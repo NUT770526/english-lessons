@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Match the Equivalents</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    color: #111;
+    padding: 24px;
+    font-size: 18px;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  h2 {
+    color: #1e2fcf;
+    font-size: 22px;
+    margin-bottom: 25px;
+  }
+
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 35px;
+  }
+
+  .option {
+    padding: 8px 12px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    background: #f9f9f9;
+    cursor: grab;
+    user-select: none;
+  }
+
+  .option:hover {
+    background: #eef2ff;
+  }
+
+  .question {
+    margin: 14px 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dash {
+    color: #bcd4ff;
+    font-weight: bold;
+    font-size: 24px;
+  }
+
+  .dropzone {
+    min-width: 180px;
+    min-height: 32px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    background: #f7f7f7;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 8px;
+  }
+
+  .dropzone.over {
+    background: #e6f0ff;
+    border-color: #1e2fcf;
+  }
+
+  .correct {
+    background: #dff7df !important;
+    border-color: #38a838 !important;
+  }
+
+  .incorrect {
+    background: #ffe1e1 !important;
+    border-color: #d23a3a !important;
+  }
+
+  button {
+    margin-top: 25px;
+    padding: 10px 18px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #1e2fcf;
+    color: white;
+  }
+
+  button:hover {
+    background: #1523a8;
+  }
+
+  #result {
+    margin-top: 18px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>🔄 Match the equivalents</h2>
+
+  <div class="word-bank" id="wordBank">
+    <div class="option" draggable="true" data-answer="What's the matter?">What's the matter?</div>
+    <div class="option" draggable="true" data-answer="100% with you on that.">100% with you on that.</div>
+    <div class="option" draggable="true" data-answer="I'm here for it.">I'm here for it.</div>
+    <div class="option" draggable="true" data-answer="Mind blown!">Mind blown!</div>
+    <div class="option" draggable="true" data-answer="You're spot on.">You're spot on.</div>
+    <div class="option" draggable="true" data-answer="You're on fire!">You're on fire!</div>
+    <div class="option" draggable="true" data-answer="That's disappointing.">That's disappointing.</div>
+    <div class="option" draggable="true" data-answer="Why the long face?">Why the long face?</div>
+    <div class="option" draggable="true" data-answer="Are you for real?">Are you for real?</div>
+    <div class="option" draggable="true" data-answer="That’s a shame!">That’s a shame!</div>
+  </div>
+
+  <div class="question"><span class="dash">—</span> Why do you look sad? – <span class="dropzone" data-correct="Why the long face?"></span></div>
+  <div class="question"><span class="dash">—</span> What's wrong? – <span class="dropzone" data-correct="What's the matter?"></span></div>
+  <div class="question"><span class="dash">—</span> I'm shocked! – <span class="dropzone" data-correct="Mind blown!"></span></div>
+  <div class="question"><span class="dash">—</span> Are you serious? – <span class="dropzone" data-correct="Are you for real?"></span></div>
+  <div class="question"><span class="dash">—</span> That's sad. – <span class="dropzone" data-correct="That’s a shame!"></span></div>
+  <div class="question"><span class="dash">—</span> That’s not what I expected and it's a letdown. – <span class="dropzone" data-correct="That's disappointing."></span></div>
+  <div class="question"><span class="dash">—</span> You're doing great! – <span class="dropzone" data-correct="You're on fire!"></span></div>
+  <div class="question"><span class="dash">—</span> You are exactly right. – <span class="dropzone" data-correct="You're spot on."></span></div>
+  <div class="question"><span class="dash">—</span> I totally support this (or I’m excited for this). – <span class="dropzone" data-correct="I'm here for it."></span></div>
+  <div class="question"><span class="dash">—</span> I completely agree with you. – <span class="dropzone" data-correct="100% with you on that."></span></div>
+
+  <button onclick="checkAnswers()">Check answers</button>
+  <button onclick="resetExercise()">Reset</button>
+
+  <div id="result"></div>
+</div>
+
+<script>
+  let draggedItem = null;
+
+  document.querySelectorAll('.option').forEach(option => {
+    option.addEventListener('dragstart', () => {
+      draggedItem = option;
+    });
+  });
+
+  document.querySelectorAll('.dropzone').forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      zone.classList.add('over');
+    });
+
+    zone.addEventListener('dragleave', () => {
+      zone.classList.remove('over');
+    });
+
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('over');
+
+      if (draggedItem) {
+        if (zone.firstChild) {
+          document.getElementById('wordBank').appendChild(zone.firstChild);
+        }
+        zone.appendChild(draggedItem);
+      }
+    });
+  });
+
+  function checkAnswers() {
+    let correct = 0;
+    const zones = document.querySelectorAll('.dropzone');
+
+    zones.forEach(zone => {
+      zone.classList.remove('correct', 'incorrect');
+      const answer = zone.textContent.trim();
+      const correctAnswer = zone.dataset.correct;
+
+      if (answer === correctAnswer) {
+        zone.classList.add('correct');
+        correct++;
+      } else {
+        zone.classList.add('incorrect');
+      }
+    });
+
+    document.getElementById('result').textContent = `Your score: ${correct} / ${zones.length}`;
+  }
+
+  function resetExercise() {
+    const wordBank = document.getElementById('wordBank');
+    document.querySelectorAll('.dropzone .option').forEach(option => {
+      wordBank.appendChild(option);
+    });
+    document.querySelectorAll('.dropzone').forEach(zone => {
+      zone.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('result').textContent = '';
+  }
+</script>
+</body>
+</html>
