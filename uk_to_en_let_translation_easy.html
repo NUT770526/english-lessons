@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Let / Let's / Let me — Easy Translation Game</title>
+<style>
+  :root{--blue:#1d6fd6;--light:#f4f8ff;--green:#20a464;--red:#dc4b4b;--orange:#ff9f1c;--ink:#123;}
+  body{font-family:Arial, sans-serif;background:linear-gradient(135deg,#eef6ff,#fff7e8);margin:0;padding:20px;color:var(--ink)}
+  .wrap{max-width:950px;margin:auto;background:#fff;border-radius:24px;padding:22px;box-shadow:0 10px 35px #0002}
+  h1{text-align:center;color:#0b46a0;margin:8px 0 12px;font-size:30px}
+  .subtitle{text-align:center;font-size:18px;margin-bottom:18px}
+  .grammar{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+  .card{border-radius:18px;padding:14px;border:2px solid #d6e7ff;background:#f9fcff}
+  .card h3{margin:0 0 8px;color:#0b46a0;font-size:21px}
+  .formula{font-size:20px;font-weight:bold;background:#eaf3ff;border-radius:12px;padding:9px;margin:8px 0;color:#003d8f}
+  .noTo{background:#fff1f1;border:2px dashed var(--red);border-radius:14px;padding:12px;text-align:center;font-weight:bold;color:#b30000;margin:14px 0;font-size:20px}
+  .game{background:#f8fbff;border-radius:20px;border:2px solid #d7e9ff;padding:18px;margin-top:16px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+  .pill{background:#eaf3ff;color:#0b46a0;border-radius:999px;padding:9px 14px;font-weight:bold}
+  .ua{font-size:24px;font-weight:bold;line-height:1.35;background:white;border:2px solid #b9dcff;border-radius:16px;padding:18px;margin:14px 0}
+  .hint{background:#fff8df;border-left:6px solid var(--orange);padding:12px;border-radius:12px;margin:10px 0;font-size:17px;display:none}
+  input{width:100%;box-sizing:border-box;border:2px solid #b9cdeb;border-radius:14px;padding:14px;font-size:20px;outline:none}
+  input:focus{border-color:var(--blue);box-shadow:0 0 0 4px #1d6fd622}
+  .buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  button{border:0;border-radius:14px;padding:12px 16px;font-size:17px;font-weight:bold;cursor:pointer}
+  .check{background:var(--green);color:white}.hintBtn{background:#ffe29c}.next{background:var(--blue);color:white}.show{background:#eceff5;color:#123}.restart{background:#ffcfda;color:#7a001d}
+  .feedback{min-height:34px;margin-top:12px;font-size:19px;font-weight:bold}
+  .ok{color:var(--green)}.bad{color:var(--red)}
+  .answer{background:#eef9f3;border:2px solid #bde8ce;border-radius:14px;padding:12px;margin-top:10px;font-size:18px;display:none}
+  .wordbank{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .chip{background:white;border:1px solid #bfd7ff;border-radius:999px;padding:7px 11px;font-weight:bold;color:#0b46a0}
+  .finish{text-align:center;display:none;padding:28px}.finish h2{font-size:34px;color:#0b46a0}.stars{font-size:42px}
+  @media(max-width:760px){.grammar{grid-template-columns:1fr}.ua{font-size:20px}h1{font-size:25px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Let / Let’s / Let me — переклад без стресу 🌟</h1>
+  <div class="subtitle">Прочитай українське речення і напиши англійською.</div>
+
+  <div class="grammar">
+    <div class="card"><h3>1) Let’s + дієслово</h3><div class="formula">Let’s meet.</div><p><b>Давай / давайте</b> зробимо щось разом.</p><p>Let’s see. — Давай подивимось.</p></div>
+    <div class="card"><h3>2) Let me + дієслово</h3><div class="formula">Let me see.</div><p><b>Дозволь мені / дай мені</b> щось зробити.</p><p>Let me help. — Дай мені допомогти.</p></div>
+    <div class="card"><h3>3) Let + someone + дієслово</h3><div class="formula">Let Ben see.</div><p><b>Нехай / дозволь комусь</b> щось зробити.</p><p>Let Ben try. — Нехай Бен спробує.</p></div>
+  </div>
+
+  <div class="noTo">Запам’ятай: після LET не ставимо TO ❌<br>Let me see ✅ &nbsp;&nbsp; Let me <u>to</u> see ❌</div>
+
+  <div class="game" id="game">
+    <div class="topbar"><div class="pill" id="progress">1 / 16</div><div class="pill" id="score">Score: 0</div></div>
+    <div class="wordbank" id="wordbank"></div>
+    <div class="ua" id="ua"></div>
+    <div class="hint" id="hint"></div>
+    <input id="answer" placeholder="Type your answer here..." autocomplete="off" />
+    <div class="buttons">
+      <button class="check" onclick="checkAnswer()">Check ✅</button>
+      <button class="hintBtn" onclick="toggleHint()">Hint 💡</button>
+      <button class="show" onclick="showAnswer()">Show answer 👀</button>
+      <button class="next" onclick="nextQuestion()">Next ➜</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <div class="answer" id="correctBox"></div>
+  </div>
+
+  <div class="finish" id="finish">
+    <div class="stars">🏆 ⭐ 🎉</div>
+    <h2>Well done!</h2>
+    <p id="finalScore"></p>
+    <button class="restart" onclick="restart()">Play again</button>
+  </div>
+</div>
+<script>
+const tasks = [
+ {ua:'Познайомтесь — Бен Дент!', ans:['Meet Ben Dent!'], hint:'Познайомтесь = Meet. Тут без Let.'},
+ {ua:'— Що? — Так, будь ласка.', ans:['What? Yes, please.'], hint:'Що? = What? Так, будь ласка = Yes, please.'},
+ {ua:'Будь ласка, зустріньте мене.', ans:['Please meet me.'], hint:'Будь ласка = Please. зустріньте мене = meet me.'},
+ {ua:'Будь ласка, розкажіть мені.', ans:['Please tell me.'], hint:'розкажіть мені = tell me.'},
+ {ua:'Надішліть мені сім комплектів, навіть десять.', ans:['Send me seven sets, even ten.'], hint:'надішліть = send. сім комплектів = seven sets.'},
+ {ua:'Позичте мені комплект 7-B, будь ласка.', ans:['Lend me set 7-B, please.','Lend me set 7B, please.'], hint:'позичте = lend. комплект = set.'},
+ {ua:'— Давайте побачимося з Тедом. — Так, давайте.', ans:["Let's meet Ted. Yes, let's."], hint:'Давайте = Let’s. побачимося / зустрінемося = meet.'},
+ {ua:'Давай зустрінемо Емму. — Так, давай.', ans:["Let's meet Em. Yes, let's.","Let's meet Emma. Yes, let's."], hint:'Давай = Let’s. Так, давай = Yes, let’s.'},
+ {ua:'Давайте надішлемо Стіву комплект 10. — Так, давайте.', ans:["Let's send Steve set 10. Yes, let's.","Let's send Steve set ten. Yes, let's."], hint:'Let’s + send. Steve = Стіву.'},
+ {ua:'— Давай подивимось тести Неллі. — Так, давай.', ans:["Let's see Nell's tests. Yes, let's."], hint:'подивимось = see. тести Неллі = Nell’s tests.'},
+ {ua:'Дайте мені подивитися сьомий урок.', ans:['Let me see lesson seven.','Let me see the seventh lesson.'], hint:'Дайте мені = Let me. подивитися = see.'},
+ {ua:'Давайте я побачуся з Бесс Делл.', ans:['Let me meet Bess Dell.'], hint:'Давайте я... = Let me...'},
+ {ua:'Дайте мені зустріти Неллі.', ans:['Let me meet Nell.'], hint:'Дайте мені = Let me. зустріти = meet.'},
+ {ua:'Дайте подумати.', ans:['Let me see.'], hint:'Запам’ятай фразу: Let me see = дай подумати / дайте подумати.'},
+ {ua:'Нехай Тед перевірить телевізор Емми.', ans:["Let Ted check Em's TV set.","Let Ted check Emma's TV set.","Let Ted test Em's TV set.","Let Ted test Emma's TV set."], hint:'Нехай Тед = Let Ted. перевірить = check / test.'},
+ {ua:'Нехай Бен побачиться зі мною.', ans:['Let Ben meet me.'], hint:'Нехай Бен = Let Ben. зі мною = me.'}
+];
+let i=0, score=0, checked=false;
+function norm(s){return s.toLowerCase().replace(/[’‘]/g,"'").replace(/[.!?]/g,'').replace(/\s+/g,' ').trim()}
+function render(){checked=false;document.getElementById('progress').textContent=(i+1)+' / '+tasks.length;document.getElementById('score').textContent='Score: '+score;document.getElementById('ua').textContent=tasks[i].ua;document.getElementById('answer').value='';document.getElementById('feedback').textContent='';document.getElementById('feedback').className='feedback';document.getElementById('correctBox').style.display='none';document.getElementById('hint').style.display='none';document.getElementById('hint').textContent=tasks[i].hint;
+ const chips=['Let’s','Let me','Let Ben','meet','see','send','please','Yes, let’s','no to'];
+ document.getElementById('wordbank').innerHTML=chips.map(c=>`<span class="chip">${c}</span>`).join('');
+ document.getElementById('answer').focus();}
+function checkAnswer(){const val=norm(document.getElementById('answer').value);const ok=tasks[i].ans.some(a=>norm(a)===val);const fb=document.getElementById('feedback');if(ok){fb.textContent='Great! Correct ✅';fb.className='feedback ok';if(!checked){score++;checked=true;}document.getElementById('score').textContent='Score: '+score;}else{fb.textContent='Almost! Check the grammar and try again 💛';fb.className='feedback bad';}}
+function toggleHint(){const h=document.getElementById('hint');h.style.display=h.style.display==='block'?'none':'block'}
+function showAnswer(){const box=document.getElementById('correctBox');box.innerHTML='<b>Possible answer:</b> '+tasks[i].ans[0];box.style.display='block'}
+function nextQuestion(){if(i<tasks.length-1){i++;render()}else{document.getElementById('game').style.display='none';document.getElementById('finish').style.display='block';document.getElementById('finalScore').textContent='Your score: '+score+' / '+tasks.length;}}
+function restart(){i=0;score=0;document.getElementById('finish').style.display='none';document.getElementById('game').style.display='block';render()}
+document.getElementById('answer').addEventListener('keydown',e=>{if(e.key==='Enter')checkAnswer()});
+render();
+</script>
+</body>
+</html>
