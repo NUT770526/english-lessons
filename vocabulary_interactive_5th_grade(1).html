@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Інтерактивне повторення слів</title>
+<style>
+  body{font-family:Arial, sans-serif;background:#f6f7fb;margin:0;padding:20px;color:#222}
+  .wrap{max-width:1000px;margin:auto}
+  h1{font-size:30px;text-align:center;margin:10px 0;color:#3740a4}
+  h2{color:#3740a4;margin-top:30px}
+  .card{background:white;border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 4px 14px #0001}
+  button{border:0;border-radius:12px;padding:10px 16px;margin:6px;cursor:pointer;font-size:16px;background:#e7e9ff}
+  button:hover{background:#d7dbff}.ok{background:#d8f8dd!important}.bad{background:#ffdcdc!important}
+  .word{display:inline-block;background:#eef0ff;border-radius:14px;padding:10px 13px;margin:6px;font-size:18px}
+  select,input{font-size:17px;padding:8px;border:1px solid #bbb;border-radius:10px;margin:5px;max-width:100%}
+  .row{padding:8px 0;border-bottom:1px solid #eee}.feedback{font-weight:bold;margin-top:10px}.small{font-size:14px;color:#666}
+  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#fff2c7;margin:4px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+  .match{background:#fff;border:2px solid #d9dcff;border-radius:12px;padding:12px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Повторюємо слова 🎯</h1>
+<p style="text-align:center">Виконай вправи. Усі речення — у теперішньому часі.</p>
+
+<div class="card">
+<h2>1. Швидкі картки</h2>
+<p>Натисни на картку, щоб побачити переклад українською.</p>
+<div id="flashcards"></div>
+</div>
+
+<div class="card">
+<h2>2. Обери правильний переклад</h2>
+<div id="quiz"></div>
+<button onclick="checkQuiz()">Перевірити</button>
+<div id="quizResult" class="feedback"></div>
+</div>
+
+<div class="card">
+<h2>3. Збери словосполучення</h2>
+<p>Обери слово, яке підходить до кількості.</p>
+<div id="phrases"></div>
+<button onclick="checkPhrases()">Перевірити</button>
+<div id="phrasesResult" class="feedback"></div>
+</div>
+
+<div class="card">
+<h2>4. Встав слово в речення</h2>
+<p>Використай слова з підказок. Тут тільки I / we / they, тому закінчення <b>-s</b> не потрібно.</p>
+<div id="sentences"></div>
+<button onclick="checkSentences()">Перевірити</button>
+<div id="sentResult" class="feedback"></div>
+</div>
+
+<div class="card">
+<h2>5. Дієслово чи іменник?</h2>
+<p>Розподіли слова: натисни правильну кнопку.</p>
+<div id="sortGame"></div>
+<div id="sortResult" class="feedback"></div>
+</div>
+
+<div class="card">
+<h2>6. Міні-переклад</h2>
+<p>Переклади словосполучення українською. Пиши маленькими літерами.</p>
+<div id="write"></div>
+<button onclick="checkWrite()">Перевірити</button>
+<div id="writeResult" class="feedback"></div>
+</div>
+</div>
+<script>
+const nouns=[
+ ['experience','досвід / випробування'],['set','комплект'],['pen','ручка'],['step','крок / ступінь'],['place','місце'],['lesson','урок'],['team','команда'],['pet','домашня тварина'],['tent','намет'],['bed','ліжко'],['bee','бджола'],['tea','чай'],['meat','мʼясо']
+];
+const verbs=[
+ ['be','бути'],['meet','зустрічати / знайомитися'],['fix','чинити / ремонтувати'],['lend','давати в борг / позичати'],['spend','витрачати'],['send','посилати / надсилати'],['see','бачити / побачитися'],['sleep','спати'],['spell','говорити по буквах'],['test','перевіряти / випробовувати']
+];
+const all=[...nouns,...verbs];
+const phrasesData=[
+ ['ten steps','десять кроків','steps'],['ten pence','десять пенсів','pence'],['seven experiences','сім випробувань','experiences'],['ten lessons','десять уроків','lessons'],['ten tents','десять наметів','tents'],['seven pens','сім ручок','pens'],['ten TVs','десять телевізорів','TVs'],['seven sets','сім комплектів','sets'],['ten teams','десять команд','teams'],['ten places','десять місць','places']
+];
+const sentencesData=[
+ ['I ___ a pen.','see','бачити'],['I ___ a letter now.','send','надсилати'],['We ___ eight hours.','sleep','спати'],['They ___ the word.','spell','говорити по буквах'],['I ___ my friend today.','meet','зустрічатися'],['We ___ an old TV.','fix','чинити / ремонтувати'],['They ___ money.','spend','витрачати'],['I ___ tea.','drink','пити чай']
+];
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5)}
+// 1
+flashcards.innerHTML=all.map(([en,ua])=>`<button class="word" onclick="this.textContent=this.dataset.ua" data-ua="${ua}">${en}</button>`).join('');
+// 2
+const quizItems=shuffle(all).slice(0,10);
+quiz.innerHTML=quizItems.map(([en,ua],i)=>{
+ let opts=shuffle([ua,...shuffle(all).slice(0,3).map(x=>x[1])]);
+ return `<div class="row"><b>${en}</b> → <select id="q${i}" data-answer="${ua}"><option value="">обери</option>${opts.map(o=>`<option>${o}</option>`).join('')}</select></div>`
+}).join('');
+function checkQuiz(){let s=0;quizItems.forEach((_,i)=>{let e=document.getElementById('q'+i); if(e.value===e.dataset.answer){s++;e.className='ok'}else e.className='bad'});quizResult.textContent=`Результат: ${s}/${quizItems.length}`}
+//3
+phrases.innerHTML=phrasesData.map((p,i)=>`<div class="row"><b>${p[0].split(' ')[0]}</b> <select id="p${i}" data-answer="${p[2]}"><option value="">обери слово</option>${shuffle(phrasesData.map(x=>x[2])).map(o=>`<option>${o}</option>`).join('')}</select> <span class="small">= ${p[1]}</span></div>`).join('');
+function checkPhrases(){let s=0;phrasesData.forEach((_,i)=>{let e=document.getElementById('p'+i); if(e.value===e.dataset.answer){s++;e.className='ok'}else e.className='bad'});phrasesResult.textContent=`Результат: ${s}/${phrasesData.length}`}
+//4
+sentences.innerHTML=sentencesData.map((x,i)=>`<div class="row">${x[0].replace('___',`<input id="s${i}" data-answer="${x[1]}" placeholder="${x[2]}">`)}</div>`).join('');
+function checkSentences(){let s=0;sentencesData.forEach((x,i)=>{let e=document.getElementById('s'+i); if(e.value.trim().toLowerCase()===x[1]){s++;e.className='ok'}else e.className='bad'});sentResult.textContent=`Результат: ${s}/${sentencesData.length}. У цій вправі закінчення -s не потрібно.`}
+//5
+let sortWords=shuffle(all).slice(0,14); let sortScore=0, answered=0;
+sortGame.innerHTML=sortWords.map(([en,ua])=>`<div class="match" id="m${en}"><b>${en}</b><br><span class="small">${ua}</span><br><button onclick="sortAns('${en}','noun')">іменник</button><button onclick="sortAns('${en}','verb')">дієслово</button></div>`).join('');
+function sortAns(en,type){let isN=nouns.some(x=>x[0]===en); let correct=(isN&&type==='noun')||(!isN&&type==='verb'); let box=document.getElementById('m'+en); if(box.dataset.done)return; box.dataset.done=1; answered++; if(correct){sortScore++;box.classList.add('ok')}else box.classList.add('bad'); sortResult.textContent=`Результат: ${sortScore}/${answered}`}
+//6
+const writeData=[['ten lessons','десять уроків'],['seven pens','сім ручок'],['ten teams','десять команд'],['ten places','десять місць'],['seven sets','сім комплектів']];
+write.innerHTML=writeData.map((x,i)=>`<div class="row"><b>${x[0]}</b> → <input id="w${i}" data-answer="${x[1]}"></div>`).join('');
+function norm(x){return x.trim().toLowerCase().replace(/'/g,'’').replace(/\s+/g,' ')}
+function checkWrite(){let s=0;writeData.forEach((x,i)=>{let e=document.getElementById('w'+i); if(norm(e.value)===norm(x[1])){s++;e.className='ok'}else e.className='bad'});writeResult.textContent=`Результат: ${s}/${writeData.length}`}
+</script>
+</body>
+</html>
