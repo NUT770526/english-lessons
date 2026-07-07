@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Match each situation with the correct response</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #f7f8ff;
+    margin: 0;
+    padding: 24px;
+    color: #111;
+  }
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.08);
+  }
+  h1 {
+    font-size: 24px;
+    color: #0037c7;
+    margin: 0 0 8px;
+  }
+  .subtitle { margin: 0 0 22px; color: #555; }
+  .columns {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .situation {
+    background: #f1f3f7;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 14px;
+    border: 2px solid transparent;
+  }
+  .situation-text {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .dropzone {
+    min-height: 48px;
+    border: 2px dashed #9aa8d8;
+    border-radius: 9px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    color: #777;
+  }
+  .dropzone.over { background: #eef3ff; border-color: #0037c7; }
+  .answers-box {
+    background: #eef1ff;
+    border-radius: 14px;
+    padding: 14px;
+    position: sticky;
+    top: 12px;
+  }
+  .answers-title { font-weight: 700; margin-bottom: 12px; color: #0037c7; }
+  .answer {
+    background: white;
+    border: 2px solid #d9def7;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: grab;
+    user-select: none;
+    transition: transform .1s, box-shadow .1s;
+  }
+  .answer:active { cursor: grabbing; transform: scale(.99); }
+  .answer.dragging { opacity: .55; }
+  .answer.selected { outline: 3px solid #0037c7; }
+  .correct { border-color: #26a65b !important; background: #ecfff3 !important; }
+  .wrong { border-color: #e74c3c !important; background: #fff1f0 !important; }
+  .buttons { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; }
+  button {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .check { background: #0037c7; color: white; }
+  .reset { background: #e7e9f2; }
+  .result { margin-top: 14px; font-weight: 700; font-size: 18px; }
+  @media (max-width: 760px) {
+    .columns { grid-template-columns: 1fr; }
+    .answers-box { position: static; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Match each situation with the correct response</h1>
+  <p class="subtitle">Drag each response to the correct situation. You can also click an answer, then click a box.</p>
+
+  <div class="columns">
+    <div id="situations"></div>
+
+    <div class="answers-box">
+      <div class="answers-title">Responses</div>
+      <div id="answers"></div>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button class="check" onclick="checkAnswers()">Check answers</button>
+    <button class="reset" onclick="resetExercise()">Try again</button>
+  </div>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+const data = [
+  {
+    situation: "Your friend just got a new high score in their favourite game.",
+    answer: "No way! You're on fire!"
+  },
+  {
+    situation: "Your friend looks really upset.",
+    answer: "What's the matter? You don't look happy."
+  },
+  {
+    situation: "Your friend didn't do well on a test.",
+    answer: "That's a pity. You'll do better next time."
+  },
+  {
+    situation: "Your friend's pet is sick, and they are worried.",
+    answer: "I'm so sorry. That must be really tough."
+  },
+  {
+    situation: "Your friend suggests preparing for exams together.",
+    answer: "100% with you on that."
+  }
+];
+
+let selectedAnswer = null;
+
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function createExercise() {
+  const situations = document.getElementById('situations');
+  const answers = document.getElementById('answers');
+  situations.innerHTML = '';
+  answers.innerHTML = '';
+  document.getElementById('result').textContent = '';
+
+  data.forEach((item, index) => {
+    const card = document.createElement('div');
+    card.className = 'situation';
+    card.innerHTML = `
+      <div class="situation-text">${item.situation}</div>
+      <div class="dropzone" data-correct="${item.answer}" onclick="placeSelected(this)">Drop answer here</div>
+    `;
+    situations.appendChild(card);
+  });
+
+  shuffle(data.map(x => x.answer)).forEach((answer, index) => {
+    const div = document.createElement('div');
+    div.className = 'answer';
+    div.draggable = true;
+    div.textContent = answer;
+    div.id = 'answer-' + index;
+
+    div.addEventListener('dragstart', e => {
+      div.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', div.id);
+    });
+    div.addEventListener('dragend', () => div.classList.remove('dragging'));
+    div.addEventListener('click', () => selectAnswer(div));
+    answers.appendChild(div);
+  });
+
+  setupDropzones();
+}
+
+function setupDropzones() {
+  document.querySelectorAll('.dropzone').forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      zone.classList.add('over');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('over');
+      const id = e.dataTransfer.getData('text/plain');
+      const answer = document.getElementById(id);
+      putAnswerInZone(answer, zone);
+    });
+  });
+}
+
+function selectAnswer(answer) {
+  document.querySelectorAll('.answer').forEach(a => a.classList.remove('selected'));
+  selectedAnswer = answer;
+  answer.classList.add('selected');
+}
+
+function placeSelected(zone) {
+  if (selectedAnswer) {
+    putAnswerInZone(selectedAnswer, zone);
+    selectedAnswer.classList.remove('selected');
+    selectedAnswer = null;
+  }
+}
+
+function putAnswerInZone(answer, zone) {
+  if (!answer) return;
+  const existing = zone.querySelector('.answer');
+  if (existing) document.getElementById('answers').appendChild(existing);
+  zone.textContent = '';
+  zone.appendChild(answer);
+  clearMarks();
+}
+
+function clearMarks() {
+  document.querySelectorAll('.dropzone').forEach(z => z.classList.remove('correct', 'wrong'));
+  document.getElementById('result').textContent = '';
+}
+
+function checkAnswers() {
+  let score = 0;
+  document.querySelectorAll('.dropzone').forEach(zone => {
+    const answer = zone.querySelector('.answer');
+    zone.classList.remove('correct', 'wrong');
+    if (answer && answer.textContent === zone.dataset.correct) {
+      zone.classList.add('correct');
+      score++;
+    } else {
+      zone.classList.add('wrong');
+    }
+  });
+  document.getElementById('result').textContent = `Your score: ${score} / ${data.length}`;
+}
+
+function resetExercise() {
+  selectedAnswer = null;
+  createExercise();
+}
+
+createExercise();
+</script>
+</body>
+</html>
