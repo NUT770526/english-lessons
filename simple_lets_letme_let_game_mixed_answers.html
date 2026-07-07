@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Let's / Let me / Let someone</title>
+<style>
+  body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#e8f5ff,#fff4d6);margin:0;padding:20px;color:#1f2937}.wrap{max-width:850px;margin:auto;background:white;border-radius:24px;padding:24px;box-shadow:0 10px 30px #0002}h1{text-align:center;color:#2563eb;margin:0 0 8px}.rule{text-align:center;font-size:20px;background:#eef6ff;border-radius:16px;padding:14px;margin:15px 0}.rule b{color:#dc2626}.card{border:3px solid #dbeafe;border-radius:22px;padding:22px;margin-top:20px}.num{font-weight:bold;color:#6b7280}.situation{font-size:24px;text-align:center;margin:12px 0}.emoji{font-size:56px;text-align:center}.options{display:grid;gap:12px;margin-top:20px}.option{font-size:22px;padding:15px;border:2px solid #c7d2fe;border-radius:16px;background:#f8fafc;cursor:pointer;text-align:left}.option:hover{background:#e0f2fe}.option.correct{background:#dcfce7;border-color:#22c55e}.option.wrong{background:#fee2e2;border-color:#ef4444}.feedback{text-align:center;font-size:22px;font-weight:bold;margin:18px;min-height:30px}.buttons{text-align:center}.btn{font-size:20px;border:0;border-radius:14px;padding:12px 24px;background:#2563eb;color:white;cursor:pointer}.btn:disabled{background:#9ca3af}.score{text-align:center;font-size:24px;font-weight:bold}.hidden{display:none}.small{text-align:center;color:#6b7280;margin-top:8px}.ukr{font-size:16px;color:#475569;margin-top:5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Grammar Game: Let's / Let me / Let someone</h1>
+<div class="rule">
+  ✅ <b>NO TO!</b><br>
+  Let's + verb &nbsp; | &nbsp; Let me + verb &nbsp; | &nbsp; Let Ben/Tom/Ann + verb
+</div>
+<div id="game">
+  <div class="score">Score: <span id="score">0</span> / 15</div>
+  <div class="card">
+    <div class="num" id="num"></div>
+    <div class="emoji" id="emoji"></div>
+    <div class="situation" id="situation"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="buttons"><button class="btn" id="next" disabled>Next</button></div>
+  </div>
+  <p class="small">Choose the correct sentence.</p>
+</div>
+<div id="finish" class="hidden">
+  <div class="emoji">🏆</div>
+  <h1>Well done!</h1>
+  <div class="score">Your score: <span id="finalScore"></span> / 15</div>
+  <div class="buttons"><button class="btn" onclick="location.reload()">Try again</button></div>
+</div>
+</div>
+<script>
+const questions = [
+ {e:'⚽', s:'We want to play football together.', uk:'Ми хочемо разом пограти у футбол.', a:"Let's play football.", o:["Let me play football.","Let's play football.","Let Tom play football."]},
+ {e:'🚪', s:'I want to open the door.', uk:'Я хочу відкрити двері.', a:'Let me open the door.', o:["Let's open me the door.",'Let Ben opens the door.','Let me open the door.']},
+ {e:'📖', s:'Ben wants to read the book.', uk:'Бен хоче читати книгу.', a:'Let Ben read the book.', o:["Let's Ben read the book.",'Let Ben read the book.','Let Ben to read the book.']},
+ {e:'🏫', s:'We want to go to school together.', uk:'Ми хочемо разом піти до школи.', a:"Let's go to school.", o:['Let me go school.',"Let's go to school.",'Let Tom to go to school.']},
+ {e:'👩', s:'I want to help Mum.', uk:'Я хочу допомогти мамі.', a:'Let me help Mum.', o:['Let Dad help Mum.','Let me help Mum.',"Let's me help Mum."]},
+ {e:'🪟', s:'Tom wants to close the window.', uk:'Том хоче закрити вікно.', a:'Let Tom close the window.', o:['Let Tom to close the window.',"Let's Tom close the window.",'Let Tom close the window.']},
+ {e:'🍕', s:'We want to eat pizza together.', uk:'Ми хочемо разом їсти піцу.', a:"Let's eat pizza.", o:["Let's eat pizza.",'Let Ann eat pizza.','Let me eat pizza.']},
+ {e:'📓', s:'I want to see your notebook.', uk:'Я хочу подивитися твій зошит.', a:'Let me see your notebook.', o:["Let's me see your notebook.",'Let me see your notebook.','Let me to see your notebook.']},
+ {e:'✏️', s:'Ann wants to write her name.', uk:'Енн хоче написати своє ім’я.', a:'Let Ann write her name.', o:['Let Ann writes her name.','Let Ann to write her name.','Let Ann write her name.']},
+ {e:'📚', s:'We want to read this book together.', uk:'Ми хочемо разом читати цю книгу.', a:"Let's read this book.", o:['Let Dad read this book.',"Let's read this book.",'Let me read this book.']},
+ {e:'🎒', s:'I want to take your bag.', uk:'Я хочу взяти твою сумку.', a:'Let me take your bag.', o:['Let me to take your bag.',"Let's take me your bag.",'Let me take your bag.']},
+ {e:'🚗', s:'Dad wants to drive the car.', uk:'Тато хоче вести машину.', a:'Let Dad drive the car.', o:['Let Dad drive the car.','Let Dad to drive the car.','Let Dad drives the car.']},
+ {e:'💧', s:'We want to drink some water.', uk:'Ми хочемо випити води.', a:"Let's drink some water.", o:['Let me drink some water.',"Let's drink some water.",'Let Ben drink some water.']},
+ {e:'👋', s:'I want to meet your friend.', uk:'Я хочу познайомитися з твоїм другом.', a:'Let me meet your friend.', o:['Let me to meet your friend.',"Let's me meet your friend.",'Let me meet your friend.']},
+ {e:'🐶', s:'The dog wants to play.', uk:'Собака хоче гратися.', a:'Let the dog play.', o:["Let's the dog play.",'Let the dog play.','Let the dog to play.']}
+];
+let i=0, score=0, answered=false;
+const num=document.getElementById('num'), emoji=document.getElementById('emoji'), sit=document.getElementById('situation'), options=document.getElementById('options'), fb=document.getElementById('feedback'), next=document.getElementById('next');
+function load(){answered=false; next.disabled=true; fb.textContent=''; const q=questions[i]; num.textContent=`Question ${i+1} of ${questions.length}`; emoji.textContent=q.e; sit.innerHTML=`${q.s}<div class="ukr">${q.uk}</div>`; options.innerHTML=''; q.o.forEach(text=>{ const b=document.createElement('button'); b.className='option'; b.textContent=text; b.onclick=()=>choose(b,text,q.a); options.appendChild(b); });}
+function choose(btn,text,answer){ if(answered)return; answered=true; document.querySelectorAll('.option').forEach(b=>{ if(b.textContent===answer)b.classList.add('correct'); }); if(text===answer){score++; document.getElementById('score').textContent=score; fb.textContent='✅ Correct!'; fb.style.color='#16a34a';} else {btn.classList.add('wrong'); fb.textContent='❌ Remember: no TO after let!'; fb.style.color='#dc2626';} next.disabled=false;}
+next.onclick=()=>{i++; if(i<questions.length) load(); else finish();};
+function finish(){document.getElementById('game').classList.add('hidden'); document.getElementById('finish').classList.remove('hidden'); document.getElementById('finalScore').textContent=score;}
+load();
+</script>
+</body>
+</html>
