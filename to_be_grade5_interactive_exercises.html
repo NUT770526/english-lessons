@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>To Be — Interactive Exercises for Grade 5</title>
+<style>
+  :root{
+    --pink:#ff5ca8; --purple:#7c4dff; --blue:#28a8ff; --green:#33b36b; --yellow:#ffd95c;
+    --bg:#fff7fb; --card:#ffffff; --text:#263238; --soft:#f3e9ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Comic Sans MS, Trebuchet MS, Arial, sans-serif;background:linear-gradient(135deg,#fff7fb,#eef8ff);color:var(--text)}
+  header{padding:28px 18px;text-align:center;background:linear-gradient(90deg,#ff8cc6,#8dd8ff);border-bottom:6px dotted #fff}
+  h1{margin:0;font-size:42px;color:white;text-shadow:2px 2px 0 #7c4dff}
+  header p{font-size:20px;margin:10px auto 0;max-width:900px;color:white;font-weight:bold}
+  .wrap{max-width:1100px;margin:0 auto;padding:22px}
+  .rule{background:#fff;border:4px solid var(--yellow);border-radius:24px;padding:18px;margin-bottom:22px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+  .rule h2{margin:0 0 10px;color:var(--purple)}
+  .forms{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+  .pill{padding:10px 14px;border-radius:999px;background:#f4f8ff;border:2px solid #d8e8ff;font-weight:bold}
+  .pill b{color:var(--pink)}
+  .exercise{background:var(--card);border-radius:26px;margin:24px 0;padding:22px;border:4px solid #e9d9ff;box-shadow:0 8px 22px rgba(65,45,120,.12)}
+  .exercise h2{margin-top:0;color:var(--pink);font-size:28px}
+  .task{padding:12px;margin:10px 0;border-radius:16px;background:#fbf8ff;border:2px solid #eadcff}
+  .task.correct{background:#eafff2;border-color:#7bd99e}
+  .task.wrong{background:#fff0f2;border-color:#ff95aa}
+  .num{font-weight:bold;color:var(--purple);margin-right:6px}
+  select,input[type="text"]{font-size:18px;border:2px solid #cbb7ff;border-radius:10px;padding:7px 10px;background:white;margin:4px;min-width:86px}
+  button{font-family:inherit;font-size:18px;font-weight:bold;border:none;border-radius:14px;padding:10px 16px;margin:8px 6px 0 0;cursor:pointer;background:linear-gradient(90deg,var(--pink),var(--purple));color:#fff;box-shadow:0 4px 10px rgba(0,0,0,.15)}
+  button.secondary{background:linear-gradient(90deg,var(--blue),var(--green))}
+  .result{font-weight:bold;margin-top:10px;font-size:18px}
+  .small{font-size:15px;color:#607d8b;margin-top:6px}
+  .word{display:inline-block;background:#fff4cc;border:2px dashed #ffbd00;border-radius:12px;padding:2px 8px;font-weight:bold;color:#7a4a00}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+  .optionBtn{display:block;width:100%;text-align:left;background:#fff;border:2px solid #cfe7ff;color:#263238;box-shadow:none;margin:6px 0;padding:10px;border-radius:14px}
+  .optionBtn:hover{background:#eef8ff}
+  footer{text-align:center;padding:20px;color:#7c4dff;font-weight:bold}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌟 To Be: am / is / are 🌟</h1>
+  <p>Інтерактивні вправи для 5 класу: тільки теперішній час і тільки дієслово <b>to be</b>.</p>
+</header>
+
+<div class="wrap">
+  <section class="rule">
+    <h2>💡 Пригадай правило</h2>
+    <p><b>To be</b> означає <b>бути</b>. У теперішньому часі воно має три форми:</p>
+    <div class="forms">
+      <div class="pill">I → <b>am</b></div>
+      <div class="pill">He / She / It → <b>is</b></div>
+      <div class="pill">You / We / They → <b>are</b></div>
+    </div>
+    <p>🎯 Секрет: якщо українською можна подумки сказати <b>«є»</b>, англійською часто потрібна форма <b>am / is / are</b>.</p>
+  </section>
+
+  <section class="exercise" id="ex1">
+    <h2>1️⃣ Обери правильну форму: am / is / are</h2>
+    <p>Вибери правильну форму <b>to be</b>. У реченнях є слова з твого списку: <span class="word">test</span>, <span class="word">seat</span>, <span class="word">team</span>, <span class="word">tent</span>, <span class="word">beef</span> та інші.</p>
+    <div id="ex1tasks"></div>
+    <button onclick="checkEx1()">Перевірити</button>
+    <button class="secondary" onclick="resetEx1()">Очистити</button>
+    <div class="result" id="ex1result"></div>
+  </section>
+
+  <section class="exercise" id="ex2">
+    <h2>2️⃣ Переклади речення англійською</h2>
+    <p>Напиши речення англійською. Використовуй тільки <b>am / is / are</b>. Не використовуй інші дієслова.</p>
+    <div id="ex2tasks"></div>
+    <button onclick="checkEx2()">Перевірити</button>
+    <button class="secondary" onclick="showAnswersEx2()">Показати відповіді</button>
+    <div class="result" id="ex2result"></div>
+  </section>
+
+  <section class="exercise" id="ex3">
+    <h2>3️⃣ Міні-гра: знайди правильне речення</h2>
+    <p>У кожному завданні натисни на правильне речення. Будь уважна: помилки саме у формах <b>to be</b>.</p>
+    <div class="cards" id="ex3tasks"></div>
+    <button class="secondary" onclick="resetEx3()">Почати знову</button>
+    <div class="result" id="ex3result"></div>
+  </section>
+</div>
+<footer>✨ Молодець! Пам’ятай: I am • He/She/It is • You/We/They are ✨</footer>
+
+<script>
+const ex1 = [
+  ["I ___ ready for the test.", "am"],
+  ["This test ___ easy.", "is"],
+  ["The seat ___ near the window.", "is"],
+  ["These seats ___ clean.", "are"],
+  ["My team ___ strong.", "is"],
+  ["We ___ a great team.", "are"],
+  ["The tent ___ blue.", "is"],
+  ["The tents ___ small.", "are"],
+  ["The beef ___ hot.", "is"],
+  ["I ___ hungry.", "am"],
+  ["You ___ kind to lend me a pen.", "are"],
+  ["She ___ happy to talk to me.", "is"],
+  ["He ___ ready to speak to the teacher.", "is"],
+  ["The pet ___ cute.", "is"],
+  ["The steps ___ not difficult.", "are"]
+];
+
+const ex2 = [
+  ["Я готова до тесту.", "I am ready for the test."],
+  ["Цей тест легкий.", "This test is easy."],
+  ["Місце біля вікна.", "The seat is near the window."],
+  ["Ці місця вільні.", "These seats are free."],
+  ["Моя команда сильна.", "My team is strong."],
+  ["Ми гарна команда.", "We are a good team."],
+  ["Намет зелений.", "The tent is green."],
+  ["Намети великі.", "The tents are big."],
+  ["Яловичина гаряча.", "The beef is hot."],
+  ["Я голодна.", "I am hungry."],
+  ["Ти дуже добра.", "You are very kind."],
+  ["Вона щаслива.", "She is happy."],
+  ["Він у класі.", "He is in the classroom."],
+  ["Мій домашній улюбленець милий.", "My pet is cute."],
+  ["Ці кроки прості.", "These steps are easy."]
+];
+
+const ex3 = [
+  {opts:["I is ready for the test.","I am ready for the test.","I are ready for the test."], ans:1},
+  {opts:["This test are easy.","This test am easy.","This test is easy."], ans:2},
+  {opts:["The seat is near the door.","The seat are near the door.","The seat am near the door."], ans:0},
+  {opts:["These seats is free.","These seats are free.","These seats am free."], ans:1},
+  {opts:["My team are strong.","My team am strong.","My team is strong."], ans:2},
+  {opts:["We is a good team.","We are a good team.","We am a good team."], ans:1},
+  {opts:["The tent is small.","The tent are small.","The tent am small."], ans:0},
+  {opts:["The beef are hot.","The beef is hot.","The beef am hot."], ans:1},
+  {opts:["You are kind to lend me a book.","You is kind to lend me a book.","You am kind to lend me a book."], ans:0},
+  {opts:["She are ready to talk to Ann.","She am ready to talk to Ann.","She is ready to talk to Ann."], ans:2},
+  {opts:["He is ready to speak to the teacher.","He are ready to speak to the teacher.","He am ready to speak to the teacher."], ans:0},
+  {opts:["My pet are cute.","My pet is cute.","My pet am cute."], ans:1},
+  {opts:["The steps is easy.","The steps are easy.","The steps am easy."], ans:1},
+  {opts:["The set is on the desk.","The set are on the desk.","The set am on the desk."], ans:0},
+  {opts:["We are happy to meet you.","We is happy to meet you.","We am happy to meet you."], ans:0}
+];
+
+function renderEx1(){
+  const box=document.getElementById('ex1tasks'); box.innerHTML='';
+  ex1.forEach((item,i)=>{
+    box.innerHTML += `<div class="task" id="ex1t${i}"><span class="num">${i+1}.</span>${item[0].replace('___', `<select id="ex1_${i}"><option value="">---</option><option>am</option><option>is</option><option>are</option></select>`)}</div>`;
+  });
+}
+function checkEx1(){
+  let score=0;
+  ex1.forEach((item,i)=>{
+    const val=document.getElementById(`ex1_${i}`).value;
+    const t=document.getElementById(`ex1t${i}`);
+    t.classList.remove('correct','wrong');
+    if(val===item[1]){score++;t.classList.add('correct')}else{t.classList.add('wrong')}
+  });
+  document.getElementById('ex1result').textContent=`Результат: ${score}/15 ${score===15?'🎉 Perfect!':'— спробуй ще раз!'}`;
+}
+function resetEx1(){renderEx1();document.getElementById('ex1result').textContent=''}
+
+function norm(s){return s.trim().toLowerCase().replace(/[.!?]/g,'').replace(/\s+/g,' ')}
+function renderEx2(){
+  const box=document.getElementById('ex2tasks'); box.innerHTML='';
+  ex2.forEach((item,i)=>{
+    box.innerHTML += `<div class="task" id="ex2t${i}"><span class="num">${i+1}.</span>${item[0]}<br><input id="ex2_${i}" type="text" style="width:90%" placeholder="Type here..."><div class="small" id="hint${i}"></div></div>`;
+  });
+}
+function checkEx2(){
+  let score=0;
+  ex2.forEach((item,i)=>{
+    const val=norm(document.getElementById(`ex2_${i}`).value);
+    const ans=norm(item[1]);
+    const t=document.getElementById(`ex2t${i}`);
+    t.classList.remove('correct','wrong');
+    if(val===ans){score++;t.classList.add('correct');document.getElementById(`hint${i}`).textContent='✅ Правильно!'}
+    else{t.classList.add('wrong');document.getElementById(`hint${i}`).textContent='❌ Перевір форму am / is / are і порядок слів.'}
+  });
+  document.getElementById('ex2result').textContent=`Результат: ${score}/15`;
+}
+function showAnswersEx2(){
+  ex2.forEach((item,i)=>{document.getElementById(`hint${i}`).textContent='Відповідь: '+item[1]});
+}
+
+let ex3score=0, ex3answered=0;
+function renderEx3(){
+  ex3score=0; ex3answered=0;
+  const box=document.getElementById('ex3tasks'); box.innerHTML='';
+  ex3.forEach((q,i)=>{
+    let html=`<div class="task" id="ex3t${i}"><b>${i+1}.</b><br>`;
+    q.opts.forEach((opt,j)=> html += `<button class="optionBtn" onclick="chooseEx3(${i},${j},this)">${opt}</button>`);
+    html += `</div>`;
+    box.innerHTML += html;
+  });
+  document.getElementById('ex3result').textContent='';
+}
+function chooseEx3(i,j,btn){
+  const card=document.getElementById(`ex3t${i}`);
+  if(card.dataset.done) return;
+  card.dataset.done='1'; ex3answered++;
+  if(j===ex3[i].ans){ex3score++;card.classList.add('correct')} else {card.classList.add('wrong')}
+  document.getElementById('ex3result').textContent=`Обрано: ${ex3answered}/15. Балів: ${ex3score}/15`;
+}
+function resetEx3(){renderEx3()}
+
+renderEx1(); renderEx2(); renderEx3();
+</script>
+</body>
+</html>
