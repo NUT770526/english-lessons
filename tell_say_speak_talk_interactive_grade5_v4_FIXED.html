@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tell / Say / Speak to / Talk to — Interactive Practice</title>
+<style>
+  :root{
+    --pink:#ff5fa2;
+    --blue:#3a86ff;
+    --green:#2fb344;
+    --purple:#7b4de3;
+    --yellow:#ffe66d;
+    --bg:#fff7fb;
+    --card:#ffffff;
+    --text:#202124;
+    --muted:#5f6368;
+    --good:#1f9d55;
+    --bad:#d93025;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+    background: linear-gradient(135deg,#fff7fb,#f0f7ff);
+    color:var(--text);
+  }
+  header{
+    padding:28px 18px 20px;
+    text-align:center;
+    background: linear-gradient(120deg,#ffe0ef,#e5f0ff);
+    border-bottom:4px solid #fff;
+  }
+  h1{
+    margin:0;
+    font-size:clamp(30px,5vw,54px);
+    letter-spacing:1px;
+  }
+  .subtitle{
+    margin:10px auto 0;
+    max-width:920px;
+    font-size:18px;
+    color:#333;
+  }
+  .rules{
+    display:grid;
+    grid-template-columns: repeat(4,1fr);
+    gap:14px;
+    max-width:1100px;
+    margin:22px auto 0;
+    padding:0 12px;
+  }
+  .rule{
+    background:white;
+    border-radius:20px;
+    padding:15px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    border:3px solid transparent;
+  }
+  .rule h2{margin:0 0 8px;font-size:28px}
+  .tell{border-color:var(--pink)}
+  .say{border-color:var(--blue)}
+  .speak{border-color:var(--green)}
+  .talk{border-color:var(--purple)}
+  .tell h2{color:var(--pink)}
+  .say h2{color:var(--blue)}
+  .speak h2{color:var(--green)}
+  .talk h2{color:var(--purple)}
+  main{max-width:1100px;margin:24px auto;padding:0 16px 40px}
+  section{
+    background:var(--card);
+    border-radius:26px;
+    padding:22px;
+    margin:22px 0;
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+  }
+  h3{
+    font-size:28px;
+    margin:0 0 8px;
+  }
+  .note{
+    background:#fff4c2;
+    border:2px dashed #f2b705;
+    padding:12px 14px;
+    border-radius:16px;
+    margin:12px 0 18px;
+    font-size:17px;
+  }
+  .question{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px;
+    margin:10px 0;
+    border:2px solid #edf0f5;
+    border-radius:16px;
+    background:#fbfdff;
+  }
+  .question p{margin:0;font-size:18px;line-height:1.35}
+  select, input[type="text"]{
+    font-size:17px;
+    padding:9px 10px;
+    border-radius:12px;
+    border:2px solid #d9dce3;
+    background:white;
+    min-width:145px;
+  }
+  button{
+    border:0;
+    border-radius:16px;
+    padding:11px 18px;
+    margin:8px 8px 0 0;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+    background:var(--purple);
+    color:white;
+    box-shadow:0 5px 12px rgba(0,0,0,.16);
+  }
+  button.secondary{background:#6c757d}
+  button:hover{filter:brightness(.98); transform:translateY(-1px)}
+  .result{
+    margin-top:14px;
+    font-size:20px;
+    font-weight:bold;
+  }
+  .correct{border-color:#78d39b;background:#f0fff5}
+  .wrong{border-color:#ff9b9b;background:#fff5f5}
+  .mini{
+    color:var(--muted);
+    font-size:15px;
+    margin-top:4px;
+  }
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .bank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:14px 0;
+  }
+  .chip{
+    background:#f4f0ff;
+    border:2px solid #d8c9ff;
+    border-radius:999px;
+    padding:9px 13px;
+    font-weight:bold;
+  }
+  .cardline{
+    padding:12px;
+    margin:9px 0;
+    border-radius:14px;
+    background:#fbfdff;
+    border:2px solid #edf0f5;
+  }
+  .emoji{font-size:26px}
+  footer{
+    text-align:center;
+    padding:20px;
+    color:#555;
+  }
+  @media(max-width:850px){
+    .rules{grid-template-columns:1fr 1fr}
+    .grid2{grid-template-columns:1fr}
+    .question{flex-direction:column;align-items:flex-start}
+  }
+  @media(max-width:520px){
+    .rules{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tell • Say • Speak to • Talk to</h1>
+  <p class="subtitle">Інтерактивна практика для 5 класу: обираємо правильне слово. Усі речення — у теперішньому часі, без he/she/it.</p>
+  <div class="rules">
+    <div class="rule tell"><h2>TELL</h2><b>говоримо комусь</b><br>tell my friend / tell you / tell my parents</div>
+    <div class="rule say"><h2>SAY</h2><b>говоримо щось</b><br>say hello / say the answer / say “thank you”</div>
+    <div class="rule speak"><h2>SPEAK TO</h2><b>говоримо з кимось</b><br>часто трохи офіційніше</div>
+    <div class="rule talk"><h2>TALK TO</h2><b>розмовляємо з кимось</b><br>дружня розмова</div>
+  </div>
+</header>
+
+<main>
+<section>
+  <h3>Вправа 1. Обери правильне слово</h3>
+  <div class="note">Пам’ятай: <b>tell</b> = комусь, <b>say</b> = щось, <b>speak to</b> = говорити з кимось, <b>talk to</b> = розмовляти з кимось.</div>
+  <div id="ex1"></div>
+  <button onclick="checkEx1()">Перевірити</button>
+  <button class="secondary" onclick="resetEx1()">Очистити</button>
+  <div class="result" id="res1"></div>
+</section>
+
+<section>
+  <h3>Вправа 2. Переклади українську підказку</h3>
+  <div class="note">Вибери правильний початок англійського речення. Усі варіанти без третьої особи однини.</div>
+  <div id="ex2"></div>
+  <button onclick="checkEx2()">Перевірити</button>
+  <button class="secondary" onclick="resetEx2()">Очистити</button>
+  <div class="result" id="res2"></div>
+</section>
+
+<section>
+  <h3>Вправа 3. Міні-квест: виправ речення</h3>
+  <div class="note">У кожному реченні одне слово неправильне. Обери, що треба поставити замість нього.</div>
+  <div id="ex3"></div>
+  <button onclick="checkEx3()">Перевірити</button>
+  <button class="secondary" onclick="resetEx3()">Очистити</button>
+  <div class="result" id="res3"></div>
+</section>
+
+<section>
+  <h3>Вправа 4. Швидке сортування</h3>
+  <div class="note">Подумай: це про <b>людину</b>, <b>слова/фразу</b>, <b>мову/офіційне спілкування</b> чи <b>дружню розмову</b>?</div>
+  <div id="ex4"></div>
+  <button onclick="checkEx4()">Перевірити</button>
+  <button class="secondary" onclick="resetEx4()">Очистити</button>
+  <div class="result" id="res4"></div>
+</section>
+</main>
+
+<footer>Practice every day — and it becomes easy 💜</footer>
+
+<script>
+const options = ["tell", "say", "speak", "speak to", "talk to"];
+
+const ex1 = [
+  ["I ___ my friend a secret.", "tell"],
+  ["We ___ hello every morning.", "say"],
+  ["You ___ English very well.", "speak"],
+  ["I ___ my teacher after class.", "talk to"],
+  ["They ___ the answer together.", "say"],
+  ["We ___ our parents the truth.", "tell"],
+  ["I ___ my grandma on Sundays.", "talk to"],
+  ["You ___ Ukrainian at home.", "speak"],
+  ["We ___ thank you to our teacher.", "say"],
+  ["I ___ you an interesting story.", "tell"],
+  ["They ___ their classmates about the game.", "tell"],
+  ["We ___ our English teacher today.", "talk to"],
+  ["I ___ French a little.", "speak"],
+  ["You ___ sorry when you are late.", "say"],
+  ["We ___ our friends about our pets.", "tell"]
+];
+
+const ex2 = [
+  ["сказати «дякую»", "say"],
+  ["розповісти мамі новину", "tell"],
+  ["розмовляти з подругою", "talk to"],
+  ["говорити англійською", "speak"],
+  ["сказати відповідь", "say"],
+  ["розповісти вчителю правду", "tell"],
+  ["говорити з лікарем", "speak to"],
+  ["розмовляти з батьками", "talk to"],
+  ["сказати «привіт»", "say"],
+  ["розповісти другу секрет", "tell"],
+  ["говорити французькою", "speak"],
+  ["розмовляти з однокласниками", "talk to"],
+  ["сказати це ще раз", "say"],
+  ["розповісти сестрі про день", "tell"],
+  ["говорити з директором", "speak to"]
+];
+
+const ex3 = [
+  ["I say my friend a secret.", "tell"],
+  ["We tell hello every day.", "say"],
+  ["You speak English at school.", "speak"],
+  ["I speak to my friend after lunch.", "talk to"],
+  ["We say our parents the truth.", "tell"],
+  ["They tell thank you.", "say"],
+  ["I tell to my teacher about my test.", "talk to"],
+  ["We say my grandma about the pet.", "tell"],
+  ["You speak Ukrainian very well.", "speak"],
+  ["I speak to my classmates about the team.", "talk to"],
+  ["We tell the answer together.", "say"],
+  ["They say their teacher a story.", "tell"],
+  ["I speak French a little.", "speak"],
+  ["You speak to your friend every day.", "talk to"],
+  ["We tell sorry when we are late.", "say"]
+];
+
+const ex4 = [
+  ["___ my parents the news", "tell"],
+  ["___ “good morning”", "say"],
+  ["___ English", "speak to"],
+  ["___ my friend after school", "talk to"],
+  ["___ you the answer", "tell"],
+  ["___ the word again", "say"],
+  ["___ Ukrainian", "speak to"],
+  ["___ my classmates", "talk to"],
+  ["___ my sister a funny story", "tell"],
+  ["___ hello to Kate", "say"],
+  ["___ to my doctor", "speak to"],
+  ["___ to my grandma", "talk to"],
+  ["___ the truth", "say"],
+  ["___ our teacher about the test", "tell"],
+  ["___ to our friends at break time", "talk to"]
+];
+
+function makeSelect(id){
+  return `<select id="${id}">
+    <option value="">— choose —</option>
+    ${options.map(o=>`<option value="${o}">${o}</option>`).join("")}
+  </select>`;
+}
+
+function renderExercise(containerId, data, type){
+  const box = document.getElementById(containerId);
+  box.innerHTML = data.map((item, i)=>{
+    let text = item[0];
+    if(type === "ua"){
+      text = `<b>Українська підказка:</b> ${item[0]}`;
+    }
+    return `<div class="question" id="${containerId}_q${i}">
+      <p><span class="emoji">${i%4===0?'💬':i%4===1?'⭐':i%4===2?'📘':'🌸'}</span> ${i+1}. ${text}</p>
+      ${makeSelect(containerId+"_a"+i)}
+    </div>`;
+  }).join("");
+}
+
+function check(containerId, data, resultId){
+  let score = 0;
+  data.forEach((item,i)=>{
+    const q = document.getElementById(`${containerId}_q${i}`);
+    const a = document.getElementById(`${containerId}_a${i}`).value;
+    q.classList.remove("correct","wrong");
+    if(a === item[1]){
+      score++;
+      q.classList.add("correct");
+    } else {
+      q.classList.add("wrong");
+    }
+  });
+  const res = document.getElementById(resultId);
+  res.innerHTML = `Результат: ${score} / ${data.length} ${score===data.length ? "🎉 Супер!" : "💪 Спробуй ще раз!"}`;
+}
+
+function reset(containerId, resultId){
+  const qs = document.querySelectorAll(`[id^="${containerId}_q"]`);
+  qs.forEach(q=>q.classList.remove("correct","wrong"));
+  const sels = document.querySelectorAll(`[id^="${containerId}_a"]`);
+  sels.forEach(s=>s.value="");
+  document.getElementById(resultId).innerHTML="";
+}
+
+function checkEx1(){check("ex1", ex1, "res1")}
+function resetEx1(){reset("ex1", "res1")}
+function checkEx2(){check("ex2", ex2, "res2")}
+function resetEx2(){reset("ex2", "res2")}
+function checkEx3(){check("ex3", ex3, "res3")}
+function resetEx3(){reset("ex3", "res3")}
+function checkEx4(){check("ex4", ex4, "res4")}
+function resetEx4(){reset("ex4", "res4")}
+
+renderExercise("ex1", ex1, "en");
+renderExercise("ex2", ex2, "ua");
+renderExercise("ex3", ex3, "en");
+renderExercise("ex4", ex4, "en");
+</script>
+</body>
+</html>
