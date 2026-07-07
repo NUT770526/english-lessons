@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Replace the phrases in the gaps</title>
+<style>
+  :root{
+    --blue:#1e88e5;
+    --light-blue:#eaf4ff;
+    --orange:#ffb23f;
+    --green:#4caf50;
+    --red:#ef5350;
+    --text:#111;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    background:#f7f7f7;
+    color:var(--text);
+  }
+  .wrap{
+    max-width:920px;
+    margin:20px auto;
+    background:#fff;
+    padding:24px;
+    border-radius:14px;
+    box-shadow:0 6px 20px rgba(0,0,0,.08);
+  }
+  h1{
+    margin:0 0 18px;
+    color:#0434c7;
+    font-size:24px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .icon{
+    width:42px;height:42px;border-radius:50%;border:2px dotted #9aa8ff;
+    display:grid;place-items:center;font-size:22px;background:#fff;
+  }
+  .wordlist{
+    background:#eaf2ff;
+    padding:15px 18px;
+    border-radius:4px;
+    margin-bottom:22px;
+    line-height:1.6;
+  }
+  .wordlist b{font-weight:700}
+  .phrase-bank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px;
+  }
+  .chip{
+    background:white;
+    border:2px solid #b8ccff;
+    border-radius:8px;
+    padding:8px 11px;
+    cursor:grab;
+    user-select:none;
+    font-size:15px;
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+  }
+  .chip:active{cursor:grabbing}
+  .dialogue{display:flex;flex-direction:column;gap:18px}
+  .row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .row.right{justify-content:flex-end}
+  .avatar{
+    width:46px;height:46px;border-radius:50%;
+    display:grid;place-items:center;flex:0 0 auto;
+    font-size:26px;
+    border:3px solid var(--orange);
+    background:#fff7e8;
+  }
+  .row.right .avatar{border-color:#38bdf8;background:#effaff;order:2}
+  .bubble{
+    max-width:720px;
+    padding:13px 15px;
+    border-radius:8px;
+    line-height:1.55;
+    font-size:16px;
+    background:#fff;
+    border:2px solid var(--orange);
+  }
+  .row.right .bubble{border-color:#28aeea;background:#fff}
+  .gap{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:170px;
+    min-height:38px;
+    padding:6px 10px;
+    margin:0 4px;
+    border:2px dashed #9aa8ff;
+    border-radius:7px;
+    background:#f8fbff;
+    vertical-align:middle;
+    color:#777;
+  }
+  .gap.filled{
+    border-style:solid;
+    background:#fff;
+    color:#111;
+  }
+  .gap.correct{border-color:var(--green);background:#eef9ef}
+  .gap.wrong{border-color:var(--red);background:#fff0f0}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+  button{
+    border:none;
+    border-radius:8px;
+    padding:11px 18px;
+    font-weight:700;
+    cursor:pointer;
+    color:white;
+    background:#0434c7;
+  }
+  button.secondary{background:#6b7280}
+  .result{font-weight:700;margin-top:14px;font-size:18px}
+  @media(max-width:650px){
+    .wrap{margin:0;border-radius:0;padding:15px}
+    h1{font-size:18px}
+    .bubble{font-size:14px}
+    .gap{min-width:140px}
+    .avatar{width:38px;height:38px;font-size:21px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><span class="icon">💬</span> Replace the phrases in the gaps with the ones from the list</h1>
+
+  <div class="wordlist">
+    <b>Wordlist:</b>
+    <div class="phrase-bank" id="bank"></div>
+  </div>
+
+  <div class="dialogue">
+    <div class="row"><div class="avatar">👩</div><div class="bubble">Hey, <span class="gap" data-answer="Why the long face?">drop here</span></div></div>
+    <div class="row right"><div class="avatar">👦</div><div class="bubble">I just found out my art project didn’t win the competition.</div></div>
+
+    <div class="row"><div class="avatar">👩</div><div class="bubble">Oh no, <span class="gap" data-answer="That’s disappointing.">drop here</span> What’s the matter? You worked so hard on it.</div></div>
+    <div class="row right"><div class="avatar">👦</div><div class="bubble">Yeah, I did. <span class="gap" data-answer="That’s not what I expected, and it’s a letdown.">drop here</span> I thought I had a good chance.</div></div>
+
+    <div class="row"><div class="avatar">👩</div><div class="bubble"><span class="gap" data-answer="Are you for real?">drop here</span> ? I saw your work – it was amazing! <span class="gap" data-answer="Mind blown!">drop here</span>!</div></div>
+    <div class="row right"><div class="avatar">👦</div><div class="bubble">Thanks, but I guess it wasn’t enough.</div></div>
+
+    <div class="row"><div class="avatar">👩</div><div class="bubble">No way, <span class="gap" data-answer="You’re on fire!">drop here</span> You’ll win the next one, for sure.</div></div>
+    <div class="row right"><div class="avatar">👦</div><div class="bubble">Thanks, I appreciate it. You know, I think I could win the next competition.</div></div>
+
+    <div class="row"><div class="avatar">👩</div><div class="bubble"><span class="gap" data-answer="I’m here for it!">drop here</span>!</div></div>
+    <div class="row right"><div class="avatar">👦</div><div class="bubble">Would you like to come and cheer me on?</div></div>
+
+    <div class="row"><div class="avatar">👩</div><div class="bubble"><span class="gap" data-answer="100% with you on that!">drop here</span>!</div></div>
+  </div>
+
+  <div class="controls">
+    <button onclick="checkAnswers()">Check answers</button>
+    <button class="secondary" onclick="resetExercise()">Reset</button>
+  </div>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+const phrases = [
+  'Are you for real?',
+  'You’re on fire!',
+  '100% with you on that!',
+  'That’s disappointing.',
+  'That’s not what I expected, and it’s a letdown.',
+  'Why the long face?',
+  'Mind blown!',
+  'I’m here for it!'
+];
+
+const bank = document.getElementById('bank');
+function shuffle(arr){return arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);}
+
+function makeChip(text){
+  const chip=document.createElement('div');
+  chip.className='chip';
+  chip.draggable=true;
+  chip.textContent=text;
+  chip.dataset.value=text;
+  chip.addEventListener('dragstart', e=>{
+    e.dataTransfer.setData('text/plain', text);
+    setTimeout(()=>chip.style.opacity='.45',0);
+  });
+  chip.addEventListener('dragend', ()=>chip.style.opacity='1');
+  return chip;
+}
+
+function loadBank(){
+  bank.innerHTML='';
+  shuffle(phrases).forEach(p=>bank.appendChild(makeChip(p)));
+}
+
+function clearGap(gap){
+  if(gap.dataset.value){
+    bank.appendChild(makeChip(gap.dataset.value));
+  }
+  gap.textContent='drop here';
+  gap.dataset.value='';
+  gap.className='gap';
+}
+
+document.querySelectorAll('.gap').forEach(gap=>{
+  gap.addEventListener('dragover', e=>e.preventDefault());
+  gap.addEventListener('drop', e=>{
+    e.preventDefault();
+    const text=e.dataTransfer.getData('text/plain');
+    const oldChip=[...document.querySelectorAll('.chip')].find(c=>c.dataset.value===text);
+    if(oldChip) oldChip.remove();
+    if(gap.dataset.value) bank.appendChild(makeChip(gap.dataset.value));
+    gap.textContent=text;
+    gap.dataset.value=text;
+    gap.className='gap filled';
+    document.getElementById('result').textContent='';
+  });
+  gap.addEventListener('click',()=>clearGap(gap));
+});
+
+function checkAnswers(){
+  let correct=0;
+  const gaps=document.querySelectorAll('.gap');
+  gaps.forEach(g=>{
+    g.classList.remove('correct','wrong');
+    if(g.dataset.value===g.dataset.answer){g.classList.add('correct'); correct++;}
+    else g.classList.add('wrong');
+  });
+  document.getElementById('result').textContent=`${correct} / ${gaps.length} correct`;
+}
+
+function resetExercise(){
+  document.querySelectorAll('.gap').forEach(g=>{
+    g.textContent='drop here';
+    g.dataset.value='';
+    g.className='gap';
+  });
+  document.getElementById('result').textContent='';
+  loadBank();
+}
+
+loadBank();
+</script>
+</body>
+</html>
