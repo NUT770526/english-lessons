@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Complete the Dialogue</title>
+<style>
+  body{font-family:Arial,sans-serif;background:#fff;margin:0;padding:18px;color:#111}.wrap{max-width:900px;margin:auto}.title{font-size:22px;font-weight:700;color:#073bb8;display:flex;align-items:center;gap:10px;margin-bottom:18px}.icon{width:38px;height:38px;border:2px solid #9fb5ff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#073bb8}.instructions{font-size:15px;margin-bottom:22px;line-height:1.4}.instructions div:before{content:'●';color:#b7d4ff;margin-right:8px}.row{display:flex;align-items:center;margin:18px 0;gap:10px}.row.friend{justify-content:flex-end}.tag{border:2px solid #ffb21a;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:#f5a000;background:#fff;font-weight:700;flex:0 0 auto}.tag.friendtag{border-color:#3fc8ff;color:#20aeea;font-size:12px;text-align:center;line-height:1.1}.bubble{border:2px solid #ffb21a;border-radius:5px;padding:10px 12px;max-width:650px;background:white;position:relative;font-size:15px}.bubble.friendbubble{border-color:#3fc8ff}.answer{width:360px;max-width:70vw;min-height:28px;border:1px solid #aaa;border-radius:6px;padding:8px 10px;font-size:15px}.answer:focus{outline:none;border-color:#ffb21a;box-shadow:0 0 0 2px #fff1cf}.correct{background:#e7ffe7!important;border-color:#20a020!important}.wrong{background:#ffe9e9!important;border-color:#d33!important}.controls{margin-top:22px;display:flex;gap:12px;flex-wrap:wrap}button{border:0;border-radius:7px;padding:10px 16px;font-weight:700;cursor:pointer;background:#073bb8;color:white}.reset{background:#777}.show{background:#12a05c}.result{font-weight:700;margin-top:12px;font-size:17px}.answers{display:none;margin-top:14px;background:#f4f7ff;border-left:5px solid #6c95ff;padding:12px 16px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title"><div class="icon">🎧</div>Complete the dialogue</div>
+  <div class="instructions">
+    <div>Your friend is nervous about a big presentation at school tomorrow.</div>
+    <div>Type your own responses in the gaps.</div>
+  </div>
+
+  <div class="row"><div class="tag">You</div><div class="bubble"><input class="answer" data-correct="Why are you nervous?" placeholder="Type here..."></div></div>
+  <div class="row friend"><div class="bubble friendbubble">I’m so nervous about my presentation tomorrow.</div><div class="tag friendtag">Your<br>friend</div></div>
+
+  <div class="row"><div class="tag">You</div><div class="bubble"><input class="answer" data-correct="What's the matter?" placeholder="Type here..."></div></div>
+  <div class="row friend"><div class="bubble friendbubble">I’ve been practising a lot, but I’m worried I’ll mess up in front of everyone.</div><div class="tag friendtag">Your<br>friend</div></div>
+
+  <div class="row"><div class="tag">You</div><div class="bubble"><input class="answer" data-correct="Are you for real? You're on fire!" placeholder="Type here..."></div></div>
+  <div class="row friend"><div class="bubble friendbubble">What if I completely forget my speech?</div><div class="tag friendtag">Your<br>friend</div></div>
+
+  <div class="row"><div class="tag">You</div><div class="bubble"><input class="answer" data-correct="I'm so sorry. I'm here for you." placeholder="Type here..."></div></div>
+  <div class="row friend"><div class="bubble friendbubble">I don’t know, it just feels like everything could go wrong.</div><div class="tag friendtag">Your<br>friend</div></div>
+
+  <div class="row"><div class="tag">You</div><div class="bubble"><input class="answer" data-correct="You can do this!" placeholder="Type here..."></div></div>
+  <div class="row friend"><div class="bubble friendbubble">I guess you’re right, but it’s still scary.</div><div class="tag friendtag">Your<br>friend</div></div>
+
+  <div class="row"><div class="tag">You</div><div class="bubble"><input class="answer" data-correct="100% with you on that." placeholder="Type here..."></div></div>
+  <div class="row friend"><div class="bubble friendbubble">Thanks for believing in me. I think I’ll do it!</div><div class="tag friendtag">Your<br>friend</div></div>
+
+  <div class="row"><div class="tag">You</div><div class="bubble"><input class="answer" data-correct="Mind blown!" placeholder="Type here..."></div></div>
+
+  <div class="controls">
+    <button onclick="checkAnswers()">Check answers</button>
+    <button class="show" onclick="showAnswers()">Show answers</button>
+    <button class="reset" onclick="resetExercise()">Reset</button>
+  </div>
+  <div class="result" id="result"></div>
+  <div class="answers" id="answers"></div>
+</div>
+<script>
+function normalise(text){
+  return text.trim().toLowerCase().replace(/[’]/g,"'").replace(/[.,!?]+$/g,'').replace(/\s+/g,' ');
+}
+function checkAnswers(){
+  let total=0, score=0;
+  document.querySelectorAll('.answer').forEach(input=>{
+    total++;
+    input.classList.remove('correct','wrong');
+    if(normalise(input.value)===normalise(input.dataset.correct)){
+      input.classList.add('correct'); score++;
+    } else {
+      input.classList.add('wrong');
+    }
+  });
+  document.getElementById('result').textContent=`Your score: ${score}/${total}`;
+}
+function showAnswers(){
+  const box=document.getElementById('answers');
+  const answers=[...document.querySelectorAll('.answer')].map((i,n)=>`${n+1}. ${i.dataset.correct}`).join('<br>');
+  box.innerHTML='<b>Possible answers:</b><br>'+answers;
+  box.style.display='block';
+}
+function resetExercise(){
+  document.querySelectorAll('.answer').forEach(input=>{input.value='';input.classList.remove('correct','wrong');});
+  document.getElementById('result').textContent='';
+  document.getElementById('answers').style.display='none';
+}
+</script>
+</body>
+</html>
