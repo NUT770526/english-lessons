@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Order Vocabulary — Interactive Practice</title>
+<style>
+:root{
+  --pink:#ff5fa2; --purple:#7b4de3; --blue:#3a86ff; --green:#2fb344;
+  --yellow:#ffe66d; --bg:#fff8fb; --card:#fff; --text:#202124;
+  --ok:#d8f8dd; --bad:#ffdcdc;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; padding:0; font-family:Arial, "Trebuchet MS", sans-serif;
+  background:linear-gradient(135deg,#fff8fb,#eef6ff); color:var(--text);
+}
+header{
+  text-align:center; padding:28px 16px 22px;
+  background:linear-gradient(120deg,#ffe0ef,#e8e2ff,#e6f7ff);
+  border-bottom:5px solid #fff;
+}
+h1{margin:0;font-size:clamp(30px,5vw,52px);color:#26306f}
+.subtitle{max-width:950px;margin:12px auto 0;font-size:18px;line-height:1.45}
+main{max-width:1100px;margin:24px auto;padding:0 16px 42px}
+.card{
+  background:var(--card); border-radius:24px; padding:22px; margin:22px 0;
+  box-shadow:0 8px 24px #00000014; border:2px solid #fff;
+}
+h2{margin:0 0 8px;color:#26306f;font-size:28px}
+.note{
+  background:#fff4c2; border:2px dashed #f0b600; border-radius:16px;
+  padding:12px 14px; margin:12px 0 18px; font-size:17px;
+}
+.row{
+  display:flex; gap:12px; align-items:center; justify-content:space-between;
+  padding:12px; margin:10px 0; border:2px solid #edf0f5; border-radius:16px;
+  background:#fbfdff;
+}
+.row p{margin:0;font-size:18px;line-height:1.35}
+select,input{
+  font-size:17px; padding:9px 10px; border-radius:12px;
+  border:2px solid #d9dce3; background:white; min-width:230px; max-width:100%;
+}
+button{
+  border:0; border-radius:16px; padding:11px 18px; margin:8px 8px 0 0;
+  font-size:17px; font-weight:bold; cursor:pointer; background:var(--purple);
+  color:white; box-shadow:0 5px 12px #00000025;
+}
+button.secondary{background:#6c757d}
+button:hover{filter:brightness(.98);transform:translateY(-1px)}
+.result{margin-top:14px;font-size:20px;font-weight:bold}
+.correct{border-color:#78d39b!important;background:var(--ok)!important}
+.wrong{border-color:#ff9b9b!important;background:var(--bad)!important}
+.grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px;
+}
+.flip{
+  min-height:120px; border-radius:20px; border:2px solid #ddd; padding:14px;
+  background:linear-gradient(135deg,#fff,#f7f2ff); cursor:pointer;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  text-align:center; font-size:19px; font-weight:bold; transition:.15s;
+}
+.flip:hover{transform:translateY(-2px);box-shadow:0 8px 18px #0001}
+.flip small{display:block;font-weight:normal;color:#555;margin-top:8px;font-size:14px}
+.wordbank{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.chip{
+  padding:8px 12px; border-radius:999px; background:#eef0ff; border:2px solid #d9dcff;
+  font-weight:bold;
+}
+.progress{
+  height:16px;background:#eef0ff;border-radius:999px;overflow:hidden;margin-top:14px
+}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--purple));transition:.2s}
+footer{text-align:center;color:#555;padding:18px}
+@media(max-width:700px){.row{flex-direction:column;align-items:flex-start} select,input{min-width:100%;}}
+</style>
+</head>
+<body>
+<header>
+<h1>New Words Practice 🌸</h1>
+<p class="subtitle">4 інтерактивні вправи для запам’ятовування слів. Натискай, обирай, вставляй і перевіряй себе. Чим більше повторень — тим легше мозку запам’ятати слова.</p>
+</header>
+
+<main>
+<section class="card">
+<h2>Вправа 1. Картки-пам’яталки</h2>
+<div class="note">Натисни на картку: спочатку бачиш англійське слово, потім переклад і приклад.</div>
+<div class="grid" id="cards"></div>
+</section>
+
+<section class="card">
+<h2>Вправа 2. Обери правильний переклад</h2>
+<div class="note">Прочитай англійське слово або фразу і вибери правильний переклад.</div>
+<div id="ex2"></div>
+<button onclick="checkEx2()">Перевірити</button>
+<button class="secondary" onclick="resetEx('ex2','res2')">Очистити</button>
+<div class="result" id="res2"></div>
+<div class="progress"><div class="bar" id="bar2"></div></div>
+</section>
+
+<section class="card">
+<h2>Вправа 3. Встав слово в речення</h2>
+<div class="note">Вибери слово з варіантів. Усі речення прості, щоб було легше запам’ятати значення.</div>
+<div id="ex3"></div>
+<button onclick="checkEx3()">Перевірити</button>
+<button class="secondary" onclick="resetEx('ex3','res3')">Очистити</button>
+<div class="result" id="res3"></div>
+<div class="progress"><div class="bar" id="bar3"></div></div>
+</section>
+
+<section class="card">
+<h2>Вправа 4. Угадай слово за ситуацією</h2>
+<div class="note">Прочитай українську ситуацію і вибери слово, яке найкраще підходить.</div>
+<div id="ex4"></div>
+<button onclick="checkEx4()">Перевірити</button>
+<button class="secondary" onclick="resetEx('ex4','res4')">Очистити</button>
+<div class="result" id="res4"></div>
+<div class="progress"><div class="bar" id="bar4"></div></div>
+</section>
+
+<section class="card">
+<h2>Вправа 5. Міні-диктант</h2>
+<div class="note">Напиши англійське слово або фразу за українською підказкою. Маленькі/великі літери не важливі.</div>
+<div id="ex5"></div>
+<button onclick="checkEx5()">Перевірити</button>
+<button class="secondary" onclick="resetInputs()">Очистити</button>
+<div class="result" id="res5"></div>
+<div class="progress"><div class="bar" id="bar5"></div></div>
+</section>
+</main>
+
+<footer>Good luck! Practice in no time 😉</footer>
+
+<script>
+const vocab = [
+ {en:"angry", ua:"сердитий, злий", ex:"She is angry."},
+ {en:"deal with", ua:"мати справу з; вирішувати", ex:"I deal with this problem every day."},
+ {en:"focus on", ua:"зосереджуватися на", ex:"We focus on English."},
+ {en:"to be good at", ua:"добре вміти; бути здібним до", ex:"He is good at math."},
+ {en:"try", ua:"намагатися; пробувати", ex:"They try every day."},
+ {en:"guess", ua:"здогадуватися; вгадувати", ex:"I guess the answer."},
+ {en:"mean", ua:"означати", ex:"What does this word mean?"},
+ {en:"definitions", ua:"визначення", ex:"We learn new definitions."},
+ {en:"the most interesting", ua:"найцікавіший", ex:"This book is the most interesting."},
+ {en:"the least interesting", ua:"найменш цікавий", ex:"This lesson is the least interesting."},
+ {en:"large", ua:"великий, крупний", ex:"It is a large house."},
+ {en:"a shopping mall", ua:"торговельний центр", ex:"We go to the shopping mall on Saturdays."},
+ {en:"high", ua:"високий", ex:"The mountain is high."},
+ {en:"light", ua:"легкий; світлий; світло", ex:"This bag is light."},
+ {en:"highlighted", ua:"виділений", ex:"The highlighted word is important."},
+ {en:"mature", ua:"зрілий", ex:"She is very mature."},
+ {en:"in no time", ua:"дуже швидко; миттєво", ex:"He finishes his homework in no time."},
+ {en:"somebody", ua:"хтось", ex:"Somebody calls you."},
+ {en:"give somebody a hard time", ua:"дошкуляти комусь", ex:"My brother gives me a hard time."},
+ {en:"siblings", ua:"брати й сестри", ex:"I have two siblings."},
+ {en:"suitable", ua:"відповідний; придатний", ex:"This book is suitable for children."}
+];
+
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5)}
+function options(correct){
+  let wrong = shuffle(vocab.filter(v=>v.ua!==correct).map(v=>v.ua)).slice(0,3);
+  return shuffle([correct,...wrong]);
+}
+function optionsEn(correct){
+  let wrong = shuffle(vocab.filter(v=>v.en!==correct).map(v=>v.en)).slice(0,3);
+  return shuffle([correct,...wrong]);
+}
+
+cards.innerHTML = vocab.map((v,i)=>`
+ <div class="flip" onclick="flipCard(this)" data-front="${v.en}" data-back="${v.ua}<small>${v.ex}</small>">
+   ${v.en}<small>натисни, щоб побачити переклад</small>
+ </div>
+`).join("");
+function flipCard(el){
+  if(el.dataset.side==="back"){
+    el.innerHTML = el.dataset.front + "<small>натисни, щоб побачити переклад</small>";
+    el.dataset.side="front";
+  } else {
+    el.innerHTML = el.dataset.back;
+    el.dataset.side="back";
+  }
+}
+
+const ex2Data = shuffle(vocab).slice(0,15);
+ex2.innerHTML = ex2Data.map((v,i)=>`
+ <div class="row" id="ex2_q${i}">
+   <p>${i+1}. <b>${v.en}</b></p>
+   <select id="ex2_a${i}">
+     <option value="">обери переклад</option>
+     ${options(v.ua).map(o=>`<option value="${o}">${o}</option>`).join("")}
+   </select>
+ </div>
+`).join("");
+
+const ex3Data = [
+ ["When I am not happy, I am sometimes ___.","angry"],
+ ["At school, we ___ on English words.","focus on"],
+ ["I ___ this problem every day.","deal with"],
+ ["My friend can ___ the answer.","guess"],
+ ["We learn new ___ in English.","definitions"],
+ ["This story is ___ for teenagers.","suitable"],
+ ["I have two brothers. They are my ___.","siblings"],
+ ["This bag is not heavy. It is ___.","light"],
+ ["The building is very ___.","high"],
+ ["We go to ___ on Saturday.","a shopping mall"],
+ ["This house is very big. It is ___.","large"],
+ ["I finish this task very quickly, ___.","in no time"],
+ ["This word is yellow. It is ___.","highlighted"],
+ ["I ___ to remember new words.","try"],
+ ["This lesson is not boring. It is ___.","the most interesting"]
+];
+ex3.innerHTML = ex3Data.map((x,i)=>`
+ <div class="row" id="ex3_q${i}">
+   <p>${i+1}. ${x[0]}</p>
+   <select id="ex3_a${i}">
+     <option value="">обери слово</option>
+     ${optionsEn(x[1]).map(o=>`<option value="${o}">${o}</option>`).join("")}
+   </select>
+ </div>
+`).join("");
+
+const ex4Data = [
+ ["Ти злишся або сердишся.", "angry"],
+ ["Ти вирішуєш проблему або маєш з нею справу.", "deal with"],
+ ["Ти концентруєш увагу на чомусь.", "focus on"],
+ ["Ти добре вмієш щось робити.", "to be good at"],
+ ["Ти намагаєшся зробити завдання.", "try"],
+ ["Ти не знаєш точно, але пробуєш відповісти.", "guess"],
+ ["Ти питаєш, що слово означає.", "mean"],
+ ["Це пояснення значень слів.", "definitions"],
+ ["Це найцікавіша річ із усіх.", "the most interesting"],
+ ["Це найменш цікава річ із усіх.", "the least interesting"],
+ ["Це великий будинок або великий розмір.", "large"],
+ ["Місце з багатьма магазинами.", "a shopping mall"],
+ ["Гора або будівля може бути такою.", "high"],
+ ["Сумка не важка.", "light"],
+ ["Слово виділили кольором.", "highlighted"],
+ ["Людина поводиться доросло і зріло.", "mature"],
+ ["Дуже швидко.", "in no time"],
+ ["Невідома людина, хтось.", "somebody"],
+ ["Хтось дратує тебе або дошкуляє.", "give somebody a hard time"],
+ ["Брати й сестри.", "siblings"]
+];
+ex4.innerHTML = ex4Data.map((x,i)=>`
+ <div class="row" id="ex4_q${i}">
+   <p>${i+1}. ${x[0]}</p>
+   <select id="ex4_a${i}">
+     <option value="">обери слово</option>
+     ${optionsEn(x[1]).map(o=>`<option value="${o}">${o}</option>`).join("")}
+   </select>
+ </div>
+`).join("");
+
+const ex5Data = [
+ ["сердитий, злий","angry"],
+ ["мати справу з; вирішувати","deal with"],
+ ["зосереджуватися на","focus on"],
+ ["добре вміти","to be good at"],
+ ["намагатися; пробувати","try"],
+ ["здогадуватися; вгадувати","guess"],
+ ["означати","mean"],
+ ["визначення","definitions"],
+ ["найцікавіший","the most interesting"],
+ ["найменш цікавий","the least interesting"],
+ ["великий, крупний","large"],
+ ["торговельний центр","a shopping mall"],
+ ["високий","high"],
+ ["легкий; світлий; світло","light"],
+ ["виділений","highlighted"]
+];
+ex5.innerHTML = ex5Data.map((x,i)=>`
+ <div class="row" id="ex5_q${i}">
+   <p>${i+1}. <b>${x[0]}</b></p>
+   <input id="ex5_a${i}" placeholder="напиши англійською">
+ </div>
+`).join("");
+
+function checkSelect(prefix, data, resultId, barId, mode){
+  let score=0;
+  data.forEach((item,i)=>{
+    const q=document.getElementById(`${prefix}_q${i}`);
+    const a=document.getElementById(`${prefix}_a${i}`).value;
+    q.classList.remove("correct","wrong");
+    let ans = mode==="ua" ? item.ua : (Array.isArray(item) ? item[1] : item.en);
+    if(a===ans){score++;q.classList.add("correct")} else {q.classList.add("wrong")}
+  });
+  document.getElementById(resultId).innerHTML = `Результат: ${score}/${data.length} ${score===data.length?"🎉 Ідеально!":"💪 Повтори ще раз!"}`;
+  document.getElementById(barId).style.width = (score/data.length*100)+"%";
+}
+function checkEx2(){checkSelect("ex2",ex2Data,"res2","bar2","ua")}
+function checkEx3(){checkSelect("ex3",ex3Data,"res3","bar3","en")}
+function checkEx4(){checkSelect("ex4",ex4Data,"res4","bar4","en")}
+
+function norm(s){return s.trim().toLowerCase().replace(/\s+/g," ")}
+function checkEx5(){
+  let score=0;
+  ex5Data.forEach((x,i)=>{
+    const q=document.getElementById(`ex5_q${i}`);
+    const a=document.getElementById(`ex5_a${i}`).value;
+    q.classList.remove("correct","wrong");
+    if(norm(a)===norm(x[1])){score++;q.classList.add("correct")} else {q.classList.add("wrong")}
+  });
+  res5.innerHTML = `Результат: ${score}/${ex5Data.length} ${score===ex5Data.length?"🎉 Great!":"💪 Спробуй ще раз!"}`;
+  bar5.style.width = (score/ex5Data.length*100)+"%";
+}
+
+function resetEx(prefix,resultId){
+  document.querySelectorAll(`[id^="${prefix}_q"]`).forEach(q=>q.classList.remove("correct","wrong"));
+  document.querySelectorAll(`[id^="${prefix}_a"]`).forEach(s=>s.value="");
+  document.getElementById(resultId).innerHTML="";
+  const bar = document.getElementById("bar"+prefix.slice(-1));
+  if(bar) bar.style.width="0";
+}
+function resetInputs(){
+  document.querySelectorAll(`[id^="ex5_q"]`).forEach(q=>q.classList.remove("correct","wrong"));
+  document.querySelectorAll(`[id^="ex5_a"]`).forEach(s=>s.value="");
+  res5.innerHTML=""; bar5.style.width="0";
+}
+</script>
+</body>
+</html>
