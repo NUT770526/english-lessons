@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Games — Easy Practice</title>
+<style>
+:root{
+  --blue:#3a86ff; --yellow:#ffe66d; --pink:#ff5fa2; --green:#2fb344; --purple:#7b4de3;
+  --ok:#dcfce7; --bad:#fee2e2; --card:#fff; --ink:#1f2937;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:Arial, "Trebuchet MS", sans-serif;
+  background:linear-gradient(135deg,#f1f8ff,#fff7fb); color:var(--ink);
+}
+header{
+  text-align:center; padding:26px 14px;
+  background:linear-gradient(120deg,#dbeafe,#fce7f3,#ede9fe);
+  border-bottom:5px solid white;
+}
+h1{margin:0;font-size:clamp(30px,6vw,52px);color:#24306f}
+.subtitle{font-size:18px;max-width:900px;margin:12px auto 0;line-height:1.4}
+main{max-width:1080px;margin:24px auto;padding:0 16px 40px}
+.card{
+  background:var(--card); border-radius:24px; padding:22px; margin:22px 0;
+  box-shadow:0 8px 24px #00000014;
+}
+h2{margin:0 0 10px;color:#24306f;font-size:28px}
+.note{
+  background:#fff1a8; border:2px dashed #eab308; border-radius:16px;
+  padding:12px 14px; margin:12px 0 18px; font-size:17px;
+}
+.grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px;
+}
+.flip{
+  min-height:115px; border-radius:20px; border:2px solid #d9dcff; padding:14px;
+  background:linear-gradient(135deg,#fff,#f3efff); cursor:pointer; text-align:center;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  font-size:20px; font-weight:bold; transition:.15s;
+}
+.flip:hover{transform:translateY(-2px); box-shadow:0 8px 18px #0001}
+.flip small{font-size:14px; color:#555; margin-top:8px; font-weight:normal}
+.row{
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:12px; margin:10px 0; border:2px solid #edf0f5; border-radius:16px;
+  background:#fbfdff;
+}
+.row p{margin:0;font-size:18px;line-height:1.35}
+select,input{
+  font-size:17px; padding:9px 10px; border-radius:12px;
+  border:2px solid #d9dce3; background:white; min-width:240px; max-width:100%;
+}
+button{
+  border:0;border-radius:16px;padding:11px 18px;margin:8px 8px 0 0;
+  font-size:17px;font-weight:bold;cursor:pointer;background:var(--purple);
+  color:white;box-shadow:0 5px 12px #00000025;
+}
+button.secondary{background:#64748b}
+.correct{border-color:#74d99f!important;background:var(--ok)!important}
+.wrong{border-color:#ff9b9b!important;background:var(--bad)!important}
+.result{font-size:20px;font-weight:bold;margin-top:14px}
+.matchWrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.matchCol{background:#fbfdff;border:2px solid #edf0f5;border-radius:18px;padding:12px}
+.matchBtn{
+  display:block;width:100%;margin:7px 0;background:#eef0ff;color:#24306f;
+  box-shadow:none;border:2px solid #d9dcff;text-align:left;
+}
+.matchBtn.selected{background:#ffe0ef;border-color:#ff5fa2}
+.matchBtn.done{background:#dcfce7;border-color:#2fb344;color:#14532d}
+.progress{height:16px;background:#eef0ff;border-radius:999px;overflow:hidden;margin-top:14px}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--purple));transition:.25s}
+.wordbank{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chip{padding:8px 12px;border-radius:999px;background:#eef0ff;border:2px solid #d9dcff;font-weight:bold}
+footer{text-align:center;color:#555;padding:18px}
+@media(max-width:760px){
+  .row{flex-direction:column;align-items:flex-start}
+  select,input{min-width:100%}
+  .matchWrap{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>New Words Games 🎮</h1>
+<p class="subtitle">4 легкі інтерактивні ігри для запам’ятовування слів. Натискай, обирай, пиши — і тренуй слова без стресу.</p>
+</header>
+
+<main>
+<section class="card">
+<h2>Гра 1. Картки-пам’яталки</h2>
+<div class="note">Натисни на картку, щоб побачити переклад і приклад.</div>
+<div class="grid" id="cards"></div>
+</section>
+
+<section class="card">
+<h2>Гра 2. Обери переклад</h2>
+<div class="note">Прочитай слово англійською і вибери правильний переклад.</div>
+<div id="quiz"></div>
+<button onclick="checkQuiz()">Перевірити</button>
+<button class="secondary" onclick="resetSelect('quiz','quizResult','bar2')">Очистити</button>
+<div class="result" id="quizResult"></div>
+<div class="progress"><div class="bar" id="bar2"></div></div>
+</section>
+
+<section class="card">
+<h2>Гра 3. Встав слово в речення</h2>
+<div class="note">Обери слово, яке підходить у речення. Усі речення дуже прості.</div>
+<div class="wordbank" id="bank"></div>
+<div id="sentences"></div>
+<button onclick="checkSentences()">Перевірити</button>
+<button class="secondary" onclick="resetSelect('sentences','sentResult','bar3')">Очистити</button>
+<div class="result" id="sentResult"></div>
+<div class="progress"><div class="bar" id="bar3"></div></div>
+</section>
+
+<section class="card">
+<h2>Гра 4. Знайди пару</h2>
+<div class="note">Натисни англійське слово, потім його переклад. Якщо пара правильна — вона стане зеленою.</div>
+<div class="matchWrap">
+  <div class="matchCol"><h3>English</h3><div id="left"></div></div>
+  <div class="matchCol"><h3>Українська</h3><div id="right"></div></div>
+</div>
+<button class="secondary" onclick="resetMatch()">Почати знову</button>
+<div class="result" id="matchResult"></div>
+</section>
+
+<section class="card">
+<h2>Гра 5. Міні-диктант</h2>
+<div class="note">Напиши слово англійською за українською підказкою. Великі/малі літери не важливі.</div>
+<div id="write"></div>
+<button onclick="checkWrite()">Перевірити</button>
+<button class="secondary" onclick="resetWrite()">Очистити</button>
+<div class="result" id="writeResult"></div>
+<div class="progress"><div class="bar" id="bar5"></div></div>
+</section>
+</main>
+
+<footer>Little steps every day — and words become easy 💙</footer>
+
+<script>
+const words = [
+ {en:"list", ua:"список", ex:"I make a list."},
+ {en:"meet", ua:"зустрічати", ex:"I meet my friend."},
+ {en:"I need", ua:"мені потрібно", ex:"I need help."},
+ {en:"laptop", ua:"ноутбук", ex:"I use my laptop every day."},
+ {en:"notebook", ua:"зошит", ex:"Write it in your notebook."},
+ {en:"notes", ua:"нотатки", ex:"Take notes during the lesson."},
+ {en:"spend", ua:"витрачати", ex:"Let's not spend it."},
+ {en:"send", ua:"надсилати", ex:"Please send me the file."},
+ {en:"money", ua:"гроші", ex:"I need some money."},
+ {en:"sell", ua:"продавати", ex:"They sell books online."},
+ {en:"parents", ua:"батьки", ex:"My parents are at home."},
+ {en:"size", ua:"розмір", ex:"I need size 7."},
+ {en:"line", ua:"рядок, лінія", ex:"Please type 5 lines."},
+ {en:"let me see", ua:"дай мені подумати", ex:"Let me see."},
+ {en:"file", ua:"файл", ex:"Open the file, please."},
+ {en:"time", ua:"час; раз", ex:"5 times."}
+];
+
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5)}
+function opts(correct){
+  let wrong = shuffle(words.filter(w=>w.ua!==correct).map(w=>w.ua)).slice(0,3);
+  return shuffle([correct,...wrong]);
+}
+function optsEn(correct){
+  let wrong = shuffle(words.filter(w=>w.en!==correct).map(w=>w.en)).slice(0,3);
+  return shuffle([correct,...wrong]);
+}
+
+// Game 1
+cards.innerHTML = words.map(w=>`
+  <div class="flip" onclick="flip(this)" data-front="${w.en}" data-back="${w.ua}<small>${w.ex}</small>">
+    ${w.en}<small>натисни</small>
+  </div>
+`).join("");
+function flip(el){
+  if(el.dataset.side==="back"){
+    el.innerHTML = el.dataset.front + "<small>натисни</small>";
+    el.dataset.side="front";
+  } else {
+    el.innerHTML = el.dataset.back;
+    el.dataset.side="back";
+  }
+}
+
+// Game 2
+const quizData = words;
+quiz.innerHTML = quizData.map((w,i)=>`
+  <div class="row" id="quiz_q${i}">
+    <p>${i+1}. <b>${w.en}</b></p>
+    <select id="quiz_a${i}">
+      <option value="">обери переклад</option>
+      ${opts(w.ua).map(o=>`<option value="${o}">${o}</option>`).join("")}
+    </select>
+  </div>
+`).join("");
+function checkQuiz(){checkSelect("quiz", quizData.map(w=>w.ua), "quizResult", "bar2")}
+
+// Game 3
+const sentData = [
+ ["I make a shopping ___.","list"],
+ ["I ___ my friend after school.","meet"],
+ ["___ help, please.","I need"],
+ ["I use my ___ for homework.","laptop"],
+ ["Write the word in your ___.","notebook"],
+ ["Take ___ during the lesson.","notes"],
+ ["Do not ___ all your money.","spend"],
+ ["Please ___ me the file.","send"],
+ ["I need some ___.","money"],
+ ["They ___ books online.","sell"],
+ ["My ___ are at home.","parents"],
+ ["I need ___ 7.","size"],
+ ["Please type five ___.","lines"],
+ ["___, I think I know the answer.","let me see"],
+ ["Open the ___, please.","file"],
+ ["I read this word five ___.","times"]
+];
+bank.innerHTML = ["list","meet","I need","laptop","notebook","notes","spend","send","money","sell","parents","size","lines","let me see","file","times"].map(w=>`<span class="chip">${w}</span>`).join("");
+sentences.innerHTML = sentData.map((x,i)=>`
+  <div class="row" id="sentences_q${i}">
+    <p>${i+1}. ${x[0]}</p>
+    <select id="sentences_a${i}">
+      <option value="">обери слово</option>
+      ${optsEn(x[1]).map(o=>`<option value="${o}">${o}</option>`).join("")}
+    </select>
+  </div>
+`).join("");
+function checkSentences(){checkSelect("sentences", sentData.map(x=>x[1]), "sentResult", "bar3")}
+
+function checkSelect(prefix, answers, resId, barId){
+  let score=0;
+  answers.forEach((ans,i)=>{
+    const q=document.getElementById(`${prefix}_q${i}`);
+    const a=document.getElementById(`${prefix}_a${i}`).value;
+    q.classList.remove("correct","wrong");
+    if(a===ans){score++;q.classList.add("correct")}else{q.classList.add("wrong")}
+  });
+  document.getElementById(resId).innerHTML = `Результат: ${score}/${answers.length} ${score===answers.length?"🎉 Супер!":"💪 Спробуй ще раз!"}`;
+  document.getElementById(barId).style.width = (score/answers.length*100)+"%";
+}
+function resetSelect(prefix,resId,barId){
+  document.querySelectorAll(`[id^="${prefix}_q"]`).forEach(q=>q.classList.remove("correct","wrong"));
+  document.querySelectorAll(`[id^="${prefix}_a"]`).forEach(s=>s.value="");
+  document.getElementById(resId).innerHTML="";
+  document.getElementById(barId).style.width="0";
+}
+
+// Game 4
+let leftChoice=null, rightChoice=null, matchScore=0;
+const matchItems = shuffle(words).slice(0,12);
+function safeId(s){return s.replaceAll(' ','_').replaceAll(';','').replaceAll('/','_')}
+function renderMatch(){
+  left.innerHTML = shuffle(matchItems).map(w=>`<button class="matchBtn" id="l_${safeId(w.en)}" onclick="pickLeft('${w.en}')">${w.en}</button>`).join("");
+  right.innerHTML = shuffle(matchItems).map(w=>`<button class="matchBtn" id="r_${safeId(w.en)}" onclick="pickRight('${w.en}')">${w.ua}</button>`).join("");
+  matchResult.textContent = "Пари: 0/12";
+}
+function pickLeft(en){
+  leftChoice=en;
+  document.querySelectorAll("#left .matchBtn").forEach(b=>b.classList.remove("selected"));
+  document.getElementById("l_"+safeId(en)).classList.add("selected");
+  tryMatch();
+}
+function pickRight(en){
+  rightChoice=en;
+  document.querySelectorAll("#right .matchBtn").forEach(b=>b.classList.remove("selected"));
+  document.getElementById("r_"+safeId(en)).classList.add("selected");
+  tryMatch();
+}
+function tryMatch(){
+  if(!leftChoice || !rightChoice) return;
+  if(leftChoice===rightChoice){
+    document.getElementById("l_"+safeId(leftChoice)).classList.add("done");
+    document.getElementById("r_"+safeId(rightChoice)).classList.add("done");
+    document.getElementById("l_"+safeId(leftChoice)).disabled=true;
+    document.getElementById("r_"+safeId(rightChoice)).disabled=true;
+    matchScore++;
+    matchResult.textContent = `Пари: ${matchScore}/12 ${matchScore===12?"🎉 Усі пари знайдено!":""}`;
+  }
+  document.querySelectorAll(".matchBtn").forEach(b=>b.classList.remove("selected"));
+  leftChoice=null; rightChoice=null;
+}
+function resetMatch(){leftChoice=null;rightChoice=null;matchScore=0;renderMatch();}
+renderMatch();
+
+// Game 5
+const writeData = [
+ ["список","list"],["зустрічати","meet"],["мені потрібно","I need"],["ноутбук","laptop"],
+ ["зошит","notebook"],["нотатки","notes"],["витрачати","spend"],["надсилати","send"],
+ ["гроші","money"],["продавати","sell"],["батьки","parents"],["розмір","size"],
+ ["рядок / лінія","line"],["дай мені подумати","let me see"],["файл","file"],["час / раз","time"]
+];
+write.innerHTML = writeData.map((x,i)=>`
+  <div class="row" id="write_q${i}">
+    <p>${i+1}. <b>${x[0]}</b></p>
+    <input id="write_a${i}" placeholder="write in English">
+  </div>
+`).join("");
+function norm(s){return s.trim().toLowerCase().replace(/\s+/g," ")}
+function checkWrite(){
+  let score=0;
+  writeData.forEach((x,i)=>{
+    const q=document.getElementById(`write_q${i}`);
+    const a=document.getElementById(`write_a${i}`).value;
+    q.classList.remove("correct","wrong");
+    if(norm(a)===norm(x[1])){score++;q.classList.add("correct")}else{q.classList.add("wrong")}
+  });
+  writeResult.innerHTML = `Результат: ${score}/${writeData.length} ${score===writeData.length?"🎉 Great job!":"💪 Повтори ще раз!"}`;
+  bar5.style.width = (score/writeData.length*100)+"%";
+}
+function resetWrite(){
+  document.querySelectorAll(`[id^="write_q"]`).forEach(q=>q.classList.remove("correct","wrong"));
+  document.querySelectorAll(`[id^="write_a"]`).forEach(i=>i.value="");
+  writeResult.innerHTML="";
+  bar5.style.width="0";
+}
+</script>
+</body>
+</html>
