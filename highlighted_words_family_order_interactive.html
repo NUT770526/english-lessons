@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Highlighted Words Practice</title>
+<style>
+:root{
+  --bg:#f6f7ff; --card:#ffffff; --ink:#1f2937; --muted:#64748b;
+  --pink:#ff5fa2; --blue:#3a86ff; --purple:#7c3aed; --green:#16a34a;
+  --yellow:#fff3a3; --ok:#dcfce7; --bad:#fee2e2;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; padding:0; font-family:Arial, "Trebuchet MS", sans-serif;
+  background:linear-gradient(135deg,#fff7fb,#eef6ff); color:var(--ink);
+}
+header{
+  padding:28px 16px; text-align:center;
+  background:linear-gradient(120deg,#ffe1ee,#e9e3ff,#e8f7ff);
+  border-bottom:5px solid white;
+}
+h1{margin:0;font-size:clamp(30px,5vw,50px);color:#27306f}
+.subtitle{font-size:18px;max-width:900px;margin:12px auto 0;line-height:1.45}
+main{max-width:1100px;margin:24px auto;padding:0 16px 40px}
+.card{
+  background:var(--card); border-radius:24px; padding:22px; margin:22px 0;
+  box-shadow:0 8px 24px #00000014;
+}
+h2{margin:0 0 10px;color:#27306f;font-size:28px}
+.note{
+  background:#fff7c7; border:2px dashed #f3bd00; border-radius:16px;
+  padding:12px 14px; margin:12px 0 18px; font-size:17px;
+}
+.textbox{
+  background:#fbfdff;border:2px solid #dbeafe;border-radius:20px;padding:18px;
+  line-height:1.6;font-size:18px;
+}
+mark{background:#fff063;border-radius:6px;padding:1px 4px;font-weight:bold}
+.row{
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:12px; margin:10px 0; border:2px solid #edf0f5; border-radius:16px;
+  background:#fbfdff;
+}
+.row p{margin:0;font-size:18px;line-height:1.35}
+select,input{
+  font-size:17px; padding:9px 10px; border-radius:12px;
+  border:2px solid #d9dce3; background:white; min-width:250px; max-width:100%;
+}
+button{
+  border:0;border-radius:16px;padding:11px 18px;margin:8px 8px 0 0;
+  font-size:17px;font-weight:bold;cursor:pointer;background:var(--purple);
+  color:white;box-shadow:0 5px 12px #00000025;
+}
+button.secondary{background:#64748b}
+.correct{border-color:#74d99f!important;background:var(--ok)!important}
+.wrong{border-color:#ff9b9b!important;background:var(--bad)!important}
+.result{font-size:20px;font-weight:bold;margin-top:14px}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;
+}
+.wordcard{
+  background:#f8fbff;border:2px solid #dbeafe;border-radius:18px;padding:15px;
+}
+.wordcard b{color:#27306f;font-size:20px}
+.tip{font-size:14px;color:var(--muted);margin-top:5px}
+.progress{height:16px;background:#eef0ff;border-radius:999px;overflow:hidden;margin-top:14px}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--purple));transition:.25s}
+@media(max-width:700px){
+  .row{flex-direction:column;align-items:flex-start}
+  select,input{min-width:100%}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>Highlighted Words Challenge 🌟</h1>
+<p class="subtitle">Інтерактивна практика за текстом: спочатку знайди значення слів, а потім перевір, чи можеш використати їх у контексті.</p>
+</header>
+
+<main>
+<section class="card">
+<h2>Текст-підказка</h2>
+<div class="textbox">
+<p><b>B.</b> If you’re in the middle, you’re good at keeping everybody happy. You have to deal with older and younger <mark>siblings</mark>, so you’re easy-going, and you don’t like to cause trouble. You’re a good listener, and any job that involves dealing with people is <mark>suitable</mark> for you. Usually you don’t get as much attention as your brothers or sisters do, so you have to fight for it. You worry that people won’t notice you if you keep quiet. You love meeting new people and you’ve got lots of friends. Whatever plans your friends make, you’re <mark>willing</mark> to agree with them.</p>
+<p><b>D.</b> If you’re an only child, you’re more <mark>mature</mark> than people from larger families. You’ve got no problem talking to your teachers because you’re always around adults. You love being in charge, so whatever job you do, you’ll be a success <mark>in no time</mark>. However, your parents can <mark>give you a hard time</mark>, because they always expect you to do well.</p>
+</div>
+</section>
+
+<section class="card">
+<h2>Вправа 1. Match the definitions</h2>
+<div class="note">Вибери highlighted word/phrase, який відповідає визначенню. Це як у підручнику, але з миттєвою перевіркою.</div>
+<div id="ex1"></div>
+<button onclick="checkEx1()">Перевірити</button>
+<button class="secondary" onclick="resetEx('ex1','res1','bar1')">Очистити</button>
+<div class="result" id="res1"></div>
+<div class="progress"><div class="bar" id="bar1"></div></div>
+</section>
+
+<section class="card">
+<h2>Вправа 2. Mini quest: choose the word in context</h2>
+<div class="note">Тут треба зрозуміти слово не окремо, а в реченні. Це допомагає запам’ятати краще.</div>
+<div id="ex2"></div>
+<button onclick="checkEx2()">Перевірити</button>
+<button class="secondary" onclick="resetEx('ex2','res2','bar2')">Очистити</button>
+<div class="result" id="res2"></div>
+<div class="progress"><div class="bar" id="bar2"></div></div>
+</section>
+
+<section class="card">
+<h2>Швидка шпаргалка</h2>
+<div class="grid">
+  <div class="wordcard"><b>suitable</b><br>right for sb/sth<div class="tip">відповідний, придатний</div></div>
+  <div class="wordcard"><b>give somebody a hard time</b><br>to make things difficult for you<div class="tip">дошкуляти, ускладнювати життя</div></div>
+  <div class="wordcard"><b>in no time</b><br>very soon<div class="tip">дуже швидко</div></div>
+  <div class="wordcard"><b>mature</b><br>behaving in a responsible way<div class="tip">зрілий</div></div>
+  <div class="wordcard"><b>siblings</b><br>brothers and sisters<div class="tip">брати й сестри</div></div>
+  <div class="wordcard"><b>willing</b><br>happy to do sth if necessary<div class="tip">готовий щось зробити</div></div>
+</div>
+</section>
+</main>
+
+<script>
+const words = ["suitable","give somebody a hard time","in no time","mature","siblings","willing"];
+
+const ex1Data = [
+  ["right for sb/sth", "suitable"],
+  ["to make things difficult for you", "give somebody a hard time"],
+  ["very soon", "in no time"],
+  ["behaving in a responsible way", "mature"],
+  ["brothers and sisters", "siblings"],
+  ["happy to do sth if necessary", "willing"],
+  ["good or correct for a person or situation", "suitable"],
+  ["ready to agree or help", "willing"],
+  ["acting like an adult", "mature"],
+  ["your brother and your sister", "siblings"],
+  ["very quickly", "in no time"],
+  ["to create problems for someone", "give somebody a hard time"],
+  ["not childish; responsible", "mature"],
+  ["ready to do something", "willing"],
+  ["a phrase that means soon and quickly", "in no time"]
+];
+
+const ex2Data = [
+  ["This book is ___ for teenagers because it is interesting but not too easy.", "suitable"],
+  ["I have two ___: one brother and one sister.", "siblings"],
+  ["My parents sometimes ___ when they ask too many questions about school.", "give somebody a hard time"],
+  ["She is very ___; she always thinks before she speaks.", "mature"],
+  ["I can finish this short exercise ___.", "in no time"],
+  ["My friend is ___ to help me with English words.", "willing"],
+  ["This job is ___ for people who like talking to others.", "suitable"],
+  ["We can learn these six words ___ if we practise every day.", "in no time"],
+  ["My ___ are younger than me, so I often help them.", "siblings"],
+  ["A ___ student does homework without reminders.", "mature"],
+  ["I am ___ to try again after a mistake.", "willing"],
+  ["Difficult homework can ___, but I still try.", "give somebody a hard time"],
+  ["This film is not ___ for small children.", "suitable"],
+  ["My cousin is only fourteen, but she is very ___.", "mature"],
+  ["I am ___ to agree with my friend’s plan.", "willing"]
+];
+
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5)}
+function makeOptions(correct){
+  return shuffle([correct, ...shuffle(words.filter(w=>w!==correct)).slice(0,3)]);
+}
+function render(prefix, data){
+  document.getElementById(prefix).innerHTML = data.map((x,i)=>`
+    <div class="row" id="${prefix}_q${i}">
+      <p>${i+1}. ${x[0]}</p>
+      <select id="${prefix}_a${i}">
+        <option value="">choose</option>
+        ${makeOptions(x[1]).map(o=>`<option value="${o}">${o}</option>`).join("")}
+      </select>
+    </div>
+  `).join("");
+}
+function check(prefix, data, res, bar){
+  let score=0;
+  data.forEach((x,i)=>{
+    let q=document.getElementById(`${prefix}_q${i}`);
+    let a=document.getElementById(`${prefix}_a${i}`).value;
+    q.classList.remove("correct","wrong");
+    if(a===x[1]){score++;q.classList.add("correct")}else{q.classList.add("wrong")}
+  });
+  document.getElementById(res).innerHTML = `Result: ${score}/${data.length} ${score===data.length ? "🎉 Excellent!" : "💪 Try again!"}`;
+  document.getElementById(bar).style.width = (score/data.length*100)+"%";
+}
+function resetEx(prefix,res,bar){
+  document.querySelectorAll(`[id^="${prefix}_q"]`).forEach(q=>q.classList.remove("correct","wrong"));
+  document.querySelectorAll(`[id^="${prefix}_a"]`).forEach(s=>s.value="");
+  document.getElementById(res).innerHTML="";
+  document.getElementById(bar).style.width="0";
+}
+function checkEx1(){check("ex1",ex1Data,"res1","bar1")}
+function checkEx2(){check("ex2",ex2Data,"res2","bar2")}
+render("ex1", ex1Data);
+render("ex2", ex2Data);
+</script>
+</body>
+</html>
