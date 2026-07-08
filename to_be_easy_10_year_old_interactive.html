@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To Be — Easy Practice</title>
+<style>
+:root{
+  --blue:#3a86ff; --green:#2fb344; --pink:#ff5fa2; --purple:#7b4de3;
+  --yellow:#fff1a8; --ok:#dcfce7; --bad:#fee2e2; --card:#fff; --ink:#1f2937;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:Arial, "Trebuchet MS", sans-serif;
+  background:linear-gradient(135deg,#f1f8ff,#fff7fb); color:var(--ink);
+}
+header{
+  text-align:center; padding:26px 14px;
+  background:linear-gradient(120deg,#dbeafe,#fce7f3,#ede9fe);
+  border-bottom:5px solid white;
+}
+h1{margin:0;font-size:clamp(30px,6vw,52px);color:#24306f}
+.subtitle{font-size:18px;max-width:900px;margin:12px auto 0;line-height:1.4}
+main{max-width:1050px;margin:24px auto;padding:0 16px 40px}
+.card{
+  background:var(--card); border-radius:24px; padding:22px; margin:22px 0;
+  box-shadow:0 8px 24px #00000014;
+}
+h2{margin:0 0 10px;color:#24306f;font-size:28px}
+.note{
+  background:var(--yellow); border:2px dashed #eab308; border-radius:16px;
+  padding:12px 14px; margin:12px 0 18px; font-size:17px;
+}
+.rule{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px;
+  margin-top:16px;
+}
+.rule div{
+  background:white; border:3px solid #d9dcff; border-radius:18px;
+  padding:14px; font-size:20px; font-weight:bold;
+}
+.row{
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:12px; margin:10px 0; border:2px solid #edf0f5; border-radius:16px;
+  background:#fbfdff;
+}
+.row p{margin:0;font-size:18px;line-height:1.35}
+select,input{
+  font-size:17px; padding:9px 10px; border-radius:12px;
+  border:2px solid #d9dce3; background:white; min-width:240px; max-width:100%;
+}
+button{
+  border:0;border-radius:16px;padding:11px 18px;margin:8px 8px 0 0;
+  font-size:17px;font-weight:bold;cursor:pointer;background:var(--purple);
+  color:white;box-shadow:0 5px 12px #00000025;
+}
+button.secondary{background:#64748b}
+.correct{border-color:#74d99f!important;background:var(--ok)!important}
+.wrong{border-color:#ff9b9b!important;background:var(--bad)!important}
+.result{font-size:20px;font-weight:bold;margin-top:14px}
+.wordbox{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.word{
+  background:#eef0ff;border:2px solid #d9dcff;border-radius:999px;
+  padding:7px 11px;font-weight:bold;
+}
+.progress{height:16px;background:#eef0ff;border-radius:999px;overflow:hidden;margin-top:14px}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--purple));transition:.25s}
+@media(max-width:720px){
+  .row{flex-direction:column;align-items:flex-start}
+  select,input{min-width:100%}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>TO BE: am / is / are ⭐</h1>
+<p class="subtitle">Легка практика для початку. Усі речення тільки стверджувальні, Present Simple, тільки з дієсловом <b>to be</b>.</p>
+<div class="rule">
+  <div>👦 I → <span style="color:#16a34a">am</span></div>
+  <div>🐶 He / She / It → <span style="color:#2563eb">is</span></div>
+  <div>👫 You / We / They → <span style="color:#ff5fa2">are</span></div>
+</div>
+</header>
+
+<main>
+<section class="card">
+<h2>Вправа 1. Обери am / is / are</h2>
+<div class="note">Прочитай речення і вибери правильну форму дієслова <b>to be</b>.</div>
+<div id="ex1"></div>
+<button onclick="checkSelect('ex1', ex1Data, 'res1', 'bar1')">Перевірити</button>
+<button class="secondary" onclick="resetSelect('ex1','res1','bar1')">Очистити</button>
+<div class="result" id="res1"></div>
+<div class="progress"><div class="bar" id="bar1"></div></div>
+</section>
+
+<section class="card">
+<h2>Вправа 2. Збери речення</h2>
+<div class="note">Подивись на слова-підказки і напиши речення правильно. Починай з великої літери, крапку можна не ставити.</div>
+<div id="ex2"></div>
+<button onclick="checkTyping('ex2', ex2Data, 'res2', 'bar2')">Перевірити</button>
+<button class="secondary" onclick="resetTyping('ex2','res2','bar2')">Очистити</button>
+<div class="result" id="res2"></div>
+<div class="progress"><div class="bar" id="bar2"></div></div>
+</section>
+
+<section class="card">
+<h2>Вправа 3. Переклади англійською</h2>
+<div class="note">Переклади речення. Використовуй тільки <b>am / is / are</b>.</div>
+<div id="ex3"></div>
+<button onclick="checkTyping('ex3', ex3Data, 'res3', 'bar3')">Перевірити</button>
+<button class="secondary" onclick="resetTyping('ex3','res3','bar3')">Очистити</button>
+<div class="result" id="res3"></div>
+<div class="progress"><div class="bar" id="bar3"></div></div>
+</section>
+</main>
+
+<script>
+const ex1Data = [
+ ["I ___ ten years old.", "am"],
+ ["He ___ my friend.", "is"],
+ ["She ___ happy.", "is"],
+ ["It ___ a dog.", "is"],
+ ["You ___ kind.", "are"],
+ ["We ___ at school.", "are"],
+ ["They ___ students.", "are"],
+ ["I ___ from Ukraine.", "am"],
+ ["The book ___ on the desk.", "is"],
+ ["My parents ___ at home.", "are"]
+];
+
+const ex2Data = [
+ [["I","am","a","student"], "I am a student"],
+ [["He","is","my","brother"], "He is my brother"],
+ [["She","is","my","sister"], "She is my sister"],
+ [["It","is","a","cat"], "It is a cat"],
+ [["You","are","my","friend"], "You are my friend"],
+ [["We","are","happy"], "We are happy"],
+ [["They","are","at","school"], "They are at school"],
+ [["I","am","in","Kyiv"], "I am in Kyiv"],
+ [["The","bag","is","light"], "The bag is light"],
+ [["The","pencils","are","on","the","desk"], "The pencils are on the desk"]
+];
+
+const ex3Data = [
+ ["Я учень.", "I am a student"],
+ ["Він мій друг.", "He is my friend"],
+ ["Вона щаслива.", "She is happy"],
+ ["Це собака.", "It is a dog"],
+ ["Ти добрий.", "You are kind"],
+ ["Ми у школі.", "We are at school"],
+ ["Вони учні.", "They are students"],
+ ["Я вдома.", "I am at home"],
+ ["Книга на столі.", "The book is on the table"],
+ ["Мої друзі в Києві.", "My friends are in Kyiv"]
+];
+
+function renderSelect(){
+  ex1.innerHTML = ex1Data.map((x,i)=>`
+    <div class="row" id="ex1_q${i}">
+      <p>${i+1}. ${x[0]}</p>
+      <select id="ex1_a${i}">
+        <option value="">choose</option>
+        <option value="am">am</option>
+        <option value="is">is</option>
+        <option value="are">are</option>
+      </select>
+    </div>
+  `).join("");
+}
+
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5)}
+
+function renderBuild(){
+  ex2.innerHTML = ex2Data.map((x,i)=>{
+    const words = shuffle(x[0]);
+    return `
+      <div class="row" id="ex2_q${i}">
+        <div>
+          <p>${i+1}. Склади речення:</p>
+          <div class="wordbox">${words.map(w=>`<span class="word">${w}</span>`).join("")}</div>
+        </div>
+        <input id="ex2_a${i}" placeholder="type sentence">
+      </div>
+    `;
+  }).join("");
+}
+
+function renderTranslate(){
+  ex3.innerHTML = ex3Data.map((x,i)=>`
+    <div class="row" id="ex3_q${i}">
+      <p>${i+1}. ${x[0]}</p>
+      <input id="ex3_a${i}" placeholder="translate into English">
+    </div>
+  `).join("");
+}
+
+function checkSelect(prefix, data, res, bar){
+  let score=0;
+  data.forEach((x,i)=>{
+    const q=document.getElementById(`${prefix}_q${i}`);
+    const a=document.getElementById(`${prefix}_a${i}`).value;
+    q.classList.remove("correct","wrong");
+    if(a===x[1]){score++;q.classList.add("correct")}else{q.classList.add("wrong")}
+  });
+  document.getElementById(res).innerHTML = `Результат: ${score}/${data.length} ${score===data.length?"🎉 Супер!":"💪 Спробуй ще раз!"}`;
+  document.getElementById(bar).style.width = (score/data.length*100)+"%";
+}
+function resetSelect(prefix,res,bar){
+  document.querySelectorAll(`[id^="${prefix}_q"]`).forEach(q=>q.classList.remove("correct","wrong"));
+  document.querySelectorAll(`[id^="${prefix}_a"]`).forEach(s=>s.value="");
+  document.getElementById(res).innerHTML="";
+  document.getElementById(bar).style.width="0";
+}
+
+function norm(s){
+  return s.trim().toLowerCase().replace(/[.!?]/g,"").replace(/\s+/g," ");
+}
+function checkTyping(prefix, data, res, bar){
+  let score=0;
+  data.forEach((x,i)=>{
+    const q=document.getElementById(`${prefix}_q${i}`);
+    const a=document.getElementById(`${prefix}_a${i}`).value;
+    const ans = Array.isArray(x[0]) ? x[1] : x[1];
+    q.classList.remove("correct","wrong");
+    if(norm(a)===norm(ans)){score++;q.classList.add("correct")}else{q.classList.add("wrong")}
+  });
+  document.getElementById(res).innerHTML = `Результат: ${score}/${data.length} ${score===data.length?"🎉 Молодець!":"💪 Ще трохи практики!"}`;
+  document.getElementById(bar).style.width = (score/data.length*100)+"%";
+}
+function resetTyping(prefix,res,bar){
+  document.querySelectorAll(`[id^="${prefix}_q"]`).forEach(q=>q.classList.remove("correct","wrong"));
+  document.querySelectorAll(`[id^="${prefix}_a"]`).forEach(i=>i.value="");
+  document.getElementById(res).innerHTML="";
+  document.getElementById(bar).style.width="0";
+}
+
+renderSelect();
+renderBuild();
+renderTranslate();
+</script>
+</body>
+</html>
