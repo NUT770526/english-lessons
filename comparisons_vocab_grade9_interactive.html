@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparisons + Vocabulary Practice</title>
+<style>
+:root{
+  --bg:#fff7fb; --card:#fff; --ink:#1f2937; --muted:#64748b;
+  --pink:#ff5fa2; --purple:#7c3aed; --blue:#2563eb; --green:#16a34a;
+  --yellow:#fff3a3; --ok:#dcfce7; --bad:#fee2e2;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; padding:0; font-family:Arial, "Trebuchet MS", sans-serif;
+  background:linear-gradient(135deg,#fff7fb,#eef6ff); color:var(--ink);
+}
+header{
+  text-align:center; padding:28px 16px 22px;
+  background:linear-gradient(120deg,#ffe0ef,#e8e2ff,#e6f7ff);
+  border-bottom:5px solid #fff;
+}
+h1{margin:0;font-size:clamp(30px,5vw,52px);color:#27306f}
+.subtitle{max-width:980px;margin:12px auto 0;font-size:18px;line-height:1.45}
+main{max-width:1150px;margin:24px auto;padding:0 16px 42px}
+.card{
+  background:var(--card); border-radius:24px; padding:22px; margin:22px 0;
+  box-shadow:0 8px 24px #00000014; border:2px solid #fff;
+}
+h2{margin:0 0 10px;color:#27306f;font-size:28px}
+.note{
+  background:#fff7c7; border:2px dashed #f3bd00; border-radius:16px;
+  padding:12px 14px; margin:12px 0 18px; font-size:17px; line-height:1.45;
+}
+.rules{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0;
+}
+.rule{
+  border-radius:18px;padding:14px;background:#fbfdff;border:2px solid #dbeafe;
+}
+.rule b{color:#27306f}
+.row{
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:12px; margin:10px 0; border:2px solid #edf0f5; border-radius:16px;
+  background:#fbfdff;
+}
+.row p{margin:0;font-size:18px;line-height:1.35}
+select,input{
+  font-size:17px; padding:9px 10px; border-radius:12px;
+  border:2px solid #d9dce3; background:white; min-width:260px; max-width:100%;
+}
+button{
+  border:0;border-radius:16px;padding:11px 18px;margin:8px 8px 0 0;
+  font-size:17px;font-weight:bold;cursor:pointer;background:var(--purple);
+  color:white;box-shadow:0 5px 12px #00000025;
+}
+button.secondary{background:#64748b}
+.correct{border-color:#74d99f!important;background:var(--ok)!important}
+.wrong{border-color:#ff9b9b!important;background:var(--bad)!important}
+.result{font-size:20px;font-weight:bold;margin-top:14px}
+.progress{height:16px;background:#eef0ff;border-radius:999px;overflow:hidden;margin-top:14px}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--purple));transition:.25s}
+.wordbank{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.chip{
+  padding:8px 12px;border-radius:999px;background:#eef0ff;border:2px solid #d9dcff;
+  font-weight:bold;font-size:15px;
+}
+.footer{text-align:center;color:#555;padding:18px}
+@media(max-width:750px){
+  .row{flex-direction:column;align-items:flex-start}
+  select,input{min-width:100%}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>Comparisons + New Words 🌟</h1>
+<p class="subtitle">Інтерактивна практика для 9 класу: лексика з теми + порівняльний і найвищий ступінь, as well as, less than, the more...the more, do/does у порівняннях.</p>
+</header>
+
+<main>
+<section class="card">
+<h2>Міні-шпаргалка перед стартом</h2>
+<div class="rules">
+  <div class="rule"><b>short adjectives:</b><br>smart → smarter than<br>the smartest</div>
+  <div class="rule"><b>long adjectives:</b><br>interesting → more interesting than<br>the most interesting</div>
+  <div class="rule"><b>adverbs:</b><br>quickly → quicker than<br>carefully → more carefully than</div>
+  <div class="rule"><b>as well as:</b><br>I speak English as well as my sister.</div>
+  <div class="rule"><b>less / the least:</b><br>less interesting than<br>the least interesting</div>
+  <div class="rule"><b>the more..., the more...</b><br>The more I practise, the better I understand.</div>
+</div>
+</section>
+
+<section class="card">
+<h2>Вправа 1. Vocabulary + meaning</h2>
+<div class="note">Обери правильний переклад. Тут повторюємо слова з Quizlet.</div>
+<div id="ex1"></div>
+<button onclick="checkEx('ex1', ex1Data, 'res1', 'bar1')">Перевірити</button>
+<button class="secondary" onclick="resetEx('ex1','res1','bar1')">Очистити</button>
+<div class="result" id="res1"></div>
+<div class="progress"><div class="bar" id="bar1"></div></div>
+</section>
+
+<section class="card">
+<h2>Вправа 2. Comparative or superlative?</h2>
+<div class="note">Вибери правильну форму: порівняльну або найвищу. Усі речення в Present Simple.</div>
+<div id="ex2"></div>
+<button onclick="checkEx('ex2', ex2Data, 'res2', 'bar2')">Перевірити</button>
+<button class="secondary" onclick="resetEx('ex2','res2','bar2')">Очистити</button>
+<div class="result" id="res2"></div>
+<div class="progress"><div class="bar" id="bar2"></div></div>
+</section>
+
+<section class="card">
+<h2>Вправа 3. as well as / less than / the least</h2>
+<div class="note">Тренуємо інші форми порівняння: <b>as well as</b>, <b>less ... than</b>, <b>the least ...</b>.</div>
+<div id="ex3"></div>
+<button onclick="checkEx('ex3', ex3Data, 'res3', 'bar3')">Перевірити</button>
+<button class="secondary" onclick="resetEx('ex3','res3','bar3')">Очистити</button>
+<div class="result" id="res3"></div>
+<div class="progress"><div class="bar" id="bar3"></div></div>
+</section>
+
+<section class="card">
+<h2>Вправа 4. The more..., the more...</h2>
+<div class="note">Обери правильне закінчення речення. Схема: <b>The more + subject + verb, the more/better/easier + result.</b></div>
+<div id="ex4"></div>
+<button onclick="checkEx('ex4', ex4Data, 'res4', 'bar4')">Перевірити</button>
+<button class="secondary" onclick="resetEx('ex4','res4','bar4')">Очистити</button>
+<div class="result" id="res4"></div>
+<div class="progress"><div class="bar" id="bar4"></div></div>
+</section>
+
+<section class="card">
+<h2>Вправа 5. do / does у порівняннях</h2>
+<div class="note">Обери <b>do</b> або <b>does</b>. Пам’ятай: <b>I / you / we / they → do</b>, <b>he / she / it → does</b>.</div>
+<div id="ex5"></div>
+<button onclick="checkEx('ex5', ex5Data, 'res5', 'bar5')">Перевірити</button>
+<button class="secondary" onclick="resetEx('ex5','res5','bar5')">Очистити</button>
+<div class="result" id="res5"></div>
+<div class="progress"><div class="bar" id="bar5"></div></div>
+</section>
+
+<section class="card">
+<h2>Вправа 6. Mini writing: type the missing word</h2>
+<div class="note">Напиши пропущене слово/фразу англійською. Це найефективніша вправа для запам’ятовування.</div>
+<div class="wordbank" id="bank"></div>
+<div id="ex6"></div>
+<button onclick="checkTyping()">Перевірити</button>
+<button class="secondary" onclick="resetTyping()">Очистити</button>
+<div class="result" id="res6"></div>
+<div class="progress"><div class="bar" id="bar6"></div></div>
+</section>
+</main>
+
+<div class="footer">Practice makes it easier 💜</div>
+
+<script>
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5)}
+function makeSelect(prefix, i, opts){
+  return `<select id="${prefix}_a${i}">
+    <option value="">choose</option>
+    ${opts.map(o=>`<option value="${o}">${o}</option>`).join("")}
+  </select>`;
+}
+function render(prefix, data){
+  document.getElementById(prefix).innerHTML = data.map((x,i)=>`
+    <div class="row" id="${prefix}_q${i}">
+      <p>${i+1}. ${x[0]}</p>
+      ${makeSelect(prefix, i, x[2])}
+    </div>
+  `).join("");
+}
+function checkEx(prefix, data, res, bar){
+  let score=0;
+  data.forEach((x,i)=>{
+    const q=document.getElementById(`${prefix}_q${i}`);
+    const a=document.getElementById(`${prefix}_a${i}`).value;
+    q.classList.remove("correct","wrong");
+    if(a===x[1]){score++;q.classList.add("correct")}else{q.classList.add("wrong")}
+  });
+  document.getElementById(res).innerHTML = `Result: ${score}/${data.length} ${score===data.length?"🎉 Excellent!":"💪 Try again!"}`;
+  document.getElementById(bar).style.width = (score/data.length*100)+"%";
+}
+function resetEx(prefix,res,bar){
+  document.querySelectorAll(`[id^="${prefix}_q"]`).forEach(q=>q.classList.remove("correct","wrong"));
+  document.querySelectorAll(`[id^="${prefix}_a"]`).forEach(s=>s.value="");
+  document.getElementById(res).innerHTML="";
+  document.getElementById(bar).style.width="0";
+}
+function opts(correct, all){
+  return shuffle([correct, ...shuffle(all.filter(x=>x!==correct)).slice(0,3)]);
+}
+
+const vocab = [
+ ["angry","сердитий, злий"],["deal with","мати справу з; вирішувати"],
+ ["focus on","зосереджуватися на"],["to be good at","добре вміти"],
+ ["try","намагатися; пробувати"],["guess","здогадуватися; вгадувати"],
+ ["mean","означати"],["definitions","визначення"],
+ ["the most interesting","найцікавіший"],["the least interesting","найменш цікавий"],
+ ["large","великий, крупний"],["a shopping mall","торговельний центр"],
+ ["high","високий"],["light","легкий; світлий; світло"],
+ ["highlighted","виділений"],["mature","зрілий"],
+ ["in no time","дуже швидко; миттєво"],["somebody","хтось"],
+ ["give somebody a hard time","дошкуляти комусь"],["siblings","брати й сестри"],
+ ["suitable","відповідний; придатний"],["willing","готовий"]
+];
+const uaAll = vocab.map(x=>x[1]);
+const ex1Data = vocab.slice(0,20).map(x=>[x[0],x[1],opts(x[1],uaAll)]);
+
+const compOptions = [
+"older than","more interesting than","the most interesting","the least interesting",
+"larger than","higher than","lighter than","more mature than","the most mature",
+"more suitable than","the most suitable","angrier than","the angriest","better at","the best at",
+"quicker than","more quickly than","more willing than","the most willing"
+];
+const ex2Data = [
+ ["My grandfather is ___ my grandmother.", "older than", opts("older than",compOptions)],
+ ["History is ___ school subject for me.", "the most interesting", opts("the most interesting",compOptions)],
+ ["This exercise is ___ the last one.", "more interesting than", opts("more interesting than",compOptions)],
+ ["This text is ___ text in the book.", "the least interesting", opts("the least interesting",compOptions)],
+ ["This house is ___ that flat.", "larger than", opts("larger than",compOptions)],
+ ["The mountain is ___ the hill.", "higher than", opts("higher than",compOptions)],
+ ["This bag is ___ my school bag.", "lighter than", opts("lighter than",compOptions)],
+ ["An only child is sometimes ___ other children.", "more mature than", opts("more mature than",compOptions)],
+ ["My sister is ___ person in our family.", "the most mature", opts("the most mature",compOptions)],
+ ["This book is ___ for teenagers than that book.", "more suitable than", opts("more suitable than",compOptions)],
+ ["This website is ___ for learning new words.", "the most suitable", opts("the most suitable",compOptions)],
+ ["I am ___ when I am tired.", "angrier than", opts("angrier than",compOptions)],
+ ["This is ___ message in the chat.", "the angriest", opts("the angriest",compOptions)],
+ ["I am ___ English than before.", "better at", opts("better at",compOptions)],
+ ["She is ___ math in our group.", "the best at", opts("the best at",compOptions)]
+];
+
+const ex3Options = ["as well as","less interesting than","the least interesting","less quickly than","as carefully as","not as high as","not as light as","less suitable than","as mature as","less willing than","as good at","not as large as"];
+const ex3Data = [
+ ["I speak English ___ my sister.", "as well as", opts("as well as",ex3Options)],
+ ["This lesson is ___ the video.", "less interesting than", opts("less interesting than",ex3Options)],
+ ["This is ___ task today.", "the least interesting", opts("the least interesting",ex3Options)],
+ ["I finish homework ___ my brother.", "less quickly than", opts("less quickly than",ex3Options)],
+ ["We read the text ___ we can.", "as carefully as", opts("as carefully as",ex3Options)],
+ ["This building is ___ that tower.", "not as high as", opts("not as high as",ex3Options)],
+ ["My old bag is ___ this new bag.", "not as light as", opts("not as light as",ex3Options)],
+ ["This job is ___ for me than that job.", "less suitable than", opts("less suitable than",ex3Options)],
+ ["My friend is ___ her older sister.", "as mature as", opts("as mature as",ex3Options)],
+ ["I am ___ to agree today than yesterday.", "less willing than", opts("less willing than",ex3Options)],
+ ["They are ___ listening as we are.", "as good at", opts("as good at",ex3Options)],
+ ["This shopping mall is ___ the one near my house.", "not as large as", opts("not as large as",ex3Options)],
+ ["This definition is ___ the first one.", "less interesting than", opts("less interesting than",ex3Options)],
+ ["I am ___ guessing answers as my friend.", "as good at", opts("as good at",ex3Options)],
+ ["This highlighted word is ___ the other word.", "not as easy as", shuffle(["not as easy as","as well as","the least interesting","less willing than"])]
+];
+
+const moreOptions = [
+"the better I understand","the easier it becomes","the more confident I feel",
+"the angrier I become","the more mature I become","the quicker I finish",
+"the more willing I am to try","the more suitable it is for me",
+"the more definitions I remember","the more I focus on the text"
+];
+const ex4Data = [
+ ["The more I study, ___.", "the better I understand", opts("the better I understand",moreOptions)],
+ ["The more we practise, ___.", "the easier it becomes", opts("the easier it becomes",moreOptions)],
+ ["The more I speak English, ___.", "the more confident I feel", opts("the more confident I feel",moreOptions)],
+ ["The more somebody gives me a hard time, ___.", "the angrier I become", opts("the angrier I become",moreOptions)],
+ ["The more I deal with problems, ___.", "the more mature I become", opts("the more mature I become",moreOptions)],
+ ["The more I focus on the task, ___.", "the quicker I finish", opts("the quicker I finish",moreOptions)],
+ ["The more mistakes I make, ___.", "the more willing I am to try", opts("the more willing I am to try",moreOptions)],
+ ["The more examples I see, ___.", "the more suitable it is for me", opts("the more suitable it is for me",moreOptions)],
+ ["The more I repeat new words, ___.", "the more definitions I remember", opts("the more definitions I remember",moreOptions)],
+ ["The more I read, ___.", "the more I focus on the text", opts("the more I focus on the text",moreOptions)],
+ ["The more I guess, ___.", "the better I understand", opts("the better I understand",moreOptions)],
+ ["The more my siblings help me, ___.", "the easier it becomes", opts("the easier it becomes",moreOptions)],
+ ["The more I try, ___.", "the more confident I feel", opts("the more confident I feel",moreOptions)],
+ ["The more I learn definitions, ___.", "the quicker I finish", opts("the quicker I finish",moreOptions)],
+ ["The more I work with highlighted words, ___.", "the more I focus on the text", opts("the more I focus on the text",moreOptions)]
+];
+
+const doOptions = ["do","does"];
+const ex5Data = [
+ ["I am quicker than Nadia ___ if I focus.", "is", ["do","does","is","are"]],
+ ["It is a lot quicker if Nadia ___ the washing-up than if I do it.", "does", doOptions],
+ ["Russell cannot draw as well as I ___.", "do", doOptions],
+ ["My brother studies more carefully than I ___.", "do", doOptions],
+ ["She guesses the answer faster than we ___.", "do", doOptions],
+ ["This word means more than it ___ in Ukrainian.", "does", doOptions],
+ ["My siblings try harder than I ___.", "do", doOptions],
+ ["This lesson works better than the old lesson ___.", "does", doOptions],
+ ["You focus on definitions more than I ___.", "do", doOptions],
+ ["The shopping mall opens earlier than the small shop ___.", "does", doOptions],
+ ["They deal with problems better than I ___.", "do", doOptions],
+ ["This test looks easier than it usually ___.", "does", doOptions],
+ ["We remember highlighted words better than they ___.", "do", doOptions],
+ ["This bag feels lighter than it ___.", "does", doOptions],
+ ["I learn words faster than my brother ___.", "does", doOptions]
+];
+
+const typingData = [
+ ["This book is right for children. It is ___.","suitable"],
+ ["My brother and sister are my ___.","siblings"],
+ ["I finish easy homework very soon, ___.","in no time"],
+ ["A person who acts like an adult is ___.","mature"],
+ ["I am happy to help. I am ___.","willing"],
+ ["My brother sometimes makes things difficult for me. He ___.","gives me a hard time"],
+ ["This word is yellow in the text. It is ___.","highlighted"],
+ ["We learn meanings of words. We learn ___.","definitions"],
+ ["I try to find the answer. I ___.","guess"],
+ ["What does this word ___?","mean"],
+ ["This is the ___ book in the lesson.","most interesting"],
+ ["This is the ___ interesting exercise today.","least"],
+ ["My bag is not heavy. It is ___.","light"],
+ ["The mountain is very ___.","high"],
+ ["We buy things in ___.","a shopping mall"]
+];
+
+bank.innerHTML = ["suitable","siblings","in no time","mature","willing","gives me a hard time","highlighted","definitions","guess","mean","most interesting","least","light","high","a shopping mall"].map(w=>`<span class="chip">${w}</span>`).join("");
+ex6.innerHTML = typingData.map((x,i)=>`
+  <div class="row" id="ex6_q${i}">
+    <p>${i+1}. ${x[0]}</p>
+    <input id="ex6_a${i}" placeholder="type here">
+  </div>
+`).join("");
+
+function norm(s){return s.trim().toLowerCase().replace(/\s+/g," ")}
+function checkTyping(){
+  let score=0;
+  typingData.forEach((x,i)=>{
+    const q=document.getElementById(`ex6_q${i}`);
+    const a=document.getElementById(`ex6_a${i}`).value;
+    q.classList.remove("correct","wrong");
+    if(norm(a)===norm(x[1])){score++;q.classList.add("correct")}else{q.classList.add("wrong")}
+  });
+  res6.innerHTML = `Result: ${score}/${typingData.length} ${score===typingData.length?"🎉 Excellent!":"💪 Try again!"}`;
+  bar6.style.width = (score/typingData.length*100)+"%";
+}
+function resetTyping(){
+  document.querySelectorAll(`[id^="ex6_q"]`).forEach(q=>q.classList.remove("correct","wrong"));
+  document.querySelectorAll(`[id^="ex6_a"]`).forEach(i=>i.value="");
+  res6.innerHTML=""; bar6.style.width="0";
+}
+
+render("ex1", ex1Data);
+render("ex2", ex2Data);
+render("ex3", ex3Data);
+render("ex4", ex4Data);
+render("ex5", ex5Data);
+</script>
+</body>
+</html>
