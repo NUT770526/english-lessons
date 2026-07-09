@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Talking about me — New Words Practice</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f6f0e8;
+    color: #233044;
+    margin: 0;
+    padding: 24px;
+  }
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    background: #fffdf9;
+    padding: 28px;
+    border-radius: 18px;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.08);
+  }
+  h1 {
+    text-align: center;
+    color: #12345a;
+    font-size: 34px;
+  }
+  h2 {
+    color: #12345a;
+    margin-top: 34px;
+    border-bottom: 2px solid #d7c2a3;
+    padding-bottom: 8px;
+  }
+  .task {
+    background: #f9f5ef;
+    padding: 16px;
+    border-radius: 14px;
+    margin: 14px 0;
+  }
+  button {
+    background: #12345a;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 6px 4px;
+    font-size: 16px;
+  }
+  button:hover { background: #1f4d7a; }
+  select, input {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #b9aa98;
+    font-size: 16px;
+    margin-top: 6px;
+    min-width: 230px;
+  }
+  .result {
+    font-weight: bold;
+    margin-top: 8px;
+  }
+  .correct { color: #287233; }
+  .wrong { color: #b00020; }
+  .card {
+    border: 2px solid #d7c2a3;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    font-size: 26px;
+    background: white;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .small {
+    font-size: 15px;
+    color: #5b6470;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Talking about me — New Words</h1>
+  <p class="small" style="text-align:center;">4 разноплановых упражнения для запоминания слов и фраз.</p>
+
+  <h2>Exercise 1. Flashcards: вспомните перевод</h2>
+  <div class="task">
+    <div id="card" class="card">Click “Start”</div>
+    <div style="text-align:center;">
+      <button onclick="startCards()">Start</button>
+      <button onclick="showAnswer()">Show answer</button>
+      <button onclick="nextCard()">Next</button>
+    </div>
+  </div>
+
+  <h2>Exercise 2. Choose the correct translation</h2>
+  <div id="quiz"></div>
+  <button onclick="checkQuiz()">Check Exercise 2</button>
+  <div id="quizResult" class="result"></div>
+
+  <h2>Exercise 3. Complete the sentence</h2>
+  <p class="small">Choose the best phrase for each sentence.</p>
+  <div id="sentences"></div>
+  <button onclick="checkSentences()">Check Exercise 3</button>
+  <div id="sentResult" class="result"></div>
+
+  <h2>Exercise 4. Russian → English typing</h2>
+  <p class="small">Type the English phrase. Small mistakes in capital letters are OK.</p>
+  <div id="typing"></div>
+  <button onclick="checkTyping()">Check Exercise 4</button>
+  <div id="typingResult" class="result"></div>
+</div>
+
+<script>
+const vocab = [
+  ["be married to", "быть женатым на / быть замужем за"],
+  ["have children", "иметь детей"],
+  ["have an interesting job", "иметь интересную работу"],
+  ["go to the cinema a lot", "часто ходить в кино"],
+  ["be unemployed", "быть безработным"],
+  ["have brothers and/or sisters", "иметь братьев и/или сестёр"],
+  ["play video games", "играть в видеоигры"],
+  ["work for a big/small company", "работать в большой/маленькой компании"],
+  ["take a break", "сделать перерыв"],
+  ["start a career", "начать карьеру"],
+  ["chat with friends online", "общаться с друзьями онлайн"],
+  ["get a promotion", "получить повышение"],
+  ["go to concerts", "ходить на концерты"],
+  ["work at the weekend", "работать по выходным"],
+  ["study another language", "изучать другой язык"],
+  ["raise children", "воспитывать детей"],
+  ["watch movies", "смотреть фильмы"],
+  ["read books", "читать книги"],
+  ["go shopping", "ходить за покупками"]
+];
+
+let cardIndex = 0;
+let showingAnswer = false;
+
+function shuffle(arr) {
+  return arr.map(x => [Math.random(), x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+}
+
+let cardList = shuffle([...vocab]);
+
+function startCards() {
+  cardIndex = 0;
+  showingAnswer = false;
+  document.getElementById("card").textContent = cardList[cardIndex][0];
+}
+function showAnswer() {
+  showingAnswer = true;
+  document.getElementById("card").textContent = cardList[cardIndex][1];
+}
+function nextCard() {
+  cardIndex = (cardIndex + 1) % cardList.length;
+  showingAnswer = false;
+  document.getElementById("card").textContent = cardList[cardIndex][0];
+}
+
+const quizItems = shuffle([...vocab]).slice(0, 12);
+function makeQuiz() {
+  const box = document.getElementById("quiz");
+  quizItems.forEach((item, i) => {
+    let options = shuffle([item[1], ...shuffle(vocab.filter(v=>v[1]!==item[1])).slice(0,3).map(v=>v[1])]);
+    box.innerHTML += `<div class="task"><b>${i+1}. ${item[0]}</b><br>
+      <select id="q${i}">
+        <option value="">Choose...</option>
+        ${options.map(o=>`<option value="${o}">${o}</option>`).join("")}
+      </select>
+      <div id="qres${i}" class="result"></div></div>`;
+  });
+}
+function checkQuiz() {
+  let score = 0;
+  quizItems.forEach((item, i) => {
+    const ans = document.getElementById("q"+i).value;
+    const res = document.getElementById("qres"+i);
+    if (ans === item[1]) {
+      score++; res.textContent = "Correct"; res.className = "result correct";
+    } else {
+      res.textContent = "Wrong. Correct: " + item[1]; res.className = "result wrong";
+    }
+  });
+  document.getElementById("quizResult").textContent = `Score: ${score}/${quizItems.length}`;
+}
+
+const sentenceItems = [
+  ["I want to __________ in IT next year.", "start a career"],
+  ["She likes to __________ every evening.", "read books"],
+  ["My brother likes to __________ after work.", "play video games"],
+  ["They __________ because they have two daughters.", "have children"],
+  ["He wants to __________ because he works too much.", "take a break"],
+  ["I often __________ when I need new clothes.", "go shopping"],
+  ["My friend wants to __________ because she studies English now.", "study another language"],
+  ["She can __________ because she works very well.", "get a promotion"],
+  ["We usually __________ on Fridays.", "watch movies"],
+  ["He doesn’t have a job now. He is __________.", "be unemployed"],
+  ["I like music, so I __________.", "go to concerts"],
+  ["She uses WhatsApp to __________.", "chat with friends online"]
+];
+
+function makeSentences() {
+  const box = document.getElementById("sentences");
+  sentenceItems.forEach((item, i) => {
+    let options = shuffle([item[1], ...shuffle(vocab.filter(v=>v[0]!==item[1])).slice(0,3).map(v=>v[0])]);
+    box.innerHTML += `<div class="task"><b>${i+1}. ${item[0]}</b><br>
+      <select id="s${i}">
+        <option value="">Choose...</option>
+        ${options.map(o=>`<option value="${o}">${o}</option>`).join("")}
+      </select>
+      <div id="sres${i}" class="result"></div></div>`;
+  });
+}
+function checkSentences() {
+  let score = 0;
+  sentenceItems.forEach((item, i) => {
+    const ans = document.getElementById("s"+i).value;
+    const res = document.getElementById("sres"+i);
+    if (ans === item[1]) {
+      score++; res.textContent = "Correct"; res.className = "result correct";
+    } else {
+      res.textContent = "Wrong. Correct: " + item[1]; res.className = "result wrong";
+    }
+  });
+  document.getElementById("sentResult").textContent = `Score: ${score}/${sentenceItems.length}`;
+}
+
+const typingItems = shuffle([...vocab]).slice(0, 12);
+function makeTyping() {
+  const box = document.getElementById("typing");
+  typingItems.forEach((item, i) => {
+    box.innerHTML += `<div class="task"><b>${i+1}. ${item[1]}</b><br>
+      <input id="t${i}" placeholder="Type in English">
+      <div id="tres${i}" class="result"></div></div>`;
+  });
+}
+function normalize(s) {
+  return s.trim().toLowerCase().replace(/\s+/g, " ");
+}
+function checkTyping() {
+  let score = 0;
+  typingItems.forEach((item, i) => {
+    const ans = normalize(document.getElementById("t"+i).value);
+    const correct = normalize(item[0]);
+    const res = document.getElementById("tres"+i);
+    if (ans === correct) {
+      score++; res.textContent = "Correct"; res.className = "result correct";
+    } else {
+      res.textContent = "Correct answer: " + item[0]; res.className = "result wrong";
+    }
+  });
+  document.getElementById("typingResult").textContent = `Score: ${score}/${typingItems.length}`;
+}
+
+makeQuiz();
+makeSentences();
+makeTyping();
+</script>
+</body>
+</html>
