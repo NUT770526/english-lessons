@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mess or Clutter?</title>
+<style>
+  body{
+    font-family: Arial, sans-serif;
+    background:#f4f7ff;
+    color:#102044;
+    margin:0;
+    padding:24px;
+    font-size:20px;
+  }
+  .container{
+    max-width:1050px;
+    margin:auto;
+    background:white;
+    padding:28px;
+    border-radius:20px;
+    box-shadow:0 8px 28px rgba(0,0,0,.08);
+  }
+  h1{
+    color:#1b2fbf;
+    text-align:center;
+    font-size:36px;
+    margin-bottom:8px;
+  }
+  .subtitle{
+    text-align:center;
+    color:#667085;
+    margin-bottom:24px;
+  }
+  .rule{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-bottom:26px;
+  }
+  .card{
+    border-radius:18px;
+    padding:18px;
+    line-height:1.45;
+  }
+  .mess-card{
+    background:#f3e8ff;
+    border:2px solid #a855f7;
+  }
+  .clutter-card{
+    background:#e9fbe9;
+    border:2px solid #22c55e;
+  }
+  .big{
+    font-size:30px;
+    font-weight:bold;
+  }
+  .task{
+    background:#f8fbff;
+    border:1px solid #d7e4ff;
+    border-radius:18px;
+    padding:18px;
+    margin:16px 0;
+    display:grid;
+    grid-template-columns:110px 1fr 230px;
+    gap:16px;
+    align-items:center;
+  }
+  .pic{
+    font-size:54px;
+    text-align:center;
+    background:white;
+    border-radius:16px;
+    padding:14px;
+    border:1px solid #d7e4ff;
+  }
+  .sentence{
+    line-height:1.45;
+  }
+  select{
+    font-size:20px;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid #9fb3d9;
+    background:white;
+    width:100%;
+  }
+  button{
+    background:#1b2fbf;
+    color:white;
+    border:none;
+    border-radius:12px;
+    padding:12px 18px;
+    font-size:18px;
+    cursor:pointer;
+    margin:18px 6px 0 0;
+  }
+  button:hover{background:#3146dc;}
+  .result{
+    font-weight:bold;
+    margin-top:8px;
+    font-size:18px;
+  }
+  .correct{color:#15803d;}
+  .wrong{color:#b42318;}
+  .small{
+    color:#667085;
+    font-size:16px;
+  }
+  @media(max-width:800px){
+    .rule{grid-template-columns:1fr;}
+    .task{grid-template-columns:1fr;}
+    .pic{text-align:left;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Mess or Clutter?</h1>
+  <p class="subtitle">Look at the mini-picture and sentence. Choose the correct word.</p>
+
+  <div class="rule">
+    <div class="card mess-card">
+      <div class="big">MESS 😵‍💫</div>
+      <p><b>Mess</b> = dirty, untidy, chaotic.</p>
+      <p class="small">Things are all over the place. It looks bad or hard to use.</p>
+      <p><b>Example:</b> There is a mess in the kitchen.</p>
+    </div>
+    <div class="card clutter-card">
+      <div class="big">CLUTTER 📚</div>
+      <p><b>Clutter</b> = too many things in one place.</p>
+      <p class="small">It may be clean, but there is too much stuff.</p>
+      <p><b>Example:</b> There is too much clutter on my desk.</p>
+    </div>
+  </div>
+
+  <div id="tasks"></div>
+
+  <button onclick="checkAnswers()">Check answers</button>
+  <button onclick="resetAnswers()">Reset</button>
+  <div id="finalResult" class="result"></div>
+</div>
+
+<script>
+const tasks = [
+  {
+    pic:"🍕🥤🍽️",
+    text:"There are dirty plates and pizza boxes all over the kitchen.",
+    answer:"mess"
+  },
+  {
+    pic:"📚🧸📷🪴",
+    text:"My shelf is clean, but there are too many books, toys, photos, and plants.",
+    answer:"clutter"
+  },
+  {
+    pic:"👕👖🧦",
+    text:"Clothes are on the floor, on the bed, and under the chair.",
+    answer:"mess"
+  },
+  {
+    pic:"🖊️📓📱🎧",
+    text:"My desk has many useful things, but there is almost no free space.",
+    answer:"clutter"
+  },
+  {
+    pic:"🎒📄⚽",
+    text:"After school, my bag, papers, and ball are everywhere in the room.",
+    answer:"mess"
+  },
+  {
+    pic:"🗃️📁📚",
+    text:"The drawer is full of old notebooks and papers I don’t use.",
+    answer:"clutter"
+  },
+  {
+    pic:"🧃🍪🧻",
+    text:"There is juice on the table, cookie crumbs, and paper on the floor.",
+    answer:"mess"
+  },
+  {
+    pic:"👟👟👟👟",
+    text:"There are too many shoes near the door, but they are not dirty.",
+    answer:"clutter"
+  },
+  {
+    pic:"🎨🖌️🧽",
+    text:"After painting, the table is dirty and the brushes are everywhere.",
+    answer:"mess"
+  },
+  {
+    pic:"🧢🎮🕹️📦",
+    text:"I have many caps, games, and boxes on my shelf. It looks crowded.",
+    answer:"clutter"
+  }
+];
+
+function makeTasks(){
+  const box = document.getElementById("tasks");
+  tasks.forEach((item, i) => {
+    box.innerHTML += `
+      <div class="task">
+        <div class="pic">${item.pic}</div>
+        <div class="sentence">
+          <b>${i+1}.</b> ${item.text}
+          <div id="r${i}" class="result"></div>
+        </div>
+        <select id="q${i}">
+          <option value="">Choose...</option>
+          <option value="mess">mess</option>
+          <option value="clutter">clutter</option>
+        </select>
+      </div>`;
+  });
+}
+
+function checkAnswers(){
+  let score = 0;
+  tasks.forEach((item, i) => {
+    const ans = document.getElementById("q"+i).value;
+    const res = document.getElementById("r"+i);
+
+    if(ans === item.answer){
+      score++;
+      res.textContent = "Correct!";
+      res.className = "result correct";
+    } else {
+      res.textContent = "Try again. Think: dirty/chaotic = mess, too many things = clutter.";
+      res.className = "result wrong";
+    }
+  });
+
+  const final = document.getElementById("finalResult");
+  final.textContent = `Your score: ${score}/${tasks.length}`;
+  final.className = score === tasks.length ? "result correct" : "result wrong";
+}
+
+function resetAnswers(){
+  tasks.forEach((item, i) => {
+    document.getElementById("q"+i).value = "";
+    document.getElementById("r"+i).textContent = "";
+  });
+  document.getElementById("finalResult").textContent = "";
+}
+
+makeTasks();
+</script>
+</body>
+</html>
