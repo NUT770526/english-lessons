@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match the Dialogue</title>
+<style>
+  body{
+    font-family: Arial, sans-serif;
+    background:#f6f0e8;
+    color:#233044;
+    margin:0;
+    padding:24px;
+    font-size:18px;
+  }
+  .container{
+    max-width:980px;
+    margin:auto;
+    background:#fffdf9;
+    padding:28px;
+    border-radius:18px;
+    box-shadow:0 8px 26px rgba(0,0,0,.08);
+  }
+  h1{
+    text-align:center;
+    color:#12345a;
+    font-size:34px;
+    margin-bottom:8px;
+  }
+  .subtitle{
+    text-align:center;
+    color:#5b6470;
+    margin-bottom:22px;
+  }
+  .note{
+    background:#eef3ff;
+    border-left:6px solid #12345a;
+    padding:14px;
+    border-radius:10px;
+    line-height:1.45;
+    margin-bottom:22px;
+  }
+  .dialogue{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:18px;
+  }
+  .left, .right{
+    background:#f9f5ef;
+    border:1px solid #dfd0bd;
+    border-radius:16px;
+    padding:18px;
+  }
+  h2{
+    color:#12345a;
+    margin-top:0;
+    font-size:24px;
+  }
+  .question{
+    background:#e6fff0;
+    border:1px solid #bde6c9;
+    border-radius:12px;
+    padding:14px;
+    margin:14px 0;
+    line-height:1.45;
+  }
+  .answer{
+    background:#12345a;
+    color:white;
+    border-radius:12px;
+    padding:12px;
+    margin:10px 0;
+    cursor:grab;
+    user-select:none;
+    line-height:1.45;
+  }
+  .answer:active{cursor:grabbing;}
+  .drop{
+    min-height:46px;
+    border:2px dashed #bda47d;
+    background:#fffaf2;
+    border-radius:12px;
+    margin-top:10px;
+    padding:10px;
+  }
+  .drop .answer{
+    margin:0;
+  }
+  button{
+    background:#12345a;
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:12px 18px;
+    font-size:18px;
+    cursor:pointer;
+    margin:12px 5px 0 0;
+  }
+  button:hover{background:#1f4d7a;}
+  .result{
+    font-weight:bold;
+    margin-top:10px;
+    font-size:19px;
+  }
+  .correct{color:#287233;}
+  .wrong{color:#b00020;}
+  @media(max-width:760px){
+    .dialogue{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Match the dialogue</h1>
+  <p class="subtitle">Drag the answers to the correct questions.</p>
+
+  <div class="note">
+    <b>How to do it:</b> Read the question on the left. Drag the correct answer from the right into the empty box.
+  </div>
+
+  <div class="dialogue">
+    <div class="left">
+      <h2>Questions</h2>
+      <div id="questions"></div>
+    </div>
+
+    <div class="right">
+      <h2>Answers</h2>
+      <div id="answers" class="drop" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+    </div>
+  </div>
+
+  <button onclick="checkAnswers()">Check answers</button>
+  <button onclick="showAnswers()">Show answers</button>
+  <button onclick="resetGame()">Reset</button>
+  <div id="finalResult" class="result"></div>
+</div>
+
+<script>
+const pairs = [
+  ["Are you new here?", "Yes, I am."],
+  ["Do you like this place, Jim?", "It’s really beautiful!"],
+  ["And what do you do in your leisure time?", "I enjoy going to different concerts."],
+  ["Did you hear about our local band?", "No, I didn’t!"],
+  ["Can you tell me more about it?", "Of course!"],
+  ["What do you do?", "I work for a big company."],
+  ["Do you have an interesting job?", "Well, it’s normally interesting."]
+];
+
+let dragged = null;
+
+function shuffle(arr){
+  return arr.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+}
+
+function makeAnswer(text){
+  const div = document.createElement("div");
+  div.className = "answer";
+  div.draggable = true;
+  div.textContent = text;
+  div.addEventListener("dragstart", e => { dragged = e.target; });
+  return div;
+}
+
+function allowDrop(e){ e.preventDefault(); }
+
+function drop(e){
+  e.preventDefault();
+  const target = e.currentTarget;
+  if(!dragged) return;
+
+  if(target.classList.contains("drop")){
+    // If dropping into a question box that already has an answer, move old answer back.
+    if(target.dataset.type === "question" && target.children.length > 0){
+      document.getElementById("answers").appendChild(target.children[0]);
+    }
+    target.appendChild(dragged);
+  }
+}
+
+function render(){
+  const qBox = document.getElementById("questions");
+  const aBox = document.getElementById("answers");
+  qBox.innerHTML = "";
+  aBox.innerHTML = "";
+
+  pairs.forEach((pair, i)=>{
+    qBox.innerHTML += `
+      <div class="question">
+        <b>${i+1}. ${pair[0]}</b>
+        <div class="drop" data-type="question" id="drop${i}" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+        <div id="res${i}" class="result"></div>
+      </div>`;
+  });
+
+  shuffle(pairs.map(p=>p[1])).forEach(ans=>{
+    aBox.appendChild(makeAnswer(ans));
+  });
+
+  document.getElementById("finalResult").textContent = "";
+}
+
+function checkAnswers(){
+  let score = 0;
+  pairs.forEach((pair, i)=>{
+    const dropBox = document.getElementById("drop"+i);
+    const res = document.getElementById("res"+i);
+    const userAnswer = dropBox.children.length ? dropBox.children[0].textContent : "";
+    if(userAnswer === pair[1]){
+      score++;
+      res.textContent = "Correct!";
+      res.className = "result correct";
+    } else {
+      res.textContent = "Try again. Correct answer: " + pair[1];
+      res.className = "result wrong";
+    }
+  });
+  const final = document.getElementById("finalResult");
+  final.textContent = `Your score: ${score}/${pairs.length}`;
+  final.className = score === pairs.length ? "result correct" : "result wrong";
+}
+
+function showAnswers(){
+  const aBox = document.getElementById("answers");
+  aBox.innerHTML = "";
+  pairs.forEach((pair, i)=>{
+    const dropBox = document.getElementById("drop"+i);
+    dropBox.innerHTML = "";
+    dropBox.appendChild(makeAnswer(pair[1]));
+    const res = document.getElementById("res"+i);
+    res.textContent = "Answer shown.";
+    res.className = "result correct";
+  });
+  const final = document.getElementById("finalResult");
+  final.textContent = "Answers are shown.";
+  final.className = "result correct";
+}
+
+function resetGame(){
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
