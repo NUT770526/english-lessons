@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question Practice</title>
+<style>
+  body{
+    font-family: Arial, sans-serif;
+    background:#f6f0e8;
+    margin:0;
+    padding:24px;
+    color:#233044;
+    font-size:18px;
+  }
+  .container{
+    max-width:950px;
+    margin:auto;
+    background:#fffdf9;
+    padding:28px;
+    border-radius:18px;
+    box-shadow:0 8px 26px rgba(0,0,0,.08);
+  }
+  h1{
+    text-align:center;
+    color:#12345a;
+    font-size:34px;
+    margin-bottom:8px;
+  }
+  h2{
+    color:#12345a;
+    margin-top:34px;
+    border-bottom:2px solid #d7c2a3;
+    padding-bottom:8px;
+  }
+  .note{
+    background:#eef3ff;
+    border-left:6px solid #12345a;
+    padding:14px;
+    border-radius:10px;
+    line-height:1.45;
+  }
+  .task{
+    background:#f9f5ef;
+    border:1px solid #dfd0bd;
+    border-radius:14px;
+    padding:18px;
+    margin:16px 0;
+    line-height:1.5;
+  }
+  .under{
+    text-decoration: underline;
+    font-weight:bold;
+    color:#5a2bbf;
+  }
+  select, input{
+    font-size:18px;
+    padding:9px 10px;
+    border-radius:8px;
+    border:1px solid #9c8d7a;
+    margin:6px 4px;
+    background:white;
+  }
+  input.long{
+    width:90%;
+    max-width:700px;
+  }
+  button{
+    background:#12345a;
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:12px 18px;
+    font-size:18px;
+    cursor:pointer;
+    margin:8px 5px 0 0;
+  }
+  button:hover{background:#1f4d7a;}
+  .result{
+    font-weight:bold;
+    margin-top:10px;
+    font-size:19px;
+  }
+  .correct{color:#287233;}
+  .wrong{color:#b00020;}
+  .help{
+    color:#5b6470;
+    font-size:16px;
+  }
+  .mistake-card{
+    background:white;
+    border:2px solid #c7b7f5;
+    border-radius:14px;
+    padding:18px;
+    margin-top:10px;
+  }
+  .bad{
+    color:#5a2bbf;
+    font-weight:bold;
+    font-size:22px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Questions Practice</h1>
+  <p class="note">
+    <b>Goal:</b> practise question words and correct word order in questions.<br>
+    Read slowly. First choose the question word, then write the full question.
+  </p>
+
+
+  <h2>Before you start: DO / DOES / DID</h2>
+  <div class="note" style="background:#fff8e8;border-left-color:#d19a2a;">
+    <b>Very important rule for questions:</b>
+  </div>
+
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin:18px 0 28px;">
+    <div class="task" style="background:#eef8ef;">
+      <h3 style="margin-top:0;color:#287233;">Present Simple</h3>
+      <p><b>now / every day / usually / often</b></p>
+      <p><b>I / you / we / they → DO</b></p>
+      <p><b>he / she / it → DOES</b></p>
+      <p style="font-size:22px;"><b>Question word + do/does + person + verb?</b></p>
+      <p>✅ <b>Where do you work?</b></p>
+      <p>✅ <b>What does Mike do?</b></p>
+    </div>
+
+    <div class="task" style="background:#eef3ff;">
+      <h3 style="margin-top:0;color:#12345a;">Past Simple</h3>
+      <p><b>yesterday / last week / last year / today</b></p>
+      <p><b>I / you / he / she / we / they → DID</b></p>
+      <p style="font-size:22px;"><b>Question word + did + person + verb?</b></p>
+      <p>✅ <b>When did she get a promotion?</b></p>
+      <p>✅ <b>Why did he quit?</b></p>
+      <p style="color:#b00020;"><b>Important:</b> after DID use the base verb.</p>
+      <p>❌ Did she <b>got</b>? → ✅ Did she <b>get</b>?</p>
+    </div>
+  </div>
+
+  <div class="note" style="background:#f4efff;border-left-color:#5a2bbf;">
+    ⭐ Easy memory rule: <b>Present = DO / DOES</b>, but <b>Past = DID</b>.
+  </div>
+
+
+  <h2>Exercise 1. Choose the question word and make a question</h2>
+  <p class="help"><b>Question words:</b> where, what kind, what, how many</p>
+  <p class="help"><b>Example:</b> I usually go to the cinema <u>at the weekends</u>. → <b>When do you usually go to the cinema?</b></p>
+
+  <div id="ex1"></div>
+  <button onclick="checkEx1()">Check Exercise 1</button>
+  <button onclick="showEx1()">Show answers</button>
+  <div id="resEx1" class="result"></div>
+
+  <h2>Exercise 2. Correct the mistakes</h2>
+  <p class="help">Write the correct question. Pay attention to word order: auxiliary verb + subject + main verb.</p>
+
+  <div id="ex2"></div>
+  <button onclick="checkEx2()">Check Exercise 2</button>
+  <button onclick="showEx2()">Show answers</button>
+  <div id="resEx2" class="result"></div>
+</div>
+
+<script>
+const ex1 = [
+  {
+    sentence: 'She had <span class="under">a promotion</span> last year.',
+    word: 'what',
+    question: 'What did she have last year?'
+  },
+  {
+    sentence: 'Danny really liked <span class="under">that rock concert</span>.',
+    word: 'what kind',
+    question: 'What kind of concert did Danny really like?'
+  },
+  {
+    sentence: 'Emily raised <span class="under">three children</span> herself.',
+    word: 'how many',
+    question: 'How many children did Emily raise herself?'
+  },
+  {
+    sentence: 'We rarely go <span class="under">to concerts</span>.',
+    word: 'where',
+    question: 'Where do you rarely go?'
+  }
+];
+
+const questionWords = ["where", "what kind", "what", "how many"];
+
+const ex2 = [
+  {
+    wrong: "You are married?",
+    correct: "Are you married?"
+  },
+  {
+    wrong: "They chat with their friends online?",
+    correct: "Do they chat with their friends online?"
+  },
+  {
+    wrong: "What do Mike usually do on the weekends?",
+    correct: "What does Mike usually do on the weekends?"
+  },
+  {
+    wrong: "You took a break from work today?",
+    correct: "Did you take a break from work today?"
+  }
+];
+
+function normalize(s){
+  return s.trim().toLowerCase().replace(/\s+/g," ").replace(/[’']/g,"'").replace(/\?+$/,"?");
+}
+
+function makeEx1(){
+  const box = document.getElementById("ex1");
+  ex1.forEach((item,i)=>{
+    box.innerHTML += `
+      <div class="task">
+        <b>${i+1}. ${item.sentence}</b><br>
+        Question word:
+        <select id="w${i}">
+          <option value="">Choose...</option>
+          ${questionWords.map(w=>`<option value="${w}">${w}</option>`).join("")}
+        </select><br>
+        Full question:<br>
+        <input class="long" id="q${i}" placeholder="Type the full question">
+        <div id="r1_${i}" class="result"></div>
+      </div>`;
+  });
+}
+
+function checkEx1(){
+  let score = 0;
+  ex1.forEach((item,i)=>{
+    const word = document.getElementById("w"+i).value;
+    const question = normalize(document.getElementById("q"+i).value);
+    const correctQ = normalize(item.question);
+    const res = document.getElementById("r1_"+i);
+    if(word === item.word && question === correctQ){
+      score++;
+      res.textContent = "Correct!";
+      res.className = "result correct";
+    } else {
+      res.textContent = "Check again. Correct: " + item.word + " — " + item.question;
+      res.className = "result wrong";
+    }
+  });
+  document.getElementById("resEx1").textContent = `Score: ${score}/${ex1.length}`;
+}
+
+function showEx1(){
+  ex1.forEach((item,i)=>{
+    document.getElementById("w"+i).value = item.word;
+    document.getElementById("q"+i).value = item.question;
+    const res = document.getElementById("r1_"+i);
+    res.textContent = "Answer shown.";
+    res.className = "result correct";
+  });
+  document.getElementById("resEx1").textContent = "Answers are shown.";
+}
+
+function makeEx2(){
+  const box = document.getElementById("ex2");
+  ex2.forEach((item,i)=>{
+    box.innerHTML += `
+      <div class="task">
+        <div class="mistake-card">
+          <div class="help">Incorrect question:</div>
+          <div class="bad">${i+1}. ${item.wrong}</div>
+        </div>
+        Correct question:<br>
+        <input class="long" id="m${i}" placeholder="Type the correct question">
+        <div id="r2_${i}" class="result"></div>
+      </div>`;
+  });
+}
+
+function checkEx2(){
+  let score = 0;
+  ex2.forEach((item,i)=>{
+    const ans = normalize(document.getElementById("m"+i).value);
+    const correct = normalize(item.correct);
+    const res = document.getElementById("r2_"+i);
+    if(ans === correct){
+      score++;
+      res.textContent = "Correct!";
+      res.className = "result correct";
+    } else {
+      res.textContent = "Correct answer: " + item.correct;
+      res.className = "result wrong";
+    }
+  });
+  document.getElementById("resEx2").textContent = `Score: ${score}/${ex2.length}`;
+}
+
+function showEx2(){
+  ex2.forEach((item,i)=>{
+    document.getElementById("m"+i).value = item.correct;
+    const res = document.getElementById("r2_"+i);
+    res.textContent = "Answer shown.";
+    res.className = "result correct";
+  });
+  document.getElementById("resEx2").textContent = "Answers are shown.";
+}
+
+makeEx1();
+makeEx2();
+</script>
+</body>
+</html>
