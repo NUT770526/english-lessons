@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dialogue Practice — Questions</title>
+<style>
+  body{
+    font-family: Arial, sans-serif;
+    background:#f6f0e8;
+    margin:0;
+    padding:24px;
+    color:#233044;
+    font-size:18px;
+  }
+  .wrap{
+    max-width:980px;
+    margin:auto;
+    background:#fffdf9;
+    border-radius:18px;
+    padding:28px;
+    box-shadow:0 8px 26px rgba(0,0,0,.08);
+  }
+  h1{
+    text-align:center;
+    color:#12345a;
+    font-size:34px;
+    margin-bottom:8px;
+  }
+  .subtitle{
+    text-align:center;
+    color:#5b6470;
+    margin-bottom:26px;
+  }
+  .box{
+    background:#f9f5ef;
+    border:1px solid #dfd0bd;
+    border-radius:14px;
+    padding:18px;
+    margin:18px 0;
+  }
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin:18px 0 24px;
+  }
+  .chip{
+    background:#12345a;
+    color:white;
+    padding:10px 14px;
+    border-radius:999px;
+    font-size:17px;
+  }
+  .dialogue{
+    margin-top:20px;
+  }
+  .line{
+    margin:16px 0;
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+  }
+  .speaker{
+    min-width:92px;
+    font-weight:bold;
+    color:#12345a;
+  }
+  .speech{
+    flex:1;
+    padding:14px;
+    border-radius:14px;
+    line-height:1.45;
+  }
+  .daphne{
+    background:#eef0ff;
+    border:2px solid #b9b5ff;
+  }
+  .christine{
+    background:#fff4e6;
+    border:2px solid #f2b66d;
+  }
+  .willy{
+    background:#eaf6ff;
+    border:2px solid #79bce8;
+  }
+  select{
+    font-size:18px;
+    padding:7px 10px;
+    border-radius:8px;
+    border:1px solid #9c8d7a;
+    min-width:210px;
+    background:white;
+    margin:0 5px;
+  }
+  button{
+    background:#12345a;
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:12px 18px;
+    font-size:18px;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  button:hover{background:#1f4d7a;}
+  .result{
+    font-weight:bold;
+    margin-top:14px;
+    font-size:20px;
+  }
+  .correct{color:#287233;}
+  .wrong{color:#b00020;}
+  .hint{
+    font-size:16px;
+    color:#5b6470;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Complete the dialogue</h1>
+  <p class="subtitle">Choose the correct question. Then check your answers.</p>
+
+  <div class="box">
+    <b>Useful questions:</b>
+    <div class="wordbank">
+      <div class="chip">Do you like</div>
+      <div class="chip">Why did he</div>
+      <div class="chip">Where did he</div>
+      <div class="chip">Why are you</div>
+      <div class="chip">What does he</div>
+      <div class="chip">When did he</div>
+      <div class="chip">Are you happy</div>
+    </div>
+    <p class="hint">Tip: Read the answer first. It will help you choose the correct question.</p>
+  </div>
+
+  <div class="dialogue">
+
+    <div class="line">
+      <div class="speaker">Daphne:</div>
+      <div class="speech daphne">
+        <select id="q1"><option value="">Choose...</option></select> start working here?
+      </div>
+    </div>
+    <div class="line">
+      <div class="speaker">Christine:</div>
+      <div class="speech christine">He started only last week.</div>
+    </div>
+
+    <div class="line">
+      <div class="speaker">Daphne:</div>
+      <div class="speech daphne">
+        <select id="q2"><option value="">Choose...</option></select> work before?
+      </div>
+    </div>
+    <div class="line">
+      <div class="speaker">Christine:</div>
+      <div class="speech christine">He worked for a really small company. I don’t remember its name.</div>
+    </div>
+
+    <div class="line">
+      <div class="speaker">Daphne:</div>
+      <div class="speech daphne">
+        <select id="q3"><option value="">Choose...</option></select> quit?
+      </div>
+    </div>
+    <div class="line">
+      <div class="speaker">Christine:</div>
+      <div class="speech christine">Because he had a lot of projects and he often had to work at the weekends.</div>
+    </div>
+
+    <div class="line">
+      <div class="speaker">Daphne:</div>
+      <div class="speech daphne">
+        That’s awful! And <select id="q4"><option value="">Choose...</option></select> like doing?
+      </div>
+    </div>
+    <div class="line">
+      <div class="speaker">Christine:</div>
+      <div class="speech christine">I know that he likes going to the cinema and playing video games.</div>
+    </div>
+
+    <div class="line">
+      <div class="speaker">Daphne:</div>
+      <div class="speech daphne">Nice! Me too. And ...?</div>
+    </div>
+    <div class="line">
+      <div class="speaker">Christine:</div>
+      <div class="speech christine">
+        Daphne, <select id="q5"><option value="">Choose...</option></select> asking me about him? You can talk to Willy.
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="line">
+      <div class="speaker">Daphne:</div>
+      <div class="speech daphne">
+        Willy, <select id="q6"><option value="">Choose...</option></select> to work for such a big company?
+      </div>
+    </div>
+    <div class="line">
+      <div class="speaker">Willy:</div>
+      <div class="speech willy">Of course, I am! I am lucky to start my career here.</div>
+    </div>
+
+    <div class="line">
+      <div class="speaker">Daphne:</div>
+      <div class="speech daphne">Yeah, that’s pretty cool! Maybe, we can take a break and talk more?</div>
+    </div>
+    <div class="line">
+      <div class="speaker">Christine:</div>
+      <div class="speech christine">
+        Great idea! <select id="q7"><option value="">Choose...</option></select> coffee, Willy?
+      </div>
+    </div>
+    <div class="line">
+      <div class="speaker">Willy:</div>
+      <div class="speech willy">I do.</div>
+    </div>
+  </div>
+
+  <button onclick="checkAnswers()">Check answers</button>
+  <button onclick="showAnswers()">Show answers</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+const options = [
+  "Do you like",
+  "Why did he",
+  "Where did he",
+  "Why are you",
+  "What does he",
+  "When did he",
+  "Are you happy"
+];
+
+const answers = {
+  q1: "When did he",
+  q2: "Where did he",
+  q3: "Why did he",
+  q4: "What does he",
+  q5: "Why are you",
+  q6: "Are you happy",
+  q7: "Do you like"
+};
+
+function fillOptions(){
+  for(let i=1;i<=7;i++){
+    const select = document.getElementById("q"+i);
+    options.forEach(opt=>{
+      const o = document.createElement("option");
+      o.value = opt;
+      o.textContent = opt;
+      select.appendChild(o);
+    });
+  }
+}
+
+function checkAnswers(){
+  let score = 0;
+  for(let i=1;i<=7;i++){
+    const id = "q"+i;
+    const select = document.getElementById(id);
+    if(select.value === answers[id]){
+      score++;
+      select.style.border = "3px solid #287233";
+    } else {
+      select.style.border = "3px solid #b00020";
+    }
+  }
+  const result = document.getElementById("result");
+  result.textContent = `Your score: ${score}/7`;
+  result.className = score === 7 ? "result correct" : "result wrong";
+}
+
+function showAnswers(){
+  for(let i=1;i<=7;i++){
+    const id = "q"+i;
+    document.getElementById(id).value = answers[id];
+    document.getElementById(id).style.border = "3px solid #287233";
+  }
+  const result = document.getElementById("result");
+  result.textContent = "Answers are shown.";
+  result.className = "result correct";
+}
+
+fillOptions();
+</script>
+</body>
+</html>
