@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fill in the Gaps</title>
+<style>
+  body{
+    font-family: Arial, sans-serif;
+    background:#f4f7ff;
+    color:#102044;
+    margin:0;
+    padding:24px;
+    font-size:20px;
+  }
+  .container{
+    max-width:1000px;
+    margin:auto;
+    background:white;
+    padding:28px;
+    border-radius:20px;
+    box-shadow:0 8px 28px rgba(0,0,0,.08);
+  }
+  h1{
+    color:#1b2fbf;
+    text-align:center;
+    font-size:34px;
+    margin-bottom:8px;
+  }
+  .subtitle{
+    text-align:center;
+    color:#667085;
+    margin-bottom:24px;
+  }
+  .note{
+    background:#eef3ff;
+    border-left:6px solid #1b2fbf;
+    padding:14px;
+    border-radius:12px;
+    margin-bottom:24px;
+    line-height:1.45;
+  }
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:18px 0 28px;
+  }
+  .chip{
+    background:#1b2fbf;
+    color:white;
+    padding:10px 14px;
+    border-radius:999px;
+    font-weight:bold;
+    font-size:18px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .sound{
+    background:#ffffff;
+    color:#1b2fbf;
+    border:none;
+    border-radius:50%;
+    width:30px;
+    height:30px;
+    font-size:16px;
+    cursor:pointer;
+    margin:0;
+    padding:0;
+  }
+  .sound:hover{
+    background:#d7e4ff;
+  }
+  .task{
+    background:#f8fbff;
+    border:1px solid #d7e4ff;
+    border-radius:16px;
+    padding:16px;
+    margin:14px 0;
+    line-height:1.6;
+  }
+  .dot{
+    display:inline-block;
+    width:14px;
+    height:14px;
+    background:#bcd6ff;
+    border-radius:50%;
+    margin-right:10px;
+  }
+  select{
+    font-size:20px;
+    padding:8px 10px;
+    border-radius:10px;
+    border:1px solid #9fb3d9;
+    background:white;
+    min-width:230px;
+    margin:0 5px;
+  }
+  button{
+    background:#1b2fbf;
+    color:white;
+    border:none;
+    border-radius:12px;
+    padding:12px 18px;
+    font-size:18px;
+    cursor:pointer;
+    margin:18px 6px 0 0;
+  }
+  button:hover{background:#3146dc;}
+  .result{
+    font-weight:bold;
+    margin-top:8px;
+    font-size:19px;
+  }
+  .correct{color:#15803d;}
+  .wrong{color:#b42318;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Fill in the gaps with the words from the list</h1>
+  <p class="subtitle">Choose the best word for each sentence.</p>
+
+  <div class="note">
+    <b>How to do it:</b> Read the whole sentence first. Press 🔊 to listen to the word. Then choose the word that makes the sentence logical.
+  </div>
+
+  <div class="wordbank" id="wordbank"></div>
+  <div id="tasks"></div>
+
+  <button onclick="checkAnswers()">Check answers</button>
+  <button onclick="resetAnswers()">Reset</button>
+  <div id="finalResult" class="result"></div>
+</div>
+
+<script>
+const words = ["chaos", "express oneself", "neat", "clutter", "middle ground", "mess", "nags", "pile"];
+
+const tasks = [
+  {
+    before: "Painting is a great way to",
+    after: "and show emotions.",
+    answer: "express oneself"
+  },
+  {
+    before: "My brother left a big",
+    after: "in the kitchen after cooking dinner.",
+    answer: "mess"
+  },
+  {
+    before: "We argued a lot, but finally found a",
+    after: "and agreed on a solution.",
+    answer: "middle ground"
+  },
+  {
+    before: "My mom always",
+    after: "me to clean my room, but I don’t want to.",
+    answer: "nags"
+  },
+  {
+    before: "I can’t find my book because there’s too much",
+    after: "on my desk.",
+    answer: "clutter"
+  },
+  {
+    before: "I like to keep my room",
+    after: "and tidy so I can find things easily.",
+    answer: "neat"
+  },
+  {
+    before: "There was a big",
+    after: "of clothes on my chair that I needed to fold.",
+    answer: "pile"
+  },
+  {
+    before: "The room was full of",
+    after: "after the party, with everything scattered everywhere.",
+    answer: "chaos"
+  }
+];
+
+function shuffle(arr){
+  return arr.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+}
+
+function speakWord(text){
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.8;
+    window.speechSynthesis.speak(utterance);
+  } else {
+    alert("Sorry, your browser does not support audio pronunciation.");
+  }
+}
+
+function makeGame(){
+  const wb = document.getElementById("wordbank");
+  shuffle(words).forEach(w => {
+    wb.innerHTML += `<div class="chip"><button class="sound" onclick="speakWord('${w.replace(/'/g, "\\'")}')">🔊</button>${w}</div>`;
+  });
+
+  const box = document.getElementById("tasks");
+  tasks.forEach((item, i) => {
+    box.innerHTML += `
+      <div class="task">
+        <span class="dot"></span>
+        ${item.before}
+        <select id="q${i}">
+          <option value="">Choose...</option>
+          ${shuffle(words).map(w=>`<option value="${w}">${w}</option>`).join("")}
+        </select>
+        ${item.after}
+        <div id="r${i}" class="result"></div>
+      </div>`;
+  });
+}
+
+function checkAnswers(){
+  let score = 0;
+  tasks.forEach((item, i) => {
+    const ans = document.getElementById("q"+i).value;
+    const res = document.getElementById("r"+i);
+
+    if(ans === item.answer){
+      score++;
+      res.textContent = "Correct!";
+      res.className = "result correct";
+    } else {
+      res.textContent = "Try again.";
+      res.className = "result wrong";
+    }
+  });
+
+  const final = document.getElementById("finalResult");
+  final.textContent = `Your score: ${score}/${tasks.length}`;
+  final.className = score === tasks.length ? "result correct" : "result wrong";
+}
+
+function resetAnswers(){
+  tasks.forEach((item, i) => {
+    document.getElementById("q"+i).value = "";
+    document.getElementById("r"+i).textContent = "";
+  });
+  document.getElementById("finalResult").textContent = "";
+}
+
+makeGame();
+</script>
+</body>
+</html>
