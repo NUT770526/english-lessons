@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Words Practice — A1</title>
+<style>
+:root{
+  --navy:#17324d; --blue:#2e5d7b; --light:#f4f7f9; --white:#fff;
+  --green:#2f7d5b; --red:#b94a48; --gold:#c99331; --border:#d8e1e7;
+  --text:#24323d;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);
+  background:linear-gradient(135deg,#eef3f6,#faf8f3);
+}
+header{
+  background:var(--navy);color:white;padding:34px 20px;text-align:center;
+}
+header h1{margin:0 0 8px;font-size:clamp(30px,5vw,48px)}
+header p{margin:0;opacity:.9;font-size:18px}
+main{max-width:1050px;margin:28px auto;padding:0 16px 50px}
+.word-bank,.exercise{
+  background:var(--white);border:1px solid var(--border);border-radius:18px;
+  padding:24px;margin-bottom:22px;box-shadow:0 8px 24px rgba(23,50,77,.08);
+}
+.word-bank h2,.exercise h2{color:var(--navy);margin-top:0}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{
+  background:#eaf1f5;border:1px solid #c8d7e1;border-radius:999px;
+  padding:9px 14px;font-weight:700;color:var(--navy)
+}
+.note{background:#fff8e8;border-left:5px solid var(--gold);padding:14px 16px;border-radius:8px;margin:14px 0}
+.item{padding:14px 0;border-bottom:1px solid #edf1f3;line-height:1.55}
+.item:last-child{border-bottom:0}
+select,input[type=text]{
+  width:min(340px,100%);padding:10px 12px;border:1px solid #bfcbd3;
+  border-radius:9px;font-size:16px;background:white;margin:5px 4px
+}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin-top:10px}
+.option{
+  border:1px solid #ccd7de;border-radius:10px;padding:10px;background:#fafcfd;cursor:pointer
+}
+.option:hover{background:#edf4f7}
+button{
+  border:0;border-radius:10px;padding:11px 17px;font-size:15px;font-weight:700;
+  cursor:pointer;margin:12px 8px 0 0
+}
+.check{background:var(--green);color:white}
+.show{background:var(--blue);color:white}
+.reset{background:#e6ebee;color:var(--navy)}
+.feedback{font-weight:700;margin-left:8px}
+.correct{color:var(--green)} .wrong{color:var(--red)}
+.answer{display:none;margin-top:7px;color:var(--green);font-weight:700}
+.score{
+  margin-top:14px;padding:12px;border-radius:10px;background:#eef5f1;
+  font-weight:700;color:var(--navy)
+}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.match-card{
+  padding:12px;border:1px solid #cbd7df;border-radius:10px;background:#fafcfd;
+  cursor:pointer;user-select:none
+}
+.selected{outline:3px solid #6a96b2}
+.matched{background:#e7f4ec;border-color:#73a889;opacity:.72;cursor:default}
+.dialogue{background:#f6f8fa;border-radius:12px;padding:14px;margin:12px 0}
+.small{font-size:14px;color:#657681}
+.ua{color:#657681;font-size:15px;margin-top:4px}
+@media(max-width:650px){.match-grid{grid-template-columns:1fr}.word-bank,.exercise{padding:18px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>New Words Practice</h1>
+  <p>Прості вправи рівня A1</p>
+</header>
+
+<main>
+<section class="word-bank">
+  <h2>Слова уроку</h2>
+  <div class="chips">
+    <span class="chip">buy — купувати</span>
+    <span class="chip">sell — продавати</span>
+    <span class="chip">still — досі / усе ще</span>
+    <span class="chip">only — лише / тільки</span>
+    <span class="chip">yet — ще / уже</span>
+    <span class="chip">lend — позичати комусь</span>
+    <span class="chip">be on my list — бути у моєму списку</span>
+    <span class="chip">be on my bill — бути у моєму рахунку</span>
+    <span class="chip">spend — витрачати / проводити час</span>
+    <span class="chip">send — надсилати</span>
+  </div>
+  <div class="note">
+    <b>Запам’ятайте:</b> <b>lend</b> — дати щось іншій людині на час;
+    <b>spend</b> — витрачати гроші або проводити час;
+    <b>send</b> — надсилати.
+  </div>
+</section>
+
+<section class="exercise" id="ex1">
+  <h2>1. Оберіть правильний переклад</h2>
+  <div id="mcq"></div>
+  <button class="check" onclick="checkMCQ()">Перевірити</button>
+  <button class="show" onclick="showAnswers('ex1')">Показати відповіді</button>
+  <button class="reset" onclick="resetSection('ex1')">Почати знову</button>
+  <div class="score" id="score1">Результат: —</div>
+</section>
+
+<section class="exercise" id="ex2">
+  <h2>2. Вставте потрібне слово</h2>
+  <p class="small">Оберіть слово зі списку.</p>
+  <div id="fill"></div>
+  <button class="check" onclick="checkFill()">Перевірити</button>
+  <button class="show" onclick="showAnswers('ex2')">Показати відповіді</button>
+  <button class="reset" onclick="resetSection('ex2')">Почати знову</button>
+  <div class="score" id="score2">Результат: —</div>
+</section>
+
+<section class="exercise" id="ex3">
+  <h2>3. З’єднайте слово і просту ситуацію</h2>
+  <p class="small">Натисніть слово зліва, потім його значення справа.</p>
+  <div class="match-grid" id="matching"></div>
+  <button class="reset" onclick="buildMatching()">Перемішати й почати знову</button>
+  <div class="score" id="score3">Знайдено пар: 0 / 10</div>
+</section>
+
+<section class="exercise" id="ex4">
+  <h2>4. Still, only чи yet?</h2>
+  <p class="small">Оберіть правильне слово.</p>
+  <div id="tricky"></div>
+  <button class="check" onclick="checkTricky()">Перевірити</button>
+  <button class="show" onclick="showAnswers('ex4')">Показати відповіді</button>
+  <button class="reset" onclick="resetSection('ex4')">Почати знову</button>
+  <div class="score" id="score4">Результат: —</div>
+</section>
+
+<section class="exercise" id="ex5">
+  <h2>5. Прості мінідіалоги</h2>
+  <p class="small">Напишіть англійське слово або фразу.</p>
+  <div id="dialogues"></div>
+  <button class="check" onclick="checkDialogues()">Перевірити</button>
+  <button class="show" onclick="showAnswers('ex5')">Показати відповіді</button>
+  <button class="reset" onclick="resetSection('ex5')">Почати знову</button>
+  <div class="score" id="score5">Результат: —</div>
+</section>
+</main>
+
+<script>
+const mcqData = [
+ ["buy","купувати",["продавати","купувати","надсилати"]],
+ ["sell","продавати",["витрачати","позичати","продавати"]],
+ ["still","досі / усе ще",["уже","досі / усе ще","тільки"]],
+ ["only","лише / тільки",["лише / тільки","ще","зараз"]],
+ ["yet","ще / уже",["завжди","ще / уже","досі"]],
+ ["lend","позичати комусь",["купувати","позичати комусь","витрачати"]],
+ ["be on my list","бути у моєму списку",["бути у моєму списку","бути вдома","бути у рахунку"]],
+ ["be on my bill","бути у моєму рахунку",["бути у моєму списку","бути у моєму рахунку","бути на роботі"]],
+ ["spend","витрачати / проводити час",["надсилати","витрачати / проводити час","продавати"]],
+ ["send","надсилати",["надсилати","купувати","позичати"]]
+];
+
+const fillData = [
+ ["I want to ___ a new phone.","buy"],
+ ["I want to ___ my old bike.","sell"],
+ ["I am ___ at work.","still"],
+ ["I have ___ one apple.","only"],
+ ["Is Tom here ___?","yet"],
+ ["Please ___ me your pen.","lend"],
+ ["Paris is ___.","on my list"],
+ ["This coffee is ___.","on my bill"],
+ ["I ___ money on food.","spend"],
+ ["Please ___ me a photo.","send"]
+];
+
+const matchData = [
+ ["buy","I pay money and get a thing."],
+ ["sell","I give a thing and get money."],
+ ["still","It is the same now."],
+ ["only","Just one or a small number."],
+ ["yet","Not now, but maybe later."],
+ ["lend","I give it to you for a short time."],
+ ["be on my list","I want to do it."],
+ ["be on my bill","I must pay for it."],
+ ["spend","I use money or time."],
+ ["send","I give a message or photo to another person."]
+];
+
+const trickyData = [
+ ["I am ___ at home.","still"],
+ ["I have ___ one bag.","only"],
+ ["Is Anna here ___?","yet"],
+ ["I am ___ tired.","still"],
+ ["We have ___ two cups.","only"],
+ ["Is the food ready ___?","yet"],
+ ["He is ___ at work.","still"],
+ ["I have ___ five dollars.","only"],
+ ["Is the bus here ___?","yet"],
+ ["She is ___ my friend.","still"],
+ ["There is ___ one chair.","only"],
+ ["Is Dad home ___?","yet"]
+];
+
+const dialogueData = [
+ ["— A new phone?<br>— Yes. I want to ___ it.","buy"],
+ ["— Your old bike?<br>— I want to ___ it.","sell"],
+ ["— Are you at work?<br>— Yes, I am ___ here.","still"],
+ ["— How many books?<br>— ___ one.","only"],
+ ["— Is Tom here?<br>— No, not ___.","yet"],
+ ["— I need a pen.<br>— I can ___ you my pen.","lend"],
+ ["— Do you want to go to Rome?<br>— Yes, it is ___.","on my list"],
+ ["— Is this tea for me?<br>— Yes, it is ___.","on my bill"],
+ ["— What do you do with money?<br>— I ___ it.","spend"],
+ ["— I need the photo.<br>— I can ___ it.","send"]
+];
+
+function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+
+function buildMCQ(){
+ const box=document.getElementById('mcq');box.innerHTML='';
+ mcqData.forEach((x,i)=>{
+  const opts=shuffle(x[2]).map(o=>`<label class="option"><input type="radio" name="m${i}" value="${o}"> ${o}</label>`).join('');
+  box.innerHTML+=`<div class="item"><b>${i+1}. ${x[0]}</b><div class="options">${opts}</div><span class="feedback" id="mf${i}"></span><div class="answer">Відповідь: ${x[1]}</div></div>`;
+ });
+}
+function checkMCQ(){
+ let s=0;
+ mcqData.forEach((x,i)=>{
+  const el=document.querySelector(`input[name=m${i}]:checked`),f=document.getElementById('mf'+i);
+  if(el&&el.value===x[1]){s++;f.textContent='✓';f.className='feedback correct'}
+  else{f.textContent='✗';f.className='feedback wrong'}
+ });
+ document.getElementById('score1').textContent=`Результат: ${s} / ${mcqData.length}`;
+}
+
+function buildFill(){
+ const box=document.getElementById('fill');box.innerHTML='';
+ const options=["","buy","sell","still","only","yet","lend","on my list","on my bill","spend","send"];
+ fillData.forEach((x,i)=>{
+  box.innerHTML+=`<div class="item">${i+1}. ${x[0].replace("___",`<select id="f${i}">${options.map(o=>`<option value="${o}">${o||"— оберіть —"}</option>`).join('')}</select>`)}
+  <span class="feedback" id="ff${i}"></span><div class="answer">Відповідь: ${x[1]}</div></div>`;
+ });
+}
+function checkFill(){
+ let s=0;
+ fillData.forEach((x,i)=>{
+  const v=document.getElementById('f'+i).value,f=document.getElementById('ff'+i);
+  if(v===x[1]){s++;f.textContent='✓';f.className='feedback correct'}
+  else{f.textContent='✗';f.className='feedback wrong'}
+ });
+ document.getElementById('score2').textContent=`Результат: ${s} / ${fillData.length}`;
+}
+
+let first=null,matched=0;
+function buildMatching(){
+ first=null;matched=0;
+ const box=document.getElementById('matching');box.innerHTML='';
+ const left=shuffle(matchData.map((x,i)=>({text:x[0],id:i,type:'l'})));
+ const right=shuffle(matchData.map((x,i)=>({text:x[1],id:i,type:'r'})));
+ for(let i=0;i<left.length;i++){
+  box.innerHTML+=`<div class="match-card" data-id="${left[i].id}" data-type="l">${left[i].text}</div>
+  <div class="match-card" data-id="${right[i].id}" data-type="r">${right[i].text}</div>`;
+ }
+ document.querySelectorAll('.match-card').forEach(c=>c.onclick=()=>pickMatch(c));
+ document.getElementById('score3').textContent='Знайдено пар: 0 / 10';
+}
+function pickMatch(card){
+ if(card.classList.contains('matched'))return;
+ if(!first){first=card;card.classList.add('selected');return}
+ if(first===card){card.classList.remove('selected');first=null;return}
+ if(first.dataset.type===card.dataset.type){
+  first.classList.remove('selected');first=card;card.classList.add('selected');return
+ }
+ if(first.dataset.id===card.dataset.id){
+  first.classList.remove('selected');first.classList.add('matched');card.classList.add('matched');
+  matched++;document.getElementById('score3').textContent=`Знайдено пар: ${matched} / 10`;
+ }else{
+  first.classList.remove('selected');card.classList.add('wrong');
+  setTimeout(()=>card.classList.remove('wrong'),500);
+ }
+ first=null;
+}
+
+function buildTricky(){
+ const box=document.getElementById('tricky');box.innerHTML='';
+ trickyData.forEach((x,i)=>{
+  box.innerHTML+=`<div class="item">${i+1}. ${x[0].replace("___",`<select id="t${i}"><option value="">— оберіть —</option><option>still</option><option>only</option><option>yet</option></select>`)}
+  <span class="feedback" id="tf${i}"></span><div class="answer">Відповідь: ${x[1]}</div></div>`;
+ });
+}
+function checkTricky(){
+ let s=0;
+ trickyData.forEach((x,i)=>{
+  const v=document.getElementById('t'+i).value,f=document.getElementById('tf'+i);
+  if(v===x[1]){s++;f.textContent='✓';f.className='feedback correct'}
+  else{f.textContent='✗';f.className='feedback wrong'}
+ });
+ document.getElementById('score4').textContent=`Результат: ${s} / ${trickyData.length}`;
+}
+
+function buildDialogues(){
+ const box=document.getElementById('dialogues');box.innerHTML='';
+ dialogueData.forEach((x,i)=>{
+  box.innerHTML+=`<div class="dialogue"><b>${i+1}.</b> ${x[0].replace("___",`<input type="text" id="d${i}" autocomplete="off" placeholder="Type your answer">`)}
+  <span class="feedback" id="df${i}"></span><div class="answer">Відповідь: ${x[1]}</div></div>`;
+ });
+}
+function norm(s){return s.trim().toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g,' ')}
+function checkDialogues(){
+ let s=0;
+ dialogueData.forEach((x,i)=>{
+  const v=norm(document.getElementById('d'+i).value),a=norm(x[1]),f=document.getElementById('df'+i);
+  if(v===a||((a==="on my list"||a==="on my bill")&&v==="be "+a)){s++;f.textContent='✓';f.className='feedback correct'}
+  else{f.textContent='✗';f.className='feedback wrong'}
+ });
+ document.getElementById('score5').textContent=`Результат: ${s} / ${dialogueData.length}`;
+}
+function showAnswers(id){
+ document.querySelectorAll(`#${id} .answer`).forEach(a=>a.style.display='block');
+}
+function resetSection(id){
+ document.querySelectorAll(`#${id} input[type=radio]`).forEach(x=>x.checked=false);
+ document.querySelectorAll(`#${id} input[type=text]`).forEach(x=>x.value='');
+ document.querySelectorAll(`#${id} select`).forEach(x=>x.selectedIndex=0);
+ document.querySelectorAll(`#${id} .feedback`).forEach(x=>{x.textContent='';x.className='feedback'});
+ document.querySelectorAll(`#${id} .answer`).forEach(a=>a.style.display='none');
+ const score=document.querySelector(`#${id} .score`);if(score)score.textContent='Результат: —';
+}
+buildMCQ();buildFill();buildMatching();buildTricky();buildDialogues();
+</script>
+</body>
+</html>
