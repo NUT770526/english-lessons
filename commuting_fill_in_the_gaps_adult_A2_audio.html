@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commuting Vocabulary — Fill in the Gaps</title>
+<style>
+  :root{
+    --navy:#18344f;
+    --blue:#4f7895;
+    --cream:#f8f4ea;
+    --gold:#c89b55;
+    --bg:#eef3f6;
+    --card:#ffffff;
+    --text:#253746;
+    --ok:#2d7a4b;
+    --bad:#b34a4a;
+    --line:#d4dee5;
+  }
+
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:
+      radial-gradient(circle at top left,#ffffff 0,#eef3f6 45%,#e4ebf0 100%);
+    color:var(--text);
+    font-size:18px;
+    line-height:1.55;
+  }
+
+  header{
+    background:linear-gradient(120deg,var(--navy),var(--blue));
+    color:#fff;
+    padding:34px 20px;
+    text-align:center;
+  }
+
+  header h1{
+    margin:0 0 8px;
+    font-size:36px;
+    letter-spacing:.4px;
+  }
+
+  header p{
+    margin:0;
+    opacity:.92;
+  }
+
+  main{
+    max-width:1050px;
+    margin:28px auto;
+    padding:0 18px 45px;
+  }
+
+  .panel{
+    background:var(--card);
+    border-radius:18px;
+    padding:24px;
+    box-shadow:0 8px 24px rgba(24,52,79,.10);
+    border:1px solid #e2e9ee;
+  }
+
+  .intro{
+    display:flex;
+    gap:18px;
+    align-items:center;
+    margin-bottom:22px;
+    background:var(--cream);
+    border-left:6px solid var(--gold);
+    padding:18px;
+    border-radius:14px;
+  }
+
+  .intro .icon{
+    font-size:44px;
+  }
+
+  .intro p{
+    margin:0;
+  }
+
+  .word-bank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    padding:18px;
+    margin:18px 0 26px;
+    border:2px dashed #c8d5de;
+    border-radius:14px;
+    background:#f8fbfc;
+  }
+
+  .word-wrap{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+  }
+
+  .word{
+    border:1px solid #b9c9d4;
+    background:#fff;
+    color:var(--navy);
+    padding:9px 13px;
+    border-radius:10px;
+    font-size:17px;
+    cursor:pointer;
+    transition:.18s;
+    box-shadow:0 2px 6px rgba(24,52,79,.06);
+  }
+
+  .sound{
+    width:39px;
+    height:39px;
+    margin:0;
+    padding:0;
+    border-radius:50%;
+    border:1px solid #b9c9d4;
+    background:#eef5f8;
+    color:var(--navy);
+    cursor:pointer;
+    font-size:18px;
+  }
+
+  .sound:hover{
+    background:#dfeaf0;
+  }
+
+  .word:hover{
+    transform:translateY(-1px);
+    background:#edf5f9;
+  }
+
+  .word.used{
+    opacity:.38;
+    cursor:not-allowed;
+    text-decoration:line-through;
+  }
+
+  .exercise-list{
+    display:grid;
+    gap:14px;
+  }
+
+  .sentence{
+    background:#fbfcfd;
+    border:1px solid #e1e8ed;
+    border-radius:13px;
+    padding:16px 18px;
+  }
+
+  .num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:var(--navy);
+    color:#fff;
+    font-weight:bold;
+    margin-right:8px;
+    font-size:16px;
+  }
+
+  .blank{
+    display:inline-flex;
+    min-width:145px;
+    min-height:42px;
+    align-items:center;
+    justify-content:center;
+    padding:7px 10px;
+    margin:2px 5px;
+    border:2px solid #b9c8d2;
+    border-radius:9px;
+    background:#fff;
+    vertical-align:middle;
+    cursor:pointer;
+    font-weight:bold;
+    color:var(--navy);
+  }
+
+  .blank.selected{
+    border-color:var(--gold);
+    background:#fff9ec;
+  }
+
+  .blank.correct{
+    border-color:var(--ok);
+    background:#ecf8f0;
+    color:var(--ok);
+  }
+
+  .blank.incorrect{
+    border-color:var(--bad);
+    background:#fff0f0;
+    color:var(--bad);
+  }
+
+  .hint{
+    display:block;
+    color:#687b89;
+    font-size:15px;
+    margin-top:8px;
+  }
+
+  .buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:24px;
+  }
+
+  button.action{
+    border:none;
+    border-radius:10px;
+    padding:12px 18px;
+    font-size:16px;
+    cursor:pointer;
+    color:#fff;
+    background:var(--navy);
+  }
+
+  button.action.secondary{background:#6e7f8b}
+  button.action.answer{background:var(--gold);color:#253746}
+
+  .feedback{
+    margin-top:18px;
+    padding:14px 16px;
+    border-radius:12px;
+    font-weight:bold;
+    display:none;
+  }
+
+  .feedback.good{
+    display:block;
+    color:var(--ok);
+    background:#edf8f1;
+    border:1px solid #bdddc8;
+  }
+
+  .feedback.try{
+    display:block;
+    color:var(--bad);
+    background:#fff1f1;
+    border:1px solid #efc8c8;
+  }
+
+  .answers{
+    display:none;
+    margin-top:16px;
+    padding:16px;
+    background:#fff8e8;
+    border-left:5px solid var(--gold);
+    border-radius:10px;
+  }
+
+  .answers ol{margin:0;padding-left:24px}
+
+  footer{
+    text-align:center;
+    color:#6a7a86;
+    font-size:15px;
+    margin-top:20px;
+  }
+
+  @media(max-width:650px){
+    body{font-size:17px}
+    header h1{font-size:29px}
+    .panel{padding:17px}
+    .blank{min-width:120px}
+    .intro{align-items:flex-start}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Commuting Vocabulary</h1>
+  <p>Complete the sentences with the correct words</p>
+</header>
+
+<main>
+  <section class="panel">
+    <div class="intro">
+      <div class="icon">🚆</div>
+      <p><b>Как выполнять:</b> нажмите на пустое поле, затем выберите нужное слово из рамки. Нажмите 🔊 рядом со словом, чтобы прослушать его. Чтобы убрать слово, нажмите на заполненное поле ещё раз.</p>
+    </div>
+
+    <div class="word-bank" id="wordBank"></div>
+
+    <div class="exercise-list">
+
+      <div class="sentence">
+        <span class="num">1</span>
+        Every morning, I <span class="blank" data-answer="commute"></span>
+        to school by bus and my mom uses
+        <span class="blank" data-answer="public transport"></span>.
+        <span class="hint">Каждое утро я езжу в школу на автобусе, а моя мама пользуется общественным транспортом.</span>
+      </div>
+
+      <div class="sentence">
+        <span class="num">2</span>
+        You can buy <span class="blank" data-answer="tickets"></span>
+        at the <span class="blank" data-answer="train station"></span>
+        before you board the train.
+        <span class="hint">Билеты можно купить на железнодорожной станции перед посадкой на поезд.</span>
+      </div>
+
+      <div class="sentence">
+        <span class="num">3</span>
+        During <span class="blank" data-answer="peak hours"></span>,
+        it takes longer to reach the office because of the
+        <span class="blank" data-answer="traffic jam"></span>.
+        <span class="hint">В часы пик дорога до офиса занимает больше времени из-за пробки.</span>
+      </div>
+
+      <div class="sentence">
+        <span class="num">4</span>
+        The <span class="blank" data-answer="fare"></span>
+        for the bus is cheaper if you travel during
+        <span class="blank" data-answer="off-peak"></span> times.
+        <span class="hint">Стоимость проезда дешевле, если ехать не в часы пик.</span>
+      </div>
+
+      <div class="sentence">
+        <span class="num">5</span>
+        There is a <span class="blank" data-answer="bicycle lane"></span>
+        next to the road, which makes it safer for people to cycle.
+        <span class="hint">Рядом с дорогой есть велосипедная дорожка.</span>
+      </div>
+
+      <div class="sentence">
+        <span class="num">6</span>
+        Let’s meet at the <span class="blank" data-answer="bus stop"></span>
+        near the library to catch the bus together.
+        <span class="hint">Давайте встретимся на автобусной остановке возле библиотеки.</span>
+      </div>
+
+      <div class="sentence">
+        <span class="num">7</span>
+        Check the <span class="blank" data-answer="schedule"></span>
+        to find out when the next bus arrives at the bus stop.
+        <span class="hint">Проверьте расписание, чтобы узнать, когда прибудет следующий автобус.</span>
+      </div>
+
+      <div class="sentence">
+        <span class="num">8</span>
+        When we go to the mall, we always park our car in the
+        <span class="blank" data-answer="parking lot"></span>.
+        <span class="hint">Когда мы едем в торговый центр, мы оставляем машину на парковке.</span>
+      </div>
+
+    </div>
+
+    <div class="buttons">
+      <button class="action" onclick="checkAnswers()">Проверить</button>
+      <button class="action answer" onclick="toggleAnswers()">Показать ответы</button>
+      <button class="action secondary" onclick="resetExercise()">Начать заново</button>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+
+    <div id="answers" class="answers">
+      <ol>
+        <li>commute; public transport</li>
+        <li>tickets; train station</li>
+        <li>peak hours; traffic jam</li>
+        <li>fare; off-peak</li>
+        <li>bicycle lane</li>
+        <li>bus stop</li>
+        <li>schedule</li>
+        <li>parking lot</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>Подсказка: после выполнения прочитайте все предложения вслух.</footer>
+</main>
+
+<script>
+const words = [
+  "off-peak",
+  "public transport",
+  "parking lot",
+  "schedule",
+  "bicycle lane",
+  "commute",
+  "fare",
+  "train station",
+  "peak hours",
+  "tickets",
+  "traffic jam",
+  "bus stop"
+];
+
+let selectedBlank = null;
+
+function speak(text){
+  if(!("speechSynthesis" in window)){
+    alert("Ваш браузер не поддерживает озвучивание.");
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-GB";
+  utterance.rate = 0.82;
+  utterance.pitch = 1;
+
+  const voices = window.speechSynthesis.getVoices();
+  const voice =
+    voices.find(v => /en-GB/i.test(v.lang)) ||
+    voices.find(v => /^en/i.test(v.lang));
+
+  if(voice) utterance.voice = voice;
+  window.speechSynthesis.speak(utterance);
+}
+
+function renderWordBank(){
+  const bank = document.getElementById("wordBank");
+  bank.innerHTML = "";
+
+  words.forEach(word => {
+    const wrap = document.createElement("div");
+    wrap.className = "word-wrap";
+
+    const btn = document.createElement("button");
+    btn.className = "word";
+    btn.textContent = word;
+    btn.dataset.word = word;
+    btn.onclick = () => placeWord(word, btn);
+
+    const sound = document.createElement("button");
+    sound.className = "sound";
+    sound.type = "button";
+    sound.title = "Прослушать слово";
+    sound.setAttribute("aria-label", "Прослушать " + word);
+    sound.textContent = "🔊";
+    sound.onclick = (event) => {
+      event.stopPropagation();
+      speak(word);
+    };
+
+    wrap.appendChild(btn);
+    wrap.appendChild(sound);
+    bank.appendChild(wrap);
+  });
+}
+
+if("speechSynthesis" in window){
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+
+document.querySelectorAll(".blank").forEach(blank => {
+  blank.addEventListener("click", () => {
+    if(blank.textContent.trim()){
+      releaseWord(blank.textContent.trim());
+      blank.textContent = "";
+      blank.classList.remove("correct","incorrect");
+    }
+    document.querySelectorAll(".blank").forEach(b => b.classList.remove("selected"));
+    selectedBlank = blank;
+    blank.classList.add("selected");
+  });
+});
+
+function placeWord(word, button){
+  if(!selectedBlank || button.classList.contains("used")) return;
+
+  if(selectedBlank.textContent.trim()){
+    releaseWord(selectedBlank.textContent.trim());
+  }
+
+  selectedBlank.textContent = word;
+  selectedBlank.classList.remove("correct","incorrect");
+  selectedBlank.classList.remove("selected");
+  button.classList.add("used");
+  selectedBlank = null;
+}
+
+function releaseWord(word){
+  const button = [...document.querySelectorAll(".word")]
+    .find(btn => btn.dataset.word === word && btn.classList.contains("used"));
+  if(button) button.classList.remove("used");
+}
+
+function checkAnswers(){
+  const blanks = [...document.querySelectorAll(".blank")];
+  let correct = 0;
+
+  blanks.forEach(blank => {
+    blank.classList.remove("correct","incorrect","selected");
+    if(blank.textContent.trim() === blank.dataset.answer){
+      blank.classList.add("correct");
+      correct++;
+    }else{
+      blank.classList.add("incorrect");
+    }
+  });
+
+  const feedback = document.getElementById("feedback");
+  const total = blanks.length;
+  const percent = Math.round(correct / total * 100);
+
+  if(percent >= 80){
+    feedback.className = "feedback good";
+    feedback.textContent = `Отличная работа! Правильно: ${correct} из ${total}.`;
+  }else{
+    feedback.className = "feedback try";
+    feedback.textContent = `Правильно: ${correct} из ${total}. Проверьте красные поля и попробуйте ещё раз.`;
+  }
+}
+
+function resetExercise(){
+  document.querySelectorAll(".blank").forEach(blank => {
+    blank.textContent = "";
+    blank.classList.remove("correct","incorrect","selected");
+  });
+  document.querySelectorAll(".word").forEach(btn => btn.classList.remove("used"));
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("feedback").textContent = "";
+  selectedBlank = null;
+}
+
+function toggleAnswers(){
+  const box = document.getElementById("answers");
+  box.style.display = box.style.display === "block" ? "none" : "block";
+}
+
+renderWordBank();
+</script>
+
+</body>
+</html>
