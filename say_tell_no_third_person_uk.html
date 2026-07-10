@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Say or Tell — Practice</title>
+<style>
+:root{--a:#7657d9;--b:#f5f0ff;--good:#23895d;--bad:#c83f50;--ink:#27304a}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#fff8ef,#f3efff);color:var(--ink)}
+header{padding:24px 16px;text-align:center;background:linear-gradient(135deg,#7657d9,#9c7cf0);color:white}
+header h1{margin:0 0 8px}.wrap{max-width:980px;margin:auto;padding:18px}
+.rule{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.rule div{background:white;padding:16px;border-radius:16px;box-shadow:0 8px 20px #0001}
+.say{border-top:6px solid #8a5bd1}.tell{border-top:6px solid #3498db}
+.game{background:white;border-radius:20px;padding:20px;margin-bottom:18px;box-shadow:0 10px 28px #513d8c18}
+h2{color:var(--a)}.hint{background:#fff3d9;padding:11px;border-radius:12px;margin-bottom:14px}
+.question{font-size:21px;padding:14px;background:#faf8ff;border-radius:12px;margin:10px 0}
+.options{display:flex;gap:10px;flex-wrap:wrap}
+button{border:0;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;background:#efeaff;color:#4e35b6}
+.good{color:var(--good)}.bad{color:var(--bad)}.feedback{min-height:25px;font-weight:700;margin-top:8px}
+input{width:100%;padding:12px;border:2px solid #ddd;border-radius:10px;font-size:17px}
+.row{display:grid;grid-template-columns:1fr 220px;gap:10px;align-items:center;margin:10px 0}
+.cardgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.card{padding:14px;border:2px solid #e8e0fa;border-radius:14px;background:#fff;cursor:pointer}
+.card.selected{border-color:var(--a);background:var(--b)}
+.matchgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.matchbtn{width:100%;margin:5px 0;text-align:left}.selectedBtn{background:var(--b);outline:2px solid var(--a)}
+.done{opacity:.45;pointer-events:none;background:#dff6e9}
+.big{font-size:34px;font-weight:800;text-align:center;padding:20px}
+footer{text-align:center;padding:20px;color:#6d6880}
+@media(max-width:650px){.rule,.matchgrid,.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>🌟 SAY or TELL?</h1><div>Тільки I / you / we / they</div></header>
+<div class="wrap">
+<div class="rule">
+<div class="say"><h3>SAY = що?</h3><p><b>say something</b><br><b>say that...</b><br><b>say hello / goodbye / thank you</b></p></div>
+<div class="tell"><h3>TELL = кому?</h3><p><b>tell me / you / us / them</b><br><b>tell someone something</b><br><b>tell someone to do something</b></p></div>
+</div>
+
+<section class="game">
+<h2>1. Обери SAY або TELL</h2>
+<div class="hint">Шукай людину після дієслова: <b>me, you, us, them</b> → зазвичай <b>tell</b>.</div>
+<div id="choiceBox"></div>
+</section>
+
+<section class="game">
+<h2>2. Встав SAY або TELL</h2>
+<div class="hint">У цих вправах є тільки <b>I / you / we / they</b>, тому використовуємо лише <b>say</b> або <b>tell</b>.</div>
+<div id="fillBox"></div>
+<button onclick="checkAllFill()">Перевірити всі</button>
+<div id="fillResult" class="feedback"></div>
+</section>
+
+<section class="game">
+<h2>3. Розклади фрази у дві групи</h2>
+<div class="hint">Натисни на картку, а потім обери SAY або TELL.</div>
+<div id="sortBox" class="cardgrid"></div>
+<div class="options" style="margin-top:12px">
+<button onclick="sortSelected('say')">До SAY</button>
+<button onclick="sortSelected('tell')">До TELL</button>
+</div>
+<div id="sortFeedback" class="feedback"></div>
+</section>
+
+<section class="game">
+<h2>4. Знайди пару</h2>
+<div class="hint">Поєднай дієслово з правильним продовженням.</div>
+<div class="matchgrid"><div id="leftCol"></div><div id="rightCol"></div></div>
+<div id="matchFeedback" class="feedback"></div>
+<button onclick="startMatch()">Новий раунд</button>
+</section>
+
+<section class="game">
+<h2>5. Міні-тест</h2>
+<div class="hint">10 випадкових речень. Наприкінці побачиш результат.</div>
+<div id="testBox"></div>
+</section>
+</div>
+<footer><b>SAY = що?</b> • <b>TELL = кому?</b></footer>
+
+<script>
+const items=[{"sentence": "Please ___ me the truth.", "answer": "tell", "hint": "Є кому? me → tell"}, {"sentence": "We ___ hello to our teacher every morning.", "answer": "say", "hint": "say hello"}, {"sentence": "Can you ___ me your name?", "answer": "tell", "hint": "Є кому? me → tell"}, {"sentence": "I always ___ that breakfast is important.", "answer": "say", "hint": "say + that + речення"}, {"sentence": "They ___ us a funny story.", "answer": "tell", "hint": "tell someone a story"}, {"sentence": "What do you ___?", "answer": "say", "hint": "Що ти кажеш? → say"}, {"sentence": "Please ___ us what happened.", "answer": "tell", "hint": "Є кому? us → tell"}, {"sentence": "We ___ goodbye and leave.", "answer": "say", "hint": "say goodbye"}, {"sentence": "They ___ me a secret.", "answer": "tell", "hint": "tell someone a secret"}, {"sentence": "We ___ that the film is great.", "answer": "say", "hint": "say + that + речення"}, {"sentence": "Can you ___ the answer again?", "answer": "say", "hint": "Немає кому → say"}, {"sentence": "They ___ us to open our books.", "answer": "tell", "hint": "tell someone to do something"}, {"sentence": "I always ___ thank you.", "answer": "say", "hint": "say thank you"}, {"sentence": "You ___ me not to worry.", "answer": "tell", "hint": "tell someone not to do something"}, {"sentence": "What do they ___?", "answer": "say", "hint": "Після do використовуємо say"}, {"sentence": "We ___ our parents everything.", "answer": "tell", "hint": "tell someone something"}];
+const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+
+function renderChoice(){
+ const set=shuffle(items).slice(0,10);
+ choiceBox.innerHTML='';
+ set.forEach((it,i)=>{
+  const q=document.createElement('div');
+  q.className='question';
+  q.innerHTML=`<div>${i+1}. ${it.sentence}</div>
+  <div class="options" style="margin-top:10px">
+  <button class="sayBtn">say</button><button class="tellBtn">tell</button>
+  </div><div class="feedback"></div>`;
+  q.querySelector('.sayBtn').onclick=()=>answerChoice(q,'say',it);
+  q.querySelector('.tellBtn').onclick=()=>answerChoice(q,'tell',it);
+  choiceBox.appendChild(q);
+ });
+}
+function answerChoice(q,ans,it){
+ const f=q.querySelector('.feedback');
+ if(ans===it.answer){f.textContent='Правильно! 🌟';f.className='feedback good'}
+ else{f.textContent='Подумай ще. '+it.hint;f.className='feedback bad'}
+}
+
+function renderFill(){
+ const set=shuffle(items).slice(0,10);
+ fillBox.innerHTML='';
+ set.forEach((it,i)=>{
+  const row=document.createElement('div');
+  row.className='row';
+  row.innerHTML=`<div>${i+1}. ${it.sentence}</div><input data-answer="${it.answer}" placeholder="say або tell">`;
+  fillBox.appendChild(row);
+ });
+}
+function checkAllFill(){
+ let ok=0,total=0;
+ fillBox.querySelectorAll('input').forEach(inp=>{
+   total++;
+   const good=inp.value.trim().toLowerCase()===inp.dataset.answer;
+   inp.style.borderColor=good?'#23895d':'#c83f50';
+   if(good)ok++;
+ });
+ fillResult.textContent=`Правильно: ${ok} із ${total}`;
+ fillResult.className='feedback '+(ok>=8?'good':'bad');
+}
+
+const phrases=[
+ {t:'hello',g:'say'},{t:'goodbye',g:'say'},{t:'thank you',g:'say'},{t:'something',g:'say'},
+ {t:'that we are tired',g:'say'},{t:'me the truth',g:'tell'},{t:'us a story',g:'tell'},
+ {t:'them a secret',g:'tell'},{t:'us to wait',g:'tell'},{t:'me not to worry',g:'tell'}
+];
+let selectedCard=null;
+function renderSort(){
+ sortBox.innerHTML='';selectedCard=null;
+ shuffle(phrases).forEach(p=>{
+  const c=document.createElement('div');
+  c.className='card';c.textContent=p.t;c.dataset.group=p.g;
+  c.onclick=()=>{document.querySelectorAll('#sortBox .card').forEach(x=>x.classList.remove('selected'));c.classList.add('selected');selectedCard=c};
+  sortBox.appendChild(c);
+ });
+}
+function sortSelected(group){
+ if(!selectedCard){sortFeedback.textContent='Спочатку обери картку.';sortFeedback.className='feedback bad';return}
+ if(selectedCard.dataset.group===group){
+   selectedCard.classList.add('done');selectedCard.classList.remove('selected');
+   sortFeedback.textContent='Правильно!';sortFeedback.className='feedback good';selectedCard=null;
+ } else {
+   sortFeedback.textContent='Спробуй іншу групу.';sortFeedback.className='feedback bad';
+ }
+}
+
+const pairs=[
+ ['say','hello'],['say','goodbye'],['say','thank you'],['say','something'],
+ ['tell','me the truth'],['tell','us a story'],['tell','them a secret'],['tell','me not to worry']
+];
+let lp=null,rp=null;
+function startMatch(){
+ lp=rp=null;leftCol.innerHTML='';rightCol.innerHTML='';matchFeedback.textContent='';
+ shuffle(pairs).forEach(p=>{
+  const b=document.createElement('button');b.className='matchbtn';b.textContent=p[0];
+  b.onclick=()=>pickL(b,p.join('|'));leftCol.appendChild(b);
+ });
+ shuffle(pairs).forEach(p=>{
+  const b=document.createElement('button');b.className='matchbtn';b.textContent=p[1];
+  b.onclick=()=>pickR(b,p.join('|'));rightCol.appendChild(b);
+ });
+}
+function pickL(el,k){document.querySelectorAll('#leftCol button').forEach(x=>x.classList.remove('selectedBtn'));el.classList.add('selectedBtn');lp={el,k};checkPair()}
+function pickR(el,k){document.querySelectorAll('#rightCol button').forEach(x=>x.classList.remove('selectedBtn'));el.classList.add('selectedBtn');rp={el,k};checkPair()}
+function checkPair(){
+ if(!lp||!rp)return;
+ if(lp.k===rp.k){
+   lp.el.classList.add('done');rp.el.classList.add('done');
+   matchFeedback.textContent='Так! Це пара.';matchFeedback.className='feedback good';
+ } else {
+   lp.el.classList.remove('selectedBtn');rp.el.classList.remove('selectedBtn');
+   matchFeedback.textContent='Не ця пара.';matchFeedback.className='feedback bad';
+ }
+ lp=rp=null;
+}
+
+let testSet=[],testIndex=0,testScore=0;
+function startTest(){testSet=shuffle(items).slice(0,10);testIndex=0;testScore=0;showTest()}
+function showTest(){
+ if(testIndex>=testSet.length){
+   testBox.innerHTML=`<div class="big">Результат: ${testScore} / 10</div><button onclick="startTest()">Спробувати ще раз</button>`;
+   return;
+ }
+ const it=testSet[testIndex];
+ testBox.innerHTML=`<div class="question"><div>${testIndex+1}. ${it.sentence}</div>
+ <div class="options" style="margin-top:10px"><button id="ts">say</button><button id="tt">tell</button></div>
+ <div id="tf" class="feedback"></div></div>`;
+ document.getElementById('ts').onclick=()=>testAnswer('say');
+ document.getElementById('tt').onclick=()=>testAnswer('tell');
+}
+function testAnswer(ans){
+ const it=testSet[testIndex];
+ const tf=document.getElementById('tf');
+ if(ans===it.answer){testScore++;tf.textContent='Правильно!';tf.className='feedback good'}
+ else{tf.textContent=it.hint;tf.className='feedback bad'}
+ setTimeout(()=>{testIndex++;showTest()},700);
+}
+
+renderChoice();renderFill();renderSort();startMatch();startTest();
+</script>
+</body>
+</html>
