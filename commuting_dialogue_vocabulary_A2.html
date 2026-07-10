@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commuting Dialogue and Vocabulary Practice</title>
+<style>
+  :root{
+    --bg:#f4f6f8;
+    --card:#ffffff;
+    --navy:#17324d;
+    --purple:#8a49b8;
+    --light-purple:#f4ecfa;
+    --gold:#c89b55;
+    --text:#243443;
+    --muted:#6c7a86;
+    --ok:#2f7d4a;
+    --bad:#b84747;
+    --border:#d5dee5;
+  }
+
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:linear-gradient(180deg,#f7f9fb,#eef2f5);
+    color:var(--text);
+    font-size:18px;
+    line-height:1.55;
+  }
+
+  header{
+    background:linear-gradient(120deg,var(--navy),#496e88);
+    color:white;
+    padding:34px 20px;
+    text-align:center;
+  }
+
+  header h1{
+    margin:0 0 8px;
+    font-size:35px;
+  }
+
+  header p{
+    margin:0;
+    opacity:.92;
+  }
+
+  main{
+    max-width:1050px;
+    margin:28px auto;
+    padding:0 18px 45px;
+  }
+
+  .section{
+    background:var(--card);
+    border:1px solid #e2e8ed;
+    border-radius:18px;
+    padding:24px;
+    margin-bottom:24px;
+    box-shadow:0 7px 22px rgba(25,52,77,.08);
+  }
+
+  h2{
+    margin-top:0;
+    color:var(--navy);
+    border-left:6px solid var(--gold);
+    padding-left:12px;
+  }
+
+  .instruction{
+    background:#eef4f7;
+    border-radius:11px;
+    padding:13px 15px;
+    margin-bottom:18px;
+  }
+
+  .dialogue{
+    border-left:5px solid var(--purple);
+    background:#fcfaff;
+    padding:18px 20px;
+    border-radius:12px;
+  }
+
+  .line{
+    margin:4px 0;
+  }
+
+  .speaker{
+    color:var(--purple);
+    font-weight:bold;
+  }
+
+  .vocab{
+    color:#7c3fb2;
+    font-weight:bold;
+    text-decoration:underline dotted;
+    text-underline-offset:3px;
+    cursor:pointer;
+    padding:1px 3px;
+    border-radius:4px;
+  }
+
+  .vocab:hover{
+    background:var(--light-purple);
+  }
+
+  .listen-dialogue{
+    margin-top:16px;
+  }
+
+  button{
+    border:none;
+    border-radius:10px;
+    padding:11px 17px;
+    font-size:16px;
+    cursor:pointer;
+    background:var(--navy);
+    color:#fff;
+    margin:8px 8px 0 0;
+  }
+
+  button.secondary{background:#6d7e8a}
+  button.answer{background:var(--gold);color:#243443}
+  button.audio{
+    background:#eef4f7;
+    color:var(--navy);
+    border:1px solid #c7d5df;
+  }
+
+  .word-bank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:18px 0 24px;
+    padding:16px;
+    background:#fafcfd;
+    border:2px dashed #c8d5dd;
+    border-radius:13px;
+  }
+
+  .word{
+    background:#fff;
+    border:1px solid #bccbd5;
+    color:var(--navy);
+    padding:8px 12px;
+    border-radius:9px;
+    cursor:pointer;
+    font-size:17px;
+  }
+
+  .word:hover{background:#edf5f8}
+  .word.used{
+    opacity:.38;
+    text-decoration:line-through;
+    cursor:not-allowed;
+  }
+
+  .item{
+    padding:14px 0;
+    border-bottom:1px solid #edf0f2;
+  }
+
+  .item:last-child{border-bottom:none}
+
+  .blank{
+    display:inline-flex;
+    min-width:150px;
+    min-height:42px;
+    align-items:center;
+    justify-content:center;
+    padding:7px 10px;
+    margin:2px 5px;
+    border:2px solid #b9c7d1;
+    border-radius:9px;
+    background:#fff;
+    vertical-align:middle;
+    cursor:pointer;
+    font-weight:bold;
+    color:var(--navy);
+  }
+
+  .blank.selected{
+    border-color:var(--gold);
+    background:#fff8e9;
+  }
+
+  .blank.correct{
+    border-color:var(--ok);
+    background:#edf8f1;
+    color:var(--ok);
+  }
+
+  .blank.incorrect{
+    border-color:var(--bad);
+    background:#fff1f1;
+    color:var(--bad);
+  }
+
+  .feedback{
+    display:none;
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:11px;
+    font-weight:bold;
+  }
+
+  .feedback.good{
+    display:block;
+    color:var(--ok);
+    background:#edf8f1;
+    border:1px solid #bedec9;
+  }
+
+  .feedback.try{
+    display:block;
+    color:var(--bad);
+    background:#fff1f1;
+    border:1px solid #efc8c8;
+  }
+
+  .answers{
+    display:none;
+    margin-top:15px;
+    background:#fff8e8;
+    border-left:5px solid var(--gold);
+    padding:14px 16px;
+    border-radius:10px;
+  }
+
+  .modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(18,35,50,.48);
+    z-index:1000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+
+  .modal.show{display:flex}
+
+  .modal-card{
+    background:#fff;
+    width:min(470px,100%);
+    border-radius:18px;
+    padding:24px;
+    box-shadow:0 20px 60px rgba(0,0,0,.24);
+    position:relative;
+  }
+
+  .close{
+    position:absolute;
+    right:14px;
+    top:10px;
+    background:transparent;
+    color:#5c6b77;
+    font-size:25px;
+    padding:4px 8px;
+    margin:0;
+  }
+
+  .modal-word{
+    font-size:28px;
+    color:var(--navy);
+    font-weight:bold;
+    margin-bottom:5px;
+  }
+
+  .ipa{
+    font-family:"Times New Roman", serif;
+    color:#6b7780;
+    font-size:20px;
+    margin-bottom:14px;
+  }
+
+  .translation{
+    font-size:21px;
+    font-weight:bold;
+    color:#7c3fb2;
+    margin-bottom:12px;
+  }
+
+  .example{
+    background:#f5f7f9;
+    padding:12px 14px;
+    border-radius:10px;
+    margin-top:12px;
+  }
+
+  footer{
+    text-align:center;
+    color:#6c7c88;
+    font-size:15px;
+  }
+
+  @media(max-width:650px){
+    body{font-size:17px}
+    header h1{font-size:29px}
+    .section{padding:18px}
+    .blank{min-width:120px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Commuting: Dialogue and Vocabulary</h1>
+  <p>Read, listen and complete the exercise</p>
+</header>
+
+<main>
+
+  <section class="section">
+    <h2>1. Read the dialogue</h2>
+    <div class="instruction">
+      Подчёркнутые слова могут быть сложными для уровня A2. Нажмите на слово, чтобы увидеть перевод, транскрипцию и прослушать произношение.
+    </div>
+
+    <div class="dialogue" id="dialogueText">
+      <div class="line"><span class="speaker">Alex:</span> Hi Jane, how do you usually get to work?</div>
+      <div class="line"><span class="speaker">Jane:</span> Hi Alex, I take the bus. It stops right by my house. What about you?</div>
+      <div class="line"><span class="speaker">Alex:</span> I cycle. There's a great <span class="vocab" data-key="bicycle lane">bicycle lane</span> all the way to our office. How about our <span class="vocab" data-key="colleagues">colleagues</span>? Who takes the subway?</div>
+      <div class="line"><span class="speaker">Jane:</span> Oh, many from our team do. <span class="vocab" data-key="especially">Especially</span> those living near the train station. Who rides the bike like you from our office?</div>
+      <div class="line"><span class="speaker">Alex:</span> Sara and Mike do. They say it keeps them fit and <span class="vocab" data-key="avoids">avoids</span> the <span class="vocab" data-key="peak hour rush">peak hour rush</span>.</div>
+      <div class="line"><span class="speaker">Jane:</span> Who finds driving to work better than public transport?</div>
+      <div class="line"><span class="speaker">Alex:</span> A few like John prefer driving for more <span class="vocab" data-key="convenience">convenience</span>. How often does Sara cycle to work?</div>
+      <div class="line"><span class="speaker">Jane:</span> She cycles every day, <span class="vocab" data-key="unless">unless</span> it rains. Then she <span class="vocab" data-key="switches to">switches to</span> the metro.</div>
+      <div class="line"><span class="speaker">Alex:</span> What do you usually do during your bus ride?</div>
+      <div class="line"><span class="speaker">Jane:</span> I usually listen to music or read. It's my <span class="vocab" data-key="quiet time">quiet time</span> before the busy day begins.</div>
+    </div>
+
+    <div class="listen-dialogue">
+      <button class="audio" onclick="speakDialogue()">🔊 Прослушать весь диалог</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>2. Complete the sentences</h2>
+    <div class="instruction">
+      Нажмите на пустое поле, затем выберите подходящее слово из рамки.
+    </div>
+
+    <div class="word-bank" id="wordBank"></div>
+
+    <div id="exercise">
+      <div class="item">1. Jane takes the <span class="blank" data-answer="bus"></span> to work because it's convenient.</div>
+      <div class="item">2. Alex enjoys cycling because it avoids the <span class="blank" data-answer="peak hour"></span> rush.</div>
+      <div class="item">3. Sara <span class="blank" data-answer="cycles"></span> unless it rains, then she takes the <span class="blank" data-answer="metro"></span>.</div>
+      <div class="item">4. Jane finds the <span class="blank" data-answer="bus stop"></span> near her house very convenient.</div>
+      <div class="item">5. John prefers <span class="blank" data-answer="driving"></span> for convenience.</div>
+      <div class="item">6. During her bus ride, Jane usually listens to <span class="blank" data-answer="music"></span> or reads.</div>
+    </div>
+
+    <button onclick="checkAnswers()">Проверить</button>
+    <button class="answer" onclick="toggleAnswers()">Показать ответы</button>
+    <button class="secondary" onclick="resetExercise()">Начать заново</button>
+
+    <div class="feedback" id="feedback"></div>
+
+    <div class="answers" id="answers">
+      <ol>
+        <li>bus</li>
+        <li>peak hour</li>
+        <li>cycles; metro</li>
+        <li>bus stop</li>
+        <li>driving</li>
+        <li>music</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>Совет: после упражнения ещё раз прослушайте диалог и прочитайте его вслух.</footer>
+</main>
+
+<div class="modal" id="vocabModal" onclick="closeModalOutside(event)">
+  <div class="modal-card">
+    <button class="close" onclick="closeModal()">×</button>
+    <div class="modal-word" id="modalWord"></div>
+    <div class="ipa" id="modalIpa"></div>
+    <div class="translation" id="modalTranslation"></div>
+    <button class="audio" id="modalAudio">🔊 Прослушать слово</button>
+    <div class="example" id="modalExample"></div>
+  </div>
+</div>
+
+<script>
+const vocabData = {
+  "bicycle lane":{
+    ipa:"/ˈbaɪsɪkəl leɪn/",
+    translation:"велосипедная дорожка",
+    example:"There is a bicycle lane near my office."
+  },
+  "colleagues":{
+    ipa:"/ˈkɒliːɡz/",
+    translation:"коллеги",
+    example:"My colleagues take the metro."
+  },
+  "especially":{
+    ipa:"/ɪˈspeʃəli/",
+    translation:"особенно",
+    example:"I like public transport, especially the metro."
+  },
+  "avoids":{
+    ipa:"/əˈvɔɪdz/",
+    translation:"избегает",
+    example:"Cycling avoids traffic jams."
+  },
+  "peak hour rush":{
+    ipa:"/ˌpiːk aʊə ˈrʌʃ/",
+    translation:"час пик; интенсивное движение в час пик",
+    example:"The roads are busy during the peak hour rush."
+  },
+  "convenience":{
+    ipa:"/kənˈviːniəns/",
+    translation:"удобство",
+    example:"She drives for convenience."
+  },
+  "unless":{
+    ipa:"/ənˈles/",
+    translation:"если не; если только не",
+    example:"She cycles every day unless it rains."
+  },
+  "switches to":{
+    ipa:"/ˈswɪtʃɪz tuː/",
+    translation:"переходит на; пересаживается на",
+    example:"When it rains, she switches to the metro."
+  },
+  "quiet time":{
+    ipa:"/ˈkwaɪət taɪm/",
+    translation:"спокойное время; время для себя",
+    example:"My bus ride is my quiet time."
+  }
+};
+
+const words = ["cycles","peak hour","music","bus stop","driving","bus","metro"];
+let selectedBlank = null;
+
+function speak(text){
+  if(!("speechSynthesis" in window)){
+    alert("Ваш браузер не поддерживает озвучивание.");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-GB";
+  u.rate = 0.82;
+  const voices = speechSynthesis.getVoices();
+  const voice = voices.find(v => /en-GB/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang));
+  if(voice) u.voice = voice;
+  speechSynthesis.speak(u);
+}
+
+function speakDialogue(){
+  const text = `Alex: Hi Jane, how do you usually get to work?
+Jane: Hi Alex, I take the bus. It stops right by my house. What about you?
+Alex: I cycle. There's a great bicycle lane all the way to our office. How about our colleagues? Who takes the subway?
+Jane: Oh, many from our team do. Especially those living near the train station. Who rides the bike like you from our office?
+Alex: Sara and Mike do. They say it keeps them fit and avoids the peak hour rush.
+Jane: Who finds driving to work better than public transport?
+Alex: A few like John prefer driving for more convenience. How often does Sara cycle to work?
+Jane: She cycles every day, unless it rains. Then she switches to the metro.
+Alex: What do you usually do during your bus ride?
+Jane: I usually listen to music or read. It's my quiet time before the busy day begins.`;
+  speak(text);
+}
+
+document.querySelectorAll(".vocab").forEach(el=>{
+  el.addEventListener("click",()=>{
+    const key = el.dataset.key;
+    const data = vocabData[key];
+    document.getElementById("modalWord").textContent = key;
+    document.getElementById("modalIpa").textContent = data.ipa;
+    document.getElementById("modalTranslation").textContent = data.translation;
+    document.getElementById("modalExample").textContent = data.example;
+    document.getElementById("modalAudio").onclick = ()=>speak(key);
+    document.getElementById("vocabModal").classList.add("show");
+  });
+});
+
+function closeModal(){
+  document.getElementById("vocabModal").classList.remove("show");
+}
+
+function closeModalOutside(event){
+  if(event.target.id === "vocabModal") closeModal();
+}
+
+function renderWordBank(){
+  const bank = document.getElementById("wordBank");
+  bank.innerHTML = "";
+  words.forEach(word=>{
+    const btn = document.createElement("button");
+    btn.className = "word";
+    btn.textContent = word;
+    btn.dataset.word = word;
+    btn.onclick = ()=>placeWord(word,btn);
+    bank.appendChild(btn);
+  });
+}
+
+document.querySelectorAll(".blank").forEach(blank=>{
+  blank.addEventListener("click",()=>{
+    if(blank.textContent.trim()){
+      releaseWord(blank.textContent.trim());
+      blank.textContent = "";
+      blank.classList.remove("correct","incorrect");
+    }
+    document.querySelectorAll(".blank").forEach(b=>b.classList.remove("selected"));
+    selectedBlank = blank;
+    blank.classList.add("selected");
+  });
+});
+
+function placeWord(word,button){
+  if(!selectedBlank || button.classList.contains("used")) return;
+  selectedBlank.textContent = word;
+  selectedBlank.classList.remove("selected","correct","incorrect");
+  button.classList.add("used");
+  selectedBlank = null;
+}
+
+function releaseWord(word){
+  const button = [...document.querySelectorAll(".word")]
+    .find(btn=>btn.dataset.word===word && btn.classList.contains("used"));
+  if(button) button.classList.remove("used");
+}
+
+function checkAnswers(){
+  const blanks = [...document.querySelectorAll(".blank")];
+  let correct = 0;
+
+  blanks.forEach(blank=>{
+    blank.classList.remove("correct","incorrect","selected");
+    if(blank.textContent.trim() === blank.dataset.answer){
+      blank.classList.add("correct");
+      correct++;
+    }else{
+      blank.classList.add("incorrect");
+    }
+  });
+
+  const feedback = document.getElementById("feedback");
+  if(correct === blanks.length){
+    feedback.className = "feedback good";
+    feedback.textContent = `Отлично! Все ответы правильные: ${correct} из ${blanks.length}.`;
+  }else{
+    feedback.className = "feedback try";
+    feedback.textContent = `Правильно: ${correct} из ${blanks.length}. Проверьте красные поля.`;
+  }
+}
+
+function toggleAnswers(){
+  const box = document.getElementById("answers");
+  box.style.display = box.style.display === "block" ? "none" : "block";
+}
+
+function resetExercise(){
+  document.querySelectorAll(".blank").forEach(blank=>{
+    blank.textContent = "";
+    blank.classList.remove("correct","incorrect","selected");
+  });
+  document.querySelectorAll(".word").forEach(btn=>btn.classList.remove("used"));
+  const feedback = document.getElementById("feedback");
+  feedback.className = "feedback";
+  feedback.textContent = "";
+  selectedBlank = null;
+}
+
+renderWordBank();
+
+if("speechSynthesis" in window){
+  speechSynthesis.onvoiceschanged = ()=>speechSynthesis.getVoices();
+}
+</script>
+
+</body>
+</html>
