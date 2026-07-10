@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Word Adventure — 5 ігор</title>
+<style>
+:root{--a:#7657d9;--a2:#9b7bef;--ink:#27304a;--good:#23895d;--bad:#c83f50;--soft:#f5f0ff}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#fff8ef,#f3efff);color:var(--ink)}
+header{text-align:center;padding:24px 14px;background:linear-gradient(135deg,var(--a),var(--a2));color:white}
+header h1{margin:0 0 8px}.wrap{max-width:1000px;margin:auto;padding:18px}
+.menu{display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto 18px auto}
+.menu button,.btn,.sound{border:0;border-radius:14px;padding:11px 14px;font-weight:700;cursor:pointer;background:white;color:var(--a);box-shadow:0 4px 12px #0001}
+.menu button.active{background:var(--a);color:white}.game{display:none;background:white;border-radius:22px;padding:20px;box-shadow:0 10px 30px #513d8c18}.game.active{display:block}
+.hint{background:#fff3d9;padding:12px;border-radius:12px;margin-bottom:14px}.ipa{color:#6d6880;font-size:20px;margin:7px 0}.feedback{min-height:27px;font-weight:700;margin-top:12px}.good{color:var(--good)}.bad{color:var(--bad)}.score{font-weight:700;margin:10px 0}
+.card{min-height:230px;border:3px dashed #cdbfff;border-radius:20px;display:flex;justify-content:center;align-items:center;text-align:center;padding:22px;background:linear-gradient(135deg,#fff,#f7f3ff);cursor:pointer}
+.front{font-size:38px;font-weight:800}.back{display:none;font-size:24px}.card.flipped .front{display:none}.card.flipped .back{display:block}.row{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.big{font-size:40px;font-weight:800;text-align:center;margin:18px 0 4px}.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.option,.match,.order-item{padding:13px;border:2px solid #e6defa;background:white;border-radius:12px;cursor:pointer}.option:hover,.match:hover,.order-item:hover{border-color:var(--a)}
+.matchgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.match{width:100%;margin:5px 0}.selected{background:var(--soft);border-color:var(--a)}.done{opacity:.45;pointer-events:none;background:#def7e9}
+.sentence{font-size:22px;background:#faf8ff;padding:17px;border-radius:14px}.bank{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.chip{background:#efeaff;border-radius:999px;padding:8px 11px;font-weight:700}
+input{width:100%;padding:13px;border:2px solid #ddd;border-radius:12px;font-size:18px}
+.memory{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.mem{min-height:78px;border:0;border-radius:12px;background:var(--a);color:white;font-weight:800;padding:8px;cursor:pointer}.mem.open,.mem.matched{background:white;color:var(--ink);border:2px solid #bdaeff}.mem.matched{background:#dff6e9}
+.order-list{display:grid;gap:10px}.order-item.active{background:var(--soft);border-color:var(--a)}
+@media(max-width:620px){.matchgrid{grid-template-columns:1fr}.memory{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header><h1>🌟 Word Adventure</h1><div>5 різних ігор з транскрипцією та вимовою</div></header>
+<div class="wrap">
+<div class="menu">
+<button class="active" onclick="showGame(0,this)">🃏 1. Картки</button>
+<button onclick="showGame(1,this)">🎯 2. Переклад</button>
+<button onclick="showGame(2,this)">🔗 3. Пари</button>
+<button onclick="showGame(3,this)">✍️ 4. Пропуски</button>
+<button onclick="showGame(4,this)">🧠 5. Memory</button>
+</div>
+
+<section class="game active">
+<h2>🃏 Гра 1. Картки</h2><div class="hint">Натисни 🔊, послухай слово і повтори 3 рази. Натисни на картку, щоб побачити переклад.</div>
+<div class="card" id="card" onclick="this.classList.toggle('flipped')">
+<div class="front"><div id="cf"></div><div class="ipa" id="ci"></div><button class="sound" onclick="event.stopPropagation();speak(current())">🔊 Слухати</button></div>
+<div class="back"><div id="cb"></div><div class="ipa" id="cib"></div><button class="sound" onclick="event.stopPropagation();speak(current())">🔊 Слухати</button><hr><div id="ce" style="font-size:18px"></div></div>
+</div>
+<div class="row"><button class="btn" onclick="prevCard()">⬅ Назад</button><button class="btn" onclick="nextCard()">Далі ➡</button></div>
+</section>
+
+<section class="game">
+<h2>🎯 Гра 2. Обери правильний переклад</h2><div class="hint">Послухай слово, прочитай транскрипцію та обери правильний переклад українською.</div>
+<div id="qs" class="score"></div><div id="qw" class="big"></div><div id="qi" class="ipa" style="text-align:center"></div><div class="row"><button class="sound" onclick="speak(qcur)">🔊 Слухати</button></div><div id="qo" class="options"></div><div id="qf" class="feedback"></div><button class="btn" onclick="newQuiz()">Наступне слово</button>
+</section>
+
+<section class="game">
+<h2>🔗 Гра 3. Знайди пару</h2><div class="hint">Натисни англійське слово, а потім його переклад. Кнопка 🔊 допоможе почути слово.</div>
+<div id="ms" class="score"></div><div class="matchgrid"><div id="ml"></div><div id="mr"></div></div><div id="mf" class="feedback"></div><button class="btn" onclick="startMatch()">Новий раунд</button>
+</section>
+
+<section class="game">
+<h2>✍️ Гра 4. Встав пропущене слово</h2><div class="hint">Послухай слово, подивись на транскрипцію та впиши його у речення.</div>
+<div id="fs" class="score"></div><div id="sent" class="sentence"></div><div id="fipa" class="ipa" style="text-align:center"></div><div class="row"><button class="sound" onclick="speak(fcur)">🔊 Прослухати слово</button></div><div id="bank" class="bank"></div><input id="fin" placeholder="Введи англійське слово"><div class="row"><button class="btn" onclick="checkFill()">Перевірити</button><button class="btn" onclick="newFill()">Інше речення</button></div><div id="ff" class="feedback"></div>
+</section>
+
+<section class="game">
+<h2>🧠 Гра 5. Memory</h2><div class="hint">Відкривай по дві картки. Знайди англійське слово та його український переклад.</div>
+<div id="mems" class="score"></div><div id="mb" class="memory"></div><button class="btn" style="margin-top:14px" onclick="startMemory()">Почати знову</button>
+</section>
+</div>
+
+<script>
+const words=[{"en": "even", "speak": "even", "ipa": "/ˈiːvən/", "uk": "навіть", "ex": "Even my brother knows the answer."}, {"en": "Cyprus", "speak": "Cyprus", "ipa": "/ˈsaɪprəs/", "uk": "Кіпр", "ex": "We go to Cyprus every summer."}, {"en": "Cypriot", "speak": "Cypriot", "ipa": "/ˈsɪpriət/", "uk": "кіпрський; кіпріот; кіпріотка", "ex": "She is Cypriot."}, {"en": "Argentina", "speak": "Argentina", "ipa": "/ˌɑːdʒənˈtiːnə/", "uk": "Аргентина", "ex": "Argentina is a large country."}, {"en": "Argentinian", "speak": "Argentinian", "ipa": "/ˌɑːdʒənˈtɪniən/", "uk": "аргентинський; аргентинець; аргентинка", "ex": "He is Argentinian."}, {"en": "Turkey", "speak": "Turkey", "ipa": "/ˈtɜːki/", "uk": "Туреччина", "ex": "My family visits Turkey every year."}, {"en": "Turkish", "speak": "Turkish", "ipa": "/ˈtɜːkɪʃ/", "uk": "турецький; турок; туркеня", "ex": "She speaks Turkish."}, {"en": "talk to", "speak": "talk to", "ipa": "/ˈtɔːk tuː/", "uk": "розмовляти з кимось", "ex": "We talk to our teacher every day."}, {"en": "speak to", "speak": "speak to", "ipa": "/ˈspiːk tuː/", "uk": "говорити з кимось", "ex": "Could I speak to Tom, please?"}, {"en": "lend", "speak": "lend", "ipa": "/lend/", "uk": "позичати комусь (давати в борг)", "ex": "Can you lend me your pencil?"}, {"en": "beef", "speak": "beef", "ipa": "/biːf/", "uk": "яловичина", "ex": "My dad likes beef."}, {"en": "spend time", "speak": "spend time", "ipa": "/ˌspend ˈtaɪm/", "uk": "проводити час", "ex": "I spend time with my family every weekend."}, {"en": "spend money on", "speak": "spend money on", "ipa": "/ˌspend ˈmʌni ɒn/", "uk": "витрачати гроші на", "ex": "Don't spend all your money on sweets."}, {"en": "send", "speak": "send", "ipa": "/send/", "uk": "надсилати", "ex": "I send messages to my friends."}, {"en": "seat", "speak": "seat", "ipa": "/siːt/", "uk": "сидіння; місце (у транспорті, театрі тощо)", "ex": "This seat is free."}, {"en": "test (noun)", "speak": "test", "ipa": "/test/", "uk": "тест; контрольна", "ex": "We have an English test today."}, {"en": "test (verb)", "speak": "test", "ipa": "/test/", "uk": "тестувати; перевіряти", "ex": "The teacher will test our vocabulary."}, {"en": "spell", "speak": "spell", "ipa": "/spel/", "uk": "писати слово по літерах; вимовляти по буквах", "ex": "Can you spell your name?"}, {"en": "pet", "speak": "pet", "ipa": "/pet/", "uk": "домашній улюбленець", "ex": "I have a pet cat."}, {"en": "step", "speak": "step", "ipa": "/step/", "uk": "крок", "ex": "Take one step forward."}, {"en": "team", "speak": "team", "ipa": "/tiːm/", "uk": "команда", "ex": "Our team won the game."}, {"en": "tent", "speak": "tent", "ipa": "/tent/", "uk": "намет", "ex": "We slept in a tent."}, {"en": "eat", "speak": "eat", "ipa": "/iːt/", "uk": "їсти", "ex": "We eat breakfast at seven."}, {"en": "meet", "speak": "meet", "ipa": "/miːt/", "uk": "зустрічати; знайомитися", "ex": "I meet my friends after school."}, {"en": "fix", "speak": "fix", "ipa": "/fɪks/", "uk": "ремонтувати; лагодити", "ex": "My dad can fix a bike."}, {"en": "set", "speak": "set", "ipa": "/set/", "uk": "ставити; встановлювати; накривати (на стіл)", "ex": "Please set the table."}];
+const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+function showGame(i,b){document.querySelectorAll('.game').forEach((g,j)=>g.classList.toggle('active',i===j));document.querySelectorAll('.menu button').forEach(x=>x.classList.remove('active'));b.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function speak(w){if(!w)return;const u=new SpeechSynthesisUtterance(w.speak);u.lang='en-GB';u.rate=.8;speechSynthesis.cancel();speechSynthesis.speak(u)}
+
+let idx=0;const current=()=>words[idx];
+function renderCard(){const w=current();card.classList.remove('flipped');cf.textContent=w.en;ci.textContent=w.ipa;cb.textContent=w.uk;cib.textContent=w.ipa;ce.textContent=w.ex}
+function nextCard(){idx=(idx+1)%words.length;renderCard()}function prevCard(){idx=(idx-1+words.length)%words.length;renderCard()}
+
+let qcur,qok=0,qt=0;
+function newQuiz(){qf.textContent='';qcur=words[Math.floor(Math.random()*words.length)];qw.textContent=qcur.en;qi.textContent=qcur.ipa;const opts=shuffle([qcur,...shuffle(words.filter(x=>x!==qcur)).slice(0,3)]);qo.innerHTML=opts.map((x,i)=>`<button class="option" data-i="${i}">${x.uk}</button>`).join('');[...qo.children].forEach((btn,i)=>btn.onclick=()=>checkQuiz(opts[i].uk));qs.textContent=`Правильно: ${qok} із ${qt}`}
+function checkQuiz(a){qt++;if(a===qcur.uk){qok++;qf.textContent='Правильно! 🌟';qf.className='feedback good'}else{qf.textContent='Правильна відповідь: '+qcur.uk;qf.className='feedback bad'}qs.textContent=`Правильно: ${qok} із ${qt}`}
+
+let leftPick=null,rightPick=null,matchCount=0;
+function startMatch(){matchCount=0;leftPick=rightPick=null;mf.textContent='';const set=shuffle(words).slice(0,8);const left=shuffle(set),right=shuffle(set);ml.innerHTML='';mr.innerHTML='';left.forEach(w=>{const b=document.createElement('button');b.className='match';b.innerHTML=`<b>${w.en}</b><div class="ipa" style="font-size:15px">${w.ipa}</div><span class="sound">🔊</span>`;b.querySelector('.sound').onclick=e=>{e.stopPropagation();speak(w)};b.onclick=()=>pickLeft(b,w.en);ml.appendChild(b)});right.forEach(w=>{const b=document.createElement('button');b.className='match';b.textContent=w.uk;b.onclick=()=>pickRight(b,w.en);mr.appendChild(b)});ms.textContent='Знайдено пар: 0 / 8'}
+function pickLeft(el,key){document.querySelectorAll('#ml .match').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');leftPick={el,key};checkPair()}
+function pickRight(el,key){document.querySelectorAll('#mr .match').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');rightPick={el,key};checkPair()}
+function checkPair(){if(!leftPick||!rightPick)return;if(leftPick.key===rightPick.key){leftPick.el.classList.add('done');rightPick.el.classList.add('done');matchCount++;mf.textContent='Так! Це пара 🎉';mf.className='feedback good'}else{leftPick.el.classList.remove('selected');rightPick.el.classList.remove('selected');mf.textContent='Спробуй ще.';mf.className='feedback bad'}leftPick=rightPick=null;ms.textContent=`Знайдено пар: ${matchCount} / 8`}
+
+let fcur,fok=0,ft=0;
+function newFill(){ff.textContent='';fin.value='';fcur=words[Math.floor(Math.random()*words.length)];fipa.textContent=fcur.ipa;sent.textContent=fcur.ex.replace(fcur.speak,'_____');const opts=shuffle([fcur,...shuffle(words.filter(x=>x!==fcur)).slice(0,4)]);bank.innerHTML='';opts.forEach(w=>{const s=document.createElement('span');s.className='chip';s.innerHTML=`${w.en} <button class="sound">🔊</button>`;s.onclick=()=>fin.value=w.en;s.querySelector('button').onclick=e=>{e.stopPropagation();speak(w)};bank.appendChild(s)});fs.textContent=`Правильно: ${fok} із ${ft}`}
+function checkFill(){ft++;const a=fin.value.trim().toLowerCase();if(a===fcur.en.toLowerCase()||a===fcur.speak.toLowerCase()){fok++;ff.textContent='Правильно! ⭐';ff.className='feedback good'}else{ff.textContent='Правильна відповідь: '+fcur.en;ff.className='feedback bad'}fs.textContent=`Правильно: ${fok} із ${ft}`}
+
+let first=null,lock=false,pairs=0;
+function startMemory(){first=null;lock=false;pairs=0;const set=shuffle(words).slice(0,6);const cards=shuffle(set.flatMap(w=>[{key:w.en,text:w.en+'\n'+w.ipa,w},{key:w.en,text:w.uk,w:null}]));mb.innerHTML='';cards.forEach(c=>{const b=document.createElement('button');b.className='mem';b.textContent='?';b.onclick=()=>flipMemory(b,c);mb.appendChild(b)});mems.textContent='Знайдено пар: 0 / 6'}
+function flipMemory(el,c){if(lock||el.classList.contains('open')||el.classList.contains('matched'))return;el.classList.add('open');el.innerText=c.text;if(c.w)speak(c.w);el.dataset.key=c.key;if(!first){first=el;return}lock=true;if(first.dataset.key===el.dataset.key){first.classList.add('matched');el.classList.add('matched');pairs++;mems.textContent=`Знайдено пар: ${pairs} / 6`;first=null;lock=false}else{setTimeout(()=>{first.classList.remove('open');el.classList.remove('open');first.textContent='?';el.textContent='?';first=null;lock=false},850)}}
+
+renderCard();newQuiz();startMatch();newFill();startMemory();
+</script>
+</body></html>
