@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Still, Only, Yet — A1 Practice</title>
+<style>
+:root{
+  --navy:#17324d; --blue:#2f6588; --green:#2f7d5b; --orange:#c87519;
+  --red:#b94a48; --light:#f3f6f8; --border:#d7e1e7; --text:#263642;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);
+  background:linear-gradient(135deg,#eef3f6,#fbf9f4);
+}
+header{
+  background:var(--navy);color:#fff;text-align:center;padding:34px 18px;
+}
+header h1{margin:0 0 8px;font-size:clamp(32px,5vw,50px)}
+header p{margin:0;font-size:18px;opacity:.92}
+main{max-width:1050px;margin:28px auto;padding:0 16px 48px}
+.rule,.exercise{
+  background:#fff;border:1px solid var(--border);border-radius:18px;
+  padding:24px;margin-bottom:22px;box-shadow:0 8px 24px rgba(23,50,77,.08)
+}
+.rule h2,.exercise h2{margin-top:0;color:var(--navy)}
+.rule-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.rule-card{padding:17px;border-radius:14px;line-height:1.55}
+.still{background:#edf7f0;border:1px solid #c4dfcc}
+.only{background:#eef5fa;border:1px solid #c3d9e7}
+.yet{background:#fff5e8;border:1px solid #efd1a6}
+.word{font-size:25px;font-weight:800;margin-bottom:8px}
+.still .word{color:var(--green)} .only .word{color:var(--blue)} .yet .word{color:var(--orange)}
+.formula{font-weight:800;margin:8px 0;color:var(--navy)}
+.note{
+  margin-top:16px;background:#fff8e7;border-left:5px solid #d29a2e;
+  padding:14px 16px;border-radius:8px
+}
+.item{padding:14px 0;border-bottom:1px solid #edf1f3;line-height:1.6}
+.item:last-child{border-bottom:0}
+select,input[type=text]{
+  padding:10px 12px;border:1px solid #bcc9d2;border-radius:9px;
+  font-size:16px;background:#fff;margin:5px 4px;max-width:100%
+}
+input[type=text]{width:min(430px,100%)}
+.options{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:8px;margin-top:10px
+}
+.option{
+  border:1px solid #ccd7de;border-radius:10px;padding:10px;
+  background:#fafcfd;cursor:pointer
+}
+.option:hover{background:#edf4f7}
+button{
+  border:0;border-radius:10px;padding:11px 17px;font-size:15px;font-weight:700;
+  cursor:pointer;margin:12px 8px 0 0
+}
+.check{background:var(--green);color:white}
+.show{background:var(--blue);color:white}
+.reset{background:#e7ecef;color:var(--navy)}
+.feedback{font-weight:800;margin-left:8px}
+.correct{color:var(--green)} .wrong{color:var(--red)}
+.answer{display:none;margin-top:7px;color:var(--green);font-weight:700}
+.score{
+  margin-top:14px;padding:12px;border-radius:10px;
+  background:#eef5f1;font-weight:700;color:var(--navy)
+}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.match-card{
+  padding:12px;border:1px solid #cbd7df;border-radius:10px;
+  background:#fafcfd;cursor:pointer;user-select:none
+}
+.selected{outline:3px solid #7197b0}
+.matched{background:#e7f4ec;border-color:#73a889;opacity:.75;cursor:default}
+.dialogue{background:#f7f9fa;border-radius:12px;padding:14px;margin:12px 0}
+.small{font-size:14px;color:#687986}
+.ua{font-size:14px;color:#697983;margin-top:4px}
+@media(max-width:760px){
+  .rule-grid,.match-grid{grid-template-columns:1fr}
+  .rule,.exercise{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>STILL • ONLY • YET</h1>
+  <p>Прості вправи для рівня A1</p>
+</header>
+
+<main>
+
+<section class="rule">
+  <h2>Швидке нагадування</h2>
+  <div class="rule-grid">
+    <div class="rule-card still">
+      <div class="word">STILL — усе ще</div>
+      <div>Щось продовжується зараз.</div>
+      <div class="formula">Перед звичайною дією:</div>
+      <div>I <b>still live</b> in Sheffield.</div>
+      <div>We <b>still have</b> time.</div>
+      <div class="formula">Після am / are:</div>
+      <div>I am <b>still</b> at the office.</div>
+      <div>They are <b>still</b> busy.</div>
+    </div>
+
+    <div class="rule-card only">
+      <div class="word">ONLY — тільки</div>
+      <div>Не більше, лише одна річ або мала кількість.</div>
+      <div class="formula">Перед словом:</div>
+      <div>I have <b>only</b> one file.</div>
+      <div>We have <b>only</b> five minutes.</div>
+      <div>I want <b>only</b> fish.</div>
+    </div>
+
+    <div class="rule-card yet">
+      <div class="word">YET — вже? / ще ні</div>
+      <div>Ставимо <b>в кінці</b> питання або заперечення.</div>
+      <div class="formula">У питанні — «вже?»</div>
+      <div>Are you at the shop <b>yet</b>?</div>
+      <div>Is it six <b>yet</b>?</div>
+      <div class="formula">У запереченні — «ще ні»</div>
+      <div>I am not at the office <b>yet</b>.</div>
+      <div>We are not ready <b>yet</b>.</div>
+    </div>
+  </div>
+  <div class="note">
+    <b>Пам’ятайте:</b> still — щось триває; only — тільки; yet — наприкінці питання або заперечення.
+  </div>
+</section>
+
+<section class="exercise" id="ex1">
+  <h2>1. Оберіть still, only або yet</h2>
+  <div id="choose"></div>
+  <button class="check" onclick="checkChoose()">Перевірити</button>
+  <button class="show" onclick="showAnswers('ex1')">Показати відповіді</button>
+  <button class="reset" onclick="resetSection('ex1')">Почати знову</button>
+  <div class="score" id="score1">Результат: —</div>
+</section>
+
+<section class="exercise" id="ex2">
+  <h2>2. Поставте слово на правильне місце</h2>
+  <p class="small">Оберіть правильне речення.</p>
+  <div id="position"></div>
+  <button class="check" onclick="checkPosition()">Перевірити</button>
+  <button class="show" onclick="showAnswers('ex2')">Показати відповіді</button>
+  <button class="reset" onclick="resetSection('ex2')">Почати знову</button>
+  <div class="score" id="score2">Результат: —</div>
+</section>
+
+<section class="exercise" id="ex3">
+  <h2>3. З’єднайте речення і значення</h2>
+  <p class="small">Натисніть англійське речення, потім український переклад.</p>
+  <div class="match-grid" id="matching"></div>
+  <button class="reset" onclick="buildMatching()">Перемішати й почати знову</button>
+  <div class="score" id="score3">Знайдено пар: 0 / 10</div>
+</section>
+
+<section class="exercise" id="ex4">
+  <h2>4. Допишіть слово</h2>
+  <p class="small">Напишіть: still, only або yet.</p>
+  <div id="typing"></div>
+  <button class="check" onclick="checkTyping()">Перевірити</button>
+  <button class="show" onclick="showAnswers('ex4')">Показати відповіді</button>
+  <button class="reset" onclick="resetSection('ex4')">Почати знову</button>
+  <div class="score" id="score4">Результат: —</div>
+</section>
+
+<section class="exercise" id="ex5">
+  <h2>5. Мінідіалоги</h2>
+  <p class="small">Оберіть правильну відповідь.</p>
+  <div id="dialogues"></div>
+  <button class="check" onclick="checkDialogues()">Перевірити</button>
+  <button class="show" onclick="showAnswers('ex5')">Показати відповіді</button>
+  <button class="reset" onclick="resetSection('ex5')">Почати знову</button>
+  <div class="score" id="score5">Результат: —</div>
+</section>
+
+</main>
+
+<script>
+const chooseData = [
+ ["I am ___ at the shop.","still"],
+ ["We have ___ one file.","only"],
+ ["Are you at the office ___?","yet"],
+ ["They are ___ busy.","still"],
+ ["I want ___ fish.","only"],
+ ["Is it ten ___?","yet"],
+ ["We ___ have time.","still"],
+ ["I have ___ one bill.","only"],
+ ["I am not ready ___.","yet"],
+ ["They ___ live in Sheffield.","still"],
+ ["We have ___ five minutes.","only"],
+ ["Are we at the shop ___?","yet"]
+];
+
+const positionData = [
+ ["still", "I still live in Sheffield.", ["I live still in Sheffield.","I still live in Sheffield.","Still I live in Sheffield."]],
+ ["still", "I am still at the office.", ["I still am at the office.","I am still at the office.","I am at still the office."]],
+ ["only", "I have only one file.", ["I only have one file.","I have one only file.","I have only one file."]],
+ ["yet", "Are you at the shop yet?", ["Yet are you at the shop?","Are you yet at the shop?","Are you at the shop yet?"]],
+ ["still", "We still have time.", ["We have still time.","We still have time.","Still we have time."]],
+ ["only", "We have only five minutes.", ["We have five only minutes.","We only have five minutes.","We have only five minutes."]],
+ ["yet", "I am not at the office yet.", ["I am yet not at the office.","I am not yet at the office.","I am not at the office yet."]],
+ ["still", "They are still busy.", ["They still are busy.","They are busy still.","They are still busy."]],
+ ["only", "I want only fish.", ["Only I want fish.","I want fish only.","I want only fish."]],
+ ["yet", "Is it six yet?", ["Is yet it six?","Is it six yet?","Yet is it six?"]]
+];
+
+const matchData = [
+ ["I still live in Sheffield.","Я все ще живу в Шеффілді."],
+ ["We still have time.","У нас усе ще є час."],
+ ["I am still at the office.","Я все ще в офісі."],
+ ["They are still busy.","Вони все ще зайняті."],
+ ["I have only one file.","У мене тільки один файл."],
+ ["We have only five minutes.","У нас тільки п’ять хвилин."],
+ ["I want only fish.","Я хочу тільки рибу."],
+ ["Are you at the shop yet?","Ти вже в магазині?"],
+ ["I am not ready yet.","Я ще не готовий / готова."],
+ ["Is it six yet?","Вже шоста?"]
+];
+
+const typingData = [
+ ["I ___ live in Sheffield.","still"],
+ ["We have ___ one bill.","only"],
+ ["Are you at the shop ___?","yet"],
+ ["I am ___ busy.","still"],
+ ["They want ___ fish.","only"],
+ ["We are not ready ___.","yet"],
+ ["I ___ have my file.","still"],
+ ["We have ___ ten minutes.","only"],
+ ["Is the ship here ___?","yet"],
+ ["They are ___ at the office.","still"],
+ ["I want ___ water.","only"],
+ ["Are we in time ___?","yet"]
+];
+
+const dialogueData = [
+ ["— Are you at the shop?<br>— No, I am not there ___.","yet",["still","only","yet"]],
+ ["— Do you live in Sheffield?<br>— Yes, I ___ live there.","still",["still","only","yet"]],
+ ["— How many files do you have?<br>— I have ___ one file.","only",["still","only","yet"]],
+ ["— Are they busy?<br>— Yes, they are ___ busy.","still",["still","only","yet"]],
+ ["— Is it six?<br>— No, it isn’t six ___.","yet",["still","only","yet"]],
+ ["— How much time do we have?<br>— We have ___ five minutes.","only",["still","only","yet"]],
+ ["— Do we have time?<br>— Yes, we ___ have time.","still",["still","only","yet"]],
+ ["— Are you ready?<br>— No, I am not ready ___.","yet",["still","only","yet"]],
+ ["— What do you want?<br>— I want ___ fish.","only",["still","only","yet"]],
+ ["— Are they at the office?<br>— Yes, they are ___ there.","still",["still","only","yet"]]
+];
+
+function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+function norm(s){return s.trim().toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g," ")}
+
+function buildChoose(){
+  const box=document.getElementById('choose'); box.innerHTML='';
+  chooseData.forEach((x,i)=>{
+    box.innerHTML+=`<div class="item">${i+1}. ${x[0].replace("___",
+    `<select id="c${i}"><option value="">— оберіть —</option><option>still</option><option>only</option><option>yet</option></select>`)}
+    <span class="feedback" id="cf${i}"></span>
+    <div class="answer">Відповідь: ${x[1]}</div></div>`;
+  });
+}
+function checkChoose(){
+  let s=0;
+  chooseData.forEach((x,i)=>{
+    const v=document.getElementById('c'+i).value,f=document.getElementById('cf'+i);
+    if(v===x[1]){s++;f.textContent='✓';f.className='feedback correct'}
+    else{f.textContent='✗';f.className='feedback wrong'}
+  });
+  document.getElementById('score1').textContent=`Результат: ${s} / ${chooseData.length}`;
+}
+
+function buildPosition(){
+  const box=document.getElementById('position'); box.innerHTML='';
+  positionData.forEach((x,i)=>{
+    const opts=shuffle(x[2]).map(o=>`<label class="option"><input type="radio" name="p${i}" value="${o}"> ${o}</label>`).join('');
+    box.innerHTML+=`<div class="item"><b>${i+1}. Слово: ${x[0]}</b>
+    <div class="options">${opts}</div>
+    <span class="feedback" id="pf${i}"></span>
+    <div class="answer">Відповідь: ${x[1]}</div></div>`;
+  });
+}
+function checkPosition(){
+  let s=0;
+  positionData.forEach((x,i)=>{
+    const el=document.querySelector(`input[name=p${i}]:checked`),f=document.getElementById('pf'+i);
+    if(el&&el.value===x[1]){s++;f.textContent='✓';f.className='feedback correct'}
+    else{f.textContent='✗';f.className='feedback wrong'}
+  });
+  document.getElementById('score2').textContent=`Результат: ${s} / ${positionData.length}`;
+}
+
+let first=null,matched=0;
+function buildMatching(){
+  first=null;matched=0;
+  const box=document.getElementById('matching'); box.innerHTML='';
+  const left=shuffle(matchData.map((x,i)=>({text:x[0],id:i,type:'l'})));
+  const right=shuffle(matchData.map((x,i)=>({text:x[1],id:i,type:'r'})));
+  for(let i=0;i<left.length;i++){
+    box.innerHTML+=`<div class="match-card" data-id="${left[i].id}" data-type="l">${left[i].text}</div>
+    <div class="match-card" data-id="${right[i].id}" data-type="r">${right[i].text}</div>`;
+  }
+  document.querySelectorAll('.match-card').forEach(c=>c.onclick=()=>pickMatch(c));
+  document.getElementById('score3').textContent='Знайдено пар: 0 / 10';
+}
+function pickMatch(card){
+  if(card.classList.contains('matched'))return;
+  if(!first){first=card;card.classList.add('selected');return}
+  if(first===card){card.classList.remove('selected');first=null;return}
+  if(first.dataset.type===card.dataset.type){
+    first.classList.remove('selected');first=card;card.classList.add('selected');return;
+  }
+  if(first.dataset.id===card.dataset.id){
+    first.classList.remove('selected');first.classList.add('matched');card.classList.add('matched');
+    matched++;document.getElementById('score3').textContent=`Знайдено пар: ${matched} / 10`;
+  }else{
+    first.classList.remove('selected');card.classList.add('wrong');
+    setTimeout(()=>card.classList.remove('wrong'),500);
+  }
+  first=null;
+}
+
+function buildTyping(){
+  const box=document.getElementById('typing'); box.innerHTML='';
+  typingData.forEach((x,i)=>{
+    box.innerHTML+=`<div class="item">${i+1}. ${x[0].replace("___",
+    `<input type="text" id="t${i}" autocomplete="off" placeholder="still / only / yet">`)}
+    <span class="feedback" id="tf${i}"></span>
+    <div class="answer">Відповідь: ${x[1]}</div></div>`;
+  });
+}
+function checkTyping(){
+  let s=0;
+  typingData.forEach((x,i)=>{
+    const v=norm(document.getElementById('t'+i).value),f=document.getElementById('tf'+i);
+    if(v===x[1]){s++;f.textContent='✓';f.className='feedback correct'}
+    else{f.textContent='✗';f.className='feedback wrong'}
+  });
+  document.getElementById('score4').textContent=`Результат: ${s} / ${typingData.length}`;
+}
+
+function buildDialogues(){
+  const box=document.getElementById('dialogues'); box.innerHTML='';
+  dialogueData.forEach((x,i)=>{
+    const opts=shuffle(x[2]).map(o=>`<label class="option"><input type="radio" name="d${i}" value="${o}"> ${o}</label>`).join('');
+    box.innerHTML+=`<div class="dialogue"><b>${i+1}.</b> ${x[0]}
+    <div class="options">${opts}</div>
+    <span class="feedback" id="df${i}"></span>
+    <div class="answer">Відповідь: ${x[1]}</div></div>`;
+  });
+}
+function checkDialogues(){
+  let s=0;
+  dialogueData.forEach((x,i)=>{
+    const el=document.querySelector(`input[name=d${i}]:checked`),f=document.getElementById('df'+i);
+    if(el&&el.value===x[1]){s++;f.textContent='✓';f.className='feedback correct'}
+    else{f.textContent='✗';f.className='feedback wrong'}
+  });
+  document.getElementById('score5').textContent=`Результат: ${s} / ${dialogueData.length}`;
+}
+
+function showAnswers(id){
+  document.querySelectorAll(`#${id} .answer`).forEach(a=>a.style.display='block');
+}
+function resetSection(id){
+  document.querySelectorAll(`#${id} input[type=radio]`).forEach(x=>x.checked=false);
+  document.querySelectorAll(`#${id} input[type=text]`).forEach(x=>x.value='');
+  document.querySelectorAll(`#${id} select`).forEach(x=>x.selectedIndex=0);
+  document.querySelectorAll(`#${id} .feedback`).forEach(x=>{x.textContent='';x.className='feedback'});
+  document.querySelectorAll(`#${id} .answer`).forEach(a=>a.style.display='none');
+  const score=document.querySelector(`#${id} .score`);
+  if(score)score.textContent='Результат: —';
+}
+
+buildChoose();
+buildPosition();
+buildMatching();
+buildTyping();
+buildDialogues();
+</script>
+
+</body>
+</html>
