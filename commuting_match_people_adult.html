@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commuting — Match the People</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f1f8;color:#253047;padding:24px}
+.wrap{max-width:980px;margin:auto;background:#fff;border-radius:20px;padding:26px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+h1{text-align:center;margin:0 0 8px;color:#4d2b7a}
+.intro{text-align:center;color:#667085;margin-bottom:22px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.panel{background:#faf8fd;border:1px solid #e2d9ef;border-radius:16px;padding:18px}
+h2{margin-top:0;font-size:22px;color:#4d2b7a}
+.sentence{background:#eee7f7;border:2px solid #d8c6eb;border-radius:12px;padding:14px;margin:10px 0;cursor:grab;user-select:none;font-size:18px}
+.sentence.selected{outline:3px solid #7d5aa6}
+.person{background:#eef9f1;border:2px dashed #79bf86;border-radius:12px;padding:14px;margin:10px 0;min-height:64px}
+.person strong{display:block;color:#1d6b37;margin-bottom:8px;font-size:18px}
+.person .sentence{margin:0;background:#dff3e4;border-color:#a7d7b2}
+.buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;justify-content:center}
+button{border:none;border-radius:10px;padding:12px 18px;font-size:16px;cursor:pointer}
+.check{background:#4d2b7a;color:white}.reset{background:#ece8f2;color:#3f3152}.shuffle{background:#e7f5eb;color:#195f31}
+#result{text-align:center;margin-top:16px;font-weight:bold;font-size:19px}.ok{color:#237a39}.bad{color:#b42318}
+.tip{margin-top:20px;background:#f1ecf8;border-left:5px solid #7d5aa6;padding:12px 14px;border-radius:10px;color:#5b4a6c}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Commuting — Match the sentences</h1>
+<p class="intro">Drag each sentence to the correct person. The sentences are mixed.</p>
+<div class="grid">
+<section class="panel"><h2>Sentences</h2><div id="sentenceBank"></div></section>
+<section class="panel"><h2>People</h2>
+<div class="person" data-person="Jane"><strong>Jane</strong></div>
+<div class="person" data-person="John"><strong>John</strong></div>
+<div class="person" data-person="Alex"><strong>Alex</strong></div>
+<div class="person" data-person="Sara"><strong>Sara</strong></div>
+</section>
+</div>
+<div class="buttons">
+<button class="check" onclick="checkAnswers()">Check answers</button>
+<button class="reset" onclick="resetGame()">Reset</button>
+<button class="shuffle" onclick="shuffleGame()">Shuffle</button>
+</div>
+<div id="result"></div>
+<div class="tip">Tip: On a phone or tablet, tap a sentence first, then tap a person.</div>
+</div>
+<script>
+const items=[
+{text:"Takes the bus",person:"Jane"},
+{text:"Prefers driving",person:"John"},
+{text:"Cycles",person:"Alex"},
+{text:"Cycles or takes the subway when it rains",person:"Sara"}
+];
+let selected=null;
+function shuffleArray(arr){return [...arr].sort(()=>Math.random()-0.5)}
+function makeSentence(item){
+ const el=document.createElement("div");
+ el.className="sentence"; el.textContent=item.text; el.draggable=true; el.dataset.person=item.person;
+ el.addEventListener("dragstart",()=>{selected=el});
+ el.addEventListener("click",()=>{document.querySelectorAll(".sentence").forEach(x=>x.classList.remove("selected"));selected=el;el.classList.add("selected")});
+ return el;
+}
+function render(){
+ const bank=document.getElementById("sentenceBank"); bank.innerHTML="";
+ shuffleArray(items).forEach(item=>bank.appendChild(makeSentence(item)));
+ document.querySelectorAll(".person").forEach(box=>{[...box.querySelectorAll(".sentence")].forEach(s=>s.remove());box.style.borderColor="#79bf86"});
+ document.getElementById("result").textContent=""; selected=null;
+}
+document.querySelectorAll(".person").forEach(box=>{
+ box.addEventListener("dragover",e=>e.preventDefault());
+ box.addEventListener("drop",e=>{e.preventDefault();place(box)});
+ box.addEventListener("click",()=>place(box));
+});
+function place(box){
+ if(!selected)return;
+ const existing=box.querySelector(".sentence");
+ if(existing)document.getElementById("sentenceBank").appendChild(existing);
+ box.appendChild(selected); selected.classList.remove("selected"); selected=null;
+}
+document.getElementById("sentenceBank").addEventListener("dragover",e=>e.preventDefault());
+document.getElementById("sentenceBank").addEventListener("drop",e=>{e.preventDefault();if(selected){document.getElementById("sentenceBank").appendChild(selected);selected.classList.remove("selected");selected=null}});
+function checkAnswers(){
+ let score=0;
+ document.querySelectorAll(".person").forEach(box=>{
+  const sentence=box.querySelector(".sentence");
+  if(sentence&&sentence.dataset.person===box.dataset.person){score++;box.style.borderColor="#2e9b4f"}else{box.style.borderColor="#d92d20"}
+ });
+ const result=document.getElementById("result");result.textContent=`Score: ${score}/4`;result.className=score===4?"ok":"bad";
+}
+function resetGame(){render()}
+function shuffleGame(){render()}
+render();
+</script>
+</body>
+</html>
