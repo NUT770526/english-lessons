@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Let’s / Let me / Let somebody — Interactive Practice</title>
+<style>
+:root{--a:#6f55d9;--b:#f3efff;--g:#23895d;--r:#c83f50;--ink:#27304a;--y:#fff4cf}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#fff9f1,#f2efff);color:var(--ink)}
+header{background:linear-gradient(135deg,#6f55d9,#9b7bed);color:#fff;text-align:center;padding:26px 16px}
+header h1{margin:0 0 8px;font-size:clamp(28px,5vw,44px)}
+.wrap{max-width:980px;margin:auto;padding:18px}
+.rule{background:white;border-radius:18px;padding:16px;box-shadow:0 8px 22px #0001;margin-bottom:18px}
+.rulegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rulebox{padding:13px;border-radius:14px;background:var(--b);text-align:center}
+.exercise{background:white;border-radius:20px;padding:20px;margin:18px 0;box-shadow:0 10px 28px #513d8c18}
+h2{color:var(--a);margin-top:0}
+.hint{background:var(--y);padding:11px;border-radius:12px;margin-bottom:14px}
+.item{padding:14px;background:#faf8ff;border-radius:13px;margin:10px 0}
+.options{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+button{border:0;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;background:#eee9ff;color:#4e35b6}
+button:hover{transform:translateY(-1px)}
+.feedback{min-height:24px;font-weight:700;margin-top:8px}.good{color:var(--g)}.bad{color:var(--r)}
+input{width:100%;padding:12px;border:2px solid #ddd;border-radius:10px;font-size:17px;margin-top:8px}
+.sortgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.card{padding:13px;border:2px solid #e6defa;border-radius:13px;background:#fff;cursor:pointer}
+.card.selected{border-color:var(--a);background:var(--b)}.done{opacity:.45;pointer-events:none;background:#dff6e9}
+.bank{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.chip{padding:8px 11px;border-radius:999px;background:#efeaff;font-weight:700;cursor:pointer}
+.orderbox{min-height:48px;border:2px dashed #c9bbf4;border-radius:12px;padding:10px;display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.wordbtn{background:white;border:2px solid #ded5f7}
+.score{font-weight:700;margin-top:10px}
+footer{text-align:center;padding:24px;color:#6d6880}
+@media(max-width:700px){.rulegrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<h1>🌟 LET’S / LET ME / LET SOMEBODY</h1>
+<div>6 легких інтерактивних вправ</div>
+</header>
+<div class="wrap">
+
+<div class="rule">
+<div class="rulegrid">
+<div class="rulebox"><b>LET’S + дієслово</b><br>Давай(те)...</div>
+<div class="rulebox"><b>LET ME + дієслово</b><br>Дай мені...</div>
+<div class="rulebox"><b>LET + людина + дієслово</b><br>Нехай хтось...</div>
+</div>
+<p style="text-align:center;margin-bottom:0"><b>Після let / let’s / let me завжди дієслово без to.</b></p>
+</div>
+
+<section class="exercise">
+<h2>1. Обери правильний початок</h2>
+<div class="hint">Обери: <b>Let’s</b>, <b>Let me</b> або <b>Let</b>.</div>
+<div id="ex1"></div>
+</section>
+
+<section class="exercise">
+<h2>2. Обери правильну форму дієслова</h2>
+<div class="hint">Після let завжди початкова форма: <b>meet, see, fix</b> — без <b>to</b> і без <b>-s</b>.</div>
+<div id="ex2"></div>
+</section>
+
+<section class="exercise">
+<h2>3. Розклади фрази у 3 групи</h2>
+<div class="hint">Натисни на картку, а потім на потрібну групу.</div>
+<div id="ex3" class="sortgrid"></div>
+<div class="options">
+<button onclick="sortCard('lets')">LET’S</button>
+<button onclick="sortCard('letme')">LET ME</button>
+<button onclick="sortCard('letsomebody')">LET SOMEBODY</button>
+</div>
+<div id="sortFeedback" class="feedback"></div>
+</section>
+
+<section class="exercise">
+<h2>4. Встав слово з банку</h2>
+<div class="hint">Натисни на слово або введи його самостійно.</div>
+<div class="bank" id="bank"></div>
+<div id="ex4"></div>
+<button onclick="checkFillAll()">Перевірити все</button>
+<div id="fillScore" class="score"></div>
+</section>
+
+<section class="exercise">
+<h2>5. Склади речення</h2>
+<div class="hint">Натискай слова у правильному порядку.</div>
+<div id="ex5"></div>
+</section>
+
+<section class="exercise">
+<h2>6. Обери правильну відповідь у діалозі</h2>
+<div class="hint">Подумай, хто виконує дію: ми, я чи інша людина.</div>
+<div id="ex6"></div>
+</section>
+
+</div>
+<footer>Правильні відповіді не показуються — спробуй ще раз 💜</footer>
+
+<script>
+const D={"ex1": [{"s": "___ meet Eve.", "a": "Let's"}, {"s": "___ see lesson ten.", "a": "Let me"}, {"s": "___ Ben fix the TV set.", "a": "Let"}, {"s": "___ send Pete ten sets.", "a": "Let's"}, {"s": "___ lend Ben set seven.", "a": "Let me"}, {"s": "___ Nell tell me.", "a": "Let"}, {"s": "___ see Ben's tests.", "a": "Let's"}, {"s": "___ test Steve's TV set.", "a": "Let"}, {"s": "___ meet Ted.", "a": "Let me"}, {"s": "___ fix Nell's tent.", "a": "Let's"}], "ex2": [{"s": "Let's ___ Eve.", "opts": ["meet", "meets", "meeting"], "a": "meet"}, {"s": "Let me ___ lesson ten.", "opts": ["see", "sees", "to see"], "a": "see"}, {"s": "Let Ben ___ the tent.", "opts": ["fix", "fixs", "to fix"], "a": "fix"}, {"s": "Let's ___ Pete seven sets.", "opts": ["send", "sends", "to send"], "a": "send"}, {"s": "Let me ___ you.", "opts": ["tell", "tells", "to tell"], "a": "tell"}, {"s": "Let Nell ___ the TV set.", "opts": ["test", "tests", "to test"], "a": "test"}, {"s": "Let's ___ Steve.", "opts": ["meet", "meets", "to meet"], "a": "meet"}, {"s": "Let me ___ Ben set B.", "opts": ["lend", "lends", "to lend"], "a": "lend"}, {"s": "Let Ted ___ me.", "opts": ["see", "sees", "to see"], "a": "see"}, {"s": "Let's ___ Eve's tent.", "opts": ["fix", "fixs", "to fix"], "a": "fix"}], "ex3": [{"t": "meet Eve", "g": "lets"}, {"t": "see lesson ten", "g": "letme"}, {"t": "Ben fix the tent", "g": "letsomebody"}, {"t": "send Pete ten sets", "g": "lets"}, {"t": "lend Ben set seven", "g": "letme"}, {"t": "Nell tell me", "g": "letsomebody"}, {"t": "see Ben's tests", "g": "lets"}, {"t": "test the TV set", "g": "letme"}, {"t": "Ted meet Nell", "g": "letsomebody"}, {"t": "fix Eve's tent", "g": "lets"}], "ex4": [{"s": "Let's ___ Nell.", "a": "meet"}, {"s": "Let me ___ test seven.", "a": "see"}, {"s": "Let Ben ___ the TV set.", "a": "test"}, {"s": "Let's ___ the tent.", "a": "fix"}, {"s": "Let me ___ Pete set B.", "a": "lend"}, {"s": "Let Eve ___ me.", "a": "tell"}, {"s": "Let's ___ Steve ten sets.", "a": "send"}, {"s": "Let me ___ Ted.", "a": "meet"}, {"s": "Let Nell ___ lesson ten.", "a": "see"}, {"s": "Let's ___ Ben's tent.", "a": "fix"}], "ex5": [{"w": ["Let's", "meet", "Eve."], "a": "Let's meet Eve."}, {"w": ["Let", "me", "see", "lesson", "ten."], "a": "Let me see lesson ten."}, {"w": ["Let", "Ben", "fix", "the", "tent."], "a": "Let Ben fix the tent."}, {"w": ["Let's", "send", "Pete", "ten", "sets."], "a": "Let's send Pete ten sets."}, {"w": ["Let", "me", "lend", "Ben", "set", "B."], "a": "Let me lend Ben set B."}, {"w": ["Let", "Nell", "tell", "me."], "a": "Let Nell tell me."}, {"w": ["Let's", "see", "Ben's", "tests."], "a": "Let's see Ben's tests."}, {"w": ["Let", "Ted", "test", "the", "TV", "set."], "a": "Let Ted test the TV set."}, {"w": ["Let", "me", "meet", "Steve."], "a": "Let me meet Steve."}, {"w": ["Let's", "fix", "Eve's", "tent."], "a": "Let's fix Eve's tent."}], "ex6": [{"q": "— Let's meet Eve. — ___", "opts": ["Yes, let's.", "Yes, let me.", "Let Eve."], "a": "Yes, let's."}, {"q": "— Can I see lesson ten? — ___", "opts": ["Let me see it.", "Let's see me.", "Let Ben see."], "a": "Let me see it."}, {"q": "— Ben wants to fix the tent. — ___", "opts": ["Let Ben fix it.", "Let's Ben fix it.", "Let me Ben fix it."], "a": "Let Ben fix it."}, {"q": "— Let's send Pete ten sets. — ___", "opts": ["Yes, let's.", "Yes, let Pete.", "Let me Pete."], "a": "Yes, let's."}, {"q": "— I want to test the TV set. — ___", "opts": ["Let me test it.", "Let's me test it.", "Let Ted me test it."], "a": "Let me test it."}, {"q": "— Nell wants to tell me. — ___", "opts": ["Let Nell tell you.", "Let's Nell tell you.", "Let me Nell tell you."], "a": "Let Nell tell you."}, {"q": "— Let's see Ben's tests. — ___", "opts": ["Yes, let's.", "Yes, let Ben.", "Let me Ben."], "a": "Yes, let's."}, {"q": "— Ted wants to meet Eve. — ___", "opts": ["Let Ted meet her.", "Let's Ted meet her.", "Let me Ted meet her."], "a": "Let Ted meet her."}, {"q": "— I want to lend Ben set B. — ___", "opts": ["Let me lend it.", "Let's me lend it.", "Let Ben me lend it."], "a": "Let me lend it."}, {"q": "— Let's fix Nell's tent. — ___", "opts": ["Yes, let's.", "Yes, let Nell.", "Let me Nell."], "a": "Yes, let's."}]};
+const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+
+function feedback(el,ok){
+ el.textContent=ok?'Правильно! 🌟':'Спробуй ще.';
+ el.className='feedback '+(ok?'good':'bad');
+}
+
+// Exercise 1
+D.ex1.forEach((it,i)=>{
+ const box=document.createElement('div'); box.className='item';
+ box.innerHTML=`<div>${i+1}. ${it.s}</div><div class="options"></div><div class="feedback"></div>`;
+ const opts=box.querySelector('.options');
+ ["Let's","Let me","Let"].forEach(o=>{
+   const b=document.createElement('button'); b.textContent=o;
+   b.onclick=()=>feedback(box.querySelector('.feedback'),o===it.a);
+   opts.appendChild(b);
+ });
+ ex1.appendChild(box);
+});
+
+// Exercise 2
+D.ex2.forEach((it,i)=>{
+ const box=document.createElement('div'); box.className='item';
+ box.innerHTML=`<div>${i+1}. ${it.s}</div><div class="options"></div><div class="feedback"></div>`;
+ const opts=box.querySelector('.options');
+ it.opts.forEach(o=>{
+   const b=document.createElement('button'); b.textContent=o;
+   b.onclick=()=>feedback(box.querySelector('.feedback'),o===it.a);
+   opts.appendChild(b);
+ });
+ ex2.appendChild(box);
+});
+
+// Exercise 3
+let selected=null;
+shuffle(D.ex3).forEach(it=>{
+ const c=document.createElement('div'); c.className='card'; c.textContent=it.t; c.dataset.g=it.g;
+ c.onclick=()=>{document.querySelectorAll('#ex3 .card').forEach(x=>x.classList.remove('selected'));c.classList.add('selected');selected=c};
+ ex3.appendChild(c);
+});
+function sortCard(g){
+ if(!selected){sortFeedback.textContent='Спочатку обери картку.';sortFeedback.className='feedback bad';return}
+ if(selected.dataset.g===g){selected.classList.add('done');selected.classList.remove('selected');selected=null;sortFeedback.textContent='Правильно!';sortFeedback.className='feedback good'}
+ else{sortFeedback.textContent='Спробуй ще.';sortFeedback.className='feedback bad'}
+}
+
+// Exercise 4
+const bankWords=["meet","see","test","fix","lend","tell","send"];
+bankWords.forEach(w=>{const c=document.createElement('span');c.className='chip';c.textContent=w;c.onclick=()=>{const f=document.querySelector('#ex4 input:focus');if(f)f.value=w};bank.appendChild(c)});
+D.ex4.forEach((it,i)=>{
+ const box=document.createElement('div');box.className='item';
+ box.innerHTML=`<div>${i+1}. ${it.s}</div><input data-a="${it.a}" placeholder="Введи слово"><div class="feedback"></div>`;
+ ex4.appendChild(box);
+});
+function checkFillAll(){
+ let ok=0;
+ document.querySelectorAll('#ex4 input').forEach(inp=>{
+   const good=inp.value.trim().toLowerCase()===inp.dataset.a;
+   inp.style.borderColor=good?'#23895d':'#c83f50';
+   feedback(inp.nextElementSibling,good);
+   if(good)ok++;
+ });
+ fillScore.textContent=`Правильно: ${ok} із ${D.ex4.length}`;
+}
+
+// Exercise 5
+D.ex5.forEach((it,i)=>{
+ const box=document.createElement('div');box.className='item';
+ const chosen=document.createElement('div');chosen.className='orderbox';
+ const words=document.createElement('div');words.className='options';
+ const f=document.createElement('div');f.className='feedback';
+ let selectedWords=[];
+ shuffle(it.w).forEach(w=>{
+   const b=document.createElement('button');b.className='wordbtn';b.textContent=w;
+   b.onclick=()=>{
+     selectedWords.push(w); chosen.textContent=selectedWords.join(' '); b.disabled=true;
+   };
+   words.appendChild(b);
+ });
+ const check=document.createElement('button');check.textContent='Перевірити';
+ check.onclick=()=>feedback(f,selectedWords.join(' ')===it.a);
+ const reset=document.createElement('button');reset.textContent='Почати знову';
+ reset.onclick=()=>{selectedWords=[];chosen.textContent='';words.querySelectorAll('button').forEach(b=>b.disabled=false);f.textContent=''};
+ box.append(`${i+1}.`);box.append(chosen,words,check,reset,f);ex5.appendChild(box);
+});
+
+// Exercise 6
+D.ex6.forEach((it,i)=>{
+ const box=document.createElement('div');box.className='item';
+ box.innerHTML=`<div>${i+1}. ${it.q}</div><div class="options"></div><div class="feedback"></div>`;
+ const opts=box.querySelector('.options');
+ it.opts.forEach(o=>{
+   const b=document.createElement('button');b.textContent=o;
+   b.onclick=()=>feedback(box.querySelector('.feedback'),o===it.a);
+   opts.appendChild(b);
+ });
+ ex6.appendChild(box);
+});
+</script>
+</body>
+</html>
