@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imperative vs Present Simple — A1</title>
+<style>
+:root{
+  --navy:#17324d; --blue:#2d6386; --green:#2f7d5b; --red:#b94a48;
+  --cream:#fbfaf6; --light:#f1f5f7; --border:#d7e0e6; --text:#273642;
+  --gold:#d29a2e;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--text);
+  background:linear-gradient(135deg,#eef3f6,#faf8f3);
+}
+header{
+  background:var(--navy);
+  color:#fff;
+  padding:34px 18px;
+  text-align:center;
+}
+header h1{margin:0 0 8px;font-size:clamp(30px,5vw,48px)}
+header p{margin:0;font-size:18px;opacity:.92}
+main{max-width:1050px;margin:28px auto;padding:0 16px 48px}
+.rule,.exercise{
+  background:white;border:1px solid var(--border);border-radius:18px;
+  padding:24px;margin-bottom:22px;box-shadow:0 8px 24px rgba(23,50,77,.08)
+}
+.rule h2,.exercise h2{margin-top:0;color:var(--navy)}
+.rule-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px
+}
+.rule-card{padding:18px;border-radius:14px}
+.be{background:#eef4f8;border:1px solid #c7d7e2}
+.imp{background:#eef7f1;border:1px solid #c5dfcf}
+.formula{
+  font-size:22px;font-weight:800;color:var(--navy);margin-bottom:10px
+}
+.example{padding:7px 0;line-height:1.5}
+.note{
+  background:#fff7e5;border-left:5px solid var(--gold);
+  padding:14px 16px;border-radius:8px;margin-top:16px
+}
+.item{
+  padding:14px 0;border-bottom:1px solid #edf1f3;line-height:1.55
+}
+.item:last-child{border-bottom:0}
+select,input[type=text]{
+  padding:10px 12px;border:1px solid #bfcbd3;border-radius:9px;
+  font-size:16px;background:#fff;margin:5px 4px;max-width:100%
+}
+input[type=text]{width:min(420px,100%)}
+.options{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:8px;margin-top:10px
+}
+.option{
+  border:1px solid #ccd7de;border-radius:10px;padding:10px;
+  background:#fafcfd;cursor:pointer
+}
+.option:hover{background:#edf4f7}
+button{
+  border:0;border-radius:10px;padding:11px 17px;font-size:15px;font-weight:700;
+  cursor:pointer;margin:12px 8px 0 0
+}
+.check{background:var(--green);color:#fff}
+.show{background:var(--blue);color:#fff}
+.reset{background:#e7ecef;color:var(--navy)}
+.feedback{font-weight:800;margin-left:8px}
+.correct{color:var(--green)} .wrong{color:var(--red)}
+.answer{
+  display:none;margin-top:7px;color:var(--green);font-weight:700
+}
+.score{
+  margin-top:14px;padding:12px;border-radius:10px;
+  background:#eef5f1;font-weight:700;color:var(--navy)
+}
+.sort-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px
+}
+.sort-box{
+  min-height:180px;padding:14px;border:2px dashed #b9c8d2;
+  border-radius:14px;background:#fafcfd
+}
+.sort-box h3{margin-top:0;color:var(--navy)}
+.card{
+  padding:10px 12px;border:1px solid #cbd6dd;border-radius:9px;
+  background:white;margin:8px 0;cursor:pointer
+}
+.card.selected{outline:3px solid #729bb5}
+.card.good{background:#e7f4ec;border-color:#77aa8b}
+.card.bad{background:#fdeceb;border-color:#d68a86}
+.small{font-size:14px;color:#687986}
+@media(max-width:700px){
+  .rule-grid,.sort-grid{grid-template-columns:1fr}
+  .rule,.exercise{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Imperative or Present Simple?</h1>
+  <p>is / isn’t чи don’t?</p>
+</header>
+
+<main>
+
+<section class="rule">
+  <h2>Головне правило</h2>
+  <div class="rule-grid">
+    <div class="rule-card be">
+      <div class="formula">is / isn’t</div>
+      <div class="example">
+        Використовуємо, коли говоримо, <b>який хтось або щось є</b>.
+      </div>
+      <div class="example"><b>The test is easy.</b><br>Тест легкий.</div>
+      <div class="example"><b>The file isn’t empty.</b><br>Файл не порожній.</div>
+      <div class="example"><b>She isn’t busy.</b><br>Вона не зайнята.</div>
+    </div>
+
+    <div class="rule-card imp">
+      <div class="formula">Don’t + дія!</div>
+      <div class="example">
+        Використовуємо, коли говоримо людині: <b>«Не роби це!»</b>
+      </div>
+      <div class="example"><b>Don’t buy it!</b><br>Не купуй це!</div>
+      <div class="example"><b>Don’t type it!</b><br>Не друкуй це!</div>
+      <div class="example"><b>Don’t sell the fish!</b><br>Не продавай рибу!</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Не кажемо:</b> <s>Isn’t buy it!</s><br>
+    <b>Правильно:</b> <b>Don’t buy it!</b>
+  </div>
+</section>
+
+<section class="exercise" id="ex1">
+  <h2>1. Оберіть: is, isn’t або don’t</h2>
+  <p class="small">Подумайте: це опис чи команда?</p>
+  <div id="choose"></div>
+  <button class="check" onclick="checkChoose()">Перевірити</button>
+  <button class="show" onclick="showAnswers('ex1')">Показати відповіді</button>
+  <button class="reset" onclick="resetSection('ex1')">Почати знову</button>
+  <div class="score" id="score1">Результат: —</div>
+</section>
+
+<section class="exercise" id="ex2">
+  <h2>2. Опис чи команда?</h2>
+  <p class="small">Натисніть речення, потім натисніть правильну колонку.</p>
+  <div id="cards"></div>
+  <div class="sort-grid">
+    <div class="sort-box" id="descBox" onclick="placeCard('description')">
+      <h3>Опис: is / isn’t</h3>
+      <div class="small">Який? Яка? Яке?</div>
+    </div>
+    <div class="sort-box" id="cmdBox" onclick="placeCard('command')">
+      <h3>Команда: don’t + дія!</h3>
+      <div class="small">Не роби це!</div>
+    </div>
+  </div>
+  <button class="reset" onclick="buildSort()">Перемішати й почати знову</button>
+  <div class="score" id="score2">Правильно: 0 / 10</div>
+</section>
+
+<section class="exercise" id="ex3">
+  <h2>3. Зробіть речення заперечним</h2>
+  <p class="small">Впишіть повне речення. Не забудьте: опис → isn’t; команда → don’t.</p>
+  <div id="negative"></div>
+  <button class="check" onclick="checkNegative()">Перевірити</button>
+  <button class="show" onclick="showAnswers('ex3')">Показати відповіді</button>
+  <button class="reset" onclick="resetSection('ex3')">Почати знову</button>
+  <div class="score" id="score3">Результат: —</div>
+</section>
+
+<section class="exercise" id="ex4">
+  <h2>4. Знайдіть і виправте помилку</h2>
+  <p class="small">У кожному реченні є помилка. Напишіть правильний варіант.</p>
+  <div id="correctMistake"></div>
+  <button class="check" onclick="checkMistakes()">Перевірити</button>
+  <button class="show" onclick="showAnswers('ex4')">Показати відповіді</button>
+  <button class="reset" onclick="resetSection('ex4')">Почати знову</button>
+  <div class="score" id="score4">Результат: —</div>
+</section>
+
+<section class="exercise" id="ex5">
+  <h2>5. Мініситуації</h2>
+  <p class="small">Оберіть правильне речення для ситуації.</p>
+  <div id="situations"></div>
+  <button class="check" onclick="checkSituations()">Перевірити</button>
+  <button class="show" onclick="showAnswers('ex5')">Показати відповіді</button>
+  <button class="reset" onclick="resetSection('ex5')">Почати знову</button>
+  <div class="score" id="score5">Результат: —</div>
+</section>
+
+</main>
+
+<script>
+const chooseData = [
+  {sentence:"The shop ___ busy.", answers:["is","isn’t"], shown:"is / isn’t"},
+  {sentence:"___ buy this fish!", answers:["don’t"], shown:"don’t"},
+  {sentence:"The file ___ empty.", answers:["isn’t"], shown:"isn’t"},
+  {sentence:"___ type my test!", answers:["don’t"], shown:"don’t"},
+  {sentence:"The bill ___ fine.", answers:["is"], shown:"is"},
+  {sentence:"___ sell my bike!", answers:["don’t"], shown:"don’t"},
+  {sentence:"The shelf ___ little.", answers:["is"], shown:"is"},
+  {sentence:"___ film it!", answers:["don’t"], shown:"don’t"},
+  {sentence:"She ___ busy.", answers:["isn’t"], shown:"isn’t"},
+  {sentence:"___ send it now!", answers:["don’t"], shown:"don’t"},
+  {sentence:"The test ___ simple.", answers:["is"], shown:"is"},
+  {sentence:"___ settle my bill!", answers:["don’t"], shown:"don’t"}
+];
+
+const sortData = [
+ ["The shop is busy.","description"],
+ ["Don’t buy it!","command"],
+ ["The file isn’t empty.","description"],
+ ["Don’t type it!","command"],
+ ["The test is easy.","description"],
+ ["Don’t sell the fish!","command"],
+ ["She isn’t busy.","description"],
+ ["Don’t film it!","command"],
+ ["The bill is fine.","description"],
+ ["Don’t send it!","command"]
+];
+
+const negativeData = [
+ ["The shop is busy.","The shop isn’t busy."],
+ ["Buy the fish!","Don’t buy the fish!"],
+ ["The file is empty.","The file isn’t empty."],
+ ["Type test five!","Don’t type test five!"],
+ ["She is busy.","She isn’t busy."],
+ ["Sell the bike!","Don’t sell the bike!"],
+ ["The test is easy.","The test isn’t easy."],
+ ["Film it!","Don’t film it!"],
+ ["The bill is simple.","The bill isn’t simple."],
+ ["Send my file!","Don’t send my file!"]
+];
+
+const mistakeData = [
+ ["Isn’t buy it!","Don’t buy it!"],
+ ["Don’t busy.","She isn’t busy."],
+ ["Isn’t type the test!","Don’t type the test!"],
+ ["The file don’t empty.","The file isn’t empty."],
+ ["Isn’t sell the fish!","Don’t sell the fish!"],
+ ["The shop don’t busy.","The shop isn’t busy."],
+ ["Isn’t film it!","Don’t film it!"],
+ ["The test don’t easy.","The test isn’t easy."],
+ ["Isn’t send my file!","Don’t send my file!"],
+ ["The bill don’t simple.","The bill isn’t simple."]
+];
+
+const situationData = [
+ ["Ви не хочете, щоб людина купувала цю рибу.","Don’t buy this fish!",["This fish isn’t buy.","Don’t buy this fish!","The fish don’t buy."]],
+ ["Файл не порожній.","The file isn’t empty.",["Don’t empty the file!","The file isn’t empty.","The file don’t empty."]],
+ ["Не друкуй мій тест!","Don’t type my test!",["My test isn’t type.","Don’t type my test!","The test don’t type."]],
+ ["Магазин не зайнятий.","The shop isn’t busy.",["Don’t busy the shop!","The shop isn’t busy.","The shop don’t busy."]],
+ ["Не продавай велосипед!","Don’t sell the bike!",["The bike isn’t sell.","Don’t sell the bike!","The bike don’t sell."]],
+ ["Тест не легкий.","The test isn’t easy.",["Don’t easy the test!","The test isn’t easy.","The test don’t easy."]],
+ ["Не знімай це!","Don’t film it!",["It isn’t film.","Don’t film it!","It don’t film."]],
+ ["Рахунок не простий.","The bill isn’t simple.",["Don’t simple the bill!","The bill isn’t simple.","The bill don’t simple."]],
+ ["Не надсилай файл!","Don’t send the file!",["The file isn’t send.","Don’t send the file!","The file don’t send."]],
+ ["Вона не зайнята.","She isn’t busy.",["Don’t busy!","She isn’t busy.","She don’t busy."]]
+];
+
+function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+function norm(s){
+  return s.trim().toLowerCase()
+    .replace(/[’‘]/g,"'")
+    .replace(/[.!?]/g,"")
+    .replace(/\s+/g," ");
+}
+
+function buildChoose(){
+  const box=document.getElementById('choose');
+  box.innerHTML='';
+  chooseData.forEach((x,i)=>{
+    box.innerHTML += `<div class="item">${i+1}. ${x.sentence.replace("___",
+      `<select id="c${i}">
+        <option value="">— оберіть —</option>
+        <option value="is">is</option>
+        <option value="isn’t">isn’t</option>
+        <option value="don’t">don’t</option>
+      </select>`)}
+      <span class="feedback" id="cf${i}"></span>
+      <div class="answer">Відповідь: ${x.shown}</div>
+    </div>`;
+  });
+}
+
+function checkChoose(){
+  let s=0;
+  chooseData.forEach((x,i)=>{
+    const v=document.getElementById('c'+i).value;
+    const f=document.getElementById('cf'+i);
+    if(x.answers.includes(v)){
+      s++;
+      f.textContent='✓';
+      f.className='feedback correct';
+    }else{
+      f.textContent='✗';
+      f.className='feedback wrong';
+    }
+  });
+  document.getElementById('score1').textContent=`Результат: ${s} / ${chooseData.length}`;
+}
+
+let selectedCard=null, sortScore=0;
+function buildSort(){
+  selectedCard=null;
+  sortScore=0;
+  document.getElementById('descBox').innerHTML='<h3>Опис: is / isn’t</h3><div class="small">Який? Яка? Яке?</div>';
+  document.getElementById('cmdBox').innerHTML='<h3>Команда: don’t + дія!</h3><div class="small">Не роби це!</div>';
+  const cards=document.getElementById('cards');
+  cards.innerHTML='';
+  shuffle(sortData).forEach((x)=>{
+    const div=document.createElement('div');
+    div.className='card';
+    div.textContent=x[0];
+    div.dataset.type=x[1];
+    div.onclick=()=>{
+      if(div.dataset.done==='1') return;
+      document.querySelectorAll('#cards .card').forEach(c=>c.classList.remove('selected'));
+      div.classList.add('selected');
+      selectedCard=div;
+    };
+    cards.appendChild(div);
+  });
+  document.getElementById('score2').textContent='Правильно: 0 / 10';
+}
+
+function placeCard(type){
+  if(!selectedCard || selectedCard.dataset.done==='1') return;
+  if(selectedCard.dataset.type===type){
+    sortScore++;
+    selectedCard.classList.add('good');
+  }else{
+    selectedCard.classList.add('bad');
+  }
+  selectedCard.classList.remove('selected');
+  selectedCard.dataset.done='1';
+  const target=type==='description'?document.getElementById('descBox'):document.getElementById('cmdBox');
+  target.appendChild(selectedCard);
+  selectedCard=null;
+  document.getElementById('score2').textContent=`Правильно: ${sortScore} / 10`;
+}
+
+function buildNegative(){
+  const box=document.getElementById('negative');
+  box.innerHTML='';
+  negativeData.forEach((x,i)=>{
+    box.innerHTML += `<div class="item">
+      <b>${i+1}. ${x[0]}</b><br>
+      <input type="text" id="n${i}" placeholder="Write the negative sentence">
+      <span class="feedback" id="nf${i}"></span>
+      <div class="answer">Відповідь: ${x[1]}</div>
+    </div>`;
+  });
+}
+
+function checkNegative(){
+  let s=0;
+  negativeData.forEach((x,i)=>{
+    const v=norm(document.getElementById('n'+i).value);
+    const a=norm(x[1]);
+    const f=document.getElementById('nf'+i);
+    if(v===a){s++;f.textContent='✓';f.className='feedback correct'}
+    else{f.textContent='✗';f.className='feedback wrong'}
+  });
+  document.getElementById('score3').textContent=`Результат: ${s} / ${negativeData.length}`;
+}
+
+function buildMistakes(){
+  const box=document.getElementById('correctMistake');
+  box.innerHTML='';
+  mistakeData.forEach((x,i)=>{
+    box.innerHTML += `<div class="item">
+      <b>${i+1}. ${x[0]}</b><br>
+      <input type="text" id="m${i}" placeholder="Write the correct sentence">
+      <span class="feedback" id="mf${i}"></span>
+      <div class="answer">Відповідь: ${x[1]}</div>
+    </div>`;
+  });
+}
+
+function checkMistakes(){
+  let s=0;
+  mistakeData.forEach((x,i)=>{
+    const v=norm(document.getElementById('m'+i).value);
+    const a=norm(x[1]);
+    const f=document.getElementById('mf'+i);
+    if(v===a){s++;f.textContent='✓';f.className='feedback correct'}
+    else{f.textContent='✗';f.className='feedback wrong'}
+  });
+  document.getElementById('score4').textContent=`Результат: ${s} / ${mistakeData.length}`;
+}
+
+function buildSituations(){
+  const box=document.getElementById('situations');
+  box.innerHTML='';
+  situationData.forEach((x,i)=>{
+    const opts=shuffle(x[2]).map(o=>`<label class="option"><input type="radio" name="s${i}" value="${o}"> ${o}</label>`).join('');
+    box.innerHTML += `<div class="item">
+      <b>${i+1}. ${x[0]}</b>
+      <div class="options">${opts}</div>
+      <span class="feedback" id="sf${i}"></span>
+      <div class="answer">Відповідь: ${x[1]}</div>
+    </div>`;
+  });
+}
+
+function checkSituations(){
+  let s=0;
+  situationData.forEach((x,i)=>{
+    const el=document.querySelector(`input[name=s${i}]:checked`);
+    const f=document.getElementById('sf'+i);
+    if(el && el.value===x[1]){s++;f.textContent='✓';f.className='feedback correct'}
+    else{f.textContent='✗';f.className='feedback wrong'}
+  });
+  document.getElementById('score5').textContent=`Результат: ${s} / ${situationData.length}`;
+}
+
+function showAnswers(id){
+  document.querySelectorAll(`#${id} .answer`).forEach(a=>a.style.display='block');
+}
+
+function resetSection(id){
+  document.querySelectorAll(`#${id} input[type=radio]`).forEach(x=>x.checked=false);
+  document.querySelectorAll(`#${id} input[type=text]`).forEach(x=>x.value='');
+  document.querySelectorAll(`#${id} select`).forEach(x=>x.selectedIndex=0);
+  document.querySelectorAll(`#${id} .feedback`).forEach(x=>{x.textContent='';x.className='feedback'});
+  document.querySelectorAll(`#${id} .answer`).forEach(a=>a.style.display='none');
+  const score=document.querySelector(`#${id} .score`);
+  if(score) score.textContent='Результат: —';
+}
+
+buildChoose();
+buildSort();
+buildNegative();
+buildMistakes();
+buildSituations();
+</script>
+
+</body>
+</html>
