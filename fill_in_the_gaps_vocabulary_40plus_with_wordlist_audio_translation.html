@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fill in the Gaps — Vocabulary Practice</title>
+<style>
+  :root{
+    --bg:#f6f3ef;
+    --card:#ffffff;
+    --ink:#17324d;
+    --muted:#667085;
+    --accent:#6b4bc3;
+    --accent-soft:#f1edff;
+    --line:#d9e1ea;
+    --good:#16845b;
+    --bad:#c43d3d;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:linear-gradient(180deg,#faf8f5,#f1f5f9);
+    color:var(--ink);
+    line-height:1.5;
+  }
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:28px 16px 60px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:22px;
+    box-shadow:0 12px 30px rgba(23,50,77,.08);
+    padding:28px;
+  }
+  h1{
+    margin:0 0 8px;
+    font-size:clamp(28px,5vw,42px);
+    line-height:1.1;
+  }
+  .subtitle{
+    color:var(--muted);
+    margin:0 0 22px;
+    font-size:18px;
+  }
+  .wordbank{
+    background:var(--accent-soft);
+    border:1px solid #d8cdf8;
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:24px;
+  }
+  .wordbank strong{display:block;margin-bottom:10px}
+  .words{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+  }
+  .word-card{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#fff;
+    border:1px solid #cfc4ef;
+    border-radius:14px;
+    padding:8px 10px;
+  }
+  .word{
+    border:0;
+    background:transparent;
+    color:var(--ink);
+    padding:0;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+  }
+  .translation{
+    color:var(--muted);
+    font-size:14px;
+  }
+  .word:hover{transform:translateY(-1px);border-color:var(--accent)}
+  .word.used{opacity:.38;pointer-events:none}
+  .item{
+    padding:18px 0;
+    border-top:1px solid #edf1f5;
+  }
+  .item:first-of-type{border-top:0}
+  .sentence{
+    font-size:18px;
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:7px;
+  }
+  select{
+    min-width:190px;
+    padding:10px 12px;
+    border:1px solid #b9c6d3;
+    border-radius:10px;
+    background:#fff;
+    color:var(--ink);
+    font-size:16px;
+  }
+  select:focus{outline:3px solid rgba(107,75,195,.16);border-color:var(--accent)}
+  .speak{
+    border:0;
+    background:#eef4fb;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:18px;
+  }
+  .feedback{
+    min-height:22px;
+    margin-top:7px;
+    font-size:14px;
+    font-weight:700;
+  }
+  .ok{color:var(--good)}
+  .no{color:var(--bad)}
+  .btns{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:24px;
+  }
+  button.action{
+    border:0;
+    border-radius:12px;
+    padding:11px 17px;
+    font-weight:800;
+    cursor:pointer;
+    font-size:15px;
+  }
+  .primary{background:var(--accent);color:white}
+  .secondary{background:#edf3fb;color:var(--ink);border:1px solid #cfdae7!important}
+  .ghost{background:#f1f3f5;color:var(--ink)}
+  .score{
+    margin-top:15px;
+    padding:13px 15px;
+    background:#f8fafc;
+    border-radius:12px;
+    font-weight:800;
+  }
+  .note{
+    margin-top:18px;
+    padding:13px 15px;
+    background:#fff9e8;
+    border-left:5px solid #e5b94a;
+    border-radius:10px;
+    color:#594817;
+  }
+  @media(max-width:620px){
+    .card{padding:19px}
+    .sentence{font-size:16px}
+    select{width:100%;min-width:0}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>Fill in the gaps</h1>
+    <p class="subtitle">Complete the sentences with the words from the list.</p>
+
+    <div class="wordbank">
+      <strong>Word list:</strong>
+      <div class="words" id="words"></div>
+    </div>
+
+    <div id="exercise"></div>
+
+    <div class="btns">
+      <button class="action primary" onclick="checkAnswers()">Check answers</button>
+      <button class="action secondary" onclick="showAnswers()">Show answers</button>
+      <button class="action ghost" onclick="resetExercise()">Reset</button>
+    </div>
+
+    <div class="score" id="score">Score: 0/6</div>
+
+    <div class="note">
+      Tip: first listen to the phrases in the Word list, read the Ukrainian translation,
+      and then complete the sentences. Learn the phrases as complete expressions:
+      <b>chat to friends, raise children, study another language, go shopping, be married, go to concerts.</b>
+    </div>
+  </div>
+</div>
+
+<script>
+const vocab = [
+  {word:"chat to", translation:"спілкуватися з"},
+  {word:"raise", translation:"виховувати"},
+  {word:"study another language", translation:"вивчати іншу мову"},
+  {word:"watch movies", translation:"дивитися фільми"},
+  {word:"go shopping", translation:"ходити за покупками"},
+  {word:"married", translation:"одружений / заміжня"},
+  {word:"go to concerts", translation:"ходити на концерти"}
+];
+const options = vocab.map(v => v.word);
+
+const data = [
+  {
+    before:"Modern teenagers prefer to",
+    after:"their friends online.",
+    answer:"chat to",
+    full:"Modern teenagers prefer to chat to their friends online."
+  },
+  {
+    before:"It’s hard to",
+    after:"children in another country when you also need to study another language.",
+    answer:"raise",
+    full:"It’s hard to raise children in another country when you also need to study another language."
+  },
+  {
+    before:"My son only wants to play video games and",
+    after:".",
+    answer:"watch movies",
+    full:"My son only wants to play video games and watch movies."
+  },
+  {
+    before:"Dan and Milly prefer to",
+    after:"after going to the cinema at the weekend.",
+    answer:"go shopping",
+    full:"Dan and Milly prefer to go shopping after going to the cinema at the weekend."
+  },
+  {
+    before:"Andy and Jill have been",
+    after:"for 30 years and they have five children.",
+    answer:"married",
+    full:"Andy and Jill have been married for 30 years and they have five children."
+  },
+  {
+    before:"I have two sisters and a brother. We really like to",
+    after:"together.",
+    answer:"go to concerts",
+    full:"I have two sisters and a brother. We really like to go to concerts together."
+  }
+];
+
+function speak(text){
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-US";
+  utterance.rate = 0.82;
+  speechSynthesis.speak(utterance);
+}
+
+function build(){
+  const wordBox=document.getElementById("words");
+  wordBox.innerHTML="";
+  [...vocab].sort(()=>Math.random()-.5).forEach(item=>{
+    const card=document.createElement("div");
+    card.className="word-card";
+
+    const audio=document.createElement("button");
+    audio.className="speak";
+    audio.type="button";
+    audio.title="Listen";
+    audio.textContent="🔊";
+    audio.onclick=()=>speak(item.word);
+
+    const textWrap=document.createElement("div");
+
+    const chip=document.createElement("button");
+    chip.className="word";
+    chip.textContent=item.word;
+    chip.type="button";
+    chip.onclick=()=>selectWord(item.word);
+
+    const tr=document.createElement("div");
+    tr.className="translation";
+    tr.textContent=item.translation;
+
+    textWrap.append(chip,tr);
+    card.append(audio,textWrap);
+    wordBox.appendChild(card);
+  });
+
+  const ex=document.getElementById("exercise");
+  ex.innerHTML="";
+  data.forEach((item,index)=>{
+    const row=document.createElement("div");
+    row.className="item";
+    row.innerHTML=`
+      <div class="sentence">
+        <button class="speak" type="button" title="Listen" onclick='speak(${JSON.stringify(item.full)})'>🔊</button>
+        <span><b>${index+1}.</b> ${item.before}</span>
+        <select data-answer="${item.answer}">
+          <option value="">— choose —</option>
+          ${options.map(o=>`<option value="${o}">${o}</option>`).join("")}
+        </select>
+        <span>${item.after}</span>
+      </div>
+      <div class="feedback"></div>
+    `;
+    ex.appendChild(row);
+  });
+}
+
+function selectWord(word){
+  const firstEmpty=[...document.querySelectorAll("select")].find(s=>!s.value);
+  if(firstEmpty) firstEmpty.value=word;
+}
+
+function checkAnswers(){
+  let score=0;
+  document.querySelectorAll(".item").forEach(item=>{
+    const select=item.querySelector("select");
+    const feedback=item.querySelector(".feedback");
+    if(select.value===select.dataset.answer){
+      score++;
+      feedback.textContent="✓ Correct";
+      feedback.className="feedback ok";
+    }else{
+      feedback.textContent=`✗ Correct answer: ${select.dataset.answer}`;
+      feedback.className="feedback no";
+    }
+  });
+  document.getElementById("score").textContent=`Score: ${score}/6`;
+}
+
+function showAnswers(){
+  document.querySelectorAll("select").forEach(s=>s.value=s.dataset.answer);
+}
+
+function resetExercise(){
+  document.querySelectorAll("select").forEach(s=>s.value="");
+  document.querySelectorAll(".feedback").forEach(f=>{
+    f.textContent="";
+    f.className="feedback";
+  });
+  document.getElementById("score").textContent="Score: 0/6";
+}
+build();
+</script>
+</body>
+</html>
