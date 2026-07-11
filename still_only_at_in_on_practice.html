@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Still, Only, At, In, On</title>
+<style>
+:root{
+  --navy:#2e376e;
+  --purple:#7d55d9;
+  --pink:#f47ca3;
+  --blue:#4b79df;
+  --green:#2fa56f;
+  --yellow:#ffd764;
+  --red:#dc4f5a;
+  --light:#f6f4ff;
+  --text:#202840;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:linear-gradient(135deg,#f8f3ff,#fff8df);
+  color:var(--text);
+}
+.container{max-width:1050px;margin:auto;padding:22px}
+header{
+  background:linear-gradient(120deg,var(--navy),var(--purple));
+  color:white;
+  border-radius:26px;
+  padding:30px;
+  box-shadow:0 12px 30px rgba(45,55,110,.18);
+}
+h1{margin:0 0 8px;font-size:clamp(34px,5vw,54px)}
+header p{font-size:18px;margin:7px 0}
+.rules{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+  margin-top:18px;
+}
+.rule{
+  background:white;
+  color:var(--text);
+  border-radius:16px;
+  padding:15px;
+  line-height:1.5;
+}
+.rule b{color:var(--purple)}
+.score{
+  position:sticky;
+  top:8px;
+  z-index:5;
+  margin:15px 0 0 auto;
+  width:max-content;
+  background:#202d62;
+  color:#fff;
+  padding:10px 16px;
+  border-radius:14px;
+}
+.exercise{
+  background:white;
+  border-radius:22px;
+  padding:24px;
+  margin-top:22px;
+  box-shadow:0 9px 24px rgba(45,55,110,.10);
+}
+.exercise h2{margin-top:0;color:var(--navy)}
+.tip{
+  background:#fff7d6;
+  border-left:6px solid var(--yellow);
+  border-radius:12px;
+  padding:13px 15px;
+  margin-bottom:16px;
+}
+.item{
+  padding:14px 0;
+  border-bottom:1px solid #e8ebf4;
+  font-size:18px;
+  line-height:1.6;
+}
+.item:last-child{border-bottom:none}
+.num{
+  display:inline-flex;
+  width:30px;
+  height:30px;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:var(--purple);
+  color:white;
+  font-weight:700;
+  margin-right:8px;
+}
+select,input[type="text"]{
+  padding:9px 11px;
+  border:2px solid #c3cae6;
+  border-radius:10px;
+  font-size:17px;
+  background:white;
+}
+input[type="text"]{min-width:280px}
+.correct{border-color:var(--green)!important;background:#eefaf4!important}
+.wrong{border-color:var(--red)!important;background:#fff0f1!important}
+.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+button{
+  border:none;
+  border-radius:12px;
+  padding:11px 18px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+}
+.check{background:var(--blue);color:white}
+.reset{background:#e9edf8;color:var(--navy)}
+.feedback{font-size:19px;font-weight:700;margin-top:15px}
+.choice-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:12px;
+}
+.choice-card{
+  background:var(--light);
+  border:2px solid #dce1f5;
+  border-radius:15px;
+  padding:15px;
+}
+.word-bank{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  background:#f1efff;
+  border:2px dashed #bdb8ea;
+  border-radius:15px;
+  padding:14px;
+  margin-bottom:16px;
+}
+.word-bank span{
+  background:white;
+  border:2px solid #d0cef0;
+  border-radius:10px;
+  padding:8px 11px;
+  font-weight:700;
+}
+.final{
+  border:3px solid #d8ceff;
+  background:linear-gradient(145deg,#fff,#f8f4ff);
+}
+@media(max-width:650px){
+  .container{padding:10px}
+  .exercise{padding:17px}
+  .item{font-size:16px}
+  input[type="text"],select{width:100%;margin-top:7px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Still & Only</h1>
+  <p>Practise word order and time prepositions: <b>at, in, on</b>.</p>
+
+  <div class="rules">
+    <div class="rule">
+      <b>STILL = всё ещё</b><br>
+      after <i>am / is / are</i>:<br>
+      She is <b>still</b> busy.
+    </div>
+    <div class="rule">
+      <b>ONLY = только</b><br>
+      before the word it limits:<br>
+      He is <b>only</b> twelve.
+    </div>
+    <div class="rule">
+      <b>AT / IN / ON</b><br>
+      at 7 o’clock • in April • on Monday
+    </div>
+  </div>
+</header>
+
+<div class="score">Total score: <span id="total">0</span> / 54</div>
+
+<section class="exercise">
+  <h2>1. Still or only?</h2>
+  <div class="tip">Choose by meaning: <b>still</b> = всё ещё; <b>only</b> = только.</div>
+  <div id="ex1"></div>
+  <div class="buttons">
+    <button class="check" onclick="checkSelect('ex1',a1,'f1',1)">Check</button>
+    <button class="reset" onclick="resetEx('ex1','f1',1)">Reset</button>
+  </div>
+  <div class="feedback" id="f1"></div>
+</section>
+
+<section class="exercise">
+  <h2>2. Put still or only in the correct place</h2>
+  <div class="tip">Rewrite the sentence correctly.</div>
+  <div id="ex2"></div>
+  <div class="buttons">
+    <button class="check" onclick="checkText('ex2',a2,'f2',2)">Check</button>
+    <button class="reset" onclick="resetEx('ex2','f2',2)">Reset</button>
+  </div>
+  <div class="feedback" id="f2"></div>
+</section>
+
+<section class="exercise">
+  <h2>3. Choose at, in or on</h2>
+  <div class="tip">at = точное время • in = месяц, сезон, часть дня • on = день, дата</div>
+  <div id="ex3"></div>
+  <div class="buttons">
+    <button class="check" onclick="checkSelect('ex3',a3,'f3',3)">Check</button>
+    <button class="reset" onclick="resetEx('ex3','f3',3)">Reset</button>
+  </div>
+  <div class="feedback" id="f3"></div>
+</section>
+
+<section class="exercise">
+  <h2>4. Choose the correct sentence</h2>
+  <div id="ex4" class="choice-grid"></div>
+  <div class="buttons">
+    <button class="check" onclick="checkSelect('ex4',a4,'f4',4)">Check</button>
+    <button class="reset" onclick="resetEx('ex4','f4',4)">Reset</button>
+  </div>
+  <div class="feedback" id="f4"></div>
+</section>
+
+<section class="exercise final">
+  <h2>5. Final mixed challenge</h2>
+  <div class="word-bank">
+    <span>still</span><span>only</span><span>at</span><span>in</span><span>on</span>
+  </div>
+  <p>Choose two words in every sentence.</p>
+  <div id="ex5"></div>
+  <div class="buttons">
+    <button class="check" onclick="checkMixed()">Check</button>
+    <button class="reset" onclick="resetEx('ex5','f5',5)">Reset</button>
+  </div>
+  <div class="feedback" id="f5"></div>
+</section>
+
+</div>
+
+<script>
+const scores={1:0,2:0,3:0,4:0,5:0};
+
+function updateTotal(){
+  document.getElementById('total').textContent=
+    Object.values(scores).reduce((a,b)=>a+b,0);
+}
+function norm(s){
+  return s.toLowerCase()
+    .replace(/[.!?]/g,'')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+function mark(el,ok){
+  el.classList.remove('correct','wrong');
+  el.classList.add(ok?'correct':'wrong');
+}
+function feedback(id,score,total){
+  const el=document.getElementById(id);
+  el.style.color=score===total?'var(--green)':'var(--red)';
+  el.textContent=score===total
+    ? `Excellent! ${score}/${total}`
+    : `Score: ${score}/${total}. Try again!`;
+}
+function checkSelect(id,answers,fb,num){
+  const fields=[...document.querySelectorAll(`#${id} select`)];
+  let score=0;
+  fields.forEach((x,i)=>{
+    const ok=x.value===answers[i];
+    mark(x,ok);
+    if(ok)score++;
+  });
+  scores[num]=score;
+  updateTotal();
+  feedback(fb,score,answers.length);
+}
+function checkText(id,answers,fb,num){
+  const fields=[...document.querySelectorAll(`#${id} input[type=text]`)];
+  let score=0;
+  fields.forEach((x,i)=>{
+    const accepted=Array.isArray(answers[i])?answers[i]:[answers[i]];
+    const ok=accepted.map(norm).includes(norm(x.value));
+    mark(x,ok);
+    if(ok)score++;
+  });
+  scores[num]=score;
+  updateTotal();
+  feedback(fb,score,answers.length);
+}
+function resetEx(id,fb,num){
+  document.querySelectorAll(`#${id} select`).forEach(x=>{
+    x.selectedIndex=0;
+    x.classList.remove('correct','wrong');
+  });
+  document.querySelectorAll(`#${id} input`).forEach(x=>{
+    x.value='';
+    x.classList.remove('correct','wrong');
+  });
+  document.getElementById(fb).textContent='';
+  scores[num]=0;
+  updateTotal();
+}
+
+/* Exercise 1 */
+const q1=[
+  ['She is ___ at school. She is not at home yet.','still'],
+  ['He is ___ twelve.','only'],
+  ['It is ___ nine o’clock.','only'],
+  ['My tea is ___ hot.','still'],
+  ['We are ___ in the classroom.','still'],
+  ['The shop is ___ open.','still'],
+  ['She is ___ busy till five.','only'],
+  ['I have ___ one notebook.','only'],
+  ['They are ___ in Spain.','still'],
+  ['Tom is ___ ten.','only']
+];
+const a1=q1.map(x=>x[1]);
+document.getElementById('ex1').innerHTML=q1.map((x,i)=>`
+<div class="item">
+  <span class="num">${i+1}</span>
+  ${x[0].replace('___',`
+  <select>
+    <option value="">Choose...</option>
+    <option>still</option>
+    <option>only</option>
+  </select>`)}
+</div>`).join('');
+
+/* Exercise 2 */
+const q2=[
+  ['She is in the park. (still)','She is still in the park'],
+  ['He is eleven. (only)','He is only eleven'],
+  ['My tea is hot. (still)','My tea is still hot'],
+  ['It is eight o’clock. (only)','It is only eight o’clock'],
+  ['We are at school. (still)','We are still at school'],
+  ['The shop is open till six. (only)','The shop is only open till six'],
+  ['They are in Italy. (still)','They are still in Italy'],
+  ['I have two books. (only)','I only have two books']
+];
+const a2=q2.map(x=>x[1]);
+document.getElementById('ex2').innerHTML=q2.map((x,i)=>`
+<div class="item">
+  <span class="num">${i+1}</span><b>${x[0]}</b><br>
+  <input type="text" placeholder="Write the correct sentence">
+</div>`).join('');
+
+/* Exercise 3 */
+const q3=[
+  ['___ 7 o’clock','at'],
+  ['___ Monday','on'],
+  ['___ April','in'],
+  ['___ the morning','in'],
+  ['___ night','at'],
+  ['___ Friday afternoon','on'],
+  ['___ summer','in'],
+  ['___ my birthday','on'],
+  ['___ noon','at'],
+  ['___ the evening','in'],
+  ['___ 3rd September','on'],
+  ['___ spring','in']
+];
+const a3=q3.map(x=>x[1]);
+document.getElementById('ex3').innerHTML=q3.map((x,i)=>`
+<div class="item">
+  <span class="num">${i+1}</span>
+  ${x[0].replace('___',`
+  <select>
+    <option value="">Choose...</option>
+    <option>at</option>
+    <option>in</option>
+    <option>on</option>
+  </select>`)}
+</div>`).join('');
+
+/* Exercise 4 */
+const q4=[
+  ['She is still at school.','She still is at school.'],
+  ['He is only eleven.','He only is eleven.'],
+  ['My tea is still hot.','My still tea is hot.'],
+  ['It is only nine o’clock.','It only is nine o’clock.'],
+  ['We are still in the park.','We still are in the park.'],
+  ['The shop is only open till seven.','The shop only is open till seven.'],
+  ['They are still in France.','They still are in France.'],
+  ['I only have one pen.','I have only one pen.'],
+  ['She is busy in the morning.','She is busy on the morning.'],
+  ['We meet on Monday.','We meet in Monday.']
+];
+const a4=q4.map(x=>x[0]);
+document.getElementById('ex4').innerHTML=q4.map((x,i)=>`
+<div class="choice-card">
+  <b>${i+1}</b><br><br>
+  <select>
+    <option value="">Choose...</option>
+    <option>${x[0]}</option>
+    <option>${x[1]}</option>
+  </select>
+</div>`).join('');
+
+/* Exercise 5 */
+const q5=[
+  ['She is ___ at school ___ 4 o’clock.','still','at'],
+  ['It is ___ ten ___ the morning.','only','in'],
+  ['We are ___ in Italy ___ July.','still','in'],
+  ['He is ___ busy ___ Monday.','only','on'],
+  ['My tea is ___ hot ___ noon.','still','at'],
+  ['They are ___ in Spain ___ summer.','still','in'],
+  ['The shop is ___ open ___ Friday.','still','on'],
+  ['She is ___ twelve ___ September.','only','in'],
+  ['We are ___ at home ___ night.','still','at'],
+  ['It is ___ eight ___ Monday morning.','only','on'],
+  ['I have ___ one lesson ___ Friday.','only','on'],
+  ['They are ___ at school ___ 9 o’clock.','still','at']
+];
+
+document.getElementById('ex5').innerHTML=q5.map((x,i)=>`
+<div class="item">
+  <span class="num">${i+1}</span>
+  ${x[0]
+    .replace('___',`
+      <select class="w1">
+        <option value="">still / only...</option>
+        <option>still</option>
+        <option>only</option>
+      </select>`)
+    .replace('___',`
+      <select class="w2">
+        <option value="">at / in / on...</option>
+        <option>at</option>
+        <option>in</option>
+        <option>on</option>
+      </select>`)}
+</div>`).join('');
+
+function checkMixed(){
+  const rows=[...document.querySelectorAll('#ex5 .item')];
+  let score=0;
+  rows.forEach((row,i)=>{
+    const a=row.querySelector('.w1');
+    const b=row.querySelector('.w2');
+    const ok1=a.value===q5[i][1];
+    const ok2=b.value===q5[i][2];
+    mark(a,ok1);
+    mark(b,ok2);
+    if(ok1)score++;
+    if(ok2)score++;
+  });
+  scores[5]=score;
+  updateTotal();
+  feedback('f5',score,24);
+}
+</script>
+</body>
+</html>
