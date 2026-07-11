@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Present Simple: -s, at, in, on</title>
+<style>
+:root{--navy:#25366d;--purple:#7454d8;--blue:#4b78e6;--green:#31a56f;--yellow:#ffd561;--red:#df4f5c;--text:#202840}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#f6f1ff,#fff8e6);color:var(--text)}
+.container{max-width:1100px;margin:auto;padding:22px}header{background:linear-gradient(120deg,var(--navy),var(--purple));color:#fff;border-radius:26px;padding:30px;box-shadow:0 12px 30px rgba(45,50,110,.18)}
+h1{margin:0 0 8px;font-size:clamp(34px,5vw,56px)}header p{font-size:18px}.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:18px}
+.rule{background:#fff;color:var(--text);border-radius:16px;padding:15px;line-height:1.5}.scoreboard{position:sticky;top:8px;z-index:4;margin:16px 0 0 auto;width:max-content;background:#17275d;color:#fff;padding:10px 16px;border-radius:14px}
+.exercise{background:#fff;border-radius:22px;padding:24px;margin-top:22px;box-shadow:0 9px 24px rgba(37,54,109,.10)}.exercise h2{margin-top:0;color:var(--navy)}
+.tip{background:#fff7d6;border-left:6px solid var(--yellow);padding:13px 15px;border-radius:12px;margin-bottom:16px}.item{padding:14px 0;border-bottom:1px solid #e9ebf4;font-size:18px;line-height:1.6}
+.item:last-child{border-bottom:none}.num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:50%;background:var(--purple);color:#fff;font-weight:700;margin-right:8px}
+select,input[type=text]{padding:9px 11px;border:2px solid #c1c9e6;border-radius:10px;font-size:17px;background:#fff}input[type=text]{min-width:280px}
+.correct{border-color:var(--green)!important;background:#eefaf4!important}.wrong{border-color:var(--red)!important;background:#fff0f1!important}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+button{border:none;border-radius:12px;padding:11px 18px;font-size:16px;font-weight:700;cursor:pointer}.check{background:var(--blue);color:#fff}.reset{background:#e9edf8;color:var(--navy)}
+.feedback{font-size:19px;font-weight:700;margin-top:15px}.choice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.choice-card{background:#f8f9ff;border:2px solid #dce2f5;border-radius:15px;padding:15px}
+.builder{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.word{background:#eef1ff;border:2px solid #c9d1f4;color:var(--navy);border-radius:10px;padding:8px 10px;font-weight:700}.final{background:linear-gradient(145deg,#fff,#f7f2ff);border:3px solid #d8ccff}
+@media(max-width:650px){.container{padding:10px}.exercise{padding:17px}.item{font-size:16px}input[type=text],select{width:100%;margin-top:7px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>Present Simple Challenge</h1>
+<p>Practise <b>-s</b> and time prepositions: <b>at, in, on</b>.</p>
+<div class="rules">
+<div class="rule"><b>I / You / We / They</b><br>play, go, do, fly</div>
+<div class="rule"><b>He / She / It</b><br>plays, goes, does, flies</div>
+<div class="rule"><b>at</b> = точное время<br><b>in</b> = месяц / сезон / часть дня<br><b>on</b> = день / дата</div>
+</div>
+</header>
+<div class="scoreboard">Total score: <span id="total">0</span> / 74</div>
+
+<section class="exercise"><h2>1. Add -s or not?</h2><div class="tip">Look at the subject first.</div><div id="ex1"></div><div class="buttons"><button class="check" onclick="checkSelect('ex1',a1,'f1',1)">Check</button><button class="reset" onclick="resetEx('ex1','f1',1)">Reset</button></div><div class="feedback" id="f1"></div></section>
+
+<section class="exercise"><h2>2. Choose at, in or on</h2><div class="tip">at 7 o’clock • in April • on Monday</div><div id="ex2"></div><div class="buttons"><button class="check" onclick="checkSelect('ex2',a2,'f2',2)">Check</button><button class="reset" onclick="resetEx('ex2','f2',2)">Reset</button></div><div class="feedback" id="f2"></div></section>
+
+<section class="exercise"><h2>3. Choose the correct sentence</h2><div id="ex3" class="choice-grid"></div><div class="buttons"><button class="check" onclick="checkSelect('ex3',a3,'f3',3)">Check</button><button class="reset" onclick="resetEx('ex3','f3',3)">Reset</button></div><div class="feedback" id="f3"></div></section>
+
+<section class="exercise"><h2>4. Fix the two mistakes</h2><div class="tip">Each sentence has one verb mistake and one preposition mistake.</div><div id="ex4"></div><div class="buttons"><button class="check" onclick="checkText('ex4',a4,'f4',4)">Check</button><button class="reset" onclick="resetEx('ex4','f4',4)">Reset</button></div><div class="feedback" id="f4"></div></section>
+
+<section class="exercise"><h2>5. Mixed challenge</h2><p>Choose the verb and the preposition.</p><div id="ex5"></div><div class="buttons"><button class="check" onclick="checkMixed()">Check</button><button class="reset" onclick="resetEx('ex5','f5',5)">Reset</button></div><div class="feedback" id="f5"></div></section>
+
+<section class="exercise"><h2>6. Build the sentence</h2><div id="ex6"></div><div class="buttons"><button class="check" onclick="checkText('ex6',a6,'f6',6)">Check</button><button class="reset" onclick="resetEx('ex6','f6',6)">Reset</button></div><div class="feedback" id="f6"></div></section>
+
+<section class="exercise final"><h2>7. Final Boss</h2><p>Complete the sentences. Think about both rules.</p><div id="ex7"></div><div class="buttons"><button class="check" onclick="checkFinal()">Check</button><button class="reset" onclick="resetEx('ex7','f7',7)">Reset</button></div><div class="feedback" id="f7"></div></section>
+</div>
+
+<script>
+const scores={1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+function updateTotal(){document.getElementById('total').textContent=Object.values(scores).reduce((a,b)=>a+b,0)}
+function norm(s){return s.toLowerCase().replace(/[.!?]/g,'').replace(/\s+/g,' ').trim()}
+function mark(el,ok){el.classList.remove('correct','wrong');el.classList.add(ok?'correct':'wrong')}
+function feedback(id,score,total){const e=document.getElementById(id);e.style.color=score===total?'var(--green)':'var(--red)';e.textContent=score===total?`Excellent! ${score}/${total}`:`Score: ${score}/${total}. Try again!`}
+function checkSelect(id,answers,fb,num){const fields=[...document.querySelectorAll(`#${id} select`)];let score=0;fields.forEach((x,i)=>{const ok=x.value===answers[i];mark(x,ok);if(ok)score++});scores[num]=score;updateTotal();feedback(fb,score,answers.length)}
+function checkText(id,answers,fb,num){const fields=[...document.querySelectorAll(`#${id} input[type=text]`)];let score=0;fields.forEach((x,i)=>{const accepted=Array.isArray(answers[i])?answers[i]:[answers[i]];const ok=accepted.map(norm).includes(norm(x.value));mark(x,ok);if(ok)score++});scores[num]=score;updateTotal();feedback(fb,score,answers.length)}
+function resetEx(id,fb,num){document.querySelectorAll(`#${id} select`).forEach(x=>{x.selectedIndex=0;x.classList.remove('correct','wrong')});document.querySelectorAll(`#${id} input`).forEach(x=>{x.value='';x.classList.remove('correct','wrong')});document.getElementById(fb).textContent='';scores[num]=0;updateTotal()}
+
+const q1=[['I ___ English every day.','learn','learns'],['She ___ English every day.','learns','learn'],['We ___ games on Saturday.','play','plays'],['He ___ games on Saturday.','plays','play'],['They ___ to school at 8 o’clock.','go','goes'],['My sister ___ to school at 8 o’clock.','goes','go'],['You ___ homework in the evening.','do','does'],['Tom ___ homework in the evening.','does','do'],['We ___ to Italy in summer.','fly','flies'],['Anna ___ to Italy in summer.','flies','fly']];
+const a1=q1.map(x=>x[1]);
+document.getElementById('ex1').innerHTML=q1.map((x,i)=>`<div class="item"><span class="num">${i+1}</span>${x[0].replace('___',`<select><option value="">Choose...</option><option>${x[1]}</option><option>${x[2]}</option></select>`)}</div>`).join('');
+
+const q2=[['___ 7 o’clock','at'],['___ Monday','on'],['___ April','in'],['___ the morning','in'],['___ Friday afternoon','on'],['___ midnight','at'],['___ summer','in'],['___ 3rd September','on'],['___ night','at'],['___ the evening','in'],['___ Saturday','on'],['___ spring','in']];
+const a2=q2.map(x=>x[1]);
+document.getElementById('ex2').innerHTML=q2.map((x,i)=>`<div class="item"><span class="num">${i+1}</span>${x[0].replace('___',`<select><option value="">Choose...</option><option>at</option><option>in</option><option>on</option></select>`)}</div>`).join('');
+
+const q3=[['She plays tennis on Sunday.','She play tennis in Sunday.'],['We do homework in the evening.','We does homework on the evening.'],['He goes to school at 8 o’clock.','He go to school in 8 o’clock.'],['They learn English in April.','They learns English on April.'],['My brother flies to Spain in summer.','My brother fly to Spain on summer.'],['I play games on Friday evening.','I plays games in Friday evening.'],['Anna does homework at night.','Anna do homework in night.'],['We go to the park on Monday.','We goes to the park at Monday.'],['She teaches English in the morning.','She teach English on the morning.'],['You fly to Italy in spring.','You flies to Italy at spring.']];
+const a3=q3.map(x=>x[0]);
+document.getElementById('ex3').innerHTML=q3.map((x,i)=>`<div class="choice-card"><b>${i+1}</b><br><br><select><option value="">Choose...</option><option>${x[0]}</option><option>${x[1]}</option></select></div>`).join('');
+
+const wrong4=['She play tennis in Monday.','He go to school on 8 o’clock.','We plays games at Saturday.','Anna do homework on the evening.','They learns English on April.','My brother fly to Italy on summer.','I goes to the park at Friday.','Tom teach English on the morning.'];
+const a4=['She plays tennis on Monday','He goes to school at 8 o’clock','We play games on Saturday','Anna does homework in the evening','They learn English in April','My brother flies to Italy in summer','I go to the park on Friday','Tom teaches English in the morning'];
+document.getElementById('ex4').innerHTML=wrong4.map((x,i)=>`<div class="item"><span class="num">${i+1}</span><b>${x}</b><br><input type="text" placeholder="Write the correct sentence"></div>`).join('');
+
+const mix5=[
+['She','play','plays','on'],['We','go','goes','at'],['Tom','do','does','in'],['They','learn','learns','in'],
+['My sister','fly','flies','in'],['I','teach','teaches','on'],['Anna','go','goes','at'],['You','play','plays','on']
+];
+const tails=['Monday','8 o’clock','the evening','April','summer','Friday','noon','Saturday afternoon'];
+document.getElementById('ex5').innerHTML=mix5.map((x,i)=>`<div class="item"><span class="num">${i+1}</span>${x[0]} <select class="v"><option value="">verb...</option><option>${x[1]}</option><option>${x[2]}</option></select> English <select class="p"><option value="">prep...</option><option>at</option><option>in</option><option>on</option></select> ${tails[i]}.</div>`).join('');
+function checkMixed(){const rows=[...document.querySelectorAll('#ex5 .item')];let score=0;rows.forEach((row,i)=>{const v=row.querySelector('.v'),p=row.querySelector('.p');const expectedVerb=[mix5[i][2],mix5[i][1],mix5[i][2],mix5[i][1],mix5[i][2],mix5[i][1],mix5[i][2],mix5[i][1]][i];const okv=v.value===expectedVerb,okp=p.value===mix5[i][3];mark(v,okv);mark(p,okp);if(okv)score++;if(okp)score++});scores[5]=score;updateTotal();feedback('f5',score,16)}
+
+const build6=[[['she','play','tennis','on Monday'],'She plays tennis on Monday'],[['we','do','homework','in the evening'],'We do homework in the evening'],[['he','go','to school','at 8 o’clock'],'He goes to school at 8 o’clock'],[['they','learn','English','in April'],'They learn English in April'],[['my sister','fly','to Spain','in summer'],'My sister flies to Spain in summer'],[['I','play','games','on Friday evening'],'I play games on Friday evening'],[['Anna','do','homework','at night'],'Anna does homework at night'],[['you','go','to the park','on Saturday'],'You go to the park on Saturday']];
+const a6=build6.map(x=>x[1]);
+document.getElementById('ex6').innerHTML=build6.map((x,i)=>`<div class="item"><span class="num">${i+1}</span><div class="builder">${x[0].map(w=>`<span class="word">${w}</span>`).join('')}</div><input type="text" placeholder="Build the sentence"></div>`).join('');
+
+const final7=[
+['My brother','play','plays','football','on','Saturday'],['We','go','goes','to school','at','8 o’clock'],['Anna','do','does','homework','in','the evening'],
+['They','learn','learns','English','in','April'],['My sister','fly','flies','to Italy','in','summer'],['I','teach','teaches','English','on','Monday morning'],
+['Tom','go','goes','to bed','at','midnight'],['You','play','plays','games','on','Friday'],['She','learn','learns','English','in','the morning'],
+['We','do','does','homework','at','night'],['My dad','teach','teaches','English','in','spring'],['They','fly','flies','to Spain','in','July'],
+['Anna','play','plays','tennis','on','Sunday afternoon'],['I','go','goes','to the park','at','noon'],['He','do','does','homework','on','3rd September']
+];
+document.getElementById('ex7').innerHTML=final7.map((x,i)=>`<div class="item"><span class="num">${i+1}</span>${x[0]} <select class="fv"><option value="">verb...</option><option>${x[1]}</option><option>${x[2]}</option></select> ${x[3]} <select class="fp"><option value="">prep...</option><option>at</option><option>in</option><option>on</option></select> ${x[5]}.</div>`).join('');
+function checkFinal(){const rows=[...document.querySelectorAll('#ex7 .item')];let score=0;rows.forEach((row,i)=>{const v=row.querySelector('.fv'),p=row.querySelector('.fp');const expectedVerb=(['We','They','I','You'].includes(final7[i][0]))?final7[i][1]:final7[i][2];const okv=v.value===expectedVerb,okp=p.value===final7[i][4];mark(v,okv);mark(p,okp);if(okv)score++;if(okp)score++});scores[7]=score;updateTotal();feedback('f7',score,30)}
+</script>
+</body>
+</html>
