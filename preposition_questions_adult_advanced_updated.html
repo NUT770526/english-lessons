@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Питальні речення з прийменниками — тренажер</title>
+<style>
+  :root{
+    --bg:#f7f4ef;
+    --card:#ffffff;
+    --ink:#18324a;
+    --muted:#64748b;
+    --accent:#c83f6f;
+    --accent2:#5b7db1;
+    --good:#1f8a5b;
+    --bad:#c0392b;
+    --line:#dbe3ec;
+    --soft:#fff1f6;
+    --soft2:#eef5ff;
+    --shadow:0 10px 28px rgba(24,50,74,.09);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:linear-gradient(180deg,#faf8f4 0%,#f3f6fa 100%);
+    color:var(--ink);
+    line-height:1.5;
+  }
+  .wrap{max-width:1050px;margin:0 auto;padding:24px 16px 60px}
+  header{
+    background:linear-gradient(135deg,#fff 0%,#fff8fb 50%,#eef5ff 100%);
+    border:1px solid var(--line);
+    border-radius:24px;
+    padding:28px;
+    box-shadow:var(--shadow);
+    margin-bottom:22px;
+  }
+  h1{margin:0 0 10px;font-size:clamp(28px,5vw,48px);line-height:1.08}
+  .subtitle{font-size:18px;color:var(--muted);margin:0}
+  .rule{
+    margin-top:20px;
+    padding:18px;
+    border-left:6px solid var(--accent);
+    background:var(--soft);
+    border-radius:14px;
+  }
+  .rule strong{color:var(--accent)}
+  .examples{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:10px;
+    margin-top:14px;
+  }
+  .example{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px 14px;
+  }
+  .prep{color:var(--accent);font-weight:800}
+  .phrase{color:var(--accent2);font-weight:800}
+  .progress{
+    position:sticky;top:8px;z-index:10;
+    background:rgba(255,255,255,.96);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:12px 16px;
+    box-shadow:var(--shadow);
+    margin-bottom:18px;
+    display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  }
+  .bar{height:10px;background:#e7edf4;border-radius:999px;overflow:hidden;flex:1;min-width:180px}
+  .bar > div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.3s}
+  section{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:22px;
+    margin:18px 0;
+    box-shadow:var(--shadow);
+  }
+  h2{margin:0 0 6px;font-size:25px}
+  .instruction{margin:0 0 18px;color:var(--muted)}
+  .item{
+    border-top:1px solid #edf1f5;
+    padding:14px 0;
+  }
+  .item:first-of-type{border-top:0}
+  label{font-weight:700}
+  select,input[type="text"]{
+    width:100%;
+    margin-top:8px;
+    padding:11px 12px;
+    border:1px solid #bfcbd8;
+    border-radius:10px;
+    font-size:16px;
+    background:#fff;
+    color:var(--ink);
+  }
+  select:focus,input:focus{outline:3px solid rgba(91,125,177,.18);border-color:var(--accent2)}
+  .feedback{min-height:22px;margin-top:6px;font-size:14px;font-weight:700}
+  .ok{color:var(--good)}
+  .no{color:var(--bad)}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  button{
+    border:0;border-radius:12px;padding:11px 16px;font-size:15px;font-weight:800;cursor:pointer;
+  }
+  .primary{background:var(--accent);color:white}
+  .secondary{background:var(--soft2);color:var(--ink);border:1px solid #ccd9e8}
+  .ghost{background:#f4f5f7;color:var(--ink)}
+  .choice{
+    display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;
+  }
+  .choice button{
+    background:#f6f8fb;border:1px solid #ccd7e3;color:var(--ink);
+  }
+  .choice button.selected{background:#dfeaff;border-color:var(--accent2)}
+  .wordbank{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .word{
+    background:#eef5ff;border:1px solid #c8d8ee;border-radius:10px;padding:8px 11px;cursor:pointer;
+    user-select:none;
+  }
+  .word.used{opacity:.35;pointer-events:none}
+  .answerline{
+    min-height:48px;border:2px dashed #cbd5e1;border-radius:12px;padding:8px;display:flex;gap:7px;flex-wrap:wrap;
+    background:#fbfcfe;
+  }
+  .token{
+    background:#fff1f6;border:1px solid #f0bfd0;border-radius:9px;padding:7px 10px;cursor:pointer;
+  }
+  .radio-row{display:grid;gap:8px;margin-top:10px}
+  .radio-row label{font-weight:500;background:#f8fafc;border:1px solid #dce5ee;border-radius:10px;padding:10px;cursor:pointer}
+  .scorebox{
+    margin-top:12px;padding:12px 14px;background:#f7fafc;border-radius:12px;font-weight:800;
+  }
+  .mini{font-size:14px;color:var(--muted)}
+  mark{
+    background:#fff0a8;
+    color:var(--ink);
+    padding:2px 5px;
+    border-radius:6px;
+    font-weight:800;
+  }
+  footer{text-align:center;color:var(--muted);padding-top:10px}
+  @media(max-width:600px){
+    header,section{padding:18px}
+    h2{font-size:22px}
+    .progress{top:4px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Питальні речення з прийменниками</h1>
+  <p class="subtitle">Інтерактивний тренажер для дорослого студента</p>
+
+  <div class="rule">
+    <strong>Головне правило:</strong> в англійському питанні прийменник часто залишається
+    <strong>в кінці речення</strong>.<br><br>
+    Вивчай дієслово разом із прийменником: <b>wait for, talk to, look through, depend on</b>.<br>
+    <b>Важливо:</b> кажемо <b>discuss something</b> або <b>discuss something with somebody</b>, але не <s>discuss about</s>.
+    <div class="examples">
+      <div class="example"><span class="phrase">talk to</span> → Who can I talk <span class="prep">to</span>?</div>
+      <div class="example"><span class="phrase">wait for</span> → Who are you waiting <span class="prep">for</span>?</div>
+      <div class="example"><span class="phrase">look for</span> → What are you looking <span class="prep">for</span>?</div>
+      <div class="example"><span class="phrase">talk about</span> → What are they talking <span class="prep">about</span>?</div>
+      <div class="example"><span class="phrase">come from</span> → Where do you come <span class="prep">from</span>?</div>
+      <div class="example"><span class="phrase">stay at</span> → Which hotel does he stay <span class="prep">at</span>?</div>
+    </div>
+  </div>
+</header>
+
+<div class="progress">
+  <strong>Загальний результат: <span id="totalScore">0</span>/76</strong>
+  <div class="bar"><div id="progressFill"></div></div>
+  <span id="percent">0%</span>
+</div>
+
+<section id="ex1">
+  <h2>1. З’єднай конструкцію з перекладом</h2>
+  <p class="instruction">Оберіть правильне значення. 18 найуживаніших конструкцій.</p>
+  <div id="matchContainer"></div>
+  <div class="btns">
+    <button class="primary" onclick="checkSelectExercise('matchContainer','score1')">Перевірити</button>
+    <button class="secondary" onclick="showSelectAnswers('matchContainer')">Показати відповіді</button>
+    <button class="ghost" onclick="resetSection('matchContainer','score1')">Скинути</button>
+  </div>
+  <div class="scorebox" id="score1">Результат: 0/18</div>
+</section>
+
+<section id="ex2">
+  <h2>2. Встав правильний прийменник</h2>
+  <p class="instruction">Обери: <b>to, for, about, from, at, with, by</b>. 10 речень.</p>
+  <div id="prepContainer"></div>
+  <div class="btns">
+    <button class="primary" onclick="checkSelectExercise('prepContainer','score2')">Перевірити</button>
+    <button class="secondary" onclick="showSelectAnswers('prepContainer')">Показати відповіді</button>
+    <button class="ghost" onclick="resetSection('prepContainer','score2')">Скинути</button>
+  </div>
+  <div class="scorebox" id="score2">Результат: 0/10</div>
+</section>
+
+<section id="ex3">
+  <h2>3. Склади питання зі слів</h2>
+  <p class="instruction">Натискай на слова в правильному порядку. Щоб прибрати слово, натисни на нього у відповіді.</p>
+  <div id="orderContainer"></div>
+  <div class="btns">
+    <button class="primary" onclick="checkOrderExercise()">Перевірити</button>
+    <button class="secondary" onclick="showOrderAnswers()">Показати відповіді</button>
+    <button class="ghost" onclick="resetOrder()">Скинути</button>
+  </div>
+  <div class="scorebox" id="score3">Результат: 0/10</div>
+</section>
+
+<section id="ex4">
+  <h2>4. Постав питання до виділеної частини</h2>
+  <p class="instruction">Відповідь уже є. Напиши відповідне питання. Не забудь прийменник у кінці.</p>
+  <div id="questionContainer"></div>
+  <div class="btns">
+    <button class="primary" onclick="checkTextExercise('questionContainer','score4')">Перевірити</button>
+    <button class="secondary" onclick="showTextAnswers('questionContainer')">Показати відповіді</button>
+    <button class="ghost" onclick="resetSection('questionContainer','score4')">Скинути</button>
+  </div>
+  <div class="scorebox" id="score4">Результат: 0/10</div>
+</section>
+
+<section id="ex5">
+  <h2>5. Переклади англійською</h2>
+  <p class="instruction">Напиши повне питання англійською. 10 речень.</p>
+  <div id="translateContainer"></div>
+  <div class="btns">
+    <button class="primary" onclick="checkTextExercise('translateContainer','score5')">Перевірити</button>
+    <button class="secondary" onclick="showTextAnswers('translateContainer')">Показати відповіді</button>
+    <button class="ghost" onclick="resetSection('translateContainer','score5')">Скинути</button>
+  </div>
+  <div class="scorebox" id="score5">Результат: 0/10</div>
+</section>
+
+<section id="ex6">
+  <h2>6. Обери правильний варіант</h2>
+  <p class="instruction">У кожній парі лише одне питання побудоване правильно. Звертай увагу, чи потрібен прийменник у кінці.</p>
+  <div id="choiceContainer"></div>
+  <div class="btns">
+    <button class="primary" onclick="checkRadioExercise()">Перевірити</button>
+    <button class="secondary" onclick="showRadioAnswers()">Показати відповіді</button>
+    <button class="ghost" onclick="resetRadio()">Скинути</button>
+  </div>
+  <div class="scorebox" id="score6">Результат: 0/18</div>
+</section>
+
+<footer>Практикуйте конструкцію як одне ціле: <b>talk to, wait for, look for, talk about, come from, stay at</b>.</footer>
+</div>
+
+<script>
+const scores = {score1:0,score2:0,score3:0,score4:0,score5:0,score6:0};
+
+function normalize(s){
+  return s.toLowerCase().trim()
+    .replace(/[’‘]/g,"'")
+    .replace(/[?.!,]/g,"")
+    .replace(/\s+/g," ");
+}
+function updateTotal(){
+  const total = Object.values(scores).reduce((a,b)=>a+b,0);
+  document.getElementById('totalScore').textContent = total;
+  const pct = Math.round(total/76*100);
+  document.getElementById('percent').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+const maxScores = {score1:18,score2:10,score3:10,score4:10,score5:10,score6:18};
+function setScore(id,val){
+  scores[id]=val;
+  document.getElementById(id).textContent=`Результат: ${val}/${maxScores[id]}`;
+  updateTotal();
+}
+
+const matchData = [
+  ["talk to","розмовляти з кимось"],
+  ["talk about","говорити про щось"],
+  ["wait for","чекати на когось / щось"],
+  ["look for","шукати когось / щось"],
+  ["look at","дивитися на когось / щось"],
+  ["look through","переглядати документи / речі"],
+  ["listen to","слухати когось / щось"],
+  ["think about","думати про щось"],
+  ["ask for","просити щось"],
+  ["pay for","платити за щось"],
+  ["belong to","належати комусь"],
+  ["depend on","залежати від когось / чогось"],
+  ["laugh at","сміятися з когось / чогось"],
+  ["work with","працювати з кимось"],
+  ["agree with","погоджуватися з кимось"],
+  ["write about","писати про щось"],
+  ["come from","бути родом з / походити з"],
+  ["stay at","зупинятися в певному місці"]
+];
+const matchOptions = [
+  "розмовляти з кимось",
+  "говорити про щось",
+  "чекати на когось / щось",
+  "шукати когось / щось",
+  "дивитися на когось / щось",
+  "переглядати документи / речі",
+  "слухати когось / щось",
+  "думати про щось",
+  "просити щось",
+  "платити за щось",
+  "належати комусь",
+  "залежати від когось / чогось",
+  "сміятися з когось / чогось",
+  "працювати з кимось",
+  "погоджуватися з кимось",
+  "писати про щось",
+  "бути родом з / походити з",
+  "зупинятися в певному місці"
+];
+
+const prepData = [
+ ["Who can I talk ___ about it?","to"],
+ ["Who are you waiting ___?","for"],
+ ["What are they talking ___?","about"],
+ ["What are you looking ___?","for"],
+ ["Where do you come ___?","from"],
+ ["Which hotel does he usually stay ___?","at"],
+ ["Who did you go to the theatre ___?","with"],
+ ["Who is this book ___?","by"],
+ ["Who is she married ___?","to"],
+ ["Who did you discuss it ___?","with"]
+];
+const prepOptions = ["","to","for","about","from","at","with","by"];
+
+const orderData = [
+ ["Who can I talk to about it?","Who|can|I|talk|to|about|it?"],
+ ["Who else can I talk to about it?","Who|else|can|I|talk|to|about|it?"],
+ ["What are they talking about?","What|are|they|talking|about?"],
+ ["Who are you waiting for?","Who|are|you|waiting|for?"],
+ ["What are they looking for?","What|are|they|looking|for?"],
+ ["Where does he come from?","Where|does|he|come|from?"],
+ ["Which school did you go to?","Which|school|did|you|go|to?"],
+ ["Who did you go to the theatre with?","Who|did|you|go|to|the|theatre|with?"],
+ ["What do you need that for?","What|do|you|need|that|for?"],
+ ["Which hotel does he usually stay at?","Which|hotel|does|he|usually|stay|at?"]
+];
+
+const questionData = [
+  ["You can talk about it to <mark>the head engineer</mark>.","Who can I talk to about it?"],
+  ["His new book is about <mark>children</mark>.","What is his new book about?"],
+  ["This book is by <mark>an American writer</mark>.","Who is this book by?"],
+  ["This letter is for <mark>you</mark>.","Who is this letter for?"],
+  ["I’m looking for <mark>my telephone book</mark>.","What are you looking for?"],
+  ["They’re waiting for <mark>John</mark>.","Who are they waiting for?"],
+  ["Bob is listening to <mark>the new discs</mark>.","What is Bob listening to?"],
+  ["They’re talking about <mark>our plan</mark>.","What are they talking about?"],
+  ["He’s married to <mark>my cousin</mark>.","Who is he married to?"],
+  ["We discussed it with <mark>Mr Smith</mark>.","Who did you discuss it with?"]
+];
+
+const translateData = [
+ ["З ким я можу поговорити про це?","Who can I talk to about it?"],
+ ["З ким іще ви можете це обговорити?","Who else can you discuss it with?"],
+ ["Що ти шукаєш?","What are you looking for?"],
+ ["На кого ви чекаєте?","Who are you waiting for?"],
+ ["Про що вони говорять?","What are they talking about?"],
+ ["Для чого тобі це потрібно?","What do you need it for?"],
+ ["Звідки він родом?","Where does he come from?"],
+ ["У якому готелі він зазвичай зупиняється?","Which hotel does he usually stay at?"],
+ ["З ким ти ходила до театру?","Who did you go to the theatre with?"],
+ ["Кого ти слухаєш?","Who are you listening to?"]
+];
+
+const radioData = [
+  ["Who are you waiting for?","Who are you waiting?"],
+  ["What are they talking about?","What are they talking?"],
+  ["Who did you go with?","Who did you go?"],
+  ["Where do you come from?","Where do you come?"],
+  ["Which hotel does he stay at?","Which hotel does he stay?"],
+  ["What are you looking for?","What are you looking?"],
+  ["What are you looking at?","What are you looking?"],
+  ["What are you looking through?","What are you looking?"],
+  ["Who are you listening to?","Who are you listening?"],
+  ["What are you thinking about?","What are you thinking?"],
+  ["What did you ask for?","What did you ask?"],
+  ["What did you pay for?","What did you pay?"],
+  ["Who does this bag belong to?","Who does this bag belong?"],
+  ["What does it depend on?","What does it depend?"],
+  ["Who are they laughing at?","Who are they laughing?"],
+  ["Who do you work with?","Who do you work?"],
+  ["Who do you agree with?","Who do you agree?"],
+  ["What are you writing about?","What are you writing?"]
+];
+
+function makeSelectExercise(containerId,data,options){
+  const c=document.getElementById(containerId);
+  data.forEach((row,i)=>{
+    const div=document.createElement('div'); div.className='item';
+    const lab=document.createElement('label'); lab.textContent=`${i+1}. ${row[0]}`;
+    const sel=document.createElement('select'); sel.dataset.answer=row[1];
+    options.forEach(o=>{
+      const op=document.createElement('option'); op.value=o; op.textContent=o||"— оберіть —"; sel.appendChild(op);
+    });
+    const fb=document.createElement('div'); fb.className='feedback';
+    div.append(lab,sel,fb); c.appendChild(div);
+  });
+}
+function checkSelectExercise(containerId,scoreId){
+  let n=0;
+  document.querySelectorAll(`#${containerId} .item`).forEach(item=>{
+    const sel=item.querySelector('select'), fb=item.querySelector('.feedback');
+    if(sel.value===sel.dataset.answer){n++;fb.textContent='✓ Правильно';fb.className='feedback ok';}
+    else{fb.textContent=`✗ Правильна відповідь: ${sel.dataset.answer}`;fb.className='feedback no';}
+  });
+  setScore(scoreId,n);
+}
+function showSelectAnswers(containerId){
+  document.querySelectorAll(`#${containerId} select`).forEach(s=>s.value=s.dataset.answer);
+}
+function resetSection(containerId,scoreId){
+  const c=document.getElementById(containerId);
+  c.querySelectorAll('select').forEach(x=>x.selectedIndex=0);
+  c.querySelectorAll('input[type=text]').forEach(x=>x.value='');
+  c.querySelectorAll('.feedback').forEach(f=>{f.textContent='';f.className='feedback';});
+  setScore(scoreId,0);
+}
+
+function makeOrder(){
+  const c=document.getElementById('orderContainer');
+  orderData.forEach((row,i)=>{
+    const item=document.createElement('div'); item.className='item orderItem'; item.dataset.answer=row[0];
+    const lab=document.createElement('label'); lab.textContent=`${i+1}. Складіть питання:`;
+    const bank=document.createElement('div'); bank.className='wordbank';
+    const answer=document.createElement('div'); answer.className='answerline';
+    const fb=document.createElement('div'); fb.className='feedback';
+    const words=row[1].split('|').sort(()=>Math.random()-.5);
+    words.forEach((w,idx)=>{
+      const b=document.createElement('span'); b.className='word'; b.textContent=w; b.dataset.id=idx;
+      b.onclick=()=>{ b.classList.add('used'); const t=document.createElement('span');t.className='token';t.textContent=w;t.dataset.source=idx;
+        t.onclick=()=>{b.classList.remove('used');t.remove();}; answer.appendChild(t); };
+      bank.appendChild(b);
+    });
+    item.append(lab,bank,answer,fb);c.appendChild(item);
+  });
+}
+function checkOrderExercise(){
+  let n=0;
+  document.querySelectorAll('.orderItem').forEach(item=>{
+    const ans=[...item.querySelectorAll('.token')].map(x=>x.textContent).join(' ');
+    const fb=item.querySelector('.feedback');
+    if(normalize(ans)===normalize(item.dataset.answer)){n++;fb.textContent='✓ Правильно';fb.className='feedback ok';}
+    else{fb.textContent=`✗ Правильна відповідь: ${item.dataset.answer}`;fb.className='feedback no';}
+  });
+  setScore('score3',n);
+}
+function showOrderAnswers(){
+  document.querySelectorAll('.orderItem').forEach(item=>{
+    item.querySelector('.answerline').innerHTML='';
+    item.dataset.answer.split(' ').forEach(w=>{const t=document.createElement('span');t.className='token';t.textContent=w;item.querySelector('.answerline').appendChild(t);});
+    item.querySelectorAll('.word').forEach(w=>w.classList.add('used'));
+  });
+}
+function resetOrder(){
+  document.getElementById('orderContainer').innerHTML='';
+  makeOrder(); setScore('score3',0);
+}
+
+function makeTextExercise(containerId,data){
+  const c=document.getElementById(containerId);
+  data.forEach((row,i)=>{
+    const item=document.createElement('div');item.className='item';
+    const lab=document.createElement('label');
+    if(containerId==='questionContainer'){lab.innerHTML=`${i+1}. ${row[0]}`;}
+    else{lab.textContent=`${i+1}. ${row[0]}`;}
+    const inp=document.createElement('input');inp.type='text';inp.placeholder='Напишіть питання англійською';inp.dataset.answer=row[1];
+    const fb=document.createElement('div');fb.className='feedback';
+    item.append(lab,inp,fb);c.appendChild(item);
+  });
+}
+function checkTextExercise(containerId,scoreId){
+  let n=0;
+  document.querySelectorAll(`#${containerId} .item`).forEach(item=>{
+    const inp=item.querySelector('input'), fb=item.querySelector('.feedback');
+    if(normalize(inp.value)===normalize(inp.dataset.answer)){n++;fb.textContent='✓ Правильно';fb.className='feedback ok';}
+    else{fb.textContent=`✗ Варіант відповіді: ${inp.dataset.answer}`;fb.className='feedback no';}
+  });
+  setScore(scoreId,n);
+}
+function showTextAnswers(containerId){
+  document.querySelectorAll(`#${containerId} input`).forEach(i=>i.value=i.dataset.answer);
+}
+
+function makeRadio(){
+  const c=document.getElementById('choiceContainer');
+  radioData.forEach((row,i)=>{
+    const item=document.createElement('div');item.className='item radioItem';item.dataset.answer='0';
+    const lab=document.createElement('label');lab.textContent=`${i+1}. Оберіть правильне питання:`;
+    const rr=document.createElement('div');rr.className='radio-row';
+    row.forEach((txt,j)=>{
+      const l=document.createElement('label');
+      const r=document.createElement('input');r.type='radio';r.name='r'+i;r.value=j;
+      l.append(r,document.createTextNode(' '+txt));rr.appendChild(l);
+    });
+    const fb=document.createElement('div');fb.className='feedback';
+    item.append(lab,rr,fb);c.appendChild(item);
+  });
+}
+function checkRadioExercise(){
+  let n=0;
+  document.querySelectorAll('.radioItem').forEach((item,i)=>{
+    const chosen=item.querySelector('input:checked'),fb=item.querySelector('.feedback');
+    if(chosen && chosen.value==='0'){n++;fb.textContent='✓ Правильно';fb.className='feedback ok';}
+    else{fb.textContent=`✗ Правильна відповідь: ${radioData[i][0]}`;fb.className='feedback no';}
+  });
+  setScore('score6',n);
+}
+function showRadioAnswers(){
+  document.querySelectorAll('.radioItem').forEach(item=>item.querySelector('input[value="0"]').checked=true);
+}
+function resetRadio(){
+  document.querySelectorAll('.radioItem input').forEach(r=>r.checked=false);
+  document.querySelectorAll('.radioItem .feedback').forEach(f=>{f.textContent='';f.className='feedback';});
+  setScore('score6',0);
+}
+
+makeSelectExercise('matchContainer',matchData,["",...matchOptions]);
+makeSelectExercise('prepContainer',prepData,prepOptions);
+makeOrder();
+makeTextExercise('questionContainer',questionData);
+makeTextExercise('translateContainer',translateData);
+makeRadio();
+</script>
+</body>
+</html>
