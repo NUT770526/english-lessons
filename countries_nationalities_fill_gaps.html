@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countries and Nationalities</title>
+<style>
+  :root{
+    --blue:#3346d3;
+    --light:#eef1ff;
+    --yellow:#ffd85a;
+    --green:#2ca66f;
+    --red:#df4b4b;
+    --text:#1c2540;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:linear-gradient(135deg,#f4f6ff,#fff9e8);
+    color:var(--text);
+  }
+  .wrap{max-width:980px;margin:auto;padding:22px}
+  .card{
+    background:white;
+    border-radius:24px;
+    box-shadow:0 10px 28px rgba(36,55,120,.14);
+    padding:26px;
+  }
+  h1{margin-top:0;color:var(--blue);font-size:clamp(28px,5vw,46px)}
+  .subtitle{font-size:18px;margin-bottom:20px}
+  .word-bank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    background:var(--light);
+    border:2px dashed #aeb9ff;
+    padding:16px;
+    border-radius:18px;
+    margin-bottom:24px;
+  }
+  .word{
+    background:#fff;
+    border:2px solid #c8cef8;
+    color:var(--blue);
+    padding:10px 14px;
+    border-radius:12px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+  }
+  .word:hover{transform:translateY(-2px)}
+  .word.used{opacity:.35;text-decoration:line-through}
+  .sentence{
+    background:#fbfcff;
+    border:2px solid #e1e6f5;
+    border-radius:16px;
+    padding:16px;
+    margin:14px 0;
+    font-size:18px;
+    line-height:1.6;
+  }
+  .num{
+    display:inline-flex;
+    width:30px;
+    height:30px;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:var(--blue);
+    color:white;
+    font-weight:700;
+    margin-right:8px;
+  }
+  select{
+    min-width:150px;
+    padding:9px 10px;
+    border:2px solid #bbc5e8;
+    border-radius:10px;
+    font-size:17px;
+    background:white;
+  }
+  select.correct{border-color:var(--green);background:#eefaf4}
+  select.wrong{border-color:var(--red);background:#fff0f0}
+  .buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+  button{
+    border:none;
+    border-radius:12px;
+    padding:12px 18px;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .check{background:var(--blue);color:white}
+  .reset{background:#e9edf8;color:var(--text)}
+  .answers{background:var(--yellow);color:#3d3300}
+  .feedback{margin-top:18px;font-size:20px;font-weight:700}
+  .answer-box{
+    display:none;
+    margin-top:16px;
+    background:#eefaf4;
+    border-left:6px solid var(--green);
+    padding:15px;
+    border-radius:12px;
+    line-height:1.7;
+  }
+  .tip{
+    background:#fff7d6;
+    border-left:6px solid var(--yellow);
+    padding:14px;
+    border-radius:12px;
+    margin-bottom:18px;
+  }
+  @media(max-width:600px){
+    .wrap{padding:10px}
+    .card{padding:16px}
+    .sentence{font-size:16px}
+    select{width:100%;margin-top:8px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>Read and fill in the gaps</h1>
+    <p class="subtitle">Choose the correct country or nationality.</p>
+
+    <div class="tip">
+      <b>Remember:</b> country → <i>from Spain</i>, nationality → <i>Spanish</i>.
+    </div>
+
+    <div class="word-bank" id="wordBank"></div>
+    <div id="exercise"></div>
+
+    <div class="buttons">
+      <button class="check" onclick="checkAnswers()">Check</button>
+      <button class="reset" onclick="resetExercise()">Reset</button>
+      <button class="answers" onclick="toggleAnswers()">Show answers</button>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+    <div class="answer-box" id="answerBox"></div>
+  </div>
+</div>
+
+<script>
+const words = ["Turkish","Italian","French","Polish","Argentina","British","Chinese","German","Spain"];
+const items = [
+  {before:"My friends live in the UK. They are ", after:".", answer:"British"},
+  {before:"She is from ", after:", so she’s Argentinian.", answer:"Argentina"},
+  {before:"Hans speaks ", after:" because he lives in Germany.", answer:"German"},
+  {before:"I love Kung Pao Chicken. ", after:" food is delicious.", answer:"Chinese"},
+  {before:"Poland is a beautiful country, and people from there are ", after:".", answer:"Polish"},
+  {before:"Paul lives in Paris, so he speaks ", after:".", answer:"French"},
+  {before:"I can learn the Spanish language not only in ", after:".", answer:"Spain"},
+  {before:"", after:" food is famous for its kebabs and baklava.", answer:"Turkish"},
+  {before:"I would love to visit Italy and try ", after:" pizza.", answer:"Italian"}
+];
+
+function build(){
+  document.getElementById("wordBank").innerHTML =
+    words.map(w=>`<button class="word" type="button" onclick="chooseWord('${w}')">${w}</button>`).join("");
+
+  document.getElementById("exercise").innerHTML = items.map((item,i)=>`
+    <div class="sentence">
+      <span class="num">${i+1}</span>
+      ${item.before}
+      <select data-answer="${item.answer}" onchange="updateWordBank()">
+        <option value="">Choose...</option>
+        ${words.map(w=>`<option value="${w}">${w}</option>`).join("")}
+      </select>
+      ${item.after}
+    </div>
+  `).join("");
+
+  document.getElementById("answerBox").innerHTML =
+    items.map((x,i)=>`${i+1}. <b>${x.answer}</b>`).join("<br>");
+}
+
+function chooseWord(word){
+  const empty = [...document.querySelectorAll("select")].find(s=>!s.value);
+  if(empty){
+    empty.value = word;
+    updateWordBank();
+  }
+}
+
+function updateWordBank(){
+  const selected = [...document.querySelectorAll("select")].map(s=>s.value);
+  document.querySelectorAll(".word").forEach(btn=>{
+    btn.classList.toggle("used", selected.includes(btn.textContent));
+  });
+}
+
+function checkAnswers(){
+  let score=0;
+  document.querySelectorAll("select").forEach(s=>{
+    s.classList.remove("correct","wrong");
+    if(s.value===s.dataset.answer){
+      s.classList.add("correct");
+      score++;
+    }else{
+      s.classList.add("wrong");
+    }
+  });
+
+  const fb=document.getElementById("feedback");
+  if(score===items.length){
+    fb.style.color="var(--green)";
+    fb.textContent="Excellent! 9 / 9";
+  }else{
+    fb.style.color="var(--red)";
+    fb.textContent=`Score: ${score} / ${items.length}. Try again!`;
+  }
+}
+
+function resetExercise(){
+  document.querySelectorAll("select").forEach(s=>{
+    s.value="";
+    s.classList.remove("correct","wrong");
+  });
+  document.getElementById("feedback").textContent="";
+  document.getElementById("answerBox").style.display="none";
+  updateWordBank();
+}
+
+function toggleAnswers(){
+  const box=document.getElementById("answerBox");
+  box.style.display = box.style.display==="block" ? "none" : "block";
+}
+
+build();
+</script>
+</body>
+</html>
