@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Because or So — Practice</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#17324d;line-height:1.5}
+.wrap{max-width:1000px;margin:auto;padding:24px 16px 60px}
+header,section{background:#fff;border:1px solid #dbe3ec;border-radius:20px;box-shadow:0 8px 24px rgba(23,50,77,.08);padding:24px;margin:18px 0}
+h1{font-size:42px;margin:0 0 8px}.sub{color:#687386;font-size:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.card{padding:16px;border-radius:14px}.b{background:#edf4ff}.s{background:#edf9f2}
+.b h3,.b b{color:#2359a8}.s h3,.s b{color:#16824d}
+.compare{margin-top:14px;padding:14px;background:#fff9e8;border-left:5px solid #e2b547;border-radius:10px}
+.item{padding:14px 0;border-top:1px solid #edf1f5}.item:first-child{border-top:0}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.speak{border:0;background:#eef4fb;width:38px;height:38px;border-radius:50%;cursor:pointer}
+select,input{width:100%;margin-top:8px;padding:11px;border:1px solid #bcc9d6;border-radius:10px;font-size:16px}
+.feedback{min-height:22px;margin-top:6px;font-weight:700;font-size:14px}.ok{color:#19865b}.no{color:#c33b3b}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+button.action{border:0;border-radius:11px;padding:11px 15px;font-weight:800;cursor:pointer}
+.primary{background:#7a4bb7;color:white}.secondary{background:#edf3fb}.ghost{background:#f1f3f5}
+.score{margin-top:12px;padding:12px;background:#f8fafc;border-radius:10px;font-weight:800}
+.wordbank{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.token,.answerword{padding:8px 10px;border-radius:9px;cursor:pointer}
+.token{background:#eef5ff;border:1px solid #c6d4e7}.token.used{opacity:.35;pointer-events:none}
+.answerline{min-height:48px;border:2px dashed #cbd5e1;border-radius:12px;padding:8px;display:flex;gap:7px;flex-wrap:wrap}
+.answerword{background:#fff1f6;border:1px solid #edbfd0}
+footer{text-align:center;color:#687386}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Because or So?</h1>
+<p class="sub">Причина чи результат?</p>
+<div class="grid">
+<div class="card b"><h3>BECAUSE = тому що</h3><p><b>Питання: ЧОМУ?</b></p><p>I took a break <b>because</b> I was tired.</p><p><i>Я зробила перерву, тому що втомилася.</i></p></div>
+<div class="card s"><h3>SO = тому / так що</h3><p><b>Питання: ЩО СТАЛОСЯ ПОТІМ?</b></p><p>I was tired, <b>so</b> I took a break.</p><p><i>Я втомилася, тому зробила перерву.</i></p></div>
+</div>
+<div class="compare"><b>Порівняйте:</b><br>She works at the weekends <b>because</b> she has too many projects.<br>She has too many projects, <b>so</b> she works at the weekends.</div>
+</header>
+
+<section><h2>1. Choose because or so</h2><p class="sub">Друга частина пояснює причину чи показує результат?</p><div id="ex1"></div><div class="btns"><button class="action primary" onclick="checkSelect('ex1','score1')">Check answers</button><button class="action secondary" onclick="showSelect('ex1')">Show answers</button><button class="action ghost" onclick="resetSelect('ex1','score1')">Reset</button></div><div class="score" id="score1">Score: 0/10</div></section>
+
+<section><h2>2. Match the two parts</h2><p class="sub">Оберіть логічне продовження.</p><div id="ex2"></div><div class="btns"><button class="action primary" onclick="checkSelect('ex2','score2')">Check answers</button><button class="action secondary" onclick="showSelect('ex2')">Show answers</button><button class="action ghost" onclick="resetSelect('ex2','score2')">Reset</button></div><div class="score" id="score2">Score: 0/10</div></section>
+
+<section><h2>3. Put the words in order</h2><p class="sub">Складіть речення зі слів.</p><div id="ex3"></div><div class="btns"><button class="action primary" onclick="checkOrder()">Check answers</button><button class="action secondary" onclick="showOrder()">Show answers</button><button class="action ghost" onclick="resetOrder()">Reset</button></div><div class="score" id="score3">Score: 0/10</div></section>
+
+<section><h2>4. Rewrite with because or so</h2><p class="sub">Об’єднайте два речення в одне.</p><div id="ex4"></div><div class="btns"><button class="action primary" onclick="checkText('ex4','score4')">Check answers</button><button class="action secondary" onclick="showText('ex4')">Show answers</button><button class="action ghost" onclick="resetText('ex4','score4')">Reset</button></div><div class="score" id="score4">Score: 0/10</div></section>
+
+<section><h2>5. Translate into English</h2><p class="sub">Перекладіть речення англійською.</p><div id="ex5"></div><div class="btns"><button class="action primary" onclick="checkText('ex5','score5')">Check answers</button><button class="action secondary" onclick="showText('ex5')">Show answers</button><button class="action ghost" onclick="resetText('ex5','score5')">Reset</button></div><div class="score" id="score5">Score: 0/10</div></section>
+
+<footer><b>because = чому?</b> | <b>so = що сталося потім?</b></footer>
+</div>
+
+<script>
+function speak(t){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.83;speechSynthesis.speak(u)}
+function norm(s){return s.toLowerCase().trim().replace(/[’‘]/g,"'").replace(/[?.!,]/g,"").replace(/\s+/g," ")}
+
+const ex1=[
+["Mia has an interesting job ___ she makes websites.","because"],
+["Mia had a promotion, ___ she helps other people now.","so"],
+["She works at the weekends ___ she has too many projects.","because"],
+["She was tired, ___ she took a break.","so"],
+["She is never unemployed ___ she always has projects.","because"],
+["She wanted new opportunities, ___ she started a career in IT.","so"],
+["Mia works for a big company ___ she likes meeting new people.","because"],
+["She had a lot of work, ___ she didn’t go to the concert.","so"],
+["She finds time for chatting to friends ___ it helps her relax.","because"],
+["Her job is interesting, ___ she enjoys it very much.","so"]];
+
+const ex2=[
+["Mia took a break because...","she was tired."],
+["Mia was tired, so...","she took a break."],
+["She works at the weekends because...","she has too many projects."],
+["She had too many projects, so...","she worked at the weekend."],
+["She started a career because...","she wanted an interesting job."],
+["She wanted an interesting job, so...","she started a career."],
+["She is happy because...","she had a promotion."],
+["She had a promotion, so...","she helps other people now."],
+["She chats to friends because...","it helps her relax."],
+["She had free time, so...","she went to a concert."]];
+const ex2opts=["","she was tired.","she took a break.","she has too many projects.","she worked at the weekend.","she wanted an interesting job.","she started a career.","she had a promotion.","she helps other people now.","it helps her relax.","she went to a concert."];
+
+const order=[
+["Mia took a break because she was tired.","Mia|took|a|break|because|she|was|tired."],
+["Mia was tired, so she took a break.","Mia|was|tired,|so|she|took|a|break."],
+["She works at the weekends because she has many projects.","She|works|at|the|weekends|because|she|has|many|projects."],
+["She had many projects, so she worked at the weekend.","She|had|many|projects,|so|she|worked|at|the|weekend."],
+["She started a career because she wanted an interesting job.","She|started|a|career|because|she|wanted|an|interesting|job."],
+["She wanted an interesting job, so she started a career.","She|wanted|an|interesting|job,|so|she|started|a|career."],
+["She is happy because she had a promotion.","She|is|happy|because|she|had|a|promotion."],
+["She had a promotion, so she helps other people now.","She|had|a|promotion,|so|she|helps|other|people|now."],
+["She chats to friends because it helps her relax.","She|chats|to|friends|because|it|helps|her|relax."],
+["She had free time, so she went to a concert.","She|had|free|time,|so|she|went|to|a|concert."]];
+
+const ex4=[
+["Mia was tired. She took a break. (so)","Mia was tired, so she took a break."],
+["Mia took a break. She was tired. (because)","Mia took a break because she was tired."],
+["She had too many projects. She worked at the weekend. (so)","She had too many projects, so she worked at the weekend."],
+["She worked at the weekend. She had too many projects. (because)","She worked at the weekend because she had too many projects."],
+["She wanted an interesting job. She started a career. (so)","She wanted an interesting job, so she started a career."],
+["She started a career. She wanted an interesting job. (because)","She started a career because she wanted an interesting job."],
+["She had a promotion. She was very happy. (so)","She had a promotion, so she was very happy."],
+["She was very happy. She had a promotion. (because)","She was very happy because she had a promotion."],
+["She had free time. She went to a concert. (so)","She had free time, so she went to a concert."],
+["She went to a concert. She had free time. (because)","She went to a concert because she had free time."]];
+
+const ex5=[
+["Мія зробила перерву, тому що втомилася.","Mia took a break because she was tired."],
+["Мія втомилася, тому зробила перерву.","Mia was tired, so she took a break."],
+["Вона працює у вихідні, тому що має багато проєктів.","She works at the weekends because she has many projects."],
+["У неї було багато проєктів, тому вона працювала у вихідні.","She had many projects, so she worked at the weekend."],
+["Вона почала кар’єру, тому що хотіла цікаву роботу.","She started a career because she wanted an interesting job."],
+["Вона хотіла цікаву роботу, тому почала кар’єру.","She wanted an interesting job, so she started a career."],
+["Вона щаслива, тому що отримала підвищення.","She is happy because she had a promotion."],
+["Вона отримала підвищення, тому тепер допомагає іншим.","She had a promotion, so she helps other people now."],
+["Вона спілкується з друзями, тому що це допомагає їй розслабитися.","She chats to friends because it helps her relax."],
+["У неї був вільний час, тому вона пішла на концерт.","She had free time, so she went to a concert."]];
+
+function makeSelect(id,data,opts){let c=document.getElementById(id);data.forEach((r,i)=>{let d=document.createElement('div');d.className='item';d.innerHTML=`<div class="row"><button class="speak" onclick='speak(${JSON.stringify(r[0].replace("___",r[1]))})'>🔊</button><b>${i+1}. ${r[0]}</b></div>`;let s=document.createElement('select');s.dataset.answer=r[1];opts.forEach(o=>{let op=document.createElement('option');op.value=o;op.textContent=o||'— choose —';s.appendChild(op)});let f=document.createElement('div');f.className='feedback';d.append(s,f);c.appendChild(d)})}
+function checkSelect(id,score){let n=0;document.querySelectorAll(`#${id} .item`).forEach(d=>{let s=d.querySelector('select'),f=d.querySelector('.feedback');if(s.value===s.dataset.answer){n++;f.textContent='✓ Correct';f.className='feedback ok'}else{f.textContent='✗ '+s.dataset.answer;f.className='feedback no'}});document.getElementById(score).textContent=`Score: ${n}/10`}
+function showSelect(id){document.querySelectorAll(`#${id} select`).forEach(s=>s.value=s.dataset.answer)}
+function resetSelect(id,score){document.querySelectorAll(`#${id} select`).forEach(s=>s.selectedIndex=0);document.querySelectorAll(`#${id} .feedback`).forEach(f=>{f.textContent='';f.className='feedback'});document.getElementById(score).textContent='Score: 0/10'}
+
+function makeOrder(){let c=document.getElementById('ex3');c.innerHTML='';order.forEach((r,i)=>{let d=document.createElement('div');d.className='item orderItem';d.dataset.answer=r[0];d.innerHTML=`<div class="row"><button class="speak" onclick='speak(${JSON.stringify(r[0])})'>🔊</button><b>${i+1}. Make a sentence</b></div>`;let b=document.createElement('div');b.className='wordbank';let a=document.createElement('div');a.className='answerline';let f=document.createElement('div');f.className='feedback';r[1].split('|').sort(()=>Math.random()-.5).forEach((w,j)=>{let t=document.createElement('span');t.className='token';t.textContent=w;t.onclick=()=>{t.classList.add('used');let x=document.createElement('span');x.className='answerword';x.textContent=w;x.onclick=()=>{t.classList.remove('used');x.remove()};a.appendChild(x)};b.appendChild(t)});d.append(b,a,f);c.appendChild(d)})}
+function checkOrder(){let n=0;document.querySelectorAll('.orderItem').forEach(d=>{let a=[...d.querySelectorAll('.answerword')].map(x=>x.textContent).join(' '),f=d.querySelector('.feedback');if(norm(a)===norm(d.dataset.answer)){n++;f.textContent='✓ Correct';f.className='feedback ok'}else{f.textContent='✗ '+d.dataset.answer;f.className='feedback no'}});document.getElementById('score3').textContent=`Score: ${n}/10`}
+function showOrder(){document.querySelectorAll('.orderItem').forEach(d=>{let a=d.querySelector('.answerline');a.innerHTML='';d.dataset.answer.split(' ').forEach(w=>{let x=document.createElement('span');x.className='answerword';x.textContent=w;a.appendChild(x)});d.querySelectorAll('.token').forEach(t=>t.classList.add('used'))})}
+function resetOrder(){makeOrder();document.getElementById('score3').textContent='Score: 0/10'}
+
+function makeText(id,data){let c=document.getElementById(id);data.forEach((r,i)=>{let d=document.createElement('div');d.className='item';d.innerHTML=`<div class="row"><button class="speak" onclick='speak(${JSON.stringify(r[1])})'>🔊</button><b>${i+1}. ${r[0]}</b></div>`;let inp=document.createElement('input');inp.dataset.answer=r[1];inp.placeholder='Write your answer';let f=document.createElement('div');f.className='feedback';d.append(inp,f);c.appendChild(d)})}
+function checkText(id,score){let n=0;document.querySelectorAll(`#${id} .item`).forEach(d=>{let i=d.querySelector('input'),f=d.querySelector('.feedback');if(norm(i.value)===norm(i.dataset.answer)){n++;f.textContent='✓ Correct';f.className='feedback ok'}else{f.textContent='✗ '+i.dataset.answer;f.className='feedback no'}});document.getElementById(score).textContent=`Score: ${n}/10`}
+function showText(id){document.querySelectorAll(`#${id} input`).forEach(i=>i.value=i.dataset.answer)}
+function resetText(id,score){document.querySelectorAll(`#${id} input`).forEach(i=>i.value='');document.querySelectorAll(`#${id} .feedback`).forEach(f=>{f.textContent='';f.className='feedback'});document.getElementById(score).textContent='Score: 0/10'}
+
+makeSelect('ex1',ex1,['','because','so']);makeSelect('ex2',ex2,ex2opts);makeOrder();makeText('ex4',ex4);makeText('ex5',ex5);
+</script>
+</body>
+</html>
