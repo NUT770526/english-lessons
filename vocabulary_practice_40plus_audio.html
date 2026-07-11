@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Practice — Let’s Talk About You</title>
+<style>
+:root{
+  --bg:#f7f4ef; --card:#fff; --ink:#18324a; --muted:#667085;
+  --accent:#b23a63; --blue:#4f6f9f; --good:#1f8a5b; --bad:#c0392b;
+  --line:#d9e1ea; --soft:#fff2f6; --soft2:#edf4ff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#faf8f5,#f2f6fa);color:var(--ink);line-height:1.5}
+.wrap{max-width:1050px;margin:auto;padding:24px 16px 60px}
+header,section{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 10px 28px rgba(24,50,74,.08)}
+header{padding:28px;margin-bottom:20px;background:linear-gradient(135deg,#fff,#fff8fb,#eef5ff)}
+h1{margin:0 0 8px;font-size:clamp(30px,5vw,48px)}
+.subtitle{color:var(--muted);font-size:18px;margin:0}
+.note{margin-top:16px;padding:15px 17px;border-left:6px solid var(--accent);background:var(--soft);border-radius:13px}
+section{padding:22px;margin:18px 0}
+h2{margin:0 0 6px}
+.instruction{color:var(--muted);margin:0 0 16px}
+.item{padding:14px 0;border-top:1px solid #edf1f5}
+.item:first-of-type{border-top:0}
+.wordrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.speak{border:0;border-radius:50%;width:42px;height:42px;background:var(--soft2);font-size:20px;cursor:pointer}
+select,input[type=text]{width:100%;margin-top:8px;padding:11px 12px;border:1px solid #bcc9d6;border-radius:10px;font-size:16px}
+.feedback{min-height:22px;margin-top:6px;font-weight:700;font-size:14px}
+.ok{color:var(--good)} .no{color:var(--bad)}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+button.action{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer}
+.primary{background:var(--accent);color:#fff}
+.secondary{background:var(--soft2);color:var(--ink);border:1px solid #cbd7e5!important}
+.ghost{background:#f1f3f5}
+.score{margin-top:12px;padding:12px 14px;background:#f7fafc;border-radius:12px;font-weight:800}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:16px;padding:16px;background:#fff}
+.card b{font-size:18px}
+.small{font-size:14px;color:var(--muted)}
+.choice{display:grid;gap:8px;margin-top:10px}
+.choice label{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px;cursor:pointer}
+.wordbank{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.token{padding:8px 11px;border:1px solid #c5d4e7;border-radius:10px;background:#eef5ff;cursor:pointer}
+.token.used{opacity:.35;pointer-events:none}
+.answerline{min-height:48px;border:2px dashed #cbd5e1;border-radius:12px;padding:8px;display:flex;gap:7px;flex-wrap:wrap}
+.answerword{padding:7px 10px;border:1px solid #edbfd0;border-radius:9px;background:#fff1f6;cursor:pointer}
+mark{background:#fff0a8;padding:2px 4px;border-radius:5px}
+footer{text-align:center;color:var(--muted);padding-top:12px}
+@media(max-width:600px){header,section{padding:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Vocabulary Practice</h1>
+  <p class="subtitle">Let’s Talk About You</p>
+  <div class="note">
+    Натискайте 🔊, щоб прослухати слово або речення. Повторіть уголос 2–3 рази.
+    Звертайте увагу на прийменники: <b>married to, look at, look through, look for</b>.
+  </div>
+</header>
+
+<section>
+  <h2>Слова уроку</h2>
+  <p class="instruction">Прослухайте кожну конструкцію та приклад.</p>
+  <div class="cards" id="vocabCards"></div>
+</section>
+
+<section>
+  <h2>1. Оберіть правильний переклад</h2>
+  <p class="instruction">10 завдань. Спочатку прослухайте конструкцію.</p>
+  <div id="ex1"></div>
+  <div class="btns">
+    <button class="action primary" onclick="checkSelect('ex1','score1')">Перевірити</button>
+    <button class="action secondary" onclick="showSelect('ex1')">Показати відповіді</button>
+    <button class="action ghost" onclick="resetSelect('ex1','score1')">Скинути</button>
+  </div>
+  <div class="score" id="score1">Результат: 0/10</div>
+</section>
+
+<section>
+  <h2>2. Вставте правильну конструкцію</h2>
+  <p class="instruction">Оберіть слово або словосполучення, яке найкраще підходить за змістом.</p>
+  <div id="ex2"></div>
+  <div class="btns">
+    <button class="action primary" onclick="checkSelect('ex2','score2')">Перевірити</button>
+    <button class="action secondary" onclick="showSelect('ex2')">Показати відповіді</button>
+    <button class="action ghost" onclick="resetSelect('ex2','score2')">Скинути</button>
+  </div>
+  <div class="score" id="score2">Результат: 0/10</div>
+</section>
+
+<section>
+  <h2>3. Складіть питання</h2>
+  <p class="instruction">Натискайте на слова у правильному порядку. Прийменник часто стоїть у кінці питання.</p>
+  <div id="ex3"></div>
+  <div class="btns">
+    <button class="action primary" onclick="checkOrder()">Перевірити</button>
+    <button class="action secondary" onclick="showOrder()">Показати відповіді</button>
+    <button class="action ghost" onclick="resetOrder()">Скинути</button>
+  </div>
+  <div class="score" id="score3">Результат: 0/10</div>
+</section>
+
+<section>
+  <h2>4. Перекладіть англійською</h2>
+  <p class="instruction">Напишіть повне речення або питання. Після перевірки прослухайте правильну відповідь.</p>
+  <div id="ex4"></div>
+  <div class="btns">
+    <button class="action primary" onclick="checkText()">Перевірити</button>
+    <button class="action secondary" onclick="showText()">Показати відповіді</button>
+    <button class="action ghost" onclick="resetText()">Скинути</button>
+  </div>
+  <div class="score" id="score4">Результат: 0/10</div>
+</section>
+
+<footer>Рекомендація: спочатку виконайте вправу без підказок, а потім прослухайте всі правильні відповіді.</footer>
+</div>
+
+<script>
+const vocab = [
+  ["be married to","бути одруженим з / бути заміжньою за","She is married to a doctor."],
+  ["look at","дивитися на","Look at this picture."],
+  ["look through","переглядати","I am looking through these documents."],
+  ["look for","шукати","We are looking for a good restaurant."],
+  ["talk to","розмовляти з","Who can I talk to?"],
+  ["talk about","говорити про","What are you talking about?"],
+  ["wait for","чекати на","Who are you waiting for?"],
+  ["listen to","слухати","What are you listening to?"],
+  ["work for a company","працювати в компанії","I work for a small company."],
+  ["take a break","зробити перерву","Let’s take a break."]
+];
+
+function speak(text){
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=.82;
+  speechSynthesis.speak(u);
+}
+function norm(s){return s.toLowerCase().trim().replace(/[?.!,’']/g,"").replace(/\s+/g," ");}
+
+const vc=document.getElementById('vocabCards');
+vocab.forEach(v=>{
+  const d=document.createElement('div'); d.className='card';
+  d.innerHTML=`<div class="wordrow"><button class="speak" onclick='speak(${JSON.stringify(v[0])})'>🔊</button><b>${v[0]}</b></div>
+  <div>${v[1]}</div><div class="small">${v[2]}</div>
+  <button class="action secondary" style="margin-top:10px" onclick='speak(${JSON.stringify(v[2])})'>▶ Приклад</button>`;
+  vc.appendChild(d);
+});
+
+const ex1data=vocab.map(v=>[v[0],v[1]]);
+const ex1opts=["","бути одруженим з / бути заміжньою за","дивитися на","переглядати","шукати","розмовляти з","говорити про","чекати на","слухати","працювати в компанії","зробити перерву"];
+
+const ex2data=[
+ ["I am ______ my keys.","looking for"],
+ ["Please ______ these papers before the meeting.","look through"],
+ ["______ the screen, please.","Look at"],
+ ["She is ______ an engineer.","married to"],
+ ["Who are you ______?","waiting for"],
+ ["What are they ______?","talking about"],
+ ["Who can I ______ about this problem?","talk to"],
+ ["What are you ______?","listening to"],
+ ["I ______ a small international company.","work for"],
+ ["Let’s ______ after this exercise.","take a break"]
+];
+const ex2opts=["","looking for","look through","Look at","married to","waiting for","talking about","talk to","listening to","work for","take a break"];
+
+function buildSelect(id,data,opts,audioSource=true){
+  const c=document.getElementById(id);
+  data.forEach((r,i)=>{
+    const item=document.createElement('div');item.className='item';
+    item.innerHTML=`<div class="wordrow">
+      <button class="speak" onclick='speak(${JSON.stringify(audioSource?r[0]:r[0].replace("______",r[1]))})'>🔊</button>
+      <b>${i+1}. ${r[0]}</b></div>`;
+    const s=document.createElement('select');s.dataset.answer=r[1];
+    opts.forEach(o=>{const op=document.createElement('option');op.value=o;op.textContent=o||"— оберіть —";s.appendChild(op)});
+    const f=document.createElement('div');f.className='feedback';
+    item.append(s,f);c.appendChild(item);
+  });
+}
+function checkSelect(id,score){
+  let n=0;
+  document.querySelectorAll(`#${id} .item`).forEach(it=>{
+    const s=it.querySelector('select'),f=it.querySelector('.feedback');
+    if(s.value===s.dataset.answer){n++;f.textContent="✓ Правильно";f.className="feedback ok";}
+    else{f.textContent=`✗ Правильна відповідь: ${s.dataset.answer}`;f.className="feedback no";}
+  });
+  document.getElementById(score).textContent=`Результат: ${n}/10`;
+}
+function showSelect(id){document.querySelectorAll(`#${id} select`).forEach(s=>s.value=s.dataset.answer)}
+function resetSelect(id,score){
+ document.querySelectorAll(`#${id} select`).forEach(s=>s.selectedIndex=0);
+ document.querySelectorAll(`#${id} .feedback`).forEach(f=>{f.textContent="";f.className="feedback"});
+ document.getElementById(score).textContent="Результат: 0/10";
+}
+
+buildSelect('ex1',ex1data,ex1opts,true);
+buildSelect('ex2',ex2data,ex2opts,false);
+
+const orderData=[
+ ["Who are you waiting for?","Who|are|you|waiting|for?"],
+ ["What are you looking for?","What|are|you|looking|for?"],
+ ["What are you looking at?","What|are|you|looking|at?"],
+ ["What are you looking through?","What|are|you|looking|through?"],
+ ["Who are you married to?","Who|are|you|married|to?"],
+ ["Who can I talk to?","Who|can|I|talk|to?"],
+ ["What are they talking about?","What|are|they|talking|about?"],
+ ["What are you listening to?","What|are|you|listening|to?"],
+ ["Which company do you work for?","Which|company|do|you|work|for?"],
+ ["Who did you go with?","Who|did|you|go|with?"]
+];
+
+function makeOrder(){
+ const c=document.getElementById('ex3'); c.innerHTML='';
+ orderData.forEach((r,i)=>{
+   const item=document.createElement('div');item.className='item orderItem';item.dataset.answer=r[0];
+   item.innerHTML=`<div class="wordrow"><button class="speak" onclick='speak(${JSON.stringify(r[0])})'>🔊</button><b>${i+1}. Складіть питання</b></div>`;
+   const bank=document.createElement('div');bank.className='wordbank';
+   const ans=document.createElement('div');ans.className='answerline';
+   const fb=document.createElement('div');fb.className='feedback';
+   r[1].split('|').sort(()=>Math.random()-.5).forEach((w,j)=>{
+      const t=document.createElement('span');t.className='token';t.textContent=w;t.dataset.id=j;
+      t.onclick=()=>{t.classList.add('used');const a=document.createElement('span');a.className='answerword';a.textContent=w;a.onclick=()=>{t.classList.remove('used');a.remove()};ans.appendChild(a)};
+      bank.appendChild(t);
+   });
+   item.append(bank,ans,fb);c.appendChild(item);
+ });
+}
+function checkOrder(){
+ let n=0;
+ document.querySelectorAll('.orderItem').forEach(it=>{
+  const answer=[...it.querySelectorAll('.answerword')].map(x=>x.textContent).join(' ');
+  const f=it.querySelector('.feedback');
+  if(norm(answer)===norm(it.dataset.answer)){n++;f.textContent="✓ Правильно";f.className="feedback ok";}
+  else{f.textContent=`✗ ${it.dataset.answer}`;f.className="feedback no";}
+ });
+ document.getElementById('score3').textContent=`Результат: ${n}/10`;
+}
+function showOrder(){
+ document.querySelectorAll('.orderItem').forEach(it=>{
+  const ans=it.querySelector('.answerline');ans.innerHTML='';
+  it.dataset.answer.split(' ').forEach(w=>{const a=document.createElement('span');a.className='answerword';a.textContent=w;ans.appendChild(a)});
+  it.querySelectorAll('.token').forEach(t=>t.classList.add('used'));
+ });
+}
+function resetOrder(){makeOrder();document.getElementById('score3').textContent="Результат: 0/10";}
+makeOrder();
+
+const textData=[
+ ["Я заміжня за лікарем.","I am married to a doctor."],
+ ["Подивіться на цю фотографію.","Look at this photo."],
+ ["Я переглядаю свої електронні листи.","I am looking through my emails."],
+ ["Ми шукаємо новий готель.","We are looking for a new hotel."],
+ ["З ким ви розмовляєте?","Who are you talking to?"],
+ ["Про що вони говорять?","What are they talking about?"],
+ ["На кого ти чекаєш?","Who are you waiting for?"],
+ ["Що ти слухаєш?","What are you listening to?"],
+ ["У якій компанії ви працюєте?","Which company do you work for?"],
+ ["Давайте зробимо перерву.","Let’s take a break."]
+];
+const e4=document.getElementById('ex4');
+textData.forEach((r,i)=>{
+ const it=document.createElement('div');it.className='item';
+ it.innerHTML=`<b>${i+1}. ${r[0]}</b>`;
+ const inp=document.createElement('input');inp.type='text';inp.dataset.answer=r[1];inp.placeholder='Напишіть англійською';
+ const fb=document.createElement('div');fb.className='feedback';
+ const aud=document.createElement('button');aud.className='action secondary';aud.textContent='🔊 Прослухати відповідь';aud.style.marginTop='8px';aud.onclick=()=>speak(r[1]);
+ it.append(inp,fb,aud);e4.appendChild(it);
+});
+function checkText(){
+ let n=0;
+ document.querySelectorAll('#ex4 .item').forEach(it=>{
+  const inp=it.querySelector('input'),f=it.querySelector('.feedback');
+  if(norm(inp.value)===norm(inp.dataset.answer)){n++;f.textContent='✓ Правильно';f.className='feedback ok';}
+  else{f.textContent=`✗ ${inp.dataset.answer}`;f.className='feedback no';}
+ });
+ document.getElementById('score4').textContent=`Результат: ${n}/10`;
+}
+function showText(){document.querySelectorAll('#ex4 input').forEach(i=>i.value=i.dataset.answer)}
+function resetText(){
+ document.querySelectorAll('#ex4 input').forEach(i=>i.value='');
+ document.querySelectorAll('#ex4 .feedback').forEach(f=>{f.textContent='';f.className='feedback'});
+ document.getElementById('score4').textContent='Результат: 0/10';
+}
+</script>
+</body>
+</html>
