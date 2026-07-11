@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TO, AT or FROM?</title>
+<style>
+:root{
+  --navy:#173268;
+  --blue:#3f65dc;
+  --green:#2ea56f;
+  --purple:#7c4bd8;
+  --yellow:#ffd45a;
+  --red:#dc4d58;
+  --light:#f3f6ff;
+  --text:#1d2942;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  color:var(--text);
+  background:linear-gradient(135deg,#edf3ff,#fff7d9);
+}
+.container{max-width:1020px;margin:auto;padding:22px}
+header{
+  color:white;
+  background:linear-gradient(125deg,var(--navy),var(--blue));
+  border-radius:24px;
+  padding:28px;
+  box-shadow:0 12px 30px rgba(23,50,104,.18);
+}
+h1{margin:0 0 10px;font-size:clamp(34px,6vw,54px)}
+header p{font-size:18px;margin:6px 0}
+.rules{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:12px;
+  margin-top:18px;
+}
+.rule{
+  background:white;
+  color:var(--text);
+  padding:15px;
+  border-radius:16px;
+  line-height:1.5;
+}
+.to{border-top:7px solid var(--green)}
+.at{border-top:7px solid var(--purple)}
+.from{border-top:7px solid var(--blue)}
+.exercise{
+  background:white;
+  border-radius:22px;
+  margin-top:22px;
+  padding:23px;
+  box-shadow:0 9px 24px rgba(23,50,104,.10);
+}
+h2{margin-top:0;color:var(--navy)}
+.tip{
+  background:#fff7d5;
+  border-left:6px solid var(--yellow);
+  padding:13px 15px;
+  border-radius:12px;
+  margin-bottom:16px;
+}
+.item{
+  padding:14px 0;
+  border-bottom:1px solid #e7ebf5;
+  font-size:18px;
+  line-height:1.6;
+}
+.item:last-child{border-bottom:none}
+.num{
+  display:inline-flex;
+  width:30px;height:30px;
+  justify-content:center;align-items:center;
+  border-radius:50%;
+  background:var(--navy);
+  color:white;
+  font-weight:700;
+  margin-right:8px;
+}
+select,input[type="text"]{
+  padding:9px 11px;
+  border:2px solid #bdc9e7;
+  border-radius:10px;
+  font-size:17px;
+  background:white;
+}
+input[type="text"]{min-width:260px}
+.correct{border-color:var(--green)!important;background:#eefaf4!important}
+.wrong{border-color:var(--red)!important;background:#fff0f1!important}
+.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+button{
+  border:none;
+  border-radius:12px;
+  padding:11px 17px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+}
+.check{background:var(--blue);color:white}
+.reset{background:#e9edf7;color:var(--navy)}
+.show{background:var(--yellow);color:#473900}
+.feedback{font-size:19px;font-weight:700;margin-top:15px}
+.answers{
+  display:none;
+  margin-top:14px;
+  background:#eefaf4;
+  border-left:6px solid var(--green);
+  border-radius:12px;
+  padding:14px;
+  line-height:1.7;
+}
+.choice-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+.choice-card{
+  background:var(--light);
+  border:2px solid #dbe2f7;
+  border-radius:15px;
+  padding:14px;
+}
+.word-bank{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  background:#f0f3ff;
+  border:2px dashed #b7c3ee;
+  border-radius:15px;
+  padding:14px;
+  margin-bottom:17px;
+}
+.word-bank span{
+  background:white;
+  border:2px solid #cad3f2;
+  border-radius:10px;
+  padding:8px 11px;
+  font-weight:700;
+}
+@media(max-width:600px){
+  .container{padding:10px}
+  .exercise{padding:17px}
+  .item{font-size:16px}
+  input[type="text"],select{width:100%;margin-top:7px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>TO, AT or FROM?</h1>
+  <p>Choose the correct preposition and build simple sentences.</p>
+  <div class="rules">
+    <div class="rule to"><b>TO = КУДИ?</b><br>We go <b>to</b> school.</div>
+    <div class="rule at"><b>AT = ДЕ?</b><br>We are <b>at</b> school.</div>
+    <div class="rule from"><b>FROM = ЗВІДКИ?</b><br>We are <b>from</b> Ukraine.</div>
+  </div>
+</header>
+
+<section class="exercise">
+  <h2>1. Choose TO, AT or FROM</h2>
+  <div class="tip">Think: movement → <b>to</b>, place → <b>at</b>, origin → <b>from</b>.</div>
+  <div id="ex1"></div>
+  <div class="buttons">
+    <button class="check" onclick="checkSelect('ex1', answers1, 'fb1')">Check</button>
+    <button class="reset" onclick="resetExercise('ex1','fb1')">Reset</button>
+  </div>
+  <div class="feedback" id="fb1"></div>
+</section>
+
+<section class="exercise">
+  <h2>2. Country, place or direction?</h2>
+  <p>Choose the correct complete phrase.</p>
+  <div id="ex2" class="choice-grid"></div>
+  <div class="buttons">
+    <button class="check" onclick="checkSelect('ex2', answers2, 'fb2')">Check</button>
+    <button class="reset" onclick="resetExercise('ex2','fb2')">Reset</button>
+  </div>
+  <div class="feedback" id="fb2"></div>
+</section>
+
+<section class="exercise">
+  <h2>3. Correct the mistake</h2>
+  <div class="tip">Example: <b>We are to school.</b> → <b>We are at school.</b></div>
+  <div id="ex3"></div>
+  <div class="buttons">
+    <button class="check" onclick="checkText('ex3', answers3, 'fb3')">Check</button>
+    <button class="show" onclick="toggleAnswers('ans3')">Show answers</button>
+    <button class="reset" onclick="resetExercise('ex3','fb3')">Reset</button>
+  </div>
+  <div class="feedback" id="fb3"></div>
+  <div class="answers" id="ans3"></div>
+</section>
+
+<section class="exercise">
+  <h2>4. Build the sentence</h2>
+  <div class="word-bank">
+    <span>to school</span><span>at school</span><span>from Italy</span>
+    <span>to Spain</span><span>at home</span><span>from Germany</span>
+    <span>to the cinema</span><span>at the park</span>
+  </div>
+  <p>Complete each sentence with a phrase from the box.</p>
+  <div id="ex4"></div>
+  <div class="buttons">
+    <button class="check" onclick="checkText('ex4', answers4, 'fb4')">Check</button>
+    <button class="show" onclick="toggleAnswers('ans4')">Show answers</button>
+    <button class="reset" onclick="resetExercise('ex4','fb4')">Reset</button>
+  </div>
+  <div class="feedback" id="fb4"></div>
+  <div class="answers" id="ans4"></div>
+</section>
+
+</div>
+
+<script>
+function normalize(s){
+  return s.toLowerCase().replace(/[.!?]/g,"").replace(/\s+/g," ").trim();
+}
+function mark(el,ok){
+  el.classList.remove("correct","wrong");
+  el.classList.add(ok ? "correct" : "wrong");
+}
+function setFeedback(id,score,total){
+  const el=document.getElementById(id);
+  el.style.color=score===total?"var(--green)":"var(--red)";
+  el.textContent=score===total ? `Excellent! ${score}/${total}` : `Score: ${score}/${total}. Try again!`;
+}
+function checkSelect(containerId,answers,feedbackId){
+  const fields=[...document.querySelectorAll(`#${containerId} select`)];
+  let score=0;
+  fields.forEach((f,i)=>{
+    const ok=f.value===answers[i];
+    mark(f,ok);
+    if(ok)score++;
+  });
+  setFeedback(feedbackId,score,answers.length);
+}
+function checkText(containerId,answers,feedbackId){
+  const fields=[...document.querySelectorAll(`#${containerId} input`)];
+  let score=0;
+  fields.forEach((f,i)=>{
+    const accepted=Array.isArray(answers[i])?answers[i]:[answers[i]];
+    const ok=accepted.map(normalize).includes(normalize(f.value));
+    mark(f,ok);
+    if(ok)score++;
+  });
+  setFeedback(feedbackId,score,answers.length);
+}
+function resetExercise(containerId,feedbackId){
+  document.querySelectorAll(`#${containerId} select`).forEach(s=>{
+    s.selectedIndex=0;s.classList.remove("correct","wrong");
+  });
+  document.querySelectorAll(`#${containerId} input`).forEach(i=>{
+    i.value="";i.classList.remove("correct","wrong");
+  });
+  document.getElementById(feedbackId).textContent="";
+}
+function toggleAnswers(id){
+  const box=document.getElementById(id);
+  box.style.display=box.style.display==="block"?"none":"block";
+}
+
+/* Exercise 1 */
+const ex1Sentences=[
+  "We go ___ school on Monday.",
+  "We are ___ school on weekdays.",
+  "I am ___ Ukraine.",
+  "We travel ___ Italy in summer.",
+  "We are ___ the cinema at the weekend.",
+  "They are ___ Poland.",
+  "I go ___ the park on my birthday.",
+  "We are ___ home today.",
+  "You are ___ Germany.",
+  "We go ___ Spain in July."
+];
+const answers1=["to","at","from","to","at","from","to","at","from","to"];
+document.getElementById("ex1").innerHTML=ex1Sentences.map((s,i)=>`
+<div class="item"><span class="num">${i+1}</span>${s.replace("___",`
+<select>
+<option value="">Choose...</option>
+<option value="to">to</option>
+<option value="at">at</option>
+<option value="from">from</option>
+</select>`)}</div>`).join("");
+
+/* Exercise 2 */
+const ex2Data=[
+  ["We go...","to school","at school","from school","to school"],
+  ["We are...","to school","at school","from school","at school"],
+  ["We are...","to Italy","at Italy","from Italy","from Italy"],
+  ["We travel...","to Spain","at Spain","from Spain","to Spain"],
+  ["We are...","to home","at home","from home","at home"],
+  ["We are...","to Germany","at Germany","from Germany","from Germany"],
+  ["We go...","to the cinema","at the cinema","from the cinema","to the cinema"],
+  ["We are...","to the park","at the park","from the park","at the park"]
+];
+const answers2=ex2Data.map(x=>x[4]);
+document.getElementById("ex2").innerHTML=ex2Data.map((x,i)=>`
+<div class="choice-card">
+  <b>${i+1}. ${x[0]}</b><br><br>
+  <select>
+    <option value="">Choose...</option>
+    <option value="${x[1]}">${x[1]}</option>
+    <option value="${x[2]}">${x[2]}</option>
+    <option value="${x[3]}">${x[3]}</option>
+  </select>
+</div>`).join("");
+
+/* Exercise 3 */
+const mistakes=[
+  "We are to school.",
+  "I am at Ukraine.",
+  "We go at the cinema.",
+  "They are to Spain.",
+  "We travel from Italy.",
+  "I am to home.",
+  "We are from the park.",
+  "You go from school on Monday."
+];
+const answers3=[
+  "We are at school",
+  "I am from Ukraine",
+  "We go to the cinema",
+  "They are from Spain",
+  "We travel to Italy",
+  "I am at home",
+  "We are at the park",
+  "You go to school on Monday"
+];
+document.getElementById("ex3").innerHTML=mistakes.map((s,i)=>`
+<div class="item">
+  <span class="num">${i+1}</span><b>${s}</b><br>
+  <input type="text" placeholder="Write the correct sentence">
+</div>`).join("");
+document.getElementById("ans3").innerHTML=answers3.map((a,i)=>`${i+1}. ${a}.`).join("<br>");
+
+/* Exercise 4 */
+const ex4Prompts=[
+  "On Monday, we go ___.",
+  "On weekdays, we are ___.",
+  "I am ___. I am Italian.",
+  "In summer, we travel ___.",
+  "Today, we are ___.",
+  "They are ___. They are German.",
+  "At the weekend, we go ___.",
+  "Now, we are ___."
+];
+const answers4=[
+  "to school","at school","from Italy","to Spain",
+  "at home","from Germany","to the cinema","at the park"
+];
+document.getElementById("ex4").innerHTML=ex4Prompts.map((s,i)=>`
+<div class="item"><span class="num">${i+1}</span>${s}<br>
+<input type="text" placeholder="Write the phrase"></div>`).join("");
+document.getElementById("ans4").innerHTML=answers4.map((a,i)=>`${i+1}. ${a}`).join("<br>");
+</script>
+</body>
+</html>
