@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Past Simple vs Present Simple — Commuting</title>
+<style>
+:root{
+  --navy:#18344f; --blue:#527b97; --gold:#c69a54; --bg:#eef3f6;
+  --card:#fff; --text:#263746; --muted:#667886; --ok:#2f7d4a;
+  --bad:#b84747; --purple:#7d4aa8; --light:#f4f7f9;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:Arial,Helvetica,sans-serif; background:var(--bg);
+  color:var(--text); font-size:18px; line-height:1.55;
+}
+header{
+  background:linear-gradient(120deg,var(--navy),var(--blue));
+  color:#fff; padding:36px 20px; text-align:center;
+}
+header h1{margin:0 0 8px;font-size:36px}
+header p{margin:0;opacity:.93}
+main{max-width:1100px;margin:28px auto;padding:0 18px 50px}
+.card{
+  background:var(--card); border-radius:18px; padding:24px; margin:22px 0;
+  box-shadow:0 7px 22px rgba(24,52,79,.09); border:1px solid #e1e8ed;
+}
+h2{color:var(--navy);margin-top:0;border-left:6px solid var(--gold);padding-left:12px}
+.note{
+  background:#eef4f7; border-radius:11px; padding:13px 15px; margin-bottom:18px;
+}
+.tip{
+  background:#fff8e8; border-left:5px solid var(--gold); padding:13px 15px;
+  border-radius:10px; margin:12px 0;
+}
+.grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:14px; margin:15px 0;
+}
+.rule{
+  border:1px solid #d9e2e8; border-radius:13px; padding:16px; background:#fafcfd;
+}
+.rule b{color:var(--navy)}
+.item{padding:13px 0;border-bottom:1px solid #edf0f2}
+.item:last-child{border-bottom:none}
+select,input[type="text"]{
+  font-size:17px; padding:9px 10px; border:1px solid #c6d2db;
+  border-radius:8px; background:#fff; min-width:180px;
+}
+input[type="radio"]{transform:scale(1.16);margin-right:7px}
+label.option{
+  display:block; margin:7px 0; padding:7px 10px; border-radius:8px;
+}
+label.option:hover{background:#f3f6f8}
+button{
+  border:none; border-radius:10px; padding:11px 17px; font-size:16px;
+  cursor:pointer; background:var(--navy); color:white; margin:14px 8px 0 0;
+}
+button.answer{background:var(--gold);color:#243443}
+button.secondary{background:#6d7f8c}
+button.audio{background:#eef4f7;color:var(--navy);border:1px solid #c8d7e0}
+.feedback{font-weight:bold;margin-top:13px}
+.correct{color:var(--ok)}
+.incorrect{color:var(--bad)}
+.answer-box{
+  display:none; margin-top:14px; padding:14px 16px; background:#fff8e8;
+  border-left:5px solid var(--gold); border-radius:10px;
+}
+.word-bank{
+  display:flex; flex-wrap:wrap; gap:8px; margin:13px 0 18px;
+}
+.word-bank span{
+  background:#f0f5f8; border:1px solid #cbd8e1; border-radius:20px;
+  padding:6px 11px; font-size:16px;
+}
+.builder{
+  min-height:48px; border:2px dashed #b9c7d1; border-radius:9px;
+  padding:10px; margin:8px 0; background:#fafcfd;
+}
+.tokens{display:flex;flex-wrap:wrap;gap:7px}
+.token{background:#eaf1f5;color:#20394d;border:1px solid #c9d8e2;margin:0;padding:8px 11px}
+.story{
+  background:#fbf9ff; border-left:5px solid var(--purple); border-radius:11px;
+  padding:16px 18px; margin:14px 0;
+}
+.small{font-size:15px;color:var(--muted)}
+.summary{
+  position:sticky; bottom:12px; background:rgba(24,52,79,.95); color:#fff;
+  border-radius:12px; padding:12px 16px; text-align:center; margin-top:22px;
+}
+@media(max-width:650px){
+ body{font-size:17px} header h1{font-size:29px}
+ .card{padding:18px} select,input[type="text"]{width:100%;min-width:0}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Past Simple vs Present Simple</h1>
+  <p>7 интерактивных упражнений • Commuting Vocabulary • уровень A2</p>
+</header>
+
+<main>
+<section class="card">
+  <h2>Короткая подсказка</h2>
+  <div class="grid">
+    <div class="rule"><b>Present Simple</b><br>I commute every day.<br>She works in an office.<br><span class="small">usually, every day, often</span></div>
+    <div class="rule"><b>Past Simple: to be</b><br>I / he / she <b>was</b><br>we / you / they <b>were</b><br><span class="small">wasn't / weren't; Was...? Were...?</span></div>
+    <div class="rule"><b>Past Simple: main verb</b><br>worked / went / took<br><span class="small">didn't + verb; Did + subject + verb?</span></div>
+  </div>
+  <div class="tip"><b>Важно:</b> после <b>did</b> и <b>didn't</b> глагол всегда простой: <b>Did she go?</b> — не <s>Did she went?</s></div>
+</section>
+
+<section class="card">
+  <h2>1. Present или Past?</h2>
+  <div class="note">Выберите правильную форму. Смотрите на слова-подсказки: <b>every day, usually</b> → Present; <b>yesterday, last week</b> → Past.</div>
+  <div id="ex1"></div>
+  <button onclick="checkEx1()">Проверить</button><button class="answer" onclick="toggle('a1')">Показать ответы</button><button class="secondary" onclick="resetEx1()">Сбросить</button>
+  <div id="f1" class="feedback"></div><div id="a1" class="answer-box"></div>
+</section>
+
+<section class="card">
+  <h2>2. Was или were?</h2>
+  <div class="note">Выберите <b>was</b> или <b>were</b>. Подсказка: I/he/she/it → was; we/you/they → were.</div>
+  <div id="ex2"></div>
+  <button onclick="checkEx2()">Проверить</button><button class="answer" onclick="toggle('a2')">Показать ответы</button><button class="secondary" onclick="resetSelects('w','f2')">Сбросить</button>
+  <div id="f2" class="feedback"></div><div id="a2" class="answer-box"></div>
+</section>
+
+<section class="card">
+  <h2>3. Сделайте отрицание</h2>
+  <div class="note">Напишите полную отрицательную форму. Используйте <b>wasn't / weren't</b> или <b>didn't + простой глагол</b>.</div>
+  <div id="ex3"></div>
+  <button onclick="checkInputs(ex3,'n','f3')">Проверить</button><button class="answer" onclick="toggle('a3')">Показать ответы</button><button class="secondary" onclick="resetInputs('n','f3')">Сбросить</button>
+  <div id="f3" class="feedback"></div><div id="a3" class="answer-box"></div>
+</section>
+
+<section class="card">
+  <h2>4. Составьте вопросы</h2>
+  <div class="note">Используйте <b>Was/Were</b> с глаголом to be и <b>Did</b> с обычными глаголами.</div>
+  <div id="ex4"></div>
+  <button onclick="checkInputs(ex4,'q','f4')">Проверить</button><button class="answer" onclick="toggle('a4')">Показать ответы</button><button class="secondary" onclick="resetInputs('q','f4')">Сбросить</button>
+  <div id="f4" class="feedback"></div><div id="a4" class="answer-box"></div>
+</section>
+
+<section class="card">
+  <h2>5. Найдите ошибку</h2>
+  <div class="note">Выберите правильный вариант. Здесь проверяются <b>did/didn't + verb</b>, was/were и Present Simple.</div>
+  <div id="ex5"></div>
+  <button onclick="checkRadio(ex5,'r','f5')">Проверить</button><button class="answer" onclick="toggle('a5')">Показать ответы</button><button class="secondary" onclick="resetRadios('r','f5')">Сбросить</button>
+  <div id="f5" class="feedback"></div><div id="a5" class="answer-box"></div>
+</section>
+
+<section class="card">
+  <h2>6. История: поездка на работу вчера</h2>
+  <div class="note">Вставьте глаголы в Past Simple. Неправильные глаголы: go → went, take → took, have → had.</div>
+  <div class="word-bank"><span>was</span><span>were</span><span>went</span><span>took</span><span>checked</span><span>didn't drive</span><span>had</span></div>
+  <div class="story" id="ex6"></div>
+  <button onclick="checkInputs(ex6,'s','f6')">Проверить</button><button class="answer" onclick="toggle('a6')">Показать ответы</button><button class="secondary" onclick="resetInputs('s','f6')">Сбросить</button>
+  <div id="f6" class="feedback"></div><div id="a6" class="answer-box"></div>
+</section>
+
+<section class="card">
+  <h2>7. Соберите предложения</h2>
+  <div class="note">Нажимайте на слова в правильном порядке. Обратите внимание на Present и Past.</div>
+  <div id="ex7"></div>
+  <button onclick="checkBuilders()">Проверить все</button><button class="answer" onclick="toggle('a7')">Показать ответы</button>
+  <div id="f7" class="feedback"></div><div id="a7" class="answer-box"></div>
+</section>
+
+<div class="summary">Подсказка: сначала найдите слово времени, затем определите Present или Past.</div>
+</main>
+
+<script>
+function norm(s){return s.trim().toLowerCase().replace(/[?.!]/g,"").replace(/\s+/g," ")}
+function toggle(id){const e=document.getElementById(id);e.style.display=e.style.display==="block"?"none":"block"}
+function score(id,got,total){
+ const e=document.getElementById(id),p=Math.round(got/total*100);
+ e.textContent=`Результат: ${got} из ${total} (${p}%). `+(p===100?"Отлично!":p>=70?"Очень хорошо!":"Повторите подсказку и попробуйте ещё раз.");
+ e.className="feedback "+(p>=70?"correct":"incorrect");
+}
+
+/* 1 */
+const ex1=[
+ ["I usually ___ the bus to work.","take","took"],
+ ["Yesterday I ___ the metro because it rained.","take","took"],
+ ["She ___ the train schedule every morning.","checks","checked"],
+ ["Last Monday we ___ late for work.","are","were"],
+ ["The bus fare ___ cheap in my city.","is","was"],
+ ["The bus fare ___ cheaper last year.","is","was"],
+ ["They often ___ during off-peak hours.","travel","travelled"],
+ ["He ___ in a traffic jam yesterday.","is","was"]
+];
+document.getElementById("ex1").innerHTML=ex1.map((x,i)=>`<div class="item"><b>${i+1}. ${x[0]}</b><br><select id="p${i}"><option>— выберите —</option><option>${x[1]}</option><option>${x[2]}</option></select></div>`).join("");
+document.getElementById("a1").innerHTML=ex1.map((x,i)=>`${i+1}. ${[1,3,5,7].includes(i)?x[2]:x[1]}`).join("<br>");
+function checkEx1(){
+ let c=0; const ans=["take","took","checks","were","is","was","travel","was"];
+ ans.forEach((a,i)=>{let e=document.getElementById("p"+i);if(e.value===a){c++;e.style.background="#edf8f1"}else e.style.background="#fff1f1"});score("f1",c,ans.length)
+}
+function resetEx1(){ex1.forEach((_,i)=>{let e=document.getElementById("p"+i);e.selectedIndex=0;e.removeAttribute("style")});document.getElementById("f1").textContent=""}
+
+/* 2 */
+const ex2=[
+ ["I ___ at the bus stop yesterday.","was"],["We ___ late because of a traffic jam.","were"],
+ ["She ___ excited about the trip.","was"],["The tickets ___ expensive last week.","were"],
+ ["You ___ at the train station at 8 a.m.","were"],["The parking lot ___ full.","was"],
+ ["They ___ worried about the schedule.","were"],["My commute ___ very long yesterday.","was"]
+];
+document.getElementById("ex2").innerHTML=ex2.map((x,i)=>`<div class="item">${i+1}. ${x[0].replace("___",`<select id="w${i}"><option>—</option><option>was</option><option>were</option></select>`)}</div>`).join("");
+document.getElementById("a2").innerHTML=ex2.map((x,i)=>`${i+1}. ${x[1]}`).join("<br>");
+function checkEx2(){let c=0;ex2.forEach((x,i)=>{let e=document.getElementById("w"+i);if(e.value===x[1]){c++;e.style.background="#edf8f1"}else e.style.background="#fff1f1"});score("f2",c,ex2.length)}
+function resetSelects(prefix,fb){let i=0,e;while(e=document.getElementById(prefix+i)){e.selectedIndex=0;e.removeAttribute("style");i++}document.getElementById(fb).textContent=""}
+
+/* 3 */
+const ex3=[
+ ["I was at the train station.","I wasn't at the train station."],
+ ["They were in the parking lot.","They weren't in the parking lot."],
+ ["She took the bus yesterday.","She didn't take the bus yesterday."],
+ ["We checked the schedule.","We didn't check the schedule."],
+ ["He went to work by metro.","He didn't go to work by metro."],
+ ["The fare was expensive.","The fare wasn't expensive."]
+];
+document.getElementById("ex3").innerHTML=ex3.map((x,i)=>`<div class="item">${i+1}. <b>${x[0]}</b><br><input id="n${i}" type="text" placeholder="Напишите отрицание"></div>`).join("");
+document.getElementById("a3").innerHTML=ex3.map((x,i)=>`${i+1}. ${x[1]}`).join("<br>");
+
+/* 4 */
+const ex4=[
+ ["She was at the bus stop.","Was she at the bus stop?"],
+ ["They were late.","Were they late?"],
+ ["He took the train.","Did he take the train?"],
+ ["You checked the schedule.","Did you check the schedule?"],
+ ["Jane travelled during off-peak hours.","Did Jane travel during off-peak hours?"],
+ ["The ticket was cheap.","Was the ticket cheap?"]
+];
+document.getElementById("ex4").innerHTML=ex4.map((x,i)=>`<div class="item">${i+1}. <b>${x[0]}</b><br><input id="q${i}" type="text" placeholder="Напишите вопрос"></div>`).join("");
+document.getElementById("a4").innerHTML=ex4.map((x,i)=>`${i+1}. ${x[1]}`).join("<br>");
+
+function checkInputs(data,prefix,fb){
+ let c=0;data.forEach((x,i)=>{let e=document.getElementById(prefix+i);if(norm(e.value)===norm(x[1])){c++;e.style.background="#edf8f1";e.style.borderColor="#2f7d4a"}else{e.style.background="#fff1f1";e.style.borderColor="#b84747"}});score(fb,c,data.length)
+}
+function resetInputs(prefix,fb){let i=0,e;while(e=document.getElementById(prefix+i)){e.value="";e.removeAttribute("style");i++}document.getElementById(fb).textContent=""}
+
+/* 5 */
+const ex5=[
+ {o:["Did she went to work by bus?","Did she go to work by bus?"],a:1},
+ {o:["He didn't took the metro.","He didn't take the metro."],a:1},
+ {o:["They was at the train station.","They were at the train station."],a:1},
+ {o:["She usually checks the schedule.","She usually checked the schedule."],a:0},
+ {o:["Were the tickets expensive?","Did the tickets expensive?"],a:0},
+ {o:["I commute every day.","I commuted every day."],a:0}
+];
+document.getElementById("ex5").innerHTML=ex5.map((q,i)=>`<div class="item"><b>${i+1}.</b>${q.o.map((o,j)=>`<label class="option"><input type="radio" name="r${i}" value="${j}">${o}</label>`).join("")}</div>`).join("");
+document.getElementById("a5").innerHTML=ex5.map((q,i)=>`${i+1}. ${q.o[q.a]}`).join("<br>");
+function checkRadio(data,prefix,fb){
+ let c=0;data.forEach((q,i)=>{let e=document.querySelector(`input[name="${prefix}${i}"]:checked`);document.querySelectorAll(`input[name="${prefix}${i}"]`).forEach(x=>x.parentElement.style.background="");if(e&&+e.value===q.a){c++;e.parentElement.style.background="#e8f6ec"}else if(e)e.parentElement.style.background="#fdeaea"});score(fb,c,data.length)
+}
+function resetRadios(prefix,fb){document.querySelectorAll(`input[name^="${prefix}"]`).forEach(e=>{e.checked=false;e.parentElement.style.background=""});document.getElementById(fb).textContent=""}
+
+/* 6 */
+const ex6=[
+ ["was","was"],["checked","checked"],["were","were"],["didn't drive","didn't drive"],["took","took"],["went","went"],["had","had"]
+];
+document.getElementById("ex6").innerHTML=`Yesterday my commute <input id="s0" type="text"> different. I <input id="s1" type="text"> the train schedule before I left home. The roads <input id="s2" type="text"> very busy, so I <input id="s3" type="text">. I <input id="s4" type="text"> the bus to the train station and then I <input id="s5" type="text"> to work by train. I <input id="s6" type="text"> a quiet trip and arrived on time.`;
+document.getElementById("a6").innerHTML="Yesterday my commute <b>was</b> different. I <b>checked</b> the train schedule... The roads <b>were</b> very busy, so I <b>didn't drive</b>. I <b>took</b> the bus... then I <b>went</b> to work by train. I <b>had</b> a quiet trip.";
+
+/* 7 */
+const buildData=[
+ ["I usually commute by bus.","usually|bus|I|by|commute"],
+ ["Yesterday I took the metro.","metro|Yesterday|took|the|I"],
+ ["Were you at the train station?","station|you|the|Were|train|at"],
+ ["She didn't check the schedule.","schedule|didn't|She|the|check"],
+ ["Did they travel during peak hours?","peak|Did|hours|travel|during|they"],
+ ["The parking lot was full.","full|parking|The|was|lot"]
+];
+let built=buildData.map(()=>[]);
+document.getElementById("ex7").innerHTML=buildData.map((x,i)=>`<div class="item"><b>${i+1}.</b><div class="builder" id="b${i}"></div><div class="tokens" id="toks${i}">${x[1].split("|").map((t,j)=>`<button class="token" id="t${i}_${j}" onclick="add(${i},${j},'${t.replace(/'/g,"\\'")}')">${t}</button>`).join("")}</div><button class="secondary" onclick="clearB(${i})">Очистить</button></div>`).join("");
+document.getElementById("a7").innerHTML=buildData.map((x,i)=>`${i+1}. ${x[0]}`).join("<br>");
+function add(i,j,t){built[i].push({j,t});document.getElementById(`t${i}_${j}`).style.display="none";document.getElementById("b"+i).textContent=built[i].map(x=>x.t).join(" ")}
+function clearB(i){built[i]=[];document.getElementById("b"+i).textContent="";document.querySelectorAll(`#toks${i} button`).forEach(e=>e.style.display="inline-block");document.getElementById("b"+i).removeAttribute("style")}
+function checkBuilders(){let c=0;buildData.forEach((x,i)=>{let e=document.getElementById("b"+i);if(norm(e.textContent)===norm(x[0])){c++;e.style.background="#edf8f1";e.style.borderColor="#2f7d4a"}else{e.style.background="#fff1f1";e.style.borderColor="#b84747"}});score("f7",c,buildData.length)}
+</script>
+</body>
+</html>
