@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Work + in / for / with</title>
+<style>
+  :root{
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#1f2937;
+    --muted:#6b7280;
+    --purple:#5b21b6;
+    --purple-soft:#ede9fe;
+    --green:#15803d;
+    --green-soft:#dcfce7;
+    --red:#b91c1c;
+    --red-soft:#fee2e2;
+    --blue:#2563eb;
+    --border:#dbe2ea;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:linear-gradient(135deg,#f8fafc,#eef2ff);
+    color:var(--text);
+  }
+  .wrap{
+    max-width:980px;
+    margin:0 auto;
+    padding:28px 18px 50px;
+  }
+  .hero{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:24px;
+    box-shadow:0 10px 28px rgba(31,41,55,.08);
+    margin-bottom:22px;
+  }
+  h1{
+    margin:0 0 8px;
+    text-align:center;
+    color:#2e1065;
+    font-size:clamp(30px,4vw,44px);
+  }
+  .subtitle{
+    text-align:center;
+    color:var(--muted);
+    margin:0 0 22px;
+    font-size:18px;
+  }
+  .rule-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+  }
+  .rule{
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:16px;
+    background:#fafafa;
+  }
+  .rule h3{
+    margin:0 0 8px;
+    font-size:23px;
+  }
+  .rule p{margin:6px 0}
+  .rule.in h3{color:#15803d}
+  .rule.for h3{color:#2563eb}
+  .rule.with h3{color:#7e22ce}
+  .tip{
+    margin-top:16px;
+    padding:12px 14px;
+    border-radius:12px;
+    background:#f8fafc;
+    border-left:4px solid var(--purple);
+    font-size:16px;
+  }
+  .section{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:22px;
+    margin:20px 0;
+    box-shadow:0 8px 22px rgba(31,41,55,.06);
+  }
+  h2{
+    margin-top:0;
+    color:#3b0764;
+    font-size:26px;
+  }
+  .instruction{
+    color:var(--muted);
+    margin-top:-6px;
+    margin-bottom:18px;
+  }
+  .question{
+    padding:14px 0;
+    border-bottom:1px solid #eef2f7;
+  }
+  .question:last-child{border-bottom:none}
+  .qline{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    font-size:18px;
+  }
+  .num{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    background:#eef2ff;
+    color:#5b21b6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    flex:0 0 auto;
+  }
+  input[type="text"], select{
+    min-width:150px;
+    padding:10px 12px;
+    border:1px solid #bfc7d2;
+    border-radius:10px;
+    font-size:17px;
+    background:white;
+  }
+  .options{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .choice{
+    padding:9px 14px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:#f8fafc;
+    cursor:pointer;
+    font-size:16px;
+  }
+  .choice input{margin-right:6px}
+  .btns{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
+  button{
+    border:none;
+    border-radius:11px;
+    padding:11px 16px;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .primary{background:var(--purple); color:white}
+  .secondary{background:#e5e7eb; color:#374151}
+  .audio{
+    background:var(--purple-soft);
+    color:var(--purple);
+    padding:7px 10px;
+    border-radius:9px;
+    font-size:18px;
+  }
+  .feedback{
+    margin-top:8px;
+    font-weight:700;
+  }
+  .correct{color:var(--green)}
+  .incorrect{color:var(--red)}
+  .score{
+    margin-top:15px;
+    font-size:19px;
+    font-weight:700;
+  }
+  .sentence-card{
+    padding:14px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    background:#fafbff;
+    margin:10px 0;
+  }
+  .hidden-answer{
+    display:none;
+    margin-top:8px;
+    color:var(--blue);
+    font-weight:700;
+  }
+  @media (max-width:760px){
+    .rule-grid{grid-template-columns:1fr}
+    .qline{align-items:flex-start}
+    input[type="text"], select{width:100%; min-width:0}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>Work + in / for / with</h1>
+    <p class="subtitle">Learn the difference and practise it step by step.</p>
+
+    <div class="rule-grid">
+      <div class="rule in">
+        <h3>work in</h3>
+        <p><strong>place / building / industry</strong></p>
+        <p>I work <b>in</b> a bank.</p>
+        <p>She works <b>in</b> IT.</p>
+      </div>
+      <div class="rule for">
+        <h3>work for</h3>
+        <p><strong>company / employer</strong></p>
+        <p>He works <b>for</b> BMW.</p>
+        <p>They work <b>for</b> Google.</p>
+      </div>
+      <div class="rule with">
+        <h3>work with</h3>
+        <p><strong>people / things</strong></p>
+        <p>I work <b>with</b> children.</p>
+        <p>She works <b>with</b> computers.</p>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>Quick tip:</strong>
+      <b>in</b> = where? &nbsp; | &nbsp;
+      <b>for</b> = which company? &nbsp; | &nbsp;
+      <b>with</b> = with whom / what?
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Exercise 1. Fill in the gaps</h2>
+    <p class="instruction">Type <b>in</b>, <b>for</b>, or <b>with</b>.</p>
+    <div id="ex1"></div>
+    <div class="btns">
+      <button class="primary" onclick="checkEx1()">Check answers</button>
+      <button class="secondary" onclick="showEx1()">Show answers</button>
+      <button class="secondary" onclick="resetEx1()">Try again</button>
+    </div>
+    <div class="score" id="score1"></div>
+  </section>
+
+  <section class="section">
+    <h2>Exercise 2. Choose the correct preposition</h2>
+    <p class="instruction">Choose one answer for each sentence.</p>
+    <div id="ex2"></div>
+    <div class="btns">
+      <button class="primary" onclick="checkEx2()">Check answers</button>
+      <button class="secondary" onclick="showEx2()">Show answers</button>
+      <button class="secondary" onclick="resetEx2()">Try again</button>
+    </div>
+    <div class="score" id="score2"></div>
+  </section>
+
+  <section class="section">
+    <h2>Exercise 3. Correct the mistake</h2>
+    <p class="instruction">Rewrite each sentence with the correct preposition.</p>
+    <div id="ex3"></div>
+    <div class="btns">
+      <button class="primary" onclick="checkEx3()">Check answers</button>
+      <button class="secondary" onclick="showEx3()">Show answers</button>
+      <button class="secondary" onclick="resetEx3()">Try again</button>
+    </div>
+    <div class="score" id="score3"></div>
+  </section>
+</div>
+
+<script>
+const ex1 = [
+  {s:"My sister works ___ a bank.", a:"in"},
+  {s:"My cousin worked ___ BMW for 10 years.", a:"for"},
+  {s:"I enjoy working together ___ my husband.", a:"with"},
+  {s:"We often work ___ Japanese universities.", a:"with"},
+  {s:"He worked ___ the same factory his whole life.", a:"in"},
+  {s:"Do you like to work ___ this office?", a:"in"},
+  {s:"She works ___ Microsoft.", a:"for"},
+  {s:"I work ___ elderly people.", a:"with"},
+  {s:"They worked ___ the medical industry.", a:"in"},
+  {s:"He works ___ a small family company.", a:"for"}
+];
+
+const ex2 = [
+  {s:"Anna works ___ a hospital.", a:"in"},
+  {s:"Peter works ___ an international company.", a:"for"},
+  {s:"I work ___ documents every day.", a:"with"},
+  {s:"She worked ___ a school last year.", a:"in"},
+  {s:"My brother works ___ Apple.", a:"for"},
+  {s:"We work ___ clients from different countries.", a:"with"},
+  {s:"He works ___ finance.", a:"in"},
+  {s:"They work ___ a German employer.", a:"for"},
+  {s:"Do you work ___ children?", a:"with"},
+  {s:"My friend works ___ this building.", a:"in"},
+  {s:"She works ___ computers.", a:"with"},
+  {s:"He worked ___ Toyota for five years.", a:"for"}
+];
+
+const ex3 = [
+  {wrong:"I work for a bank.", correct:"I work in a bank."},
+  {wrong:"She works in Google.", correct:"She works for Google."},
+  {wrong:"They work for children.", correct:"They work with children."},
+  {wrong:"He works with a factory.", correct:"He works in a factory."},
+  {wrong:"We work in Microsoft.", correct:"We work for Microsoft."},
+  {wrong:"My sister works for computers.", correct:"My sister works with computers."},
+  {wrong:"He worked with the same office for years.", correct:"He worked in the same office for years."},
+  {wrong:"I work in my clients every day.", correct:"I work with my clients every day."}
+];
+
+function speak(text){
+  if(!("speechSynthesis" in window)){
+    alert("Speech is not supported in this browser.");
+    return;
+  }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text.replace("___","blank"));
+  u.lang = "en-US";
+  u.rate = 0.85;
+  speechSynthesis.speak(u);
+}
+
+function renderEx1(){
+  document.getElementById("ex1").innerHTML = ex1.map((q,i)=>`
+    <div class="question" data-answer="${q.a}">
+      <div class="qline">
+        <span class="num">${i+1}</span>
+        <span>${q.s.split("___")[0]}</span>
+        <input type="text" aria-label="answer ${i+1}">
+        <span>${q.s.split("___")[1]}</span>
+        <button class="audio" onclick="speak('${q.s.replace(/'/g,"\\'")}')">🔊</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+  `).join("");
+}
+
+function checkEx1(){
+  let score=0;
+  document.querySelectorAll("#ex1 .question").forEach(q=>{
+    const val=q.querySelector("input").value.trim().toLowerCase();
+    const fb=q.querySelector(".feedback");
+    if(val===q.dataset.answer){
+      score++; fb.textContent="✓ Correct"; fb.className="feedback correct";
+    } else {
+      fb.textContent="✗ Correct answer: "+q.dataset.answer;
+      fb.className="feedback incorrect";
+    }
+  });
+  document.getElementById("score1").textContent=`Score: ${score} / ${ex1.length}`;
+}
+function showEx1(){
+  document.querySelectorAll("#ex1 .question").forEach(q=>{
+    q.querySelector("input").value=q.dataset.answer;
+  });
+}
+function resetEx1(){
+  renderEx1();
+  document.getElementById("score1").textContent="";
+}
+
+function renderEx2(){
+  document.getElementById("ex2").innerHTML = ex2.map((q,i)=>`
+    <div class="question" data-answer="${q.a}">
+      <div class="qline">
+        <span class="num">${i+1}</span>
+        <span>${q.s}</span>
+        <button class="audio" onclick="speak('${q.s.replace(/'/g,"\\'")}')">🔊</button>
+      </div>
+      <div class="options">
+        ${["in","for","with"].map(opt=>`
+          <label class="choice">
+            <input type="radio" name="ex2_${i}" value="${opt}"> ${opt}
+          </label>
+        `).join("")}
+      </div>
+      <div class="feedback"></div>
+    </div>
+  `).join("");
+}
+function checkEx2(){
+  let score=0;
+  document.querySelectorAll("#ex2 .question").forEach(q=>{
+    const selected=q.querySelector("input:checked");
+    const fb=q.querySelector(".feedback");
+    if(selected && selected.value===q.dataset.answer){
+      score++; fb.textContent="✓ Correct"; fb.className="feedback correct";
+    } else {
+      fb.textContent="✗ Correct answer: "+q.dataset.answer;
+      fb.className="feedback incorrect";
+    }
+  });
+  document.getElementById("score2").textContent=`Score: ${score} / ${ex2.length}`;
+}
+function showEx2(){
+  document.querySelectorAll("#ex2 .question").forEach(q=>{
+    const right=q.querySelector(`input[value="${q.dataset.answer}"]`);
+    if(right) right.checked=true;
+  });
+}
+function resetEx2(){
+  renderEx2();
+  document.getElementById("score2").textContent="";
+}
+
+function normalize(s){
+  return s.trim().toLowerCase().replace(/[.!?]+$/,"").replace(/\s+/g," ");
+}
+function renderEx3(){
+  document.getElementById("ex3").innerHTML = ex3.map((q,i)=>`
+    <div class="sentence-card" data-answer="${q.correct}">
+      <div class="qline">
+        <span class="num">${i+1}</span>
+        <strong>${q.wrong}</strong>
+        <button class="audio" onclick="speak('${q.wrong.replace(/'/g,"\\'")}')">🔊</button>
+      </div>
+      <input type="text" placeholder="Write the correct sentence">
+      <div class="feedback"></div>
+      <div class="hidden-answer">Correct answer: ${q.correct}</div>
+    </div>
+  `).join("");
+}
+function checkEx3(){
+  let score=0;
+  document.querySelectorAll("#ex3 .sentence-card").forEach(q=>{
+    const val=normalize(q.querySelector("input").value);
+    const ans=normalize(q.dataset.answer);
+    const fb=q.querySelector(".feedback");
+    if(val===ans){
+      score++; fb.textContent="✓ Correct"; fb.className="feedback correct";
+    } else {
+      fb.textContent="✗ Check the preposition and try again.";
+      fb.className="feedback incorrect";
+    }
+  });
+  document.getElementById("score3").textContent=`Score: ${score} / ${ex3.length}`;
+}
+function showEx3(){
+  document.querySelectorAll("#ex3 .sentence-card").forEach(q=>{
+    q.querySelector(".hidden-answer").style.display="block";
+  });
+}
+function resetEx3(){
+  renderEx3();
+  document.getElementById("score3").textContent="";
+}
+
+renderEx1();
+renderEx2();
+renderEx3();
+</script>
+</body>
+</html>
