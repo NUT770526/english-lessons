@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Practice</title>
+<style>
+  :root{
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#1f2937;
+    --muted:#6b7280;
+    --accent:#5b67f1;
+    --accent2:#eef0ff;
+    --good:#15803d;
+    --bad:#b91c1c;
+    --border:#dbe0ea;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:linear-gradient(135deg,#f5f7fb,#eef2ff);
+    color:var(--text);
+    line-height:1.5;
+  }
+  .container{
+    max-width:980px;
+    margin:0 auto;
+    padding:28px 18px 50px;
+  }
+  h1{
+    text-align:center;
+    margin:0 0 8px;
+    font-size:clamp(28px,4vw,42px);
+  }
+  .subtitle{
+    text-align:center;
+    color:var(--muted);
+    margin-bottom:26px;
+  }
+  .section{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:22px;
+    margin:20px 0;
+    box-shadow:0 8px 24px rgba(31,41,55,.07);
+  }
+  h2{margin-top:0}
+  .word-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:12px;
+  }
+  .word-card{
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:14px;
+    background:#fafbff;
+  }
+  .word-card strong{font-size:17px}
+  .translation{color:var(--muted); margin-top:4px}
+  .sound-btn{
+    border:none;
+    border-radius:10px;
+    padding:7px 10px;
+    cursor:pointer;
+    background:var(--accent2);
+    color:var(--accent);
+    font-size:18px;
+    margin-left:6px;
+  }
+  .question{
+    padding:14px 0;
+    border-bottom:1px solid #edf0f5;
+  }
+  .question:last-child{border-bottom:none}
+  select,input[type="text"]{
+    width:100%;
+    max-width:520px;
+    margin-top:8px;
+    padding:10px 12px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    font-size:16px;
+  }
+  .options label{
+    display:block;
+    margin:7px 0;
+    padding:8px 10px;
+    border-radius:9px;
+    background:#f8fafc;
+    cursor:pointer;
+  }
+  .btn-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
+  button.action{
+    border:none;
+    border-radius:12px;
+    padding:11px 16px;
+    font-size:16px;
+    cursor:pointer;
+    background:var(--accent);
+    color:white;
+    font-weight:700;
+  }
+  button.secondary{
+    background:#e5e7eb;
+    color:#374151;
+  }
+  .feedback{
+    margin-top:8px;
+    font-weight:700;
+  }
+  .correct{color:var(--good)}
+  .incorrect{color:var(--bad)}
+  .score{
+    margin-top:15px;
+    font-size:18px;
+    font-weight:700;
+  }
+  .hint{
+    background:#f8fafc;
+    border-left:4px solid var(--accent);
+    padding:10px 12px;
+    border-radius:8px;
+    color:#4b5563;
+    margin-bottom:14px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Vocabulary Practice</h1>
+  <p class="subtitle">Новые слова: слушаем, выбираем и используем в предложениях.</p>
+
+  <section class="section">
+    <h2>🔊 Слова с озвучиванием</h2>
+    <div class="word-grid" id="wordGrid"></div>
+  </section>
+
+  <section class="section">
+    <h2>Упражнение 1. Выбери правильный перевод</h2>
+    <div class="hint">Прочитай слово или фразу и выбери правильное значение.</div>
+    <div id="exercise1"></div>
+    <div class="btn-row">
+      <button class="action" onclick="checkExercise1()">Проверить</button>
+      <button class="action secondary" onclick="resetExercise1()">Начать заново</button>
+    </div>
+    <div class="score" id="score1"></div>
+  </section>
+
+  <section class="section">
+    <h2>Упражнение 2. Вставь подходящее слово</h2>
+    <div class="hint">Выбери слово или фразу, которая лучше всего подходит по смыслу.</div>
+    <div id="exercise2"></div>
+    <div class="btn-row">
+      <button class="action" onclick="checkExercise2()">Проверить</button>
+      <button class="action secondary" onclick="resetExercise2()">Начать заново</button>
+    </div>
+    <div class="score" id="score2"></div>
+  </section>
+
+  <section class="section">
+    <h2>Упражнение 3. Напиши слово по-английски</h2>
+    <div class="hint">Посмотри на русский перевод и напиши английское слово или фразу.</div>
+    <div id="exercise3"></div>
+    <div class="btn-row">
+      <button class="action" onclick="checkExercise3()">Проверить</button>
+      <button class="action secondary" onclick="resetExercise3()">Начать заново</button>
+    </div>
+    <div class="score" id="score3"></div>
+  </section>
+</div>
+
+<script>
+const words = [
+  {en:"way", ru:"способ; путь"},
+  {en:"twice a week", ru:"два раза в неделю"},
+  {en:"three times a month", ru:"три раза в месяц"},
+  {en:"leave – left – left", speak:"leave, left, left", ru:"уходить; покидать; оставлять"},
+  {en:"do – did – done", speak:"do, did, done", ru:"делать"},
+  {en:"match", ru:"подходить; соответствовать; совпадать"},
+  {en:"gap", ru:"пробел; промежуток; разрыв"},
+  {en:"yawn", ru:"зевать"},
+  {en:"loud", ru:"громкий; громко"},
+  {en:"delicious", ru:"вкусный"},
+  {en:"shout at", ru:"кричать на кого-либо"},
+  {en:"to be unemployed", ru:"быть безработным"},
+  {en:"start a career", ru:"начать карьеру"},
+  {en:"have a promotion", ru:"получить повышение"}
+];
+
+function speak(text){
+  if(!("speechSynthesis" in window)){
+    alert("Озвучивание не поддерживается в этом браузере.");
+    return;
+  }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-US";
+  u.rate = 0.85;
+  speechSynthesis.speak(u);
+}
+
+function shuffle(arr){
+  return [...arr].sort(()=>Math.random()-0.5);
+}
+
+function renderWordGrid(){
+  document.getElementById("wordGrid").innerHTML = words.map(w=>`
+    <div class="word-card">
+      <strong>${w.en}</strong>
+      <button class="sound-btn" onclick="speak('${(w.speak||w.en).replace(/'/g,"\\'")}')">🔊</button>
+      <div class="translation">${w.ru}</div>
+    </div>
+  `).join("");
+}
+
+const ex1Items = shuffle(words).slice(0,10);
+function renderExercise1(){
+  const container = document.getElementById("exercise1");
+  container.innerHTML = ex1Items.map((item,i)=>{
+    const distractors = shuffle(words.filter(w=>w.en!==item.en)).slice(0,3).map(w=>w.ru);
+    const options = shuffle([item.ru,...distractors]);
+    return `
+      <div class="question" data-answer="${item.ru}">
+        <strong>${i+1}. ${item.en}</strong>
+        <button class="sound-btn" onclick="speak('${(item.speak||item.en).replace(/'/g,"\\'")}')">🔊</button>
+        <div class="options">
+          ${options.map(opt=>`
+            <label><input type="radio" name="q1_${i}" value="${opt}"> ${opt}</label>
+          `).join("")}
+        </div>
+        <div class="feedback"></div>
+      </div>`;
+  }).join("");
+}
+
+function checkExercise1(){
+  let score=0;
+  document.querySelectorAll("#exercise1 .question").forEach(q=>{
+    const selected=q.querySelector("input:checked");
+    const fb=q.querySelector(".feedback");
+    if(selected && selected.value===q.dataset.answer){
+      score++; fb.textContent="✓ Правильно"; fb.className="feedback correct";
+    }else{
+      fb.textContent="✗ Правильный ответ: "+q.dataset.answer;
+      fb.className="feedback incorrect";
+    }
+  });
+  document.getElementById("score1").textContent=`Результат: ${score} из ${ex1Items.length}`;
+}
+function resetExercise1(){ renderExercise1(); document.getElementById("score1").textContent=""; }
+
+const ex2 = [
+  {s:"This is the best ___ to learn new words.", a:"way"},
+  {s:"I study English ___.", a:"twice a week"},
+  {s:"We visit this restaurant ___.", a:"three times a month"},
+  {s:"She ___ work early yesterday.", a:"left"},
+  {s:"He ___ his homework last night.", a:"did"},
+  {s:"This blue shirt ___ your trousers.", a:"matches"},
+  {s:"There is a small ___ between the doors.", a:"gap"},
+  {s:"I always ___ when I am tired.", a:"yawn"},
+  {s:"The music is very ___.", a:"loud"},
+  {s:"The cake was ___.", a:"delicious"},
+  {s:"Please do not ___ me.", a:"shout at"},
+  {s:"He is ___ at the moment.", a:"unemployed"},
+  {s:"She wants to ___ in finance.", a:"start a career"},
+  {s:"He had ___ last month.", a:"a promotion"}
+];
+
+const ex2Choices = [
+  "way","twice a week","three times a month","left","did","matches","gap",
+  "yawn","loud","delicious","shout at","unemployed","start a career","a promotion"
+];
+
+function renderExercise2(){
+  const container=document.getElementById("exercise2");
+  container.innerHTML=ex2.map((item,i)=>`
+    <div class="question" data-answer="${item.a}">
+      <strong>${i+1}. ${item.s}</strong><br>
+      <select>
+        <option value="">— выбери ответ —</option>
+        ${shuffle(ex2Choices).map(c=>`<option value="${c}">${c}</option>`).join("")}
+      </select>
+      <div class="feedback"></div>
+    </div>
+  `).join("");
+}
+function checkExercise2(){
+  let score=0;
+  document.querySelectorAll("#exercise2 .question").forEach(q=>{
+    const val=q.querySelector("select").value;
+    const fb=q.querySelector(".feedback");
+    if(val===q.dataset.answer){
+      score++; fb.textContent="✓ Правильно"; fb.className="feedback correct";
+    }else{
+      fb.textContent="✗ Правильный ответ: "+q.dataset.answer;
+      fb.className="feedback incorrect";
+    }
+  });
+  document.getElementById("score2").textContent=`Результат: ${score} из ${ex2.length}`;
+}
+function resetExercise2(){ renderExercise2(); document.getElementById("score2").textContent=""; }
+
+const ex3 = [
+  {ru:"способ; путь", a:["way"]},
+  {ru:"два раза в неделю", a:["twice a week"]},
+  {ru:"три раза в месяц", a:["three times a month"]},
+  {ru:"уходить — ушёл — ушедший", a:["leave - left - left","leave – left – left","leave left left"]},
+  {ru:"делать — сделал — сделанный", a:["do - did - done","do – did – done","do did done"]},
+  {ru:"подходить; соответствовать", a:["match"]},
+  {ru:"пробел; промежуток", a:["gap"]},
+  {ru:"зевать", a:["yawn"]},
+  {ru:"громкий; громко", a:["loud"]},
+  {ru:"вкусный", a:["delicious"]},
+  {ru:"кричать на кого-либо", a:["shout at"]},
+  {ru:"быть безработным", a:["to be unemployed","be unemployed"]},
+  {ru:"начать карьеру", a:["start a career"]},
+  {ru:"получить повышение", a:["have a promotion","get a promotion"]}
+];
+
+function normalize(s){
+  return s.trim().toLowerCase().replace(/[–—]/g,"-").replace(/\s+/g," ");
+}
+function renderExercise3(){
+  document.getElementById("exercise3").innerHTML=ex3.map((item,i)=>`
+    <div class="question" data-answer='${JSON.stringify(item.a)}'>
+      <strong>${i+1}. ${item.ru}</strong><br>
+      <input type="text" placeholder="Напиши по-английски">
+      <div class="feedback"></div>
+    </div>
+  `).join("");
+}
+function checkExercise3(){
+  let score=0;
+  document.querySelectorAll("#exercise3 .question").forEach(q=>{
+    const val=normalize(q.querySelector("input").value);
+    const answers=JSON.parse(q.dataset.answer).map(normalize);
+    const fb=q.querySelector(".feedback");
+    if(answers.includes(val)){
+      score++; fb.textContent="✓ Правильно"; fb.className="feedback correct";
+    }else{
+      fb.textContent="✗ Возможный ответ: "+JSON.parse(q.dataset.answer)[0];
+      fb.className="feedback incorrect";
+    }
+  });
+  document.getElementById("score3").textContent=`Результат: ${score} из ${ex3.length}`;
+}
+function resetExercise3(){ renderExercise3(); document.getElementById("score3").textContent=""; }
+
+renderWordGrid();
+renderExercise1();
+renderExercise2();
+renderExercise3();
+</script>
+</body>
+</html>
