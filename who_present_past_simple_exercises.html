@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who + Present Simple / Past Simple</title>
+<style>
+:root{
+  --bg:#f5f3ff;
+  --card:#ffffff;
+  --purple:#6037c7;
+  --light:#eee9ff;
+  --text:#22223b;
+  --muted:#6b6780;
+  --green:#18794e;
+  --red:#b42318;
+  --border:#ddd6fe;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:linear-gradient(135deg,#f8f7ff,#efeaff);
+  color:var(--text);
+}
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:28px 18px 50px;
+}
+header{
+  background:linear-gradient(120deg,#5630bd,#8665e9);
+  color:white;
+  border-radius:22px;
+  padding:26px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(75,45,150,.2);
+}
+h1{margin:0 0 8px;font-size:clamp(28px,4vw,42px)}
+header p{margin:6px 0}
+.rule{
+  margin-top:16px;
+  background:rgba(255,255,255,.15);
+  border-radius:14px;
+  padding:14px;
+  text-align:left;
+}
+.section{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:22px;
+  margin-top:22px;
+  box-shadow:0 8px 25px rgba(55,40,100,.08);
+}
+h2{margin-top:0;color:var(--purple)}
+.tip{
+  background:var(--light);
+  border-left:5px solid var(--purple);
+  border-radius:10px;
+  padding:11px 13px;
+  margin-bottom:16px;
+}
+.question{
+  padding:14px 0;
+  border-bottom:1px solid #eeeaf8;
+}
+.question:last-child{border-bottom:none}
+select,input[type="text"]{
+  width:100%;
+  max-width:650px;
+  padding:10px 12px;
+  margin-top:8px;
+  border:1px solid #cfc7ef;
+  border-radius:10px;
+  font-size:16px;
+}
+.options label{
+  display:block;
+  padding:8px 10px;
+  margin:7px 0;
+  background:#faf9ff;
+  border-radius:9px;
+  cursor:pointer;
+}
+button{
+  border:none;
+  border-radius:11px;
+  padding:11px 16px;
+  font-size:16px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.check{background:var(--purple);color:white}
+.reset{background:#e8e5ef;color:#403b50}
+.sound{
+  padding:5px 9px;
+  background:#eee9ff;
+  color:var(--purple);
+  margin-left:6px;
+}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.feedback{margin-top:7px;font-weight:bold}
+.correct{color:var(--green)}
+.incorrect{color:var(--red)}
+.score{margin-top:14px;font-size:18px;font-weight:bold}
+.drag-bank{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  padding:12px;
+  background:#f8f7ff;
+  border-radius:12px;
+  margin-bottom:12px;
+}
+.word{
+  background:#ded6ff;
+  color:#3f238e;
+  border-radius:9px;
+  padding:7px 10px;
+  cursor:grab;
+  user-select:none;
+}
+.drop{
+  display:inline-block;
+  min-width:120px;
+  min-height:34px;
+  padding:5px 8px;
+  border:2px dashed #a99ade;
+  border-radius:8px;
+  vertical-align:middle;
+  background:#fbfaff;
+}
+.small{font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Who + Present Simple / Past Simple</h1>
+  <p><b>Who goes?</b> — Кто ходит? &nbsp; | &nbsp; <b>Who went?</b> — Кто ходил?</p>
+  <div class="rule">
+    <b>Present Simple:</b> Who + глагол с <b>-s / -es</b>: Who works? Who goes? Who leaves?<br>
+    <b>Past Simple:</b> Who + вторая форма глагола: Who worked? Who went? Who left?<br>
+    <span class="small">После Who здесь нет другого подлежащего, потому что Who само заменяет человека.</span>
+  </div>
+</header>
+
+<section class="section">
+  <h2>Упражнение 1. Выбери правильную форму глагола</h2>
+  <div class="tip">Определи время: настоящее или прошедшее. После <b>Who</b> вспомогательные <b>does/did</b> не нужны.</div>
+  <div id="ex1"></div>
+  <div class="btns">
+    <button class="check" onclick="checkEx1()">Проверить</button>
+    <button class="reset" onclick="renderEx1()">Начать заново</button>
+  </div>
+  <div class="score" id="score1"></div>
+</section>
+
+<section class="section">
+  <h2>Упражнение 2. Выбери правильный вопрос</h2>
+  <div class="tip">Выбери грамматически правильный вариант.</div>
+  <div id="ex2"></div>
+  <div class="btns">
+    <button class="check" onclick="checkEx2()">Проверить</button>
+    <button class="reset" onclick="renderEx2()">Начать заново</button>
+  </div>
+  <div class="score" id="score2"></div>
+</section>
+
+<section class="section">
+  <h2>Упражнение 3. Собери вопрос</h2>
+  <div class="tip">Перетащи нужные слова в пропуски. В каждом предложении используется вопрос с <b>Who</b>.</div>
+  <div class="drag-bank" id="bank"></div>
+  <div id="ex3"></div>
+  <div class="btns">
+    <button class="check" onclick="checkEx3()">Проверить</button>
+    <button class="reset" onclick="renderEx3()">Начать заново</button>
+  </div>
+  <div class="score" id="score3"></div>
+</section>
+
+<section class="section">
+  <h2>Упражнение 4. Переведи на английский</h2>
+  <div class="tip">Напиши полный вопрос. Следи за формой глагола после <b>Who</b>.</div>
+  <div id="ex4"></div>
+  <div class="btns">
+    <button class="check" onclick="checkEx4()">Проверить</button>
+    <button class="reset" onclick="renderEx4()">Начать заново</button>
+  </div>
+  <div class="score" id="score4"></div>
+</section>
+</div>
+
+<script>
+function speak(text){
+  if(!("speechSynthesis" in window)){
+    alert("Озвучивание не поддерживается этим браузером.");
+    return;
+  }
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-US";
+  u.rate=.85;
+  speechSynthesis.speak(u);
+}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+
+const ex1=[
+  {q:"Who ___ to work by bus twice a week?", opts:["goes","go","went"], a:"goes"},
+  {q:"Who ___ the office early yesterday?", opts:["leaves","left","leave"], a:"left"},
+  {q:"Who ___ this task every Monday?", opts:["does","did","do"], a:"does"},
+  {q:"Who ___ this task last week?", opts:["does","did","done"], a:"did"},
+  {q:"Who ___ loudly when they are tired?", opts:["yawns","yawn","yawned"], a:"yawns"},
+  {q:"Who ___ during the long meeting yesterday?", opts:["yawns","yawned","yawn"], a:"yawned"},
+  {q:"Who ___ at the waiter last night?", opts:["shouts","shouted","shout"], a:"shouted"},
+  {q:"Who ___ a career in finance last year?", opts:["starts","started","start"], a:"started"},
+  {q:"Who ___ unemployed at the moment?", opts:["is","was","be"], a:"is"},
+  {q:"Who ___ unemployed after the company closed?", opts:["is","was","were"], a:"was"}
+];
+function renderEx1(){
+  document.getElementById("score1").textContent="";
+  document.getElementById("ex1").innerHTML=ex1.map((x,i)=>`
+    <div class="question" data-a="${x.a}">
+      <b>${i+1}. ${x.q}</b>
+      <select>
+        <option value="">— выбери —</option>
+        ${shuffle(x.opts).map(o=>`<option value="${o}">${o}</option>`).join("")}
+      </select>
+      <div class="feedback"></div>
+    </div>`).join("");
+}
+function checkEx1(){
+  let s=0;
+  document.querySelectorAll("#ex1 .question").forEach(q=>{
+    const v=q.querySelector("select").value, f=q.querySelector(".feedback");
+    if(v===q.dataset.a){s++;f.textContent="✓ Правильно";f.className="feedback correct"}
+    else{f.textContent="✗ Правильно: "+q.dataset.a;f.className="feedback incorrect"}
+  });
+  score1.textContent=`Результат: ${s} из ${ex1.length}`;
+}
+
+const ex2=[
+  {opts:["Who goes to work by bus?","Who does go to work by bus?","Who go to work by bus?"],a:"Who goes to work by bus?"},
+  {opts:["Who left the office early?","Who did left the office early?","Who leave the office early?"],a:"Who left the office early?"},
+  {opts:["Who has a promotion this year?","Who does have a promotion this year?","Who have a promotion this year?"],a:"Who has a promotion this year?"},
+  {opts:["Who had a promotion last month?","Who did had a promotion last month?","Who has a promotion last month?"],a:"Who had a promotion last month?"},
+  {opts:["Who matches the names with the pictures?","Who does matches the names with the pictures?","Who match the names with the pictures?"],a:"Who matches the names with the pictures?"},
+  {opts:["Who matched the words yesterday?","Who did matched the words yesterday?","Who matches the words yesterday?"],a:"Who matched the words yesterday?"},
+  {opts:["Who likes this delicious soup?","Who does likes this delicious soup?","Who like this delicious soup?"],a:"Who likes this delicious soup?"},
+  {opts:["Who lived near this restaurant?","Who did lived near this restaurant?","Who lives near this restaurant last year?"],a:"Who lived near this restaurant?"}
+];
+function renderEx2(){
+  score2.textContent="";
+  ex2div=document.getElementById("ex2");
+  ex2div.innerHTML=ex2.map((x,i)=>`
+    <div class="question" data-a="${x.a.replace(/"/g,'&quot;')}">
+      <b>${i+1}.</b>
+      <div class="options">
+      ${shuffle(x.opts).map(o=>`<label><input type="radio" name="e2_${i}" value="${o}"> ${o}
+      <button type="button" class="sound" onclick="event.preventDefault();speak('${o.replace(/'/g,"\\'")}')">🔊</button></label>`).join("")}
+      </div>
+      <div class="feedback"></div>
+    </div>`).join("");
+}
+function checkEx2(){
+  let s=0;
+  document.querySelectorAll("#ex2 .question").forEach(q=>{
+    const c=q.querySelector("input:checked"),f=q.querySelector(".feedback");
+    if(c&&c.value===q.dataset.a){s++;f.textContent="✓ Правильно";f.className="feedback correct"}
+    else{f.textContent="✗ Правильно: "+q.dataset.a;f.className="feedback incorrect"}
+  });
+  score2.textContent=`Результат: ${s} из ${ex2.length}`;
+}
+
+const ex3=[
+  {before:"Who",after:"to work twice a week?",a:"goes"},
+  {before:"Who",after:"the company yesterday?",a:"left"},
+  {before:"Who",after:"this exercise last night?",a:"did"},
+  {before:"Who",after:"a career in medicine in 2024?",a:"started"},
+  {before:"Who",after:"at the manager yesterday?",a:"shouted"},
+  {before:"Who",after:"near the large shopping mall?",a:"lives"},
+  {before:"Who",after:"during the movie yesterday?",a:"yawned"},
+  {before:"Who",after:"a promotion last month?",a:"had"}
+];
+const bankWords=["goes","left","did","started","shouted","lives","yawned","had"];
+let dragged=null;
+function renderEx3(){
+  score3.textContent="";
+  document.getElementById("bank").innerHTML=shuffle(bankWords).map((w,i)=>`<span class="word" draggable="true" data-word="${w}" id="w${i}">${w}</span>`).join("");
+  document.getElementById("ex3").innerHTML=ex3.map((x,i)=>`
+    <div class="question" data-a="${x.a}">
+      <b>${i+1}. ${x.before} <span class="drop" data-value=""></span> ${x.after}</b>
+      <div class="feedback"></div>
+    </div>`).join("");
+  document.querySelectorAll(".word").forEach(w=>{
+    w.addEventListener("dragstart",()=>dragged=w);
+  });
+  document.querySelectorAll(".drop").forEach(d=>{
+    d.addEventListener("dragover",e=>e.preventDefault());
+    d.addEventListener("drop",e=>{
+      e.preventDefault();
+      if(dragged){
+        if(d.firstChild) document.getElementById("bank").appendChild(d.firstChild);
+        d.appendChild(dragged);
+        d.dataset.value=dragged.dataset.word;
+        dragged=null;
+      }
+    });
+  });
+  document.getElementById("bank").addEventListener("dragover",e=>e.preventDefault());
+  document.getElementById("bank").addEventListener("drop",e=>{
+    e.preventDefault();
+    if(dragged){
+      const old=dragged.parentElement;
+      document.getElementById("bank").appendChild(dragged);
+      if(old.classList.contains("drop")) old.dataset.value="";
+      dragged=null;
+    }
+  });
+}
+function checkEx3(){
+  let s=0;
+  document.querySelectorAll("#ex3 .question").forEach(q=>{
+    const v=q.querySelector(".drop").dataset.value,f=q.querySelector(".feedback");
+    if(v===q.dataset.a){s++;f.textContent="✓ Правильно";f.className="feedback correct"}
+    else{f.textContent="✗ Правильно: "+q.dataset.a;f.className="feedback incorrect"}
+  });
+  score3.textContent=`Результат: ${s} из ${ex3.length}`;
+}
+
+const ex4=[
+  {ru:"Кто ездит на работу на автобусе два раза в неделю?",a:["who goes to work by bus twice a week?"]},
+  {ru:"Кто ушёл с работы рано вчера?",a:["who left work early yesterday?"]},
+  {ru:"Кто выполняет это упражнение три раза в месяц?",a:["who does this exercise three times a month?"]},
+  {ru:"Кто сделал это упражнение вчера?",a:["who did this exercise yesterday?"]},
+  {ru:"Кто начал карьеру в этой компании?",a:["who started a career in this company?"]},
+  {ru:"Кто получил повышение в прошлом месяце?",a:["who had a promotion last month?","who got a promotion last month?"]},
+  {ru:"Кто кричал на менеджера?",a:["who shouted at the manager?"]},
+  {ru:"Кто жил рядом с этим большим торговым центром?",a:["who lived near this large shopping mall?","who lived near the large shopping mall?"]}
+];
+function norm(s){return s.trim().toLowerCase().replace(/\s+/g," ").replace(/[’]/g,"'")}
+function renderEx4(){
+  score4.textContent="";
+  document.getElementById("ex4").innerHTML=ex4.map((x,i)=>`
+    <div class="question" data-a='${JSON.stringify(x.a)}'>
+      <b>${i+1}. ${x.ru}</b><br>
+      <input type="text" placeholder="Who ...?">
+      <div class="feedback"></div>
+    </div>`).join("");
+}
+function checkEx4(){
+  let s=0;
+  document.querySelectorAll("#ex4 .question").forEach(q=>{
+    const v=norm(q.querySelector("input").value);
+    const a=JSON.parse(q.dataset.a).map(norm);
+    const f=q.querySelector(".feedback");
+    if(a.includes(v)){s++;f.textContent="✓ Правильно";f.className="feedback correct"}
+    else{f.textContent="✗ Возможный ответ: "+JSON.parse(q.dataset.a)[0];f.className="feedback incorrect"}
+  });
+  score4.textContent=`Результат: ${s} из ${ex4.length}`;
+}
+
+renderEx1();renderEx2();renderEx3();renderEx4();
+</script>
+</body>
+</html>
