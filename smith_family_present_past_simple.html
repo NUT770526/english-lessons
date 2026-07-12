@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Present Simple vs Past Simple — The Smith Family</title>
+<style>
+:root{
+  --bg:#f7f5ff;
+  --card:#ffffff;
+  --ink:#24213a;
+  --muted:#6c6780;
+  --purple:#6741c7;
+  --purple2:#efe9ff;
+  --blue:#2463eb;
+  --green:#16803b;
+  --red:#bd1e2d;
+  --border:#ddd6fe;
+  --yellow:#fff6d8;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:linear-gradient(135deg,#f8f7ff,#eee9ff);
+  color:var(--ink);
+  line-height:1.5;
+}
+.container{
+  max-width:1050px;
+  margin:auto;
+  padding:28px 18px 55px;
+}
+.hero{
+  background:linear-gradient(120deg,#5f3dc4,#8c6be8);
+  color:#fff;
+  border-radius:24px;
+  padding:28px;
+  box-shadow:0 12px 34px rgba(83,55,160,.22);
+}
+.hero h1{
+  margin:0 0 10px;
+  font-size:clamp(28px,4vw,44px);
+}
+.hero p{margin:7px 0}
+.rules{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:12px;
+  margin-top:18px;
+}
+.rule{
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;
+  padding:13px;
+}
+.section{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:22px;
+  margin-top:22px;
+  box-shadow:0 8px 24px rgba(55,40,95,.08);
+}
+h2{
+  margin:0 0 8px;
+  color:var(--purple);
+}
+.note{
+  background:var(--yellow);
+  border-left:5px solid #e2a900;
+  padding:11px 13px;
+  border-radius:10px;
+  margin:12px 0 18px;
+}
+.question{
+  padding:14px 0;
+  border-bottom:1px solid #eeeaf8;
+}
+.question:last-child{border-bottom:none}
+.en{font-weight:700}
+.ru{
+  color:var(--muted);
+  margin-top:4px;
+  font-size:15px;
+}
+select,input[type="text"]{
+  width:100%;
+  max-width:720px;
+  margin-top:9px;
+  padding:10px 12px;
+  font-size:16px;
+  border:1px solid #cdc6e6;
+  border-radius:10px;
+  background:white;
+}
+.inline-input{
+  display:inline-block;
+  width:170px !important;
+  margin:0 5px !important;
+}
+.options label{
+  display:block;
+  padding:9px 11px;
+  margin:7px 0;
+  border-radius:10px;
+  background:#faf9ff;
+  cursor:pointer;
+}
+.btns{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+button{
+  border:none;
+  border-radius:11px;
+  padding:11px 16px;
+  font-size:16px;
+  cursor:pointer;
+  font-weight:700;
+}
+.check{background:var(--purple);color:white}
+.reset{background:#e7e4ef;color:#3e394b}
+.sound{
+  background:var(--purple2);
+  color:var(--purple);
+  padding:5px 9px;
+  margin-left:5px;
+}
+.feedback{
+  margin-top:7px;
+  font-weight:700;
+}
+.correct{color:var(--green)}
+.incorrect{color:var(--red)}
+.score{
+  margin-top:14px;
+  font-size:18px;
+  font-weight:700;
+}
+.tense-present{
+  color:#0d6c3f;
+  font-weight:700;
+}
+.tense-past{
+  color:#2458d3;
+  font-weight:700;
+}
+.summary{
+  background:#f9f8ff;
+  border-radius:14px;
+  padding:14px;
+  margin-top:14px;
+}
+.small{font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<section class="hero">
+  <h1>Present Simple или Past Simple?</h1>
+  <p>Тема: семья Смит — обычные действия и события вчера.</p>
+  <div class="rules">
+    <div class="rule">
+      <b>Present Simple</b><br>
+      обычно, часто, каждый день, по понедельникам<br>
+      <b>do / does</b>, <b>don’t / doesn’t</b>
+    </div>
+    <div class="rule">
+      <b>Past Simple</b><br>
+      вчера, прошлой ночью, на прошлой неделе<br>
+      <b>did</b>, <b>didn’t</b>, глагол во 2-й форме
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Упражнение 1. Раскрой скобки в Past Simple</h2>
+  <div class="note">
+    Все предложения относятся ко вчерашнему дню. Напиши глагол в прошедшей форме.
+  </div>
+  <div id="ex1"></div>
+  <div class="btns">
+    <button class="check" onclick="checkEx1()">Проверить</button>
+    <button class="reset" onclick="renderEx1()">Начать заново</button>
+  </div>
+  <div class="score" id="score1"></div>
+</section>
+
+<section class="section">
+  <h2>Упражнение 2. Present Simple или Past Simple?</h2>
+  <div class="note">
+    Смотри на перевод и слова-маркеры: <b>обычно, часто, каждый день</b> → Present Simple; 
+    <b>вчера, прошлой ночью</b> → Past Simple.
+  </div>
+  <div id="ex2"></div>
+  <div class="btns">
+    <button class="check" onclick="checkEx2()">Проверить</button>
+    <button class="reset" onclick="renderEx2()">Начать заново</button>
+  </div>
+  <div class="score" id="score2"></div>
+</section>
+
+<section class="section">
+  <h2>Упражнение 3. Сделай отрицательное предложение</h2>
+  <div class="note">
+    Выбери правильную отрицательную форму: <b>don’t / doesn’t</b> для настоящего и <b>didn’t</b> для прошедшего.
+  </div>
+  <div id="ex3"></div>
+  <div class="btns">
+    <button class="check" onclick="checkEx3()">Проверить</button>
+    <button class="reset" onclick="renderEx3()">Начать заново</button>
+  </div>
+  <div class="score" id="score3"></div>
+</section>
+
+<section class="section">
+  <h2>Упражнение 4. Выбери правильный вопрос</h2>
+  <div class="note">
+    В Present Simple используем <b>Do/Does</b>. В Past Simple используем <b>Did</b>. После них глагол всегда в первой форме.
+  </div>
+  <div id="ex4"></div>
+  <div class="btns">
+    <button class="check" onclick="checkEx4()">Проверить</button>
+    <button class="reset" onclick="renderEx4()">Начать заново</button>
+  </div>
+  <div class="score" id="score4"></div>
+</section>
+
+<section class="section">
+  <h2>Упражнение 5. Переведи на английский</h2>
+  <div class="note">
+    Сначала определи время по русскому предложению, затем выбери правильную форму.
+  </div>
+  <div id="ex5"></div>
+  <div class="btns">
+    <button class="check" onclick="checkEx5()">Проверить</button>
+    <button class="reset" onclick="renderEx5()">Начать заново</button>
+  </div>
+  <div class="score" id="score5"></div>
+</section>
+
+<section class="section">
+  <h2>Краткая памятка</h2>
+  <div class="summary">
+    <span class="tense-present">Present Simple:</span> She talks on the phone every evening.<br>
+    <span class="tense-past">Past Simple:</span> She talked on the phone yesterday.<br><br>
+    <span class="tense-present">Present Simple negative:</span> She doesn’t talk on the phone often.<br>
+    <span class="tense-past">Past Simple negative:</span> She didn’t talk on the phone yesterday.<br><br>
+    <span class="tense-present">Present Simple question:</span> Does she talk on the phone every evening?<br>
+    <span class="tense-past">Past Simple question:</span> Did she talk on the phone yesterday?
+  </div>
+</section>
+
+</div>
+
+<script>
+function speak(text){
+  if(!("speechSynthesis" in window)){
+    alert("Озвучивание не поддерживается этим браузером.");
+    return;
+  }
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-US";
+  u.rate=.85;
+  speechSynthesis.speak(u);
+}
+function norm(s){
+  return s.trim().toLowerCase().replace(/[’]/g,"'").replace(/\s+/g," ");
+}
+function setFeedback(el, ok, answer){
+  el.textContent=ok ? "✓ Правильно" : "✗ Правильно: "+answer;
+  el.className="feedback "+(ok?"correct":"incorrect");
+}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+
+const ex1 = [
+  ["What did your neighbours do yesterday?","Что ваши соседи делали вчера?","did"],
+  ["Mr Smith ___ his car yesterday morning. (fix)","Мистер Смит починил машину вчера утром.","fixed"],
+  ["His wife ___ her lovely flowers. (water)","Его жена полила свои красивые цветы.","watered"],
+  ["Their children ___ the yard and then they ___ basketball. (clean, play)","Их дети убрали двор, а затем играли в баскетбол.","cleaned|played"],
+  ["In the evening their boys ___ to loud music and ___ TV. (listen, watch)","Вечером их мальчики слушали громкую музыку и смотрели телевизор.","listened|watched"],
+  ["Their little girl ___ a little and then ___. (cry, smile)","Их маленькая девочка немного поплакала, а затем улыбнулась.","cried|smiled"],
+  ["Her brothers ___ at her. (shout)","Её братья кричали на неё.","shouted"],
+  ["Mrs Smith ___ in the kitchen. (work)","Миссис Смит работала на кухне.","worked"],
+  ["She ___ a delicious apple pie. (bake)","Она испекла вкусный яблочный пирог.","baked"],
+  ["She ___ a nice dinner. (cook)","Она приготовила хороший ужин.","cooked"],
+  ["She ___ the dishes and ___ very tired. (wash, look)","Она помыла посуду и выглядела очень уставшей.","washed|looked"],
+  ["The children ___ their teeth, ___ a little and ___ to bed. (brush, yawn, go)","Дети почистили зубы, немного позевали и пошли спать.","brushed|yawned|went"],
+  ["Their mother ___ her clothes, ___ her hair and then ___ on the phone. (change, brush, talk)","Их мама переоделась, расчесала волосы, а затем говорила по телефону.","changed|brushed|talked"],
+  ["Her husband ___ a cigarette and ___ to his wife. (smoke, talk)","Её муж курил сигарету и разговаривал с женой.","smoked|talked"],
+  ["They ___ for the bus. The bus ___ at 9 o’clock. (wait, arrive)","Они ждали автобус. Автобус прибыл в девять часов.","waited|arrived"],
+  ["They ___ their friends and ___ a lot there. (visit, dance)","Они навестили друзей и много там танцевали.","visited|danced"],
+  ["Mr and Mrs Smith ___ very well last night. They really ___ a wonderful time. (rest, have)","Мистер и миссис Смит хорошо отдохнули прошлой ночью. Они прекрасно провели время.","rested|had"]
+];
+
+function renderEx1(){
+  score1.textContent="";
+  ex1div=document.getElementById("ex1");
+  ex1div.innerHTML=ex1.map((x,i)=>{
+    if(i===0){
+      return `<div class="question"><div class="en">${i+1}. ${x[0]}</div><div class="ru">${x[1]}</div></div>`;
+    }
+    const count=x[2].split("|").length;
+    const parts=x[0].split("___");
+    let line=parts[0];
+    for(let j=0;j<count;j++){
+      line+=`<input class="inline-input" type="text" data-index="${j}">`+(parts[j+1]||"");
+    }
+    return `<div class="question" data-a="${x[2]}">
+      <div class="en">${i+1}. ${line}</div>
+      <div class="ru">${x[1]}</div>
+      <div class="feedback"></div>
+    </div>`;
+  }).join("");
+}
+function checkEx1(){
+  let s=0,total=ex1.length-1;
+  document.querySelectorAll("#ex1 .question[data-a]").forEach(q=>{
+    const answers=q.dataset.a.split("|").map(norm);
+    const inputs=[...q.querySelectorAll("input")].map(x=>norm(x.value));
+    const ok=answers.every((a,i)=>a===inputs[i]);
+    if(ok)s++;
+    setFeedback(q.querySelector(".feedback"),ok,answers.join(", "));
+  });
+  score1.textContent=`Результат: ${s} из ${total}`;
+}
+
+const ex2 = [
+  {
+    en:"Mrs Smith ___ in the kitchen every day.",
+    ru:"Миссис Смит работает на кухне каждый день.",
+    opts:["works","worked"], a:"works"
+  },
+  {
+    en:"Mrs Smith ___ in the kitchen yesterday.",
+    ru:"Миссис Смит работала на кухне вчера.",
+    opts:["works","worked"], a:"worked"
+  },
+  {
+    en:"She usually ___ on the phone in the evening.",
+    ru:"Она обычно разговаривает по телефону вечером.",
+    opts:["talks","talked"], a:"talks"
+  },
+  {
+    en:"She ___ on the phone after dinner yesterday.",
+    ru:"Она разговаривала по телефону после ужина вчера.",
+    opts:["talks","talked"], a:"talked"
+  },
+  {
+    en:"The children often ___ basketball after school.",
+    ru:"Дети часто играют в баскетбол после школы.",
+    opts:["play","played"], a:"play"
+  },
+  {
+    en:"The children ___ basketball yesterday.",
+    ru:"Дети играли в баскетбол вчера.",
+    opts:["play","played"], a:"played"
+  },
+  {
+    en:"Mr Smith usually ___ his car himself.",
+    ru:"Мистер Смит обычно сам чинит свою машину.",
+    opts:["fixes","fixed"], a:"fixes"
+  },
+  {
+    en:"Mr Smith ___ his car yesterday morning.",
+    ru:"Мистер Смит починил машину вчера утром.",
+    opts:["fixes","fixed"], a:"fixed"
+  },
+  {
+    en:"Their daughter often ___ when she is tired.",
+    ru:"Их дочь часто зевает, когда устаёт.",
+    opts:["yawns","yawned"], a:"yawns"
+  },
+  {
+    en:"Their daughter ___ before bed last night.",
+    ru:"Их дочь зевала перед сном прошлой ночью.",
+    opts:["yawns","yawned"], a:"yawned"
+  }
+];
+function renderEx2(){
+  score2.textContent="";
+  document.getElementById("ex2").innerHTML=ex2.map((x,i)=>`
+    <div class="question" data-a="${x.a}">
+      <div class="en">${i+1}. ${x.en}</div>
+      <div class="ru">${x.ru}</div>
+      <select>
+        <option value="">— выбери форму —</option>
+        ${shuffle(x.opts).map(o=>`<option value="${o}">${o}</option>`).join("")}
+      </select>
+      <div class="feedback"></div>
+    </div>`).join("");
+}
+function checkEx2(){
+  let s=0;
+  document.querySelectorAll("#ex2 .question").forEach(q=>{
+    const v=q.querySelector("select").value;
+    const ok=v===q.dataset.a;
+    if(ok)s++;
+    setFeedback(q.querySelector(".feedback"),ok,q.dataset.a);
+  });
+  score2.textContent=`Результат: ${s} из ${ex2.length}`;
+}
+
+const ex3 = [
+  {
+    ru:"Она не разговаривает по телефону часто.",
+    opts:[
+      "She doesn’t talk on the phone often.",
+      "She didn’t talk on the phone often.",
+      "She doesn’t talked on the phone often."
+    ],
+    a:"She doesn’t talk on the phone often."
+  },
+  {
+    ru:"Она не разговаривала по телефону вчера.",
+    opts:[
+      "She doesn’t talk on the phone yesterday.",
+      "She didn’t talk on the phone yesterday.",
+      "She didn’t talked on the phone yesterday."
+    ],
+    a:"She didn’t talk on the phone yesterday."
+  },
+  {
+    ru:"Дети не играют в баскетбол каждый день.",
+    opts:[
+      "The children don’t play basketball every day.",
+      "The children didn’t play basketball every day.",
+      "The children don’t played basketball every day."
+    ],
+    a:"The children don’t play basketball every day."
+  },
+  {
+    ru:"Дети не играли в баскетбол вчера.",
+    opts:[
+      "The children don’t play basketball yesterday.",
+      "The children didn’t play basketball yesterday.",
+      "The children didn’t played basketball yesterday."
+    ],
+    a:"The children didn’t play basketball yesterday."
+  },
+  {
+    ru:"Мистер Смит обычно не кричит на детей.",
+    opts:[
+      "Mr Smith doesn’t shout at the children usually.",
+      "Mr Smith didn’t shout at the children usually.",
+      "Mr Smith doesn’t shouted at the children usually."
+    ],
+    a:"Mr Smith doesn’t shout at the children usually."
+  },
+  {
+    ru:"Мистер Смит не кричал на детей вчера.",
+    opts:[
+      "Mr Smith doesn’t shout at the children yesterday.",
+      "Mr Smith didn’t shout at the children yesterday.",
+      "Mr Smith didn’t shouted at the children yesterday."
+    ],
+    a:"Mr Smith didn’t shout at the children yesterday."
+  },
+  {
+    ru:"Она не печёт пирог каждое воскресенье.",
+    opts:[
+      "She doesn’t bake a pie every Sunday.",
+      "She didn’t bake a pie every Sunday.",
+      "She doesn’t baked a pie every Sunday."
+    ],
+    a:"She doesn’t bake a pie every Sunday."
+  },
+  {
+    ru:"Она не испекла пирог вчера.",
+    opts:[
+      "She doesn’t bake a pie yesterday.",
+      "She didn’t bake a pie yesterday.",
+      "She didn’t baked a pie yesterday."
+    ],
+    a:"She didn’t bake a pie yesterday."
+  }
+];
+function renderEx3(){
+  score3.textContent="";
+  document.getElementById("ex3").innerHTML=ex3.map((x,i)=>`
+    <div class="question" data-a="${x.a.replace(/"/g,'&quot;')}">
+      <div class="ru"><b>${i+1}. ${x.ru}</b></div>
+      <div class="options">
+        ${shuffle(x.opts).map(o=>`
+          <label>
+            <input type="radio" name="e3_${i}" value="${o}">
+            ${o}
+            <button type="button" class="sound" onclick="event.preventDefault();speak('${o.replace(/'/g,"\\'")}')">🔊</button>
+          </label>`).join("")}
+      </div>
+      <div class="feedback"></div>
+    </div>`).join("");
+}
+function checkEx3(){
+  let s=0;
+  document.querySelectorAll("#ex3 .question").forEach(q=>{
+    const c=q.querySelector("input:checked");
+    const ok=c && c.value===q.dataset.a;
+    if(ok)s++;
+    setFeedback(q.querySelector(".feedback"),ok,q.dataset.a);
+  });
+  score3.textContent=`Результат: ${s} из ${ex3.length}`;
+}
+
+const ex4 = [
+  {
+    ru:"Она обычно печёт яблочный пирог?",
+    opts:[
+      "Does she usually bake an apple pie?",
+      "Did she usually bake an apple pie?",
+      "Does she usually bakes an apple pie?"
+    ],
+    a:"Does she usually bake an apple pie?"
+  },
+  {
+    ru:"Она испекла яблочный пирог вчера?",
+    opts:[
+      "Does she bake an apple pie yesterday?",
+      "Did she bake an apple pie yesterday?",
+      "Did she baked an apple pie yesterday?"
+    ],
+    a:"Did she bake an apple pie yesterday?"
+  },
+  {
+    ru:"Дети часто смотрят телевизор вечером?",
+    opts:[
+      "Do the children often watch TV in the evening?",
+      "Did the children often watch TV in the evening?",
+      "Do the children often watched TV in the evening?"
+    ],
+    a:"Do the children often watch TV in the evening?"
+  },
+  {
+    ru:"Дети смотрели телевизор вчера вечером?",
+    opts:[
+      "Do the children watch TV yesterday evening?",
+      "Did the children watch TV yesterday evening?",
+      "Did the children watched TV yesterday evening?"
+    ],
+    a:"Did the children watch TV yesterday evening?"
+  },
+  {
+    ru:"Мистер Смит обычно чинит машину сам?",
+    opts:[
+      "Does Mr Smith usually fix his car himself?",
+      "Did Mr Smith usually fix his car himself?",
+      "Does Mr Smith usually fixes his car himself?"
+    ],
+    a:"Does Mr Smith usually fix his car himself?"
+  },
+  {
+    ru:"Мистер Смит починил машину вчера?",
+    opts:[
+      "Does Mr Smith fix his car yesterday?",
+      "Did Mr Smith fix his car yesterday?",
+      "Did Mr Smith fixed his car yesterday?"
+    ],
+    a:"Did Mr Smith fix his car yesterday?"
+  }
+];
+function renderEx4(){
+  score4.textContent="";
+  document.getElementById("ex4").innerHTML=ex4.map((x,i)=>`
+    <div class="question" data-a="${x.a.replace(/"/g,'&quot;')}">
+      <div class="ru"><b>${i+1}. ${x.ru}</b></div>
+      <div class="options">
+        ${shuffle(x.opts).map(o=>`
+          <label>
+            <input type="radio" name="e4_${i}" value="${o}">
+            ${o}
+            <button type="button" class="sound" onclick="event.preventDefault();speak('${o.replace(/'/g,"\\'")}')">🔊</button>
+          </label>`).join("")}
+      </div>
+      <div class="feedback"></div>
+    </div>`).join("");
+}
+function checkEx4(){
+  let s=0;
+  document.querySelectorAll("#ex4 .question").forEach(q=>{
+    const c=q.querySelector("input:checked");
+    const ok=c && c.value===q.dataset.a;
+    if(ok)s++;
+    setFeedback(q.querySelector(".feedback"),ok,q.dataset.a);
+  });
+  score4.textContent=`Результат: ${s} из ${ex4.length}`;
+}
+
+const ex5 = [
+  {
+    ru:"Она говорит по телефону каждый вечер.",
+    a:["she talks on the phone every evening."]
+  },
+  {
+    ru:"Она говорила по телефону вчера вечером.",
+    a:["she talked on the phone yesterday evening."]
+  },
+  {
+    ru:"Она не говорит по телефону часто.",
+    a:["she doesn't talk on the phone often.","she does not talk on the phone often."]
+  },
+  {
+    ru:"Она не говорила по телефону вчера.",
+    a:["she didn't talk on the phone yesterday.","she did not talk on the phone yesterday."]
+  },
+  {
+    ru:"Дети обычно ложатся спать в девять часов.",
+    a:["the children usually go to bed at nine o'clock.","the children usually go to bed at 9 o'clock."]
+  },
+  {
+    ru:"Дети легли спать в девять часов вчера.",
+    a:["the children went to bed at nine o'clock yesterday.","the children went to bed at 9 o'clock yesterday."]
+  },
+  {
+    ru:"Миссис Смит готовит ужин каждый день.",
+    a:["mrs smith cooks dinner every day.","mrs. smith cooks dinner every day."]
+  },
+  {
+    ru:"Миссис Смит приготовила ужин вчера.",
+    a:["mrs smith cooked dinner yesterday.","mrs. smith cooked dinner yesterday."]
+  }
+];
+function renderEx5(){
+  score5.textContent="";
+  document.getElementById("ex5").innerHTML=ex5.map((x,i)=>`
+    <div class="question" data-a='${JSON.stringify(x.a)}'>
+      <div class="ru"><b>${i+1}. ${x.ru}</b></div>
+      <input type="text" placeholder="Напиши предложение по-английски">
+      <div class="feedback"></div>
+    </div>`).join("");
+}
+function checkEx5(){
+  let s=0;
+  document.querySelectorAll("#ex5 .question").forEach(q=>{
+    const v=norm(q.querySelector("input").value);
+    const answers=JSON.parse(q.dataset.a).map(norm);
+    const ok=answers.includes(v);
+    if(ok)s++;
+    setFeedback(q.querySelector(".feedback"),ok,JSON.parse(q.dataset.a)[0]);
+  });
+  score5.textContent=`Результат: ${s} из ${ex5.length}`;
+}
+
+renderEx1();
+renderEx2();
+renderEx3();
+renderEx4();
+renderEx5();
+</script>
+</body>
+</html>
