@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Still, Only, Till and To Be Phrases</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#f7f2ff,#fff8df);color:#202840}
+.wrap{max-width:1050px;margin:auto;padding:20px}
+header,.ex{background:#fff;border-radius:22px;padding:22px;margin-bottom:20px;box-shadow:0 8px 22px rgba(40,50,100,.12)}
+header{background:linear-gradient(120deg,#29366f,#7955d8);color:#fff}
+h1{margin-top:0}.vocab{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.vocab div{background:#fff;color:#202840;padding:10px;border-radius:12px}
+.item{padding:12px 0;border-bottom:1px solid #e8ebf4;font-size:17px;line-height:1.5}
+select,input{padding:8px 10px;border:2px solid #c3cae6;border-radius:9px;font-size:16px}
+input{min-width:280px}.correct{border-color:#30a56f!important;background:#eefaf4!important}.wrong{border-color:#dc4e5b!important;background:#fff0f1!important}
+button{border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;margin:12px 8px 0 0}
+.check{background:#4d78df;color:#fff}.reset{background:#e9edf8}.feedback{font-weight:700;margin-top:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.card{background:#f6f3ff;padding:13px;border-radius:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Word Memory Challenge</h1>
+<p>Learn these words in simple Present Simple sentences.</p>
+<div class="vocab">
+<div><b>still</b> — всё ещё</div><div><b>only</b> — только</div><div><b>till</b> — до</div>
+<div><b>be pleased with</b> — быть довольным</div><div><b>be idle</b> — бездельничать</div>
+<div><b>be in</b> — быть дома / на месте</div><div><b>be sleepy</b> — хотеть спать</div>
+<div><b>be ill</b> — болеть</div><div><b>be busy</b> — быть занятым</div>
+</div>
+</header>
+
+<section class="ex"><h2>1. Match the word and the meaning</h2><div id="e1" class="grid"></div><button class="check" onclick="checkSel('e1',a1,'f1')">Check</button><button class="reset" onclick="resetEx('e1','f1')">Reset</button><div id="f1" class="feedback"></div></section>
+
+<section class="ex"><h2>2. Still, only or till?</h2><div id="e2"></div><button class="check" onclick="checkSel('e2',a2,'f2')">Check</button><button class="reset" onclick="resetEx('e2','f2')">Reset</button><div id="f2" class="feedback"></div></section>
+
+<section class="ex"><h2>3. Choose the correct phrase</h2><div id="e3"></div><button class="check" onclick="checkSel('e3',a3,'f3')">Check</button><button class="reset" onclick="resetEx('e3','f3')">Reset</button><div id="f3" class="feedback"></div></section>
+
+<section class="ex"><h2>4. Choose the correct sentence</h2><div id="e4" class="grid"></div><button class="check" onclick="checkSel('e4',a4,'f4')">Check</button><button class="reset" onclick="resetEx('e4','f4')">Reset</button><div id="f4" class="feedback"></div></section>
+
+<section class="ex"><h2>5. Translate into English</h2><div id="e5"></div><button class="check" onclick="checkText('e5',a5,'f5')">Check</button><button class="reset" onclick="resetEx('e5','f5')">Reset</button><div id="f5" class="feedback"></div></section>
+
+<section class="ex"><h2>6. Final mixed challenge</h2><div id="e6"></div><button class="check" onclick="checkSel('e6',a6,'f6')">Check</button><button class="reset" onclick="resetEx('e6','f6')">Reset</button><div id="f6" class="feedback"></div></section>
+</div>
+
+<script>
+const meanings=['всё ещё','только','до','быть довольным','бездельничать','быть дома / на месте','хотеть спать','болеть','быть занятым'];
+const words=['still','only','till','be pleased with','be idle','be in','be sleepy','be ill','be busy'];
+const a1=[...meanings];
+e1.innerHTML=words.map((w,i)=>`<div class="card"><b>${w}</b><br><select><option value="">Choose...</option>${meanings.map(m=>`<option>${m}</option>`).join('')}</select></div>`).join('');
+
+const q2=[['She is ___ at school.','still'],['He is ___ twelve.','only'],['We wait ___ five.','till'],['My tea is ___ hot.','still'],['I have ___ one notebook.','only'],['The shop is open ___ six.','till'],['They are ___ in Japan.','still'],['It is ___ nine o’clock.','only'],['We stay here ___ Monday.','till']];
+const a2=q2.map(x=>x[1]);
+e2.innerHTML=q2.map((x,i)=>`<div class="item">${i+1}. ${x[0].replace('___',`<select><option value="">Choose...</option><option>still</option><option>only</option><option>till</option></select>`)}</div>`).join('');
+
+const opts=['pleased with it','idle','in','sleepy','ill','busy'];
+const q3=[['I like my test. I am ___.','pleased with it'],['We do nothing. We are ___.','idle'],['Mum is at home now. She is ___.','in'],['I want to sleep. I am ___.','sleepy'],['Tom has a cold. He is ___.','ill'],['Anna has many lessons. She is ___.','busy'],['They like the project. They are ___.','pleased with it'],['Dad is at home. He is ___.','in']];
+const a3=q3.map(x=>x[1]);
+e3.innerHTML=q3.map((x,i)=>`<div class="item">${i+1}. ${x[0].replace('___',`<select><option value="">Choose...</option>${opts.map(o=>`<option>${o}</option>`).join('')}</select>`)}</div>`).join('');
+
+const q4=[['She is still at school.','She still is at school.'],['He is only twelve.','He only is twelve.'],['We wait till five.','We wait still five.'],['I am pleased with my test.','I pleased with my test.'],['They are idle today.','They idle today.'],['Mum is in now.','Mum in now.'],['I am sleepy in the evening.','I sleepy in the evening.'],['Tom is ill today.','Tom ill today.'],['We are busy on Monday.','We busy on Monday.']];
+const a4=q4.map(x=>x[0]);
+e4.innerHTML=q4.map((x,i)=>`<div class="card">${i+1}.<br><select><option value="">Choose...</option><option>${x[0]}</option><option>${x[1]}</option></select></div>`).join('');
+
+const q5=[['Она всё ещё в школе.','She is still at school'],['Ему только двенадцать.','He is only twelve'],['Мы ждём до пяти.','We wait till five'],['Я довольна своим тестом.','I am pleased with my test'],['Они бездельничают сегодня.','They are idle today'],['Мама сейчас дома.','Mum is in now'],['Я хочу спать вечером.','I am sleepy in the evening'],['Том сегодня болеет.','Tom is ill today'],['Мы заняты в понедельник.','We are busy on Monday']];
+const a5=q5.map(x=>x[1]);
+e5.innerHTML=q5.map((x,i)=>`<div class="item">${i+1}. <b>${x[0]}</b><br><input type="text" placeholder="Write in English"></div>`).join('');
+
+const q6=[['She is ___ at home.','still'],['He is ___ ten.','only'],['We stay here ___ Friday.','till'],['I am ___ my new book.','pleased with'],['They are ___ after lunch.','idle'],['Mum is ___ now.','in'],['I am ___ in the morning.','sleepy'],['Tom is ___ today.','ill'],['We are ___ this week.','busy']];
+const a6=q6.map(x=>x[1]);
+const all=['still','only','till','pleased with','idle','in','sleepy','ill','busy'];
+e6.innerHTML=q6.map((x,i)=>`<div class="item">${i+1}. ${x[0].replace('___',`<select><option value="">Choose...</option>${all.map(o=>`<option>${o}</option>`).join('')}</select>`)}</div>`).join('');
+
+function norm(s){return s.toLowerCase().replace(/[.!?]/g,'').replace(/\s+/g,' ').trim()}
+function mark(el,ok){el.className=ok?'correct':'wrong'}
+function msg(id,s,t){const e=document.getElementById(id);e.style.color=s===t?'#30a56f':'#dc4e5b';e.textContent=s===t?`Excellent! ${s}/${t}`:`Score: ${s}/${t}. Try again!`}
+function checkSel(id,a,f){let s=0;document.querySelectorAll('#'+id+' select').forEach((x,i)=>{let ok=x.value===a[i];mark(x,ok);if(ok)s++});msg(f,s,a.length)}
+function checkText(id,a,f){let s=0;document.querySelectorAll('#'+id+' input').forEach((x,i)=>{let ok=norm(x.value)===norm(a[i]);mark(x,ok);if(ok)s++});msg(f,s,a.length)}
+function resetEx(id,f){document.querySelectorAll('#'+id+' select').forEach(x=>{x.selectedIndex=0;x.className=''});document.querySelectorAll('#'+id+' input').forEach(x=>{x.value='';x.className=''});document.getElementById(f).textContent=''}
+</script>
+</body>
+</html>
