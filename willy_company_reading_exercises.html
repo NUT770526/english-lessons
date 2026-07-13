@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Willy at the New Company</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#151515;
+      --purple:#3b1dad;
+      --green:#00a86b;
+      --green-soft:#dff8e8;
+      --green-softer:#effcf4;
+      --red:#ef5b6c;
+      --border:#d7eadc;
+      --shadow:0 5px 16px rgba(0,0,0,.07);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:#f7f9fb;
+      color:var(--text);
+      line-height:1.45;
+    }
+    .container{
+      width:min(1050px,94%);
+      margin:0 auto;
+      padding:28px 0 50px;
+    }
+    header{
+      background:#fff;
+      padding:24px 28px;
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      margin-bottom:22px;
+    }
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(30px,5vw,46px);
+      color:var(--purple);
+    }
+    .subtitle{
+      margin:0;
+      color:#555;
+      font-size:18px;
+    }
+    .dialogue{
+      margin-top:20px;
+      background:#f1fff6;
+      border:1px solid #cdeed8;
+      border-radius:14px;
+      padding:18px;
+    }
+    .dialogue p{margin:8px 0}
+    .speaker{
+      font-weight:700;
+      color:var(--purple);
+    }
+    .card{
+      background:#fff;
+      border-radius:18px;
+      padding:24px;
+      margin:22px 0;
+      box-shadow:var(--shadow);
+    }
+    h2{
+      margin:0 0 18px;
+      color:var(--purple);
+      font-size:28px;
+    }
+    .instruction{
+      background:#f6f2ff;
+      border-left:5px solid #7c5ce7;
+      padding:11px 14px;
+      border-radius:10px;
+      margin-bottom:18px;
+    }
+    .matching-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px 22px;
+    }
+    .match-row{
+      display:contents;
+    }
+    .question-box,
+    .answer-box{
+      background:var(--green-soft);
+      border-radius:6px;
+      padding:15px 14px;
+      min-height:62px;
+      display:flex;
+      align-items:center;
+      font-size:18px;
+    }
+    .answer-box select{
+      width:100%;
+      padding:9px 10px;
+      border:1px solid #b9d8c4;
+      border-radius:8px;
+      background:#fff;
+      font-size:16px;
+    }
+    .tf-row{
+      display:grid;
+      grid-template-columns:1fr 250px;
+      gap:20px;
+      align-items:center;
+      padding:10px 0;
+    }
+    .tf-row p{
+      margin:0;
+      font-size:19px;
+    }
+    select{
+      padding:10px 12px;
+      border-radius:9px;
+      border:1px solid #b9d8c4;
+      background:var(--green-softer);
+      font-size:17px;
+    }
+    .mcq{
+      counter-reset:q;
+    }
+    .mcq-item{
+      padding:14px 0 18px;
+      border-bottom:1px solid #eee;
+    }
+    .mcq-item:last-child{border-bottom:none}
+    .mcq-item h3{
+      margin:0 0 10px;
+      font-size:18px;
+      font-weight:500;
+    }
+    .mcq-item h3::before{
+      counter-increment:q;
+      content:counter(q) ". ";
+      color:#8a5d00;
+      font-weight:700;
+    }
+    .option{
+      display:block;
+      margin:8px 0;
+      cursor:pointer;
+      font-size:16px;
+    }
+    button{
+      margin-top:18px;
+      padding:11px 18px;
+      border:0;
+      border-radius:10px;
+      background:var(--purple);
+      color:#fff;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    button:hover{filter:brightness(.95)}
+    .result{
+      margin-top:14px;
+      min-height:24px;
+      font-weight:700;
+    }
+    .correct{
+      outline:2px solid #31c765 !important;
+      background:#effff3 !important;
+    }
+    .incorrect{
+      outline:2px solid var(--red) !important;
+      background:#fff1f3 !important;
+    }
+    .feedback{
+      margin-left:8px;
+      font-weight:700;
+    }
+    .feedback.good{color:var(--green)}
+    .feedback.bad{color:var(--red)}
+    @media(max-width:760px){
+      .matching-grid{grid-template-columns:1fr}
+      .match-row{display:block}
+      .question-box{margin-top:12px}
+      .answer-box{margin-bottom:8px}
+      .tf-row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Willy at the New Company</h1>
+  <p class="subtitle">Read the dialogue and complete the exercises.</p>
+
+  <div class="dialogue">
+    <p><span class="speaker">Christine:</span> Daphne, have you met Willy? He started working here only last week.</p>
+    <p><span class="speaker">Daphne:</span> No, I haven’t. Who is Willy?</p>
+    <p><span class="speaker">Christine:</span> He is our new colleague. He worked for a really small company before.</p>
+    <p><span class="speaker">Daphne:</span> Why did he leave?</p>
+    <p><span class="speaker">Christine:</span> Because he had a lot of projects and often needed to work at the weekends.</p>
+    <p><span class="speaker">Daphne:</span> And what does he like doing?</p>
+    <p><span class="speaker">Christine:</span> He likes going to the cinema and playing video games.</p>
+    <p><span class="speaker">Daphne:</span> Is he married?</p>
+    <p><span class="speaker">Christine:</span> Yes, he is.</p>
+    <p><span class="speaker">Daphne:</span> Oh... I see.</p>
+    <p><span class="speaker">Christine:</span> Willy, are you happy to work for such a big company?</p>
+    <p><span class="speaker">Willy:</span> Of course, I am!</p>
+    <p><span class="speaker">Christine:</span> Do you like coffee, Willy?</p>
+    <p><span class="speaker">Willy:</span> I do.</p>
+    <p><span class="speaker">Christine:</span> Great. Let’s take a break and go out for a cup of coffee.</p>
+  </div>
+</header>
+
+<section class="card">
+  <h2>1. Match the questions with the answers</h2>
+  <div class="instruction">Choose the correct answer for each question.</div>
+
+  <div class="matching-grid" id="matchEx">
+
+    <div class="question-box">Why did he leave?</div>
+    <div class="answer-box">
+      <select data-answer="Because he had a lot of projects and often needed to work at the weekends.">
+        <option value="">Choose an answer</option>
+        <option>He started only last week.</option>
+        <option>Because he had a lot of projects and often needed to work at the weekends.</option>
+        <option>He worked for a really small company.</option>
+        <option>Of course, I am!</option>
+        <option>I do.</option>
+        <option>I know that he likes to go to the cinema and play video games.</option>
+        <option>Christine, I am talking about the man you talked to a minute ago!</option>
+      </select>
+    </div>
+
+    <div class="question-box">And what does he like doing?</div>
+    <div class="answer-box">
+      <select data-answer="I know that he likes to go to the cinema and play video games.">
+        <option value="">Choose an answer</option>
+        <option>He started only last week.</option>
+        <option>Because he had a lot of projects and often needed to work at the weekends.</option>
+        <option>He worked for a really small company.</option>
+        <option>Of course, I am!</option>
+        <option>I do.</option>
+        <option>I know that he likes to go to the cinema and play video games.</option>
+        <option>Christine, I am talking about the man you talked to a minute ago!</option>
+      </select>
+    </div>
+
+    <div class="question-box">When did he start working here?</div>
+    <div class="answer-box">
+      <select data-answer="He started only last week.">
+        <option value="">Choose an answer</option>
+        <option>He started only last week.</option>
+        <option>Because he had a lot of projects and often needed to work at the weekends.</option>
+        <option>He worked for a really small company.</option>
+        <option>Of course, I am!</option>
+        <option>I do.</option>
+        <option>I know that he likes to go to the cinema and play video games.</option>
+        <option>Christine, I am talking about the man you talked to a minute ago!</option>
+      </select>
+    </div>
+
+    <div class="question-box">Who are you talking about?</div>
+    <div class="answer-box">
+      <select data-answer="Christine, I am talking about the man you talked to a minute ago!">
+        <option value="">Choose an answer</option>
+        <option>He started only last week.</option>
+        <option>Because he had a lot of projects and often needed to work at the weekends.</option>
+        <option>He worked for a really small company.</option>
+        <option>Of course, I am!</option>
+        <option>I do.</option>
+        <option>I know that he likes to go to the cinema and play video games.</option>
+        <option>Christine, I am talking about the man you talked to a minute ago!</option>
+      </select>
+    </div>
+
+    <div class="question-box">Where did he work before?</div>
+    <div class="answer-box">
+      <select data-answer="He worked for a really small company.">
+        <option value="">Choose an answer</option>
+        <option>He started only last week.</option>
+        <option>Because he had a lot of projects and often needed to work at the weekends.</option>
+        <option>He worked for a really small company.</option>
+        <option>Of course, I am!</option>
+        <option>I do.</option>
+        <option>I know that he likes to go to the cinema and play video games.</option>
+        <option>Christine, I am talking about the man you talked to a minute ago!</option>
+      </select>
+    </div>
+
+    <div class="question-box">Willy, are you happy to work for such a big company?</div>
+    <div class="answer-box">
+      <select data-answer="Of course, I am!">
+        <option value="">Choose an answer</option>
+        <option>He started only last week.</option>
+        <option>Because he had a lot of projects and often needed to work at the weekends.</option>
+        <option>He worked for a really small company.</option>
+        <option>Of course, I am!</option>
+        <option>I do.</option>
+        <option>I know that he likes to go to the cinema and play video games.</option>
+        <option>Christine, I am talking about the man you talked to a minute ago!</option>
+      </select>
+    </div>
+
+    <div class="question-box">Do you like coffee, Willy?</div>
+    <div class="answer-box">
+      <select data-answer="I do.">
+        <option value="">Choose an answer</option>
+        <option>He started only last week.</option>
+        <option>Because he had a lot of projects and often needed to work at the weekends.</option>
+        <option>He worked for a really small company.</option>
+        <option>Of course, I am!</option>
+        <option>I do.</option>
+        <option>I know that he likes to go to the cinema and play video games.</option>
+        <option>Christine, I am talking about the man you talked to a minute ago!</option>
+      </select>
+    </div>
+
+  </div>
+
+  <button onclick="checkSelects('matchEx','matchResult')">Check answers</button>
+  <div class="result" id="matchResult"></div>
+</section>
+
+<section class="card">
+  <h2>2. Mark the sentences as True or False</h2>
+
+  <div id="tfEx">
+    <div class="tf-row">
+      <p>1. Willy is a long-time employee at the company.</p>
+      <select data-answer="False">
+        <option value="">Choose</option>
+        <option>True</option>
+        <option>False</option>
+      </select>
+    </div>
+
+    <div class="tf-row">
+      <p>2. Willy left his previous job because he didn't like his colleagues.</p>
+      <select data-answer="False">
+        <option value="">Choose</option>
+        <option>True</option>
+        <option>False</option>
+      </select>
+    </div>
+
+    <div class="tf-row">
+      <p>3. Willy enjoys playing video games.</p>
+      <select data-answer="True">
+        <option value="">Choose</option>
+        <option>True</option>
+        <option>False</option>
+      </select>
+    </div>
+
+    <div class="tf-row">
+      <p>4. Christine suggests taking a break to go out for a cup of coffee.</p>
+      <select data-answer="True">
+        <option value="">Choose</option>
+        <option>True</option>
+        <option>False</option>
+      </select>
+    </div>
+
+    <div class="tf-row">
+      <p>5. Willy worked for a large company before.</p>
+      <select data-answer="False">
+        <option value="">Choose</option>
+        <option>True</option>
+        <option>False</option>
+      </select>
+    </div>
+
+    <div class="tf-row">
+      <p>6. Willy often had to work at the weekends in his previous job.</p>
+      <select data-answer="True">
+        <option value="">Choose</option>
+        <option>True</option>
+        <option>False</option>
+      </select>
+    </div>
+  </div>
+
+  <button onclick="checkSelects('tfEx','tfResult')">Check answers</button>
+  <div class="result" id="tfResult"></div>
+</section>
+
+<section class="card">
+  <h2>3. Choose the correct answer</h2>
+
+  <div class="mcq" id="mcqEx">
+
+    <div class="mcq-item">
+      <h3>Who is Willy?</h3>
+      <label class="option"><input type="radio" name="q1" value="Christine's friend"> Christine's friend</label>
+      <label class="option"><input type="radio" name="q1" value="Daphne's brother"> Daphne's brother</label>
+      <label class="option"><input type="radio" name="q1" value="A new colleague" data-correct="true"> A new colleague</label>
+      <label class="option"><input type="radio" name="q1" value="A long-time employee"> A long-time employee</label>
+    </div>
+
+    <div class="mcq-item">
+      <h3>Why did Willy leave his previous job?</h3>
+      <label class="option"><input type="radio" name="q2" value="He didn't like his colleagues."> He didn't like his colleagues.</label>
+      <label class="option"><input type="radio" name="q2" value="He had too many projects and worked at the weekends." data-correct="true"> He had too many projects and worked at the weekends.</label>
+      <label class="option"><input type="radio" name="q2" value="He was promoted."> He was promoted.</label>
+      <label class="option"><input type="radio" name="q2" value="The company closed down."> The company closed down.</label>
+    </div>
+
+    <div class="mcq-item">
+      <h3>What does Christine suggest at the end of the conversation?</h3>
+      <label class="option"><input type="radio" name="q3" value="To go out for a cup of coffee" data-correct="true"> To go out for a cup of coffee</label>
+      <label class="option"><input type="radio" name="q3" value="To keep working without a break"> To keep working without a break</label>
+      <label class="option"><input type="radio" name="q3" value="To invite Willy to a meeting"> To invite Willy to a meeting</label>
+      <label class="option"><input type="radio" name="q3" value="To finish the project first"> To finish the project first</label>
+    </div>
+
+    <div class="mcq-item">
+      <h3>How does Daphne react when she learns Willy is married?</h3>
+      <label class="option"><input type="radio" name="q4" value="She is happy for him."> She is happy for him.</label>
+      <label class="option"><input type="radio" name="q4" value="She is surprised and excited."> She is surprised and excited.</label>
+      <label class="option"><input type="radio" name="q4" value="She doesn't care."> She doesn't care.</label>
+      <label class="option"><input type="radio" name="q4" value="She sounds disappointed." data-correct="true"> She sounds disappointed.</label>
+    </div>
+
+    <div class="mcq-item">
+      <h3>When did Willy start working at the company?</h3>
+      <label class="option"><input type="radio" name="q5" value="Last year"> Last year</label>
+      <label class="option"><input type="radio" name="q5" value="Only last week" data-correct="true"> Only last week</label>
+      <label class="option"><input type="radio" name="q5" value="Two months ago"> Two months ago</label>
+      <label class="option"><input type="radio" name="q5" value="Yesterday"> Yesterday</label>
+    </div>
+
+    <div class="mcq-item">
+      <h3>What does Willy like doing?</h3>
+      <label class="option"><input type="radio" name="q6" value="Reading and cooking"> Reading and cooking</label>
+      <label class="option"><input type="radio" name="q6" value="Going to the cinema and playing video games" data-correct="true"> Going to the cinema and playing video games</label>
+      <label class="option"><input type="radio" name="q6" value="Working at the weekends"> Working at the weekends</label>
+      <label class="option"><input type="radio" name="q6" value="Playing tennis"> Playing tennis</label>
+    </div>
+
+  </div>
+
+  <button onclick="checkRadios('mcqEx','mcqResult')">Check answers</button>
+  <div class="result" id="mcqResult"></div>
+</section>
+
+</div>
+
+<script>
+function normalize(value){
+  return value.trim().toLowerCase().replace(/\s+/g,' ');
+}
+
+function showResult(id, score, total){
+  const box = document.getElementById(id);
+  box.textContent = `Score: ${score} / ${total}`;
+  box.style.color = score === total ? '#00a86b' : '#3b1dad';
+}
+
+function checkSelects(exId, resultId){
+  const selects = document.querySelectorAll(`#${exId} select`);
+  let score = 0;
+
+  selects.forEach(select => {
+    select.classList.remove('correct','incorrect');
+    if(normalize(select.value) === normalize(select.dataset.answer)){
+      score++;
+      select.classList.add('correct');
+    } else {
+      select.classList.add('incorrect');
+    }
+  });
+
+  showResult(resultId, score, selects.length);
+}
+
+function checkRadios(exId, resultId){
+  const radios = [...document.querySelectorAll(`#${exId} input[type="radio"]`)];
+  const groups = [...new Set(radios.map(r => r.name))];
+  let score = 0;
+
+  groups.forEach(name => {
+    const group = document.querySelectorAll(`input[name="${name}"]`);
+    group.forEach(r => r.parentElement.classList.remove('correct','incorrect'));
+
+    const selected = document.querySelector(`input[name="${name}"]:checked`);
+
+    if(selected && selected.dataset.correct === "true"){
+      score++;
+      selected.parentElement.classList.add('correct');
+    } else if(selected){
+      selected.parentElement.classList.add('incorrect');
+    }
+  });
+
+  showResult(resultId, score, groups.length);
+}
+</script>
+
+</body>
+</html>
