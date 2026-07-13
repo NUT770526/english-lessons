@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vocabulary Practice</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --text:#243047;
+      --muted:#6b7280;
+      --accent:#4f46e5;
+      --accent-soft:#eef2ff;
+      --good:#15803d;
+      --bad:#b91c1c;
+      --border:#dbe2ea;
+      --shadow:0 10px 25px rgba(30,41,59,.08);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#eef2ff 0,#f8fafc 240px,#f5f7fb 100%);
+      color:var(--text);
+      line-height:1.55;
+    }
+    .container{
+      width:min(1100px,92%);
+      margin:0 auto;
+      padding:36px 0 60px;
+    }
+    header{
+      text-align:center;
+      margin-bottom:28px;
+    }
+    h1{
+      margin:0 0 10px;
+      font-size:clamp(30px,5vw,48px);
+      color:#312e81;
+    }
+    .subtitle{
+      color:var(--muted);
+      font-size:18px;
+      margin:0;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid rgba(219,226,234,.9);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      padding:24px;
+      margin:22px 0;
+    }
+    h2{
+      margin-top:0;
+      color:#3730a3;
+      font-size:27px;
+    }
+    h3{
+      margin-bottom:8px;
+      color:#4338ca;
+    }
+    .note{
+      background:var(--accent-soft);
+      border-left:5px solid var(--accent);
+      padding:12px 14px;
+      border-radius:10px;
+      margin:12px 0 18px;
+    }
+    .vocab-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+      gap:14px;
+    }
+    .vocab-item{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+      background:#fbfdff;
+    }
+    .word{
+      font-weight:700;
+      color:#312e81;
+      font-size:18px;
+    }
+    .translation{
+      color:#0f766e;
+      font-weight:600;
+      margin:3px 0 6px;
+    }
+    .example{
+      color:#475569;
+      font-size:15px;
+    }
+    .exercise{
+      counter-reset:item;
+    }
+    .q{
+      padding:14px 0;
+      border-bottom:1px solid #edf0f4;
+    }
+    .q:last-child{border-bottom:none}
+    .q::before{
+      counter-increment:item;
+      content:counter(item) ". ";
+      font-weight:700;
+      color:#4f46e5;
+    }
+    select,input[type="text"]{
+      padding:8px 10px;
+      border:1px solid #bcc6d4;
+      border-radius:8px;
+      font-size:16px;
+      min-width:180px;
+      background:#fff;
+    }
+    input[type="text"]{width:min(420px,100%)}
+    .options label{
+      display:block;
+      margin:7px 0;
+      cursor:pointer;
+    }
+    .word-bank{
+      display:flex;
+      flex-wrap:wrap;
+      gap:9px;
+      margin:12px 0 18px;
+    }
+    .chip{
+      background:#eef2ff;
+      color:#3730a3;
+      border:1px solid #c7d2fe;
+      border-radius:999px;
+      padding:7px 12px;
+      font-weight:600;
+    }
+    button{
+      background:var(--accent);
+      color:white;
+      border:none;
+      border-radius:10px;
+      padding:11px 18px;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+      margin-top:16px;
+    }
+    button:hover{filter:brightness(.95)}
+    .result{
+      margin-top:14px;
+      font-weight:700;
+      min-height:24px;
+    }
+    .correct{
+      border-color:#22c55e !important;
+      background:#f0fdf4 !important;
+    }
+    .incorrect{
+      border-color:#ef4444 !important;
+      background:#fef2f2 !important;
+    }
+    .answer{
+      display:none;
+      margin-top:7px;
+      color:#0f766e;
+      font-weight:600;
+    }
+    .matching-table{
+      width:100%;
+      border-collapse:collapse;
+    }
+    .matching-table th,.matching-table td{
+      border:1px solid var(--border);
+      padding:10px;
+      text-align:left;
+      vertical-align:top;
+    }
+    .matching-table th{background:#f1f5f9}
+    .small{font-size:14px;color:var(--muted)}
+    footer{
+      text-align:center;
+      color:var(--muted);
+      margin-top:28px;
+    }
+    @media(max-width:650px){
+      .card{padding:17px}
+      .matching-table{font-size:14px}
+      select{min-width:150px}
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Vocabulary Practice</h1>
+    <p class="subtitle">Повторення та вправи для запам’ятовування нової лексики</p>
+  </header>
+
+  <section class="card">
+    <h2>1. Повторіть слова</h2>
+    <div class="note">Прочитайте слово, переклад і приклад. Потім переходьте до вправ.</div>
+    <div class="vocab-grid">
+      <div class="vocab-item"><div class="word">pleasant</div><div class="translation">приємний</div><div class="example">The office is pleasant and quiet.</div></div>
+      <div class="vocab-item"><div class="word">be pleased with</div><div class="translation">бути задоволеним чимось</div><div class="example">Our manager is pleased with the results.</div></div>
+      <div class="vocab-item"><div class="word">leave school</div><div class="translation">закінчити школу</div><div class="example">She left school in 2019.</div></div>
+      <div class="vocab-item"><div class="word">make a mistake</div><div class="translation">зробити помилку</div><div class="example">I made a mistake in the report yesterday.</div></div>
+      <div class="vocab-item"><div class="word">do a job</div><div class="translation">виконувати роботу</div><div class="example">He does his job very well.</div></div>
+      <div class="vocab-item"><div class="word">make a profit</div><div class="translation">отримувати прибуток</div><div class="example">The company made a profit last year.</div></div>
+      <div class="vocab-item"><div class="word">make a loss</div><div class="translation">зазнати збитків</div><div class="example">The business made a loss in 2024.</div></div>
+      <div class="vocab-item"><div class="word">make a promise</div><div class="translation">дати обіцянку</div><div class="example">She made a promise to help her team.</div></div>
+      <div class="vocab-item"><div class="word">work on</div><div class="translation">працювати над чимось</div><div class="example">We work on a new project every week.</div></div>
+      <div class="vocab-item"><div class="word">conversation</div><div class="translation">розмова</div><div class="example">We had an interesting conversation after the meeting.</div></div>
+      <div class="vocab-item"><div class="word">enjoy</div><div class="translation">любити; отримувати задоволення від</div><div class="example">I enjoy learning English.</div></div>
+      <div class="vocab-item"><div class="word">keep on</div><div class="translation">продовжувати</div><div class="example">Please keep on studying every day.</div></div>
+      <div class="vocab-item"><div class="word">finish</div><div class="translation">закінчувати</div><div class="example">She finished writing the report yesterday.</div></div>
+      <div class="vocab-item"><div class="word">go on</div><div class="translation">продовжувати</div><div class="example">He went on talking after the presentation.</div></div>
+      <div class="vocab-item"><div class="word">give up</div><div class="translation">кидати; припиняти; відмовлятися</div><div class="example">He gave up smoking five years ago.</div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2. Оберіть правильний переклад</h2>
+    <div class="exercise" id="ex1">
+      <div class="q">pleasant —
+        <select data-answer="приємний">
+          <option value="">Оберіть</option><option>прибутковий</option><option>приємний</option><option>зайнятий</option>
+        </select>
+      </div>
+      <div class="q">be pleased with —
+        <select data-answer="бути задоволеним чимось">
+          <option value="">Оберіть</option><option>бути задоволеним чимось</option><option>бути готовим</option><option>бути зайнятим</option>
+        </select>
+      </div>
+      <div class="q">leave school —
+        <select data-answer="закінчити школу">
+          <option value="">Оберіть</option><option>піти до школи</option><option>закінчити школу</option><option>пропустити урок</option>
+        </select>
+      </div>
+      <div class="q">make a mistake —
+        <select data-answer="зробити помилку">
+          <option value="">Оберіть</option><option>зробити помилку</option><option>виправити помилку</option><option>перевірити звіт</option>
+        </select>
+      </div>
+      <div class="q">do a job —
+        <select data-answer="виконувати роботу">
+          <option value="">Оберіть</option><option>шукати роботу</option><option>виконувати роботу</option><option>залишити роботу</option>
+        </select>
+      </div>
+      <div class="q">make a profit —
+        <select data-answer="отримувати прибуток">
+          <option value="">Оберіть</option><option>витрачати гроші</option><option>отримувати прибуток</option><option>зазнати збитків</option>
+        </select>
+      </div>
+      <div class="q">make a loss —
+        <select data-answer="зазнати збитків">
+          <option value="">Оберіть</option><option>зазнати збитків</option><option>дати обіцянку</option><option>укласти угоду</option>
+        </select>
+      </div>
+      <div class="q">make a promise —
+        <select data-answer="дати обіцянку">
+          <option value="">Оберіть</option><option>прийняти рішення</option><option>дати обіцянку</option><option>провести розмову</option>
+        </select>
+      </div>
+      <div class="q">work on —
+        <select data-answer="працювати над чимось">
+          <option value="">Оберіть</option><option>працювати над чимось</option><option>працювати замість когось</option><option>працювати вдома</option>
+        </select>
+      </div>
+      <div class="q">conversation —
+        <select data-answer="розмова">
+          <option value="">Оберіть</option><option>зустріч</option><option>розмова</option><option>презентація</option>
+        </select>
+      </div>
+      <div class="q">enjoy —
+        <select data-answer="любити; отримувати задоволення від">
+          <option value="">Оберіть</option><option>уникати</option><option>любити; отримувати задоволення від</option><option>планувати</option>
+        </select>
+      </div>
+      <div class="q">keep on —
+        <select data-answer="продовжувати">
+          <option value="">Оберіть</option><option>починати</option><option>продовжувати</option><option>зупиняти</option>
+        </select>
+      </div>
+      <div class="q">finish —
+        <select data-answer="закінчувати">
+          <option value="">Оберіть</option><option>закінчувати</option><option>повторювати</option><option>відкладати</option>
+        </select>
+      </div>
+      <div class="q">go on —
+        <select data-answer="продовжувати">
+          <option value="">Оберіть</option><option>повертатися</option><option>продовжувати</option><option>відмовлятися</option>
+        </select>
+      </div>
+      <div class="q">give up —
+        <select data-answer="кидати; припиняти; відмовлятися">
+          <option value="">Оберіть</option><option>кидати; припиняти; відмовлятися</option><option>погоджуватися</option><option>запам’ятовувати</option>
+        </select>
+      </div>
+    </div>
+    <button onclick="checkSelects('ex1','res1')">Перевірити</button>
+    <div class="result" id="res1"></div>
+  </section>
+
+  <section class="card">
+    <h2>3. Вставте правильне слово або вираз</h2>
+    <div class="word-bank">
+      <span class="chip">pleasant</span><span class="chip">be pleased with</span><span class="chip">leave school</span>
+      <span class="chip">make a mistake</span><span class="chip">do a job</span><span class="chip">make a profit</span>
+      <span class="chip">make a loss</span><span class="chip">make a promise</span><span class="chip">work on</span>
+      <span class="chip">conversation</span><span class="chip">enjoy</span><span class="chip">keep on</span>
+      <span class="chip">finish</span><span class="chip">go on</span><span class="chip">give up</span>
+    </div>
+    <div class="exercise" id="ex2">
+      <div class="q">The new café is quiet and very <input type="text" data-answer="pleasant">.</div>
+      <div class="q">Our client will <input type="text" data-answer="be pleased with"> the final result.</div>
+      <div class="q">Many students <input type="text" data-answer="leave school"> at the age of seventeen or eighteen.</div>
+      <div class="q">It is normal to <input type="text" data-answer="make a mistake"> when you learn something new.</div>
+      <div class="q">She always tries to <input type="text" data-answer="do a job"> carefully and on time.</div>
+      <div class="q">The company hopes to <input type="text" data-answer="make a profit"> this year.</div>
+      <div class="q">A business can <input type="text" data-answer="make a loss"> if its costs are too high.</div>
+      <div class="q">Never <input type="text" data-answer="make a promise"> if you cannot keep it.</div>
+      <div class="q">We need to <input type="text" data-answer="work on"> the new marketing plan.</div>
+      <div class="q">I had a useful <input type="text" data-answer="conversation"> with my manager.</div>
+      <div class="q">I really <input type="text" data-answer="enjoy"> working with this team.</div>
+      <div class="q">Please <input type="text" data-answer="keep on"> practising these words.</div>
+      <div class="q">We need to <input type="text" data-answer="finish"> the report before Friday.</div>
+      <div class="q">After a short break, the speaker decided to <input type="text" data-answer="go on"> talking.</div>
+      <div class="q">Do not <input type="text" data-answer="give up"> after one difficult exercise.</div>
+    </div>
+    <button onclick="checkInputs('ex2','res2')">Перевірити</button>
+    <div class="result" id="res2"></div>
+  </section>
+
+  <section class="card">
+    <h2>4. Оберіть правильний варіант</h2>
+    <div class="exercise" id="ex3">
+      <div class="q options">The company ___ a profit last year.
+        <label><input type="radio" name="q1" value="did"> did</label>
+        <label><input type="radio" name="q1" value="made" data-correct="true"> made</label>
+        <label><input type="radio" name="q1" value="worked"> worked</label>
+      </div>
+      <div class="q options">She is pleased ___ the progress.
+        <label><input type="radio" name="q2" value="of"> of</label>
+        <label><input type="radio" name="q2" value="with" data-correct="true"> with</label>
+        <label><input type="radio" name="q2" value="at"> at</label>
+      </div>
+      <div class="q options">We are working ___ a new project.
+        <label><input type="radio" name="q3" value="at"> at</label>
+        <label><input type="radio" name="q3" value="for"> for</label>
+        <label><input type="radio" name="q3" value="on" data-correct="true"> on</label>
+      </div>
+      <div class="q options">He enjoys ___ with international clients.
+        <label><input type="radio" name="q4" value="work"> work</label>
+        <label><input type="radio" name="q4" value="working" data-correct="true"> working</label>
+        <label><input type="radio" name="q4" value="to working"> to working</label>
+      </div>
+      <div class="q options">Please keep on ___.
+        <label><input type="radio" name="q5" value="study"> study</label>
+        <label><input type="radio" name="q5" value="studying" data-correct="true"> studying</label>
+        <label><input type="radio" name="q5" value="studied"> studied</label>
+      </div>
+      <div class="q options">She finished ___ the email.
+        <label><input type="radio" name="q6" value="write"> write</label>
+        <label><input type="radio" name="q6" value="writing" data-correct="true"> writing</label>
+        <label><input type="radio" name="q6" value="wrote"> wrote</label>
+      </div>
+      <div class="q options">He went on ___ after the meeting ended.
+        <label><input type="radio" name="q7" value="talking" data-correct="true"> talking</label>
+        <label><input type="radio" name="q7" value="talk"> talk</label>
+        <label><input type="radio" name="q7" value="talked"> talked</label>
+      </div>
+      <div class="q options">She gave up ___ two years ago.
+        <label><input type="radio" name="q8" value="smoke"> smoke</label>
+        <label><input type="radio" name="q8" value="smoking" data-correct="true"> smoking</label>
+        <label><input type="radio" name="q8" value="to smoked"> to smoked</label>
+      </div>
+      <div class="q options">The business ___ a loss in 2024.
+        <label><input type="radio" name="q9" value="made" data-correct="true"> made</label>
+        <label><input type="radio" name="q9" value="did"> did</label>
+        <label><input type="radio" name="q9" value="had been"> had been</label>
+      </div>
+      <div class="q options">I had an interesting ___ with the new colleague.
+        <label><input type="radio" name="q10" value="conversation" data-correct="true"> conversation</label>
+        <label><input type="radio" name="q10" value="profit"> profit</label>
+        <label><input type="radio" name="q10" value="promise"> promise</label>
+      </div>
+    </div>
+    <button onclick="checkRadios('ex3','res3')">Перевірити</button>
+    <div class="result" id="res3"></div>
+  </section>
+
+  <section class="card">
+    <h2>5. Перекладіть українські фрази англійською</h2>
+    <p class="small">Пишіть тільки потрібне слово або вираз.</p>
+    <div class="exercise" id="ex4">
+      <div class="q">приємний — <input type="text" data-answer="pleasant"></div>
+      <div class="q">бути задоволеним чимось — <input type="text" data-answer="be pleased with"></div>
+      <div class="q">закінчити школу — <input type="text" data-answer="leave school"></div>
+      <div class="q">зробити помилку — <input type="text" data-answer="make a mistake"></div>
+      <div class="q">виконувати роботу — <input type="text" data-answer="do a job"></div>
+      <div class="q">отримувати прибуток — <input type="text" data-answer="make a profit"></div>
+      <div class="q">зазнати збитків — <input type="text" data-answer="make a loss"></div>
+      <div class="q">дати обіцянку — <input type="text" data-answer="make a promise"></div>
+      <div class="q">працювати над чимось — <input type="text" data-answer="work on"></div>
+      <div class="q">розмова — <input type="text" data-answer="conversation"></div>
+      <div class="q">любити; отримувати задоволення від — <input type="text" data-answer="enjoy"></div>
+      <div class="q">продовжувати — <input type="text" data-answer="keep on|go on"></div>
+      <div class="q">закінчувати — <input type="text" data-answer="finish"></div>
+      <div class="q">кидати; припиняти; відмовлятися — <input type="text" data-answer="give up"></div>
+    </div>
+    <button onclick="checkInputs('ex4','res4')">Перевірити</button>
+    <div class="result" id="res4"></div>
+  </section>
+
+  <section class="card">
+    <h2>6. Знайдіть і виправте помилку</h2>
+    <div class="note">У кожному реченні є одна помилка у використанні нового слова або виразу.</div>
+    <div class="exercise" id="ex5">
+      <div class="q">The company did a profit last year.<br><input type="text" data-answer="The company made a profit last year."></div>
+      <div class="q">Our manager is pleased of the results.<br><input type="text" data-answer="Our manager is pleased with the results."></div>
+      <div class="q">We are working in a new project.<br><input type="text" data-answer="We are working on a new project."></div>
+      <div class="q">She enjoys to learn English.<br><input type="text" data-answer="She enjoys learning English."></div>
+      <div class="q">Please keep on to study every day.<br><input type="text" data-answer="Please keep on studying every day."></div>
+      <div class="q">He finished to write the report.<br><input type="text" data-answer="He finished writing the report."></div>
+      <div class="q">The speaker went on to talking for another hour.<br><input type="text" data-answer="The speaker went on talking for another hour."></div>
+      <div class="q">She gave up to smoke last year.<br><input type="text" data-answer="She gave up smoking last year."></div>
+      <div class="q">The business did a loss in 2024.<br><input type="text" data-answer="The business made a loss in 2024."></div>
+      <div class="q">I made an interesting conversation with my colleague.<br><input type="text" data-answer="I had an interesting conversation with my colleague."></div>
+    </div>
+    <button onclick="checkInputs('ex5','res5')">Перевірити</button>
+    <div class="result" id="res5"></div>
+  </section>
+
+  <section class="card">
+    <h2>7. Складіть речення з поданих слів</h2>
+    <p class="small">Напишіть повне речення. Регістр і крапка в кінці не впливають на перевірку.</p>
+    <div class="exercise" id="ex6">
+      <div class="q">office / pleasant / is / the / very<br><input type="text" data-answer="The office is very pleasant."></div>
+      <div class="q">pleased / manager / results / with / the / is / our<br><input type="text" data-answer="Our manager is pleased with the results."></div>
+      <div class="q">school / she / 2019 / left / in<br><input type="text" data-answer="She left school in 2019."></div>
+      <div class="q">mistake / made / report / I / the / in / a<br><input type="text" data-answer="I made a mistake in the report."></div>
+      <div class="q">job / does / well / his / he / very<br><input type="text" data-answer="He does his job very well."></div>
+      <div class="q">profit / company / last / made / the / year / a<br><input type="text" data-answer="The company made a profit last year."></div>
+      <div class="q">promise / help / made / she / team / her / a / to<br><input type="text" data-answer="She made a promise to help her team."></div>
+      <div class="q">project / work / every / on / a / week / we / new<br><input type="text" data-answer="We work on a new project every week."></div>
+      <div class="q">conversation / after / had / meeting / we / the / a<br><input type="text" data-answer="We had a conversation after the meeting."></div>
+      <div class="q">English / learning / enjoy / I<br><input type="text" data-answer="I enjoy learning English."></div>
+    </div>
+    <button onclick="checkInputs('ex6','res6')">Перевірити</button>
+    <div class="result" id="res6"></div>
+  </section>
+
+  <section class="card">
+    <h2>8. Міні-тест: оберіть найкраще слово</h2>
+    <div class="exercise" id="ex7">
+      <div class="q">The team did not stop after the first problem. They decided to ___ working.
+        <select data-answer="keep on"><option value="">Оберіть</option><option>give up</option><option>keep on</option><option>leave school</option></select>
+      </div>
+      <div class="q">The hotel room was clean, quiet and very ___.
+        <select data-answer="pleasant"><option value="">Оберіть</option><option>pleasant</option><option>profitable</option><option>finished</option></select>
+      </div>
+      <div class="q">The company spent more money than it earned, so it ___.
+        <select data-answer="made a loss"><option value="">Оберіть</option><option>made a promise</option><option>made a loss</option><option>did a job</option></select>
+      </div>
+      <div class="q">My manager liked the report and was ___ my work.
+        <select data-answer="pleased with"><option value="">Оберіть</option><option>pleased with</option><option>working on</option><option>giving up</option></select>
+      </div>
+      <div class="q">We had a long ___ about the new project.
+        <select data-answer="conversation"><option value="">Оберіть</option><option>profit</option><option>conversation</option><option>mistake</option></select>
+      </div>
+      <div class="q">He decided to ___ eating fast food.
+        <select data-answer="give up"><option value="">Оберіть</option><option>go on</option><option>finish</option><option>give up</option></select>
+      </div>
+      <div class="q">She ___ reading the document before the meeting.
+        <select data-answer="finished"><option value="">Оберіть</option><option>finished</option><option>promised</option><option>pleased</option></select>
+      </div>
+      <div class="q">We are currently ___ an important client request.
+        <select data-answer="working on"><option value="">Оберіть</option><option>working on</option><option>making a loss</option><option>leaving school</option></select>
+      </div>
+      <div class="q">I ___ speaking English with international colleagues.
+        <select data-answer="enjoy"><option value="">Оберіть</option><option>enjoy</option><option>finish</option><option>promise</option></select>
+      </div>
+      <div class="q">He paused for a moment and then ___ explaining the problem.
+        <select data-answer="went on"><option value="">Оберіть</option><option>gave up</option><option>went on</option><option>made a loss</option></select>
+      </div>
+    </div>
+    <button onclick="checkSelects('ex7','res7')">Перевірити</button>
+    <div class="result" id="res7"></div>
+  </section>
+
+  <footer>Keep on learning — and do not give up!</footer>
+</div>
+
+<script>
+function normalize(s){
+  return s.trim().toLowerCase().replace(/[.!?]+$/,'').replace(/\s+/g,' ');
+}
+function showResult(id,score,total){
+  const el=document.getElementById(id);
+  el.textContent=`Результат: ${score} з ${total}`;
+  el.style.color=score===total?'#15803d':'#3730a3';
+}
+function checkSelects(exId,resId){
+  const items=document.querySelectorAll(`#${exId} select`);
+  let score=0;
+  items.forEach(el=>{
+    el.classList.remove('correct','incorrect');
+    if(normalize(el.value)===normalize(el.dataset.answer)){
+      score++; el.classList.add('correct');
+    } else el.classList.add('incorrect');
+  });
+  showResult(resId,score,items.length);
+}
+function checkInputs(exId,resId){
+  const items=document.querySelectorAll(`#${exId} input[type="text"]`);
+  let score=0;
+  items.forEach(el=>{
+    el.classList.remove('correct','incorrect');
+    const answers=el.dataset.answer.split('|').map(normalize);
+    if(answers.includes(normalize(el.value))){
+      score++; el.classList.add('correct');
+    } else el.classList.add('incorrect');
+  });
+  showResult(resId,score,items.length);
+}
+function checkRadios(exId,resId){
+  const groups=[...new Set([...document.querySelectorAll(`#${exId} input[type="radio"]`)].map(x=>x.name))];
+  let score=0;
+  groups.forEach(name=>{
+    const radios=document.querySelectorAll(`input[name="${name}"]`);
+    radios.forEach(r=>r.parentElement.classList.remove('correct','incorrect'));
+    const selected=document.querySelector(`input[name="${name}"]:checked`);
+    if(selected && selected.dataset.correct==="true"){
+      score++;
+      selected.parentElement.classList.add('correct');
+    }else if(selected){
+      selected.parentElement.classList.add('incorrect');
+    }
+  });
+  showResult(resId,score,groups.length);
+}
+</script>
+</body>
+</html>
