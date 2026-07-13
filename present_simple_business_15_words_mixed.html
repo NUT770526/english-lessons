@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Present Simple + Business Vocabulary</title>
+<style>
+:root{
+  --navy:#16345c; --blue:#2f6598; --light:#eef4f8; --white:#fff;
+  --text:#24303f; --muted:#667085; --ok:#1f7a45; --bad:#b42318; --gold:#c89b3c;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#edf3f7,#dce7ef);color:var(--text)}
+header{background:linear-gradient(135deg,#102b4e,#2e5f8d);color:white;text-align:center;padding:40px 18px}
+header h1{margin:0 0 8px;font-size:clamp(30px,5vw,50px)}
+header p{margin:0;font-size:18px;opacity:.92}
+main{max-width:1100px;margin:auto;padding:24px 16px 60px}
+.note{background:#fff8e6;border-left:6px solid var(--gold);padding:16px;border-radius:12px;margin-bottom:22px}
+.exercise{background:#fff;border-radius:18px;padding:22px;margin:20px 0;box-shadow:0 10px 28px rgba(22,52,92,.08)}
+.exercise h2{margin-top:0;color:var(--navy)}
+.instruction{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px}
+.item{background:var(--light);padding:14px;border-radius:12px}
+select,input{width:100%;padding:10px 12px;margin-top:8px;border:1px solid #bcc9d6;border-radius:8px;font-size:16px;background:white}
+button{border:0;border-radius:10px;padding:10px 16px;margin:12px 8px 0 0;background:var(--blue);color:white;font-size:15px;cursor:pointer}
+button.secondary{background:#7d8895}
+.feedback{font-weight:700;margin-top:12px}
+.correct{outline:2px solid #48a36a;background:#eefaf2}
+.incorrect{outline:2px solid #dc6b60;background:#fff1ef}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:14px}
+.chip{background:#e7eef7;padding:8px 12px;border-radius:999px;color:var(--navy);font-weight:700}
+.rule{display:inline-block;padding:7px 10px;border-radius:8px;font-weight:700;margin:4px}
+.be{background:#e5efff;color:#174a84}
+.action{background:#eaf8ee;color:#1f6f3d}
+.neg{background:#fff0ef;color:#a9342c}
+.sentence{background:#f8fafc;border-left:5px solid var(--blue);padding:14px;border-radius:10px;margin:10px 0}
+.audio{width:38px;height:38px;border-radius:50%;padding:0;margin:0 0 0 8px}
+.small{font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Present Simple + Business Vocabulary</h1>
+  <p>Ствердження і заперечення • to be • don’t / doesn’t</p>
+</header>
+
+<main>
+  <div class="note">
+    <b>Пам’ятай:</b>
+    <span class="rule be">am / is / are</span>
+    <span class="rule neg">am not / isn’t / aren’t</span>
+    <span class="rule action">звичайна дія</span>
+    <span class="rule neg">don’t / doesn’t + дія без -s</span>
+  </div>
+
+  <section class="exercise" id="ex1">
+    <h2>1. Спочатку визнач групу</h2>
+    <p class="instruction">Обери: це <b>to be</b> чи <b>звичайна дія</b>?</p>
+    <div class="grid">
+      <div class="item" data-answer="to be"><b>She is busy today.</b><select><option value="">— обери —</option><option>звичайна дія</option><option>to be</option></select></div>
+      <div class="item" data-answer="звичайна дія"><b>They discuss priorities.</b><select><option value="">— обери —</option><option>to be</option><option>звичайна дія</option></select></div>
+      <div class="item" data-answer="to be"><b>We are not late.</b><select><option value="">— обери —</option><option>звичайна дія</option><option>to be</option></select></div>
+      <div class="item" data-answer="звичайна дія"><b>He updates the report.</b><select><option value="">— обери —</option><option>звичайна дія</option><option>to be</option></select></div>
+      <div class="item" data-answer="to be"><b>The deadline is important.</b><select><option value="">— обери —</option><option>to be</option><option>звичайна дія</option></select></div>
+      <div class="item" data-answer="звичайна дія"><b>I check my email.</b><select><option value="">— обери —</option><option>to be</option><option>звичайна дія</option></select></div>
+    </div>
+    <button onclick="checkSelects('ex1')">Перевірити</button><button class="secondary" onclick="resetSection('ex1')">Скинути</button>
+    <div class="feedback"></div>
+  </section>
+
+  <section class="exercise" id="ex2">
+    <h2>2. Обери правильну форму</h2>
+    <p class="instruction">Тут перемішані <b>am/is/are</b>, <b>don’t/doesn’t</b> і звичайні дієслова.</p>
+    <div class="grid">
+      <div class="item" data-answer="am">I ___ ready for the meeting.<select><option value="">— обери —</option><option>do not</option><option>am</option><option>is</option></select></div>
+      <div class="item" data-answer="doesn't">She ___ attend every meeting.<select><option value="">— обери —</option><option>isn't</option><option>don't</option><option>doesn't</option></select></div>
+      <div class="item" data-answer="are">They ___ responsible for the update.<select><option value="">— обери —</option><option>are</option><option>do</option><option>is</option></select></div>
+      <div class="item" data-answer="checks">He ___ his email every morning.<select><option value="">— обери —</option><option>check</option><option>checks</option><option>doesn't checks</option></select></div>
+      <div class="item" data-answer="do not">We ___ discuss this issue today.<select><option value="">— обери —</option><option>are not</option><option>do not</option><option>does not</option></select></div>
+      <div class="item" data-answer="is not">The goal ___ clear.<select><option value="">— обери —</option><option>doesn't</option><option>is not</option><option>do not</option></select></div>
+    </div>
+    <button onclick="checkSelects('ex2')">Перевірити</button><button class="secondary" onclick="resetSection('ex2')">Скинути</button>
+    <div class="feedback"></div>
+  </section>
+
+  <section class="exercise" id="ex3">
+    <h2>3. Зроби заперечення</h2>
+    <p class="instruction">Обери правильне заперечне речення.</p>
+    <div class="item" data-answer="I do not prepare for meetings."><b>I prepare for meetings.</b>
+      <select><option value="">— обери —</option><option>I am not prepare for meetings.</option><option>I do not prepare for meetings.</option><option>I does not prepare for meetings.</option></select>
+    </div>
+    <div class="item" data-answer="She is not busy."><b>She is busy.</b>
+      <select><option value="">— обери —</option><option>She does not busy.</option><option>She is not busy.</option><option>She not is busy.</option></select>
+    </div>
+    <div class="item" data-answer="He does not update the report."><b>He updates the report.</b>
+      <select><option value="">— обери —</option><option>He does not update the report.</option><option>He does not updates the report.</option><option>He is not update the report.</option></select>
+    </div>
+    <div class="item" data-answer="They are not ready."><b>They are ready.</b>
+      <select><option value="">— обери —</option><option>They do not ready.</option><option>They does not ready.</option><option>They are not ready.</option></select>
+    </div>
+    <button onclick="checkSelects('ex3')">Перевірити</button><button class="secondary" onclick="resetSection('ex3')">Скинути</button>
+    <div class="feedback"></div>
+  </section>
+
+  <section class="exercise" id="ex4">
+    <h2>4. Встав слово або фразу</h2>
+    <p class="instruction">Використай слова з рамки. Усі речення — Present Simple.</p>
+    <div class="chips">
+      <span class="chip">prepare for a meeting</span><span class="chip">check my email</span><span class="chip">update the report</span>
+      <span class="chip">meet a deadline</span><span class="chip">give feedback</span>
+    </div>
+    <div class="item" data-answer="check my email">I <input> every morning.</div>
+    <div class="item" data-answer="prepare for a meeting">I <input> every Monday.</div>
+    <div class="item" data-answer="update the report">We <input> every Friday.</div>
+    <div class="item" data-answer="meet a deadline">They always <input>.</div>
+    <div class="item" data-answer="give feedback">Managers often <input>.</div>
+    <button onclick="checkInputs('ex4')">Перевірити</button><button class="secondary" onclick="resetSection('ex4')">Скинути</button>
+    <div class="feedback"></div>
+  </section>
+
+  <section class="exercise" id="ex5">
+    <h2>5. Знайди правильне речення</h2>
+    <p class="instruction">У кожній парі тільки одне речення правильне.</p>
+    <div class="item" data-answer="She explains the process clearly.">
+      <select><option value="">— обери —</option><option>She explain the process clearly.</option><option>She explains the process clearly.</option></select>
+    </div>
+    <div class="item" data-answer="He doesn't discuss this issue.">
+      <select><option value="">— обери —</option><option>He doesn't discusses this issue.</option><option>He doesn't discuss this issue.</option></select>
+    </div>
+    <div class="item" data-answer="We are not late.">
+      <select><option value="">— обери —</option><option>We don't late.</option><option>We are not late.</option></select>
+    </div>
+    <div class="item" data-answer="The deadline is important.">
+      <select><option value="">— обери —</option><option>The deadline is important.</option><option>The deadline does important.</option></select>
+    </div>
+    <button onclick="checkSelects('ex5')">Перевірити</button><button class="secondary" onclick="resetSection('ex5')">Скинути</button>
+    <div class="feedback"></div>
+  </section>
+
+  <section class="exercise" id="ex6">
+    <h2>6. Переклади українське речення</h2>
+    <p class="instruction">Обери правильний англійський варіант.</p>
+    <div class="item" data-answer="My goal is clear."><b>Моя мета зрозуміла.</b>
+      <select><option value="">— обери —</option><option>My goal is clear.</option><option>My goal does clear.</option><option>My goal not clear.</option></select>
+    </div>
+    <div class="item" data-answer="We do not give feedback today."><b>Ми сьогодні не даємо зворотний зв’язок.</b>
+      <select><option value="">— обери —</option><option>We are not give feedback today.</option><option>We do not give feedback today.</option><option>We does not give feedback today.</option></select>
+    </div>
+    <div class="item" data-answer="He meets every deadline."><b>Він дотримується кожного кінцевого терміну.</b>
+      <select><option value="">— обери —</option><option>He meet every deadline.</option><option>He meets every deadline.</option><option>He is meet every deadline.</option></select>
+    </div>
+    <div class="item" data-answer="They are not ready."><b>Вони не готові.</b>
+      <select><option value="">— обери —</option><option>They do not ready.</option><option>They are not ready.</option><option>They doesn't ready.</option></select>
+    </div>
+    <button onclick="checkSelects('ex6')">Перевірити</button><button class="secondary" onclick="resetSection('ex6')">Скинути</button>
+    <div class="feedback"></div>
+  </section>
+
+  <section class="exercise" id="ex7">
+    <h2>7. Міні-історія: офісний день</h2>
+    <p class="instruction">Встав правильні форми. Тут усе перемішано.</p>
+    <div class="sentence">
+      I <input data-answer="am" style="width:120px"> ready for work.<br>
+      I <input data-answer="check" style="width:140px"> my email every morning.<br>
+      My manager <input data-answer="is" style="width:120px"> busy today.<br>
+      She <input data-answer="doesn't" style="width:140px"> attend every meeting.<br>
+      We <input data-answer="discuss" style="width:150px"> priorities every Monday.<br>
+      He <input data-answer="updates" style="width:150px"> the report every Friday.<br>
+      Our goal <input data-answer="is not" style="width:140px"> difficult.<br>
+      We <input data-answer="do not" style="width:140px"> miss deadlines.
+    </div>
+    <button onclick="checkStory()">Перевірити</button><button class="secondary" onclick="resetStory()">Скинути</button>
+    <div class="feedback"></div>
+  </section>
+
+  <section class="exercise">
+    <h2>8. Прослухай ключові слова</h2>
+    <p class="instruction">Натисни й повтори.</p>
+    <div class="grid">
+      <div class="item"><b>prepare</b><button class="audio" onclick="speak('prepare')">🔊</button></div>
+      <div class="item"><b>check</b><button class="audio" onclick="speak('check')">🔊</button></div>
+      <div class="item"><b>update</b><button class="audio" onclick="speak('update')">🔊</button></div>
+      <div class="item"><b>attend</b><button class="audio" onclick="speak('attend')">🔊</button></div>
+      <div class="item"><b>discuss</b><button class="audio" onclick="speak('discuss')">🔊</button></div>
+      <div class="item"><b>explain</b><button class="audio" onclick="speak('explain')">🔊</button></div>
+      <div class="item"><b>deadline</b><button class="audio" onclick="speak('deadline')">🔊</button></div>
+      <div class="item"><b>feedback</b><button class="audio" onclick="speak('feedback')">🔊</button></div>
+      <div class="item"><b>priority</b><button class="audio" onclick="speak('priority')">🔊</button></div>
+      <div class="item"><b>goal</b><button class="audio" onclick="speak('goal')">🔊</button></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+function speak(text){
+  if(!('speechSynthesis' in window)){alert('Ваш браузер не підтримує озвучення.');return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.82;
+  const voices=speechSynthesis.getVoices();
+  const v=voices.find(x=>x.lang==='en-US')||voices.find(x=>x.lang.startsWith('en'));
+  if(v)u.voice=v;
+  speechSynthesis.speak(u);
+}
+function showFeedback(sec,score,total){
+  const f=sec.querySelector('.feedback');
+  f.textContent=`Результат: ${score} / ${total}`;
+  f.style.color=score===total?'var(--ok)':'var(--bad)';
+}
+function checkSelects(id){
+  const sec=document.getElementById(id),items=[...sec.querySelectorAll('.item')];let score=0;
+  items.forEach(item=>{
+    const x=item.querySelector('select');
+    item.classList.remove('correct','incorrect');
+    if(x.value===item.dataset.answer){item.classList.add('correct');score++}
+    else item.classList.add('incorrect');
+  });
+  showFeedback(sec,score,items.length);
+}
+function checkInputs(id){
+  const sec=document.getElementById(id),items=[...sec.querySelectorAll('.item')];let score=0;
+  items.forEach(item=>{
+    const x=item.querySelector('input');
+    item.classList.remove('correct','incorrect');
+    if(x.value.trim().toLowerCase()===item.dataset.answer.toLowerCase()){item.classList.add('correct');score++}
+    else item.classList.add('incorrect');
+  });
+  showFeedback(sec,score,items.length);
+}
+function resetSection(id){
+  const sec=document.getElementById(id);
+  sec.querySelectorAll('select').forEach(x=>x.value='');
+  sec.querySelectorAll('input').forEach(x=>x.value='');
+  sec.querySelectorAll('.item').forEach(x=>x.classList.remove('correct','incorrect'));
+  const f=sec.querySelector('.feedback');if(f)f.textContent='';
+}
+function checkStory(){
+  const sec=document.getElementById('ex7'),inputs=[...sec.querySelectorAll('input')];let score=0;
+  inputs.forEach(x=>{
+    x.classList.remove('correct','incorrect');
+    if(x.value.trim().toLowerCase()===x.dataset.answer.toLowerCase()){x.classList.add('correct');score++}
+    else x.classList.add('incorrect');
+  });
+  showFeedback(sec,score,inputs.length);
+}
+function resetStory(){
+  const sec=document.getElementById('ex7');
+  sec.querySelectorAll('input').forEach(x=>{x.value='';x.classList.remove('correct','incorrect')});
+  sec.querySelector('.feedback').textContent='';
+}
+</script>
+</body>
+</html>
