@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerund Practice</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --navy:#172554;
+      --pink:#c53664;
+      --purple:#6d5ba8;
+      --teal:#2d8ca5;
+      --green:#7ba05b;
+      --border:#d9e1ec;
+      --text:#253047;
+      --muted:#667085;
+      --good:#15803d;
+      --bad:#b91c1c;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,#f1f5ff 0,#f8fafc 260px,#f4f7fb 100%);
+      line-height:1.55;
+    }
+    .container{
+      width:min(1080px,93%);
+      margin:auto;
+      padding:34px 0 55px;
+    }
+    header{
+      background:white;
+      border-radius:22px;
+      padding:28px;
+      box-shadow:0 10px 28px rgba(30,41,59,.09);
+      margin-bottom:24px;
+      border:1px solid var(--border);
+    }
+    h1{
+      margin:0 0 8px;
+      color:var(--navy);
+      font-size:clamp(32px,5vw,52px);
+    }
+    h1 span{color:var(--pink)}
+    .subtitle{
+      margin:0;
+      font-size:19px;
+      color:var(--muted);
+    }
+    .rule{
+      margin-top:20px;
+      background:#fdf2f7;
+      border-left:6px solid var(--pink);
+      padding:15px 18px;
+      border-radius:12px;
+    }
+    .rule strong{color:var(--pink)}
+    .verbs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:9px;
+      margin-top:14px;
+    }
+    .chip{
+      background:#eef2ff;
+      border:1px solid #c7d2fe;
+      color:#3730a3;
+      padding:7px 11px;
+      border-radius:999px;
+      font-weight:700;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:24px;
+      margin:22px 0;
+      box-shadow:0 8px 24px rgba(30,41,59,.07);
+    }
+    h2{
+      margin-top:0;
+      font-size:27px;
+      color:var(--navy);
+    }
+    .instruction{
+      background:#f1f5f9;
+      border-radius:11px;
+      padding:11px 14px;
+      margin-bottom:15px;
+    }
+    .exercise{counter-reset:item}
+    .q{
+      padding:14px 0;
+      border-bottom:1px solid #edf1f5;
+    }
+    .q:last-child{border-bottom:none}
+    .q::before{
+      counter-increment:item;
+      content:counter(item) ". ";
+      font-weight:800;
+      color:var(--purple);
+    }
+    input[type="text"],select{
+      padding:8px 10px;
+      border:1px solid #b8c3d3;
+      border-radius:8px;
+      font-size:16px;
+      background:#fff;
+      min-width:190px;
+    }
+    input[type="text"]{width:min(430px,100%)}
+    .options label{
+      display:block;
+      margin:7px 0 7px 24px;
+      cursor:pointer;
+    }
+    button{
+      border:none;
+      background:var(--navy);
+      color:white;
+      padding:11px 18px;
+      border-radius:10px;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+      margin-top:17px;
+    }
+    button:hover{filter:brightness(.95)}
+    .result{
+      min-height:25px;
+      margin-top:13px;
+      font-weight:800;
+    }
+    .correct{
+      border-color:#22c55e !important;
+      background:#f0fdf4 !important;
+    }
+    .incorrect{
+      border-color:#ef4444 !important;
+      background:#fef2f2 !important;
+    }
+    .word-bank{
+      display:flex;
+      flex-wrap:wrap;
+      gap:9px;
+      margin:12px 0 18px;
+    }
+    .word{
+      background:#ecfeff;
+      border:1px solid #a5f3fc;
+      color:#155e75;
+      border-radius:9px;
+      padding:7px 11px;
+      font-weight:700;
+    }
+    .tip{
+      background:#fffbeb;
+      border:1px solid #fde68a;
+      border-radius:12px;
+      padding:12px 14px;
+      margin-top:15px;
+    }
+    footer{
+      text-align:center;
+      color:var(--muted);
+      font-weight:700;
+      margin-top:26px;
+    }
+    @media(max-width:650px){
+      .card,header{padding:18px}
+      input[type="text"],select{min-width:150px}
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>GERUND: <span>verb + -ing</span></h1>
+  <p class="subtitle">Герундій після enjoy, finish, keep on, go on, give up</p>
+
+  <div class="rule">
+    <strong>Правило:</strong> після дієслів <b>enjoy, finish, keep on, go on, give up</b>
+    наступне дієслово вживається із закінченням <b>-ing</b>.<br>
+    <b>I enjoy learning English.</b> — Я люблю вивчати англійську.<br>
+    <b>She finished writing the report.</b> — Вона закінчила писати звіт.
+  </div>
+
+  <div class="verbs">
+    <span class="chip">enjoy + -ing</span>
+    <span class="chip">finish + -ing</span>
+    <span class="chip">keep on + -ing</span>
+    <span class="chip">go on + -ing</span>
+    <span class="chip">give up + -ing</span>
+  </div>
+</header>
+
+<section class="card">
+  <h2>1. Оберіть правильну форму дієслова</h2>
+  <div class="instruction">Після виділених дієслів оберіть форму з <b>-ing</b>.</div>
+  <div class="exercise" id="ex1">
+
+    <div class="q options">I enjoy ___ English after work.
+      <label><input type="radio" name="a1" value="learn"> learn</label>
+      <label><input type="radio" name="a1" value="learning" data-correct="true"> learning</label>
+      <label><input type="radio" name="a1" value="to learning"> to learning</label>
+    </div>
+
+    <div class="q options">She finished ___ the monthly report.
+      <label><input type="radio" name="a2" value="writing" data-correct="true"> writing</label>
+      <label><input type="radio" name="a2" value="write"> write</label>
+      <label><input type="radio" name="a2" value="to wrote"> to wrote</label>
+    </div>
+
+    <div class="q options">Please keep on ___ on the new project.
+      <label><input type="radio" name="a3" value="work"> work</label>
+      <label><input type="radio" name="a3" value="working" data-correct="true"> working</label>
+      <label><input type="radio" name="a3" value="to work"> to work</label>
+    </div>
+
+    <div class="q options">He went on ___ after the meeting ended.
+      <label><input type="radio" name="a4" value="talking" data-correct="true"> talking</label>
+      <label><input type="radio" name="a4" value="talk"> talk</label>
+      <label><input type="radio" name="a4" value="to talking"> to talking</label>
+    </div>
+
+    <div class="q options">The manager gave up ___ every small mistake.
+      <label><input type="radio" name="a5" value="check"> check</label>
+      <label><input type="radio" name="a5" value="checking" data-correct="true"> checking</label>
+      <label><input type="radio" name="a5" value="checked"> checked</label>
+    </div>
+
+    <div class="q options">We enjoy ___ pleasant conversations during lunch.
+      <label><input type="radio" name="a6" value="having" data-correct="true"> having</label>
+      <label><input type="radio" name="a6" value="have"> have</label>
+      <label><input type="radio" name="a6" value="to having"> to having</label>
+    </div>
+
+    <div class="q options">She finished ___ her job and went home.
+      <label><input type="radio" name="a7" value="doing" data-correct="true"> doing</label>
+      <label><input type="radio" name="a7" value="do"> do</label>
+      <label><input type="radio" name="a7" value="to do"> to do</label>
+    </div>
+
+    <div class="q options">The company keeps on ___ a profit every year.
+      <label><input type="radio" name="a8" value="make"> make</label>
+      <label><input type="radio" name="a8" value="making" data-correct="true"> making</label>
+      <label><input type="radio" name="a8" value="to making"> to making</label>
+    </div>
+
+    <div class="q options">He went on ___ promises that he could not keep.
+      <label><input type="radio" name="a9" value="making" data-correct="true"> making</label>
+      <label><input type="radio" name="a9" value="make"> make</label>
+      <label><input type="radio" name="a9" value="made"> made</label>
+    </div>
+
+    <div class="q options">Do not give up ___ after one mistake.
+      <label><input type="radio" name="a10" value="trying" data-correct="true"> trying</label>
+      <label><input type="radio" name="a10" value="try"> try</label>
+      <label><input type="radio" name="a10" value="to trying"> to trying</label>
+    </div>
+
+  </div>
+  <button onclick="checkRadios('ex1','res1')">Перевірити</button>
+  <div class="result" id="res1"></div>
+</section>
+
+<section class="card">
+  <h2>2. Поставте дієслово у форму герундія</h2>
+  <div class="instruction">Напишіть правильну форму дієслова із закінченням <b>-ing</b>.</div>
+
+  <div class="exercise" id="ex2">
+    <div class="q">I enjoy <input type="text" data-answer="learning"> (learn) new business vocabulary.</div>
+    <div class="q">She finished <input type="text" data-answer="writing"> (write) the email.</div>
+    <div class="q">We keep on <input type="text" data-answer="working"> (work) on the same project.</div>
+    <div class="q">He went on <input type="text" data-answer="talking"> (talk) after the presentation.</div>
+    <div class="q">They gave up <input type="text" data-answer="smoking"> (smoke) last year.</div>
+    <div class="q">My manager enjoys <input type="text" data-answer="having"> (have) conversations with clients.</div>
+    <div class="q">She finished <input type="text" data-answer="doing"> (do) her job before lunch.</div>
+    <div class="q">The company keeps on <input type="text" data-answer="making"> (make) a profit.</div>
+    <div class="q">He gave up <input type="text" data-answer="making"> (make) the same mistake.</div>
+    <div class="q">Please go on <input type="text" data-answer="reading"> (read) the report.</div>
+  </div>
+
+  <div class="tip">
+    <b>Зверніть увагу:</b> make → making, write → writing, have → having.
+  </div>
+
+  <button onclick="checkInputs('ex2','res2')">Перевірити</button>
+  <div class="result" id="res2"></div>
+</section>
+
+<section class="card">
+  <h2>3. Виправте помилку</h2>
+  <div class="instruction">У кожному реченні є помилка після enjoy, finish, keep on, go on або give up. Напишіть речення правильно.</div>
+
+  <div class="exercise" id="ex3">
+    <div class="q">I enjoy to learn English.<br>
+      <input type="text" data-answer="I enjoy learning English.">
+    </div>
+    <div class="q">She finished to write the report.<br>
+      <input type="text" data-answer="She finished writing the report.">
+    </div>
+    <div class="q">We keep on work on the project.<br>
+      <input type="text" data-answer="We keep on working on the project.">
+    </div>
+    <div class="q">He went on to talk after the meeting.<br>
+      <input type="text" data-answer="He went on talking after the meeting.">
+    </div>
+    <div class="q">They gave up to smoke last year.<br>
+      <input type="text" data-answer="They gave up smoking last year.">
+    </div>
+    <div class="q">She enjoys do her job carefully.<br>
+      <input type="text" data-answer="She enjoys doing her job carefully.">
+    </div>
+    <div class="q">He finished make the presentation.<br>
+      <input type="text" data-answer="He finished making the presentation.">
+    </div>
+    <div class="q">The company keeps on make a loss.<br>
+      <input type="text" data-answer="The company keeps on making a loss.">
+    </div>
+    <div class="q">Please go on read the document.<br>
+      <input type="text" data-answer="Please go on reading the document.">
+    </div>
+    <div class="q">Do not give up try after one mistake.<br>
+      <input type="text" data-answer="Do not give up trying after one mistake.">
+    </div>
+  </div>
+
+  <button onclick="checkInputs('ex3','res3')">Перевірити</button>
+  <div class="result" id="res3"></div>
+</section>
+
+<section class="card">
+  <h2>4. Перекладіть речення англійською</h2>
+  <div class="instruction">Використайте герундій та лексику з уроку.</div>
+
+  <div class="word-bank">
+    <span class="word">enjoy</span>
+    <span class="word">finish</span>
+    <span class="word">keep on</span>
+    <span class="word">go on</span>
+    <span class="word">give up</span>
+    <span class="word">work on</span>
+    <span class="word">make a mistake</span>
+    <span class="word">do a job</span>
+    <span class="word">conversation</span>
+  </div>
+
+  <div class="exercise" id="ex4">
+    <div class="q">Я люблю вивчати англійську.<br>
+      <input type="text" data-answer="I enjoy learning English.">
+    </div>
+    <div class="q">Вона закінчила писати звіт.<br>
+      <input type="text" data-answer="She finished writing the report.">
+    </div>
+    <div class="q">Ми продовжуємо працювати над новим проєктом.<br>
+      <input type="text" data-answer="We keep on working on a new project.|We keep on working on the new project.">
+    </div>
+    <div class="q">Він продовжив говорити після зустрічі.<br>
+      <input type="text" data-answer="He went on talking after the meeting.">
+    </div>
+    <div class="q">Вона кинула палити п’ять років тому.<br>
+      <input type="text" data-answer="She gave up smoking five years ago.">
+    </div>
+    <div class="q">Я люблю виконувати свою роботу добре.<br>
+      <input type="text" data-answer="I enjoy doing my job well.">
+    </div>
+    <div class="q">Він перестав робити ту саму помилку.<br>
+      <input type="text" data-answer="He gave up making the same mistake.">
+    </div>
+    <div class="q">Ми закінчили працювати над цим завданням.<br>
+      <input type="text" data-answer="We finished working on this task.|We finished working on the task.">
+    </div>
+    <div class="q">Вони продовжують отримувати прибуток.<br>
+      <input type="text" data-answer="They keep on making a profit.">
+    </div>
+    <div class="q">Мені подобається розмовляти з моїми колегами.<br>
+      <input type="text" data-answer="I enjoy talking to my colleagues.|I enjoy having conversations with my colleagues.">
+    </div>
+  </div>
+
+  <button onclick="checkInputs('ex4','res4')">Перевірити</button>
+  <div class="result" id="res4"></div>
+</section>
+
+<footer>Keep on practising and never give up learning!</footer>
+
+</div>
+
+<script>
+function normalize(text){
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/[’']/g,"'")
+    .replace(/[.!?]+$/,"")
+    .replace(/\s+/g," ");
+}
+
+function showResult(id, score, total){
+  const el = document.getElementById(id);
+  el.textContent = `Результат: ${score} з ${total}`;
+  el.style.color = score === total ? "#15803d" : "#3730a3";
+}
+
+function checkInputs(exId,resId){
+  const fields=document.querySelectorAll(`#${exId} input[type="text"]`);
+  let score=0;
+
+  fields.forEach(field=>{
+    field.classList.remove("correct","incorrect");
+    const answers=field.dataset.answer.split("|").map(normalize);
+    const userAnswer=normalize(field.value);
+
+    if(answers.includes(userAnswer)){
+      score++;
+      field.classList.add("correct");
+    }else{
+      field.classList.add("incorrect");
+    }
+  });
+
+  showResult(resId,score,fields.length);
+}
+
+function checkRadios(exId,resId){
+  const radios=[...document.querySelectorAll(`#${exId} input[type="radio"]`)];
+  const names=[...new Set(radios.map(r=>r.name))];
+  let score=0;
+
+  names.forEach(name=>{
+    const group=document.querySelectorAll(`input[name="${name}"]`);
+    group.forEach(r=>r.parentElement.classList.remove("correct","incorrect"));
+
+    const selected=document.querySelector(`input[name="${name}"]:checked`);
+
+    if(selected && selected.dataset.correct==="true"){
+      score++;
+      selected.parentElement.classList.add("correct");
+    }else if(selected){
+      selected.parentElement.classList.add("incorrect");
+    }
+  });
+
+  showResult(resId,score,names.length);
+}
+</script>
+
+</body>
+</html>
