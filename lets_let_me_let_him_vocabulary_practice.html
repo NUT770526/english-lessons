@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Let’s, Let me, Let him — Vocabulary Practice</title>
+  <style>
+    :root{
+      --bg:#fff7fb;
+      --card:#ffffff;
+      --pink:#ff6fa9;
+      --purple:#7b61c9;
+      --blue:#42b7c7;
+      --yellow:#ffd56a;
+      --green:#54c79b;
+      --text:#2f2a3a;
+      --soft:#f4eaff;
+      --border:#eadcf4;
+      --ok:#dff7ea;
+      --bad:#ffe4e4;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, #ffe5f0 0 90px, transparent 91px),
+        radial-gradient(circle at 90% 8%, #e4fbff 0 80px, transparent 81px),
+        var(--bg);
+      color:var(--text);
+      line-height:1.45;
+    }
+    header{
+      text-align:center;
+      padding:36px 18px 22px;
+    }
+    h1{
+      margin:0;
+      font-size:clamp(30px,5vw,52px);
+      color:var(--purple);
+    }
+    .subtitle{
+      margin:10px auto 0;
+      max-width:760px;
+      font-size:18px;
+    }
+    .rule-box{
+      max-width:900px;
+      margin:18px auto 0;
+      background:#fff;
+      border:3px dashed var(--pink);
+      border-radius:22px;
+      padding:18px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      box-shadow:0 8px 22px rgba(90,50,120,.08);
+    }
+    .rule{
+      border-radius:16px;
+      padding:14px;
+      background:var(--soft);
+    }
+    .rule strong{color:var(--purple); font-size:21px}
+    main{
+      max-width:980px;
+      margin:auto;
+      padding:10px 16px 50px;
+    }
+    section{
+      background:var(--card);
+      border:2px solid var(--border);
+      border-radius:24px;
+      padding:22px;
+      margin:20px 0;
+      box-shadow:0 10px 24px rgba(88,57,115,.08);
+    }
+    h2{
+      margin:0 0 8px;
+      color:var(--purple);
+      font-size:26px;
+    }
+    .instruction{
+      margin:0 0 16px;
+      color:#625a70;
+    }
+    .item{
+      padding:14px;
+      margin:10px 0;
+      border:2px solid #eee6f5;
+      border-radius:16px;
+      background:#fffdfd;
+    }
+    .options{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+    button, select, input{
+      font:inherit;
+    }
+    .choice, .word-btn{
+      border:2px solid var(--blue);
+      background:#effcff;
+      color:#215f68;
+      border-radius:14px;
+      padding:9px 14px;
+      cursor:pointer;
+      transition:.15s;
+    }
+    .choice:hover, .word-btn:hover{transform:translateY(-1px)}
+    .choice.selected{
+      background:var(--blue);
+      color:white;
+    }
+    select, input[type="text"]{
+      width:min(100%,420px);
+      border:2px solid #d9cceb;
+      border-radius:12px;
+      padding:9px 11px;
+      background:white;
+      margin:6px 0;
+    }
+    .sentence-parts{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      min-height:48px;
+      padding:10px;
+      border:2px dashed #d8c6ec;
+      border-radius:14px;
+      background:#fcf9ff;
+      margin:10px 0;
+    }
+    .chip{
+      background:#fff1a8;
+      border:2px solid #e5c853;
+      border-radius:12px;
+      padding:8px 12px;
+      cursor:pointer;
+    }
+    .answer-zone{
+      min-height:50px;
+      border:2px solid #cbe6e9;
+      border-radius:14px;
+      background:#f7feff;
+      padding:9px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+    }
+    .match-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .match-row{
+      display:contents;
+    }
+    .feedback{
+      margin-top:8px;
+      font-weight:bold;
+      min-height:24px;
+    }
+    .correct{background:var(--ok)!important; border-color:#61bc83!important}
+    .incorrect{background:var(--bad)!important; border-color:#e78282!important}
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+    }
+    .check{
+      border:0;
+      background:var(--pink);
+      color:white;
+      padding:11px 18px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+    .reset{
+      border:0;
+      background:var(--purple);
+      color:white;
+      padding:11px 18px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+    #final-score{
+      text-align:center;
+      font-size:24px;
+      font-weight:bold;
+      color:var(--purple);
+      margin-top:22px;
+    }
+    footer{
+      text-align:center;
+      padding:20px;
+      color:#786f83;
+    }
+    @media(max-width:700px){
+      .rule-box{grid-template-columns:1fr}
+      .match-grid{grid-template-columns:1fr}
+      .match-row{display:block}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Let’s • Let me • Let him</h1>
+  <p class="subtitle">Веселе тренування для запам’ятовування нових слів 🌟</p>
+
+  <div class="rule-box">
+    <div class="rule"><strong>Let’s + verb</strong><br>Давай / давайте щось зробимо.<br><em>Let’s play tennis!</em></div>
+    <div class="rule"><strong>Let me + verb</strong><br>Дозволь мені щось зробити.<br><em>Let me see it.</em></div>
+    <div class="rule"><strong>Let him + verb</strong><br>Дозволь йому щось зробити.<br><em>Let him type it.</em></div>
+  </div>
+</header>
+
+<main>
+  <section id="ex1">
+    <h2>1. Choose the best beginning</h2>
+    <p class="instruction">Обери: <b>Let’s</b>, <b>Let me</b> або <b>Let him</b>.</p>
+
+    <div class="item" data-answer="Let's">
+      <div>_____ buy a new tennis ball!</div>
+      <div class="options">
+        <button class="choice">Let's</button><button class="choice">Let me</button><button class="choice">Let him</button>
+      </div>
+    </div>
+
+    <div class="item" data-answer="Let me">
+      <div>_____ find your list.</div>
+      <div class="options">
+        <button class="choice">Let's</button><button class="choice">Let me</button><button class="choice">Let him</button>
+      </div>
+    </div>
+
+    <div class="item" data-answer="Let him">
+      <div>Tom can use the computer. _____ type it.</div>
+      <div class="options">
+        <button class="choice">Let's</button><button class="choice">Let me</button><button class="choice">Let him</button>
+      </div>
+    </div>
+
+    <div class="item" data-answer="Let's">
+      <div>_____ visit Grandma on Sunday.</div>
+      <div class="options">
+        <button class="choice">Let's</button><button class="choice">Let me</button><button class="choice">Let him</button>
+      </div>
+    </div>
+
+    <div class="item" data-answer="Let me">
+      <div>_____ see the bill, please.</div>
+      <div class="options">
+        <button class="choice">Let's</button><button class="choice">Let me</button><button class="choice">Let him</button>
+      </div>
+    </div>
+    <div class="feedback"></div>
+    <div class="actions"><button class="check" onclick="checkChoices('ex1')">Check</button></div>
+  </section>
+
+  <section id="ex2">
+    <h2>2. Complete the sentences</h2>
+    <p class="instruction">Обери правильне слово або вираз.</p>
+
+    <div class="item">
+      1. Please send the photo
+      <select data-answer="in time">
+        <option value="">— choose —</option>
+        <option>in time</option><option>till</option><option>busy</option>
+      </select>.
+    </div>
+    <div class="item">
+      2. I play outside
+      <select data-answer="till">
+        <option value="">— choose —</option>
+        <option>in</option><option>till</option><option>easy</option>
+      </select> six.
+    </div>
+    <div class="item">
+      3. My pencils are
+      <select data-answer="in">
+        <option value="">— choose —</option>
+        <option>in</option><option>buy</option><option>minute</option>
+      </select> my school bag.
+    </div>
+    <div class="item">
+      4. Wait a
+      <select data-answer="minute">
+        <option value="">— choose —</option>
+        <option>list</option><option>minute</option><option>tin</option>
+      </select>, please.
+    </div>
+    <div class="item">
+      5. This test is
+      <select data-answer="easy">
+        <option value="">— choose —</option>
+        <option>easy</option><option>busy</option><option>film</option>
+      </select>.
+    </div>
+    <div class="feedback"></div>
+    <div class="actions"><button class="check" onclick="checkSelects('ex2')">Check</button></div>
+  </section>
+
+  <section id="ex3">
+    <h2>3. Match the words</h2>
+    <p class="instruction">Добери правильний переклад.</p>
+
+    <div class="match-grid">
+      <div class="item">find</div>
+      <div class="item"><select data-answer="знайти"><option value="">— choose —</option><option>купити</option><option>знайти</option><option>відвідати</option></select></div>
+
+      <div class="item">buy</div>
+      <div class="item"><select data-answer="купити"><option value="">— choose —</option><option>рахунок</option><option>купити</option><option>друкувати</option></select></div>
+
+      <div class="item">type</div>
+      <div class="item"><select data-answer="друкувати"><option value="">— choose —</option><option>дивитися</option><option>друкувати</option><option>надсилати</option></select></div>
+
+      <div class="item">visit</div>
+      <div class="item"><select data-answer="відвідати"><option value="">— choose —</option><option>відвідати</option><option>знайти</option><option>грати</option></select></div>
+
+      <div class="item">bill</div>
+      <div class="item"><select data-answer="рахунок"><option value="">— choose —</option><option>список</option><option>рахунок</option><option>хвилина</option></select></div>
+    </div>
+    <div class="feedback"></div>
+    <div class="actions"><button class="check" onclick="checkSelects('ex3')">Check</button></div>
+  </section>
+
+  <section id="ex4">
+    <h2>4. Put the words in order</h2>
+    <p class="instruction">Натискай на слова, щоб скласти речення. Щоб почати знову, натисни Reset.</p>
+
+    <div class="item order-task" data-answer="Let's film it.">
+      <div class="sentence-parts">
+        <button class="chip">it.</button><button class="chip">Let's</button><button class="chip">film</button>
+      </div>
+      <div class="answer-zone"></div>
+    </div>
+
+    <div class="item order-task" data-answer="Let me see the list.">
+      <div class="sentence-parts">
+        <button class="chip">the</button><button class="chip">see</button><button class="chip">Let</button><button class="chip">list.</button><button class="chip">me</button>
+      </div>
+      <div class="answer-zone"></div>
+    </div>
+
+    <div class="item order-task" data-answer="Let him buy a tin.">
+      <div class="sentence-parts">
+        <button class="chip">buy</button><button class="chip">him</button><button class="chip">a</button><button class="chip">Let</button><button class="chip">tin.</button>
+      </div>
+      <div class="answer-zone"></div>
+    </div>
+
+    <div class="item order-task" data-answer="Let's be in time.">
+      <div class="sentence-parts">
+        <button class="chip">time.</button><button class="chip">be</button><button class="chip">Let's</button><button class="chip">in</button>
+      </div>
+      <div class="answer-zone"></div>
+    </div>
+
+    <div class="feedback"></div>
+    <div class="actions">
+      <button class="check" onclick="checkOrder('ex4')">Check</button>
+      <button class="reset" onclick="resetOrder('ex4')">Reset</button>
+    </div>
+  </section>
+
+  <section id="ex5">
+    <h2>5. Mini-dialogues</h2>
+    <p class="instruction">Впиши відповідь англійською. Використай підказку.</p>
+
+    <div class="item">
+      <div><b>A:</b> I can’t find my tennis ball.<br><b>B:</b> _____________. (Дозволь мені знайти його.)</div>
+      <input type="text" data-answer="Let me find it." placeholder="Type your answer">
+    </div>
+
+    <div class="item">
+      <div><b>A:</b> We have a phone.<br><b>B:</b> _____________. (Давай знімемо це.)</div>
+      <input type="text" data-answer="Let's film it." placeholder="Type your answer">
+    </div>
+
+    <div class="item">
+      <div><b>A:</b> Ben wants to use the computer.<br><b>B:</b> _____________. (Дозволь йому надрукувати це.)</div>
+      <input type="text" data-answer="Let him type it." placeholder="Type your answer">
+    </div>
+
+    <div class="item">
+      <div><b>A:</b> Grandma is at home today.<br><b>B:</b> _____________. (Давай відвідаємо її.)</div>
+      <input type="text" data-answer="Let's visit her." placeholder="Type your answer">
+    </div>
+
+    <div class="item">
+      <div><b>A:</b> The lesson starts in ten minutes.<br><b>B:</b> _____________. (Давай будемо вчасно.)</div>
+      <input type="text" data-answer="Let's be in time." placeholder="Type your answer">
+    </div>
+
+    <div class="feedback"></div>
+    <div class="actions"><button class="check" onclick="checkInputs('ex5')">Check</button></div>
+  </section>
+
+  <div id="final-score">Complete the exercises and press “Check” 🌈</div>
+</main>
+
+<footer>Great job! Keep learning and have fun! ⭐</footer>
+
+<script>
+  let totalCorrect = 0;
+  let checkedSections = new Set();
+
+  document.querySelectorAll('.choice').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      btn.parentElement.querySelectorAll('.choice').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  });
+
+  document.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      const task = chip.closest('.order-task');
+      const source = task.querySelector('.sentence-parts');
+      const target = task.querySelector('.answer-zone');
+      if(chip.parentElement === source){
+        target.appendChild(chip);
+      } else {
+        source.appendChild(chip);
+      }
+    });
+  });
+
+  function normalize(s){
+    return s.trim().replace(/\s+/g,' ').replace(/[’]/g,"'").toLowerCase();
+  }
+
+  function updateScore(){
+    document.getElementById('final-score').textContent =
+      `Your score: ${totalCorrect} correct answers ⭐`;
+  }
+
+  function registerSection(id, correct){
+    if(!checkedSections.has(id)){
+      checkedSections.add(id);
+      totalCorrect += correct;
+    }
+    updateScore();
+  }
+
+  function checkChoices(id){
+    const section = document.getElementById(id);
+    let correct = 0;
+    section.querySelectorAll('.item').forEach(item=>{
+      item.classList.remove('correct','incorrect');
+      const selected = item.querySelector('.choice.selected');
+      if(selected && selected.textContent === item.dataset.answer){
+        item.classList.add('correct'); correct++;
+      } else item.classList.add('incorrect');
+    });
+    section.querySelector('.feedback').textContent = `${correct} / 5 correct`;
+    registerSection(id, correct);
+  }
+
+  function checkSelects(id){
+    const section = document.getElementById(id);
+    let correct = 0;
+    const selects = section.querySelectorAll('select');
+    selects.forEach(sel=>{
+      sel.classList.remove('correct','incorrect');
+      if(sel.value === sel.dataset.answer){
+        sel.classList.add('correct'); correct++;
+      } else sel.classList.add('incorrect');
+    });
+    section.querySelector('.feedback').textContent = `${correct} / ${selects.length} correct`;
+    registerSection(id, correct);
+  }
+
+  function checkOrder(id){
+    const section = document.getElementById(id);
+    let correct = 0;
+    section.querySelectorAll('.order-task').forEach(task=>{
+      task.classList.remove('correct','incorrect');
+      const words = [...task.querySelector('.answer-zone').children].map(x=>x.textContent).join(' ');
+      if(normalize(words) === normalize(task.dataset.answer)){
+        task.classList.add('correct'); correct++;
+      } else task.classList.add('incorrect');
+    });
+    section.querySelector('.feedback').textContent = `${correct} / 4 correct`;
+    registerSection(id, correct);
+  }
+
+  function resetOrder(id){
+    const section = document.getElementById(id);
+    section.querySelectorAll('.order-task').forEach(task=>{
+      const source = task.querySelector('.sentence-parts');
+      [...task.querySelector('.answer-zone').children].forEach(chip=>source.appendChild(chip));
+      task.classList.remove('correct','incorrect');
+    });
+    section.querySelector('.feedback').textContent = '';
+  }
+
+  function checkInputs(id){
+    const section = document.getElementById(id);
+    let correct = 0;
+    const inputs = section.querySelectorAll('input');
+    inputs.forEach(inp=>{
+      inp.classList.remove('correct','incorrect');
+      if(normalize(inp.value) === normalize(inp.dataset.answer)){
+        inp.classList.add('correct'); correct++;
+      } else inp.classList.add('incorrect');
+    });
+    section.querySelector('.feedback').textContent = `${correct} / ${inputs.length} correct`;
+    registerSection(id, correct);
+  }
+</script>
+</body>
+</html>
