@@ -1,0 +1,33 @@
+<!doctype html><html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Present Simple: TO BE or VERB?</title>
+<style>body{font-family:Arial;background:linear-gradient(135deg,#eff6ff,#ecfdf5);margin:0;color:#172554}.w{max-width:1000px;margin:auto;padding:24px}.ref,.card{background:white;border-radius:18px;padding:20px;margin:16px 0;box-shadow:0 8px 25px #0002}.ref{border:3px solid #facc15}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.blue{background:#dbeafe;padding:14px;border-radius:12px}.green{background:#dcfce7;padding:14px;border-radius:12px}button{border:0;border-radius:10px;padding:10px 13px;margin:5px;background:#e2e8f0;cursor:pointer;font-weight:bold}input{padding:10px;border:2px solid #93c5fd;border-radius:8px;font-size:16px;min-width:260px}.row{padding:12px;margin:9px 0;background:#f8fafc;border-radius:10px}.ok{color:#15803d;font-weight:bold}.hint{color:#a16207;font-weight:bold}.tag{font-weight:bold;color:#1d4ed8}@media(max-width:650px){.grid{grid-template-columns:1fr}input{min-width:0;width:90%}}</style></head>
+<body><div class="w"><h1>🎯 Present Simple: TO BE чи звичайне дієслово?</h1>
+<div class="ref"><h2>📌 Спочатку запитай себе: «Є ДІЯ?»</h2><div class="grid"><div class="blue"><b>НЕМАЄ дії → TO BE</b><br>стан / опис / хто? де?<br><br>I <b>am</b> tired.<br>He <b>is</b> Italian.<br>We <b>are</b> in Italy.<hr>❌ am not / isn't / aren't</div><div class="green"><b>Є ДІЯ → VERB</b><br>що робить?<br><br>I <b>live</b> in Italy.<br>He <b>swims</b>.<br>She <b>reads</b>.<hr>❌ don't + verb / doesn't + verb<br><small>Після doesn't: без -s → doesn't live</small></div></div></div>
+<div class="card"><h2>1️⃣ TO BE чи VERB?</h2><p>Обери правильне речення за перекладом.</p><div id="e1"></div></div>
+<div class="card"><h2>2️⃣ Зроби заперечення</h2><p>Обери правильну заперечну форму.</p><div id="e2"></div></div>
+<div class="card"><h2>3️⃣ Переклади англійською</h2><p>Виріши сам: потрібне <b>to be</b> чи звичайне дієслово?</p><div id="e3"></div></div>
+<div class="card"><h2>4️⃣ Grammar Detective 🕵️</h2><p>Знайди правильний варіант.</p><div id="e4"></div></div>
+</div><script>
+const q1=[
+["Я втомлений.","I am tired.","I tired."],["Я живу в Італії.","I live in Italy.","I am live in Italy."],
+["Він турок.","He is Turkish.","He Turkish."],["Він плаває.","He swims.","He is swim."],
+["Ми зайняті у вівторок.","We are busy on Tuesday.","We busy on Tuesday."],["Вона живе в Туреччині.","She lives in Turkey.","She is live in Turkey."]
+];
+function choices(id,data){let root=document.getElementById(id);data.forEach((x,i)=>{let d=document.createElement("div");d.className="row";let h=document.createElement("b");h.textContent=(i+1)+". "+x[0];d.append(h,document.createElement("br"));let m=document.createElement("div");[x[1],x[2]].sort(()=>Math.random()-.5).forEach(o=>{let b=document.createElement("button");b.textContent=o;b.onclick=()=>{if(o===x[1]){m.textContent="✅ Правильно!";m.className="ok"}else{m.textContent="💡 Запитай: тут є дія? Якщо так — потрібне звичайне дієслово. Якщо ні — to be.";m.className="hint"}};d.appendChild(b)});d.appendChild(m);root.appendChild(d)})}choices("e1",q1);
+const q2=[
+["I am tired.","I am not tired.","I don't tired."],["He swims.","He doesn't swim.","He isn't swim."],
+["She is Italian.","She isn't Italian.","She doesn't Italian."],["I live in Turkey.","I don't live in Turkey.","I am not live in Turkey."],
+["He is late.","He isn't late.","He doesn't late."],["She reads on Tuesday.","She doesn't read on Tuesday.","She isn't read on Tuesday."]
+];choices("e2",q2);
+const tr=[
+["Я зайнятий.","I am busy"],["Я не зайнятий.","I am not busy"],["Він живе в Італії.","He lives in Italy"],
+["Він не живе в Італії.","He doesn't live in Italy"],["Вона запізнюється.","She is late"],["Вона не запізнюється.","She isn't late"],
+["Я читаю у вівторок.","I read on Tuesday"],["Я не читаю у вівторок.","I don't read on Tuesday"]
+];let r=document.getElementById("e3");tr.forEach((x,i)=>{let d=document.createElement("div");d.className="row";d.innerHTML=`<b>${i+1}. ${x[0]}</b><br><input id="i${i}" placeholder="Type in English"> <button onclick="ck(${i})">Готово</button><div id="m${i}"></div>`;r.appendChild(d)});
+function n(s){return s.toLowerCase().trim().replace(/[.!?']/g,"").replace(/doesnt/g,"doesnt").replace(/isnt/g,"isnt")}
+function ck(i){let v=n(document.getElementById("i"+i).value),c=n(tr[i][1]),m=document.getElementById("m"+i);if(v===c){m.textContent="✅ Правильно!";m.className="ok"}else{let action=/live|read/.test(c);m.textContent=action?"💡 Тут є ДІЯ. Подумай про verb, а для заперечення — don't / doesn't.":"💡 Тут немає дії. Подумай про am / is / are та їх заперечення.";m.className="hint"}}
+const det=[
+["Він зайнятий.","He is busy.","He busy.","He does busy."],["Вона читає.","She reads.","She is read.","She read."],
+["Він не втомлений.","He isn't tired.","He doesn't tired.","He not tired."],["Вона не живе в Туреччині.","She doesn't live in Turkey.","She isn't live in Turkey.","She doesn't lives in Turkey."],
+["Я схвильований.","I am excited.","I excited.","I do excited."],["Він не плаває.","He doesn't swim.","He isn't swim.","He doesn't swims."]
+];choices("e4",det);
+</script></body></html>
