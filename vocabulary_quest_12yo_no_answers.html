@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Quest — English Games</title>
+<style>
+:root{
+  --bg:#0f172a; --card:#172554; --card2:#1e293b; --text:#f8fafc;
+  --muted:#cbd5e1; --accent:#38bdf8; --accent2:#facc15; --good:#22c55e; --bad:#ef4444;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:Arial,Helvetica,sans-serif; color:var(--text);
+  background:linear-gradient(135deg,#0f172a,#172554 55%,#0c4a6e);
+  min-height:100vh;
+}
+header{padding:32px 18px 18px;text-align:center}
+h1{margin:0;font-size:clamp(30px,6vw,52px)}
+.subtitle{color:var(--muted);margin-top:10px;font-size:18px}
+.container{max-width:1050px;margin:auto;padding:16px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
+.tab{
+  border:0;border-radius:999px;padding:12px 18px;font-weight:700;cursor:pointer;
+  background:#e2e8f0;color:#0f172a;
+}
+.tab.active{background:var(--accent2)}
+.game{
+  display:none;background:rgba(15,23,42,.88);border:1px solid rgba(255,255,255,.14);
+  border-radius:22px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.25)
+}
+.game.active{display:block}
+h2{margin-top:0;color:#7dd3fc}
+.info{color:var(--muted);line-height:1.5}
+.word-card{
+  background:linear-gradient(135deg,#1d4ed8,#0ea5e9);border-radius:20px;padding:28px;
+  text-align:center;margin:20px 0
+}
+.bigword{font-size:clamp(30px,7vw,58px);font-weight:800}
+.ipa{font-size:20px;color:#e0f2fe;margin-top:8px}
+.btn{
+  border:0;border-radius:12px;padding:12px 16px;margin:6px;cursor:pointer;font-weight:700;
+  background:var(--accent);color:#082f49;font-size:16px
+}
+.btn.secondary{background:#e2e8f0;color:#0f172a}
+.btn.good{background:var(--good);color:white}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:20px 0}
+.option{
+  padding:16px;border-radius:14px;border:2px solid transparent;background:#334155;color:white;
+  cursor:pointer;font-size:17px;text-align:left
+}
+.option:hover{border-color:var(--accent)}
+.feedback{min-height:28px;font-weight:700;margin-top:12px}
+.score{font-weight:700;color:var(--accent2)}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.column{display:flex;flex-direction:column;gap:10px}
+.match-item{
+  background:#334155;padding:12px;border-radius:12px;cursor:pointer;border:2px solid transparent
+}
+.match-item.selected{border-color:var(--accent2)}
+.match-item.matched{background:#166534;opacity:.7;cursor:default}
+.sentence{
+  font-size:23px;line-height:1.6;background:#1e293b;padding:18px;border-radius:14px;margin:18px 0
+}
+input[type=text]{
+  width:100%;padding:14px;border-radius:12px;border:2px solid #64748b;background:#f8fafc;
+  color:#0f172a;font-size:18px
+}
+.order-zone{display:flex;gap:10px;flex-wrap:wrap;min-height:62px;padding:12px;border:2px dashed #64748b;border-radius:14px}
+.chip{background:#facc15;color:#422006;padding:10px 14px;border-radius:999px;cursor:pointer;font-weight:700}
+.small{font-size:14px;color:var(--muted)}
+footer{text-align:center;color:#cbd5e1;padding:28px 12px}
+@media(max-width:650px){.match-grid{grid-template-columns:1fr}.game{padding:18px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎮 Vocabulary Quest</h1>
+  <div class="subtitle">4 ігри для вивчення слів, вимови та речень у Present Simple</div>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showGame(0)">1. Sound Mission</button>
+    <button class="tab" onclick="showGame(1)">2. Match Battle</button>
+    <button class="tab" onclick="showGame(2)">3. Sentence Builder</button>
+    <button class="tab" onclick="showGame(3)">4. Secret Word</button>
+  </div>
+
+  <section class="game active">
+    <h2>🔊 Game 1 — Sound Mission</h2>
+    <p class="info">Натисни кнопку, послухай слово й обери правильний переклад. Можна слухати кілька разів.</p>
+    <div class="score" id="soundScore">Рахунок: 0</div>
+    <div class="word-card">
+      <div class="bigword" id="soundWord">Tuesday</div>
+      <div class="ipa" id="soundIpa">/ˈtjuːzdeɪ/</div>
+      <button class="btn secondary" onclick="speakCurrent()">🔊 Listen</button>
+    </div>
+    <div class="options" id="soundOptions"></div>
+    <div class="feedback" id="soundFeedback"></div>
+    <button class="btn" onclick="nextSound()">Next ➜</button>
+  </section>
+
+  <section class="game">
+    <h2>⚔️ Game 2 — Match Battle</h2>
+    <p class="info">З'єднай англійське слово з українським перекладом. Натисни спочатку зліва, потім справа.</p>
+    <div class="match-grid">
+      <div class="column" id="leftCol"></div>
+      <div class="column" id="rightCol"></div>
+    </div>
+    <div class="feedback" id="matchFeedback"></div>
+    <button class="btn" onclick="startMatching()">Restart</button>
+  </section>
+
+  <section class="game">
+    <h2>🧩 Game 3 — Sentence Builder</h2>
+    <p class="info">Склади речення у правильному порядку. У прикладах використовується Present Simple, а також <b>still</b>.</p>
+    <div class="score" id="orderScore">Рахунок: 0</div>
+    <div class="small">Натискай на слова по черзі. Якщо порядок неправильний, ти отримаєш лише підказку:</div>
+    <div class="order-zone" id="wordBank"></div>
+    <div class="small" style="margin-top:14px">Твоє речення:</div>
+    <div class="order-zone" id="answerZone"></div>
+    <div class="feedback" id="orderFeedback"></div>
+    <button class="btn good" onclick="checkOrder()">Готово!</button>
+    <button class="btn secondary" onclick="resetOrder()">Reset</button>
+    <button class="btn" onclick="nextOrder()">Next ➜</button>
+  </section>
+
+  <section class="game">
+    <h2>🕵️ Game 4 — Secret Word</h2>
+    <p class="info">Прочитай підказку українською, введи англійське слово або вираз і потім послухай правильну вимову.</p>
+    <div class="score" id="secretScore">Рахунок: 0</div>
+    <div class="sentence" id="secretHint">бути зайнятим</div>
+    <input type="text" id="secretInput" placeholder="Type the English word..." autocomplete="off">
+    <div style="margin-top:12px">
+      <button class="btn good" onclick="checkSecret()">Спробувати</button>
+      <button class="btn secondary" onclick="hearSecret()">🔊 Audio hint</button>
+      <button class="btn" onclick="nextSecret()">Next ➜</button>
+    </div>
+    <div class="feedback" id="secretFeedback"></div>
+  </section>
+</div>
+
+<footer>Keep going — you are getting better every round! 🚀</footer>
+
+<script>
+const words = [
+ {en:"to be tired", uk:"бути втомленим", ipa:"/tə biː ˈtaɪəd/", ex:"I am still tired after school."},
+ {en:"season", uk:"пора року; сезон", ipa:"/ˈsiːzən/", ex:"My favourite season is still summer."},
+ {en:"Turkey", uk:"Туреччина", ipa:"/ˈtɜːki/", ex:"He still lives in Turkey."},
+ {en:"Turkish", uk:"турецький; турок / туркеня", ipa:"/ˈtɜːkɪʃ/", ex:"He is still interested in Turkish culture."},
+ {en:"Italy", uk:"Італія", ipa:"/ˈɪtəli/", ex:"She still lives in Italy."},
+ {en:"Italian", uk:"італійський; італієць / італійка", ipa:"/ɪˈtæliən/", ex:"He is still an Italian student."},
+ {en:"Tuesday", uk:"вівторок", ipa:"/ˈtjuːzdeɪ/", ex:"Tuesday is still my busiest day."},
+ {en:"on Tuesday", uk:"у вівторок", ipa:"/ɒn ˈtjuːzdeɪ/", ex:"I still play football on Tuesday."},
+ {en:"Let him", uk:"дозволь йому; нехай він", ipa:"/let hɪm/", ex:"Let him play with us."},
+ {en:"to be busy", uk:"бути зайнятим", ipa:"/tə biː ˈbɪzi/", ex:"I am still busy after school."},
+ {en:"to be late", uk:"запізнюватися; бути пізно", ipa:"/tə biː leɪt/", ex:"He is still late for school."},
+ {en:"to be excited", uk:"бути схвильованим; радісно збудженим", ipa:"/tə biː ɪkˈsaɪtɪd/", ex:"I am still excited about my trip."}
+];
+
+function speak(text){
+ const u=new SpeechSynthesisUtterance(text);
+ u.lang="en-GB"; u.rate=.8; u.pitch=1;
+ speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function showGame(i){
+ document.querySelectorAll(".tab").forEach((x,n)=>x.classList.toggle("active",n===i));
+ document.querySelectorAll(".game").forEach((x,n)=>x.classList.toggle("active",n===i));
+}
+let soundIndex=0,soundScore=0;
+function loadSound(){
+ const w=words[soundIndex];
+ soundWord.textContent=w.en;soundIpa.textContent=w.ipa;soundFeedback.textContent="";
+ const wrong=shuffle(words.filter(x=>x.en!==w.en)).slice(0,3).map(x=>x.uk);
+ const opts=shuffle([w.uk,...wrong]);
+ soundOptions.innerHTML="";
+ opts.forEach(o=>{
+  const b=document.createElement("button");b.className="option";b.textContent=o;
+  b.onclick=()=>{
+   if(o===w.uk){soundFeedback.textContent="✅ Правильно!";soundFeedback.style.color="#22c55e";soundScore++;soundScoreEl();}
+   else{soundFeedback.textContent="💡 Послухай ще раз і зверни увагу на наголос.";soundFeedback.style.color="#facc15";}
+  };
+  soundOptions.appendChild(b);
+ });
+}
+function soundScoreEl(){document.getElementById("soundScore").textContent="Рахунок: "+soundScore}
+function speakCurrent(){speak(words[soundIndex].en)}
+function nextSound(){soundIndex=(soundIndex+1)%words.length;loadSound()}
+
+let selectedLeft=null,selectedRight=null,matched=0;
+function startMatching(){
+ matched=0;selectedLeft=null;selectedRight=null;matchFeedback.textContent="";
+ const set=shuffle(words).slice(0,8);
+ leftCol.innerHTML="";rightCol.innerHTML="";
+ set.forEach(w=>{
+  const d=document.createElement("div");d.className="match-item";d.textContent=w.en;d.dataset.key=w.en;
+  d.onclick=()=>pickMatch(d,"left");leftCol.appendChild(d);
+ });
+ shuffle(set).forEach(w=>{
+  const d=document.createElement("div");d.className="match-item";d.textContent=w.uk;d.dataset.key=w.en;
+  d.onclick=()=>pickMatch(d,"right");rightCol.appendChild(d);
+ });
+}
+function pickMatch(el,side){
+ if(el.classList.contains("matched"))return;
+ document.querySelectorAll("#"+(side==="left"?"leftCol":"rightCol")+" .match-item").forEach(x=>x.classList.remove("selected"));
+ el.classList.add("selected");
+ if(side==="left")selectedLeft=el;else selectedRight=el;
+ if(selectedLeft&&selectedRight){
+  if(selectedLeft.dataset.key===selectedRight.dataset.key){
+   selectedLeft.classList.add("matched");selectedRight.classList.add("matched");
+   selectedLeft.classList.remove("selected");selectedRight.classList.remove("selected");
+   speak(selectedLeft.dataset.key);matched++;
+   matchFeedback.textContent=matched===8?"🏆 Усі пари знайдено!":"✅ Правильна пара!";
+  }else{
+   matchFeedback.textContent="💡 Спробуй іншу пару. Подумай про значення слова.";
+   selectedLeft.classList.remove("selected");selectedRight.classList.remove("selected");
+  }
+  selectedLeft=null;selectedRight=null;
+ }
+}
+
+const sentences = words.map(w=>w.ex);
+let orderIndex=0,orderScore=0,currentOrder=[];
+function loadOrder(){
+ orderAttempts=0;currentOrder=[];answerZone.innerHTML="";orderFeedback.textContent="";
+ const parts=sentences[orderIndex].replace(/[.]/g,"").split(" ");
+ wordBank.innerHTML="";
+ shuffle(parts).forEach((p,i)=>{
+  const c=document.createElement("span");c.className="chip";c.textContent=p;c.dataset.id=i;
+  c.onclick=()=>{currentOrder.push(p);c.remove();renderAnswer();};wordBank.appendChild(c);
+ });
+}
+function renderAnswer(){
+ answerZone.innerHTML="";
+ currentOrder.forEach((p,i)=>{
+  const c=document.createElement("span");c.className="chip";c.textContent=p;
+  c.onclick=()=>{currentOrder.splice(i,1);loadOrder();};answerZone.appendChild(c);
+ });
+}
+let orderAttempts=0;
+function checkOrder(){
+ const answer=currentOrder.join(" ").toLowerCase();
+ const correct=sentences[orderIndex].replace(/[.]/g,"").toLowerCase();
+ if(answer===correct){
+   orderFeedback.textContent="✅ Чудово!";
+   orderFeedback.style.color="#22c55e";
+   orderScore++;
+   document.getElementById("orderScore").textContent="Рахунок: "+orderScore;
+   speak(sentences[orderIndex]);
+   orderAttempts=0;
+ } else {
+   orderAttempts++;
+   const correctWords=sentences[orderIndex].replace(/[.]/g,"").split(" ");
+   let hint="💡 Подумай ще раз.";
+   if(orderAttempts===1) hint+=" Речення починається зі слова: “"+correctWords[0]+"”.";
+   else if(orderAttempts===2) hint+=" Знайди правильне місце для слова “still”.";
+   else hint+=" Перевір, де стоїть to be або основне дієслово.";
+   orderFeedback.textContent=hint;
+   orderFeedback.style.color="#facc15";
+ }
+}
+function resetOrder(){loadOrder()}
+function nextOrder(){orderIndex=(orderIndex+1)%sentences.length;loadOrder()}
+
+let secretIndex=0,secretScore=0;
+function loadSecret(){
+ secretAttempts=0;secretHint.textContent=words[secretIndex].uk;secretInput.value="";secretFeedback.textContent="";
+}
+let secretAttempts=0;
+function checkSecret(){
+ const a=secretInput.value.trim().toLowerCase();
+ const c=words[secretIndex].en.toLowerCase();
+ if(a===c){
+   secretFeedback.textContent="✅ Правильно!";
+   secretFeedback.style.color="#22c55e";
+   secretScore++;
+   document.getElementById("secretScore").textContent="Рахунок: "+secretScore;
+   speak(words[secretIndex].en);
+   secretAttempts=0;
+ } else {
+   secretAttempts++;
+   const parts=c.split(" ");
+   let hint="💡 Спробуй ще раз. ";
+   if(secretAttempts===1) hint+="Перша літера: “"+c.charAt(0).toUpperCase()+"”.";
+   else if(secretAttempts===2) hint+="Кількість слів: "+parts.length+".";
+   else hint+="Вимова: "+words[secretIndex].ipa+".";
+   secretFeedback.textContent=hint;
+   secretFeedback.style.color="#facc15";
+ }
+}
+function hearSecret(){speak(words[secretIndex].en)}
+function nextSecret(){secretIndex=(secretIndex+1)%words.length;loadSecret()}
+
+secretInput.addEventListener("keydown",e=>{if(e.key==="Enter")checkSecret();});
+loadSound();startMatching();loadOrder();loadSecret();
+</script>
+</body>
+</html>
