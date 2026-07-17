@@ -1,0 +1,149 @@
+<!doctype html><html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Still Practice</title><style>
+body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;margin:0;padding:24px}.wrap{max-width:900px;margin:auto}
+h1{text-align:center}.card{background:#fff;color:#172554;border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 10px 25px #0004}
+button{padding:10px 14px;border:0;border-radius:10px;background:#facc15;font-weight:700;cursor:pointer;margin:5px}
+.opt{background:#dbeafe}.ok{color:#15803d;font-weight:bold}.hint{color:#a16207;font-weight:bold}.row{margin:12px 0;padding:10px;background:#eff6ff;border-radius:10px}
+input{padding:10px;border:2px solid #93c5fd;border-radius:8px;font-size:16px;width:min(90%,500px)}
+.word{display:inline-block;background:#fde68a;padding:8px 12px;border-radius:20px;margin:5px;cursor:pointer}
+.zone{min-height:45px;border:2px dashed #93c5fd;border-radius:10px;padding:8px;margin:8px 0}
+small{color:#475569}
+</style></head><body><div class="wrap"><h1>🎯 STILL — “все ще / досі”</h1>
+<p style="text-align:center">Present Simple • Vocabulary Practice</p>
+
+
+<div class="card" style="border:3px solid #facc15">
+  <h2>📌 Підказка: де ставимо <b>still</b>?</h2>
+  <p><b>STILL = все ще / досі</b> — щось було раніше і продовжується зараз.</p>
+  <div class="row">
+    <b>1. З дієсловом TO BE (am / is / are):</b><br>
+    <span style="font-size:20px">am / is / are + <b>still</b></span><br><br>
+    I am <b>still</b> tired. — Я все ще втомлений.<br>
+    I am <b>still</b> busy. — Я все ще зайнятий.<br>
+    He is <b>still</b> late. — Він все ще запізнюється.
+  </div>
+  <div class="row">
+    <b>2. З основним дієсловом:</b><br>
+    <span style="font-size:20px"><b>still</b> + verb</span><br><br>
+    I <b>still</b> live in Italy. — Я все ще живу в Італії.<br>
+    He <b>still</b> lives in Turkey. — Він все ще живе в Туреччині.
+  </div>
+  <p class="hint">💡 Запам’ятай: <b>TO BE → still ПІСЛЯ нього.</b> &nbsp; | &nbsp; <b>Інше дієслово → still ПЕРЕД ним.</b></p>
+</div>
+
+<div class="card"><h2>1️⃣ Put STILL in the right place</h2><p>Натисни на правильний варіант.</p><div id="g1"></div></div>
+
+<div class="card"><h2>2️⃣ Build the sentence</h2><p>Склади речення зі слів. Пам’ятай: <b>still</b> стоїть перед основним дієсловом, але після <b>to be</b>.</p><div id="g2"></div></div>
+
+<div class="card"><h2>3️⃣ Translate into English</h2><p>Переклади речення. Використай <b>still</b> і слова уроку.</p><div id="g3"></div></div>
+
+<div class="card"><h2>4️⃣ Still Detective 🕵️</h2><p>Знайди речення, де <b>still</b> стоїть правильно.</p><div id="g4"></div></div>
+</div><script>
+const one=[
+["Я все ще втомлений.","I am still tired.","I still am tired."],
+["Я все ще зайнятий у вівторок.","I am still busy on Tuesday.","I still am busy on Tuesday."],
+["Він все ще запізнюється.","He is still late.","He still is late."],
+["Я все ще живу в Італії.","I still live in Italy.","I live still in Italy."],
+["Він все ще живе в Туреччині.","He still lives in Turkey.","He lives still in Turkey."],
+["Я все ще схвильований.","I am still excited.","I still am excited."]
+];
+let g1=document.getElementById("g1");
+one.forEach((x,i)=>{
+  let d=document.createElement("div");
+  d.className="row";
+
+  let title=document.createElement("b");
+  title.textContent=`${i+1}. ${x[0]}`;
+  d.appendChild(title);
+  d.appendChild(document.createElement("br"));
+
+  let msg=document.createElement("div");
+  msg.className="msg";
+
+  [x[1],x[2]].sort(()=>Math.random()-.5).forEach(o=>{
+    let b=document.createElement("button");
+    b.className="opt";
+    b.textContent=o;
+    b.onclick=()=>{
+      msg.textContent=o===x[1]
+        ?"✅ Чудово!"
+        :"💡 Подумай: тут є to be чи основне дієслово?";
+      msg.className=o===x[1]?"msg ok":"msg hint";
+    };
+    d.appendChild(b);
+  });
+
+  d.appendChild(msg);
+  g1.appendChild(d);
+});
+
+const builds=[
+"I am still tired","I am still busy on Tuesday","He is still late","I still live in Italy","He still lives in Turkey","I am still excited"
+];let bi=0,chosen=[];
+function loadBuild(){
+  chosen=[];
+  let s=builds[bi],parts=s.split(" ").sort(()=>Math.random()-.5);
+  g2.innerHTML=`<div class="zone" id="bank"></div><div class="zone" id="ans"></div><div id="bm"></div><button onclick="checkB()">Готово</button><button onclick="bi=(bi+1)%builds.length;loadBuild()">Next ➜</button>`;
+  const bankEl=document.getElementById("bank");
+  const ansEl=document.getElementById("ans");
+  parts.forEach(w=>{
+    let z=document.createElement("span");
+    z.className="word";
+    z.textContent=w;
+    z.onclick=()=>{
+      chosen.push(w);
+      z.remove();
+      ansEl.textContent=chosen.join(" ");
+    };
+    bankEl.appendChild(z);
+  });
+}
+function checkB(){let m=document.getElementById("bm");if(chosen.join(" ")===builds[bi]){m.textContent="✅ Чудово!";m.className="ok"}else{m.textContent=builds[bi].includes(" am ")||builds[bi].includes(" is ")?"💡 Підказка: після to be ставимо still.":"💡 Підказка: still ставимо перед основним дієсловом.";m.className="hint"}}
+loadBuild();
+
+const trans=[
+["Я все ще втомлений.","I am still tired"],
+["Я все ще зайнятий у вівторок.","I am still busy on Tuesday"],
+["Він все ще запізнюється.","He is still late"],
+["Я все ще живу в Італії.","I still live in Italy"],
+["Він все ще живе в Туреччині.","He still lives in Turkey"],
+["Я все ще схвильований поїздкою.","I am still excited about the trip"]
+];let g3=document.getElementById("g3");
+trans.forEach((x,i)=>{let d=document.createElement("div");d.className="row";d.innerHTML=`<b>${i+1}. ${x[0]}</b><br><input id="t${i}" placeholder="Type in English"><button onclick="ct(${i})">Готово</button><div id="tm${i}"></div>`;g3.appendChild(d)});
+function norm(s){return s.trim().toLowerCase().replace(/[.!?]/g,"")}
+function ct(i){let v=document.getElementById("t"+i).value,m=document.getElementById("tm"+i);if(norm(v)===norm(trans[i][1])){m.textContent="✅ Чудово!";m.className="ok"}else{let first=trans[i][1].split(" ")[0];m.textContent=`💡 Підказка: речення починається з “${first}”. Перевір місце still.`;m.className="hint"}}
+
+const det=[
+["I am still tired.","I still am tired."],["I still live in Italy.","I live still in Italy."],
+["He is still busy on Tuesday.","He still is busy on Tuesday."],["She still lives in Turkey.","She lives still in Turkey."]
+];let g4=document.getElementById("g4");
+det.forEach((x,i)=>{
+  let d=document.createElement("div");
+  d.className="row";
+
+  let title=document.createElement("b");
+  title.textContent=`${i+1}.`;
+  d.appendChild(title);
+  d.appendChild(document.createElement("br"));
+
+  let msg=document.createElement("div");
+  msg.className="dm";
+
+  x.sort(()=>Math.random()-.5).forEach(o=>{
+    let b=document.createElement("button");
+    b.className="opt";
+    b.textContent=o;
+    b.onclick=()=>{
+      let correct=/\b(am|is|are) still\b/.test(o)||/\bstill (live|lives)\b/.test(o);
+      msg.textContent=correct
+        ?"✅ Так!"
+        :"💡 Згадай правило: to be + still / still + основне дієслово.";
+      msg.className=correct?"dm ok":"dm hint";
+    };
+    d.appendChild(b);
+  });
+
+  d.appendChild(msg);
+  g4.appendChild(d);
+});
+</script></body></html>
