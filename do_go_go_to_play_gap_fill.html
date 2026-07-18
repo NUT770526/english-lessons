@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Do, Go, Go to or Play</title>
+<style>
+:root{
+  --bg:#f5f7fb;
+  --card:#fff;
+  --text:#202938;
+  --muted:#6b7280;
+  --accent:#4338ca;
+  --good:#15803d;
+  --bad:#b91c1c;
+  --line:#d7deea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#eef2ff,#f8fafc);
+  color:var(--text);
+  line-height:1.65;
+}
+.wrap{max-width:980px;margin:0 auto;padding:28px 16px 60px}
+header,.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:0 10px 30px rgba(30,41,59,.08);
+}
+header{padding:26px;margin-bottom:22px}
+h1{margin:0 0 8px;font-size:clamp(28px,4vw,43px);color:#312e81}
+.subtitle{color:var(--muted);font-size:18px}
+.rules{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:18px;
+}
+.rule{
+  background:#f8fafc;
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:13px;
+}
+.rule strong{display:block;color:#4338ca;font-size:19px}
+.card{padding:24px}
+.task{
+  padding:17px 0;
+  border-bottom:1px solid #edf1f5;
+  font-size:18px;
+}
+.task:last-child{border-bottom:0}
+.num{
+  display:inline-flex;
+  width:30px;height:30px;
+  border-radius:50%;
+  align-items:center;justify-content:center;
+  background:#e0e7ff;color:#3730a3;
+  font-weight:700;margin-right:8px;
+}
+select{
+  font-size:17px;
+  padding:9px 11px;
+  border:1px solid #aeb9ca;
+  border-radius:9px;
+  margin:4px;
+  background:#fff;
+  min-width:125px;
+}
+.audio{
+  border:0;
+  border-radius:8px;
+  padding:7px 10px;
+  background:#e8eefc;
+  color:#3730a3;
+  cursor:pointer;
+  font-weight:700;
+  margin-left:6px;
+}
+.feedback{font-weight:700;margin-left:7px}
+.correct{color:var(--good)}
+.wrong{color:var(--bad)}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+button.main{
+  border:0;border-radius:10px;padding:11px 18px;
+  font-size:16px;font-weight:700;color:#fff;cursor:pointer
+}
+.check{background:var(--accent)}
+.reset{background:#64748b}
+.score{
+  display:none;
+  margin-top:15px;
+  padding:13px;
+  border-radius:10px;
+  background:#eef2ff;
+  font-weight:700;
+}
+.note{
+  background:#fff7ed;
+  border-left:5px solid #f97316;
+  border-radius:9px;
+  padding:12px 14px;
+  margin-bottom:15px;
+}
+.translation{font-size:14px;color:var(--muted);margin-top:3px}
+@media(max-width:760px){
+  .rules{grid-template-columns:1fr 1fr}
+  .task{font-size:16px}
+}
+@media(max-width:480px){
+  .rules{grid-template-columns:1fr}
+  .card,header{padding:17px}
+  select{min-width:110px}
+  .controls button{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Do, Go, Go to or Play?</h1>
+  <div class="subtitle">Fill in the gaps with the correct form.</div>
+  <div class="rules">
+    <div class="rule"><strong>DO</strong>do sports, do Pilates, do judo</div>
+    <div class="rule"><strong>PLAY</strong>play basketball, play chess</div>
+    <div class="rule"><strong>GO + -ing</strong>go running, go shopping</div>
+    <div class="rule"><strong>GO TO + place/event</strong>go to the gym, go to museums</div>
+  </div>
+</header>
+
+<section class="card">
+  <div class="note">Выберите правильную форму. После <strong>love, like, hate, enjoy</strong> обращайте внимание на форму следующего глагола.</div>
+  <div id="tasks"></div>
+  <div class="controls">
+    <button class="main check" onclick="checkAll()">Проверить</button>
+    <button class="main reset" onclick="resetAll()">Начать заново</button>
+  </div>
+  <div class="score" id="score"></div>
+</section>
+</div>
+
+<script>
+const tasks = [
+  {
+    parts:["They say when you "," Pilates, you forget about all your problems. Well, I prefer to "," mountain biking to forget about everything."],
+    answers:["do","go"],
+    ru:"Говорят, что, когда занимаешься пилатесом, забываешь обо всех проблемах. А я предпочитаю кататься на горном велосипеде."
+  },
+  {
+    parts:["Steve is lucky as his wife loves "," sports and hates "," shopping."],
+    answers:["doing","going"],
+    ru:"Стиву повезло: его жена любит заниматься спортом и ненавидит ходить по магазинам."
+  },
+  {
+    parts:["Oliver and Claire love to "," running every morning. They also love to "," basketball and "," museums."],
+    answers:["go","play","go to"],
+    ru:"Оливер и Клэр любят бегать по утрам. Они также любят играть в баскетбол и ходить в музеи."
+  },
+  {
+    parts:["On my day off, I prefer to "," running in the mornings and to "," calm games like chess in the evenings."],
+    answers:["go","play"],
+    ru:"В выходной я предпочитаю бегать утром и играть в спокойные игры, например в шахматы, вечером."
+  },
+  {
+    parts:["Molly likes "," to concert gigs with her friends. They also enjoy "," to food festivals."],
+    answers:["going","going"],
+    ru:"Молли любит ходить на концерты с друзьями. Им также нравится ходить на гастрономические фестивали."
+  },
+  {
+    parts:["Does your sister "," gymnastics? Does she also "," judo?"],
+    answers:["do","do"],
+    ru:"Твоя сестра занимается гимнастикой? Она также занимается дзюдо?"
+  },
+  {
+    parts:["I prefer to "," sports outside. I "," the gym only when it’s raining."],
+    answers:["do","go to"],
+    ru:"Я предпочитаю заниматься спортом на улице. Я хожу в спортзал только когда идёт дождь."
+  }
+];
+
+const choices=["","do","does","doing","play","plays","playing","go","goes","going","go to","goes to","going to"];
+
+function makeSelect(answer){
+  return `<select data-answer="${answer}">
+    ${choices.map(x=>`<option value="${x}">${x || "— choose —"}</option>`).join("")}
+  </select>`;
+}
+function fullSentence(task){
+  let s="";
+  task.answers.forEach((a,i)=>{s+=task.parts[i]+a});
+  s+=task.parts[task.parts.length-1];
+  return s;
+}
+function render(){
+  const box=document.getElementById("tasks");
+  tasks.forEach((t,i)=>{
+    let sentence="";
+    t.answers.forEach((a,j)=>sentence+=t.parts[j]+makeSelect(a));
+    sentence+=t.parts[t.parts.length-1];
+    box.innerHTML+=`<div class="task">
+      <span class="num">${i+1}</span>${sentence}
+      <button class="audio" onclick='speak(${JSON.stringify(fullSentence(t))})'>🔊</button>
+      <span class="feedback"></span>
+      <div class="translation">${t.ru}</div>
+    </div>`;
+  });
+}
+function speak(text){
+  if(!("speechSynthesis" in window)){alert("Ваш браузер не поддерживает озвучивание.");return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-GB";u.rate=.84;
+  speechSynthesis.speak(u);
+}
+function checkAll(){
+  let correct=0,total=0;
+  document.querySelectorAll(".task").forEach(task=>{
+    let taskOK=true;
+    task.querySelectorAll("select").forEach(s=>{
+      total++;
+      const ok=s.value===s.dataset.answer;
+      if(ok)correct++; else taskOK=false;
+      s.style.borderColor=ok?"#15803d":"#b91c1c";
+      s.style.background=ok?"#f0fdf4":"#fef2f2";
+    });
+    const fb=task.querySelector(".feedback");
+    fb.textContent=taskOK?"✓":"✗";
+    fb.className="feedback "+(taskOK?"correct":"wrong");
+  });
+  const score=document.getElementById("score");
+  score.style.display="block";
+  score.textContent=`Результат: ${correct} из ${total} пропусков.`;
+}
+function resetAll(){
+  document.querySelectorAll("select").forEach(s=>{
+    s.value="";s.style.borderColor="";s.style.background="";
+  });
+  document.querySelectorAll(".feedback").forEach(f=>{
+    f.textContent="";f.className="feedback";
+  });
+  const score=document.getElementById("score");
+  score.style.display="none";score.textContent="";
+}
+render();
+</script>
+</body>
+</html>
