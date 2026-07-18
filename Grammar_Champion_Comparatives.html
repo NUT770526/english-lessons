@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Grammar Challenge - Comparatives</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);padding:35px}
+.wrap{max-width:900px;margin:auto;background:#fff;border-radius:22px;padding:30px;box-shadow:0 20px 40px rgba(0,0,0,.25)}
+h1{text-align:center;color:#5a49d6}
+.card{background:#f7f8ff;border-radius:16px;padding:18px;margin:16px 0}
+.options{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+button.opt{padding:10px 16px;border:none;border-radius:20px;background:#e9ecff;cursor:pointer;font-size:16px}
+button.opt:hover{transform:scale(1.05)}
+.ok{background:#d4ffd9!important}
+.bad{background:#ffd8d8!important}
+#score{text-align:center;font-size:22px;font-weight:bold;margin:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🏆 Grammar Champion</h1>
+<p><b>Choose the correct phrase to complete the sentence.</b></p>
+<div id="score">Score: 0 / 10</div>
+<div id="quiz"></div>
+</div>
+<script>
+const data=[
+["My brother is ___ than me.",["much taller","much tall","much tallest"],0],
+["Kate sings ___ she dances.",["as well as","as good as","as better as"],0],
+["This test is ___ easier than yesterday's.",["a bit","bit","a little of"],0],
+["My bike is ___ faster than yours.",["a lot","a lot of","lot"],0],
+["Tom plays football ___ basketball.",["as well as","better than","more"],0],
+["Winter is ___ colder than autumn.",["much","many","more much"],0],
+["This exercise is ___ more difficult.",["a bit","a little of","bit of"],0],
+["My dad cooks ___ my mum.",["as well as","as good","well as"],0],
+["Today I'm ___ happier.",["a lot","many","lot of"],0],
+["The blue bag is ___ bigger than the black one.",["a bit","bit","little of"],0]
+];
+function shuffle(a){return a.map(v=>({v,r:Math.random()})).sort((x,y)=>x.r-y.r).map(x=>x.v)}
+let score=0;
+const q=document.getElementById("quiz");
+data.forEach((item,i)=>{
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML="<h3>"+(i+1)+". "+item[0].replace("___","_____")+"</h3>";
+ const opts=document.createElement("div");opts.className="options";
+ const correct=item[1][item[2]];
+ const arr=shuffle(item[1]);
+ arr.forEach(ans=>{
+   const b=document.createElement("button");
+   b.className="opt";b.textContent=ans;
+   b.onclick=()=>{
+      if(opts.dataset.done)return;
+      opts.dataset.done=1;
+      if(ans===correct){
+        b.classList.add("ok");
+        score++;
+      }else{
+        b.classList.add("bad");
+        [...opts.children].forEach(x=>{if(x.textContent===correct)x.classList.add("ok")});
+      }
+      document.getElementById("score").textContent="Score: "+score+" / "+data.length;
+   };
+   opts.appendChild(b);
+ });
+ c.appendChild(opts);
+ q.appendChild(c);
+});
+</script>
+</body>
+</html>
