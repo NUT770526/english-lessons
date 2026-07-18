@@ -1,0 +1,19 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Find the Mistake</title>
+<style>body{font-family:Arial;background:#6C63FF;color:#222;padding:30px}main{max-width:900px;margin:auto;background:#fff;padding:30px;border-radius:20px}button{margin:5px;padding:8px 14px} .ok{background:#c8ffd1}.bad{background:#ffd6d6}</style></head>
+<body><main><h1>🔎 Find the Mistake</h1><div id=q></div><script>
+const data=[
+["My sister is much tall than me.","My sister is much taller than me."],
+["Tom runs a bit fast than Ben.","Tom runs a bit faster than Ben."],
+["Kate sings as well as dance.","Kate sings as well as she dances."],
+["My bag is a lot heavy than yours.","My bag is a lot heavier than yours."],
+["Dad cooks as well my mum.","Dad cooks as well as my mum."],
+["This test is much easy.","This test is much easier."],
+["Lucy is a bit young than Emma.","Lucy is a bit younger than Emma."],
+["I swim as well than my brother.","I swim as well as my brother."],
+["Today is a lot hot.","Today is a lot hotter."],
+["This chair is much comfortable.","This chair is much more comfortable."]
+];
+let h="";
+data.forEach((x,i)=>{h+=`<p><b>${i+1}.</b> ${x[0]}<br><button onclick="this.nextElementSibling.style.display='block'">Show answer</button><span style="display:none;color:green"><br>✔ ${x[1]}</span></p>`});
+q.innerHTML=h;
+</script></main></body></html>
