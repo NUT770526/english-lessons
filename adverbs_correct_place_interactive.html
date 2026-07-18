@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adverbs of Frequency — Word Order</title>
+<style>
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --text:#252b38;
+  --muted:#697386;
+  --accent:#5b3fd6;
+  --accent-soft:#eeeaff;
+  --good:#16803a;
+  --bad:#c62828;
+  --line:#dce3ee;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#eef2ff,#f8fafc);
+  color:var(--text);
+  line-height:1.55;
+}
+.container{max-width:950px;margin:0 auto;padding:28px 16px 60px}
+header,.exercise{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:0 10px 30px rgba(30,41,59,.08);
+}
+header{padding:26px;margin-bottom:22px}
+h1{margin:0 0 8px;font-size:clamp(29px,4.5vw,44px);color:#34248f}
+.subtitle{font-size:18px;color:var(--muted)}
+.rules{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:18px;
+}
+.rule{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  background:#fafbff;
+}
+.rule strong{display:block;color:var(--accent);font-size:18px;margin-bottom:4px}
+.exercise{padding:24px}
+.tip{
+  background:#fff8e7;
+  border-left:5px solid #f6a21a;
+  border-radius:9px;
+  padding:12px 14px;
+  margin-bottom:16px;
+}
+.task{
+  padding:17px 0;
+  border-bottom:1px solid #edf1f5;
+}
+.task:last-child{border-bottom:none}
+.task-head{
+  display:flex;
+  gap:9px;
+  align-items:flex-start;
+}
+.num{
+  flex:0 0 30px;
+  width:30px;height:30px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:#e8e4ff;
+  color:#4931b3;
+  font-weight:700;
+}
+.original{font-size:18px;font-weight:700;color:#3b2c95}
+.adverb{
+  display:inline-block;
+  padding:3px 9px;
+  border-radius:999px;
+  background:#f0ebff;
+  color:#5b3fd6;
+}
+.answer-row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin:12px 0 4px 39px;
+}
+input[type=text]{
+  width:min(100%,650px);
+  font-size:16px;
+  padding:10px 12px;
+  border:1px solid #b7c2d0;
+  border-radius:10px;
+  background:#fff;
+}
+.audio{
+  border:0;
+  border-radius:9px;
+  padding:9px 11px;
+  background:#ece8ff;
+  color:#432fa5;
+  font-weight:700;
+  cursor:pointer;
+}
+.translation{
+  margin-left:39px;
+  color:var(--muted);
+  font-size:14px;
+}
+.feedback{font-weight:700;margin-left:8px}
+.correct{color:var(--good)}
+.wrong{color:var(--bad)}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+button.main{
+  border:0;
+  border-radius:10px;
+  padding:11px 18px;
+  color:#fff;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+}
+.check{background:var(--accent)}
+.reset{background:#64748b}
+.score{
+  display:none;
+  margin-top:14px;
+  padding:12px 14px;
+  background:#eef2ff;
+  border-radius:10px;
+  font-weight:700;
+}
+@media(max-width:760px){
+  .rules{grid-template-columns:1fr}
+  .answer-row,.translation{margin-left:0}
+  .task-head{align-items:flex-start}
+  .controls button{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Put the adverbs in the correct place</h1>
+  <div class="subtitle">Поставьте наречие частотности в правильное место в предложении.</div>
+
+  <div class="rules">
+    <div class="rule">
+      <strong>После TO BE</strong>
+      She is <b>always</b> tired.
+    </div>
+    <div class="rule">
+      <strong>Перед обычным глаголом</strong>
+      We <b>often</b> travel.
+    </div>
+    <div class="rule">
+      <strong>После вспомогательного глагола</strong>
+      I don’t <b>usually</b> work late.
+    </div>
+  </div>
+</header>
+
+<section class="exercise">
+  <div class="tip">
+    Перепишите каждое предложение полностью и поставьте слово в скобках в правильное место.
+  </div>
+
+  <div id="tasks"></div>
+
+  <div class="controls">
+    <button class="main check" onclick="checkAnswers()">Проверить</button>
+    <button class="main reset" onclick="resetAll()">Начать заново</button>
+  </div>
+  <div class="score" id="score"></div>
+</section>
+</div>
+
+<script>
+const tasks = [
+  {
+    original:"My legs are tired after the gym.",
+    adverb:"Always",
+    answer:"My legs are always tired after the gym.",
+    translation:"После спортзала мои ноги всегда уставшие."
+  },
+  {
+    original:"Kids go skateboarding there.",
+    adverb:"Seldom",
+    answer:"Kids seldom go skateboarding there.",
+    translation:"Дети редко катаются там на скейтборде."
+  },
+  {
+    original:"We played basketball at school.",
+    adverb:"Hardly ever",
+    answer:"We hardly ever played basketball at school.",
+    translation:"Мы почти никогда не играли в баскетбол в школе."
+  },
+  {
+    original:"We go to concert gigs.",
+    adverb:"Sometimes",
+    answer:"We sometimes go to concert gigs.",
+    translation:"Мы иногда ходим на концерты."
+  },
+  {
+    original:"Who do you travel with?",
+    adverb:"Usually",
+    answer:"Who do you usually travel with?",
+    translation:"С кем вы обычно путешествуете?"
+  },
+  {
+    original:"My parents don’t go to art galleries.",
+    adverb:"Often",
+    answer:"My parents don’t often go to art galleries.",
+    translation:"Мои родители нечасто ходят в художественные галереи."
+  }
+];
+
+function render(){
+  const box=document.getElementById("tasks");
+  tasks.forEach((t,i)=>{
+    box.innerHTML += `
+      <div class="task">
+        <div class="task-head">
+          <span class="num">${i+1}</span>
+          <div class="original">${t.original} <span class="adverb">(${t.adverb})</span></div>
+        </div>
+        <div class="answer-row">
+          <input type="text" data-answer="${t.answer}" placeholder="Напишите правильное предложение">
+          <button class="audio" onclick='speak(${JSON.stringify(t.answer)})'>🔊</button>
+          <span class="feedback"></span>
+        </div>
+        <div class="translation">${t.translation}</div>
+      </div>`;
+  });
+}
+
+function normalize(s){
+  return s.trim()
+    .toLowerCase()
+    .replace(/[’‘]/g,"'")
+    .replace(/\s+/g," ")
+    .replace(/[.?!]+$/,"");
+}
+
+function checkAnswers(){
+  let correct=0;
+  const inputs=document.querySelectorAll("input");
+  inputs.forEach(input=>{
+    const ok=normalize(input.value)===normalize(input.dataset.answer);
+    const fb=input.parentElement.querySelector(".feedback");
+    fb.textContent=ok ? "✓" : "✗";
+    fb.className="feedback "+(ok?"correct":"wrong");
+    input.style.borderColor=ok?"#16803a":"#c62828";
+    input.style.background=ok?"#f0fdf4":"#fef2f2";
+    if(ok) correct++;
+  });
+  const score=document.getElementById("score");
+  score.style.display="block";
+  score.textContent=`Результат: ${correct} из ${inputs.length}.`;
+}
+
+function resetAll(){
+  document.querySelectorAll("input").forEach(input=>{
+    input.value="";
+    input.style.borderColor="";
+    input.style.background="";
+  });
+  document.querySelectorAll(".feedback").forEach(f=>{
+    f.textContent="";
+    f.className="feedback";
+  });
+  const score=document.getElementById("score");
+  score.style.display="none";
+  score.textContent="";
+}
+
+function speak(text){
+  if(!("speechSynthesis" in window)){
+    alert("Ваш браузер не поддерживает озвучивание.");
+    return;
+  }
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-GB";
+  u.rate=.82;
+  speechSynthesis.speak(u);
+}
+
+render();
+</script>
+</body>
+</html>
