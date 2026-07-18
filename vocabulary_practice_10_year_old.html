@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Practice</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f5f7fb;color:#243047;margin:0}
+.wrap{max-width:900px;margin:auto;padding:20px}
+h1{text-align:center;color:#5b4fe8}
+.exercise{background:white;padding:22px;margin:20px 0;border-radius:18px;box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.question{margin:14px 0;padding:12px;background:#f8f8ff;border-radius:12px}
+select,input{padding:8px;border:1px solid #bbb;border-radius:8px;font-size:16px}
+button{background:#5b4fe8;color:white;border:0;border-radius:10px;padding:10px 18px;font-size:16px;cursor:pointer}
+.result{font-weight:bold;margin-left:10px}
+.correct{color:green}.wrong{color:#d33}
+.wordbank{background:#fff4d6;padding:12px;border-radius:12px;margin-bottom:15px;line-height:1.8}
+.match-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;margin:10px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Vocabulary Practice</h1>
+<p style="text-align:center">Повтори слова кілька разів і виконай усі 4 вправи.</p>
+
+<div class="exercise">
+<h2>1. Обери правильне слово</h2>
+<div id="ex1"></div>
+<button onclick="checkSelects('ex1')">Перевірити</button>
+<span id="ex1res" class="result"></span>
+</div>
+
+<div class="exercise">
+<h2>2. Встав слово з рамки</h2>
+<div class="wordbank">use • type • sell • find • in time • till • in 5 minutes • file • empty • a little • when • let him • event • spend</div>
+<div id="ex2"></div>
+<button onclick="checkInputs('ex2')">Перевірити</button>
+<span id="ex2res" class="result"></span>
+</div>
+
+<div class="exercise">
+<h2>3. З'єднай слово і переклад</h2>
+<div id="ex3"></div>
+<button onclick="checkSelects('ex3')">Перевірити</button>
+<span id="ex3res" class="result"></span>
+</div>
+
+<div class="exercise">
+<h2>4. Переклади українську підказку</h2>
+<div id="ex4"></div>
+<button onclick="checkInputs('ex4')">Перевірити</button>
+<span id="ex4res" class="result"></span>
+</div>
+</div>
+
+<script>
+const ex1 = [
+["I ___ my laptop for homework.","use",["use","sell","find"]],
+["Please ___ your name here.","type",["type","spend","empty"]],
+["They ___ toys in this shop.","sell",["sell","file","let him"]],
+["I cannot ___ my phone.","find",["find","use","event"]],
+["We came to school ___.","in time",["in time","till","when"]],
+["Wait here ___ five o'clock.","till",["till","a little","event"]],
+["I will call you ___.","in 5 minutes",["in 5 minutes","in time","when"]],
+["Please ___ these papers.","file",["file","type","sell"]],
+["The bottle is ___.","empty",["empty","in time","a little"]],
+["I am ___ tired.","a little",["a little","empty","till"]],
+["___ is your birthday?","when",["when","event","find"]],
+["Please ___ speak.","let him",["let him","spend","use"]],
+["The school ___ is on Friday.","event",["event","file","type"]],
+["I ___ time with my family.","spend",["spend","sell","find"]]
+];
+
+const ex2 = [
+["I ___ this pen every day.","use"],
+["Can you ___ this word?","type"],
+["They ___ cakes at school.","sell"],
+["Please help me ___ my book.","find"],
+["We arrived ___.","in time"],
+["Stay here ___ Monday.","till"],
+["Dinner will be ready ___.","in 5 minutes"],
+["I ___ my school papers.","file"],
+["The box is ___.","empty"],
+["I need ___ water.","a little"],
+["___ do you come home?","when"],
+["Please ___ play outside.","let him"],
+["This sports ___ is fun.","event"],
+["I ___ money on books.","spend"]
+];
+
+const ex3 = [
+["use","використовувати"],
+["type","друкувати"],
+["sell","продавати"],
+["find","знаходити"],
+["in time","вчасно"],
+["till","до певного часу"],
+["in 5 minutes","через 5 хвилин"],
+["file","підшивати в папку"],
+["empty","порожній"],
+["a little","трохи"],
+["when","коли"],
+["let him","дозволь йому"],
+["event","подія"],
+["spend","витрачати / проводити час"]
+];
+
+const translations = ex3.map(x=>x[1]).sort(()=>Math.random()-0.5);
+
+const ex4 = [
+["Я використовую цей комп'ютер.","use"],
+["Надрукуй своє ім'я.","type"],
+["Вони продають книги.","sell"],
+["Я не можу знайти ключі.","find"],
+["Ми прийшли вчасно.","in time"],
+["Чекай до п'ятої.","till"],
+["Я буду готова через 5 хвилин.","in 5 minutes"],
+["Підший ці документи в папку.","file"],
+["Чашка порожня.","empty"],
+["Я трохи втомлена.","a little"],
+["Коли ти приходиш додому?","when"],
+["Дозволь йому відповісти.","let him"],
+["Ця подія дуже цікава.","event"],
+["Я проводжу час із друзями.","spend"]
+];
+
+function renderSelect(id,data,match=false){
+ const box=document.getElementById(id);
+ data.forEach((q,i)=>{
+  const d=document.createElement('div'); d.className='question';
+  if(match){
+   d.innerHTML=`<b>${i+1}. ${q[0]}</b><br><select data-answer="${q[1]}"><option value="">Обери переклад</option>${translations.map(o=>`<option>${o}</option>`).join('')}</select>`;
+  }else{
+   d.innerHTML=`<b>${i+1}. ${q[0]}</b><br><select data-answer="${q[1]}"><option value="">Обери слово</option>${q[2].map(o=>`<option>${o}</option>`).join('')}</select>`;
+  }
+  box.appendChild(d);
+ });
+}
+function renderInputs(id,data){
+ const box=document.getElementById(id);
+ data.forEach((q,i)=>{
+  const d=document.createElement('div'); d.className='question';
+  d.innerHTML=`<b>${i+1}. ${q[0]}</b><br><input data-answer="${q[1]}" placeholder="Напиши англійською">`;
+  box.appendChild(d);
+ });
+}
+function checkSelects(id){
+ const els=document.querySelectorAll('#'+id+' select'); let ok=0;
+ els.forEach(e=>{e.className=''; if(e.value===e.dataset.answer){ok++;e.classList.add('correct')}else e.classList.add('wrong')});
+ const r=document.getElementById(id+'res'); r.textContent=`${ok} / ${els.length}`; r.className='result '+(ok===els.length?'correct':'wrong');
+}
+function checkInputs(id){
+ const els=document.querySelectorAll('#'+id+' input'); let ok=0;
+ els.forEach(e=>{e.className=''; if(e.value.trim().toLowerCase()===e.dataset.answer.toLowerCase()){ok++;e.classList.add('correct')}else e.classList.add('wrong')});
+ const r=document.getElementById(id+'res'); r.textContent=`${ok} / ${els.length}`; r.className='result '+(ok===els.length?'correct':'wrong');
+}
+renderSelect('ex1',ex1);
+renderInputs('ex2',ex2);
+renderSelect('ex3',ex3,true);
+renderInputs('ex4',ex4);
+</script>
+</body>
+</html>
