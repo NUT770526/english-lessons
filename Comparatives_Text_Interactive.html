@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparatives and Superlatives Practice</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Segoe UI,Arial,sans-serif;
+    background:linear-gradient(135deg,#7b68ee,#53c7ff);
+    color:#25324a;
+    padding:24px;
+  }
+  main{
+    max-width:940px;
+    margin:auto;
+    background:#fff;
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 18px 45px rgba(0,0,0,.2);
+  }
+  h1{margin:0 0 8px;text-align:center;color:#5b4bd8}
+  .instruction{
+    background:#f4f1ff;
+    border-left:5px solid #6c5ce7;
+    padding:14px;
+    border-radius:12px;
+    margin:18px 0;
+    font-weight:600;
+  }
+  .text{
+    font-size:19px;
+    line-height:1.9;
+    background:#fafbff;
+    border:2px solid #e6e8fa;
+    border-radius:18px;
+    padding:22px;
+  }
+  .gap{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin:2px 3px;
+    white-space:nowrap;
+  }
+  input{
+    width:150px;
+    padding:8px 10px;
+    border:2px solid #cfd3ee;
+    border-radius:10px;
+    font-size:17px;
+    outline:none;
+  }
+  input:focus{border-color:#6c5ce7}
+  input.good{background:#d9f8df;border-color:#39a85a}
+  input.bad{background:#ffdada;border-color:#db4b4b}
+  .word{font-size:15px;color:#6b7280}
+  .buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin-top:22px;
+  }
+  button{
+    border:0;
+    border-radius:11px;
+    padding:11px 17px;
+    font-size:16px;
+    cursor:pointer;
+    background:#6558e8;
+    color:white;
+  }
+  button.secondary{background:#eceaff;color:#3f359e}
+  .result{
+    margin-top:16px;
+    text-align:center;
+    font-size:19px;
+    font-weight:700;
+    min-height:30px;
+  }
+  .hintbox{
+    display:none;
+    margin-top:18px;
+    background:#fff8d8;
+    border-left:5px solid #f0b400;
+    padding:14px;
+    border-radius:10px;
+  }
+  .answer-key{
+    display:none;
+    margin-top:18px;
+    background:#eaf8ee;
+    border-left:5px solid #38a169;
+    padding:14px;
+    border-radius:10px;
+  }
+  @media(max-width:650px){
+    body{padding:10px}
+    main{padding:18px}
+    .text{font-size:17px;padding:16px}
+    input{width:125px}
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Comparatives and Superlatives</h1>
+
+  <div class="instruction">
+    Complete the text with the correct form of the adjectives or adverbs in brackets.
+    Add <b>the</b> and <b>as</b> where necessary.
+  </div>
+
+  <div class="text">
+    My elder sisters, Anne and Helen, are twins. Anne is a bit
+    <span class="gap"><b>(1)</b><input data-answer="taller" placeholder="your answer"><span class="word">(tall)</span></span>
+    than Helen, and she wants to be a scientist.
+    My sisters used to spend all of their free time together, but as they got
+    <span class="gap"><b>(2a)</b><input data-answer="older" placeholder="your answer"><span class="word">(old)</span></span>
+    and
+    <span class="gap"><b>(2b)</b><input data-answer="older" placeholder="your answer"><span class="word">(old)</span></span>,
+    they started being interested in different things.
+    Helen is
+    <span class="gap"><b>(3)</b><input data-answer="the most creative" placeholder="your answer"><span class="word">(creative)</span></span>
+    person in our family; she wants to become an artist.
+    She isn’t
+    <span class="gap"><b>(4)</b><input data-answer="as interested" placeholder="your answer"><span class="word">(interested)</span></span>
+    in science as Anne and our parents are.
+    Helen spends
+    <span class="gap"><b>(5)</b><input data-answer="less" placeholder="your answer"><span class="word">(little)</span></span>
+    time watching TV or being around people than Anne does.
+    Next year, they’re both moving to England for their studies.
+    So,
+    <span class="gap"><b>(6)</b><input data-answer="the better" placeholder="your answer"><span class="word">(good)</span></span>
+    it is for me because I spend
+    <span class="gap"><b>(7)</b><input data-answer="more" placeholder="your answer"><span class="word">(much)</span></span>
+    time with them now. I’m going to miss them.
+  </div>
+
+  <div class="buttons">
+    <button onclick="checkAnswers()">Check</button>
+    <button class="secondary" onclick="showHints()">Hints</button>
+    <button class="secondary" onclick="showAnswers()">Show answers</button>
+    <button class="secondary" onclick="resetExercise()">Reset</button>
+  </div>
+
+  <div class="result" id="result"></div>
+
+  <div class="hintbox" id="hints">
+    <b>Hints:</b><br>
+    1. Use the comparative form.<br>
+    2. Use the repeated comparative: <i>older and older</i>.<br>
+    3. Use the superlative with <i>the</i>.<br>
+    4. Use the structure <i>not as … as</i>.<br>
+    5. The comparative form of <i>little</i> is irregular.<br>
+    6–7. Use the pattern <i>the + comparative…, the + comparative…</i>.
+  </div>
+
+  <div class="answer-key" id="answers">
+    <b>Answers:</b><br>
+    1. taller<br>
+    2. older and older<br>
+    3. the most creative<br>
+    4. as interested<br>
+    5. less<br>
+    6. the better<br>
+    7. more
+  </div>
+</main>
+
+<script>
+function normalize(s){
+  return s.toLowerCase().trim().replace(/[’']/g,"'").replace(/\s+/g," ");
+}
+function checkAnswers(){
+  const inputs=[...document.querySelectorAll('input[data-answer]')];
+  let correct=0;
+  inputs.forEach(input=>{
+    const ok=normalize(input.value)===normalize(input.dataset.answer);
+    input.classList.remove('good','bad');
+    input.classList.add(ok?'good':'bad');
+    if(ok) correct++;
+  });
+  document.getElementById('result').textContent=
+    correct===inputs.length
+      ? 'Excellent! All answers are correct! 🎉'
+      : `Correct answers: ${correct} / ${inputs.length}`;
+}
+function showHints(){
+  const box=document.getElementById('hints');
+  box.style.display=box.style.display==='block'?'none':'block';
+}
+function showAnswers(){
+  document.getElementById('answers').style.display='block';
+}
+function resetExercise(){
+  document.querySelectorAll('input[data-answer]').forEach(input=>{
+    input.value='';
+    input.classList.remove('good','bad');
+  });
+  document.getElementById('result').textContent='';
+  document.getElementById('hints').style.display='none';
+  document.getElementById('answers').style.display='none';
+}
+</script>
+</body>
+</html>
