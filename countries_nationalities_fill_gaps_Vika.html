@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countries & Nationalities</title>
+<style>
+:root{
+  --purple:#7667f5;
+  --pink:#ff79b0;
+  --blue:#69bfff;
+  --mint:#70d7be;
+  --yellow:#ffd76a;
+  --ink:#26324a;
+  --soft:#f7f7ff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Trebuchet MS",Arial,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at top left,#fff0f8 0,transparent 28%),
+    radial-gradient(circle at top right,#edf5ff 0,transparent 30%),
+    linear-gradient(180deg,#fbfaff,#f4f8ff);
+}
+.wrap{max-width:930px;margin:auto;padding:22px}
+.hero{
+  position:relative;
+  overflow:hidden;
+  border-radius:28px;
+  padding:32px 28px;
+  color:#fff;
+  background:linear-gradient(135deg,#6f61ef,#997aff 55%,#ff84b8);
+  box-shadow:0 16px 40px rgba(79,67,170,.22);
+}
+.hero:before,.hero:after{
+  content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.14)
+}
+.hero:before{width:180px;height:180px;right:-45px;top:-70px}
+.hero:after{width:110px;height:110px;left:-25px;bottom:-50px}
+.hero h1{font-size:36px;margin:0 0 9px;position:relative}
+.hero p{font-size:18px;line-height:1.5;margin:0;position:relative}
+.panel{
+  background:#fff;
+  border-radius:24px;
+  padding:24px;
+  margin:22px 0;
+  box-shadow:0 10px 28px rgba(67,75,125,.10)
+}
+.panel h2{margin:0 0 6px;color:#5749ce}
+.instruction{color:#6d7488;margin:0 0 18px}
+.wordbank{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  padding:16px;
+  border-radius:19px;
+  background:linear-gradient(135deg,#fff8dd,#fff0f7);
+  border:2px dashed #efb05d;
+  margin-bottom:19px
+}
+.word-card{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  background:#fff;
+  border-radius:999px;
+  padding:7px 8px 7px 12px;
+  box-shadow:0 3px 10px rgba(0,0,0,.07);
+  font-weight:700
+}
+.audio{
+  border:0;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--purple),#9c83ff);
+  color:#fff;
+  font-size:15px
+}
+.questions{counter-reset:item}
+.question{
+  counter-increment:item;
+  padding:16px 16px;
+  margin:12px 0;
+  border-radius:17px;
+  background:#fafaff;
+  border-left:6px solid var(--blue);
+  line-height:1.7;
+  font-size:17px
+}
+.question:nth-child(3n+1){border-left-color:var(--pink)}
+.question:nth-child(3n+2){border-left-color:var(--mint)}
+.question:before{
+  content:counter(item) ". ";
+  font-weight:800;
+  color:#584dce
+}
+select{
+  min-width:150px;
+  max-width:100%;
+  margin:0 5px;
+  padding:9px 11px;
+  border:2px solid #d9ddef;
+  border-radius:11px;
+  background:#fff;
+  color:var(--ink);
+  font-size:16px;
+  outline:none
+}
+select:focus{
+  border-color:var(--purple);
+  box-shadow:0 0 0 4px rgba(118,103,245,.10)
+}
+.tip{
+  margin-top:20px;
+  padding:16px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#eafff8,#eef4ff);
+  text-align:center;
+  font-weight:700
+}
+.reset{
+  display:block;
+  margin:18px auto 0;
+  border:0;
+  border-radius:13px;
+  padding:11px 18px;
+  cursor:pointer;
+  color:#fff;
+  font-weight:700;
+  font-size:16px;
+  background:linear-gradient(135deg,#ff7ab8,#ff9a75)
+}
+@media(max-width:650px){
+  .wrap{padding:13px}
+  .hero h1{font-size:30px}
+  .panel{padding:18px}
+  .question{font-size:16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section class="hero">
+  <div style="font-size:25px;margin-bottom:8px">🌍 ✈️ ⭐</div>
+  <h1>Countries & Nationalities</h1>
+  <p>Read the sentences and choose the correct country or nationality.</p>
+</section>
+
+<section class="panel">
+  <h2>Listen to the words</h2>
+  <p class="instruction">Нажми на 🔊 и повтори каждое слово 2–3 раза.</p>
+
+  <div class="wordbank">
+    <div class="word-card">Turkish <button class="audio" onclick="speak('Turkish')">🔊</button></div>
+    <div class="word-card">Italian <button class="audio" onclick="speak('Italian')">🔊</button></div>
+    <div class="word-card">French <button class="audio" onclick="speak('French')">🔊</button></div>
+    <div class="word-card">Polish <button class="audio" onclick="speak('Polish')">🔊</button></div>
+    <div class="word-card">Argentina <button class="audio" onclick="speak('Argentina')">🔊</button></div>
+    <div class="word-card">British <button class="audio" onclick="speak('British')">🔊</button></div>
+    <div class="word-card">Chinese <button class="audio" onclick="speak('Chinese')">🔊</button></div>
+    <div class="word-card">German <button class="audio" onclick="speak('German')">🔊</button></div>
+    <div class="word-card">Spain <button class="audio" onclick="speak('Spain')">🔊</button></div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Fill in the gaps</h2>
+  <p class="instruction">Выбери подходящее слово. Обращай внимание: нужна страна или национальность?</p>
+
+  <div class="questions">
+    <div class="question">
+      My friends live in the UK. They are
+      <select>
+        <option value="">choose</option>
+        <option>British</option>
+        <option>Turkish</option>
+        <option>German</option>
+      </select>.
+    </div>
+
+    <div class="question">
+      She is from
+      <select>
+        <option value="">choose</option>
+        <option>Argentina</option>
+        <option>Spain</option>
+        <option>Italy</option>
+      </select>,
+      so she’s Argentinian.
+    </div>
+
+    <div class="question">
+      Hans speaks
+      <select>
+        <option value="">choose</option>
+        <option>German</option>
+        <option>French</option>
+        <option>Polish</option>
+      </select>
+      because he lives in Germany.
+    </div>
+
+    <div class="question">
+      I love Kung Pao Chicken.
+      <select>
+        <option value="">choose</option>
+        <option>Chinese</option>
+        <option>Italian</option>
+        <option>Turkish</option>
+      </select>
+      food is delicious.
+    </div>
+
+    <div class="question">
+      Poland is a beautiful country, and people from there are
+      <select>
+        <option value="">choose</option>
+        <option>Polish</option>
+        <option>British</option>
+        <option>French</option>
+      </select>.
+    </div>
+
+    <div class="question">
+      Paul lives in Paris, so he speaks
+      <select>
+        <option value="">choose</option>
+        <option>French</option>
+        <option>German</option>
+        <option>Italian</option>
+      </select>.
+    </div>
+
+    <div class="question">
+      I can learn the Spanish language not only in
+      <select>
+        <option value="">choose</option>
+        <option>Spain</option>
+        <option>Argentina</option>
+        <option>France</option>
+      </select>.
+    </div>
+
+    <div class="question">
+      <select>
+        <option value="">choose</option>
+        <option>Turkish</option>
+        <option>Chinese</option>
+        <option>Italian</option>
+      </select>
+      food is famous for its kebabs and baklava.
+    </div>
+
+    <div class="question">
+      I would love to visit Italy and try
+      <select>
+        <option value="">choose</option>
+        <option>Italian</option>
+        <option>French</option>
+        <option>German</option>
+      </select>
+      pizza.
+    </div>
+  </div>
+
+  <div class="tip">✨ Remember: <b>from + country</b>, but <b>be + nationality</b>.</div>
+  <button class="reset" onclick="resetAnswers()">Start again</button>
+</section>
+
+</div>
+
+<script>
+function speak(text){
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-GB";
+  utterance.rate = 0.78;
+  utterance.pitch = 1;
+  speechSynthesis.speak(utterance);
+}
+function resetAnswers(){
+  document.querySelectorAll("select").forEach(s => s.selectedIndex = 0);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+</script>
+</body>
+</html>
