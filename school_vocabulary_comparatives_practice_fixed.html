@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>School Vocabulary & Comparatives Practice</title>
+<style>
+  :root{
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#1f2937;
+    --muted:#64748b;
+    --accent:#6d5dfc;
+    --accent2:#8b5cf6;
+    --ok:#16845b;
+    --bad:#c43d4b;
+    --soft:#eeeafe;
+    --line:#dbe2ea;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:linear-gradient(135deg,#f7f8ff,#eef6ff);
+    color:var(--text);
+    line-height:1.5;
+  }
+  .wrap{max-width:980px;margin:auto;padding:24px 16px 60px}
+  .hero{
+    background:linear-gradient(135deg,#6d5dfc,#9b6df5);
+    color:#fff;border-radius:24px;padding:28px;
+    box-shadow:0 14px 30px rgba(74,58,160,.22);
+  }
+  .hero h1{margin:0 0 8px;font-size:clamp(28px,5vw,46px)}
+  .hero p{margin:6px 0;font-size:17px}
+  .pill{display:inline-block;background:rgba(255,255,255,.18);padding:7px 12px;border-radius:999px;margin-top:10px;font-weight:700}
+  .section{
+    background:var(--card);border-radius:22px;padding:22px;margin-top:20px;
+    box-shadow:0 8px 24px rgba(52,72,103,.09);
+  }
+  h2{margin:0 0 8px;font-size:25px}
+  h3{margin:18px 0 10px}
+  .note{color:var(--muted);margin:0 0 16px}
+  .grammar{
+    background:#f4f1ff;border-left:5px solid var(--accent);padding:14px 16px;border-radius:12px;margin:14px 0;
+  }
+  .grammar b{color:#4f3bd4}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .word-card{
+    border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff;
+    display:flex;gap:10px;align-items:flex-start;
+  }
+  .word-card strong{font-size:18px}
+  .ua{color:var(--muted);font-size:14px}
+  button{
+    border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;
+    background:var(--accent);color:#fff;transition:.18s;
+  }
+  button:hover{transform:translateY(-1px);filter:brightness(1.03)}
+  .speak{min-width:44px;padding:9px 11px;background:#ece9ff;color:#4e3cd0}
+  .secondary{background:#e9eef6;color:#263244}
+  .check{margin-top:14px}
+  .q{
+    border:1px solid var(--line);padding:14px;border-radius:15px;margin:12px 0;background:#fcfdff;
+  }
+  .q p{margin:0 0 10px;font-weight:650}
+  select,input[type="text"]{
+    width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:10px;
+    font-size:16px;background:#fff;
+  }
+  .inline-row{display:flex;gap:8px;align-items:center}
+  .inline-row input{flex:1}
+  .feedback{margin-top:8px;font-weight:700;min-height:24px}
+  .ok{color:var(--ok)} .bad{color:var(--bad)}
+  .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .match-col{display:flex;flex-direction:column;gap:8px}
+  .match-item{
+    border:1px solid var(--line);background:#fff;color:var(--text);text-align:left;
+    padding:11px;border-radius:12px;
+  }
+  .match-item.selected{outline:3px solid #c7befc;background:#f7f5ff}
+  .match-item.matched{background:#e9f8f1;border-color:#8bd1b4;color:#176e4f}
+  .sentence{
+    padding:12px;border-radius:12px;background:#f8fafc;margin:9px 0;border:1px solid var(--line)
+  }
+  .wordbank{
+    display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;
+  }
+  .chip{background:#ece9ff;color:#4b3bb8;padding:7px 10px;border-radius:999px;font-weight:700}
+  .score{
+    position:sticky;bottom:12px;margin-top:20px;background:#111827;color:#fff;border-radius:16px;
+    padding:14px 18px;text-align:center;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.18)
+  }
+  .mini{font-size:13px;color:var(--muted)}
+  @media(max-width:650px){
+    .match-grid{grid-template-columns:1fr}
+    .hero,.section{border-radius:18px}
+    .inline-row{align-items:stretch}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>School Vocabulary Challenge 🎧</h1>
+    <p>Вивчаємо шкільну лексику та ступені порівняння прикметників.</p>
+    <p>Натискай 🔊, слухай, повторюй уголос і виконуй завдання.</p>
+    <span class="pill">Для підлітка • 13 років • English + Ukrainian</span>
+  </section>
+
+  <section class="section">
+    <h2>1. Listen & Repeat</h2>
+    <p class="note">Прослухай усі слова. Намагайся повторити кожне слово 2–3 рази.</p>
+    <div class="grammar">
+      <b>Перевірка звуку:</b> натисни кнопку. Якщо почуєш “Hello! The sound is working”, озвучка працює.
+      <div style="margin-top:10px">
+        <button type="button" class="audio-btn" data-speech="Hello! The sound is working.">🔊 Test sound</button>
+      </div>
+    </div>
+    <div class="grid" id="vocabGrid"></div>
+  </section>
+
+  <section class="section">
+    <h2>Grammar reminder</h2>
+    <div class="grammar">
+      <b>a lot + comparative</b> = набагато…<br>
+      This task is <b>a lot quicker</b> than the previous one.<br><br>
+      <b>a bit + comparative</b> = трохи…<br>
+      My elder sister is <b>a bit stricter</b> than my teacher.<br><br>
+      <b>less + adjective</b> = менш…<br>
+      This source is <b>less reliable</b> than that one.<br><br>
+      <b>as well as</b> = а також / так само як<br>
+      She can draw <b>as well as</b> paint.
+    </div>
+    <button type="button" class="audio-btn" data-speech="This task is a lot quicker than the previous one. My elder sister is a bit stricter than my teacher. This source is less reliable than that one. She can draw as well as paint.">🔊 Listen to grammar examples</button>
+  </section>
+
+  <section class="section">
+    <h2>2. Choose the correct word</h2>
+    <p class="note">Обери слово, яке найкраще підходить за змістом.</p>
+    <div id="choiceExercise"></div>
+    <button type="button" class="check" onclick="checkChoices()">Check answers</button>
+    <div id="choiceFeedback" class="feedback"></div>
+  </section>
+
+  <section class="section">
+    <h2>3. Match the words</h2>
+    <p class="note">Спочатку натисни англійське слово, потім — його український переклад.</p>
+    <div class="match-grid">
+      <div class="match-col" id="matchEnglish"></div>
+      <div class="match-col" id="matchUkrainian"></div>
+    </div>
+    <div id="matchFeedback" class="feedback"></div>
+  </section>
+
+  <section class="section">
+    <h2>4. Comparatives + Vocabulary</h2>
+    <p class="note">Встав правильну форму: <b>a lot / a bit / less / as well as</b>.</p>
+    <div id="grammarExercise"></div>
+    <button type="button" class="check" onclick="checkGrammar()">Check grammar</button>
+    <div id="grammarFeedback" class="feedback"></div>
+  </section>
+
+  <section class="section">
+    <h2>5. Complete the sentences</h2>
+    <p class="note">Використай слова з банку. Кожне слово використовується один раз.</p>
+    <div class="wordbank" id="wordBank"></div>
+    <div id="gapExercise"></div>
+    <button type="button" class="check" onclick="checkGaps()">Check sentences</button>
+    <div id="gapFeedback" class="feedback"></div>
+  </section>
+
+  <section class="section">
+    <h2>6. Advice or Advise?</h2>
+    <p class="note"><b>advice</b> — іменник «порада»; <b>advise</b> — дієслово «радити».</p>
+    <div id="adviceExercise"></div>
+    <button type="button" class="check" onclick="checkAdvice()">Check</button>
+    <div id="adviceFeedback" class="feedback"></div>
+  </section>
+
+  <section class="section">
+    <h2>7. Final memory challenge</h2>
+    <p class="note">Переклади слова англійською. Натисни 🔊 після перевірки та повтори правильне речення.</p>
+    <div id="finalExercise"></div>
+    <button type="button" class="check" onclick="checkFinal()">Check final challenge</button>
+    <div id="finalFeedback" class="feedback"></div>
+  </section>
+
+  <div class="score" id="scoreBox">Total score: 0</div>
+</div>
+
+<script>
+const vocab = [
+["subject","предмет; тема","My favourite subject is science."],
+["all","усі; весь","All students complete the task."],
+["then","потім; тоді","First read the sentence, then choose the answer."],
+["draw","малювати олівцем","I can draw a scientist."],
+["paint","малювати фарбами; фарбувати","My sister likes to paint in the afternoon."],
+["as well as","а також; так само як","He can draw as well as paint."],
+["a lot quicker","набагато швидше","This exercise is a lot quicker than the previous one."],
+["a bit quicker","трохи швидше","Please work a bit quicker."],
+["complete","завершувати; заповнювати","Complete the sentence in brackets."],
+["brackets","дужки","Put the adjective in brackets into the correct form."],
+["necessary","необхідний","It is necessary to follow good advice."],
+["twins","близнюки","The twins are intelligent and generous."],
+["elder","старший у сім'ї","My elder brother is stricter than me."],
+["in the morning","вранці","I study English in the morning."],
+["in the evening","увечері","We send messages in the evening."],
+["in the afternoon","після обіду","She paints in the afternoon."],
+["scientist","учений","The scientist is intelligent and reliable."],
+["spend","витрачати час або гроші","I spend less time on this task now."],
+["send","надсилати","Please send me your complete answer."],
+["advice","порада","Her advice is useful."],
+["advise","радити","Teachers advise students to revise."],
+["follow advice","дотримуватися поради","Reliable students follow advice."],
+["stubborn","упертий","My brother is more stubborn than me."],
+["negative","негативний","Try to be less negative."],
+["intelligent","розумний","This student is a lot more intelligent than before."],
+["generous","щедрий","My aunt is generous as well as reliable."],
+["reliable","надійний","This website is more reliable than that one."],
+["unreliable","ненадійний","That source is less reliable because it is unreliable."],
+["strict","суворий","Our new teacher is a bit stricter."]
+];
+
+let englishVoice = null;
+
+function loadVoices(){
+  const voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  englishVoice =
+    voices.find(v => v.lang === 'en-GB') ||
+    voices.find(v => v.lang === 'en-US') ||
+    voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en')) ||
+    null;
+}
+
+if ('speechSynthesis' in window){
+  loadVoices();
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function speakText(text){
+  if(!('speechSynthesis' in window)){
+    alert('Озвучка не підтримується цим браузером. Відкрийте файл у Google Chrome або Microsoft Edge.');
+    return;
+  }
+
+  loadVoices();
+  speechSynthesis.cancel();
+
+  const u = new SpeechSynthesisUtterance(String(text));
+  u.lang = englishVoice ? englishVoice.lang : 'en-US';
+  if(englishVoice) u.voice = englishVoice;
+  u.rate = 0.78;
+  u.pitch = 1;
+  u.volume = 1;
+
+  // A tiny delay makes speech more reliable after cancel() in Chrome/Edge.
+  setTimeout(() => speechSynthesis.speak(u), 80);
+}
+
+document.addEventListener('click', function(event){
+  const button = event.target.closest('[data-speech]');
+  if(!button) return;
+  event.preventDefault();
+  speakText(button.getAttribute('data-speech'));
+});
+
+const grid=document.getElementById('vocabGrid');
+vocab.forEach(([en,ua,ex])=>{
+  const d=document.createElement('div');
+  d.className='word-card';
+  d.innerHTML=`<button type="button" class="speak audio-btn" data-speech="${escapeAttr(en+'. '+ex)}">🔊</button>
+  <div><strong>${en}</strong><div class="ua">${ua}</div><div class="mini">${ex}</div></div>`;
+  grid.appendChild(d);
+});
+
+let totalScore=0;
+function addScore(points,id){
+  if(!document.getElementById(id).dataset.done){
+    totalScore+=points;
+    document.getElementById(id).dataset.done='1';
+    document.getElementById('scoreBox').textContent='Total score: '+totalScore;
+  }
+}
+
+const choiceData=[
+["My favourite school ___ is English.","subject",["subject","scientist","brackets"]],
+["Please ___ the exercise before lunch.","complete",["send","complete","spend"]],
+["First read the rule, ___ do the task.","then",["all","then","elder"]],
+["My sister can ___ with pencils, but she prefers to paint.","draw",["draw","advise","follow advice"]],
+["The two boys were born on the same day. They are ___.","twins",["scientists","twins","subjects"]],
+["It is ___ to check your work.","necessary",["negative","necessary","stubborn"]],
+["A person you can trust is ___.","reliable",["unreliable","strict","reliable"]],
+["A person who does not want to change their opinion is ___.","stubborn",["generous","stubborn","intelligent"]]
+];
+const choiceWrap=document.getElementById('choiceExercise');
+choiceData.forEach((q,i)=>{
+  const div=document.createElement('div'); div.className='q';
+  div.innerHTML=`<p>${i+1}. ${q[0]} <button type="button" class="speak audio-btn" data-speech="${escapeAttr(q[0].replace('___',q[1]))}">🔊</button></p>
+  <select id="choice${i}"><option value="">— choose —</option>${q[2].map(x=>`<option>${x}</option>`).join('')}</select>`;
+  choiceWrap.appendChild(div);
+});
+function checkChoices(){
+  let n=0;
+  choiceData.forEach((q,i)=>{
+    const el=document.getElementById('choice'+i);
+    el.style.borderColor=el.value===q[1]?'#16845b':'#c43d4b';
+    if(el.value===q[1])n++;
+  });
+  const f=document.getElementById('choiceFeedback');
+  f.textContent=`${n}/${choiceData.length} correct`;
+  f.className='feedback '+(n===choiceData.length?'ok':'bad');
+  addScore(n,'choiceFeedback');
+}
+
+const matchPairs=[
+["spend","витрачати"],["send","надсилати"],["strict","суворий"],
+["generous","щедрий"],["negative","негативний"],["scientist","учений"],
+["in the morning","вранці"],["in the evening","увечері"]
+];
+let selectedEn=null, matched=0;
+function shuffled(a){return [...a].sort(()=>Math.random()-.5)}
+function escapeAttr(text){
+  return String(text)
+    .replace(/&/g,'&amp;')
+    .replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+}
+shuffled(matchPairs).forEach(([en,ua])=>{
+  const b=document.createElement('button'); b.className='match-item'; b.textContent=en; b.dataset.key=en;
+  b.onclick=()=>{ if(b.classList.contains('matched'))return; document.querySelectorAll('#matchEnglish .match-item').forEach(x=>x.classList.remove('selected')); b.classList.add('selected'); selectedEn=en; speakText(en); };
+  document.getElementById('matchEnglish').appendChild(b);
+});
+shuffled(matchPairs).forEach(([en,ua])=>{
+  const b=document.createElement('button'); b.className='match-item'; b.textContent=ua; b.dataset.key=en;
+  b.onclick=()=>{
+    if(!selectedEn || b.classList.contains('matched')) return;
+    const enBtn=[...document.querySelectorAll('#matchEnglish .match-item')].find(x=>x.dataset.key===selectedEn);
+    if(b.dataset.key===selectedEn){
+      b.classList.add('matched'); enBtn.classList.add('matched'); enBtn.classList.remove('selected'); matched++;
+      document.getElementById('matchFeedback').textContent=`Matched: ${matched}/${matchPairs.length}`;
+      document.getElementById('matchFeedback').className='feedback ok';
+      if(matched===matchPairs.length)addScore(matched,'matchFeedback');
+    }else{
+      b.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:250});
+    }
+    selectedEn=null;
+  };
+  document.getElementById('matchUkrainian').appendChild(b);
+});
+
+const grammarData=[
+["My new laptop works ___ than my old one.","a lot quicker",["a lot quicker","a bit quicker","as well as"]],
+["Please answer ___; we only have two minutes.","a bit quicker",["less","a bit quicker","as well as"]],
+["This student is ___ negative than last year.","less",["a lot","less","as well as"]],
+["Kate is intelligent ___ reliable.","as well as",["less","a lot quicker","as well as"]],
+["Our new teacher is ___ stricter than the previous one.","a bit",["a bit","as well as","less"]],
+["This science website is ___ reliable than the school website.","less",["a lot","less","a bit quicker"]],
+["The second task was ___ easier than the first one.","a lot",["a lot","less","as well as"]],
+["My elder sister is generous ___ intelligent.","as well as",["a bit","less","as well as"]]
+];
+const grammarWrap=document.getElementById('grammarExercise');
+grammarData.forEach((q,i)=>{
+ let d=document.createElement('div');d.className='q';
+ d.innerHTML=`<p>${i+1}. ${q[0]} <button type="button" class="speak audio-btn" data-speech="${escapeAttr(q[0].replace('___',q[1]))}">🔊</button></p>
+ <select id="gram${i}"><option value="">— choose —</option>${q[2].map(x=>`<option>${x}</option>`).join('')}</select>`;
+ grammarWrap.appendChild(d);
+});
+function checkGrammar(){
+ let n=0; grammarData.forEach((q,i)=>{const e=document.getElementById('gram'+i); const ok=e.value===q[1]; e.style.borderColor=ok?'#16845b':'#c43d4b'; if(ok)n++;});
+ const f=document.getElementById('grammarFeedback');f.textContent=`${n}/${grammarData.length} correct`;f.className='feedback '+(n===grammarData.length?'ok':'bad');addScore(n,'grammarFeedback');
+}
+
+const gapWords=["all","paint","brackets","elder","in the afternoon","advise","follow advice","unreliable"];
+document.getElementById('wordBank').innerHTML=gapWords.map(w=>`<span class="chip">${w}</span>`).join('');
+const gapData=[
+["___ students must complete the task.","all"],
+["My ___ sister is more intelligent than me.","elder"],
+["Write the adjective in ___.","brackets"],
+["Teachers often ___ us to read more.","advise"],
+["It is necessary to ___ from reliable people.","follow advice"],
+["I like to ___ landscapes.","paint"],
+["We usually study science ___.","in the afternoon"],
+["Do not use this source. It is ___.","unreliable"]
+];
+const gapWrap=document.getElementById('gapExercise');
+gapData.forEach((q,i)=>{
+ let d=document.createElement('div');d.className='q';
+ d.innerHTML=`<p>${i+1}. ${q[0]}</p><div class="inline-row"><input id="gap${i}" type="text" autocomplete="off"><button type="button" class="speak audio-btn" data-speech="${escapeAttr(q[0].replace('___',q[1]))}">🔊</button></div>`;
+ gapWrap.appendChild(d);
+});
+function norm(s){return s.trim().toLowerCase().replace(/\s+/g,' ')}
+function checkGaps(){
+ let n=0;gapData.forEach((q,i)=>{const e=document.getElementById('gap'+i);const ok=norm(e.value)===norm(q[1]);e.style.borderColor=ok?'#16845b':'#c43d4b';if(ok)n++;});
+ const f=document.getElementById('gapFeedback');f.textContent=`${n}/${gapData.length} correct`;f.className='feedback '+(n===gapData.length?'ok':'bad');addScore(n,'gapFeedback');
+}
+
+const adviceData=[
+["Thank you for your useful ___.","advice"],
+["I ___ you to spend more time reading.","advise"],
+["Good students usually follow their teacher's ___.","advice"],
+["My parents ___ me to be less negative.","advise"],
+["Her ___ helped me complete the project.","advice"],
+["Scientists ___ people to check reliable sources.","advise"]
+];
+const adviceWrap=document.getElementById('adviceExercise');
+adviceData.forEach((q,i)=>{
+ let d=document.createElement('div');d.className='q';
+ d.innerHTML=`<p>${i+1}. ${q[0]} <button type="button" class="speak audio-btn" data-speech="${escapeAttr(q[0].replace('___',q[1]))}">🔊</button></p>
+ <select id="adv${i}"><option value="">— choose —</option><option>advice</option><option>advise</option></select>`;
+ adviceWrap.appendChild(d);
+});
+function checkAdvice(){
+ let n=0;adviceData.forEach((q,i)=>{const e=document.getElementById('adv'+i);const ok=e.value===q[1];e.style.borderColor=ok?'#16845b':'#c43d4b';if(ok)n++;});
+ const f=document.getElementById('adviceFeedback');f.textContent=`${n}/${adviceData.length} correct`;f.className='feedback '+(n===adviceData.length?'ok':'bad');addScore(n,'adviceFeedback');
+}
+
+const finalData=[
+["після обіду","in the afternoon","I do my homework in the afternoon."],
+["учений","scientist","The scientist is intelligent."],
+["щедрий","generous","My friend is generous as well as reliable."],
+["суворий","strict","This teacher is a bit stricter."],
+["ненадійний","unreliable","That website is unreliable."],
+["трохи швидше","a bit quicker","Please work a bit quicker."],
+["набагато швидше","a lot quicker","This method is a lot quicker."],
+["надсилати","send","Please send me the answer."],
+["витрачати","spend","I spend less time on this task now."],
+["увечері","in the evening","We read in the evening."],
+["упертий","stubborn","My brother is more stubborn than me."],
+["розумний","intelligent","She is intelligent as well as generous."]
+];
+const finalWrap=document.getElementById('finalExercise');
+finalData.forEach((q,i)=>{
+ let d=document.createElement('div');d.className='q';
+ d.innerHTML=`<p>${i+1}. ${q[0]}</p><div class="inline-row"><input id="fin${i}" type="text"><button type="button" class="speak audio-btn" data-speech="${escapeAttr(q[2])}">🔊</button></div>`;
+ finalWrap.appendChild(d);
+});
+function checkFinal(){
+ let n=0;finalData.forEach((q,i)=>{const e=document.getElementById('fin'+i);const ok=norm(e.value)===norm(q[1]);e.style.borderColor=ok?'#16845b':'#c43d4b';if(ok)n++;});
+ const f=document.getElementById('finalFeedback');f.textContent=`${n}/${finalData.length} correct`;f.className='feedback '+(n===finalData.length?'ok':'bad');addScore(n,'finalFeedback');
+}
+</script>
+</body>
+</html>
