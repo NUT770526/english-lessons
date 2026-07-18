@@ -1,0 +1,72 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+body{font-family:Segoe UI,Arial;background:#eef3ff;padding:25px}
+main{max-width:900px;margin:auto;background:#fff;padding:25px;border-radius:18px}
+.card{background:#f7f8ff;border:1px solid #ccd3ff;border-radius:12px;padding:15px;margin:15px 0}
+input{width:100%;padding:9px}
+button{margin-top:8px;padding:8px 12px}
+.good{background:#d7f7d7} .bad{background:#ffd8d8}
+</style></head><body><main>
+<h1>Exercise 3 – Rewrite the Sentence (Easy)</h1>
+<div class='card' data-answer="the blue bag is a lot bigger than the red bag.">
+<b>1. The blue bag is much bigger than the red bag.</b><p>Rewrite using <b>a lot</b>.</p>
+<input type='text' placeholder='Type your answer'>
+<button onclick='check(this)'>Check</button>
+<button onclick='showAns(this)'>Hint</button>
+<div class='fb'></div></div><div class='card' data-answer="anna can draw as well as she can paint.">
+<b>2. Anna can draw and she can paint too.</b><p>Rewrite using <b>as well as</b>.</p>
+<input type='text' placeholder='Type your answer'>
+<button onclick='check(this)'>Check</button>
+<button onclick='showAns(this)'>Hint</button>
+<div class='fb'></div></div><div class='card' data-answer="this book is a bit easier than that book.">
+<b>3. This book is a little easier than that book.</b><p>Rewrite using <b>a bit</b>.</p>
+<input type='text' placeholder='Type your answer'>
+<button onclick='check(this)'>Check</button>
+<button onclick='showAns(this)'>Hint</button>
+<div class='fb'></div></div><div class='card' data-answer="tom is much taller than ben.">
+<b>4. Tom is much taller than Ben.</b><p>Rewrite using <b>much</b>.</p>
+<input type='text' placeholder='Type your answer'>
+<button onclick='check(this)'>Check</button>
+<button onclick='showAns(this)'>Hint</button>
+<div class='fb'></div></div><div class='card' data-answer="math is a lot more interesting than history.">
+<b>5. Math is much more interesting than history.</b><p>Rewrite using <b>a lot</b>.</p>
+<input type='text' placeholder='Type your answer'>
+<button onclick='check(this)'>Check</button>
+<button onclick='showAns(this)'>Hint</button>
+<div class='fb'></div></div><div class='card' data-answer="kate sings as well as she dances.">
+<b>6. Kate sings and she dances too.</b><p>Rewrite using <b>as well as</b>.</p>
+<input type='text' placeholder='Type your answer'>
+<button onclick='check(this)'>Check</button>
+<button onclick='showAns(this)'>Hint</button>
+<div class='fb'></div></div><div class='card' data-answer="today is a bit colder than yesterday.">
+<b>7. Today is a little colder than yesterday.</b><p>Rewrite using <b>a bit</b>.</p>
+<input type='text' placeholder='Type your answer'>
+<button onclick='check(this)'>Check</button>
+<button onclick='showAns(this)'>Hint</button>
+<div class='fb'></div></div><div class='card' data-answer="my elder brother is much more reliable now.">
+<b>8. My elder brother is much more reliable now.</b><p>Rewrite using <b>much</b>.</p>
+<input type='text' placeholder='Type your answer'>
+<button onclick='check(this)'>Check</button>
+<button onclick='showAns(this)'>Hint</button>
+<div class='fb'></div></div><div class='card' data-answer="the new subject is a lot easier.">
+<b>9. The new subject is much easier.</b><p>Rewrite using <b>a lot</b>.</p>
+<input type='text' placeholder='Type your answer'>
+<button onclick='check(this)'>Check</button>
+<button onclick='showAns(this)'>Hint</button>
+<div class='fb'></div></div><div class='card' data-answer="my sister likes science as well as art.">
+<b>10. My sister likes science and art too.</b><p>Rewrite using <b>as well as</b>.</p>
+<input type='text' placeholder='Type your answer'>
+<button onclick='check(this)'>Check</button>
+<button onclick='showAns(this)'>Hint</button>
+<div class='fb'></div></div>
+<script>
+function n(s){return s.toLowerCase().trim().replace(/[.!?]+$/,'').replace(/\s+/g,' ')}
+function check(b){
+let c=b.parentNode;let i=c.querySelector('input');let fb=c.querySelector('.fb');
+if(n(i.value)==n(c.dataset.answer)){i.className='good';fb.innerHTML='✅ Correct!';}
+else{i.className='bad';fb.innerHTML='❌ Try again.';}
+}
+function showAns(b){
+let c=b.parentNode;c.querySelector('.fb').innerHTML='<b>Answer:</b> '+c.dataset.answer;
+}
+</script></main></body></html>
