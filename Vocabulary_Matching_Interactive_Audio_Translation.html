@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Matching</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Segoe UI,Arial,sans-serif;
+  background:linear-gradient(135deg,#8d5cf6,#4fc3f7);
+  padding:24px;
+  color:#24324a;
+}
+main{
+  max-width:980px;
+  margin:auto;
+  background:#fff;
+  border-radius:24px;
+  padding:28px;
+  box-shadow:0 18px 45px rgba(0,0,0,.2);
+}
+h1{
+  margin:0 0 8px;
+  text-align:center;
+  color:#7b2cbf;
+}
+.intro{
+  text-align:center;
+  color:#667085;
+  margin-bottom:22px;
+}
+.card{
+  background:#f8f7ff;
+  border:2px solid #e7e0ff;
+  border-radius:16px;
+  padding:16px;
+  margin:14px 0;
+}
+.topline{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+.num{
+  min-width:30px;
+  height:30px;
+  border-radius:50%;
+  background:#7b2cbf;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+}
+.sentence{
+  flex:1;
+  font-size:18px;
+  line-height:1.5;
+}
+.word{
+  color:#7b2cbf;
+  font-weight:800;
+}
+.controls{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+button, select{
+  border-radius:10px;
+  padding:9px 12px;
+  font-size:15px;
+}
+button{
+  border:0;
+  cursor:pointer;
+  background:#6c5ce7;
+  color:#fff;
+}
+button.secondary{
+  background:#ece8ff;
+  color:#4b3caf;
+}
+select{
+  width:100%;
+  border:2px solid #d5cfff;
+  background:#fff;
+  margin-top:12px;
+}
+.translation{
+  display:none;
+  margin-top:10px;
+  padding:10px;
+  background:#fff7db;
+  border-left:4px solid #f0b400;
+  border-radius:8px;
+}
+.good{
+  border-color:#41a85f!important;
+  background:#ddf8e4!important;
+}
+.bad{
+  border-color:#d84c4c!important;
+  background:#ffe0e0!important;
+}
+.feedback{
+  margin-top:8px;
+  font-weight:700;
+}
+.definitions{
+  margin-top:28px;
+  background:#f3f7fb;
+  border-radius:16px;
+  padding:18px;
+}
+.definitions h2{
+  margin-top:0;
+  color:#5a43b8;
+}
+.definitions p{
+  margin:8px 0;
+}
+.bottom{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:24px;
+}
+.result{
+  text-align:center;
+  font-size:19px;
+  font-weight:700;
+  margin-top:16px;
+}
+@media(max-width:650px){
+  body{padding:10px}
+  main{padding:18px}
+  .sentence{font-size:16px}
+}
+</style>
+</head>
+<body>
+<main>
+<h1>Vocabulary Matching</h1>
+<p class="intro">Match the adjective in bold with the correct definition. Use translation and audio if needed.</p>
+
+<div id="exercise"></div>
+
+<div class="definitions">
+<h2>Definitions</h2>
+<p><b>a.</b> clever; good at thinking and learning</p>
+<p><b>b.</b> not to be trusted when needed for help or support</p>
+<p><b>c.</b> willing to give your time, money or energy to others freely</p>
+<p><b>d.</b> not changing your mind easily</p>
+<p><b>e.</b> making sure that rules, especially about behaviour, are followed</p>
+<p><b>f.</b> without hope; only seeing the bad things</p>
+<p><b>g.</b> happy and hopeful</p>
+</div>
+
+<div class="bottom">
+  <button onclick="checkAll()">Check all</button>
+  <button class="secondary" onclick="resetAll()">Reset</button>
+</div>
+<div class="result" id="result"></div>
+</main>
+
+<script>
+const items = [
+{
+sentence:"My brother never follows other people’s advice. He’s very stubborn.",
+word:"stubborn",
+translation:"Мой брат никогда не следует советам других людей. Он очень упрямый.",
+answer:"d"
+},
+{
+sentence:"Don’t be so negative. I’m sure you’ll do great!",
+word:"negative",
+translation:"Не будь таким негативным. Я уверена, у тебя всё получится!",
+answer:"f"
+},
+{
+sentence:"Marina is really intelligent. Whenever the teacher asks her a question, she answers correctly.",
+word:"intelligent",
+translation:"Марина действительно умная. Когда учитель задаёт ей вопрос, она отвечает правильно.",
+answer:"a"
+},
+{
+sentence:"Ron’s mother always asks us to stay for dinner at their house. She’s so generous.",
+word:"generous",
+translation:"Мама Рона всегда приглашает нас остаться на ужин. Она очень щедрая.",
+answer:"c"
+},
+{
+sentence:"I know Judy said she’ll send the invitations for the charity event, but will she really? She’s very unreliable.",
+word:"unreliable",
+translation:"Я знаю, что Джуди сказала, что разошлёт приглашения на благотворительное мероприятие, но сделает ли она это? Она очень ненадёжная.",
+answer:"b"
+},
+{
+sentence:"Even when Jeremy is ill, he remains cheerful.",
+word:"cheerful",
+translation:"Даже когда Джереми болен, он остаётся жизнерадостным.",
+answer:"g"
+},
+{
+sentence:"Our teacher is quite strict. If we’re late, he doesn’t allow us to enter the classroom.",
+word:"strict",
+translation:"Наш учитель довольно строгий. Если мы опаздываем, он не разрешает нам войти в класс.",
+answer:"e"
+}
+];
+
+function speak(text){
+  speechSynthesis.cancel();
+  const utterance=new SpeechSynthesisUtterance(text);
+  utterance.lang="en-US";
+  utterance.rate=0.85;
+  speechSynthesis.speak(utterance);
+}
+
+function render(){
+  const box=document.getElementById("exercise");
+  box.innerHTML=items.map((item,i)=>{
+    const marked=item.sentence.replace(item.word,`<span class="word">${item.word}</span>`);
+    return `
+    <div class="card">
+      <div class="topline">
+        <div class="num">${i+1}</div>
+        <div class="sentence">${marked}</div>
+      </div>
+      <div class="controls">
+        <button onclick="speak(${JSON.stringify(item.sentence)})">🔊 Audio</button>
+        <button class="secondary" onclick="toggleTranslation(${i})">🇷🇺 Translation</button>
+      </div>
+      <div class="translation" id="tr${i}">${item.translation}</div>
+      <select id="sel${i}" data-answer="${item.answer}">
+        <option value="">Choose a definition...</option>
+        <option value="a">a. clever; good at thinking and learning</option>
+        <option value="b">b. not to be trusted when needed for help or support</option>
+        <option value="c">c. willing to give your time, money or energy to others freely</option>
+        <option value="d">d. not changing your mind easily</option>
+        <option value="e">e. making sure that rules are followed</option>
+        <option value="f">f. without hope; only seeing the bad things</option>
+        <option value="g">g. happy and hopeful</option>
+      </select>
+      <div class="feedback" id="fb${i}"></div>
+    </div>`;
+  }).join("");
+}
+
+function toggleTranslation(i){
+  const el=document.getElementById("tr"+i);
+  el.style.display=el.style.display==="block"?"none":"block";
+}
+
+function checkAll(){
+  let correct=0;
+  items.forEach((item,i)=>{
+    const select=document.getElementById("sel"+i);
+    const fb=document.getElementById("fb"+i);
+    select.classList.remove("good","bad");
+    if(select.value===item.answer){
+      select.classList.add("good");
+      fb.textContent="✅ Correct!";
+      correct++;
+    }else{
+      select.classList.add("bad");
+      fb.textContent="❌ Try again.";
+    }
+  });
+  document.getElementById("result").textContent=`Correct answers: ${correct} / ${items.length}`;
+}
+
+function resetAll(){
+  items.forEach((item,i)=>{
+    const select=document.getElementById("sel"+i);
+    select.value="";
+    select.classList.remove("good","bad");
+    document.getElementById("fb"+i).textContent="";
+    document.getElementById("tr"+i).style.display="none";
+  });
+  document.getElementById("result").textContent="";
+  speechSynthesis.cancel();
+}
+
+render();
+</script>
+</body>
+</html>
