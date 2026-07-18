@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Exercise 2 - Sentence Builder with Hints</title>
+<style>
+body{margin:0;font-family:Segoe UI,Arial;background:linear-gradient(135deg,#6f61ff,#42c6ff);padding:24px}
+main{max-width:920px;margin:auto;background:#fff;border-radius:24px;padding:28px}
+.card{background:#f7f8ff;border:2px solid #e7e9ff;border-radius:16px;padding:16px;margin:16px 0}
+.answer{min-height:46px;border:2px dashed #b7b8e7;border-radius:10px;padding:8px;margin:10px 0}
+button{padding:8px 12px;border:0;border-radius:8px;margin:4px;cursor:pointer}
+.word{background:#eceaff}
+.hint{display:none;background:#fff8d6;border-left:4px solid #f0b400;padding:10px;border-radius:8px;margin-top:10px}
+.good{background:#cdf7d7}
+.bad{background:#ffd6d6}
+</style>
+</head>
+<body>
+<main>
+<h1>🧩 Build the Sentence</h1>
+<p>Click the words in the correct order. Use <b>Hint</b> if needed.</p>
+
+<script>
+const data=[
+{w:["The","museum","is","much","more","crowded","today."],h:"Start with <b>The museum</b>. Then use <b>is + much more + adjective</b>."},
+{w:["Nora","plays","the piano","as well as","the guitar."],h:"Start with <b>Nora plays</b>. <b>as well as</b> joins two nouns."},
+{w:["This","coffee","is","a bit","stronger","than","yesterday's."],h:"Pattern: <b>This coffee is + a bit + comparative + than...</b>"},
+{w:["Our","new printer","is","a lot","quieter","than","the old one."],h:"Use <b>a lot + comparative</b>."},
+{w:["Daniel","is","much","more reliable","than","his colleague."],h:"Use <b>much more + adjective</b>."},
+{w:["The","evening train","is","a bit","slower","than","the morning train."],h:"Begin with <b>The evening train</b>."},
+{w:["Sara","writes stories","as well as","poems."],h:"<b>as well as</b> connects two objects."},
+{w:["This","hotel room","is","a lot","more comfortable","than","the last one."],h:"Remember: <b>a lot more comfortable</b>."},
+{w:["The","math test","was","much","harder","than","we expected."],h:"Past tense: <b>was</b>."},
+{w:["My","younger cousin","is","a bit","taller","now."],h:"Finish with <b>now</b>."}
+];
+
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5)}
+document.write(data.map((d,i)=>{
+let words=shuffle(d.w).map(x=>`<button class='word' onclick='add(this)'>${x}</button>`).join('');
+return `<div class='card' data-answer="${d.w.join(" ")}">
+<b>${i+1}.</b>
+<div class='answer'></div>
+<div>${words}</div>
+<button onclick='check(this)'>Check</button>
+<button onclick='hint(this)'>Hint</button>
+<button onclick='resetCard(this)'>Reset</button>
+<div class='hint'>${d.h}</div>
+</div>`;
+}).join(""));
+
+function add(b){let c=b.closest('.card');c.querySelector('.answer').innerHTML+=b.textContent+" ";b.disabled=true;}
+function hint(btn){let h=btn.parentNode.querySelector('.hint');h.style.display='block';}
+function check(btn){
+ let c=btn.closest('.card');
+ let ans=c.dataset.answer.trim().replace(/\s+/g,' ');
+ let got=c.querySelector('.answer').innerText.trim().replace(/\s+/g,' ');
+ let box=c.querySelector('.answer');
+ box.classList.remove('good','bad');
+ box.classList.add(got===ans?'good':'bad');
+}
+function resetCard(btn){
+ let c=btn.closest('.card');
+ c.querySelector('.answer').innerHTML='';
+ c.querySelectorAll('.word').forEach(b=>b.disabled=false);
+ c.querySelector('.answer').classList.remove('good','bad');
+ c.querySelector('.hint').style.display='none';
+}
+</script>
+</main>
+</body>
+</html>
