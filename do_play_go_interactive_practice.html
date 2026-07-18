@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Do, Play or Go — Interactive Practice</title>
+<style>
+:root{
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --text:#24313a;
+  --muted:#667783;
+  --do:#2e7d32;
+  --play:#1565c0;
+  --go:#7b1fa2;
+  --good:#1b7f3a;
+  --bad:#c62828;
+  --line:#d9e2ea;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:linear-gradient(135deg,#eef4f8,#f9f4fb);
+  color:var(--text);
+  line-height:1.55;
+}
+.container{max-width:1000px;margin:0 auto;padding:28px 18px 60px}
+header,.exercise{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:0 10px 30px rgba(24,46,62,.08);
+}
+header{padding:28px;margin-bottom:22px}
+h1{margin:0 0 8px;font-size:clamp(30px,5vw,48px)}
+h2{margin-top:0}
+.lead{font-size:18px;color:var(--muted)}
+.rules{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-top:18px;
+}
+.rule{
+  border-radius:15px;
+  padding:15px;
+  border:1px solid var(--line);
+  background:#fafcfd;
+}
+.rule strong{display:block;font-size:21px;margin-bottom:4px}
+.rule.do strong{color:var(--do)}
+.rule.play strong{color:var(--play)}
+.rule.go strong{color:var(--go)}
+.exercise{padding:24px;margin-top:20px}
+.tip{
+  padding:12px 14px;
+  border-left:5px solid #f59e0b;
+  background:#fff8e8;
+  border-radius:9px;
+  margin-bottom:16px;
+}
+.task{
+  padding:14px 0;
+  border-bottom:1px solid #edf1f4;
+}
+.task:last-child{border-bottom:none}
+.num{
+  display:inline-flex;
+  width:29px;height:29px;
+  align-items:center;justify-content:center;
+  border-radius:50%;
+  background:#e8eef5;
+  color:#334155;
+  font-weight:700;
+  margin-right:8px;
+}
+select,input[type=text]{
+  font-size:16px;
+  padding:9px 11px;
+  border:1px solid #b8c5cf;
+  border-radius:9px;
+  margin:4px;
+  background:#fff;
+}
+input[type=text]{width:min(100%,520px)}
+.audio{
+  border:0;
+  border-radius:8px;
+  padding:7px 10px;
+  cursor:pointer;
+  background:#e7f0f8;
+  color:#164c75;
+  font-weight:700;
+}
+.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+button.main{
+  border:0;
+  border-radius:10px;
+  padding:11px 18px;
+  font-size:16px;
+  font-weight:700;
+  color:#fff;
+  cursor:pointer;
+}
+.check{background:#2563eb}
+.reset{background:#64748b}
+.feedback{font-weight:700;margin-left:8px}
+.correct{color:var(--good)}
+.wrong{color:var(--bad)}
+.score{
+  display:none;
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:10px;
+  background:#eef6ff;
+  font-weight:700;
+}
+.translation{font-size:14px;color:var(--muted);margin-top:3px}
+.match-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:12px;
+}
+.match-card{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px;
+  background:#fafcfd;
+}
+.choice-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.choice{
+  border:1px solid #b7c3cd;
+  background:white;
+  border-radius:999px;
+  padding:7px 12px;
+  cursor:pointer;
+  font-weight:700;
+}
+.choice.selected{outline:3px solid #a7c8ec;background:#edf6ff}
+@media(max-width:760px){
+  .rules{grid-template-columns:1fr 1fr}
+  .match-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .rules{grid-template-columns:1fr}
+  .exercise,header{padding:18px}
+  .buttons button{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>DO, PLAY or GO?</h1>
+  <div class="lead">Интерактивная практика для взрослого студента по теме свободного времени и спорта.</div>
+  <div class="rules">
+    <div class="rule do"><strong>DO</strong>индивидуальные занятия и упражнения<br><em>do yoga, do karate</em></div>
+    <div class="rule play"><strong>PLAY</strong>игры и виды спорта<br><em>play tennis, play chess</em></div>
+    <div class="rule go"><strong>GO + -ing</strong>активности с окончанием <strong>-ing</strong><br><em>go swimming</em></div>
+    <div class="rule do"><strong>DO SPORTS</strong>заниматься спортом в целом<br><em>I do sports twice a week.</em></div>
+  </div>
+</header>
+
+<section class="exercise" id="ex1">
+  <h2>Упражнение 1. Выберите DO, PLAY или GO</h2>
+  <div class="tip">Выберите только глагол. Форма предложения уже дана.</div>
+  <div id="ex1tasks"></div>
+  <div class="buttons">
+    <button class="main check" onclick="checkSelects()">Проверить</button>
+    <button class="main reset" onclick="resetExercise('ex1')">Начать заново</button>
+  </div>
+  <div class="score" id="ex1score"></div>
+</section>
+
+<section class="exercise" id="ex2">
+  <h2>Упражнение 2. Составьте правильное выражение</h2>
+  <div class="tip">Введите полное выражение, например: <strong>go swimming</strong>.</div>
+  <div id="ex2tasks"></div>
+  <div class="buttons">
+    <button class="main check" onclick="checkInputs()">Проверить</button>
+    <button class="main reset" onclick="resetExercise('ex2')">Начать заново</button>
+  </div>
+  <div class="score" id="ex2score"></div>
+</section>
+
+<section class="exercise" id="ex3">
+  <h2>Упражнение 3. Исправьте ошибку</h2>
+  <div class="tip">В каждом предложении неправильно выбран глагол. Напишите правильное предложение полностью.</div>
+  <div id="ex3tasks"></div>
+  <div class="buttons">
+    <button class="main check" onclick="checkCorrections()">Проверить</button>
+    <button class="main reset" onclick="resetExercise('ex3')">Начать заново</button>
+  </div>
+  <div class="score" id="ex3score"></div>
+</section>
+</div>
+
+<script>
+const ex1 = [
+["I usually ___ yoga before breakfast.","do","Я обычно занимаюсь йогой перед завтраком."],
+["My husband and I ___ tennis at the weekend.","play","Мы с мужем играем в теннис по выходным."],
+["We sometimes ___ swimming after work.","go","Мы иногда ходим плавать после работы."],
+["She ___ karate twice a week.","does","Она занимается карате дважды в неделю."],
+["They ___ chess after dinner.","play","Они играют в шахматы после ужина."],
+["I ___ shopping on Saturday mornings.","go","Я хожу за покупками по субботам утром."],
+["My colleagues ___ football after work.","play","Мои коллеги играют в футбол после работы."],
+["We ___ sports to stay healthy.","do","Мы занимаемся спортом, чтобы оставаться здоровыми."],
+["He ___ fishing when the weather is good.","goes","Он ездит на рыбалку, когда хорошая погода."],
+["My daughter ___ gymnastics at a local club.","does","Моя дочь занимается гимнастикой в местном клубе."],
+["We ___ table tennis on holiday.","play","Мы играем в настольный теннис в отпуске."],
+["I sometimes ___ mountain biking in summer.","go","Летом я иногда катаюсь на горном велосипеде."]
+];
+
+const ex2 = [
+["йога","do yoga"],
+["карате","do karate"],
+["спорт в целом","do sports"],
+["футбол","play football"],
+["теннис","play tennis"],
+["шахматы","play chess"],
+["настольный теннис","play table tennis"],
+["плавание","go swimming"],
+["рыбалка","go fishing"],
+["покупки","go shopping"],
+["катание на горном велосипеде","go mountain biking"],
+["бег","go running"]
+];
+
+const ex3 = [
+["I play yoga every morning.","I do yoga every morning."],
+["We do tennis on Sundays.","We play tennis on Sundays."],
+["She plays swimming twice a week.","She goes swimming twice a week."],
+["My husband goes chess with his friends.","My husband plays chess with his friends."],
+["They play karate after work.","They do karate after work."],
+["I do shopping on Saturday.","I go shopping on Saturday."],
+["We go football in the park.","We play football in the park."],
+["She plays gymnastics at the sports centre.","She does gymnastics at the sports centre."],
+["He does fishing at the weekend.","He goes fishing at the weekend."],
+["My friends do table tennis in the evening.","My friends play table tennis in the evening."],
+["I play sports three times a week.","I do sports three times a week."],
+["We do mountain biking in summer.","We go mountain biking in summer."]
+];
+
+function speak(text){
+  if(!("speechSynthesis" in window)){alert("Ваш браузер не поддерживает озвучивание.");return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-GB";
+  u.rate=.85;
+  speechSynthesis.speak(u);
+}
+function render(){
+  const e1=document.getElementById("ex1tasks");
+  ex1.forEach((t,i)=>{
+    const opts=["","do","does","play","go","goes"];
+    e1.innerHTML+=`<div class="task"><span class="num">${i+1}</span>
+      ${t[0].replace("___",`<select data-answer="${t[1]}">${opts.map(o=>`<option value="${o}">${o||"— выберите —"}</option>`).join("")}</select>`)}
+      <button class="audio" onclick='speak(${JSON.stringify(t[0].replace("___",t[1]))})'>🔊</button>
+      <span class="feedback"></span><div class="translation">${t[2]}</div></div>`;
+  });
+
+  const e2=document.getElementById("ex2tasks");
+  ex2.forEach((t,i)=>{
+    e2.innerHTML+=`<div class="task"><span class="num">${i+1}</span><strong>${t[0]}</strong><br>
+      <input type="text" data-answer="${t[1]}" placeholder="Введите выражение">
+      <button class="audio" onclick='speak(${JSON.stringify(t[1])})'>🔊 ответ</button>
+      <span class="feedback"></span></div>`;
+  });
+
+  const e3=document.getElementById("ex3tasks");
+  ex3.forEach((t,i)=>{
+    e3.innerHTML+=`<div class="task"><span class="num">${i+1}</span><strong>${t[0]}</strong><br>
+      <input type="text" data-answer="${t[1]}" placeholder="Напишите правильное предложение">
+      <button class="audio" onclick='speak(${JSON.stringify(t[1])})'>🔊 ответ</button>
+      <span class="feedback"></span></div>`;
+  });
+}
+function norm(s){
+  return s.trim().toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g," ").replace(/[.?!]+$/,"");
+}
+function mark(el,ok){
+  const task=el.closest(".task");
+  const fb=task.querySelector(".feedback");
+  fb.textContent=ok?"✓":"✗";
+  fb.className="feedback "+(ok?"correct":"wrong");
+  el.style.borderColor=ok?"#1b7f3a":"#c62828";
+  el.style.background=ok?"#f0fdf4":"#fef2f2";
+}
+function showScore(id,n,total){
+  const s=document.getElementById(id+"score");
+  s.style.display="block";
+  s.textContent=`Результат: ${n} из ${total}.`;
+}
+function checkSelects(){
+  let n=0;
+  document.querySelectorAll("#ex1 select").forEach(x=>{
+    const ok=x.value===x.dataset.answer;
+    if(ok)n++;
+    mark(x,ok);
+  });
+  showScore("ex1",n,ex1.length);
+}
+function checkInputs(){
+  let n=0;
+  document.querySelectorAll("#ex2 input").forEach(x=>{
+    const ok=norm(x.value)===norm(x.dataset.answer);
+    if(ok)n++;
+    mark(x,ok);
+  });
+  showScore("ex2",n,ex2.length);
+}
+function checkCorrections(){
+  let n=0;
+  document.querySelectorAll("#ex3 input").forEach(x=>{
+    const ok=norm(x.value)===norm(x.dataset.answer);
+    if(ok)n++;
+    mark(x,ok);
+  });
+  showScore("ex3",n,ex3.length);
+}
+function resetExercise(id){
+  document.querySelectorAll(`#${id} select`).forEach(x=>{
+    x.value="";x.style.borderColor="";x.style.background="";
+  });
+  document.querySelectorAll(`#${id} input`).forEach(x=>{
+    x.value="";x.style.borderColor="";x.style.background="";
+  });
+  document.querySelectorAll(`#${id} .feedback`).forEach(x=>{
+    x.textContent="";x.className="feedback";
+  });
+  const s=document.getElementById(id+"score");
+  s.style.display="none";s.textContent="";
+}
+render();
+</script>
+</body>
+</html>
