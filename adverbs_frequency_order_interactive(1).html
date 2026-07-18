@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adverbs of Frequency — Order</title>
+<style>
+:root{
+  --bg:#eef4fb;
+  --card:#ffffff;
+  --text:#263238;
+  --muted:#6b7280;
+  --good:#15803d;
+  --bad:#b91c1c;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#eef4fb,#f8f5ff);
+  color:var(--text);
+}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 50px}
+header,.panel{
+  background:var(--card);
+  border:1px solid #d9e2ec;
+  border-radius:20px;
+  box-shadow:0 10px 28px rgba(30,41,59,.08);
+}
+header{padding:24px;margin-bottom:20px}
+h1{margin:0 0 8px;font-size:clamp(28px,4vw,42px)}
+.sub{color:var(--muted);font-size:17px}
+.tip{
+  margin-top:14px;
+  background:#fff7ed;
+  border-left:5px solid #f59e0b;
+  padding:11px 13px;
+  border-radius:8px;
+}
+.panel{padding:22px}
+.word-bank{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-bottom:22px;
+}
+.word{
+  border:1px solid #b8c4d2;
+  background:#fff;
+  border-radius:9px;
+  padding:8px 12px;
+  cursor:pointer;
+  font-weight:700;
+  font-size:16px;
+}
+.word.selected{
+  outline:3px solid #93c5fd;
+  background:#eff6ff;
+}
+.word.used{
+  opacity:.35;
+  cursor:not-allowed;
+}
+.scale{
+  background:#eaf0ff;
+  border-radius:18px;
+  padding:18px;
+  overflow:hidden;
+}
+.row{
+  height:62px;
+  border-radius:22px;
+  margin:10px 0;
+  display:flex;
+  align-items:center;
+  padding-left:18px;
+  position:relative;
+}
+.row:nth-child(1){width:100%;background:#ffe93b}
+.row:nth-child(2){width:92%;background:#8b4df5}
+.row:nth-child(3){width:82%;background:#f65db7}
+.row:nth-child(4){width:72%;background:#ffbd59}
+.row:nth-child(5){width:61%;background:#ff4949}
+.row:nth-child(6){width:51%;background:#12b8d6}
+.row:nth-child(7){width:41%;background:#05c46b}
+.row:nth-child(8){width:31%;background:#ff5b8a}
+.row:nth-child(9){width:26%;background:#8f9aa3}
+.slot{
+  background:#fff;
+  min-width:180px;
+  min-height:46px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 14px;
+  font-size:20px;
+  color:#4b5563;
+  border:3px solid rgba(255,255,255,.8);
+  cursor:pointer;
+  font-weight:700;
+}
+.fixed{cursor:default}
+.slot.empty::before{content:"?";font-size:24px}
+.feedback{
+  margin-left:10px;
+  font-size:22px;
+  font-weight:700;
+}
+.controls{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+button.action{
+  border:0;
+  border-radius:10px;
+  padding:11px 18px;
+  color:white;
+  font-weight:700;
+  font-size:16px;
+  cursor:pointer;
+}
+.check{background:#2563eb}
+.reset{background:#64748b}
+.audio{background:#7c3aed}
+.score{
+  display:none;
+  margin-top:15px;
+  padding:12px 14px;
+  background:#eef6ff;
+  border-radius:10px;
+  font-weight:700;
+}
+.legend{
+  display:flex;
+  justify-content:space-between;
+  color:#64748b;
+  font-size:14px;
+  margin-top:8px;
+}
+@media(max-width:650px){
+  .panel,header{padding:16px}
+  .scale{padding:10px}
+  .row{height:56px;padding-left:8px}
+  .slot{min-width:145px;font-size:17px}
+  .controls button{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Adverbs of Frequency</h1>
+  <div class="sub">Расположите наречия частотности от <strong>always</strong> до <strong>never</strong>.</div>
+  <div class="tip">Нажмите на слово сверху, затем нажмите на нужный белый блок. Чтобы убрать слово, нажмите на заполненный блок.</div>
+</header>
+
+<section class="panel">
+  <div class="word-bank" id="bank"></div>
+
+  <div class="scale">
+    <div class="row"><div class="slot fixed">always</div></div>
+    <div class="row"><div class="slot empty" data-answer="usually"></div><span class="feedback"></span></div>
+    <div class="row"><div class="slot empty" data-answer="generally"></div><span class="feedback"></span></div>
+    <div class="row"><div class="slot empty" data-answer="often"></div><span class="feedback"></span></div>
+    <div class="row"><div class="slot empty" data-answer="sometimes"></div><span class="feedback"></span></div>
+    <div class="row"><div class="slot empty" data-answer="occasionally"></div><span class="feedback"></span></div>
+    <div class="row"><div class="slot empty" data-answer="rarely"></div><span class="feedback"></span></div>
+    <div class="row"><div class="slot empty" data-answer="hardly ever"></div><span class="feedback"></span></div>
+    <div class="row"><div class="slot fixed">never</div></div>
+  </div>
+
+  <div class="legend"><span>100% — всегда</span><span>0% — никогда</span></div>
+
+  <div class="controls">
+    <button class="action check" onclick="checkAnswers()">Проверить</button>
+    <button class="action reset" onclick="resetAll()">Начать заново</button>
+    <button class="action audio" onclick="playAll()">🔊 Прослушать порядок</button>
+  </div>
+  <div class="score" id="score"></div>
+</section>
+</div>
+
+<script>
+const words=["occasionally","rarely","sometimes","often","hardly ever","usually","generally","rarely"];
+let selected=null;
+
+function renderBank(){
+  const bank=document.getElementById("bank");
+  bank.innerHTML="";
+  words.forEach(w=>{
+    const b=document.createElement("button");
+    b.className="word";
+    b.textContent=w;
+    b.dataset.word=w;
+    b.onclick=()=>selectWord(b);
+    bank.appendChild(b);
+  });
+}
+
+function selectWord(btn){
+  if(btn.classList.contains("used")) return;
+  document.querySelectorAll(".word").forEach(x=>x.classList.remove("selected"));
+  btn.classList.add("selected");
+  selected=btn.dataset.word;
+}
+
+document.addEventListener("click",e=>{
+  const slot=e.target.closest(".slot:not(.fixed)");
+  if(!slot) return;
+
+  if(slot.dataset.value){
+    const old=slot.dataset.value;
+    slot.textContent="";
+    slot.classList.add("empty");
+    delete slot.dataset.value;
+    const oldBtn=[...document.querySelectorAll(".word")].find(b=>b.dataset.word===old);
+    if(oldBtn) oldBtn.classList.remove("used");
+    slot.parentElement.querySelector(".feedback").textContent="";
+    return;
+  }
+
+  if(!selected) return;
+  slot.textContent=selected;
+  slot.classList.remove("empty");
+  slot.dataset.value=selected;
+  const btn=[...document.querySelectorAll(".word")].find(b=>b.dataset.word===selected);
+  if(btn){btn.classList.add("used");btn.classList.remove("selected")}
+  selected=null;
+});
+
+function checkAnswers(){
+  let correct=0;
+  const slots=document.querySelectorAll(".slot[data-answer]");
+  slots.forEach(slot=>{
+    const ok=slot.dataset.value===slot.dataset.answer;
+    const fb=slot.parentElement.querySelector(".feedback");
+    fb.textContent=ok?"✓":"✗";
+    fb.style.color=ok?"#15803d":"#b91c1c";
+    if(ok) correct++;
+  });
+
+  const score=document.getElementById("score");
+  score.style.display="block";
+  let note="";
+  const hasRarely=[...slots].some(s=>s.dataset.value==="rarely");
+  if(hasRarely) note=" В этой шкале rarely можно считать близким по значению к rarely.";
+  score.textContent=`Результат: ${correct} из ${slots.length}.${note}`;
+}
+
+function resetAll(){
+  selected=null;
+  document.querySelectorAll(".slot[data-answer]").forEach(slot=>{
+    slot.textContent="";
+    slot.classList.add("empty");
+    delete slot.dataset.value;
+  });
+  document.querySelectorAll(".feedback").forEach(f=>f.textContent="");
+  document.getElementById("score").style.display="none";
+  renderBank();
+}
+
+function speak(text){
+  if(!("speechSynthesis" in window)){
+    alert("Ваш браузер не поддерживает озвучивание.");
+    return;
+  }
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-GB";
+  u.rate=.78;
+  speechSynthesis.speak(u);
+}
+
+function playAll(){
+  speechSynthesis.cancel();
+  speak("always, usually, generally, often, sometimes, occasionally, rarely, hardly ever, never");
+}
+
+renderBank();
+</script>
+</body>
+</html>
