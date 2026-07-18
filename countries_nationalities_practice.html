@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countries & Nationalities</title>
+<style>
+:root{
+  --purple:#7667f5;
+  --pink:#ff7ab8;
+  --blue:#67b9ff;
+  --mint:#6ed6bd;
+  --yellow:#ffd768;
+  --ink:#26324a;
+  --soft:#f7f7ff;
+  --good:#23966f;
+  --bad:#d84b68;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Trebuchet MS",Arial,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at top left,#fff0f8 0,transparent 28%),
+    radial-gradient(circle at top right,#edf4ff 0,transparent 30%),
+    linear-gradient(180deg,#fbfaff,#f4f8ff);
+}
+.wrap{max-width:980px;margin:auto;padding:22px}
+.hero{
+  position:relative;
+  overflow:hidden;
+  border-radius:28px;
+  padding:34px 28px;
+  color:white;
+  background:linear-gradient(135deg,#6f61ef,#9a79ff 55%,#ff83b8);
+  box-shadow:0 16px 40px rgba(79,67,170,.23);
+}
+.hero:before,.hero:after{
+  content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.14)
+}
+.hero:before{width:180px;height:180px;right:-45px;top:-70px}
+.hero:after{width:110px;height:110px;left:-25px;bottom:-50px}
+.hero h1{font-size:38px;margin:0 0 10px;position:relative}
+.hero p{font-size:18px;line-height:1.5;margin:0;position:relative}
+.rule{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0
+}
+.rule-card{
+  background:#fff;border-radius:20px;padding:18px;
+  box-shadow:0 8px 24px rgba(63,72,120,.10)
+}
+.rule-card h3{margin:0 0 8px;color:#5749ce}
+.rule-card.country{border-top:7px solid var(--blue)}
+.rule-card.nationality{border-top:7px solid var(--pink)}
+.exercise{
+  background:#fff;border-radius:24px;padding:23px;margin:22px 0;
+  box-shadow:0 10px 28px rgba(67,75,125,.10)
+}
+.exercise h2{margin:0 0 6px;color:#5749ce}
+.instruction{color:#687086;margin:0 0 17px}
+.bank{
+  display:flex;flex-wrap:wrap;gap:8px;
+  padding:14px;border-radius:17px;
+  background:linear-gradient(135deg,#fff8dc,#fff0f7);
+  margin-bottom:15px
+}
+.chip{
+  background:#fff;padding:8px 11px;border-radius:999px;font-weight:700;
+  box-shadow:0 2px 7px rgba(0,0,0,.06)
+}
+.q{
+  padding:14px 15px;margin:11px 0;border-radius:16px;
+  background:#fafaff;border-left:6px solid var(--blue)
+}
+.q:nth-child(3n+1){border-left-color:var(--pink)}
+.q:nth-child(3n+2){border-left-color:var(--mint)}
+.q strong{font-size:17px}
+select,input{
+  margin-top:8px;padding:10px 11px;border:2px solid #dcdff0;
+  border-radius:11px;font-size:16px;max-width:100%;background:#fff
+}
+input{width:min(100%,420px)}
+select:focus,input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 4px rgba(118,103,245,.10)}
+.audio{
+  border:0;background:linear-gradient(135deg,var(--purple),#9d82ff);
+  color:#fff;padding:9px 13px;border-radius:11px;cursor:pointer;
+  font-weight:700;margin:5px 5px 5px 0
+}
+.check{
+  border:0;background:linear-gradient(135deg,#ff7ab8,#ff9b75);
+  color:#fff;padding:11px 18px;border-radius:12px;cursor:pointer;
+  font-size:16px;font-weight:700;margin-top:10px
+}
+.result{margin-left:10px;font-weight:700}
+.correct{border-color:var(--good)!important;background:#effcf7!important}
+.wrong{border-color:var(--bad)!important;background:#fff2f5!important}
+.pair-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px
+}
+.pair{
+  border-radius:18px;padding:14px;background:#f8f7ff;border:1px solid #eceafd
+}
+.pair-title{font-weight:800;font-size:18px}
+.tip{
+  margin:20px 0;padding:16px;border-radius:18px;
+  background:linear-gradient(135deg,#eafff8,#edf4ff);
+  font-weight:700;text-align:center
+}
+.small{font-size:14px;color:#70788d}
+@media(max-width:680px){
+  .wrap{padding:13px}.hero h1{font-size:31px}
+  .rule,.pair-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section class="hero">
+  <div style="font-size:25px;margin-bottom:8px">🌍 ✈️ ⭐</div>
+  <h1>Countries & Nationalities</h1>
+  <p>Learn the difference, listen, repeat and practise step by step.</p>
+</section>
+
+<section class="rule">
+  <div class="rule-card country">
+    <h3>🌍 COUNTRY = place</h3>
+    <p><b>Where?</b> — Argentina, Poland, China</p>
+    <p class="small">I am from <b>Poland</b>.</p>
+  </div>
+  <div class="rule-card nationality">
+    <h3>👧 NATIONALITY = person / adjective</h3>
+    <p><b>What nationality?</b> — Argentinian, Polish, Chinese</p>
+    <p class="small">She is <b>Polish</b>.</p>
+  </div>
+</section>
+
+<section class="exercise">
+  <h2>Warm-up: Listen and repeat</h2>
+  <p class="instruction">Нажми на кнопки и повтори каждую пару 2–3 раза.</p>
+  <div class="pair-grid" id="pairGrid"></div>
+</section>
+
+<section class="exercise">
+  <h2>Level 1. Country or nationality?</h2>
+  <p class="instruction">Определи: это страна или национальность.</p>
+  <div id="ex1"></div>
+  
+</section>
+
+<section class="exercise">
+  <h2>Level 2. Complete the pair</h2>
+  <p class="instruction">Впиши пропущенную страну или национальность.</p>
+  <div id="ex2"></div>
+  
+</section>
+
+<section class="exercise">
+  <h2>Level 3. Choose the correct word</h2>
+  <p class="instruction">Смотри на смысл: после <b>from</b> нужна страна, после <b>am/is/are</b> — национальность.</p>
+  <div id="ex3"></div>
+  
+</section>
+
+<section class="exercise">
+  <h2>Level 4. Listen and choose</h2>
+  <p class="instruction">Нажми 🔊, послушай слово и выбери правильный ответ.</p>
+  <div id="ex4"></div>
+  
+</section>
+
+<section class="exercise">
+  <h2>Level 5. Mini speaking</h2>
+  <p class="instruction">Нажми на фразу, повтори её и затем скажи о другой стране.</p>
+  <div class="q">
+    <button class="audio" onclick="speak('I am from Poland. I am Polish.')">🔊 Listen</button>
+    <strong>I am from Poland. I am Polish.</strong>
+  </div>
+  <div class="q">
+    <button class="audio" onclick="speak('She is from Turkey. She is Turkish.')">🔊 Listen</button>
+    <strong>She is from Turkey. She is Turkish.</strong>
+  </div>
+  <div class="q">
+    <button class="audio" onclick="speak('He is from the United Kingdom. He is British.')">🔊 Listen</button>
+    <strong>He is from the UK. He is British.</strong>
+  </div>
+  <div class="q">
+    <button class="audio" onclick="speak('They are from the United States. They are American.')">🔊 Listen</button>
+    <strong>They are from the USA. They are American.</strong>
+  </div>
+  <div class="tip">✨ Secret rule: <b>from + COUNTRY</b> → <b>be + NATIONALITY</b></div>
+</section>
+
+</div>
+
+<script>
+const pairs = [
+["Argentina","Argentinian"],
+["Turkey","Turkish"],
+["Poland","Polish"],
+["Germany","German"],
+["China","Chinese"],
+["the UK","British"],
+["Spain","Spanish"],
+["Italy","Italian"],
+["France","French"],
+["the USA","American"]
+];
+
+function speak(text){
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-GB";
+  u.rate = 0.78;
+  u.pitch = 1;
+  speechSynthesis.speak(u);
+}
+
+const pairGrid=document.getElementById("pairGrid");
+pairs.forEach(([c,n])=>{
+  const d=document.createElement("div");
+  d.className="pair";
+  d.innerHTML=`
+    <div class="pair-title">${c} → ${n}</div>
+    <button class="audio" onclick="speak('${c.replaceAll("'","\\'")}')">🔊 ${c}</button>
+    <button class="audio" onclick="speak('${n.replaceAll("'","\\'")}')">🔊 ${n}</button>`;
+  pairGrid.appendChild(d);
+});
+
+const ex1words = [
+["Argentina","country"],["Turkish","nationality"],["Poland","country"],
+["German","nationality"],["China","country"],["British","nationality"],
+["Spain","country"],["Italian","nationality"],["France","country"],["American","nationality"]
+];
+
+const ex2items = [
+["Argentina → ___","Argentinian"],
+["Turkey → ___","Turkish"],
+["___ → Polish","Poland"],
+["Germany → ___","German"],
+["China → ___","Chinese"],
+["___ → British","the UK"],
+["Spain → ___","Spanish"],
+["___ → Italian","Italy"],
+["France → ___","French"],
+["the USA → ___","American"]
+];
+
+const ex3items = [
+["I am from ___.","Poland",["Poland","Polish"]],
+["I am ___.","Polish",["Poland","Polish"]],
+["She is from ___.","Turkey",["Turkey","Turkish"]],
+["She is ___.","Turkish",["Turkey","Turkish"]],
+["He is from ___.","Germany",["Germany","German"]],
+["He is ___.","German",["Germany","German"]],
+["We are from ___.","China",["China","Chinese"]],
+["We are ___.","Chinese",["China","Chinese"]],
+["They are from ___.","the USA",["the USA","American"]],
+["They are ___.","American",["the USA","American"]]
+];
+
+const ex4items = [
+["Argentinian",["Argentina","Argentinian","American"]],
+["Turkey",["Turkish","Turkey","British"]],
+["Polish",["Poland","Polish","Spanish"]],
+["Germany",["German","Germany","France"]],
+["Chinese",["China","Chinese","Italian"]],
+["British",["the UK","British","American"]],
+["Spain",["Spanish","Spain","France"]],
+["Italian",["Italy","Italian","German"]],
+["French",["France","French","Polish"]],
+["the USA",["the USA","American","the UK"]]
+];
+
+function renderEx1(){
+ const box=document.getElementById("ex1");
+ ex1words.forEach((x,i)=>{
+  const d=document.createElement("div"); d.className="q";
+  d.innerHTML=`<strong>${i+1}. ${x[0]}</strong><br>
+  <select data-answer="${x[1]}">
+    <option value="">Choose</option>
+    <option value="country">country</option>
+    <option value="nationality">nationality</option>
+  </select>`;
+  box.appendChild(d);
+ });
+}
+function renderEx2(){
+ const box=document.getElementById("ex2");
+ ex2items.forEach((x,i)=>{
+  const d=document.createElement("div"); d.className="q";
+  d.innerHTML=`<strong>${i+1}. ${x[0]}</strong><br>
+  <input data-answer="${x[1]}" placeholder="Type the missing word">`;
+  box.appendChild(d);
+ });
+}
+function renderEx3(){
+ const box=document.getElementById("ex3");
+ ex3items.forEach((x,i)=>{
+  const d=document.createElement("div"); d.className="q";
+  d.innerHTML=`<strong>${i+1}. ${x[0]}</strong><br>
+  <select data-answer="${x[1]}"><option value="">Choose</option>
+  ${x[2].map(v=>`<option>${v}</option>`).join("")}</select>`;
+  box.appendChild(d);
+ });
+}
+function renderEx4(){
+ const box=document.getElementById("ex4");
+ ex4items.forEach((x,i)=>{
+  const d=document.createElement("div"); d.className="q";
+  d.innerHTML=`<button class="audio" onclick="speak('${x[0].replaceAll("'","\\'")}')">🔊 Listen</button><br>
+  <select data-answer="${x[0]}"><option value="">Choose the word</option>
+  ${x[1].map(v=>`<option>${v}</option>`).join("")}</select>`;
+  box.appendChild(d);
+ });
+}
+
+function checkSelect(id){
+ const all=document.querySelectorAll("#"+id+" select");
+ let ok=0;
+ all.forEach(el=>{
+  el.classList.remove("correct","wrong");
+  if(el.value===el.dataset.answer){ok++;el.classList.add("correct")}
+  else el.classList.add("wrong");
+ });
+ const rid = id==="ex1"?"r1":id==="ex3"?"r3":"r4";
+ document.getElementById(rid).textContent=`${ok} / ${all.length}`;
+}
+function normalize(s){return s.trim().toLowerCase().replace(/\s+/g," ")}
+function checkInput(id){
+ const all=document.querySelectorAll("#"+id+" input");
+ let ok=0;
+ all.forEach(el=>{
+  el.classList.remove("correct","wrong");
+  if(normalize(el.value)===normalize(el.dataset.answer)){ok++;el.classList.add("correct")}
+  else el.classList.add("wrong");
+ });
+ document.getElementById("r2").textContent=`${ok} / ${all.length}`;
+}
+
+renderEx1();
+renderEx2();
+renderEx3();
+renderEx4();
+</script>
+</body>
+</html>
