@@ -1,0 +1,131 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>Build the Sentence</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#6f61ff,#42c6ff);padding:24px;color:#20304a}
+main{max-width:920px;margin:auto;background:white;border-radius:24px;padding:28px;box-shadow:0 18px 45px rgba(0,0,0,.2)}
+h1{text-align:center;color:#5b4bd8;margin-top:0}
+.subtitle{text-align:center;color:#667085;margin-bottom:24px}
+.card{background:#f7f8ff;border:2px solid #e7e9ff;border-radius:16px;padding:16px;margin:14px 0}
+button{border:0;border-radius:10px;padding:9px 14px;font-size:15px;cursor:pointer;background:#6558e8;color:white;margin:4px}
+button.secondary{background:#e8e7ff;color:#3c35a0}
+.good{background:#cdf7d7!important;color:#174f29!important}
+.bad{background:#ffd6d6!important;color:#7b1e1e!important}
+.feedback{font-weight:700;margin-left:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{background:#eceaff;color:#362d9c}
+.answerbox{min-height:48px;border:2px dashed #b7b8e7;border-radius:12px;padding:10px;margin-top:10px;background:#fff}
+input[type=text]{width:100%;padding:10px;border:2px solid #d8daf1;border-radius:10px;font-size:16px}
+.rule{background:#fff7dc;border-left:5px solid #f2b705;padding:12px;border-radius:10px;margin-bottom:18px}
+</style>
+</head>
+<body><main>
+<h1>🧩 Exercise 2: Build the Sentence</h1>
+<p class="subtitle">Click the words in the correct order.</p>
+
+    <div class='card' data-answer="The museum is much more crowded today.">
+      <b>1. Build the sentence:</b>
+      <div class='answerbox'></div>
+      <div class='chips'><button class='chip' onclick='addWord(this)'>museum</button><button class='chip' onclick='addWord(this)'>more</button><button class='chip' onclick='addWord(this)'>much</button><button class='chip' onclick='addWord(this)'>today.</button><button class='chip' onclick='addWord(this)'>is</button><button class='chip' onclick='addWord(this)'>crowded</button><button class='chip' onclick='addWord(this)'>The</button></div>
+      <button class='secondary' onclick='resetCard(this)'>Reset</button>
+      <button onclick='checkBuild(this)'>Check</button>
+      <span class='feedback'></span>
+    </div>
+    <div class='card' data-answer="Nora plays the piano as well as the guitar.">
+      <b>2. Build the sentence:</b>
+      <div class='answerbox'></div>
+      <div class='chips'><button class='chip' onclick='addWord(this)'>plays</button><button class='chip' onclick='addWord(this)'>the piano</button><button class='chip' onclick='addWord(this)'>Nora</button><button class='chip' onclick='addWord(this)'>as well as</button><button class='chip' onclick='addWord(this)'>the guitar.</button></div>
+      <button class='secondary' onclick='resetCard(this)'>Reset</button>
+      <button onclick='checkBuild(this)'>Check</button>
+      <span class='feedback'></span>
+    </div>
+    <div class='card' data-answer="This coffee is a bit stronger than yesterday's.">
+      <b>3. Build the sentence:</b>
+      <div class='answerbox'></div>
+      <div class='chips'><button class='chip' onclick='addWord(this)'>coffee</button><button class='chip' onclick='addWord(this)'>than</button><button class='chip' onclick='addWord(this)'>is</button><button class='chip' onclick='addWord(this)'>This</button><button class='chip' onclick='addWord(this)'>a bit</button><button class='chip' onclick='addWord(this)'>yesterday's.</button><button class='chip' onclick='addWord(this)'>stronger</button></div>
+      <button class='secondary' onclick='resetCard(this)'>Reset</button>
+      <button onclick='checkBuild(this)'>Check</button>
+      <span class='feedback'></span>
+    </div>
+    <div class='card' data-answer="Our new printer is a lot quieter than the old one.">
+      <b>4. Build the sentence:</b>
+      <div class='answerbox'></div>
+      <div class='chips'><button class='chip' onclick='addWord(this)'>the old one.</button><button class='chip' onclick='addWord(this)'>quieter</button><button class='chip' onclick='addWord(this)'>Our</button><button class='chip' onclick='addWord(this)'>a lot</button><button class='chip' onclick='addWord(this)'>than</button><button class='chip' onclick='addWord(this)'>new printer</button><button class='chip' onclick='addWord(this)'>is</button></div>
+      <button class='secondary' onclick='resetCard(this)'>Reset</button>
+      <button onclick='checkBuild(this)'>Check</button>
+      <span class='feedback'></span>
+    </div>
+    <div class='card' data-answer="Daniel is much more reliable than his colleague.">
+      <b>5. Build the sentence:</b>
+      <div class='answerbox'></div>
+      <div class='chips'><button class='chip' onclick='addWord(this)'>much</button><button class='chip' onclick='addWord(this)'>more reliable</button><button class='chip' onclick='addWord(this)'>is</button><button class='chip' onclick='addWord(this)'>Daniel</button><button class='chip' onclick='addWord(this)'>his colleague.</button><button class='chip' onclick='addWord(this)'>than</button></div>
+      <button class='secondary' onclick='resetCard(this)'>Reset</button>
+      <button onclick='checkBuild(this)'>Check</button>
+      <span class='feedback'></span>
+    </div>
+    <div class='card' data-answer="The evening train is a bit slower than the morning train.">
+      <b>6. Build the sentence:</b>
+      <div class='answerbox'></div>
+      <div class='chips'><button class='chip' onclick='addWord(this)'>evening train</button><button class='chip' onclick='addWord(this)'>a bit</button><button class='chip' onclick='addWord(this)'>slower</button><button class='chip' onclick='addWord(this)'>is</button><button class='chip' onclick='addWord(this)'>than</button><button class='chip' onclick='addWord(this)'>The</button><button class='chip' onclick='addWord(this)'>the morning train.</button></div>
+      <button class='secondary' onclick='resetCard(this)'>Reset</button>
+      <button onclick='checkBuild(this)'>Check</button>
+      <span class='feedback'></span>
+    </div>
+    <div class='card' data-answer="Sara writes stories as well as poems.">
+      <b>7. Build the sentence:</b>
+      <div class='answerbox'></div>
+      <div class='chips'><button class='chip' onclick='addWord(this)'>as well as</button><button class='chip' onclick='addWord(this)'>poems.</button><button class='chip' onclick='addWord(this)'>Sara</button><button class='chip' onclick='addWord(this)'>writes stories</button></div>
+      <button class='secondary' onclick='resetCard(this)'>Reset</button>
+      <button onclick='checkBuild(this)'>Check</button>
+      <span class='feedback'></span>
+    </div>
+    <div class='card' data-answer="This hotel room is a lot more comfortable than the last one.">
+      <b>8. Build the sentence:</b>
+      <div class='answerbox'></div>
+      <div class='chips'><button class='chip' onclick='addWord(this)'>than</button><button class='chip' onclick='addWord(this)'>a lot</button><button class='chip' onclick='addWord(this)'>the last one.</button><button class='chip' onclick='addWord(this)'>This</button><button class='chip' onclick='addWord(this)'>more comfortable</button><button class='chip' onclick='addWord(this)'>is</button><button class='chip' onclick='addWord(this)'>hotel room</button></div>
+      <button class='secondary' onclick='resetCard(this)'>Reset</button>
+      <button onclick='checkBuild(this)'>Check</button>
+      <span class='feedback'></span>
+    </div>
+    <div class='card' data-answer="The math test was much harder than we expected.">
+      <b>9. Build the sentence:</b>
+      <div class='answerbox'></div>
+      <div class='chips'><button class='chip' onclick='addWord(this)'>math test</button><button class='chip' onclick='addWord(this)'>than</button><button class='chip' onclick='addWord(this)'>was</button><button class='chip' onclick='addWord(this)'>much</button><button class='chip' onclick='addWord(this)'>The</button><button class='chip' onclick='addWord(this)'>we expected.</button><button class='chip' onclick='addWord(this)'>harder</button></div>
+      <button class='secondary' onclick='resetCard(this)'>Reset</button>
+      <button onclick='checkBuild(this)'>Check</button>
+      <span class='feedback'></span>
+    </div>
+    <div class='card' data-answer="My younger cousin is a bit taller now.">
+      <b>10. Build the sentence:</b>
+      <div class='answerbox'></div>
+      <div class='chips'><button class='chip' onclick='addWord(this)'>taller</button><button class='chip' onclick='addWord(this)'>younger cousin</button><button class='chip' onclick='addWord(this)'>a bit</button><button class='chip' onclick='addWord(this)'>is</button><button class='chip' onclick='addWord(this)'>now.</button><button class='chip' onclick='addWord(this)'>My</button></div>
+      <button class='secondary' onclick='resetCard(this)'>Reset</button>
+      <button onclick='checkBuild(this)'>Check</button>
+      <span class='feedback'></span>
+    </div>
+<script>
+function addWord(btn){
+ const card=btn.closest('.card');
+ const box=card.querySelector('.answerbox');
+ const span=document.createElement('span');
+ span.textContent=btn.textContent+' ';
+ span.dataset.source=btn.textContent;
+ box.appendChild(span);
+ btn.disabled=true;
+ btn.style.opacity='.45';
+}
+function resetCard(btn){
+ const card=btn.closest('.card');
+ card.querySelector('.answerbox').innerHTML='';
+ card.querySelectorAll('.chip').forEach(b=>{b.disabled=false;b.style.opacity='1';});
+ card.querySelector('.feedback').textContent='';
+ card.querySelector('.answerbox').className='answerbox';
+}
+function checkBuild(btn){
+ const card=btn.closest('.card');
+ const typed=card.querySelector('.answerbox').innerText.trim().replace(/\s+/g,' ');
+ const answer=card.dataset.answer.trim().replace(/\s+/g,' ');
+ const box=card.querySelector('.answerbox');
+ if(typed===answer){box.classList.add('good');box.classList.remove('bad');card.querySelector('.feedback').textContent=' ✅ Correct!';}
+ else{box.classList.add('bad');box.classList.remove('good');card.querySelector('.feedback').textContent=' ❌ Try again.';}
+}
+</script></main></body></html>
