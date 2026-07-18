@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>Grammar Choice Challenge</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#6f61ff,#42c6ff);padding:24px;color:#20304a}
+main{max-width:920px;margin:auto;background:white;border-radius:24px;padding:28px;box-shadow:0 18px 45px rgba(0,0,0,.2)}
+h1{text-align:center;color:#5b4bd8;margin-top:0}
+.subtitle{text-align:center;color:#667085;margin-bottom:24px}
+.card{background:#f7f8ff;border:2px solid #e7e9ff;border-radius:16px;padding:16px;margin:14px 0}
+button{border:0;border-radius:10px;padding:9px 14px;font-size:15px;cursor:pointer;background:#6558e8;color:white;margin:4px}
+button.secondary{background:#e8e7ff;color:#3c35a0}
+.good{background:#cdf7d7!important;color:#174f29!important}
+.bad{background:#ffd6d6!important;color:#7b1e1e!important}
+.feedback{font-weight:700;margin-left:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{background:#eceaff;color:#362d9c}
+.answerbox{min-height:48px;border:2px dashed #b7b8e7;border-radius:12px;padding:10px;margin-top:10px;background:#fff}
+input[type=text]{width:100%;padding:10px;border:2px solid #d8daf1;border-radius:10px;font-size:16px}
+.rule{background:#fff7dc;border-left:5px solid #f2b705;padding:12px;border-radius:10px;margin-bottom:18px}
+</style>
+</head>
+<body><main>
+<h1>🎯 Exercise 1: Grammar Choice Challenge</h1>
+<p class="subtitle">Choose the correct option. The sentences use different topics and vocabulary.</p>
+<div class="rule"><b>Focus:</b> as well as • much + comparative • a lot + comparative • a bit + comparative</div>
+<div class='card' data-done='0'><b>1. The new science lab is ___ brighter than the old one.</b><div><button onclick="check(this,'a lot')">a lot</button><button onclick="check(this,'a lot')">a lot of</button><button onclick="check(this,'a lot')">as well as</button><span class='feedback'></span></div></div><div class='card' data-done='0'><b>2. Mia can draw ___ she can paint.</b><div><button onclick="check(this,'as well as')">as well as</button><button onclick="check(this,'as well as')">much</button><button onclick="check(this,'as well as')">a bit</button><span class='feedback'></span></div></div><div class='card' data-done='0'><b>3. This route is ___ shorter, so we will arrive sooner.</b><div><button onclick="check(this,'a bit')">a bit</button><button onclick="check(this,'a bit')">as well as</button><button onclick="check(this,'a bit')">much more</button><span class='feedback'></span></div></div><div class='card' data-done='0'><b>4. Our team is ___ more confident after the last match.</b><div><button onclick="check(this,'much')">much</button><button onclick="check(this,'much')">as well</button><button onclick="check(this,'much')">a bit of</button><span class='feedback'></span></div></div><div class='card' data-done='0'><b>5. The blue suitcase is ___ heavier than the red one.</b><div><button onclick="check(this,'a lot')">a lot</button><button onclick="check(this,'a lot')">a lot of</button><button onclick="check(this,'a lot')">as good as</button><span class='feedback'></span></div></div><div class='card' data-done='0'><b>6. Leo speaks Spanish ___ Italian.</b><div><button onclick="check(this,'as well as')">as well as</button><button onclick="check(this,'as well as')">a bit</button><button onclick="check(this,'as well as')">much more</button><span class='feedback'></span></div></div><div class='card' data-done='0'><b>7. This puzzle is ___ easier than the previous one.</b><div><button onclick="check(this,'a bit')">a bit</button><button onclick="check(this,'a bit')">a bit of</button><button onclick="check(this,'a bit')">as well</button><span class='feedback'></span></div></div><div class='card' data-done='0'><b>8. The new manager is ___ stricter than the old manager.</b><div><button onclick="check(this,'much')">much</button><button onclick="check(this,'much')">as well as</button><button onclick="check(this,'much')">much of</button><span class='feedback'></span></div></div><div class='card' data-done='0'><b>9. Her second presentation was ___ more interesting.</b><div><button onclick="check(this,'a lot')">a lot</button><button onclick="check(this,'a lot')">a lot of</button><button onclick="check(this,'a lot')">as well</button><span class='feedback'></span></div></div><div class='card' data-done='0'><b>10. The library is quiet ___ comfortable.</b><div><button onclick="check(this,'as well as')">as well as</button><button onclick="check(this,'as well as')">much</button><button onclick="check(this,'as well as')">a bit</button><span class='feedback'></span></div></div>
+<script>
+function check(btn,answer){
+ const card=btn.closest('.card');
+ if(card.dataset.done==='1') return;
+ card.dataset.done='1';
+ const buttons=[...card.querySelectorAll('button')];
+ buttons.forEach(b=>{
+   if(b.textContent===answer) b.classList.add('good');
+ });
+ if(btn.textContent!==answer) btn.classList.add('bad');
+ card.querySelector('.feedback').textContent = btn.textContent===answer ? '✅ Correct!' : '❌ Check the green answer.';
+}
+</script></main></body></html>
