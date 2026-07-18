@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>English Challenge</title>
+<style>
+body{margin:0;font-family:Segoe UI,sans-serif;background:linear-gradient(135deg,#6C63FF,#56CCF2);padding:40px}
+.container{max-width:900px;margin:auto;background:#fff;border-radius:25px;padding:35px;box-shadow:0 20px 50px rgba(0,0,0,.2)}
+h1{text-align:center;color:#4B4BFF}
+.progress{height:12px;background:#eee;border-radius:20px;overflow:hidden;margin:30px 0}
+.bar{height:100%;width:0;background:#56CCF2;transition:.4s}
+.question{background:#fafafa;padding:20px;border-radius:15px;margin-bottom:20px;border:2px solid transparent}
+.correct{border-color:#2ecc71;background:#ecfff3}
+.wrong{border-color:#e74c3c;background:#fff0f0}
+select{width:100%;padding:12px;font-size:17px;border-radius:10px;margin-top:10px}
+.result{margin-top:8px;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎮 English Challenge</h1>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div id="quiz"></div>
+</div>
+<script>
+const data=[
+{q:"My brother is ___ taller than me.",a:"much",o:["much","scientist","advice","send"]},
+{q:"Kate can draw ___ paint.",a:"as well as",o:["elder","as well as","negative","subject"]},
+{q:"Please follow my ___.",a:"advice",o:["advice","advise","complete","twins"]},
+{q:"She is only ___ older than me.",a:"a bit",o:["a bit","scientist","generous","all"]},
+{q:"A doctor or a ___ works in a laboratory.",a:"scientist",o:["scientist","send","strict","paint"]},
+{q:"Don't ___ too much money.",a:"spend",o:["spend","send","elder","negative"]},
+{q:"Can you ___ me the photo?",a:"send",o:["send","spend","reliable","brackets"]},
+{q:"My ___ sister is 16.",a:"elder",o:["elder","twins","subject","complete"]},
+{q:"Tom is very ___. You can trust him.",a:"reliable",o:["reliable","negative","paint","draw"]},
+{q:"The teacher gave us good ___.",a:"advice",o:["advice","advise","scientist","strict"]}
+];
+const quiz=document.getElementById("quiz");let solved=0;
+const shuffle=a=>[...a].sort(()=>Math.random()-0.5);
+data.forEach((item,i)=>{
+const div=document.createElement("div");div.className="question";
+div.innerHTML=`<h3>${i+1}. ${item.q}</h3>`;
+const s=document.createElement("select");
+s.innerHTML="<option>Choose...</option>";
+shuffle(item.o).forEach(v=>s.innerHTML+=`<option>${v}</option>`);
+const r=document.createElement("div");r.className="result";
+s.onchange=()=>{if(s.disabled)return;
+if(s.value===item.a){div.classList.add("correct");r.innerHTML="✅ Correct!";s.disabled=true;solved++;document.getElementById("bar").style.width=(solved/data.length*100)+"%";}
+else{div.classList.add("wrong");r.innerHTML="❌ Correct answer: <b>"+item.a+"</b>";}};
+div.appendChild(s);div.appendChild(r);quiz.appendChild(div);
+});
+</script>
+</body>
+</html>
