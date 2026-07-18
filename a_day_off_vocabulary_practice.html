@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Day Off — Vocabulary Practice</title>
+<style>
+:root{
+  --bg:#f6f3ef; --card:#ffffff; --ink:#263238; --muted:#68737d;
+  --accent:#276678; --accent2:#d98c73; --good:#2e7d32; --bad:#c62828;
+  --line:#dbe2e5; --soft:#edf6f7;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:Arial,Helvetica,sans-serif; color:var(--ink);
+  background:linear-gradient(135deg,#f8f3ed,#edf5f5);
+  line-height:1.55;
+}
+.wrap{max-width:1050px;margin:auto;padding:26px 16px 60px}
+.hero{
+  background:linear-gradient(135deg,#fff,#edf7f8);
+  border:1px solid var(--line); border-radius:24px; padding:28px;
+  box-shadow:0 12px 35px rgba(31,55,64,.09); margin-bottom:22px;
+}
+h1{margin:0 0 8px;font-size:clamp(30px,5vw,48px)}
+h2{margin:0 0 10px}
+.subtitle{font-size:18px;color:var(--muted)}
+.tip{
+  background:#fff7ed;border-left:5px solid var(--accent2);
+  padding:12px 14px;border-radius:9px;margin:15px 0;
+}
+.section{
+  background:var(--card); border:1px solid var(--line); border-radius:20px;
+  padding:23px; margin:20px 0; box-shadow:0 8px 24px rgba(31,55,64,.06);
+}
+.word-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.word-card{
+  border:1px solid var(--line);border-radius:14px;padding:14px;
+  background:#fbfdfd;min-height:126px;
+}
+.word{font-size:20px;font-weight:700}
+.ipa{color:var(--accent);font-family:"Arial Unicode MS",Arial,sans-serif;margin:3px 0}
+.ru{color:var(--muted);font-size:15px}
+.speak{
+  margin-top:9px;border:0;border-radius:9px;padding:8px 11px;
+  cursor:pointer;background:var(--accent);color:#fff;font-weight:700;
+}
+.speak:hover{filter:brightness(.94)}
+.task{padding:14px 0;border-bottom:1px solid #edf0f1}
+.task:last-child{border-bottom:0}
+.num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:29px;height:29px;border-radius:50%;background:#dceff1;
+  color:#174c5a;font-weight:700;margin-right:8px;vertical-align:middle;
+}
+select,input[type=text]{
+  font-size:16px;padding:9px 11px;border:1px solid #b8c5ca;
+  border-radius:9px;background:#fff;margin:5px 4px;max-width:100%;
+}
+input[type=text]{width:min(100%,520px)}
+.options{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.option{
+  display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);
+  border-radius:10px;padding:9px;background:#fafcfc;cursor:pointer;
+}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.check,.reset{
+  border:0;border-radius:10px;padding:11px 18px;font-size:16px;
+  font-weight:700;color:#fff;cursor:pointer;
+}
+.check{background:var(--accent)}
+.reset{background:#64748b}
+.feedback{font-weight:700;margin-left:8px}
+.correct{color:var(--good)} .wrong{color:var(--bad)}
+.score{display:none;margin-top:14px;padding:12px;border-radius:10px;background:var(--soft);font-weight:700}
+.mini-audio{border:0;background:#e5f2f3;color:#174c5a;border-radius:8px;padding:6px 9px;cursor:pointer}
+.drag-bank{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}
+.chip{
+  border:1px solid #a9bec3;background:#eef7f8;border-radius:999px;padding:7px 11px;
+  cursor:pointer;font-weight:700;
+}
+.chip.selected{outline:3px solid #88bac4;background:#dceff1}
+.blank{
+  display:inline-block;min-width:150px;border-bottom:2px solid #7c9298;
+  padding:3px 6px;text-align:center;cursor:pointer;color:var(--accent);font-weight:700;
+}
+.small{color:var(--muted);font-size:14px}
+@media(max-width:780px){
+  .word-grid{grid-template-columns:1fr 1fr}
+  .options{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .word-grid{grid-template-columns:1fr}
+  .section,.hero{padding:17px}
+  .controls button{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>A Day Off: Vocabulary Practice</h1>
+    <div class="subtitle">Интерактивные упражнения для запоминания слов и тренировки произношения.</div>
+    <div class="tip"><strong>Как работать:</strong> сначала нажмите 🔊 и повторите слово 2–3 раза, затем выполните упражнения. Для озвучивания используется голос браузера.</div>
+  </section>
+
+  <section class="section">
+    <h2>1. Pronunciation warm-up — послушайте и повторите</h2>
+    <div class="word-grid" id="wordGrid"></div>
+  </section>
+
+  <section class="section" id="ex1">
+    <h2>2. Выберите правильный перевод</h2>
+    <div id="ex1Tasks"></div>
+    <div class="controls"><button class="check" onclick="checkRadios()">Проверить</button><button class="reset" onclick="resetSection('ex1')">Начать заново</button></div>
+    <div class="score" id="ex1Score"></div>
+  </section>
+
+  <section class="section" id="ex2">
+    <h2>3. Вставьте подходящее слово</h2>
+    <div class="tip">Обратите внимание на разницу между <strong>hardly</strong>, <strong>hardly ever</strong>, <strong>occasionally</strong>, <strong>seldom</strong> и <strong>generally</strong>.</div>
+    <div id="ex2Tasks"></div>
+    <div class="controls"><button class="check" onclick="checkSelects()">Проверить</button><button class="reset" onclick="resetSection('ex2')">Начать заново</button></div>
+    <div class="score" id="ex2Score"></div>
+  </section>
+
+  <section class="section" id="ex3">
+    <h2>4. Соедините слово с ситуацией</h2>
+    <div class="small">Нажмите на слово, затем на подходящий пропуск.</div>
+    <div class="drag-bank" id="bank"></div>
+    <div id="ex3Tasks"></div>
+    <div class="controls"><button class="check" onclick="checkMatching()">Проверить</button><button class="reset" onclick="resetMatching()">Начать заново</button></div>
+    <div class="score" id="ex3Score"></div>
+  </section>
+
+  <section class="section" id="ex4">
+    <h2>5. Переведите ключевую часть на английский</h2>
+    <div class="tip">Введите только нужное слово или выражение, а не всё предложение.</div>
+    <div id="ex4Tasks"></div>
+    <div class="controls"><button class="check" onclick="checkInputs()">Проверить</button><button class="reset" onclick="resetSection('ex4')">Начать заново</button></div>
+    <div class="score" id="ex4Score"></div>
+  </section>
+</div>
+
+<script>
+const vocab = [
+["hardly ever","/ˈhɑːdli ˈevə/","почти никогда"],
+["hardly","/ˈhɑːdli/","едва; почти не"],
+["occasionally","/əˈkeɪʒənəli/","время от времени"],
+["seldom","/ˈseldəm/","редко"],
+["generally","/ˈdʒenərəli/","обычно; как правило"],
+["concert","/ˈkɒnsət/","концерт"],
+["gig","/ɡɪɡ/","концерт; выступление"],
+["gymnastics","/dʒɪmˈnæstɪks/","гимнастика"],
+["mountain biking","/ˈmaʊntən ˌbaɪkɪŋ/","катание на горном велосипеде"],
+["art gallery","/ˈɑːt ˌɡæləri/","художественная галерея"],
+["diving","/ˈdaɪvɪŋ/","дайвинг"],
+["table tennis","/ˈteɪbəl ˌtenɪs/","настольный теннис"],
+["gardening","/ˈɡɑːdənɪŋ/","садоводство"],
+["travelling","/ˈtrævəlɪŋ/","путешествия"],
+["photography","/fəˈtɒɡrəfi/","фотография"],
+["pilates","/pɪˈlɑːtiːz/","пилатес"],
+["the gym","/ðə dʒɪm/","спортзал"],
+["chess","/tʃes/","шахматы"]
+];
+
+const radioTasks = [
+["hardly ever",["почти никогда","едва","как правило","усердно"],0],
+["hardly",["время от времени","почти не","редко","обычно"],1],
+["occasionally",["редко","никогда","время от времени","часто"],2],
+["seldom",["редко","обычно","почти не","всегда"],0],
+["generally",["едва","как правило","почти никогда","иногда"],1],
+["gig",["гимнастика","выступление или концерт","галерея","поход"],1],
+["gymnastics",["спортзал","гимнастика","бег","пилатес"],1],
+["mountain biking",["катание на горном велосипеде","альпинизм","прогулка","дайвинг"],0],
+["art gallery",["музей","концертный зал","художественная галерея","спортзал"],2],
+["photography",["фотография","путешествия","садоводство","покупки"],0]
+];
+
+const selectTasks = [
+["I ______ watch television on weekdays because I finish work late.","hardly ever","Я почти никогда не смотрю телевизор по будням."],
+["I could ______ hear the announcement at the station.","hardly","Я едва слышала объявление."],
+["We ______ go to a live concert, perhaps two or three times a year.","occasionally","Мы время от времени ходим на живой концерт."],
+["My husband ______ plays chess now because he is very busy.","seldom","Мой муж теперь редко играет в шахматы."],
+["People ______ feel better after spending time outdoors.","generally","Как правило, люди чувствуют себя лучше после отдыха на свежем воздухе."],
+["I ______ eat fast food; perhaps once every few years.","hardly ever","Я почти никогда не ем фастфуд."],
+["There was ______ any space left in the car park.","hardly","На парковке почти не осталось мест."],
+["We ______ visit an art gallery when we travel to a new city.","occasionally","Иногда мы посещаем художественную галерею."],
+["She ______ has time for gardening during the working week.","seldom","В рабочие дни у неё редко есть время на садоводство."],
+["I ______ prefer quiet activities on my day off.","generally","В выходной я обычно предпочитаю спокойные занятия."]
+];
+
+const matchTasks = [
+["We listened to a small band at a local ______ on Friday evening.","gig"],
+["My daughter did ______ for several years when she was younger.","gymnastics"],
+["We rented special bicycles and went ______ in the hills.","mountain biking"],
+["I enjoy taking pictures, so ______ is one of my hobbies.","photography"],
+["My neighbour grows flowers and vegetables. She loves ______.","gardening"],
+["We saw modern paintings at an ______ last weekend.","art gallery"],
+["I go to ______ twice a week to exercise.","the gym"],
+["My husband and I sometimes play ______ after dinner.","chess"],
+["She tried ______ during her holiday by the sea.","diving"],
+["We attended a classical music ______ in the city centre.","concert"]
+];
+
+const inputTasks = [
+["Я почти никогда не работаю по воскресеньям.","hardly ever"],
+["Я едва могла открыть тяжёлую дверь.","hardly"],
+["Мы время от времени ходим на концерты.","occasionally"],
+["Она редко занимается покупками в центре города.","seldom"],
+["Как правило, я провожу выходной с семьёй.","generally"],
+["концерт или небольшое музыкальное выступление","gig"],
+["гимнастика","gymnastics"],
+["катание на горном велосипеде","mountain biking"],
+["художественная галерея","art gallery"],
+["фотография как хобби","photography"]
+];
+
+function speak(text){
+  if(!("speechSynthesis" in window)){alert("Ваш браузер не поддерживает озвучивание.");return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-GB"; u.rate=0.82; u.pitch=1;
+  speechSynthesis.speak(u);
+}
+function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+
+function render(){
+  const grid=document.getElementById("wordGrid");
+  vocab.forEach(v=>{
+    grid.innerHTML+=`<div class="word-card">
+      <div class="word">${v[0]}</div><div class="ipa">${v[1]}</div>
+      <div class="ru">${v[2]}</div>
+      <button class="speak" onclick='speak(${JSON.stringify(v[0])})'>🔊 Слушать</button>
+    </div>`;
+  });
+
+  const e1=document.getElementById("ex1Tasks");
+  radioTasks.forEach((t,i)=>{
+    e1.innerHTML+=`<div class="task" data-answer="${t[2]}">
+      <span class="num">${i+1}</span><strong>${t[0]}</strong>
+      <button class="mini-audio" onclick='speak(${JSON.stringify(t[0])})'>🔊</button>
+      <div class="options">${t[1].map((o,j)=>`<label class="option"><input type="radio" name="r${i}" value="${j}"> ${o}</label>`).join("")}</div>
+      <span class="feedback"></span>
+    </div>`;
+  });
+
+  const options=["","hardly ever","hardly","occasionally","seldom","generally"];
+  const e2=document.getElementById("ex2Tasks");
+  selectTasks.forEach((t,i)=>{
+    e2.innerHTML+=`<div class="task"><span class="num">${i+1}</span>
+      ${t[0].replace("______",`<select data-answer="${t[1]}">${options.map(o=>`<option value="${o}">${o||"— выберите —"}</option>`).join("")}</select>`)}
+      <button class="mini-audio" onclick='speak(${JSON.stringify(t[0].replace("______",t[1]))})'>🔊</button>
+      <div class="small">${t[2]}</div><span class="feedback"></span></div>`;
+  });
+
+  const bank=document.getElementById("bank");
+  matchTasks.map(x=>x[1]).sort(()=>Math.random()-.5).forEach(w=>{
+    bank.innerHTML+=`<button class="chip" data-word="${w}" onclick="selectChip(this)">${w}</button>`;
+  });
+  const e3=document.getElementById("ex3Tasks");
+  matchTasks.forEach((t,i)=>{
+    e3.innerHTML+=`<div class="task"><span class="num">${i+1}</span>
+      ${t[0].replace("______",`<span class="blank" data-answer="${t[1]}" onclick="placeWord(this)">нажмите сюда</span>`)}
+      <button class="mini-audio" onclick='speak(${JSON.stringify(t[0].replace("______",t[1]))})'>🔊</button>
+      <span class="feedback"></span></div>`;
+  });
+
+  const e4=document.getElementById("ex4Tasks");
+  inputTasks.forEach((t,i)=>{
+    e4.innerHTML+=`<div class="task"><span class="num">${i+1}</span>${t[0]}<br>
+      <input type="text" data-answer="${t[1]}" placeholder="Введите английское слово">
+      <button class="mini-audio" onclick='speak(${JSON.stringify(t[1])})'>🔊 ответ</button>
+      <span class="feedback"></span></div>`;
+  });
+}
+function norm(s){return s.trim().toLowerCase().replace(/\s+/g," ").replace(/[.?!]+$/,"")}
+function mark(task,ok){
+  const f=task.querySelector(".feedback"); f.textContent=ok?" ✓":" ✗";
+  f.className="feedback "+(ok?"correct":"wrong");
+}
+function showScore(id,n,total){
+  const s=document.getElementById(id+"Score");s.style.display="block";s.textContent=`Результат: ${n} из ${total}.`;
+}
+function checkRadios(){
+  let n=0;document.querySelectorAll("#ex1 .task").forEach(t=>{
+    const x=t.querySelector("input:checked");const ok=x&&Number(x.value)===Number(t.dataset.answer);
+    if(ok)n++;mark(t,ok);
+  });showScore("ex1",n,radioTasks.length);
+}
+function checkSelects(){
+  let n=0;document.querySelectorAll("#ex2 select").forEach(x=>{
+    const ok=x.value===x.dataset.answer;if(ok)n++;mark(x.closest(".task"),ok);
+  });showScore("ex2",n,selectTasks.length);
+}
+let selectedWord=null;
+function selectChip(el){
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("selected"));
+  el.classList.add("selected");selectedWord=el.dataset.word;
+}
+function placeWord(blank){
+  if(!selectedWord)return;
+  blank.textContent=selectedWord;blank.dataset.value=selectedWord;
+}
+function checkMatching(){
+  let n=0;document.querySelectorAll("#ex3 .blank").forEach(b=>{
+    const ok=b.dataset.value===b.dataset.answer;if(ok)n++;mark(b.closest(".task"),ok);
+  });showScore("ex3",n,matchTasks.length);
+}
+function checkInputs(){
+  let n=0;document.querySelectorAll("#ex4 input").forEach(x=>{
+    const ok=norm(x.value)===norm(x.dataset.answer);if(ok)n++;mark(x.closest(".task"),ok);
+  });showScore("ex4",n,inputTasks.length);
+}
+function resetSection(id){
+  const sec=document.getElementById(id);
+  sec.querySelectorAll("input[type=radio]").forEach(x=>x.checked=false);
+  sec.querySelectorAll("input[type=text]").forEach(x=>x.value="");
+  sec.querySelectorAll("select").forEach(x=>x.value="");
+  sec.querySelectorAll(".feedback").forEach(x=>{x.textContent="";x.className="feedback"});
+  const s=document.getElementById(id+"Score");if(s){s.style.display="none";s.textContent=""}
+}
+function resetMatching(){
+  selectedWord=null;
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("selected"));
+  document.querySelectorAll("#ex3 .blank").forEach(b=>{b.textContent="нажмите сюда";delete b.dataset.value});
+  document.querySelectorAll("#ex3 .feedback").forEach(x=>{x.textContent="";x.className="feedback"});
+  document.getElementById("ex3Score").style.display="none";
+}
+render();
+</script>
+</body>
+</html>
