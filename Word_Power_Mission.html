@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Word Power Mission</title>
+<style>
+body{margin:0;font-family:Segoe UI,Arial;background:linear-gradient(135deg,#0f172a,#4338ca);color:#fff}
+.wrap{max-width:1050px;margin:auto;padding:28px}
+.hero{background:linear-gradient(135deg,#4f46e5,#06b6d4);padding:24px;border-radius:24px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.hero h1{margin:0;font-size:40px}
+.card{margin-top:20px;background:#fff;color:#111827;border-radius:24px;padding:24px}
+.bank{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+.chip{padding:10px 14px;border-radius:999px;background:#eef2ff;border:2px solid #c7d2fe;font-weight:700;cursor:pointer}
+.chip:hover{background:#ddd6fe}
+.row{display:grid;grid-template-columns:42px 1fr 240px;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid #eee}
+.num{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#4f46e5;color:#fff;font-weight:700}
+select{padding:11px;border-radius:10px;font-size:16px}
+.good{background:#dcfce7;border:2px solid #16a34a}
+.bad{background:#fee2e2;border:2px solid #dc2626}
+.actions{text-align:center;margin-top:22px}
+button{padding:13px 24px;border:0;border-radius:12px;background:#4f46e5;color:#fff;font-size:17px;font-weight:700;cursor:pointer;margin:6px}
+#result{margin-top:18px;font-size:24px;font-weight:800;text-align:center}
+</style></head><body>
+<div class='wrap'><div class='hero'><h1>🎮 Word Power Mission</h1><p>Choose the correct word to complete each sentence.</p></div>
+<div class='card'>
+<div class='bank'><div class='chip' onclick="speak('furious')">🔊 furious</div><div class='chip' onclick="speak('jealous')">🔊 jealous</div><div class='chip' onclick="speak('disappointed')">🔊 disappointed</div><div class='chip' onclick="speak('annoyed')">🔊 annoyed</div><div class='chip' onclick="speak('upset')">🔊 upset</div><div class='chip' onclick="speak('exhausted')">🔊 exhausted</div><div class='chip' onclick="speak('terrified')">🔊 terrified</div><div class='chip' onclick="speak('embarrassed')">🔊 embarrassed</div><div class='chip' onclick="speak('depressed')">🔊 depressed</div></div><div class='row'><div class='num'>1</div><div>Our teacher was so ____ when my classmate kept talking during the exam.</div><select data-a='annoyed'><option value=''>Choose...</option><option>annoyed</option><option>depressed</option><option>disappointed</option><option>embarrassed</option><option>exhausted</option><option>furious</option><option>jealous</option><option>terrified</option><option>upset</option></select></div><div class='row'><div class='num'>2</div><div>After failing the test, I felt really ____ and didn't want to go to school.</div><select data-a='depressed'><option value=''>Choose...</option><option>annoyed</option><option>depressed</option><option>disappointed</option><option>embarrassed</option><option>exhausted</option><option>furious</option><option>jealous</option><option>terrified</option><option>upset</option></select></div><div class='row'><div class='num'>3</div><div>Ted was ____ when he didn't get the main role in the school play.</div><select data-a='disappointed'><option value=''>Choose...</option><option>annoyed</option><option>depressed</option><option>disappointed</option><option>embarrassed</option><option>exhausted</option><option>furious</option><option>jealous</option><option>terrified</option><option>upset</option></select></div><div class='row'><div class='num'>4</div><div>I felt ____ when I spilled my drink on the teacher's desk.</div><select data-a='embarrassed'><option value=''>Choose...</option><option>annoyed</option><option>depressed</option><option>disappointed</option><option>embarrassed</option><option>exhausted</option><option>furious</option><option>jealous</option><option>terrified</option><option>upset</option></select></div><div class='row'><div class='num'>5</div><div>My friend was ____ after studying all night for the exam.</div><select data-a='exhausted'><option value=''>Choose...</option><option>annoyed</option><option>depressed</option><option>disappointed</option><option>embarrassed</option><option>exhausted</option><option>furious</option><option>jealous</option><option>terrified</option><option>upset</option></select></div><div class='row'><div class='num'>6</div><div>Jenny was ____ when someone stole her phone.</div><select data-a='furious'><option value=''>Choose...</option><option>annoyed</option><option>depressed</option><option>disappointed</option><option>embarrassed</option><option>exhausted</option><option>furious</option><option>jealous</option><option>terrified</option><option>upset</option></select></div><div class='row'><div class='num'>7</div><div>I was ____ of my friend who got a higher grade than me.</div><select data-a='jealous'><option value=''>Choose...</option><option>annoyed</option><option>depressed</option><option>disappointed</option><option>embarrassed</option><option>exhausted</option><option>furious</option><option>jealous</option><option>terrified</option><option>upset</option></select></div><div class='row'><div class='num'>8</div><div>Helen was ____ of giving a presentation in front of the class.</div><select data-a='terrified'><option value=''>Choose...</option><option>annoyed</option><option>depressed</option><option>disappointed</option><option>embarrassed</option><option>exhausted</option><option>furious</option><option>jealous</option><option>terrified</option><option>upset</option></select></div><div class='row'><div class='num'>9</div><div>Mike was ____ when his best friend moved away.</div><select data-a='upset'><option value=''>Choose...</option><option>annoyed</option><option>depressed</option><option>disappointed</option><option>embarrassed</option><option>exhausted</option><option>furious</option><option>jealous</option><option>terrified</option><option>upset</option></select></div>
+<div class='actions'><button onclick='check()'>Check answers</button><button onclick='location.reload()'>Try again</button></div>
+<div id='result'></div></div></div>
+<script>
+function speak(t){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.82;speechSynthesis.speak(u);}
+function check(){
+let s=0;
+document.querySelectorAll('select').forEach(x=>{
+x.classList.remove('good','bad');
+if(x.value===x.dataset.a){x.classList.add('good');s++;}
+else{x.classList.add('bad');}
+});
+let msg="Good job!";
+if(s===9)msg="🏆 Perfect! Excellent work!";
+else if(s>=7)msg="🌟 Great work!";
+else if(s>=5)msg="👍 Keep practising!";
+else msg="💪 Try again!";
+document.getElementById('result').innerHTML=`${msg}<br>Score: ${s}/9`;
+}
+</script></body></html>
