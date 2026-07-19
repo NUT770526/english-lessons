@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bullying Vocabulary Mission</title>
+<style>
+:root{
+  --bg1:#0f172a;
+  --bg2:#1e293b;
+  --card:#ffffff;
+  --accent:#7c3aed;
+  --accent2:#06b6d4;
+  --good:#16a34a;
+  --bad:#dc2626;
+  --text:#0f172a;
+  --muted:#64748b;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Inter,Arial,sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(124,58,237,.35), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(6,182,212,.25), transparent 30%),
+    linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:white;
+}
+.app{max-width:1040px;margin:auto;padding:24px}
+.hero{
+  display:flex;justify-content:space-between;align-items:center;gap:18px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  border-radius:24px;padding:22px 24px;backdrop-filter:blur(10px);
+  box-shadow:0 18px 50px rgba(0,0,0,.25)
+}
+.hero h1{margin:0;font-size:clamp(28px,4vw,44px)}
+.hero p{margin:8px 0 0;color:#dbeafe}
+.badge{font-size:48px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.stat{background:rgba(255,255,255,.09);padding:14px;border-radius:16px;text-align:center}
+.stat strong{display:block;font-size:24px}
+.progress-wrap{height:12px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden;margin-bottom:18px}
+.progress{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.35s}
+.game-card{
+  background:var(--card);color:var(--text);border-radius:26px;padding:28px;
+  box-shadow:0 22px 60px rgba(0,0,0,.28)
+}
+.level{font-size:13px;font-weight:800;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+.translation{color:var(--muted);margin:8px 0 20px;font-size:16px}
+.sentence{font-size:clamp(22px,3vw,34px);line-height:1.45;font-weight:800;margin:12px 0 24px}
+.blank{
+  display:inline-block;min-width:170px;border-bottom:4px solid var(--accent);
+  color:var(--accent);text-align:center;padding:0 8px
+}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.option{
+  border:2px solid #e2e8f0;background:#f8fafc;border-radius:16px;padding:15px;
+  font-size:17px;font-weight:700;cursor:pointer;transition:.2s;text-align:left
+}
+.option:hover{transform:translateY(-2px);border-color:var(--accent);background:#f5f3ff}
+.option.correct{background:#dcfce7;border-color:var(--good);color:#166534}
+.option.wrong{background:#fee2e2;border-color:var(--bad);color:#991b1b}
+.feedback{min-height:46px;margin-top:18px;font-weight:800;font-size:18px}
+.controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px}
+button.main{
+  border:0;border-radius:14px;padding:13px 20px;font-weight:800;font-size:16px;cursor:pointer;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));color:white
+}
+button.secondary{
+  border:0;border-radius:14px;padding:13px 18px;font-weight:800;cursor:pointer;background:#e2e8f0;color:#0f172a
+}
+button:disabled{opacity:.45;cursor:not-allowed}
+.word-panel{
+  margin-top:18px;background:rgba(255,255,255,.08);border-radius:22px;padding:18px;
+  border:1px solid rgba(255,255,255,.12)
+}
+.word-panel h3{margin:0 0 12px}
+.words{display:flex;flex-wrap:wrap;gap:9px}
+.word-chip{
+  background:white;color:#1e293b;border-radius:999px;padding:8px 11px;
+  font-size:13px;font-weight:800;cursor:pointer;border:0
+}
+.word-chip:hover{background:#ddd6fe}
+.finish{text-align:center;padding:20px 0}
+.finish h2{font-size:40px;margin:0 0 10px}
+.stars{font-size:44px;margin:12px}
+@media(max-width:650px){
+  .hero{align-items:flex-start}.badge{font-size:36px}
+  .stats{grid-template-columns:1fr 1fr 1fr}
+  .options{grid-template-columns:1fr}
+  .game-card{padding:20px}
+  .controls{flex-direction:column;align-items:stretch}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <div>
+      <h1>Bullying Vocabulary Mission</h1>
+      <p>Complete 12 challenges and unlock the final badge.</p>
+    </div>
+    <div class="badge">🛡️</div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><span>Score</span><strong id="score">0</strong></div>
+    <div class="stat"><span>Question</span><strong id="qnum">1/12</strong></div>
+    <div class="stat"><span>Lives</span><strong id="lives">❤️❤️❤️</strong></div>
+  </section>
+
+  <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+
+  <section class="game-card" id="gameCard">
+    <div class="level" id="level">Mission 1</div>
+    <div class="translation" id="translation"></div>
+    <div class="sentence" id="sentence"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="controls">
+      <button class="secondary" id="audioBtn">🔊 Hear the correct phrase</button>
+      <button class="main" id="nextBtn" disabled>Next challenge →</button>
+    </div>
+  </section>
+
+  <section class="word-panel">
+    <h3>New Words</h3>
+    <div class="words" id="wordList"></div>
+  </section>
+</div>
+
+<script>
+const questions = [
+  {
+    sentence:"Ben felt ____ when the whole class laughed at his presentation.",
+    translation:"Бен почувствовал себя неловко, когда весь класс засмеялся над его презентацией.",
+    answer:"embarrassed",
+    options:["embarrassed","exhausted","jealous of","slightly"]
+  },
+  {
+    sentence:"Mia was ____ her new classmate because he became popular very quickly.",
+    translation:"Миа завидовала новому однокласснику, потому что он быстро стал популярным.",
+    answer:"jealous of",
+    options:["terrified of","jealous of","disappointed with","annoyed with"]
+  },
+  {
+    sentence:"The student was ____ the unfair result of the school competition.",
+    translation:"Ученик был разочарован несправедливым результатом школьного конкурса.",
+    answer:"disappointed with",
+    options:["furious with","disappointed with","upset about","among"]
+  },
+  {
+    sentence:"Do not ____ someone because of their clothes or appearance.",
+    translation:"Не витріщайся на человека из-за его одежды или внешности.",
+    answer:"stare at",
+    options:["stay up","stare at","talk among","stand between"]
+  },
+  {
+    sentence:"Cyberbullying often happens ____ teenagers in group chats.",
+    translation:"Кибербуллинг часто происходит среди подростков в групповых чатах.",
+    answer:"among",
+    options:["between","during","among","slightly"]
+  },
+  {
+    sentence:"The teacher stood ____ the bully and the younger student.",
+    translation:"Учитель встал между хулиганом и младшим учеником.",
+    answer:"between",
+    options:["between","among","during","principal"]
+  },
+  {
+    sentence:"The class discussed bullying ____ the English lesson.",
+    translation:"Класс обсуждал буллинг во время урока английского.",
+    answer:"during",
+    options:["between","during","among","at"]
+  },
+  {
+    sentence:"Leo had to ____ late to finish his school project.",
+    translation:"Лео пришлось не спать допоздна, чтобы закончить школьный проект.",
+    answer:"stay up",
+    options:["stay up","stare at","be upset","be furious"]
+  },
+  {
+    sentence:"After football practice and homework, Sam was completely ____.",
+    translation:"После футбольной тренировки и домашнего задания Сэм был полностью измотан.",
+    answer:"exhausted",
+    options:["embarrassed","depressed","exhausted","jealous"]
+  },
+  {
+    sentence:"The boy was ____ the threatening messages he received online.",
+    translation:"Мальчик был напуган угрожающими сообщениями, которые получил онлайн.",
+    answer:"terrified of",
+    options:["annoyed with","terrified of","disappointed with","jealous of"]
+  },
+  {
+    sentence:"The ____ invited both students to discuss the conflict.",
+    translation:"Директор пригласил обоих учеников обсудить конфликт.",
+    answer:"principal",
+    options:["principal","bullying","between","stare"]
+  },
+  {
+    sentence:"Nora was ____ the cruel joke, but she calmly asked for help.",
+    translation:"Нора была расстроена из-за жестокой шутки, но спокойно попросила о помощи.",
+    answer:"upset about",
+    options:["furious with","upset about","jealous of","exhausted"]
+  }
+];
+
+const vocab = [
+ ["annoyed with","роздратований на"],
+ ["depressed","пригнічений"],
+ ["disappointed with","розчарований у"],
+ ["embarrassed","збентежений"],
+ ["exhausted","виснажений"],
+ ["furious with","дуже злий на"],
+ ["jealous of","ревнувати / заздрити"],
+ ["terrified of","дуже боятися"],
+ ["upset about","засмучений через"],
+ ["among","серед"],
+ ["between","між"],
+ ["during","під час"],
+ ["stare at","витріщатися на"],
+ ["slightly","трохи"],
+ ["stay up","не спати допізна"],
+ ["principal","директор школи"],
+ ["bullying","булінг"]
+];
+
+let index=0, score=0, lives=3, locked=false;
+
+const sentenceEl=document.getElementById("sentence");
+const translationEl=document.getElementById("translation");
+const optionsEl=document.getElementById("options");
+const feedbackEl=document.getElementById("feedback");
+const nextBtn=document.getElementById("nextBtn");
+const scoreEl=document.getElementById("score");
+const qnumEl=document.getElementById("qnum");
+const livesEl=document.getElementById("lives");
+const progressEl=document.getElementById("progress");
+const levelEl=document.getElementById("level");
+const gameCard=document.getElementById("gameCard");
+
+function speak(text){
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-US"; u.rate=.82;
+  speechSynthesis.speak(u);
+}
+
+function render(){
+  locked=false;
+  const q=questions[index];
+  levelEl.textContent=`Mission ${index+1}`;
+  translationEl.textContent=q.translation;
+  sentenceEl.innerHTML=q.sentence.replace("____",'<span class="blank">?</span>');
+  optionsEl.innerHTML="";
+  feedbackEl.textContent="";
+  nextBtn.disabled=true;
+  qnumEl.textContent=`${index+1}/12`;
+  progressEl.style.width=`${(index/questions.length)*100}%`;
+
+  [...q.options].sort(()=>Math.random()-.5).forEach(opt=>{
+    const b=document.createElement("button");
+    b.className="option";
+    b.textContent=opt;
+    b.onclick=()=>choose(b,opt);
+    optionsEl.appendChild(b);
+  });
+}
+
+function choose(btn,opt){
+  if(locked) return;
+  locked=true;
+  const q=questions[index];
+  [...optionsEl.children].forEach(b=>b.disabled=true);
+  if(opt===q.answer){
+    btn.classList.add("correct");
+    score+=10;
+    feedbackEl.innerHTML="✅ Excellent! That phrase fits the situation.";
+  }else{
+    btn.classList.add("wrong");
+    lives=Math.max(0,lives-1);
+    [...optionsEl.children].forEach(b=>{
+      if(b.textContent===q.answer) b.classList.add("correct");
+    });
+    feedbackEl.innerHTML=`❌ Correct answer: <strong>${q.answer}</strong>`;
+  }
+  sentenceEl.innerHTML=q.sentence.replace("____",`<span class="blank">${q.answer}</span>`);
+  scoreEl.textContent=score;
+  livesEl.textContent="❤️".repeat(lives)+"🖤".repeat(3-lives);
+  nextBtn.disabled=false;
+}
+
+nextBtn.onclick=()=>{
+  index++;
+  if(index<questions.length) render();
+  else finish();
+};
+
+document.getElementById("audioBtn").onclick=()=>{
+  speak(questions[index].answer);
+};
+
+function finish(){
+  progressEl.style.width="100%";
+  const stars=score>=100?"⭐⭐⭐":score>=70?"⭐⭐":"⭐";
+  gameCard.innerHTML=`
+    <div class="finish">
+      <div style="font-size:64px">🏆</div>
+      <h2>Mission Complete!</h2>
+      <div class="stars">${stars}</div>
+      <p style="font-size:22px"><strong>Your score: ${score}/120</strong></p>
+      <p style="color:#64748b">You practised 12 useful sentences about feelings, school and bullying.</p>
+      <button class="main" onclick="location.reload()">Play again</button>
+    </div>`;
+}
+
+const wordList=document.getElementById("wordList");
+vocab.forEach(([en,ua])=>{
+  const b=document.createElement("button");
+  b.className="word-chip";
+  b.title=ua;
+  b.textContent="🔊 "+en;
+  b.onclick=()=>speak(en);
+  wordList.appendChild(b);
+});
+
+render();
+</script>
+</body>
+</html>
