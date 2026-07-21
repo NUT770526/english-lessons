@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choose the Best Reply — Vocabulary Practice</title>
+<style>
+:root{
+  --bg1:#fff7ed;--bg2:#eef2ff;--ink:#172033;--muted:#6b7280;
+  --card:#ffffffee;--line:#e7e5e4;--accent:#7c3aed;--accent2:#ec4899;
+  --good:#15803d;--goodBg:#ecfdf3;--bad:#b91c1c;--badBg:#fff1f2;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; font-family:Inter,Segoe UI,Arial,sans-serif; color:var(--ink);
+  background:
+    radial-gradient(circle at 10% 10%,#fde68a99 0,transparent 28%),
+    radial-gradient(circle at 90% 15%,#c4b5fd88 0,transparent 26%),
+    radial-gradient(circle at 80% 85%,#f9a8d477 0,transparent 25%),
+    linear-gradient(135deg,var(--bg1),var(--bg2));
+  display:flex; align-items:center; justify-content:center; padding:24px;
+}
+.shell{width:min(960px,100%)}
+.topbar{
+  display:flex; justify-content:space-between; align-items:center; gap:14px; margin-bottom:16px;
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800}
+.logo{
+  width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:white;font-size:23px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 10px 28px #7c3aed3d;
+}
+.pill{
+  background:#ffffffbb;border:1px solid #ffffff;padding:9px 13px;border-radius:999px;
+  color:#4b5563;font-weight:700;box-shadow:0 8px 26px #1f293712;
+}
+.card{
+  background:var(--card); backdrop-filter:blur(16px); border:1px solid #ffffff;
+  border-radius:28px; padding:clamp(22px,4vw,42px);
+  box-shadow:0 25px 70px #312e8120;
+}
+.progress-wrap{height:10px;background:#ede9fe;border-radius:999px;overflow:hidden;margin:6px 0 26px}
+.progress{height:100%;width:10%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.35s}
+.kicker{font-size:13px;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);font-weight:900;margin-bottom:10px}
+h1{font-size:clamp(27px,4vw,44px);line-height:1.08;margin:0 0 10px}
+.subtitle{color:var(--muted);font-size:16px;margin-bottom:28px}
+.scene{
+  border:1px solid #ede9fe;background:linear-gradient(135deg,#faf5ff,#fff);
+  border-radius:20px;padding:20px;margin-bottom:18px;display:flex;gap:14px;align-items:flex-start;
+}
+.avatar{
+  flex:0 0 45px;height:45px;border-radius:15px;display:grid;place-items:center;font-size:23px;
+  background:linear-gradient(135deg,#ddd6fe,#fbcfe8)
+}
+.scene-text{font-size:clamp(18px,2.5vw,24px);font-weight:750;line-height:1.38}
+.ru{font-size:14px;color:#7c3aed;margin-top:7px;font-weight:600}
+.options{display:grid;gap:12px}
+.option{
+  width:100%;border:1.5px solid var(--line);background:#fff;border-radius:16px;
+  padding:16px 18px;text-align:left;font-size:16px;font-weight:700;color:var(--ink);
+  cursor:pointer;transition:.18s;display:flex;align-items:center;gap:12px;
+}
+.option:hover{transform:translateY(-2px);border-color:#c4b5fd;box-shadow:0 10px 25px #312e8112}
+.option:disabled{cursor:default}
+.letter{
+  width:31px;height:31px;border-radius:10px;background:#f5f3ff;color:var(--accent);
+  display:grid;place-items:center;font-weight:900;flex:0 0 auto
+}
+.option.correct{border-color:#86efac;background:var(--goodBg);color:var(--good)}
+.option.wrong{border-color:#fda4af;background:var(--badBg);color:var(--bad)}
+.feedback{
+  min-height:52px;margin-top:18px;border-radius:15px;padding:13px 15px;display:none;
+  font-weight:700;line-height:1.4
+}
+.feedback.good{display:block;background:var(--goodBg);color:var(--good)}
+.feedback.bad{display:block;background:var(--badBg);color:var(--bad)}
+.controls{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:22px}
+button.ctrl{
+  border:0;border-radius:14px;padding:12px 17px;font-weight:800;font-size:15px;cursor:pointer
+}
+.audio{background:#f5f3ff;color:var(--accent)}
+.next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;box-shadow:0 10px 25px #7c3aed32}
+.next:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+.result{text-align:center;padding:14px 0}
+.result .emoji{font-size:70px}
+.score{font-size:52px;font-weight:950;margin:12px 0;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;color:transparent}
+.restart{margin-top:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff!important}
+.small{font-size:14px;color:var(--muted)}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:10px;height:16px;border-radius:3px;animation:fall 2.5s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+@media(max-width:640px){
+  body{padding:12px}.card{border-radius:22px}.topbar{align-items:flex-start}.pill{font-size:13px}
+  .controls{flex-wrap:wrap}.controls button{flex:1}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <div class="brand"><div class="logo">💬</div><div>Real-Life English</div></div>
+    <div class="pill" id="counter">1 / 10</div>
+  </div>
+
+  <main class="card">
+    <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+    <div id="quiz">
+      <div class="kicker">Choose the best reply</div>
+      <h1>What would you say?</h1>
+      <div class="subtitle">Read the situation and choose the most natural phrase.</div>
+
+      <div class="scene">
+        <div class="avatar" id="avatar">👩</div>
+        <div>
+          <div class="scene-text" id="prompt"></div>
+          <div class="ru" id="translation"></div>
+        </div>
+      </div>
+
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+
+      <div class="controls">
+        <button class="ctrl audio" id="listen">🔊 Listen</button>
+        <button class="ctrl next" id="next" disabled>Next →</button>
+      </div>
+    </div>
+    <div id="result" class="result" hidden></div>
+  </main>
+</div>
+<div class="confetti" id="confetti"></div>
+
+<script>
+const questions = [
+ {a:"👩",p:"Your colleague asks: “Would you like to join us for dinner?”",r:"Коллега предлагает присоединиться к ужину.",o:["Sounds good. I'd love to.","I didn't get it.","What kind of dinner?","It depends on downtown."],c:0,e:"“Sounds good” is a natural, positive reply to a suggestion."},
+ {a:"📅",p:"You need your assistant to organize a meeting for Friday.",r:"Вам нужно попросить помощника организовать встречу.",o:["Could you arrange a meeting for Friday?","Could you book Friday downtown?","How about a meeting arranged?","Let's make sure Friday."],c:0,e:"Use “arrange a meeting” when you mean organize it."},
+ {a:"☕",p:"You want to reserve a table at a café for 7 p.m.",r:"Вы хотите забронировать столик в кафе.",o:["I'd like to book a table for seven.","I'd like you to come along seven.","What kind of table downtown?","Make sure a blind date."],c:0,e:"We say “book a table” to reserve one in advance."},
+ {a:"🙂",p:"Your friend is going to a party alone. You want to go with her.",r:"Подруга идёт на вечеринку одна. Вы хотите пойти вместе.",o:["Can I come along?","Can I arrange?","Can I feel awkward?","Can I make sure?"],c:0,e:"“Come along” means go together with someone."},
+ {a:"😅",p:"You meet many new people and feel uncomfortable.",r:"Вы знакомитесь с новыми людьми и чувствуете себя неловко.",o:["I feel a little awkward.","I feel downtown.","I feel booked.","I feel arranged."],c:0,e:"“Awkward” describes feeling uncomfortable or embarrassed."},
+ {a:"🍽️",p:"You want to ask about your friend's preferred food.",r:"Вы хотите спросить, какую еду предпочитает друг.",o:["What kind of food do you like?","How about food do you like?","What do you say food?","Could you food me?"],c:0,e:"Use “What kind of...?” to ask about a type or preference."},
+ {a:"🚶",p:"You want to suggest going for a walk after dinner.",r:"Вы хотите предложить прогулку после ужина.",o:["How about going for a walk?","What kind of going for a walk?","Could you arrange walking me?","I didn't get a walk."],c:0,e:"“How about + -ing?” is used to make a suggestion."},
+ {a:"🕕",p:"You want to suggest meeting tomorrow at six.",r:"Вы предлагаете встретиться завтра в шесть.",o:["What do you say about meeting at six?","What kind of six do you like?","Let's make sure downtown.","I have no idea six."],c:0,e:"“What do you say about...?” is another natural way to suggest something."},
+ {a:"📍",p:"Your friend asks where the new restaurant is. It is in the city centre.",r:"Друг спрашивает, где новый ресторан. Он в центре города.",o:["It's downtown.","It's awkward.","It's a blind date.","It's arranged."],c:0,e:"“Downtown” means in or towards the city centre."},
+ {a:"❤️",p:"A friend arranged a meeting between two people who had never met before.",r:"Друг организовал встречу двух людей, которые раньше не встречались.",o:["It was a blind date.","It was downtown.","It was less awkward.","It was booked."],c:0,e:"A “blind date” is a date with someone you have not met before."}
+];
+
+let index=0, score=0, answered=false;
+const promptEl=document.getElementById("prompt"), trEl=document.getElementById("translation"),
+optionsEl=document.getElementById("options"), feedback=document.getElementById("feedback"),
+nextBtn=document.getElementById("next"), counter=document.getElementById("counter"),
+progress=document.getElementById("progress"), avatar=document.getElementById("avatar");
+
+function render(){
+  answered=false; nextBtn.disabled=true; feedback.className="feedback"; feedback.textContent="";
+  const q=questions[index];
+  promptEl.textContent=q.p; trEl.textContent=q.r; avatar.textContent=q.a;
+  counter.textContent=`${index+1} / ${questions.length}`;
+  progress.style.width=`${((index+1)/questions.length)*100}%`;
+  optionsEl.innerHTML="";
+  q.o.forEach((text,i)=>{
+    const b=document.createElement("button");
+    b.className="option";
+    b.innerHTML=`<span class="letter">${String.fromCharCode(65+i)}</span><span>${text}</span>`;
+    b.onclick=()=>choose(i,b);
+    optionsEl.appendChild(b);
+  });
+}
+function choose(i,btn){
+  if(answered)return; answered=true;
+  const q=questions[index];
+  const all=[...document.querySelectorAll(".option")];
+  all.forEach(x=>x.disabled=true);
+  all[q.c].classList.add("correct");
+  if(i===q.c){
+    score++; feedback.className="feedback good";
+    feedback.textContent="✓ Excellent! "+q.e;
+  }else{
+    btn.classList.add("wrong"); feedback.className="feedback bad";
+    feedback.textContent="Not quite. "+q.e;
+  }
+  nextBtn.disabled=false;
+}
+nextBtn.onclick=()=>{
+  index++;
+  if(index<questions.length) render(); else showResult();
+};
+document.getElementById("listen").onclick=()=>{
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(questions[index].p);
+  u.lang="en-US"; u.rate=.88; speechSynthesis.speak(u);
+};
+function showResult(){
+  document.getElementById("quiz").hidden=true;
+  const pct=Math.round(score/questions.length*100);
+  const result=document.getElementById("result"); result.hidden=false;
+  let emoji=pct>=90?"🏆":pct>=70?"🌟":"💪";
+  let msg=pct>=90?"Outstanding work!":pct>=70?"Great job!":"Good practice — try once more!";
+  result.innerHTML=`<div class="emoji">${emoji}</div><div class="score">${score}/10</div><h1>${msg}</h1>
+  <p class="small">You completed all 10 real-life vocabulary situations.</p>
+  <button class="ctrl restart" onclick="restart()">Play again</button>`;
+  if(pct>=70) makeConfetti();
+}
+function restart(){
+  index=0;score=0;document.getElementById("quiz").hidden=false;
+  document.getElementById("result").hidden=true;render();
+}
+function makeConfetti(){
+ const c=document.getElementById("confetti");
+ const colors=["#7c3aed","#ec4899","#f59e0b","#10b981","#3b82f6"];
+ for(let i=0;i<70;i++){
+   const x=document.createElement("i");
+   x.style.left=Math.random()*100+"vw";
+   x.style.background=colors[Math.floor(Math.random()*colors.length)];
+   x.style.animationDelay=Math.random()*.8+"s";
+   x.style.transform=`rotate(${Math.random()*360}deg)`;
+   c.appendChild(x); setTimeout(()=>x.remove(),3500);
+ }
+}
+render();
+</script>
+</body>
+</html>
