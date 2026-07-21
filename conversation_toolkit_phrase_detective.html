@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conversation Toolkit — Stage 1</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#64748b;
+      --accent:#5b67d8;
+      --accent2:#7c3aed;
+      --ok:#15803d;
+      --ok-bg:#dcfce7;
+      --bad:#b91c1c;
+      --bad-bg:#fee2e2;
+      --line:#e2e8f0;
+      --shadow:0 18px 45px rgba(30,41,59,.12);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(124,58,237,.12), transparent 28%),
+        radial-gradient(circle at 100% 20%, rgba(91,103,216,.14), transparent 30%),
+        var(--bg);
+      color:var(--text);
+    }
+    .wrap{width:min(960px,92%);margin:0 auto;padding:34px 0 50px}
+    .hero{
+      background:linear-gradient(135deg,#334155 0%,#4f46e5 58%,#7c3aed 100%);
+      color:#fff;border-radius:28px;padding:30px 32px;box-shadow:var(--shadow);
+      position:relative;overflow:hidden;
+    }
+    .hero:after{
+      content:"";position:absolute;width:260px;height:260px;border-radius:50%;
+      background:rgba(255,255,255,.08);right:-85px;top:-110px;
+    }
+    .eyebrow{font-size:13px;letter-spacing:.16em;text-transform:uppercase;opacity:.82;font-weight:700}
+    h1{margin:9px 0 10px;font-size:clamp(30px,5vw,48px);line-height:1.05}
+    .hero p{margin:0;max-width:700px;font-size:17px;line-height:1.55;opacity:.93}
+    .topbar{display:flex;gap:14px;align-items:center;margin:22px 0}
+    .progress-shell{height:12px;background:#e7eaf2;border-radius:999px;overflow:hidden;flex:1}
+    .progress{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.35s}
+    .counter{font-weight:800;color:#475569;white-space:nowrap}
+    .card{
+      background:var(--card);border:1px solid rgba(226,232,240,.9);
+      border-radius:24px;padding:28px;box-shadow:var(--shadow);
+    }
+    .scene-label{color:var(--accent);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
+    .scene{font-size:clamp(21px,3.2vw,30px);font-weight:750;line-height:1.35;margin:10px 0 8px}
+    .translation{color:var(--muted);font-size:16px;margin-bottom:22px}
+    .options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    button.option{
+      border:2px solid var(--line);background:#fff;border-radius:16px;padding:16px 17px;
+      text-align:left;font-size:16px;font-weight:650;color:var(--text);cursor:pointer;
+      transition:.18s;min-height:62px;
+    }
+    button.option:hover{transform:translateY(-2px);border-color:#a5b4fc;box-shadow:0 8px 20px rgba(79,70,229,.10)}
+    button.option:disabled{cursor:default;transform:none}
+    button.correct{border-color:#22c55e;background:var(--ok-bg);color:var(--ok)}
+    button.wrong{border-color:#ef4444;background:var(--bad-bg);color:var(--bad)}
+    .feedback{
+      min-height:54px;margin-top:18px;padding:0;border-radius:14px;font-size:16px;line-height:1.45;
+      display:flex;align-items:center;font-weight:650;
+    }
+    .feedback.show{padding:14px 16px}
+    .feedback.good{background:var(--ok-bg);color:var(--ok)}
+    .feedback.bad{background:var(--bad-bg);color:var(--bad)}
+    .controls{display:flex;justify-content:flex-end;margin-top:18px}
+    .next{
+      border:0;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
+      padding:14px 24px;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;
+      box-shadow:0 10px 22px rgba(91,103,216,.25);display:none;
+    }
+    .result{text-align:center;display:none}
+    .result .score{font-size:64px;font-weight:900;color:var(--accent);margin:10px 0}
+    .result h2{font-size:32px;margin:0}
+    .result p{color:var(--muted);font-size:17px;line-height:1.6}
+    .restart{
+      border:0;background:#111827;color:white;padding:14px 22px;border-radius:14px;
+      font-size:16px;font-weight:800;cursor:pointer;
+    }
+    .small-note{margin-top:16px;color:#94a3b8;font-size:13px;text-align:center}
+    @media(max-width:680px){
+      .wrap{width:min(94%,960px);padding-top:18px}
+      .hero,.card{border-radius:20px;padding:22px}
+      .options{grid-template-columns:1fr}
+      button.option{min-height:56px}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Conversation Toolkit · Stage 1</div>
+      <h1>Phrase Detective</h1>
+      <p>Прочитайте жизненную ситуацию и выберите фразу, которая звучит наиболее естественно. Каждое выражение используется один раз.</p>
+    </section>
+
+    <div class="topbar">
+      <div class="progress-shell"><div class="progress" id="progress"></div></div>
+      <div class="counter" id="counter">1 / 18</div>
+    </div>
+
+    <section class="card" id="quizCard">
+      <div class="scene-label">Real-life situation</div>
+      <div class="scene" id="scene"></div>
+      <div class="translation" id="translation"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="controls"><button class="next" id="nextBtn">Next situation →</button></div>
+    </section>
+
+    <section class="card result" id="result">
+      <div class="scene-label">Stage 1 complete</div>
+      <h2>Excellent work!</h2>
+      <div class="score" id="score"></div>
+      <p id="message"></p>
+      <button class="restart" onclick="restartQuiz()">Try again</button>
+    </section>
+    <div class="small-note">The next stage will use these phrases in short dialogues.</div>
+  </main>
+
+<script>
+const items = [
+  {
+    scene:"Your colleague asks: “Would you like to come to dinner with us tonight?”",
+    ru:"Коллега приглашает вас поужинать вместе.",
+    answer:"join us",
+    choices:["join us","book a table","make sure","downtown"],
+    explanation:"“Join us” is a natural invitation to become part of the group."
+  },
+  {
+    scene:"You want to invite a friend to go to a concert together.",
+    ru:"Вы хотите предложить другу пойти на концерт вместе.",
+    answer:"come along",
+    choices:["come along","arrange","I didn't get it.","blind date"],
+    explanation:"“Come along” means to go somewhere together with another person or group."
+  },
+  {
+    scene:"You need your assistant to organize a meeting for Friday.",
+    ru:"Вам нужно, чтобы помощник организовал встречу на пятницу.",
+    answer:"arrange",
+    choices:["arrange","book a table/place","make sure","What kind of...?"],
+    explanation:"We use “arrange” when we organize a meeting, event, or appointment."
+  },
+  {
+    scene:"You are calling a restaurant because you need a table for four.",
+    ru:"Вы звоните в ресторан, потому что вам нужен столик на четверых.",
+    answer:"book (a table/place)",
+    choices:["book (a table/place)","join us","How about...?","less awkward"],
+    explanation:"To “book a table” means to reserve it in advance."
+  },
+  {
+    scene:"A friend introduces you to someone you have never met for a romantic evening.",
+    ru:"Друг знакомит вас с человеком, которого вы никогда не видели, для романтической встречи.",
+    answer:"blind date",
+    choices:["blind date","downtown","Sounds good.","If..."],
+    explanation:"A “blind date” is a date with someone you have not met before."
+  },
+  {
+    scene:"You feel uncomfortable because nobody is talking at the meeting.",
+    ru:"Вам некомфортно, потому что на встрече никто не разговаривает.",
+    answer:"awkward",
+    choices:["awkward","downtown","make sure","come along"],
+    explanation:"“Awkward” describes an uncomfortable or embarrassing situation."
+  },
+  {
+    scene:"You think bringing another colleague will make the meeting more comfortable.",
+    ru:"Вы думаете, что присутствие ещё одного коллеги сделает встречу более комфортной.",
+    answer:"less awkward",
+    choices:["less awkward","blind date","arrange","Could you help me...?"],
+    explanation:"“Less awkward” means more comfortable and less embarrassing."
+  },
+  {
+    scene:"You are choosing a café in the city centre.",
+    ru:"Вы выбираете кафе в центре города.",
+    answer:"downtown",
+    choices:["downtown","What do you say about...?","I didn't get it.","book (a table/place)"],
+    explanation:"“Downtown” means in or toward the central part of a city."
+  },
+  {
+    scene:"You want to ask someone about their preferred type of food.",
+    ru:"Вы хотите спросить человека, какую еду он предпочитает.",
+    answer:"What kind of...?",
+    choices:["What kind of...?","How about...?","Let's make sure...","Sounds good."],
+    explanation:"“What kind of...?” asks about a type or category."
+  },
+  {
+    scene:"You suggest going for a walk after lunch.",
+    ru:"Вы предлагаете прогуляться после обеда.",
+    answer:"How about...?",
+    choices:["How about...?","If...","I'd like you to...","make sure"],
+    explanation:"“How about...?” is a friendly way to make a suggestion."
+  },
+  {
+    scene:"You suggest meeting tomorrow and ask for the other person's opinion.",
+    ru:"Вы предлагаете встретиться завтра и спрашиваете мнение собеседника.",
+    answer:"What do you say about...?",
+    choices:["What do you say about...?","Could you help me...?","come along","downtown"],
+    explanation:"“What do you say about...?” asks whether someone agrees with a suggestion."
+  },
+  {
+    scene:"Your friend suggests dinner at seven. You agree.",
+    ru:"Друг предлагает поужинать в семь. Вы соглашаетесь.",
+    answer:"Sounds good.",
+    choices:["Sounds good.","I didn't get it.","blind date","Let's make sure..."],
+    explanation:"“Sounds good” is a natural way to accept a suggestion."
+  },
+  {
+    scene:"Before leaving the office, you ask a colleague to check that the door is locked.",
+    ru:"Перед уходом из офиса вы просите коллегу проверить, что дверь заперта.",
+    answer:"make sure",
+    choices:["make sure","join us","awkward","What kind of...?"],
+    explanation:"“Make sure” means to check that something is definitely done."
+  },
+  {
+    scene:"You need assistance with a difficult report.",
+    ru:"Вам нужна помощь со сложным отчётом.",
+    answer:"Could you help me...?",
+    choices:["Could you help me...?","I'd like you to...","What do you say about...?","If..."],
+    explanation:"“Could you help me...?” is a polite request for assistance."
+  },
+  {
+    scene:"You want your colleague to meet two important clients.",
+    ru:"Вы хотите, чтобы коллега познакомился с двумя важными клиентами.",
+    answer:"I'd like you to...",
+    choices:["I'd like you to...","How about...?","less awkward","arrange"],
+    explanation:"“I'd like you to...” politely tells someone what you want them to do."
+  },
+  {
+    scene:"Someone explains a plan, but you do not understand it.",
+    ru:"Кто-то объясняет план, но вы его не понимаете.",
+    answer:"I didn't get it.",
+    choices:["I didn't get it.","Sounds good.","come along","make sure"],
+    explanation:"“I didn't get it” means “I didn't understand.”"
+  },
+  {
+    scene:"You explain that your decision depends on having enough time.",
+    ru:"Вы объясняете, что решение зависит от того, будет ли у вас достаточно времени.",
+    answer:"If...",
+    choices:["If...","What kind of...?","book (a table/place)","join us"],
+    explanation:"“If” introduces a condition: “If I have time, I'll come.”"
+  },
+  {
+    scene:"Before the event, you suggest checking that everything is ready.",
+    ru:"Перед мероприятием вы предлагаете проверить, всё ли готово.",
+    answer:"Let's make sure...",
+    choices:["Let's make sure...","Could you help me...?","downtown","awkward"],
+    explanation:"“Let's make sure...” suggests checking something together."
+  }
+];
+
+let order = [];
+let index = 0;
+let score = 0;
+let locked = false;
+
+const sceneEl = document.getElementById("scene");
+const translationEl = document.getElementById("translation");
+const optionsEl = document.getElementById("options");
+const feedbackEl = document.getElementById("feedback");
+const nextBtn = document.getElementById("nextBtn");
+const progressEl = document.getElementById("progress");
+const counterEl = document.getElementById("counter");
+const quizCard = document.getElementById("quizCard");
+const resultCard = document.getElementById("result");
+
+function shuffle(arr){
+  const copy=[...arr];
+  for(let i=copy.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [copy[i],copy[j]]=[copy[j],copy[i]];
+  }
+  return copy;
+}
+
+function start(){
+  order=shuffle(items.map((_,i)=>i));
+  index=0;score=0;locked=false;
+  quizCard.style.display="block";
+  resultCard.style.display="none";
+  render();
+}
+
+function render(){
+  locked=false;
+  const item=items[order[index]];
+  sceneEl.textContent=item.scene;
+  translationEl.textContent=item.ru;
+  feedbackEl.className="feedback";
+  feedbackEl.textContent="";
+  nextBtn.style.display="none";
+  optionsEl.innerHTML="";
+  shuffle(item.choices).forEach(choice=>{
+    const btn=document.createElement("button");
+    btn.className="option";
+    btn.textContent=choice;
+    btn.onclick=()=>selectAnswer(btn,choice,item);
+    optionsEl.appendChild(btn);
+  });
+  counterEl.textContent=`${index+1} / ${items.length}`;
+  progressEl.style.width=`${(index/items.length)*100}%`;
+}
+
+function selectAnswer(button,choice,item){
+  if(locked)return;
+  locked=true;
+  const buttons=[...document.querySelectorAll(".option")];
+  buttons.forEach(btn=>{
+    btn.disabled=true;
+    if(btn.textContent===item.answer) btn.classList.add("correct");
+  });
+
+  if(choice===item.answer){
+    score++;
+    feedbackEl.className="feedback show good";
+    feedbackEl.textContent=`✓ Correct. ${item.explanation}`;
+  }else{
+    button.classList.add("wrong");
+    feedbackEl.className="feedback show bad";
+    feedbackEl.textContent=`Not quite. The best phrase is “${item.answer}”. ${item.explanation}`;
+  }
+  progressEl.style.width=`${((index+1)/items.length)*100}%`;
+  nextBtn.textContent=index===items.length-1 ? "See my result →" : "Next situation →";
+  nextBtn.style.display="inline-block";
+}
+
+nextBtn.onclick=()=>{
+  index++;
+  if(index<items.length) render();
+  else showResult();
+};
+
+function showResult(){
+  quizCard.style.display="none";
+  resultCard.style.display="block";
+  document.getElementById("score").textContent=`${score} / ${items.length}`;
+  const percent=Math.round(score/items.length*100);
+  let msg="";
+  if(percent>=90) msg="You are ready to use these expressions in conversation. Stage 2 will place them inside short, natural dialogues.";
+  else if(percent>=70) msg="Very good. Repeat the exercise once more, then continue to Stage 2 with short dialogues.";
+  else msg="A useful first step. Try again and pay attention to the situation in which each phrase is used.";
+  document.getElementById("message").textContent=msg;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function restartQuiz(){ start(); }
+start();
+</script>
+</body>
+</html>
