@@ -1,0 +1,57 @@
+
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Memory Challenge PRO</title>
+<style>
+body{margin:0;font-family:Segoe UI,Arial;background:linear-gradient(135deg,#4f8cff,#8fd3ff);min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:#fff;width:min(760px,92vw);border-radius:24px;padding:30px;box-shadow:0 18px 50px rgba(0,0,0,.2)}
+h1{text-align:center;color:#2b4fa8}
+#progress{height:12px;background:#e8eefc;border-radius:8px;overflow:hidden;margin:18px 0}
+#bar{height:100%;width:0;background:linear-gradient(90deg,#4f8cff,#6ee7b7)}
+#word{font-size:42px;font-weight:700;text-align:center;margin:30px;color:#245}
+#hint{text-align:center;color:#777}
+input{width:100%;padding:14px;font-size:20px;border-radius:12px;border:2px solid #ccd}
+.buttons{text-align:center;margin-top:18px}
+button{padding:12px 20px;border:none;border-radius:12px;margin:6px;font-size:16px;cursor:pointer}
+.primary{background:#3b82f6;color:#fff}.ok{background:#10b981;color:#fff}
+#msg{text-align:center;font-size:22px;font-weight:700;margin-top:16px}
+</style></head><body><div class="card">
+<h1>🧠 Memory Challenge PRO</h1>
+<div id="progress"><div id="bar"></div></div>
+<div id="word"></div><div id="hint">Listen, remember, then type the word.</div>
+<input id="ans" placeholder="Type the English word...">
+<div class="buttons">
+<button class="primary" onclick="speakCurrent()">🔊 Listen again</button>
+<button class="ok" onclick="check()">Check</button>
+</div>
+<div id="msg"></div>
+</div>
+<script>
+const data=[
+["mountain","гора"],["at the weekend","на выходных"],["on weekdays","по будням"],
+["the best way","лучший способ"],["miss the chance","упустить шанс"],["also","также"],
+["since","с тех пор"],["charity","благотворительность"],["necessary","необходимый"],
+["announce","объявлять"],["announcement","объявление"],["attend","посещать"],
+["among","среди"],["blind","слепой"],["both","оба"],["flaw","недостаток"],
+["strangers","незнакомцы"],["it depends on","это зависит от"],["I have no idea","понятия не имею"],["it is not clear to me","мне непонятно"]];
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+let q=shuffle([...data]).slice(0,10),i=0,cur;
+function speak(t){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang='en-GB';speechSynthesis.speak(u);}
+function speakCurrent(){speak(cur[0]);}
+function show(){
+ if(i>=q.length){document.querySelector('.card').innerHTML='<h1>🎉 Well done!</h1><h2 style="text-align:center">You completed all 10 challenges.</h2>';return;}
+ cur=q[i];
+ bar.style.width=(i/q.length*100)+'%';
+ word.textContent=cur[0];
+ ans.value='';msg.textContent='';
+ speak(cur[0]);
+ setTimeout(()=>{word.textContent='❓';},3000);
+}
+function check(){
+ let ok=ans.value.trim().toLowerCase()==cur[0].toLowerCase();
+ msg.style.color=ok?'#059669':'#dc2626';
+ msg.textContent=ok?'✔ Correct!':'Correct answer: '+cur[0];
+ setTimeout(()=>{i++;show();},1200);
+}
+show();
+</script></body></html>
