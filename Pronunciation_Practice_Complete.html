@@ -1,0 +1,65 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>Pronunciation Practice Complete</title>
+<style>
+body{margin:0;font-family:Arial;background:#eef5fb}
+header{background:linear-gradient(90deg,#4f7cff,#61d3ff);color:#fff;padding:26px;text-align:center}
+.wrap{max-width:980px;margin:auto;padding:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.card,.panel{background:#fff;border-radius:18px;padding:18px;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.word{font-size:28px;font-weight:bold;color:#2356d8}
+.ru{color:#666;margin:8px 0 14px}
+button{border:none;border-radius:10px;padding:10px 14px;margin:4px;cursor:pointer}
+.blue{background:#2563eb;color:#fff}.green{background:#10b981;color:#fff}.orange{background:#f59e0b;color:#fff}
+label{display:block;padding:10px;border:1px solid #ddd;border-radius:10px;margin:8px 0}
+h2{color:#2356d8}
+</style></head><body>
+<header><h1>🎧 Pronunciation Practice</h1><p>Listen • Repeat • Practice</p></header>
+<div class="wrap">
+<div class="grid" id="cards"></div>
+<h2 style="margin-top:40px">🎯 Listen & Choose</h2>
+<div class="panel">
+<button class="blue" onclick="play()">🔊 Listen</button>
+<button class="blue" onclick="play()">🔁 Listen again</button>
+<div id="opts"></div>
+<div id="result" style="font-weight:bold;margin:12px 0"></div>
+<button class="green" onclick="nextQ()">➡ Next question</button>
+</div>
+</div>
+<script>
+const data=[
+["mountain","гора"],["at the weekend","на выходных"],["on weekdays","по будням"],["the best way","лучший способ"],["miss the chance","упустить шанс"],["also","также"],["since","с тех пор как"],["charity","благотворительность"],["necessary","необходимый"],["announce","объявлять"],["announcement","объявление"],["attend","посещать"],["among","среди"],["blind","слепой"],["both","оба"],["flaw","недостаток"],["strangers","незнакомцы"],["it depends on","это зависит от"],["I have no idea","понятия не имею"],["it is not clear to me","мне непонятно"]];
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const cards=document.getElementById("cards");
+shuffle([...data]).forEach(([en,ru])=>{
+cards.innerHTML+=`<div class="card"><div class="word">${en}</div><div class="ru">${ru}</div>
+<button class="blue" onclick="speak('${en.replace(/'/g,"\'")}')">🔊 Listen</button>
+<button class="green" onclick="repeat3('${en.replace(/'/g,"\'")}')">🔁 Repeat ×3</button>
+<button class="orange" onclick="this.nextElementSibling.style.display='inline'">✓ I've said it</button>
+<span style="display:none;color:#10b981;font-weight:bold"> ✔ Great!</span></div>`;
+});
+function speak(t){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang="en-GB";speechSynthesis.speak(u);}
+function repeat3(t){for(let i=0;i<3;i++)setTimeout(()=>speak(t),i*1400);}
+let answer="";
+function play(){speak(answer);}
+function nextQ(){
+document.getElementById("result").textContent="";
+answer=data[Math.floor(Math.random()*data.length)][0];
+let opts=[answer];
+while(opts.length<4){
+ let c=data[Math.floor(Math.random()*data.length)][0];
+ if(!opts.includes(c))opts.push(c);
+}
+shuffle(opts);
+let h="";
+opts.forEach(o=>h+=`<label><input type="radio" name="q" value="${o}"> ${o}</label>`);
+h+=`<button class="blue" onclick="check()">Check</button>`;
+document.getElementById("opts").innerHTML=h;
+}
+function check(){
+let s=document.querySelector("input[name=q]:checked");
+if(!s){result.textContent="Choose an answer.";result.style.color="crimson";return;}
+if(s.value===answer){result.textContent="⭐ Correct!";result.style.color="green";}
+else{result.textContent="❌ Try again.";result.style.color="crimson";}
+}
+nextQ();
+</script></body></html>
