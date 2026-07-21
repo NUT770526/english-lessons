@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listening Comprehension — Blind Date</title>
+<style>
+:root{
+  --ink:#1f2937; --muted:#6b7280; --panel:#ffffffeb; --line:#e5e7eb;
+  --violet:#6d28d9; --violet2:#a78bfa; --cyan:#0891b2; --cyan2:#67e8f9;
+  --green:#15803d; --greenbg:#ecfdf5; --red:#be123c; --redbg:#fff1f2;
+  --amber:#d97706; --amberbg:#fffbeb;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; font-family:Inter,Segoe UI,Arial,sans-serif; color:var(--ink);
+  background:
+    radial-gradient(circle at 8% 10%,#ddd6fe 0,transparent 27%),
+    radial-gradient(circle at 92% 14%,#cffafe 0,transparent 26%),
+    radial-gradient(circle at 82% 92%,#fbcfe8 0,transparent 24%),
+    linear-gradient(135deg,#faf5ff,#ecfeff);
+  padding:24px;
+}
+.app{max-width:980px;margin:auto}
+.header{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:16px
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900}
+.logo{
+  width:50px;height:50px;border-radius:16px;display:grid;place-items:center;font-size:25px;color:#fff;
+  background:linear-gradient(135deg,var(--violet),var(--cyan));box-shadow:0 10px 28px #6d28d935
+}
+.status{
+  background:#ffffffc7;border:1px solid #fff;padding:10px 14px;border-radius:999px;
+  font-size:14px;font-weight:800;box-shadow:0 8px 24px #11182712
+}
+.main{
+  background:var(--panel);backdrop-filter:blur(16px);border:1px solid #fff;border-radius:28px;
+  box-shadow:0 25px 70px #312e8120;padding:clamp(20px,4vw,40px)
+}
+.progress-track{height:10px;background:#ede9fe;border-radius:999px;overflow:hidden;margin-bottom:26px}
+.progress{height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--cyan));transition:.35s}
+.eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:900;color:var(--violet)}
+h1{margin:8px 0 8px;font-size:clamp(30px,5vw,48px);line-height:1.05}
+.subtitle{color:var(--muted);margin-bottom:22px;line-height:1.55}
+.audio-card{
+  border:1px solid #ddd6fe;background:linear-gradient(135deg,#faf5ff,#ecfeff);
+  border-radius:20px;padding:18px;margin-bottom:22px;display:flex;flex-wrap:wrap;align-items:center;gap:14px
+}
+.audio-icon{
+  width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:25px;color:white;
+  background:linear-gradient(135deg,var(--violet),var(--cyan))
+}
+.audio-text{flex:1;min-width:220px}
+.audio-title{font-weight:900;font-size:18px}
+.audio-note{color:var(--muted);font-size:14px;margin-top:4px}
+.listen-btn{
+  border:0;border-radius:14px;padding:12px 17px;background:linear-gradient(135deg,var(--violet),var(--cyan));
+  color:#fff;font-weight:900;font-size:15px;cursor:pointer;box-shadow:0 10px 25px #6d28d930
+}
+.listen-btn:hover{transform:translateY(-1px)}
+.question{
+  border:1px solid var(--line);border-radius:20px;padding:18px;margin:14px 0;background:#fff;
+  transition:.2s
+}
+.question.active{border-color:#c4b5fd;box-shadow:0 10px 25px #6d28d912}
+.q-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.num{
+  width:34px;height:34px;border-radius:11px;background:#f5f3ff;color:var(--violet);
+  display:grid;place-items:center;font-weight:950;flex:0 0 auto
+}
+.q-text{font-weight:900;line-height:1.45;padding-top:5px}
+.options{display:grid;gap:9px}
+.option{
+  width:100%;border:1.5px solid #e5e7eb;background:#fff;border-radius:14px;padding:13px 14px;
+  text-align:left;color:var(--ink);font-weight:720;font-size:15px;cursor:pointer;transition:.18s;
+  display:flex;gap:11px;align-items:flex-start
+}
+.option:hover{border-color:#c4b5fd;transform:translateY(-1px);box-shadow:0 7px 18px #6d28d910}
+.bullet{
+  width:25px;height:25px;border-radius:50%;border:2px solid #d1d5db;flex:0 0 auto;margin-top:1px;
+  display:grid;place-items:center;font-size:14px;font-weight:900
+}
+.option.selected{border-color:#a78bfa;background:#faf5ff}
+.option.selected .bullet{border-color:var(--violet);background:var(--violet);color:white}
+.option.correct{border-color:#86efac;background:var(--greenbg);color:var(--green)}
+.option.correct .bullet{border-color:#22c55e;background:#22c55e;color:#fff}
+.option.wrong{border-color:#fda4af;background:var(--redbg);color:var(--red)}
+.option.wrong .bullet{border-color:#fb7185;background:#fb7185;color:#fff}
+.option:disabled{cursor:default}
+.feedback{
+  display:none;margin-top:11px;padding:11px 13px;border-radius:12px;font-weight:750;line-height:1.45
+}
+.feedback.show{display:block}
+.feedback.good{background:var(--greenbg);color:var(--green)}
+.feedback.bad{background:var(--redbg);color:var(--red)}
+.actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:24px}
+button.action{
+  border:0;border-radius:14px;padding:12px 17px;font-weight:900;font-size:15px;cursor:pointer;transition:.18s
+}
+.secondary{background:#f3f4f6;color:#374151}
+.primary{background:linear-gradient(135deg,var(--violet),var(--cyan));color:#fff;box-shadow:0 10px 25px #6d28d930}
+.message{
+  display:none;margin-top:16px;padding:14px 16px;border-radius:14px;font-weight:800;line-height:1.5
+}
+.message.show{display:block}
+.message.bad{background:var(--amberbg);color:var(--amber)}
+.result{text-align:center;display:none;padding:24px 8px}
+.result .emoji{font-size:72px}
+.score{font-size:56px;font-weight:950;margin:12px 0;background:linear-gradient(90deg,var(--violet),var(--cyan));-webkit-background-clip:text;color:transparent}
+.small{color:var(--muted)}
+@media(max-width:650px){
+  body{padding:12px}.main{border-radius:22px}.header{align-items:flex-start}.status{font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="brand"><div class="logo">🎧</div><div>Listening Practice</div></div>
+    <div class="status" id="status">0 / 5 answered</div>
+  </div>
+
+  <main class="main">
+    <div class="progress-track"><div class="progress" id="progress"></div></div>
+    <section id="quiz">
+      <div class="eyebrow">Listen and choose</div>
+      <h1>Blind Date Conversation</h1>
+      <div class="subtitle">Listen to the conversation, then choose the best answer for each question.</div>
+
+      <div class="audio-card">
+        <div class="audio-icon">🎧</div>
+        <div class="audio-text">
+          <div class="audio-title">Listen to the dialogue</div>
+          <div class="audio-note">You can listen as many times as you need.</div>
+        </div>
+        <button class="listen-btn" id="listen">▶ Play dialogue</button>
+      </div>
+
+      <div id="questions"></div>
+
+      <div class="message" id="message"></div>
+      <div class="actions">
+        <button class="action secondary" id="reset">↻ Reset</button>
+        <button class="action primary" id="check">Check answers</button>
+      </div>
+    </section>
+
+    <section class="result" id="result"></section>
+  </main>
+</div>
+
+<script>
+const dialogue = `Roxie: Hey, Meredith, could you help me arrange a blind date for Sarah?
+Meredith: Excuse me? A blind date for Sarah?
+Roxie: Yes, exactly. Can you join us next Friday to help out?
+Meredith: I see. What do you mean?
+Roxie: I was asking if you could come along on the date to make it less awkward.
+Meredith: What did you say, Roxie? How would my presence make it less awkward?
+Roxie: If a friend is there, it might make Sarah feel more comfortable.
+Meredith: Sorry, I didn't get it. Would I be part of the date?
+Roxie: Not really. You would just join us for dinner. Sarah likes Italian, and I'm thinking about booking that new Italian place downtown.
+Meredith: Sounds good. You were saying something about the time?
+Roxie: How about 7 PM next Friday?
+Meredith: Sounds good. Let's make sure it's a great evening for Sarah.`;
+
+const data = [
+  {
+    q:"What does Roxie want Meredith to help with?",
+    o:["Setting up a surprise party for Sarah.","Arranging a blind date for Sarah.","Teaching Sarah how to cook Italian food.","Finding Sarah’s lost cat."],
+    c:1,
+    e:"Roxie asks Meredith to help arrange a blind date for Sarah."
+  },
+  {
+    q:"Why did Meredith ask Roxie to say it again?",
+    o:["She thought Roxie was talking about a game.","She was watching a funny video.","She didn’t hear her the first time.","She wanted to hear the story again."],
+    c:2,
+    e:"Meredith says “Excuse me?” because she did not hear clearly."
+  },
+  {
+    q:"How does Roxie want to make the blind date less awkward?",
+    o:["Bring a clown for fun.","Have Meredith join them.","Wear disguises.","Start a flash mob."],
+    c:1,
+    e:"Roxie wants Meredith to come along so Sarah feels more comfortable."
+  },
+  {
+    q:"What type of restaurant does Roxie consider for the date?",
+    o:["A trendy new Italian place.","An underwater dining experience.","A fast-food restaurant with a play area.","A restaurant on the moon."],
+    c:0,
+    e:"Roxie mentions booking a new Italian place downtown."
+  },
+  {
+    q:"When did Roxie suggest they go on the date?",
+    o:["At midnight during a full moon.","During the next solar eclipse.","Right after Sarah’s skydiving.","At 7 PM next Friday."],
+    c:3,
+    e:"Roxie suggests 7 PM next Friday."
+  }
+];
+
+const box=document.getElementById("questions");
+let answers=Array(data.length).fill(null), checked=false;
+
+function render(){
+  box.innerHTML="";
+  data.forEach((item,qi)=>{
+    const card=document.createElement("div");
+    card.className="question";
+    card.innerHTML=`<div class="q-head"><div class="num">${qi+1}</div><div class="q-text">${item.q}</div></div><div class="options"></div><div class="feedback"></div>`;
+    item.o.forEach((text,oi)=>{
+      const b=document.createElement("button");
+      b.className="option";
+      b.innerHTML=`<span class="bullet">${String.fromCharCode(65+oi)}</span><span>${text}</span>`;
+      b.onclick=()=>select(qi,oi);
+      card.querySelector(".options").appendChild(b);
+    });
+    box.appendChild(card);
+  });
+  update();
+}
+function select(qi,oi){
+  if(checked)return;
+  answers[qi]=oi;
+  const card=box.children[qi];
+  [...card.querySelectorAll(".option")].forEach((b,i)=>b.classList.toggle("selected",i===oi));
+  card.classList.add("active");
+  update();
+}
+function update(){
+  const done=answers.filter(x=>x!==null).length;
+  document.getElementById("status").textContent=`${done} / ${data.length} answered`;
+  document.getElementById("progress").style.width=`${done/data.length*100}%`;
+}
+document.getElementById("listen").onclick=()=>{
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(dialogue);
+  u.lang="en-US";u.rate=.86;u.pitch=1;
+  speechSynthesis.speak(u);
+};
+document.getElementById("reset").onclick=()=>{
+  speechSynthesis.cancel();answers=Array(data.length).fill(null);checked=false;
+  document.getElementById("message").className="message";
+  render();
+};
+document.getElementById("check").onclick=()=>{
+  if(answers.some(x=>x===null)){
+    const m=document.getElementById("message");
+    m.className="message show bad";
+    m.textContent="Please answer all five questions first.";
+    return;
+  }
+  checked=true;let score=0;
+  data.forEach((item,qi)=>{
+    const card=box.children[qi], opts=[...card.querySelectorAll(".option")], fb=card.querySelector(".feedback");
+    opts.forEach(b=>b.disabled=true);
+    opts[item.c].classList.add("correct");
+    if(answers[qi]===item.c){
+      score++;fb.className="feedback show good";fb.textContent="✓ Correct. "+item.e;
+    }else{
+      opts[answers[qi]].classList.add("wrong");
+      fb.className="feedback show bad";fb.textContent="Not quite. "+item.e;
+    }
+  });
+  setTimeout(()=>showResult(score),600);
+};
+function showResult(score){
+  document.getElementById("quiz").style.display="none";
+  const result=document.getElementById("result");result.style.display="block";
+  const emoji=score===5?"🏆":score>=4?"🌟":"💪";
+  const msg=score===5?"Perfect listening!":score>=4?"Great job!":"Good practice — listen once more!";
+  result.innerHTML=`<div class="emoji">${emoji}</div><div class="score">${score}/5</div><h1>${msg}</h1>
+  <p class="small">You completed the listening comprehension task.</p>
+  <button class="action primary" onclick="location.reload()">Try again</button>`;
+  document.getElementById("status").textContent="Completed";
+  document.getElementById("progress").style.width="100%";
+}
+render();
+</script>
+</body>
+</html>
