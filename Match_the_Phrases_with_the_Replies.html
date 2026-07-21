@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match the Phrases with the Replies</title>
+<style>
+:root{
+  --ink:#1f2937; --muted:#6b7280; --panel:#ffffffee; --line:#e5e7eb;
+  --violet:#6d28d9; --violet2:#a78bfa; --mint:#d1fae5; --mint2:#a7f3d0;
+  --green:#15803d; --greenbg:#ecfdf5; --red:#be123c; --redbg:#fff1f2;
+  --amber:#d97706; --amberbg:#fffbeb;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; font-family:Inter,Segoe UI,Arial,sans-serif; color:var(--ink);
+  background:
+    radial-gradient(circle at 8% 10%,#ddd6fe 0,transparent 27%),
+    radial-gradient(circle at 92% 14%,#bbf7d0 0,transparent 26%),
+    radial-gradient(circle at 82% 92%,#fde68a 0,transparent 24%),
+    linear-gradient(135deg,#faf5ff,#f0fdf4);
+  padding:24px;
+}
+.app{max-width:1080px;margin:auto}
+.header{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:16px
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900}
+.logo{
+  width:50px;height:50px;border-radius:16px;display:grid;place-items:center;font-size:25px;color:#fff;
+  background:linear-gradient(135deg,var(--violet),#f59e0b);box-shadow:0 10px 28px #6d28d935
+}
+.status{
+  background:#ffffffc7;border:1px solid #fff;padding:10px 14px;border-radius:999px;
+  font-size:14px;font-weight:800;box-shadow:0 8px 24px #11182712
+}
+.main{
+  background:var(--panel);backdrop-filter:blur(16px);border:1px solid #fff;border-radius:28px;
+  box-shadow:0 25px 70px #312e8120;padding:clamp(20px,4vw,40px)
+}
+.progress-track{height:10px;background:#ede9fe;border-radius:999px;overflow:hidden;margin-bottom:26px}
+.progress{height:100%;width:0;background:linear-gradient(90deg,var(--violet),#10b981);transition:.35s}
+.eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:900;color:var(--violet)}
+h1{margin:8px 0 8px;font-size:clamp(30px,5vw,48px);line-height:1.05}
+.subtitle{color:var(--muted);margin-bottom:24px;line-height:1.55}
+.instructions{
+  display:flex;gap:10px;align-items:center;background:#faf5ff;border:1px solid #ddd6fe;
+  border-radius:16px;padding:13px 15px;margin-bottom:22px;color:#5b21b6;font-weight:750
+}
+.grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start
+}
+.column{display:grid;gap:12px}
+.col-title{
+  font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:900;color:#6b7280;
+  padding:0 4px
+}
+.card{
+  border:1.5px solid #d1fae5;background:linear-gradient(135deg,#ecfdf5,#fff);
+  border-radius:16px;padding:14px 15px;line-height:1.45;font-weight:760;cursor:pointer;
+  transition:.18s;min-height:58px;display:flex;align-items:center;gap:11px
+}
+.card:hover{transform:translateY(-2px);border-color:#86efac;box-shadow:0 9px 22px #10b98116}
+.card.selected{
+  border-color:#8b5cf6;background:#faf5ff;box-shadow:0 0 0 3px #ede9fe
+}
+.card.matched{
+  border-color:#86efac;background:var(--greenbg);color:var(--green);cursor:default
+}
+.card.wrong{
+  border-color:#fda4af;background:var(--redbg);color:var(--red);animation:shake .28s linear
+}
+.badge{
+  width:30px;height:30px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto;
+  background:#fff;border:1px solid #d1fae5;font-weight:900;color:#047857
+}
+.card.selected .badge{border-color:#c4b5fd;color:#6d28d9}
+.card.matched .badge{border-color:#86efac;background:#dcfce7;color:#15803d}
+@keyframes shake{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+.message{
+  display:none;margin-top:18px;padding:14px 16px;border-radius:14px;font-weight:800;line-height:1.5
+}
+.message.show{display:block}
+.message.good{background:var(--greenbg);color:var(--green)}
+.message.bad{background:var(--amberbg);color:var(--amber)}
+.actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:24px}
+button{
+  border:0;border-radius:14px;padding:12px 17px;font-weight:900;font-size:15px;cursor:pointer;transition:.18s
+}
+button:hover{transform:translateY(-1px)}
+.secondary{background:#f3f4f6;color:#374151}
+.audio{background:#eef2ff;color:#5b21b6}
+.primary{background:linear-gradient(135deg,var(--violet),#10b981);color:#fff;box-shadow:0 10px 25px #6d28d930}
+.result{text-align:center;display:none;padding:24px 8px}
+.result .emoji{font-size:72px}
+.score{font-size:56px;font-weight:950;margin:12px 0;background:linear-gradient(90deg,var(--violet),#10b981);-webkit-background-clip:text;color:transparent}
+.small{color:var(--muted)}
+@media(max-width:760px){
+  body{padding:12px}.main{border-radius:22px}.grid{grid-template-columns:1fr}.header{align-items:flex-start}.status{font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="brand"><div class="logo">🧩</div><div>Phrase Match</div></div>
+    <div class="status" id="status">0 / 7 matched</div>
+  </div>
+
+  <main class="main">
+    <div class="progress-track"><div class="progress" id="progress"></div></div>
+    <section id="game">
+      <div class="eyebrow">Match the phrases with the replies</div>
+      <h1>What comes next?</h1>
+      <div class="subtitle">Choose one phrase on the left and then the reply that matches it best.</div>
+
+      <div class="instructions">💡 Tip: You can change your choice before selecting the reply.</div>
+
+      <div class="grid">
+        <div>
+          <div class="col-title">Phrases</div>
+          <div class="column" id="left"></div>
+        </div>
+        <div>
+          <div class="col-title">Replies</div>
+          <div class="column" id="right"></div>
+        </div>
+      </div>
+
+      <div class="message" id="message"></div>
+      <div class="actions">
+        <div>
+          <button class="audio" id="listen">🔊 Listen to all phrases</button>
+          <button class="secondary" id="reset">↻ Reset</button>
+        </div>
+        <button class="primary" id="finish">Finish</button>
+      </div>
+    </section>
+
+    <section class="result" id="result"></section>
+  </main>
+</div>
+
+<script>
+const pairs=[
+  ["Excuse me?","Yes, how can I help you?"],
+  ["Do you know if we need special preparation for the meeting?","Yes, please bring your laptop and the project report."],
+  ["I didn’t catch that. Can you repeat it?","Oh, sorry. I said we are meeting in Room 302."],
+  ["What do you mean?","Oh, sorry. I mean that the project deadline is next Friday."],
+  ["You were saying?","I was just asking if you're free this weekend."],
+  ["What did you say about the meeting schedule?","It starts at 3 PM next Wednesday."],
+  ["I don’t get it.","Okay, let me paraphrase."]
+];
+
+let selectedLeft=null, matched=0;
+const leftBox=document.getElementById("left"), rightBox=document.getElementById("right");
+
+function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+function build(){
+  leftBox.innerHTML=""; rightBox.innerHTML=""; selectedLeft=null; matched=0;
+  pairs.forEach((p,i)=>{
+    const c=document.createElement("div");
+    c.className="card"; c.dataset.id=i;
+    c.innerHTML=`<span class="badge">${i+1}</span><span>${p[0]}</span>`;
+    c.onclick=()=>chooseLeft(c);
+    leftBox.appendChild(c);
+  });
+  shuffle(pairs.map((p,i)=>({text:p[1],id:i}))).forEach((item,i)=>{
+    const c=document.createElement("div");
+    c.className="card"; c.dataset.id=item.id;
+    c.innerHTML=`<span class="badge">${String.fromCharCode(65+i)}</span><span>${item.text}</span>`;
+    c.onclick=()=>chooseRight(c);
+    rightBox.appendChild(c);
+  });
+  update();
+}
+function chooseLeft(card){
+  if(card.classList.contains("matched"))return;
+  document.querySelectorAll("#left .card").forEach(c=>c.classList.remove("selected"));
+  selectedLeft=card;card.classList.add("selected");
+}
+function chooseRight(card){
+  if(card.classList.contains("matched"))return;
+  const msg=document.getElementById("message");
+  if(!selectedLeft){
+    msg.className="message show bad";msg.textContent="Choose a phrase on the left first.";return;
+  }
+  if(card.dataset.id===selectedLeft.dataset.id){
+    selectedLeft.classList.remove("selected");
+    selectedLeft.classList.add("matched");
+    card.classList.add("matched");
+    selectedLeft=null;matched++;msg.className="message show good";
+    msg.textContent="✓ Correct match!";
+    update();
+  }else{
+    selectedLeft.classList.add("wrong");card.classList.add("wrong");
+    msg.className="message show bad";msg.textContent="Not quite. Try a different reply.";
+    setTimeout(()=>{selectedLeft && selectedLeft.classList.remove("wrong");card.classList.remove("wrong")},350);
+  }
+}
+function update(){
+  document.getElementById("status").textContent=`${matched} / ${pairs.length} matched`;
+  document.getElementById("progress").style.width=`${matched/pairs.length*100}%`;
+}
+document.getElementById("reset").onclick=()=>{
+  document.getElementById("message").className="message";build();
+};
+document.getElementById("listen").onclick=()=>{
+  speechSynthesis.cancel();
+  const text=pairs.map(p=>p[0]+". "+p[1]).join(" ");
+  const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=.86;speechSynthesis.speak(u);
+};
+document.getElementById("finish").onclick=()=>{
+  const msg=document.getElementById("message");
+  if(matched<pairs.length){
+    msg.className="message show bad";msg.textContent=`You still have ${pairs.length-matched} match(es) left.`;return;
+  }
+  document.getElementById("game").style.display="none";
+  const result=document.getElementById("result");result.style.display="block";
+  result.innerHTML=`<div class="emoji">🏆</div><div class="score">7/7</div><h1>Excellent work!</h1>
+  <p class="small">You matched every phrase with the correct reply.</p>
+  <button class="primary" onclick="location.reload()">Play again</button>`;
+  document.getElementById("status").textContent="Completed";
+  document.getElementById("progress").style.width="100%";
+};
+build();
+</script>
+</body>
+</html>
