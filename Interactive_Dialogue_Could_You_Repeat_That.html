@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Could You Repeat That? — Interactive Dialogue</title>
+<style>
+:root{
+  --ink:#1f2937; --muted:#6b7280; --panel:#ffffffeb; --line:#e5e7eb;
+  --purple:#7c3aed; --purple2:#a78bfa; --orange:#f97316; --orange2:#fdba74;
+  --green:#15803d; --greenbg:#ecfdf5; --red:#be123c; --redbg:#fff1f2;
+  --bluebg:#eef2ff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; font-family:Inter,Segoe UI,Arial,sans-serif; color:var(--ink);
+  background:
+    radial-gradient(circle at 8% 10%,#ddd6fe 0,transparent 28%),
+    radial-gradient(circle at 92% 12%,#fed7aa 0,transparent 26%),
+    radial-gradient(circle at 82% 92%,#fbcfe8 0,transparent 25%),
+    linear-gradient(135deg,#faf5ff,#fff7ed);
+  padding:24px;
+}
+.app{max-width:980px;margin:auto}
+.header{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:16px
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900}
+.logo{
+  width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:24px;color:#fff;
+  background:linear-gradient(135deg,var(--purple),var(--orange));box-shadow:0 10px 28px #7c3aed35
+}
+.status{
+  background:#ffffffc7;border:1px solid #fff;padding:10px 14px;border-radius:999px;
+  font-size:14px;font-weight:800;box-shadow:0 8px 24px #11182712
+}
+.main{
+  background:var(--panel);backdrop-filter:blur(16px);border:1px solid #fff;border-radius:28px;
+  box-shadow:0 25px 70px #312e8120;padding:clamp(20px,4vw,40px)
+}
+.progress-track{height:10px;background:#ede9fe;border-radius:999px;overflow:hidden;margin-bottom:28px}
+.progress{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--orange));transition:.35s}
+.eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:900;color:var(--purple)}
+h1{margin:8px 0 8px;font-size:clamp(30px,5vw,50px);line-height:1.05}
+.subtitle{color:var(--muted);margin-bottom:24px;line-height:1.55}
+.wordbank{
+  display:flex;flex-wrap:wrap;gap:10px;padding:15px;border:1px dashed #c4b5fd;
+  background:#faf5ff;border-radius:18px;margin-bottom:24px;min-height:66px
+}
+.chip{
+  border:1.5px solid #c4b5fd;background:#fff;color:#4c1d95;padding:10px 14px;border-radius:999px;
+  font-weight:800;cursor:grab;box-shadow:0 5px 14px #7c3aed12;transition:.18s;user-select:none
+}
+.chip:hover{transform:translateY(-2px);box-shadow:0 8px 20px #7c3aed20}
+.chip.selected{outline:3px solid #fbbf24;transform:translateY(-2px)}
+.chip.used{display:none}
+.dialogue{display:flex;flex-direction:column;gap:15px}
+.row{display:flex;align-items:flex-start;gap:12px}
+.row.m{justify-content:flex-end}
+.avatar{
+  width:43px;height:43px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:900;
+  flex:0 0 auto;border:2px solid
+}
+.r .avatar{background:#ede9fe;color:#5b21b6;border-color:#c4b5fd}
+.m .avatar{background:#fff7ed;color:#c2410c;border-color:#fdba74;order:2}
+.bubble{
+  max-width:78%;padding:14px 16px;border-radius:18px;line-height:1.55;background:#fff;border:1.5px solid
+}
+.r .bubble{border-color:#c4b5fd;border-top-left-radius:6px}
+.m .bubble{border-color:#fdba74;border-top-right-radius:6px}
+.drop{
+  display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;
+  min-width:145px;min-height:38px;padding:7px 10px;margin:3px 4px;border:2px dashed #a78bfa;
+  border-radius:10px;background:#faf5ff;color:#5b21b6;font-weight:800;transition:.18s
+}
+.drop.over{background:#ede9fe;transform:scale(1.03)}
+.drop.filled{border-style:solid;background:#fff}
+.drop.correct{border-color:#86efac;background:var(--greenbg);color:var(--green)}
+.drop.wrong{border-color:#fda4af;background:var(--redbg);color:var(--red)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-top:26px}
+.left-actions,.right-actions{display:flex;flex-wrap:wrap;gap:10px}
+button{
+  border:0;border-radius:14px;padding:12px 16px;font-weight:850;font-size:15px;cursor:pointer;transition:.18s
+}
+button:hover{transform:translateY(-1px)}
+.secondary{background:#f3f4f6;color:#374151}
+.audio{background:#eef2ff;color:#5b21b6}
+.primary{background:linear-gradient(135deg,var(--purple),var(--orange));color:white;box-shadow:0 10px 25px #7c3aed30}
+.message{display:none;margin-top:18px;padding:14px 16px;border-radius:14px;font-weight:750;line-height:1.5}
+.message.show{display:block}
+.message.good{background:var(--greenbg);color:var(--green)}
+.message.bad{background:var(--redbg);color:var(--red)}
+.round2{display:none}
+.mcq-card{
+  border:1px solid #e5e7eb;border-radius:18px;padding:18px;margin:14px 0;background:#fff
+}
+.mcq-q{font-weight:850;margin-bottom:10px}
+.mcq-options{display:grid;gap:8px}
+.mcq{
+  border:1.5px solid #e5e7eb;background:#fff;text-align:left;padding:12px 14px;border-radius:12px;
+  color:var(--ink);font-weight:700
+}
+.mcq:hover{border-color:#c4b5fd}
+.mcq.correct{border-color:#86efac;background:var(--greenbg);color:var(--green)}
+.mcq.wrong{border-color:#fda4af;background:var(--redbg);color:var(--red)}
+.result{text-align:center;display:none;padding:24px 8px}
+.result .emoji{font-size:72px}
+.score{font-size:56px;font-weight:950;margin:12px 0;background:linear-gradient(90deg,var(--purple),var(--orange));-webkit-background-clip:text;color:transparent}
+.small{color:var(--muted)}
+@media(max-width:650px){
+ body{padding:12px}.main{border-radius:22px}.bubble{max-width:84%}.drop{min-width:120px}
+ .header{align-items:flex-start}.status{font-size:12px}.actions{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="brand"><div class="logo">💬</div><div>Real-Life English</div></div>
+    <div class="status" id="status">Round 1 · 0/5</div>
+  </div>
+
+  <main class="main">
+    <div class="progress-track"><div class="progress" id="progress"></div></div>
+
+    <section id="round1">
+      <div class="eyebrow">Round 1 · Build the dialogue</div>
+      <h1>Could you repeat that?</h1>
+      <div class="subtitle">Drag the phrases into the correct gaps. You can also click a phrase and then click a gap.</div>
+
+      <div class="wordbank" id="bank"></div>
+
+      <div class="dialogue">
+        <div class="row r"><div class="avatar">Roxie</div><div class="bubble">Hey, Meredith, could you help me arrange a blind date for Sarah?</div></div>
+
+        <div class="row m"><div class="avatar">Meredith</div><div class="bubble">
+          Excuse me? <span class="drop" data-answer="I didn't catch that"></span> A blind date for Sarah?
+        </div></div>
+
+        <div class="row r"><div class="avatar">Roxie</div><div class="bubble">Yes, exactly. Can you join us next Friday to help out?</div></div>
+
+        <div class="row m"><div class="avatar">Meredith</div><div class="bubble">
+          I see. <span class="drop" data-answer="What do you mean"></span>?
+        </div></div>
+
+        <div class="row r"><div class="avatar">Roxie</div><div class="bubble">I was asking if you could come along on the date to make it less awkward.</div></div>
+
+        <div class="row m"><div class="avatar">Meredith</div><div class="bubble">
+          <span class="drop" data-answer="What did you say"></span>, Roxie? How would my presence make it less awkward?
+        </div></div>
+
+        <div class="row r"><div class="avatar">Roxie</div><div class="bubble">If a friend is there, it might make Sarah feel more comfortable.</div></div>
+
+        <div class="row m"><div class="avatar">Meredith</div><div class="bubble">
+          Sorry, <span class="drop" data-answer="I didn't get it"></span>. Would I be part of the date?
+        </div></div>
+
+        <div class="row r"><div class="avatar">Roxie</div><div class="bubble">Not really. You would just join us for dinner. Sarah likes Italian, and I'm thinking about booking that new place downtown.</div></div>
+
+        <div class="row m"><div class="avatar">Meredith</div><div class="bubble">
+          Sounds good. <span class="drop" data-answer="You were saying"></span> something about the time?
+        </div></div>
+
+        <div class="row r"><div class="avatar">Roxie</div><div class="bubble">How about 7 p.m. next Friday?</div></div>
+        <div class="row m"><div class="avatar">Meredith</div><div class="bubble">Sounds good. Let's make sure it's a great evening for Sarah.</div></div>
+      </div>
+
+      <div class="message" id="msg1"></div>
+      <div class="actions">
+        <div class="left-actions">
+          <button class="audio" id="listenDialogue">🔊 Listen to dialogue</button>
+          <button class="secondary" id="reset1">↻ Reset</button>
+        </div>
+        <div class="right-actions">
+          <button class="primary" id="check1">Check round 1</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="round2" id="round2">
+      <div class="eyebrow">Round 2 · Meaning check</div>
+      <h1>Choose the best meaning</h1>
+      <div class="subtitle">Complete five quick questions to make sure the phrases are clear.</div>
+      <div id="mcqs"></div>
+      <div class="message" id="msg2"></div>
+      <div class="actions">
+        <button class="secondary" id="back">← Back to dialogue</button>
+        <button class="primary" id="finish">Finish</button>
+      </div>
+    </section>
+
+    <section class="result" id="result"></section>
+  </main>
+</div>
+
+<script>
+const phrases=["You were saying","I didn't get it","What do you mean","What did you say","I didn't catch that"];
+let selected=null, round1Score=0, round2Score=0;
+
+const bank=document.getElementById("bank");
+function buildBank(){
+  bank.innerHTML="";
+  [...phrases].sort(()=>Math.random()-.5).forEach(text=>{
+    const chip=document.createElement("div");
+    chip.className="chip"; chip.textContent=text; chip.draggable=true; chip.dataset.value=text;
+    chip.addEventListener("dragstart",e=>e.dataTransfer.setData("text/plain",text));
+    chip.addEventListener("click",()=>{
+      document.querySelectorAll(".chip").forEach(c=>c.classList.remove("selected"));
+      selected=text; chip.classList.add("selected");
+    });
+    bank.appendChild(chip);
+  });
+}
+function place(drop,text){
+  const old=drop.textContent.trim();
+  if(old){
+    const oldChip=[...document.querySelectorAll(".chip")].find(c=>c.dataset.value===old);
+    if(oldChip) oldChip.classList.remove("used");
+  }
+  drop.textContent=text; drop.classList.add("filled"); drop.classList.remove("correct","wrong");
+  const chip=[...document.querySelectorAll(".chip")].find(c=>c.dataset.value===text);
+  if(chip){chip.classList.add("used");chip.classList.remove("selected")}
+  selected=null; updateStatus();
+}
+document.querySelectorAll(".drop").forEach(drop=>{
+  drop.addEventListener("dragover",e=>{e.preventDefault();drop.classList.add("over")});
+  drop.addEventListener("dragleave",()=>drop.classList.remove("over"));
+  drop.addEventListener("drop",e=>{e.preventDefault();drop.classList.remove("over");place(drop,e.dataTransfer.getData("text/plain"))});
+  drop.addEventListener("click",()=>{
+    if(selected) place(drop,selected);
+    else if(drop.textContent.trim()){
+      const chip=[...document.querySelectorAll(".chip")].find(c=>c.dataset.value===drop.textContent.trim());
+      if(chip) chip.classList.remove("used");
+      drop.textContent=""; drop.className="drop"; updateStatus();
+    }
+  });
+});
+function updateStatus(){
+  const filled=[...document.querySelectorAll(".drop")].filter(d=>d.textContent.trim()).length;
+  document.getElementById("status").textContent=`Round 1 · ${filled}/5`;
+  document.getElementById("progress").style.width=`${filled*10}%`;
+}
+document.getElementById("reset1").onclick=()=>{
+  document.querySelectorAll(".drop").forEach(d=>{d.textContent="";d.className="drop"});
+  document.getElementById("msg1").className="message";
+  buildBank(); updateStatus();
+};
+document.getElementById("check1").onclick=()=>{
+  const drops=[...document.querySelectorAll(".drop")];
+  if(drops.some(d=>!d.textContent.trim())){
+    const m=document.getElementById("msg1");m.className="message show bad";m.textContent="Complete all five gaps first.";
+    return;
+  }
+  round1Score=0;
+  drops.forEach(d=>{
+    if(d.textContent.trim()===d.dataset.answer){round1Score++;d.classList.add("correct")}
+    else d.classList.add("wrong");
+  });
+  const m=document.getElementById("msg1");
+  if(round1Score===5){
+    m.className="message show good";m.textContent="Excellent! All five phrases fit the dialogue naturally.";
+    setTimeout(()=>showRound2(),700);
+  }else{
+    m.className="message show bad";m.textContent=`You have ${round1Score}/5 correct. Red gaps can be changed — click them and try again.`;
+  }
+};
+document.getElementById("listenDialogue").onclick=()=>{
+  speechSynthesis.cancel();
+  const text=[...document.querySelectorAll(".bubble")].map(x=>x.textContent.replace(/\s+/g," ").trim()).join(" ");
+  const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=.88;speechSynthesis.speak(u);
+};
+
+const quiz=[
+ {q:"Which phrase means «Я не расслышала»?",o:["I didn't catch that","You were saying","What do you mean"],c:0},
+ {q:"Which phrase asks someone to explain their idea?",o:["What did you say","What do you mean","I didn't get it"],c:1},
+ {q:"Which phrase helps a person continue what they were saying?",o:["You were saying","I didn't catch that","What did you say"],c:0},
+ {q:"Which phrase directly asks someone to repeat their words?",o:["I didn't get it","What did you say","You were saying"],c:1},
+ {q:"Which phrase means that you did not understand?",o:["What do you mean","I didn't get it","I didn't catch that"],c:1}
+];
+function buildMcqs(){
+ const box=document.getElementById("mcqs");box.innerHTML="";
+ quiz.forEach((x,qi)=>{
+   const card=document.createElement("div");card.className="mcq-card";
+   card.innerHTML=`<div class="mcq-q">${qi+1}. ${x.q}</div><div class="mcq-options"></div>`;
+   x.o.forEach((opt,oi)=>{
+     const b=document.createElement("button");b.className="mcq";b.textContent=opt;
+     b.onclick=()=>{
+       if(card.dataset.answered)return;
+       card.dataset.answered="1";
+       [...card.querySelectorAll(".mcq")].forEach((btn,j)=>{
+         btn.disabled=true;if(j===x.c)btn.classList.add("correct");
+       });
+       if(oi===x.c)round2Score++;else b.classList.add("wrong");
+       const done=document.querySelectorAll(".mcq-card[data-answered='1']").length;
+       document.getElementById("status").textContent=`Round 2 · ${done}/5`;
+       document.getElementById("progress").style.width=`${50+done*10}%`;
+     };
+     card.querySelector(".mcq-options").appendChild(b);
+   });
+   box.appendChild(card);
+ });
+}
+function showRound2(){
+ document.getElementById("round1").style.display="none";
+ document.getElementById("round2").style.display="block";
+ round2Score=0;buildMcqs();
+ document.getElementById("status").textContent="Round 2 · 0/5";
+ document.getElementById("progress").style.width="50%";
+}
+document.getElementById("back").onclick=()=>{
+ document.getElementById("round2").style.display="none";
+ document.getElementById("round1").style.display="block";
+ updateStatus();
+};
+document.getElementById("finish").onclick=()=>{
+ const done=document.querySelectorAll(".mcq-card[data-answered='1']").length;
+ if(done<5){
+   const m=document.getElementById("msg2");m.className="message show bad";m.textContent="Answer all five questions first.";return;
+ }
+ const total=round1Score+round2Score;
+ document.getElementById("round2").style.display="none";
+ const result=document.getElementById("result");result.style.display="block";
+ const emoji=total>=9?"🏆":total>=7?"🌟":"💪";
+ const msg=total>=9?"Outstanding work!":total>=7?"Great job!":"Good practice — try once more!";
+ result.innerHTML=`<div class="emoji">${emoji}</div><div class="score">${total}/10</div><h1>${msg}</h1>
+ <p class="small">You completed the dialogue and the meaning check.</p>
+ <button class="primary" onclick="location.reload()">Play again</button>`;
+ document.getElementById("status").textContent="Completed";
+ document.getElementById("progress").style.width="100%";
+};
+buildBank();updateStatus();
+</script>
+</body>
+</html>
