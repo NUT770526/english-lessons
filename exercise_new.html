@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Substitution Game - Full Practice</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f0f3ff;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --error: #dc2626;
+            --accent: #f59e0b;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        /* Панель статистики */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            font-weight: bold;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            border: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            height: 12px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), #818cf8);
+            transition: width 0.4s ease;
+        }
+
+        /* Карточка задания */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 15px -3px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .model-box {
+            background: #e0e7ff;
+            border-left: 5px solid var(--primary);
+            padding: 10px 14px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 12px;
+        }
+
+        .model-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #4338ca;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .model-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e1b4b;
+        }
+
+        .task-prompt {
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .word-badge {
+            background: #fef3c7;
+            color: #b45309;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .audio-btn {
+            background: #e2e8f0;
+            color: #334155;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        .audio-btn:hover {
+            background: #cbd5e1;
+        }
+
+        .translation-box {
+            background-color: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #475569;
+            display: none;
+        }
+
+        .feedback {
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .correct { color: var(--success); }
+        .incorrect { color: var(--error); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🎮 English Pattern Drill Game</h1>
+        <p>Підставляйте нові слова, тренуйте вимову та запам'ятовуйте значення!</p>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div>Бали 🌟</div>
+            <div id="score" class="stat-value">0</div>
+        </div>
+        <div class="stat-item">
+            <div>Виконано ✅</div>
+            <div id="completed" class="stat-value">0 / 12</div>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
+
+    <div id="exercises-list"></div>
+</div>
+
+<script>
+    const tasks = [
+        {
+            id: 1,
+            model: "Is ten late?",
+            modelUa: "Десята година — це пізно?",
+            subWord: "five",
+            answer: "Is five late?",
+            uaTranslation: "П'ята година — це пізно?"
+        },
+        {
+            id: 2,
+            model: "Is ten late?",
+            modelUa: "Десята година — це пізно?",
+            subWord: "eleven",
+            answer: "Is eleven late?",
+            uaTranslation: "Одинадцята година — це пізно?"
+        },
+        {
+            id: 3,
+            model: "Let him film it.",
+            modelUa: "Нехай він зніме це на відео.",
+            subWord: "tape",
+            answer: "Let him tape it.",
+            uaTranslation: "Нехай він запише це на плівку/касету."
+        },
+        {
+            id: 4,
+            model: "Let him film it.",
+            modelUa: "Нехай він зніме це на відео.",
+            subWord: "settle",
+            answer: "Let him settle it.",
+            uaTranslation: "Нехай він врегулює / владнає це."
+        },
+        {
+            id: 5,
+            model: "Let him film it.",
+            modelUa: "Нехай він зніме це на відео.",
+            subWord: "spell",
+            answer: "Let him spell it.",
+            uaTranslation: "Нехай він вимовить це по буквах."
+        },
+        {
+            id: 6,
+            model: "Let me pay my bill.",
+            modelUa: "Дозвольте мені оплатити свій рахунок.",
+            subWord: "see my mail",
+            answer: "Let me see my mail.",
+            uaTranslation: "Дозвольте мені переглянути мою пошту."
+        },
+        {
+            id: 7,
+            model: "Let me pay my bill.",
+            modelUa: "Дозвольте мені оплатити свій рахунок.",
+            subWord: "stay till nine",
+            answer: "Let me stay till nine.",
+            uaTranslation: "Дозвольте мені залишитися до дев'ятої."
+        },
+        {
+            id: 8,
+            model: "Please leave his tapes on my table.",
+            modelUa: "Будь ласка, залиште його касети на моєму столі.",
+            subWord: "my mail",
+            answer: "Please leave my mail on my table.",
+            uaTranslation: "Будь ласка, залиште мою пошту на моєму столі."
+        },
+        {
+            id: 9,
+            model: "Please leave his tapes on my table.",
+            modelUa: "Будь ласка, залиште його касети на моєму столі.",
+            subWord: "his photos",
+            answer: "Please leave his photos on my table.",
+            uaTranslation: "Будь ласка, залиште його фотографії на моєму столі."
+        },
+        {
+            id: 10,
+            model: "David isn't on holiday yet.",
+            modelUa: "Девід ще не у відпустці.",
+            subWord: "Amy",
+            answer: "Amy isn't on holiday yet.",
+            uaTranslation: "Емі ще не у відпустці."
+        },
+        {
+            id: 11,
+            model: "David isn't on holiday yet.",
+            modelUa: "Девід ще не у відпустці.",
+            subWord: "she",
+            answer: "She isn't on holiday yet.",
+            uaTranslation: "Вона ще не у відпустці."
+        },
+        {
+            id: 12,
+            model: "David isn't on holiday yet.",
+            modelUa: "Девід ще не у відпустці.",
+            subWord: "my boss",
+            answer: "My boss isn't on holiday yet.",
+            uaTranslation: "Мій бос ще не у відпустці."
+        }
+    ];
+
+    let score = 0;
+    let completedCount = 0;
+    const totalTasks = tasks.length;
+
+    function renderTasks() {
+        const listContainer = document.getElementById('exercises-list');
+        listContainer.innerHTML = '';
+
+        tasks.forEach((task, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.id = `card-${task.id}`;
+
+            card.innerHTML = `
+                <div class="model-box">
+                    <div class="model-title">Завдання ${index + 1} з ${totalTasks}</div>
+                    <div class="model-text">Модель: "${task.model}"</div>
+                    <small style="color: #64748b;">(Переклад: ${task.modelUa})</small>
+                </div>
+
+                <div class="task-prompt">
+                    Замініть потрібний фрагмент на: <span class="word-badge">${task.subWord}</span>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="input-${task.id}" placeholder="Введіть повне речення..." onkeypress="handleKeyPress(event, ${task.id})">
+                    <button id="btn-${task.id}" onclick="checkTask(${task.id})">Перевірити</button>
+                </div>
+
+                <div id="feedback-${task.id}" class="feedback"></div>
+
+                <div id="translation-${task.id}" class="translation-box">
+                    <strong>🇺🇦 Переклад утвореного речення:</strong> ${task.uaTranslation}
+                    <br>
+                    <button class="audio-btn" onclick="speakText('${task.answer}')">🔊 Прослухати вимову</button>
+                </div>
+            `;
+            listContainer.appendChild(card);
+        });
+    }
+
+    function checkTask(id) {
+        const task = tasks.find(t => t.id === id);
+        const inputElem = document.getElementById(`input-${id}`);
+        const btnElem = document.getElementById(`btn-${id}`);
+        const feedbackElem = document.getElementById(`feedback-${id}`);
+        const translationElem = document.getElementById(`translation-${id}`);
+
+        const userAnswer = inputElem.value.trim().replace(/\s+/g, ' ').replace(/[.,?!]$/, "");
+        const correctAnswer = task.answer.replace(/[.,?!]$/, "");
+
+        if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+            if (!inputElem.disabled) {
+                score += 10;
+                completedCount++;
+                inputElem.disabled = true;
+                btnElem.disabled = true;
+                
+                speakText(task.answer);
+            }
+
+            feedbackElem.innerHTML = "✨ <b>Чудово! Абсолютно правильно.</b>";
+            feedbackElem.className = "feedback correct";
+            translationElem.style.display = "block";
+
+            updateStats();
+        } else {
+            feedbackElem.innerHTML = `❌ Помилка. Спробуйте ще раз! Зверніть увагу на регістр і орфографію.`;
+            feedbackElem.className = "feedback incorrect";
+        }
+    }
+
+    function handleKeyPress(event, id) {
+        if (event.key === 'Enter') {
+            checkTask(id);
+        }
+    }
+
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function updateStats() {
+        document.getElementById('score').textContent = score;
+        document.getElementById('completed').textContent = `${completedCount} / ${totalTasks}`;
+        
+        const percentage = (completedCount / totalTasks) * 100;
+        document.getElementById('progress-bar').style.width = `${percentage}%`;
+
+        if (completedCount === totalTasks) {
+            setTimeout(() => {
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.5 }
+                });
+            }, 300);
+        }
+    }
+
+    renderTasks();
+</script>
+
+</body>
+</html>
