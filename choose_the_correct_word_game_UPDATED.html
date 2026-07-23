@@ -1,0 +1,50 @@
+<!DOCTYPE html><html><head><meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Choose the Correct Word</title>
+<style>
+body{font-family:Arial;background:linear-gradient(135deg,#eef7ff,#f7f0ff);padding:20px}
+.box{max-width:900px;margin:auto;background:#fff;padding:24px;border-radius:18px;box-shadow:0 8px 25px rgba(0,0,0,.12)}
+#ua{font-size:28px;font-weight:bold;color:#0b5fa5;margin-bottom:20px}
+#q{font-size:30px;line-height:1.5;margin-bottom:20px}
+.opt{display:block;width:100%;margin:10px 0;padding:15px;border:none;border-radius:12px;background:#6c63ff;color:#fff;font-size:22px;cursor:pointer}
+.opt:hover{background:#5449f5}
+#msg{font-size:24px;font-weight:bold;height:36px;margin:15px 0}
+button#next{padding:12px 22px;font-size:18px}
+</style></head><body><div class='box'>
+<h1>Choose the Correct Word</h1>
+<div id='ua'></div><div id='q'></div><div id='opts'></div><div id='msg'></div>
+<button id='next' onclick='nextQ()'>Next</button></div>
+<script>
+const data=[
+{ua:"Будь ласка, скажи його ім'я.",parts:["Please "," his name."],opts:["say","tell","speak"],a:0},
+{ua:"Вона запізнилася на десять хвилин.",parts:["She's "," minutes late."],opts:["five","ten","twenty"],a:1},
+{ua:"Його літак вчасно.",parts:["His plane is "," time."],opts:["on","in","at"],a:0},
+{ua:"Вона ще у відпустці.",parts:["She's "," on holiday."],opts:["still","yet","already"],a:0},
+{ua:"Його відпустка у травні.",parts:["His holiday is "," May."],opts:["on","in","at"],a:1},
+{ua:"Я граю у футбол.",parts:["I play ","."],opts:["football","the football","in football"],a:0},
+{ua:"Він ще не у відпустці.",parts:["He isn't on holiday ","."],opts:["still","yet","already"],a:1},
+{ua:"Ні, він не запізнився.",parts:["No, he isn't ","."],opts:["early","late","ready"],a:1},
+{ua:"Будь ласка, скажи мені його ім'я.",parts:["Please "," me his name."],opts:["say","tell","speak"],a:1},
+{ua:"Він запізнився на п'ять хвилин.",parts:["He's "," minutes late."],opts:["five","ten","fifteen"],a:0}
+];
+let i=0,score=0;
+function load(){
+let t=data[i];
+ua.textContent="🇺🇦 "+t.ua;
+q.innerHTML=t.parts[0]+"<b>_____</b>"+t.parts[1];
+opts.innerHTML="";msg.textContent="";
+t.opts.forEach((o,n)=>{
+let b=document.createElement("button");
+b.className="opt";b.textContent=o;
+b.onclick=()=>check(n,b);
+opts.appendChild(b);
+});
+}
+function check(n,b){
+document.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+if(n===data[i].a){b.style.background="#1fa85b";msg.style.color="green";msg.textContent="Correct!";score++;}
+else{b.style.background="#d83b5b";msg.style.color="crimson";msg.textContent="Wrong. Correct answer: "+data[i].opts[data[i].a];}
+}
+function nextQ(){i++;if(i>=data.length){document.body.innerHTML="<div style='font-family:Arial;text-align:center;padding:60px'><h1>🎉 Well done!</h1><h2>Your score: "+score+" / "+data.length+"</h2></div>";return;}load();}
+load();
+</script></body></html>
