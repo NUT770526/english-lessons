@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Sentence Builder Game</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
+            --success: #16a34a;
+            --error: #dc2626;
+            --badge-bg: #e0e7ff;
+            --badge-text: #3730a3;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        /* Статистика */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            height: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), #818cf8);
+            transition: width 0.4s ease;
+        }
+
+        /* Игровая карточка */
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .level-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .target-sentence {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin-bottom: 15px;
+        }
+
+        /* Словарик / Подсказка */
+        .vocab-box {
+            background-color: #fef3c7;
+            color: #78350f;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        /* Зоны сбора слов */
+        .drop-zone {
+            min-height: 60px;
+            background-color: #f1f5f9;
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+        }
+
+        .words-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            min-height: 50px;
+        }
+
+        /* Плашки со словами */
+        .word-tile {
+            background-color: var(--badge-bg);
+            color: var(--badge-text);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .word-tile:hover {
+            transform: translateY(-2px);
+            background-color: #c7d2fe;
+        }
+
+        .word-tile:active {
+            transform: translateY(0);
+        }
+
+        /* Кнопки управления */
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-check {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-check:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-reset {
+            background-color: #e2e8f0;
+            color: #334155;
+            flex: 0.4;
+        }
+
+        .btn-reset:hover {
+            background-color: #cbd5e1;
+        }
+
+        /* Обратная связь */
+        .feedback {
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .correct { color: var(--success); }
+        .incorrect { color: var(--error); }
+
+        .audio-btn {
+            background: #e2e8f0;
+            color: #334155;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .audio-btn:hover {
+            background: #cbd5e1;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🧩 English Sentence Builder</h1>
+        <p>Зберіть правильне англійське речення з доступних слів!</p>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div>Бали 🌟</div>
+            <div id="score" class="stat-value">0</div>
+        </div>
+        <div class="stat-item">
+            <div>Прогрес 🎯</div>
+            <div id="progress-text" class="stat-value">1 / 10</div>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
+
+    <!-- Игровая зона -->
+    <div class="game-card">
+        <div class="level-title" id="level-title">Завдання 1</div>
+        
+        <div class="target-sentence" id="target-sentence">
+            <!-- Украинское предложение -->
+        </div>
+
+        <div class="vocab-box" id="vocab-box">
+            <!-- Подсказка по словарику -->
+        </div>
+
+        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 8px;">Натискайте на слова, щоб зібрати речення:</p>
+        
+        <!-- Зона сбора речения -->
+        <div class="drop-zone" id="drop-zone"></div>
+
+        <!-- Доступные слова -->
+        <div class="words-pool" id="words-pool"></div>
+
+        <div class="controls">
+            <button class="btn-reset" onclick="resetCurrentLevel()">Скинути</button>
+            <button class="btn-check" onclick="checkAnswer()">Перевірити</button>
+        </div>
+
+        <div id="feedback" class="feedback"></div>
+        <div id="audio-container" style="text-align: center;" class="hidden">
+            <button class="audio-btn" onclick="playCurrentAudio()">🔊 Прослухати вимову</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 10 заданий с разбросанными словами и лишними словами-ловушками!
+    const levels = [
+        {
+            id: 1,
+            targetUa: "П'ята година — це пізно?",
+            words: ["Is", "five", "late", "?"],
+            extraWords: ["nine", "ten"],
+            correctAnswer: "Is five late?",
+            vocab: "💡 <b>Словник:</b> late = пізно, five = п'ять"
+        },
+        {
+            id: 2,
+            targetUa: "Нехай він зніме це на відео.",
+            words: ["Let", "him", "film", "it", "."],
+            extraWords: ["her", "me"],
+            correctAnswer: "Let him film it.",
+            vocab: "💡 <b>Словник:</b> film = знімати на відео, let = дозволяти"
+        },
+        {
+            id: 3,
+            targetUa: "Нехай він запише це на касету.",
+            words: ["Let", "him", "tape", "it", "."],
+            extraWords: ["pay", "spell"],
+            correctAnswer: "Let him tape it.",
+            vocab: "💡 <b>Словник:</b> tape = записувати на плівку / касету"
+        },
+        {
+            id: 4,
+            targetUa: "Нехай він врегулює це питання.",
+            words: ["Let", "him", "settle", "it", "."],
+            extraWords: ["leave", "pay"],
+            correctAnswer: "Let him settle it.",
+            vocab: "💡 <b>Словник:</b> settle = врегульовувати, вирішувати"
+        },
+        {
+            id: 5,
+            targetUa: "Дозвольте мені оплатити свій рахунок.",
+            words: ["Let", "me", "pay", "my", "bill", "."],
+            extraWords: ["his", "mail"],
+            correctAnswer: "Let me pay my bill.",
+            vocab: "💡 <b>Словник:</b> pay = платити, bill = рахунок"
+        },
+        {
+            id: 6,
+            targetUa: "Дозвольте мені залишитися до дев'ятої.",
+            words: ["Let", "me", "stay", "till", "nine", "."],
+            extraWords: ["till", "leave"],
+            correctAnswer: "Let me stay till nine.",
+            vocab: "💡 <b>Словник:</b> stay = залишатися, till = до"
+        },
+        {
+            id: 7,
+            targetUa: "Будь ласка, залиште мою пошту на моєму столі.",
+            words: ["Please", "leave", "my", "mail", "on", "my", "table", "."],
+            extraWords: ["his", "tapes"],
+            correctAnswer: "Please leave my mail on my table.",
+            vocab: "💡 <b>Словник:</b> leave = залишати, mail = пошта, table = стіл"
+        },
+        {
+            id: 8,
+            targetUa: "Будь ласка, залиште його фотографії на моєму столі.",
+            words: ["Please", "leave", "his", "photos", "on", "my", "table", "."],
+            extraWords: ["pay", "tape"],
+            correctAnswer: "Please leave his photos on my table.",
+            vocab: "💡 <b>Словник:</b> photos = фотографії"
+        },
+        {
+            id: 9,
+            targetUa: "Емі ще не у відпустці.",
+            words: ["Amy", "isn't", "on", "holiday", "yet", "."],
+            extraWords: ["is", "already"],
+            correctAnswer: "Amy isn't on holiday yet.",
+            vocab: "💡 <b>Словник:</b> holiday = відпустка, yet = ще (у запереченнях)"
+        },
+        {
+            id: 10,
+            targetUa: "Мій бос ще не у відпустці.",
+            words: ["My", "boss", "isn't", "on", "holiday", "yet", "."],
+            extraWords: ["she", "David"],
+            correctAnswer: "My boss isn't on holiday yet.",
+            vocab: "💡 <b>Словник:</b> boss = керівник, бос"
+        }
+    ];
+
+    let currentLevelIdx = 0;
+    let score = 0;
+    let selectedWords = [];
+
+    function initLevel() {
+        const level = levels[currentLevelIdx];
+        
+        document.getElementById('level-title').textContent = `Завдання ${currentLevelIdx + 1} з ${levels.length}`;
+        document.getElementById('target-sentence').textContent = level.targetUa;
+        document.getElementById('vocab-box').innerHTML = level.vocab;
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('feedback').className = 'feedback';
+        document.getElementById('audio-container').classList.add('hidden');
+        
+        selectedWords = [];
+        renderDropZone();
+
+        // Перемешиваем слова из ответа + дополнительные слова-ловушки
+        let pool = [...level.words, ...level.extraWords];
+        pool = pool.sort(() => Math.random() - 0.5);
+
+        renderPool(pool);
+        updateProgress();
+    }
+
+    function renderPool(wordsArray) {
+        const poolElem = document.getElementById('words-pool');
+        poolElem.innerHTML = '';
+
+        wordsArray.forEach((word, index) => {
+            const tile = document.createElement('div');
+            tile.className = 'word-tile';
+            tile.textContent = word;
+            tile.onclick = () => selectWord(word, tile);
+            poolElem.appendChild(tile);
+        });
+    }
+
+    function renderDropZone() {
+        const zoneElem = document.getElementById('drop-zone');
+        zoneElem.innerHTML = '';
+
+        selectedWords.forEach((word, index) => {
+            const tile = document.createElement('div');
+            tile.className = 'word-tile';
+            tile.style.backgroundColor = '#4f46e5';
+            tile.style.color = '#ffffff';
+            tile.textContent = word;
+            tile.onclick = () => unselectWord(index, word);
+            zoneElem.appendChild(tile);
+        });
+    }
+
+    function selectWord(word, tileElem) {
+        selectedWords.push(word);
+        tileElem.remove();
+        renderDropZone();
+    }
+
+    function unselectWord(index, word) {
+        selectedWords.splice(index, 1);
+        renderDropZone();
+
+        // Возвращаем слово в пул
+        const poolElem = document.getElementById('words-pool');
+        const tile = document.createElement('div');
+        tile.className = 'word-tile';
+        tile.textContent = word;
+        tile.onclick = () => selectWord(word, tile);
+        poolElem.appendChild(tile);
+    }
+
+    function resetCurrentLevel() {
+        initLevel();
+    }
+
+    function checkAnswer() {
+        const level = levels[currentLevelIdx];
+        
+        // Собираем предложение
+        let userString = selectedWords.join(' ')
+            .replace(/\s+([.,?!])/g, '$1'); // убираем пробел перед знаками препинания
+
+        const feedbackElem = document.getElementById('feedback');
+
+        if (userString.toLowerCase() === level.correctAnswer.toLowerCase()) {
+            feedbackElem.textContent = '🎉 Чудово! Все правильно!';
+            feedbackElem.className = 'feedback correct';
+            document.getElementById('audio-container').classList.remove('hidden');
+
+            playCurrentAudio();
+
+            score += 10;
+            document.getElementById('score').textContent = score;
+
+            setTimeout(() => {
+                currentLevelIdx++;
+                if (currentLevelIdx < levels.length) {
+                    initLevel();
+                } else {
+                    finishGame();
+                }
+            }, 2000);
+
+        } else {
+            feedbackElem.textContent = '❌ Помилка у порядку слів або виборі. Спробуйте ще раз!';
+            feedbackElem.className = 'feedback incorrect';
+        }
+    }
+
+    function playCurrentAudio() {
+        const text = levels[currentLevelIdx].correctAnswer;
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function updateProgress() {
+        document.getElementById('progress-text').textContent = `${currentLevelIdx + 1} / ${levels.length}`;
+        const percentage = (currentLevelIdx / levels.length) * 100;
+        document.getElementById('progress-bar').style.width = `${percentage}%`;
+    }
+
+    function finishGame() {
+        document.getElementById('progress-bar').style.width = `100%`;
+        document.querySelector('.game-card').innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <h2 style="color: #4f46e5;">🏆 Вітаємо! Гра пройдена!</h2>
+                <p style="font-size: 1.2rem;">Ви набрали <b>${score}</b> з 100 балів!</p>
+                <button class="btn-check" style="margin-top: 15px; width: auto;" onclick="restartGame()">Зіграти знову</button>
+            </div>
+        `;
+        confetti({
+            particleCount: 200,
+            spread: 90,
+            origin: { y: 0.5 }
+        });
+    }
+
+    function restartGame() {
+        location.reload();
+    }
+
+    // Старт игры
+    initLevel();
+</script>
+
+</body>
+</html>
