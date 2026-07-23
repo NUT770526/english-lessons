@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TELL or SAY Quiz Game</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
+            --success: #16a34a;
+            --error: #dc2626;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        /* Панель статистики */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            font-weight: bold;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            border: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            height: 12px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), #818cf8);
+            transition: width 0.4s ease;
+        }
+
+        /* Правило-подсказка */
+        .rule-card {
+            background: #e0e7ff;
+            border-left: 5px solid var(--primary);
+            padding: 15px 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .rule-card h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: #3730a3;
+        }
+
+        /* Задания */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 15px -3px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+        }
+
+        .item-number {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .sentence-box {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        select {
+            padding: 8px 12px;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--primary);
+            background-color: #f8fafc;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        select:focus {
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        select:disabled {
+            background-color: #e2e8f0;
+            cursor: not-allowed;
+            border-color: #cbd5e1;
+            color: #475569;
+        }
+
+        button.check-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+
+        button.check-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button.check-btn:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .translation-box {
+            background-color: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 0.95rem;
+            color: #475569;
+            display: none;
+        }
+
+        .audio-btn {
+            background: #e2e8f0;
+            color: #334155;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .audio-btn:hover {
+            background: #cbd5e1;
+        }
+
+        .feedback {
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .correct { color: var(--success); }
+        .incorrect { color: var(--error); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🗣️ TELL чи SAY?</h1>
+        <p>Оберіть правильне дієслово для кожного речення!</p>
+    </header>
+
+    <!-- Правило-подсказка -->
+    <div class="rule-card">
+        <h3>💡 Коротке правило для запам'ятовування:</h3>
+        • <b>TELL</b> + <i>кому</i> (особа) ➔ <i>tell <u>me</u>, tell <u>him</u>, tell <u>Miss Flynn</u></i><br>
+        • <b>SAY</b> + <i>що</i> (слово/іме) ➔ <i>say <u>a name</u>, say <u>it</u>, say <u>yes/no</u></i>
+    </div>
+
+    <!-- Статистика -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div>Бали 🌟</div>
+            <div id="score" class="stat-value">0</div>
+        </div>
+        <div class="stat-item">
+            <div>Виконано ✅</div>
+            <div id="completed" class="stat-value">0 / 6</div>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
+
+    <!-- Список заданий -->
+    <div id="quiz-list"></div>
+</div>
+
+<script>
+    const questions = [
+        {
+            id: 1,
+            parts: ["1. Please", "Miss Flynn. Only don't", "Amy."],
+            answers: ["tell", "tell"],
+            translation: "Будь ласка, скажіть міс Флінн. Тільки не кажіть Емі.",
+            fullSentence: "Please tell Miss Flynn. Only don't tell Amy."
+        },
+        {
+            id: 2,
+            parts: ["2. Oh, please", "me."],
+            answers: ["tell"],
+            translation: "Ох, будь ласка, скажи мені.",
+            fullSentence: "Oh, please tell me."
+        },
+        {
+            id: 3,
+            parts: ["3. Only don't", "his name."],
+            answers: ["say"],
+            translation: "Тільки не кажи його ім'я.",
+            fullSentence: "Only don't say his name."
+        },
+        {
+            id: 4,
+            parts: ["4. Please don't", "it yet."],
+            answers: ["say"],
+            translation: "Будь ласка, не кажи цього поки що.",
+            fullSentence: "Please don't say it yet."
+        },
+        {
+            id: 5,
+            parts: ["5. Please", "him my name."],
+            answers: ["tell"],
+            translation: "Будь ласка, скажи йому моє ім'я.",
+            fullSentence: "Please tell him my name."
+        },
+        {
+            id: 6,
+            parts: ["6. Don't", "no.", "yes."],
+            answers: ["say", "Say"],
+            translation: "Не кажи 'ні'. Скажи 'так'.",
+            fullSentence: "Don't say no. Say yes."
+        }
+    ];
+
+    let score = 0;
+    let completedCount = 0;
+    const totalQuestions = questions.length;
+
+    function renderQuiz() {
+        const container = document.getElementById('quiz-list');
+        container.innerHTML = '';
+
+        questions.forEach((q, idx) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.id = `card-${q.id}`;
+
+            let sentenceHtml = '';
+            q.parts.forEach((part, pIdx) => {
+                sentenceHtml += `<span>${part}</span>`;
+                if (pIdx < q.answers.length) {
+                    const isCapital = q.answers[pIdx][0] === q.answers[pIdx][0].toUpperCase();
+                    sentenceHtml += `
+                        <select id="select-${q.id}-${pIdx}">
+                            <option value="">-- ? --</option>
+                            <option value="${isCapital ? 'Tell' : 'tell'}">${isCapital ? 'Tell' : 'tell'}</option>
+                            <option value="${isCapital ? 'Say' : 'say'}">${isCapital ? 'Say' : 'say'}</option>
+                        </select>
+                    `;
+                }
+            });
+
+            card.innerHTML = `
+                <div class="item-number">Завдання ${idx + 1} з ${totalQuestions}</div>
+                <div class="sentence-box">${sentenceHtml}</div>
+                
+                <button class="check-btn" id="btn-${q.id}" onclick="checkQuestion(${q.id})">Перевірити</button>
+                
+                <div id="feedback-${q.id}" class="feedback"></div>
+
+                <div id="translation-${q.id}" class="translation-box">
+                    <strong>🇺🇦 Переклад:</strong> ${q.translation}
+                    <br>
+                    <button class="audio-btn" onclick="speakText('${q.fullSentence}')">🔊 Прослухати вимову</button>
+                </div>
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+    function checkQuestion(id) {
+        const q = questions.find(item => item.id === id);
+        let isAllCorrect = true;
+
+        q.answers.forEach((ans, pIdx) => {
+            const selectElem = document.getElementById(`select-${id}-${pIdx}`);
+            if (selectElem.value !== ans) {
+                isAllCorrect = false;
+            }
+        });
+
+        const feedbackElem = document.getElementById(`feedback-${id}`);
+        const translationElem = document.getElementById(`translation-${id}`);
+        const btnElem = document.getElementById(`btn-${id}`);
+
+        if (isAllCorrect) {
+            feedbackElem.innerHTML = "✨ <b>Чудово! Все правильно.</b>";
+            feedbackElem.className = "feedback correct";
+            translationElem.style.display = "block";
+
+            q.answers.forEach((_, pIdx) => {
+                document.getElementById(`select-${id}-${pIdx}`).disabled = true;
+            });
+            btnElem.disabled = true;
+
+            speakText(q.fullSentence);
+
+            score += 15;
+            completedCount++;
+            updateStats();
+        } else {
+            feedbackElem.innerHTML = "❌ Є помилка. Згадайте правило і спробуйте ще раз!";
+            feedbackElem.className = "feedback incorrect";
+        }
+    }
+
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function updateStats() {
+        document.getElementById('score').textContent = score;
+        document.getElementById('completed').textContent = `${completedCount} / ${totalQuestions}`;
+        
+        const percentage = (completedCount / totalQuestions) * 100;
+        document.getElementById('progress-bar').style.width = `${percentage}%`;
+
+        if (completedCount === totalQuestions) {
+            setTimeout(() => {
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.5 }
+                });
+            }, 300);
+        }
+    }
+
+    renderQuiz();
+</script>
+
+</body>
+</html>
