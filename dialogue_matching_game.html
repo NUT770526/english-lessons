@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match the Dialogue</title>
+<style>
+  :root{
+    --bg1:#f7f4ff;
+    --bg2:#eef8ff;
+    --card:#ffffff;
+    --ink:#243047;
+    --muted:#6b7280;
+    --accent:#6c63ff;
+    --accent2:#23b5d3;
+    --good:#18a957;
+    --bad:#e84a5f;
+    --shadow:0 14px 35px rgba(51,65,85,.14);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:Arial, Helvetica, sans-serif;
+    color:var(--ink);
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    padding:24px;
+  }
+  .app{
+    width:min(1100px,100%);
+    margin:auto;
+  }
+  .header{
+    background:rgba(255,255,255,.86);
+    backdrop-filter:blur(10px);
+    border-radius:24px;
+    padding:24px;
+    box-shadow:var(--shadow);
+    margin-bottom:20px;
+  }
+  h1{
+    margin:0 0 8px;
+    font-size:clamp(28px,4vw,44px);
+  }
+  .subtitle{
+    margin:0;
+    font-size:18px;
+    color:var(--muted);
+    line-height:1.45;
+  }
+  .topbar{
+    margin-top:18px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .score{
+    font-weight:700;
+    font-size:18px;
+    background:#fff;
+    border-radius:16px;
+    padding:10px 16px;
+    box-shadow:0 8px 20px rgba(51,65,85,.08);
+  }
+  button{
+    border:0;
+    border-radius:16px;
+    padding:12px 18px;
+    font-size:17px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.18s ease;
+  }
+  button:hover{transform:translateY(-2px)}
+  .reset{
+    background:var(--accent);
+    color:white;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  .column{
+    background:rgba(255,255,255,.75);
+    border-radius:24px;
+    padding:18px;
+    box-shadow:var(--shadow);
+  }
+  .column h2{
+    margin:0 0 14px;
+    font-size:22px;
+  }
+  .card{
+    width:100%;
+    text-align:left;
+    background:var(--card);
+    color:var(--ink);
+    margin:10px 0;
+    padding:16px 18px;
+    border:3px solid transparent;
+    box-shadow:0 8px 18px rgba(51,65,85,.09);
+    line-height:1.35;
+  }
+  .card.selected{
+    border-color:var(--accent);
+    background:#f2f0ff;
+  }
+  .card.correct{
+    border-color:var(--good);
+    background:#eaf9f0;
+    color:#126b39;
+    cursor:default;
+  }
+  .card.wrong{
+    border-color:var(--bad);
+    background:#fff0f2;
+    animation:shake .28s linear;
+  }
+  .card:disabled{opacity:1}
+  .message{
+    min-height:34px;
+    margin:18px 2px 0;
+    font-size:19px;
+    font-weight:700;
+    text-align:center;
+  }
+  .finish{
+    display:none;
+    margin-top:20px;
+    background:white;
+    border-radius:24px;
+    padding:28px;
+    text-align:center;
+    box-shadow:var(--shadow);
+  }
+  .finish.show{display:block}
+  .finish h2{font-size:34px;margin:0 0 10px}
+  .finish p{font-size:20px;margin:0;color:var(--muted)}
+  @keyframes shake{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-6px)}
+    75%{transform:translateX(6px)}
+  }
+  @media (max-width:800px){
+    body{padding:12px}
+    .grid{grid-template-columns:1fr}
+    .header,.column{border-radius:18px}
+    .card{font-size:16px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <section class="header">
+    <h1>Match the Dialogue</h1>
+    <p class="subtitle">Choose a sentence on the left, then choose the correct reply on the right.</p>
+    <div class="topbar">
+      <div class="score">Correct pairs: <span id="score">0</span> / 8</div>
+      <button class="reset" id="resetBtn">Start again</button>
+    </div>
+  </section>
+
+  <main class="grid">
+    <section class="column">
+      <h2>Sentence</h2>
+      <div id="questions"></div>
+    </section>
+
+    <section class="column">
+      <h2>Reply</h2>
+      <div id="answers"></div>
+    </section>
+  </main>
+
+  <div class="message" id="message"></div>
+
+  <section class="finish" id="finish">
+    <h2>Well done! 🎉</h2>
+    <p>You matched all the dialogues correctly.</p>
+  </section>
+</div>
+
+<script>
+const pairs = [
+  ["Hello! My name's David. His name's Dennis.", "Please tell me his name."],
+  ["Please say his name.", "Ben Davies."],
+  ["She's ten minutes late.", "No, she isn't. It's only nine."],
+  ["Is he late?", "Yes, he is. He's five minutes late."],
+  ["Isn't his plane late?", "No, it's on time."],
+  ["Is Mrs Bailey still on holiday?", "Yes, she's on holiday till May."],
+  ["Isn't Dave on holiday yet?", "No, he isn't. His holiday's in May."],
+  ["Let's play tennis.", "Let's play table tennis."]
+];
+
+const questionsEl = document.getElementById("questions");
+const answersEl = document.getElementById("answers");
+const scoreEl = document.getElementById("score");
+const messageEl = document.getElementById("message");
+const finishEl = document.getElementById("finish");
+const resetBtn = document.getElementById("resetBtn");
+
+let selectedQuestion = null;
+let score = 0;
+
+function shuffle(array){
+  return [...array].sort(() => Math.random() - 0.5);
+}
+
+function buildGame(){
+  selectedQuestion = null;
+  score = 0;
+  scoreEl.textContent = "0";
+  messageEl.textContent = "";
+  finishEl.classList.remove("show");
+  questionsEl.innerHTML = "";
+  answersEl.innerHTML = "";
+
+  pairs.forEach((pair, index) => {
+    const btn = document.createElement("button");
+    btn.className = "card";
+    btn.textContent = pair[0];
+    btn.dataset.id = index;
+    btn.addEventListener("click", () => selectQuestion(btn));
+    questionsEl.appendChild(btn);
+  });
+
+  shuffle(pairs.map((pair, index) => ({text: pair[1], id: index}))).forEach(item => {
+    const btn = document.createElement("button");
+    btn.className = "card";
+    btn.textContent = item.text;
+    btn.dataset.id = item.id;
+    btn.addEventListener("click", () => selectAnswer(btn));
+    answersEl.appendChild(btn);
+  });
+}
+
+function selectQuestion(btn){
+  if(btn.disabled) return;
+  document.querySelectorAll("#questions .card").forEach(card => card.classList.remove("selected"));
+  btn.classList.add("selected");
+  selectedQuestion = btn;
+  messageEl.textContent = "Now choose the correct reply.";
+  messageEl.style.color = "#6c63ff";
+}
+
+function selectAnswer(btn){
+  if(btn.disabled) return;
+
+  if(!selectedQuestion){
+    messageEl.textContent = "First choose a sentence on the left.";
+    messageEl.style.color = "#e84a5f";
+    return;
+  }
+
+  if(btn.dataset.id === selectedQuestion.dataset.id){
+    btn.classList.add("correct");
+    selectedQuestion.classList.remove("selected");
+    selectedQuestion.classList.add("correct");
+    btn.disabled = true;
+    selectedQuestion.disabled = true;
+    selectedQuestion = null;
+    score++;
+    scoreEl.textContent = score;
+    messageEl.textContent = "Correct! ✓";
+    messageEl.style.color = "#18a957";
+
+    if(score === pairs.length){
+      finishEl.classList.add("show");
+      messageEl.textContent = "";
+      window.scrollTo({top: document.body.scrollHeight, behavior:"smooth"});
+    }
+  } else {
+    btn.classList.add("wrong");
+    selectedQuestion.classList.add("wrong");
+    messageEl.textContent = "Try again.";
+    messageEl.style.color = "#e84a5f";
+    setTimeout(() => {
+      btn.classList.remove("wrong");
+      if(selectedQuestion) selectedQuestion.classList.remove("wrong");
+    }, 450);
+  }
+}
+
+resetBtn.addEventListener("click", buildGame);
+buildGame();
+</script>
+</body>
+</html>
