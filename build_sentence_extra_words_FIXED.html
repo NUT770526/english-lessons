@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset='utf-8'><style>
+body{font-family:Arial;background:#eef5ff;padding:20px}.c{max-width:950px;margin:auto;background:white;padding:24px;border-radius:16px}
+#ua{font-size:28px;color:#0b5fa5;font-weight:bold}#ans{min-height:60px;border:2px dashed #66f;padding:12px;margin:15px 0;font-size:24px}
+.word{display:inline-block;background:#6c63ff;color:#fff;padding:10px 16px;margin:6px;border-radius:10px;cursor:pointer}
+.sel{display:inline-block;background:#22a86a;color:#fff;padding:8px 12px;margin:4px;border-radius:8px;cursor:pointer}
+button{margin:8px;padding:10px 16px}
+</style></head><body><div class='c'><h1>Build the sentence (Extra words)</h1><div id='ua'></div><div id='ans'></div><div id='words'></div><div><button onclick='check()'>Check</button><button onclick='clearAns()'>Clear</button><button onclick='nextQ()'>Next</button></div><div id='msg'></div></div>
+<script>
+const tasks=[{"ua": "Будь ласка, скажи його ім'я.", "answer": ["Please", "say", "his", "name."], "words": ["Please", "say", "tell", "his", "her", "name."]}, {"ua": "Вона запізнилася на десять хвилин.", "answer": ["She's", "ten", "minutes", "late."], "words": ["She's", "He's", "ten", "five", "minutes", "late.", "early"]}, {"ua": "Він запізнився на п'ять хвилин.", "answer": ["He's", "five", "minutes", "late."], "words": ["He's", "She's", "five", "ten", "minutes", "late.", "early"]}, {"ua": "Його літак вчасно.", "answer": ["His", "plane", "is", "on", "time."], "words": ["His", "Her", "plane", "is", "are", "on", "in", "time."]}, {"ua": "Вона ще у відпустці.", "answer": ["She's", "still", "on", "holiday."], "words": ["She's", "He's", "still", "yet", "on", "in", "holiday."]}, {"ua": "Його відпустка у травні.", "answer": ["His", "holiday's", "in", "May."], "words": ["His", "Her", "holiday's", "in", "on", "May."]}, {"ua": "Давай пограємо в настільний теніс.", "answer": ["Let's", "play", "table", "tennis."], "words": ["Let's", "play", "go", "table", "tennis.", "football"]}, {"ua": "Будь ласка, скажи мені його ім'я.", "answer": ["Please", "tell", "me", "his", "name."], "words": ["Please", "tell", "say", "me", "his", "her", "name."]}, {"ua": "Він ще не у відпустці.", "answer": ["He", "isn't", "on", "holiday", "yet."], "words": ["He", "She", "isn't", "is", "on", "in", "holiday", "yet."]}, {"ua": "Ні, він не запізнився.", "answer": ["No,", "he", "isn't", "late."], "words": ["No,", "Yes,", "he", "she", "isn't", "is", "late.", "early"]}];
+let i=0,chosen=[];
+function sh(a){return [...a].sort(()=>Math.random()-0.5)}
+function render(){
+chosen=[];msg.textContent='';ua.textContent='🇺🇦 '+tasks[i].ua;ans.innerHTML='';words.innerHTML='';
+sh(tasks[i].words).forEach((w)=>{let d=document.createElement('span');d.className='word';d.textContent=w;d.onclick=()=>{chosen.push(w);draw();d.style.display='none';};words.appendChild(d);});
+}
+function draw(){ans.innerHTML='';chosen.forEach((w,idx)=>{let s=document.createElement('span');s.className='sel';s.textContent=w;s.onclick=()=>{chosen.splice(idx,1);renderKeep();};ans.appendChild(s);})}
+function renderKeep(){let used=[...chosen];render();chosen=used;document.querySelectorAll('.word').forEach(el=>{if(chosen.includes(el.textContent))el.style.display='none';});draw();}
+function clearAns(){render();}
+function check(){msg.style.fontSize='22px';if(JSON.stringify(chosen)==JSON.stringify(tasks[i].answer)){msg.style.color='green';msg.textContent='Excellent!';}else{msg.style.color='crimson';msg.textContent='Try again. There are extra words.';}}
+function nextQ(){i++;if(i>=tasks.length){document.body.innerHTML='<h1 style="text-align:center;color:green">🎉 Well done!</h1>';return;}render();}
+render();
+</script></body></html>
