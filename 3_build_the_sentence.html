@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Build the Sentence</title><style>
+:root{
+  --bg1:#f5f7ff;--bg2:#eef9f4;--card:#ffffff;--ink:#1f2937;
+  --accent:#5b5bd6;--accent2:#14b8a6;--good:#15803d;--bad:#b91c1c;
+  --muted:#64748b;--shadow:0 16px 40px rgba(31,41,55,.12);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));min-height:100vh;
+}
+.wrap{max-width:980px;margin:0 auto;padding:28px 18px 48px}
+.hero{
+  background:linear-gradient(135deg,#5b5bd6,#14b8a6);color:#fff;
+  border-radius:28px;padding:28px;box-shadow:var(--shadow);margin-bottom:22px
+}
+.hero h1{margin:0 0 8px;font-size:clamp(28px,5vw,44px)}
+.hero p{margin:0;opacity:.94;font-size:17px}
+.panel{background:var(--card);border-radius:24px;padding:24px;box-shadow:var(--shadow)}
+.btn{
+  border:none;border-radius:14px;padding:12px 18px;font-weight:700;font-size:16px;
+  cursor:pointer;background:var(--accent);color:#fff;transition:.2s
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.secondary{background:#e2e8f0;color:#1e293b}
+.status{font-weight:800;margin-top:14px;min-height:26px}
+.good{color:var(--good)} .bad{color:var(--bad)}
+.progress{height:12px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin:16px 0}
+.progress > div{height:100%;background:linear-gradient(90deg,#5b5bd6,#14b8a6);width:0;transition:.3s}
+.small{color:var(--muted);font-size:14px}
+
+.prompt{font-size:19px;font-weight:800;margin-bottom:12px}
+.drop{min-height:70px;border:3px dashed #cbd5e1;border-radius:18px;padding:12px;display:flex;gap:10px;flex-wrap:wrap;background:#f8fafc}
+.bank{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.token{padding:11px 14px;border:none;border-radius:14px;background:#e0e7ff;color:#312e81;font-weight:800;cursor:pointer;font-size:16px}
+.token.used{opacity:.35;pointer-events:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+</style></head>
+<body><div class="wrap">
+<div class="hero"><h1>Build the Sentence</h1><p>Склади правильне англійське речення з частин.</p></div>
+<div class="panel">
+<div class="small" id="counter"></div><div class="progress"><div id="bar"></div></div>
+<div class="prompt" id="prompt"></div>
+<div class="drop" id="drop"></div>
+<div class="bank" id="bank"></div>
+<div class="actions">
+<button class="btn" onclick="check()">Перевірити</button>
+<button class="btn secondary" onclick="resetCurrent()">Очистити</button>
+<button class="btn secondary" id="next" onclick="next()" style="display:none">Наступне</button>
+</div>
+<div class="status" id="status"></div>
+</div></div>
+<script>
+const data=[
+{ua:"Мій менеджер надійний.",s:"My manager is reliable."},
+{ua:"Вона досить щедра.",s:"She is quite generous."},
+{ua:"Він не вірить у людей.",s:"He does not believe in people."},
+{ua:"Цей постачальник ненадійний.",s:"This supplier is unreliable."},
+{ua:"Я маю пристрасть до читання.",s:"I have a passion for reading."},
+{ua:"Наша нова колега життєрадісна.",s:"Our new colleague is cheerful."},
+{ua:"Егоїстична людина не думає про команду.",s:"A selfish person does not think about the team."},
+{ua:"Вона почувалася нещасною.",s:"She felt miserable."},
+{ua:"Це завдання доволі складне.",s:"This task is rather difficult."},
+{ua:"Мені справді сподобалася зустріч.",s:"I really enjoyed the meeting."},
+{ua:"Презентація була доволі цікавою.",s:"The presentation was pretty interesting."},
+{ua:"Вона має позитивне ставлення.",s:"She has a positive attitude."},
+{ua:"Він не з'явився на зустріч.",s:"He did not show up for the meeting."}
+];
+let items=[],idx=0,chosen=[];
+const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+function begin(){items=shuffle(data);idx=0;render();}
+function render(){
+ chosen=[];document.getElementById("status").textContent="";document.getElementById("next").style.display="none";
+ let q=items[idx];document.getElementById("counter").textContent=`Речення ${idx+1} з ${items.length}`;
+ document.getElementById("bar").style.width=(idx/items.length*100)+"%";document.getElementById("prompt").textContent=q.ua;
+ document.getElementById("drop").innerHTML="";let bank=document.getElementById("bank");bank.innerHTML="";
+ shuffle(q.s.replace(/[.]/g,"").split(" ")).forEach((w,n)=>{let b=document.createElement("button");b.className="token";b.textContent=w;b.dataset.id=n;b.onclick=()=>pick(b,w);bank.appendChild(b);});
+}
+function pick(btn,w){btn.classList.add("used");chosen.push({w,btn});draw();}
+function draw(){
+ let d=document.getElementById("drop");d.innerHTML="";
+ chosen.forEach((x,i)=>{let b=document.createElement("button");b.className="token";b.textContent=x.w;b.onclick=()=>remove(i);d.appendChild(b);});
+}
+function remove(i){chosen[i].btn.classList.remove("used");chosen.splice(i,1);draw();}
+function resetCurrent(){chosen.forEach(x=>x.btn.classList.remove("used"));chosen=[];draw();document.getElementById("status").textContent="";}
+function check(){
+ let made=chosen.map(x=>x.w).join(" ")+".";
+ if(made===items[idx].s){document.getElementById("status").innerHTML='<span class="good">Чудово! Речення правильне.</span>';document.getElementById("next").style.display="inline-block";}
+ else document.getElementById("status").innerHTML='<span class="bad">Порядок слів поки неправильний.</span>';
+}
+function next(){idx++;if(idx<items.length)render();else{document.getElementById("bar").style.width="100%";document.querySelector(".panel").innerHTML='<h2>Excellent work!</h2><p style="font-size:21px">Ти склав усі речення.</p><button class="btn" onclick="location.reload()">Зіграти ще раз</button>';}}
+begin();
+</script></body></html>
