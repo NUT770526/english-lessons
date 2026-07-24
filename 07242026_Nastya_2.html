@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Choose the Word</title><style>
+:root{
+  --bg1:#f5f7ff;--bg2:#eef9f4;--card:#ffffff;--ink:#1f2937;
+  --accent:#5b5bd6;--accent2:#14b8a6;--good:#15803d;--bad:#b91c1c;
+  --muted:#64748b;--shadow:0 16px 40px rgba(31,41,55,.12);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));min-height:100vh;
+}
+.wrap{max-width:980px;margin:0 auto;padding:28px 18px 48px}
+.hero{
+  background:linear-gradient(135deg,#5b5bd6,#14b8a6);color:#fff;
+  border-radius:28px;padding:28px;box-shadow:var(--shadow);margin-bottom:22px
+}
+.hero h1{margin:0 0 8px;font-size:clamp(28px,5vw,44px)}
+.hero p{margin:0;opacity:.94;font-size:17px}
+.panel{background:var(--card);border-radius:24px;padding:24px;box-shadow:var(--shadow)}
+.btn{
+  border:none;border-radius:14px;padding:12px 18px;font-weight:700;font-size:16px;
+  cursor:pointer;background:var(--accent);color:#fff;transition:.2s
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.secondary{background:#e2e8f0;color:#1e293b}
+.status{font-weight:800;margin-top:14px;min-height:26px}
+.good{color:var(--good)} .bad{color:var(--bad)}
+.progress{height:12px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin:16px 0}
+.progress > div{height:100%;background:linear-gradient(90deg,#5b5bd6,#14b8a6);width:0;transition:.3s}
+.small{color:var(--muted);font-size:14px}
+
+.card{background:#f8fafc;border:2px solid #e2e8f0;border-radius:20px;padding:22px;margin-top:18px}
+.sentence{font-size:24px;line-height:1.45;font-weight:750;margin-bottom:18px}
+.options{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.option{padding:14px;border:2px solid #cbd5e1;border-radius:16px;background:white;cursor:pointer;font-size:17px;font-weight:700}
+.option:hover{border-color:#5b5bd6}
+.option.correct{background:#dcfce7;border-color:#22c55e;color:#166534}
+.option.wrong{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+@media(max-width:650px){.options{grid-template-columns:1fr}}
+</style></head>
+<body><div class="wrap">
+<div class="hero"><h1>Choose the Word</h1><p>Обери слово, яке найкраще завершує речення.</p></div>
+<div class="panel">
+<div class="small" id="counter"></div><div class="progress"><div id="bar"></div></div>
+<div class="card"><div class="sentence" id="sentence"></div><div class="options" id="options"></div></div>
+<div class="status" id="status"></div>
+<button class="btn" id="next" style="margin-top:12px;display:none" onclick="nextQ()">Наступне</button>
+</div></div>
+<script>
+const qs = [
+{s:"My friend always helps me. He is very ___.",a:"reliable",o:["reliable","selfish","miserable","pretty"]},
+{s:"Max is ___. He never helps his friends.",a:"unreliable",o:["positive","unreliable","generous","cheerful"]},
+{s:"She gives big presents to her friends. She is ___.",a:"generous",o:["generous","miserable","selfish","rather"]},
+{s:"Why does Tom not ___ for the lesson today?",a:"show up",o:["show up","believe in people","have a passion for","really"]},
+{s:"I ___ art and draw pictures every day.",a:"have a passion for",o:["have a passion for","show up","believe in people","quite"]},
+{s:"Our classmate is happy and always smiles. She is ___.",a:"cheerful",o:["cheerful","selfish","unreliable","miserable"]},
+{s:"He does not share his toys. He is ___.",a:"selfish",o:["selfish","reliable","positive","generous"]},
+{s:"Why are you feeling so ___ today?",a:"miserable",o:["miserable","cheerful","pretty","positive"]},
+{s:"This book is ___ good, but not my favorite.",a:"quite",o:["quite","really","positive","show up"]},
+{s:"Is this game ___ difficult for you?",a:"rather",o:["rather","generous","cheerful","reliable"]},
+{s:"I ___ like playing this computer game!",a:"really",o:["really","pretty","selfish","unreliable"]},
+{s:"The movie is ___ interesting today.",a:"pretty",o:["pretty","miserable","show up","believe in people"]},
+{s:"She always has a smile on her face. She is ___.",a:"positive",o:["positive","selfish","unreliable","rather"]},
+{s:"Do you ___ when they tell you stories?",a:"believe in people",o:["believe in people","show up","have a passion for","really"]}
+];
+let order=[],i=0,score=0,locked=false;
+const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+function init(){order=shuffle(qs);i=0;score=0;render();}
+function render(){
+ locked=false;document.getElementById("next").style.display="none";document.getElementById("status").textContent="";
+ const q=order[i];document.getElementById("counter").textContent=`Питання ${i+1} з ${order.length}`;
+ document.getElementById("bar").style.width=(i/order.length*100)+"%";
+ document.getElementById("sentence").textContent=q.s;
+ const box=document.getElementById("options");box.innerHTML="";
+ shuffle(q.o).forEach(x=>{const b=document.createElement("button");b.className="option";b.textContent=x;b.onclick=()=>answer(b,x,q.a);box.appendChild(b);});
+}
+function answer(btn,x,a){
+ if(locked)return;locked=true;
+ [...document.querySelectorAll(".option")].forEach(b=>{if(b.textContent===a)b.classList.add("correct");});
+ if(x===a){score++;document.getElementById("status").innerHTML='<span class="good">Правильно!</span>';}
+ else{btn.classList.add("wrong");document.getElementById("status").innerHTML='<span class="bad">Не зовсім. Подивись на правильну відповідь.</span>';}
+ document.getElementById("next").style.display="inline-block";
+}
+function nextQ(){
+ i++;
+ if(i<order.length) render();
+ else{document.getElementById("bar").style.width="100%";document.querySelector(".card").innerHTML=`<h2>Готово!</h2><p style="font-size:22px">Твій результат: <b>${score} / ${order.length}</b></p><button class="btn" onclick="init()">Зіграти ще раз</button>`;document.getElementById("next").style.display="none";document.getElementById("status").textContent="";}
+}
+init();
+</script></body></html>
