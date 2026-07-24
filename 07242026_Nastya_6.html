@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕵️‍♂️ Детективный квест: Тайна утренних диалогов</title>
+    <style>
+        :root {
+            --bg-color: #1e1e2e;
+            --card-bg: #2b2b3d;
+            --accent-color: #89b4fa;
+            --correct-color: #a6e3a1;
+            --wrong-color: #f38ba8;
+            --text-color: #cdd6f4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+
+        /* Vocabulary Helper */
+        .vocab-card {
+            background-color: var(--card-bg);
+            border-left: 5px solid var(--accent-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .vocab-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .audio-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        /* Level Cards */
+        .level-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .level-title {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 5px;
+        }
+
+        .dialogue {
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        select {
+            background-color: #11111b;
+            color: #fff;
+            border: 1px solid var(--accent-color);
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        select.correct {
+            border-color: var(--correct-color);
+            background-color: rgba(166, 227, 161, 0.2);
+        }
+
+        select.incorrect {
+            border-color: var(--wrong-color);
+            background-color: rgba(243, 139, 168, 0.2);
+        }
+
+        /* Submit Button */
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .check-btn {
+            background-color: var(--accent-color);
+            color: #11111b;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .check-btn:hover {
+            transform: scale(1.05);
+            background-color: #b4befe;
+        }
+
+        .result-box {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🕵️‍♂️ Детективный Квест</h1>
+        <p>Тайна утренних диалогов • Present Simple vs Present Continuous</p>
+    </header>
+
+    <!-- Vocabulary Helper -->
+    <div class="vocab-card">
+        <h3>💡 Полезный словарь (Word Helper)</h3>
+        <p>Нажмите на 🔊, чтобы услышать произношение слова:</p>
+        <div class="vocab-grid">
+            <div class="vocab-item">
+                <span><b>Suitcase</b> [ˈsjuːtkeɪs] — чемодан</span>
+                <button class="audio-btn" onclick="speak('suitcase')">🔊</button>
+            </div>
+            <div class="vocab-item">
+                <span><b>Explain</b> [ɪkˈspleɪn] — объяснять</span>
+                <button class="audio-btn" onclick="speak('explain')">🔊</button>
+            </div>
+            <div class="vocab-item">
+                <span><b>Hurry</b> [ˈhʌri] — спешка</span>
+                <button class="audio-btn" onclick="speak('hurry')">🔊</button>
+            </div>
+            <div class="vocab-item">
+                <span><b>Garage</b> [ˈɡærɑːʒ] — гараж</span>
+                <button class="audio-btn" onclick="speak('garage')">🔊</button>
+            </div>
+            <div class="vocab-item">
+                <span><b>Outside</b> [ˌaʊtˈsaɪd] — снаружи</span>
+                <button class="audio-btn" onclick="speak('outside')">🔊</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Level 1 -->
+    <div class="level-card">
+        <div class="level-title">Уровень 1: Поезд в Оксфорд 🚆</div>
+        <div class="dialogue">
+            <b>A:</b> Why are you in such a hurry? What time 
+            <select data-answer="does">
+                <option value="">-- select --</option>
+                <option value="does">does</option>
+                <option value="is">is</option>
+                <option value="do">do</option>
+            </select>
+            the train to Oxford 
+            <select data-answer="leave">
+                <option value="">-- select --</option>
+                <option value="leaving">leaving</option>
+                <option value="leave">leave</option>
+                <option value="leaves">leaves</option>
+            </select>?<br>
+            <b>B:</b> At 9 p.m. But I 
+            <select data-answer="want">
+                <option value="">-- select --</option>
+                <option value="am wanting">am wanting</option>
+                <option value="want">want</option>
+                <option value="wants">wants</option>
+            </select>
+            to be in the city centre by 7 o'clock because I 
+            <select data-answer="am meeting">
+                <option value="">-- select --</option>
+                <option value="meet">meet</option>
+                <option value="meets">meets</option>
+                <option value="am meeting">am meeting</option>
+            </select>
+            my friend Katie in a café first.
+        </div>
+    </div>
+
+    <!-- Level 2 -->
+    <div class="level-card">
+        <div class="level-title">Уровень 2: Загадочный чемодан 🧳</div>
+        <div class="dialogue">
+            <b>A:</b> Whose suitcase is this?<br>
+            <b>B:</b> It's Timothy's. He 
+            <select data-answer="is staying">
+                <option value="">-- select --</option>
+                <option value="stays">stays</option>
+                <option value="is staying">is staying</option>
+                <option value="stay">stay</option>
+            </select>
+            with us for a few days.<br>
+            <b>A:</b> Really? Where is he now?<br>
+            <b>B:</b> He's in the living room with Larry. They 
+            <select data-answer="are watching">
+                <option value="">-- select --</option>
+                <option value="are watching">are watching</option>
+                <option value="watch">watch</option>
+                <option value="watches">watches</option>
+            </select>
+            a football match. Larry 
+            <select data-answer="always watches">
+                <option value="">-- select --</option>
+                <option value="is always watching">is always watching</option>
+                <option value="always watch">always watch</option>
+                <option value="always watches">always watches</option>
+            </select>
+            sports on Sundays.
+        </div>
+    </div>
+
+    <!-- Level 3 -->
+    <div class="level-card">
+        <div class="level-title">Уровень 3: Срочная помощь 💻</div>
+        <div class="dialogue">
+            <b>A:</b> Hey, Mandy. Can you explain this text to me? I 
+            <select data-answer="don't understand">
+                <option value="">-- select --</option>
+                <option value="am not understanding">am not understanding</option>
+                <option value="don't understand">don't understand</option>
+                <option value="doesn't understand">doesn't understand</option>
+            </select>
+            it.<br>
+            <b>B:</b> Not now, Kevin. I 
+            <select data-answer="am working">
+                <option value="">-- select --</option>
+                <option value="am working">am working</option>
+                <option value="work">work</option>
+                <option value="works">works</option>
+            </select>.<br>
+            <b>A:</b> Oh, Mandy. You 
+            <select data-answer="never help">
+                <option value="">-- select --</option>
+                <option value="are never helping">are never helping</option>
+                <option value="never helps">never helps</option>
+                <option value="never help">never help</option>
+            </select>
+            me!
+        </div>
+    </div>
+
+    <!-- Level 4 -->
+    <div class="level-card">
+        <div class="level-title">Уровень 4: Пропавший кот 🐾</div>
+        <div class="dialogue">
+            <b>A:</b> Why 
+            <select data-answer="are">
+                <option value="">-- select --</option>
+                <option value="do">do</option>
+                <option value="are">are</option>
+                <option value="is">is</option>
+            </select>
+            the kids 
+            <select data-answer="crying">
+                <option value="">-- select --</option>
+                <option value="cry">cry</option>
+                <option value="crying">crying</option>
+                <option value="cries">cries</option>
+            </select>?<br>
+            <b>B:</b> Because they can't find their cat. They 
+            <select data-answer="think">
+                <option value="">-- select --</option>
+                <option value="are thinking">are thinking</option>
+                <option value="think">think</option>
+                <option value="thinks">thinks</option>
+            </select>
+            someone took it.<br>
+            <b>A:</b> Their cat is outside. It 
+            <select data-answer="is sleeping">
+                <option value="">-- select --</option>
+                <option value="sleeps">sleeps</option>
+                <option value="is sleeping">is sleeping</option>
+                <option value="sleep">sleep</option>
+            </select>
+            next to the garage.
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button class="check-btn" onclick="checkAnswers()">Проверить ответы</button>
+        <div id="result" class="result-box"></div>
+    </div>
+</div>
+
+<script>
+    // Озвучка слов с помощью Web Speech API
+    function speak(word) {
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-US';
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert('Ваш браузер не поддерживает озвучку текста.');
+        }
+    }
+
+    // Проверка ответов
+    function checkAnswers() {
+        const selects = document.querySelectorAll('select');
+        let score = 0;
+        let total = selects.length;
+
+        selects.forEach(select => {
+            const correctAnswer = select.getAttribute('data-answer');
+            const userAnswer = select.value;
+
+            select.classList.remove('correct', 'incorrect');
+
+            if (userAnswer === correctAnswer) {
+                select.classList.add('correct');
+                score++;
+            } else {
+                select.classList.add('incorrect');
+            }
+        });
+
+        const resultDiv = document.getElementById('result');
+        if (score === total) {
+            resultDiv.style.color = '#a6e3a1';
+            resultDiv.textContent = `🎉 Отлично! Вы раскрыли дело и ответили правильно на все ${score} из ${total} вопросов!`;
+        } else {
+            resultDiv.style.color = '#f38ba8';
+            resultDiv.textContent = `🔍 Результат: ${score} из ${total}. Красным выделены ошибки, попробуйте еще раз!`;
+        }
+    }
+</script>
+
+</body>
+</html>
