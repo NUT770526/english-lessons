@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Grammar Practice</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --accent-color: #3b82f6;
+            --text-color: #1e293b;
+            --correct-color: #10b981;
+            --wrong-color: #ef4444;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--accent-color);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+            margin-top: 25px;
+            font-size: 1.25rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 18px;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        input[type="text"] {
+            border: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding: 4px 8px;
+            font-size: 1rem;
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.2s;
+            margin: 0 4px;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+        }
+
+        input.correct {
+            border-color: var(--correct-color) !important;
+            background-color: #ecfdf5;
+            color: #065f46;
+            font-weight: bold;
+        }
+
+        input.incorrect {
+            border-color: var(--wrong-color) !important;
+            background-color: #fef2f2;
+            color: #991b1b;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .check-btn {
+            background-color: var(--accent-color);
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 12px 32px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .check-btn:hover {
+            transform: translateY(-2px);
+            background-color: #2563eb;
+        }
+
+        .result-box {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 style="text-align: center; color: var(--accent-color); margin-top: 0;">Grammar Practice</h1>
+
+    <!-- Part A -->
+    <h2>A. Complete with the <i>Present Simple</i> of the verbs in brackets.</h2>
+    <ol>
+        <li>
+            Tony <input type="text" data-answer="doesn't play|does not play" size="14"> (not play) tennis on weekdays. 
+            He <input type="text" data-answer="usually plays" size="14"> (usually / play) tennis at the weekend.
+        </li>
+        <li>
+            <b>A:</b> What time <input type="text" data-answer="does" size="6"> Karen <input type="text" data-answer="get" size="8"> (get) home after school?<br>
+            <b>B:</b> At four o'clock. Classes <input type="text" data-answer="finish" size="10"> (finish) at 3:30.
+        </li>
+        <li>
+            Alison <input type="text" data-answer="never wears" size="14"> (never / wear) earrings. 
+            She <input type="text" data-answer="doesn't like|does not like" size="14"> (not like) accessories.
+        </li>
+        <li>
+            <input type="text" data-answer="Do" size="6"> Mark and Henry <input type="text" data-answer="go" size="8"> (go) skateboarding every afternoon?
+        </li>
+        <li>
+            I <input type="text" data-answer="don't get|do not get" size="14"> (not get) up early on Saturdays.
+        </li>
+    </ol>
+
+    <!-- Part B -->
+    <h2>B. Complete with the <i>Present Progressive</i> of the verbs in brackets.</h2>
+    <ol>
+        <li>
+            <b>A:</b> <input type="text" data-answer="Is" size="6"> Peter <input type="text" data-answer="doing" size="10"> (do) his homework at the moment?<br>
+            <b>B:</b> No, he <input type="text" data-answer="is playing|'s playing" size="14"> (play) computer games.
+        </li>
+        <li>
+            <b>A:</b> What <input type="text" data-answer="are" size="6"> you <input type="text" data-answer="making" size="10"> (make)?<br>
+            <b>B:</b> I <input type="text" data-answer="am making|'m making" size="14"> (make) a model plane.
+        </li>
+        <li>
+            Oh no! The children <input type="text" data-answer="are drawing" size="14"> (draw) on the wall.
+        </li>
+        <li>
+            Robert and I <input type="text" data-answer="aren't downloading|are not downloading|'re not downloading" size="20"> (not download) music videos at the moment. 
+            We <input type="text" data-answer="are chatting|'re chatting" size="14"> (chat) on the Net with our friend Frank.
+        </li>
+    </ol>
+
+    <div class="btn-container">
+        <button class="check-btn" onclick="checkAnswers()">Check Answers / Проверить</button>
+        <div id="result" class="result-box"></div>
+    </div>
+</div>
+
+<script>
+    function checkAnswers() {
+        const inputs = document.querySelectorAll('input[type="text"]');
+        let score = 0;
+        let total = inputs.length;
+
+        inputs.forEach(input => {
+            const allowedAnswers = input.getAttribute('data-answer').split('|').map(a => a.trim().toLowerCase());
+            const userAnswer = input.value.trim().toLowerCase();
+
+            input.classList.remove('correct', 'incorrect');
+
+            if (userAnswer !== "" && allowedAnswers.includes(userAnswer)) {
+                input.classList.add('correct');
+                score++;
+            } else {
+                input.classList.add('incorrect');
+            }
+        });
+
+        const resultDiv = document.getElementById('result');
+        if (score === total) {
+            resultDiv.style.color = '#10b981';
+            resultDiv.textContent = `🎉 Excellent! Your score: ${score} / ${total}`;
+        } else {
+            resultDiv.style.color = '#ef4444';
+            resultDiv.textContent = `Score: ${score} / ${total}. Keep practicing!`;
+        }
+    }
+</script>
+
+</body>
+</html>
