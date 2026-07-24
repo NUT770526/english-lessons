@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Negative Master: Present Simple vs Present Continuous</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #f43f5e;
+            --accent-hover: #e11d48;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #f43f5e, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #334155;
+            border-radius: 8px;
+            height: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f43f5e, #fb923c);
+            transition: width 0.3s ease;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .rule-badge {
+            display: inline-block;
+            background: #881337;
+            color: #fecdd3;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .sentence {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            background: #0f172a;
+            border: 2px solid var(--border);
+            color: var(--text);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: #2a121d;
+        }
+
+        .option-btn.correct {
+            background: #064e3b !important;
+            border-color: var(--success) !important;
+            color: #a7f3d0 !important;
+        }
+
+        .option-btn.wrong {
+            background: #7f1d1d !important;
+            border-color: var(--error) !important;
+            color: #fecdd3 !important;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 14px;
+            border-radius: 10px;
+            background: #0f172a;
+            border-left: 4px solid var(--accent);
+            font-size: 0.95rem;
+        }
+
+        .audio-btn {
+            background: var(--border);
+            color: var(--text);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .audio-btn:hover {
+            background: #475569;
+        }
+
+        .next-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            float: right;
+        }
+
+        .next-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>⛔ Negative Master</h1>
+        <p class="subtitle">Обери правильну заперечну форму: don't / doesn't або am not / isn't / aren't</p>
+    </header>
+
+    <div class="stats-bar">
+        <div>Бали: <span id="score" style="color: #fb923c;">0</span> / 150</div>
+        <div>Питання: <span id="counter" style="color: #f43f5e;">1 / 15</span></div>
+    </div>
+
+    <div class="progress-container">
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
+
+    <div id="quiz-box" class="card clearfix">
+        <!-- Завантажується JS -->
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            badge: "Present Simple • Habit",
+            sentence: "Max is unreliable. He ___ show up on time for our game.",
+            options: [
+                "doesn't",
+                "isn't",
+                "don't"
+            ],
+            correct: 0,
+            explain: "💡 **doesn't**: Дія в Present Simple (He + doesn't + дієслово show up).",
+            audioText: "Max is unreliable. He doesn't show up on time for our game."
+        },
+        {
+            badge: "Present Continuous • Right now",
+            sentence: "Look! She ___ smiling right now. She feels miserable.",
+            options: [
+                "doesn't",
+                "isn't",
+                "don't"
+            ],
+            correct: 1,
+            explain: "💡 **isn't**: Дія прямо зараз (Present Continuous: She + isn't + smiling).",
+            audioText: "Look! She isn't smiling right now. She feels miserable."
+        },
+        {
+            badge: "Present Simple • Plural Habit",
+            sentence: "My classmates ___ think Mark is generous because he never shares his toys.",
+            options: [
+                "aren't",
+                "doesn't",
+                "don't"
+            ],
+            correct: 2,
+            explain: "💡 **don't**: Present Simple в множині (They/Classmates + don't + think).",
+            audioText: "My classmates don't think Mark is generous because he never shares his toys."
+        },
+        {
+            badge: "Present Continuous • Right now",
+            sentence: "I ___ feeling cheerful today. I have a rather hard test.",
+            options: [
+                "don't",
+                "am not",
+                "isn't"
+            ],
+            correct: 1,
+            explain: "💡 **am not**: Present Continuous для першої особи (I + am not + feeling).",
+            audioText: "I am not feeling cheerful today. I have a rather hard test."
+        },
+        {
+            badge: "Present Simple • General State",
+            sentence: "He is selfish. He ___ care about other people.",
+            options: [
+                "isn't",
+                "doesn't",
+                "don't"
+            ],
+            correct: 1,
+            explain: "💡 **doesn't**: Постійна риса характеру в Present Simple (He + doesn't + care).",
+            audioText: "He is selfish. He doesn't care about other people."
+        },
+        {
+            badge: "Present Continuous • Right now",
+            sentence: "Listen! We ___ playing computer games now, we are doing homework.",
+            options: [
+                "don't",
+                "aren't",
+                "doesn't"
+            ],
+            correct: 1,
+            explain: "💡 **aren't**: Дія прямо зараз у множині (We + aren't + playing).",
+            audioText: "Listen! We aren't playing computer games now, we are doing homework."
+        },
+        {
+            badge: "Present Simple • Habit",
+            sentence: "They ___ usually believe in funny stories.",
+            options: [
+                "don't",
+                "aren't",
+                "doesn't"
+            ],
+            correct: 0,
+            explain: "💡 **don't**: Регулярна дія/ставлення зі словом 'usually' (They + don't + believe).",
+            audioText: "They don't usually believe in funny stories."
+        },
+        {
+            badge: "Present Continuous • Temporary Action",
+            sentence: "Anna ___ drawing a picture at the moment.",
+            options: [
+                "doesn't",
+                "isn't",
+                "don't"
+            ],
+            correct: 1,
+            explain: "💡 **isn't**: Тимчасова дія в даний момент (She + isn't + drawing).",
+            audioText: "Anna isn't drawing a picture at the moment."
+        },
+        {
+            badge: "Present Simple • Habit",
+            sentence: "I ___ have a passion for sports, but I really like music.",
+            options: [
+                "am not",
+                "don't",
+                "doesn't"
+            ],
+            correct: 1,
+            explain: "💡 **don't**: Постійне фактологічне твердження (I + don't + have).",
+            audioText: "I don't have a passion for sports, but I really like music."
+        },
+        {
+            badge: "Present Continuous • Plural Right Now",
+            sentence: "The students ___ writing a test right now.",
+            options: [
+                "don't",
+                "aren't",
+                "doesn't"
+            ],
+            correct: 1,
+            explain: "💡 **aren't**: Дія прямо зараз (They/Students + aren't + writing).",
+            audioText: "The students aren't writing a test right now."
+        },
+        {
+            badge: "Present Simple • Personality Habit",
+            sentence: "She is a positive girl. She ___ get miserable when tasks are hard.",
+            options: [
+                "isn't",
+                "doesn't",
+                "don't"
+            ],
+            correct: 1,
+            explain: "💡 **doesn't**: Звичка/реакція в Present Simple (She + doesn't + get).",
+            audioText: "She is a positive girl. She doesn't get miserable when tasks are hard."
+        },
+        {
+            badge: "Present Continuous • Right now",
+            sentence: "I ___ listening to you right now because the game is loud.",
+            options: [
+                "don't",
+                "am not",
+                "isn't"
+            ],
+            correct: 1,
+            explain: "💡 **am not**: Процес прямо зараз (I + am not + listening).",
+            audioText: "I am not listening to you right now because the game is loud."
+        },
+        {
+            badge: "Present Simple • Habit",
+            sentence: "Tom is reliable. He ___ forget his homework.",
+            options: [
+                "isn't",
+                "doesn't",
+                "don't"
+            ],
+            correct: 1,
+            explain: "💡 **doesn't**: Звичка в Present Simple (Tom/He + doesn't + forget).",
+            audioText: "Tom is reliable. He doesn't forget his homework."
+        },
+        {
+            badge: "Present Continuous • Right now",
+            sentence: "Why ___ you smiling right now? Is the joke funny?",
+            options: [
+                "don't",
+                "aren't",
+                "doesn't"
+            ],
+            correct: 1,
+            explain: "💡 **aren't**: Питальне заперечення прямо зараз (Why + aren't + you + smiling).",
+            audioText: "Why aren't you smiling right now? Is the joke funny?"
+        },
+        {
+            badge: "Present Simple • Habit",
+            sentence: "My parents ___ like it when I am selfish with my sister.",
+            options: [
+                "aren't",
+                "don't",
+                "doesn't"
+            ],
+            correct: 1,
+            explain: "💡 **don't**: Постійне ставлення батьків (Parents/They + don't + like).",
+            audioText: "My parents don't like it when I am selfish with my sister."
+        }
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+
+    function renderQuestion() {
+        const q = questions[currentIdx];
+        const quizBox = document.getElementById('quiz-box');
+
+        document.getElementById('counter').textContent = `${currentIdx + 1} / ${questions.length}`;
+        document.getElementById('progress-bar').style.width = `${((currentIdx) / questions.length) * 100}%`;
+
+        quizBox.innerHTML = `
+            <div class="rule-badge">${q.badge}</div>
+            <div class="sentence">${q.sentence.replace('___', '<u style="color:#fb923c;">___</u>')}</div>
+            
+            <div class="options-grid" id="options">
+                ${q.options.map((opt, i) => `
+                    <button class="option-btn" onclick="checkAnswer(${i})">${opt}</button>
+                `).join('')}
+            </div>
+
+            <div id="feedback" style="display:none;"></div>
+            <button id="next-btn" class="next-btn" style="display:none;" onclick="nextQuestion()">Далі ➔</button>
+        `;
+    }
+
+    function checkAnswer(selectedIdx) {
+        const q = questions[currentIdx];
+        const buttons = document.querySelectorAll('.option-btn');
+        const feedback = document.getElementById('feedback');
+        const nextBtn = document.getElementById('next-btn');
+
+        buttons.forEach(btn => btn.disabled = true);
+
+        if (selectedIdx === q.correct) {
+            buttons[selectedIdx].classList.add('correct');
+            score += 10;
+            document.getElementById('score').textContent = score;
+            feedback.innerHTML = `
+                <div class="feedback">
+                    <span style="color: var(--success); font-weight: bold;">✅ Чудово! Правильно!</span><br>
+                    ${q.explain}
+                    <br>
+                    <button class="audio-btn" onclick="speak('${q.audioText.replace(/'/g, "\\'")}')">🔊 Озвучити речення</button>
+                </div>
+            `;
+            speak(q.audioText);
+        } else {
+            buttons[selectedIdx].classList.add('wrong');
+            buttons[q.correct].classList.add('correct');
+            feedback.innerHTML = `
+                <div class="feedback">
+                    <span style="color: var(--error); font-weight: bold;">❌ Увага!</span><br>
+                    ${q.explain}
+                </div>
+            `;
+        }
+
+        feedback.style.display = 'block';
+        nextBtn.style.display = 'inline-block';
+    }
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < questions.length) {
+            renderQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('progress-bar').style.width = '100%';
+        const quizBox = document.getElementById('quiz-box');
+        quizBox.innerHTML = `
+            <div style="text-align:center; padding: 20px 0;">
+                <h2>🎉 Молодець! Тренування заперечень пройдено!</h2>
+                <p style="font-size: 1.4rem; margin: 20px 0;">Твій результат: <b style="color:#fb923c;">${score}</b> з 150 балів!</p>
+                <button class="next-btn" style="float:none;" onclick="resetQuiz()">Пройти ще раз 🔄</button>
+            </div>
+        `;
+
+        confetti({
+            particleCount: 180,
+            spread: 110,
+            origin: { y: 0.6 }
+        });
+    }
+
+    function resetQuiz() {
+        currentIdx = 0;
+        score = 0;
+        document.getElementById('score').textContent = score;
+        renderQuestion();
+    }
+
+    renderQuestion();
+</script>
+
+</body>
+</html>
