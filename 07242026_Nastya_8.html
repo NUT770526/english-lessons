@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Practice — Section C</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --accent-color: #3b82f6;
+            --text-color: #1e293b;
+            --correct-color: #10b981;
+            --wrong-color: #ef4444;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--accent-color);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            font-size: 1.25rem;
+        }
+
+        ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        input[type="text"] {
+            border: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding: 4px 8px;
+            font-size: 1rem;
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.2s;
+            margin: 0 4px;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+        }
+
+        input.correct {
+            border-color: var(--correct-color) !important;
+            background-color: #ecfdf5;
+            color: #065f46;
+            font-weight: bold;
+        }
+
+        input.incorrect {
+            border-color: var(--wrong-color) !important;
+            background-color: #fef2f2;
+            color: #991b1b;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .check-btn {
+            background-color: var(--accent-color);
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 12px 32px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .check-btn:hover {
+            transform: translateY(-2px);
+            background-color: #2563eb;
+        }
+
+        .result-box {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 style="text-align: center; color: var(--accent-color); margin-top: 0;">Grammar Practice</h1>
+
+    <!-- Section C -->
+    <h2>C. Complete with the <i>Present Simple</i> or the <i>Present Progressive</i> of the verbs in brackets.</h2>
+    <ol>
+        <li>
+            <b>A:</b> How often <input type="text" data-answer="does your son do" size="18"> (your son / do) the washing-up?<br>
+            <b>B:</b> Once a month but he <input type="text" data-answer="tidies" size="10"> (tidy) his room twice a week.
+        </li>
+        <li>
+            <b>A:</b> <input type="text" data-answer="Are the children studying" size="22"> (the children / study) at the moment?<br>
+            <b>B:</b> No. They <input type="text" data-answer="are sitting|'re sitting" size="14"> (sit) in their rooms.
+        </li>
+        <li>
+            <b>A:</b> <input type="text" data-answer="Do you usually have" size="20"> (you / usually / have) dinner at 8 o'clock?<br>
+            <b>B:</b> Yes, but I <input type="text" data-answer="am having|'m having" size="14"> (have) dinner now because I'm very hungry.
+        </li>
+        <li>
+            We <input type="text" data-answer="don't often watch|do not often watch|often don't watch" size="20"> (often / not watch) films on TV, 
+            but we <input type="text" data-answer="sometimes go" size="16"> (sometimes / go) to the cinema.
+        </li>
+        <li>
+            Robert and Sally <input type="text" data-answer="aren't playing|are not playing|'re not playing" size="20"> (not play) football in the garden. 
+            They <input type="text" data-answer="are reading|'re reading" size="14"> (read) magazines.
+        </li>
+    </ol>
+
+    <div class="btn-container">
+        <button class="check-btn" onclick="checkAnswers()">Check Answers / Проверить</button>
+        <div id="result" class="result-box"></div>
+    </div>
+</div>
+
+<script>
+    function checkAnswers() {
+        const inputs = document.querySelectorAll('input[type="text"]');
+        let score = 0;
+        let total = inputs.length;
+
+        inputs.forEach(input => {
+            const allowedAnswers = input.getAttribute('data-answer').split('|').map(a => a.trim().toLowerCase());
+            const userAnswer = input.value.trim().toLowerCase().replace(/’/g, "'");
+
+            input.classList.remove('correct', 'incorrect');
+
+            if (userAnswer !== "" && allowedAnswers.includes(userAnswer)) {
+                input.classList.add('correct');
+                score++;
+            } else {
+                input.classList.add('incorrect');
+            }
+        });
+
+        const resultDiv = document.getElementById('result');
+        if (score === total) {
+            resultDiv.style.color = '#10b981';
+            resultDiv.textContent = `🎉 Excellent! Score: ${score} / ${total}`;
+        } else {
+            resultDiv.style.color = '#ef4444';
+            resultDiv.textContent = `Score: ${score} / ${total}. Check the red fields and try again!`;
+        }
+    }
+</script>
+
+</body>
+</html>
