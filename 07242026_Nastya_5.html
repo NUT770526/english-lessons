@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vlog Manager: Present Simple vs Continuous</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #ec4899;
+            --accent-hover: #db2777;
+            --secondary: #8b5cf6;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .vlog-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-bg);
+            padding: 16px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .vlogger-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            font-weight: bold;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .task-badge {
+            display: inline-block;
+            background: rgba(236, 72, 153, 0.2);
+            color: #f472b6;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 14px;
+            border: 1px solid rgba(236, 72, 153, 0.4);
+        }
+
+        .prompt {
+            font-size: 1.15rem;
+            color: #cbd5e1;
+            margin-bottom: 16px;
+            background: #0f172a;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .sentence {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .words-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            min-height: 50px;
+            padding: 10px;
+            background: #0f172a;
+            border-radius: 12px;
+            border: 2px dashed var(--border);
+        }
+
+        .word-chip {
+            background: #334155;
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .word-chip:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .word-chip.used {
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .drop-zone {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            min-height: 60px;
+            padding: 12px;
+            background: #1e1b4b;
+            border-radius: 12px;
+            border: 2px solid var(--secondary);
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            background: #0f172a;
+            border: 2px solid var(--border);
+            color: var(--text);
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: #2a1226;
+        }
+
+        .option-btn.correct {
+            background: #064e3b !important;
+            border-color: var(--success) !important;
+            color: #a7f3d0 !important;
+        }
+
+        .option-btn.wrong {
+            background: #7f1d1d !important;
+            border-color: var(--error) !important;
+            color: #fecdd3 !important;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 14px;
+            border-radius: 10px;
+            background: #0f172a;
+            font-size: 0.95rem;
+            border-left: 4px solid var(--accent);
+        }
+
+        .audio-btn {
+            background: var(--border);
+            color: var(--text);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .btn-action {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+
+        .btn-action:hover {
+            background: var(--accent-hover);
+        }
+
+        .next-btn {
+            float: right;
+        }
+
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>📱 Vlog Manager Studio</h1>
+        <p class="subtitle">Допоможи блогерці Софії весело та грамотно вести її влог!</p>
+    </header>
+
+    <div class="vlog-header">
+        <div class="vlogger-info">
+            <div class="avatar">✨</div>
+            <div>
+                <div style="font-weight: bold; font-size: 1.1rem;">Sofia_Vlogs</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">Life & Gaming • 13 y.o.</div>
+            </div>
+        </div>
+        <div class="stats">
+            <div class="stat-item">👁️ <span id="views" style="color: #38bdf8;">0</span></div>
+            <div class="stat-item">❤️ <span id="likes" style="color: #ec4899;">0</span></div>
+        </div>
+    </div>
+
+    <div id="game-box" class="card clearfix">
+        <!-- JS завантаження -->
+    </div>
+</div>
+
+<script>
+    const tasks = [
+        {
+            type: "choice",
+            badge: "🔴 LIVE ВЛОГ (Прямо зараз)",
+            prompt: "Софія розповідає у прямому ефірі: «Чому ви зараз не посміхаєтесь?»",
+            sentence: "Guys, look at the chat! Why ___ you smiling right now?",
+            options: [
+                "aren't",
+                "don't"
+            ],
+            correct: 0,
+            explain: "💡 **aren't**: Питальне заперечення в Present Continuous (Why + aren't + you + smiling right now).",
+            audio: "Guys, look at the chat! Why aren't you smiling right now?"
+        },
+        {
+            type: "builder",
+            badge: "💬 ВІДПОВІДЬ НА КОМЕНТАР",
+            prompt: "Переклади коментар Софії: «Чому ти не приходиш (show up) на стрим зараз?»",
+            words: ["Why", "aren't", "you", "showing", "up", "now", "?"],
+            correctSentence: "Why aren't you showing up now ?",
+            explain: "💡 **Present Continuous Question**: Why + aren't + you + showing up (дія прямо зараз).",
+            audio: "Why aren't you showing up now?"
+        },
+        {
+            type: "choice",
+            badge: "📍 ОПИС ДРУГА (Звички)",
+            prompt: "Софія розповідає про свого найкращого друга Макса:",
+            sentence: "Max is super reliable. He ___ show up late for our podcasts.",
+            options: [
+                "doesn't",
+                "isn't"
+            ],
+            correct: 0,
+            explain: "💡 **doesn't**: Present Simple для дій/звичок (He + doesn't + show up).",
+            audio: "Max is super reliable. He doesn't show up late for our podcasts."
+        },
+        {
+            type: "builder",
+            badge: "💬 ВІДПОВІДЬ ФАНАТАМ",
+            prompt: "Переклади відповідь: «Я зараз не отримую поганих оцінок!»",
+            words: ["I", "am", "not", "getting", "bad", "marks", "today", "!"],
+            correctSentence: "I am not getting bad marks today !",
+            explain: "💡 **Present Continuous Negative**: I + am not + getting.",
+            audio: "I am not getting bad marks today!"
+        },
+        {
+            type: "choice",
+            badge: "🎬 НОВИЙ ВЛОГ (У моменті)",
+            prompt: "Софія знімає розпаковку подарунків від підписників:",
+            sentence: "Look, guys! I ___ feeling miserable today because your presents are so generous!",
+            options: [
+                "am not",
+                "don't"
+            ],
+            correct: 0,
+            explain: "💡 **am not**: Present Continuous для стану в моменті (I + am not + feeling).",
+            audio: "Look, guys! I am not feeling miserable today because your presents are so generous!"
+        },
+        {
+            type: "builder",
+            badge: "❓ ПИТАННЯ В СТОРІЗ",
+            prompt: "Софія запитує про хобі: «Чи маєте ви пристрасть до малювання?»",
+            words: ["Do", "you", "have", "a", "passion", "for", "drawing", "?"],
+            correctSentence: "Do you have a passion for drawing ?",
+            explain: "💡 **Present Simple Question**: Do + you + have.",
+            audio: "Do you have a passion for drawing?"
+        },
+        {
+            type: "choice",
+            badge: "📍 ОПИС КОМАНДИ",
+            prompt: "Пост про оператора влогу:",
+            sentence: "My friends are very cheerful! They ___ get miserable when work is hard.",
+            options: [
+                "don't",
+                "aren't"
+            ],
+            correct: 0,
+            explain: "💡 **don't**: Present Simple в множині (They + don't + get).",
+            audio: "My friends are very cheerful! They don't get miserable when work is hard."
+        },
+        {
+            type: "builder",
+            badge: "🔴 LIVE ВЛОГ",
+            prompt: "Переклади: «Чому він так егоїстично поводиться зараз?»",
+            words: ["Why", "is", "he", "being", "so", "selfish", "now", "?"],
+            correctSentence: "Why is he being so selfish now ?",
+            explain: "💡 **Present Continuous**: Why + is + he + being (у моменті).",
+            audio: "Why is he being so selfish now?"
+        },
+        {
+            type: "choice",
+            badge: "💬 ЧАТ ПІДПИСНИКІВ",
+            prompt: "Софія відповідає на питання в чаті:",
+            sentence: "Yes! I always ___ in people because my followers are amazing!",
+            options: [
+                "believe",
+                "am believing"
+            ],
+            correct: 0,
+            explain: "💡 **believe**: State verb (дієслово стану) не вживається в Continuous!",
+            audio: "Yes! I always believe in people because my followers are amazing!"
+        },
+        {
+            type: "builder",
+            badge: "🎉 ФІНАЛЬНИЙ СТРИМ",
+            prompt: "Софія прощається в ефірі: «Ми зараз не зупиняємо стрим!»",
+            words: ["We", "are", "not", "stopping", "the", "stream", "now", "!"],
+            correctSentence: "We are not stopping the stream now !",
+            explain: "💡 **Present Continuous Negative**: We + are not + stopping.",
+            audio: "We are not stopping the stream now!"
+        }
+    ];
+
+    let currentIdx = 0;
+    let views = 0;
+    let likes = 0;
+    let selectedWords = []; // Зберігає об'єкти виданих слів
+
+    function renderTask() {
+        const t = tasks[currentIdx];
+        const box = document.getElementById('game-box');
+        selectedWords = [];
+
+        if (t.type === 'choice') {
+            box.innerHTML = `
+                <div class="task-badge">${t.badge}</div>
+                <div class="prompt">${t.prompt}</div>
+                <div class="sentence">${t.sentence.replace('___', '<u style="color:var(--accent);">___</u>')}</div>
+                <div class="options-grid">
+                    ${t.options.map((opt, i) => `
+                        <button class="option-btn" onclick="checkChoice(${i})">${opt}</button>
+                    `).join('')}
+                </div>
+                <div id="feedback" style="display:none;"></div>
+                <button id="next-btn" class="btn-action next-btn" style="display:none;" onclick="nextTask()">Далі ➔</button>
+            `;
+        } else if (t.type === 'builder') {
+            // Перемішуємо слова та створюємо масив об'єктів з унікальними ID
+            const shuffled = [...t.words]
+                .sort(() => Math.random() - 0.5)
+                .map((text, id) => ({ id, text }));
+
+            box.innerHTML = `
+                <div class="task-badge">${t.badge}</div>
+                <div class="prompt">${t.prompt}</div>
+                
+                <div class="drop-zone" id="drop-zone">
+                    <span style="color: var(--text-muted); font-size: 0.9rem;" id="placeholder">Натискай на слова нижче, щоб зібрати речення...</span>
+                </div>
+
+                <div class="words-container" id="words-pool">
+                    ${shuffled.map(item => `
+                        <div class="word-chip" id="word-btn-${item.id}" onclick="addWord(${item.id}, '${item.text.replace(/'/g, "\\'")}')">${item.text}</div>
+                    `).join('')}
+                </div>
+
+                <button class="btn-action" onclick="checkBuilder()">Перевірити відповідь 🚀</button>
+                <button class="btn-action" style="background:#475569;" onclick="resetBuilder()">Скинути 🔄</button>
+
+                <div id="feedback" style="display:none;"></div>
+                <button id="next-btn" class="btn-action next-btn" style="display:none;" onclick="nextTask()">Далі ➔</button>
+            `;
+        }
+    }
+
+    function addWord(id, text) {
+        const btn = document.getElementById(`word-btn-${id}`);
+        if (!btn || btn.classList.contains('used')) return;
+
+        btn.classList.add('used');
+        selectedWords.push({ id, text });
+        updateDropZone();
+    }
+
+    function removeWord(id) {
+        selectedWords = selectedWords.filter(item => item.id !== id);
+        const btn = document.getElementById(`word-btn-${id}`);
+        if (btn) btn.classList.remove('used');
+        updateDropZone();
+    }
+
+    function updateDropZone() {
+        const zone = document.getElementById('drop-zone');
+        if (selectedWords.length === 0) {
+            zone.innerHTML = `<span style="color: var(--text-muted); font-size: 0.9rem;">Натискай на слова нижче, щоб зібрати речення...</span>`;
+            return;
+        }
+
+        zone.innerHTML = selectedWords.map(item => `
+            <div class="word-chip" style="background:var(--accent);" onclick="removeWord(${item.id})">${item.text}</div>
+        `).join('');
+    }
+
+    function resetBuilder() {
+        selectedWords.forEach(item => {
+            const btn = document.getElementById(`word-btn-${item.id}`);
+            if (btn) btn.classList.remove('used');
+        });
+        selectedWords = [];
+        updateDropZone();
+    }
+
+    function checkChoice(selected) {
+        const t = tasks[currentIdx];
+        const btns = document.querySelectorAll('.option-btn');
+        const feedback = document.getElementById('feedback');
+
+        btns.forEach(b => b.disabled = true);
+
+        if (selected === t.correct) {
+            btns[selected].classList.add('correct');
+            addStats(120, 15);
+            feedback.innerHTML = `
+                <div class="feedback" style="border-color: var(--success);">
+                    <span style="color: var(--success); font-weight: bold;">🎉 Чудово! Правильно!</span><br>
+                    ${t.explain}<br>
+                    <button class="audio-btn" onclick="speak('${t.audio.replace(/'/g, "\\'")}')">🔊 Озвучити речення</button>
+                </div>
+            `;
+            speak(t.audio);
+        } else {
+            btns[selected].classList.add('wrong');
+            btns[t.correct].classList.add('correct');
+            feedback.innerHTML = `
+                <div class="feedback" style="border-color: var(--error);">
+                    <span style="color: var(--error); font-weight: bold;">❌ Зверни увагу!</span><br>
+                    ${t.explain}
+                </div>
+            `;
+        }
+
+        feedback.style.display = 'block';
+        document.getElementById('next-btn').style.display = 'inline-block';
+    }
+
+    function checkBuilder() {
+        const t = tasks[currentIdx];
+        const built = selectedWords.map(i => i.text).join(' ');
+        const feedback = document.getElementById('feedback');
+
+        if (built === t.correctSentence) {
+            addStats(150, 25);
+            feedback.innerHTML = `
+                <div class="feedback" style="border-color: var(--success);">
+                    <span style="color: var(--success); font-weight: bold;">🚀 Ідеальний переклад! +150 переглядів!</span><br>
+                    ${t.explain}<br>
+                    <button class="audio-btn" onclick="speak('${t.audio.replace(/'/g, "\\'")}')">🔊 Озвучити речення</button>
+                </div>
+            `;
+            speak(t.audio);
+        } else {
+            feedback.innerHTML = `
+                <div class="feedback" style="border-color: var(--error);">
+                    <span style="color: var(--error); font-weight: bold;">❌ Перевір порядок слів!</span><br>
+                    Правильно: <b>${t.correctSentence}</b><br>
+                    ${t.explain}
+                </div>
+            `;
+        }
+
+        feedback.style.display = 'block';
+        document.getElementById('next-btn').style.display = 'inline-block';
+    }
+
+    function addStats(v, l) {
+        views += v;
+        likes += l;
+        document.getElementById('views').textContent = views;
+        document.getElementById('likes').textContent = likes;
+    }
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function nextTask() {
+        currentIdx++;
+        if (currentIdx < tasks.length) {
+            renderTask();
+        } else {
+            showEndScreen();
+        }
+    }
+
+    function showEndScreen() {
+        const box = document.getElementById('game-box');
+        box.innerHTML = `
+            <div style="text-align:center; padding: 20px 0;">
+                <h2>🏆 Вітаємо! Влог став суперпопулярним!</h2>
+                <p style="font-size: 1.2rem; color: var(--text-muted);">Завдяки твоєму знанню граматики Софія зібрала:</p>
+                <div style="font-size: 2rem; margin: 20px 0; font-weight: bold;">
+                    👁️ <span style="color:#38bdf8;">${views}</span> Переглядів &nbsp;&nbsp;|&nbsp;&nbsp; 
+                    ❤️ <span style="color:#ec4899;">${likes}</span> Лайків
+                </div>
+                <button class="btn-action" onclick="location.reload()">Зіграти ще раз 🔄</button>
+            </div>
+        `;
+
+        confetti({
+            particleCount: 200,
+            spread: 120,
+            origin: { y: 0.6 }
+        });
+    }
+
+    renderTask();
+</script>
+
+</body>
+</html>
