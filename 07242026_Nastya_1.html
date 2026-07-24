@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Match the Words with Audio & Phonetics</title>
+<style>
+:root {
+  --bg1:#f5f7ff; --bg2:#eef9f4; --card:#ffffff; --ink:#1f2937;
+  --accent:#5b5bd6; --accent2:#14b8a6; --good:#15803d; --bad:#b91c1c;
+  --muted:#64748b; --shadow:0 16px 40px rgba(31,41,55,.12);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:Inter,Segoe UI,Arial,sans-serif; color:var(--ink);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2)); min-height:100vh;
+}
+.wrap{max-width:980px; margin:0 auto; padding:28px 18px 48px}
+.hero{
+  background:linear-gradient(135deg,#5b5bd6,#14b8a6); color:#fff;
+  border-radius:28px; padding:28px; box-shadow:var(--shadow); margin-bottom:22px
+}
+.hero h1{margin:0 0 8px; font-size:clamp(28px,5vw,44px)}
+.hero p{margin:0; opacity:.94; font-size:17px}
+.panel{background:var(--card); border-radius:24px; padding:24px; box-shadow:var(--shadow)}
+.btn{
+  border:none; border-radius:14px; padding:12px 18px; font-weight:700; font-size:16px;
+  cursor:pointer; background:var(--accent); color:#fff; transition:.2s
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.secondary{background:#e2e8f0; color:#1e293b}
+.status{font-weight:800; margin-top:14px; min-height:26px}
+.good{color:var(--good)} .bad{color:var(--bad)}
+.progress{height:12px; background:#e2e8f0; border-radius:999px; overflow:hidden; margin:16px 0}
+.progress > div{height:100%; background:linear-gradient(90deg,#5b5bd6,#14b8a6); width:0; transition:.3s}
+
+.grid{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+.col{display:flex; flex-direction:column; gap:10px}
+
+.word{
+  padding:12px 16px; border:2px solid #dbeafe; border-radius:16px; background:#f8fafc;
+  cursor:pointer; font-weight:700; transition:.2s; text-align:left;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.word:hover{border-color:#818cf8; transform:translateY(-1px)}
+.word.selected{border-color:#5b5bd6; background:#eef2ff}
+.word.done{border-color:#86efac; background:#f0fdf4; color:#166534; cursor:default}
+
+.en-info { display:flex; flex-direction:column; }
+.phonetic { font-size: 13px; color: var(--muted); font-weight: normal; margin-top: 2px; }
+
+.audio-btn {
+  background: #e0e7ff; border: none; border-radius: 50%; width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
+  flex-shrink: 0;
+}
+.audio-btn:hover { background: #c7d2fe; transform: scale(1.05); }
+
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <h1>Match the Words</h1>
+    <p>Натисни англійське слово (воно озвучиться), а потім його переклад.</p>
+  </div>
+  <div class="panel">
+    <div class="progress"><div id="bar"></div></div>
+    <div class="grid"><div class="col" id="left"></div><div class="col" id="right"></div></div>
+    <div class="status" id="status"></div>
+    <div style="margin-top:18px">
+      <button class="btn secondary" onclick="start()">Перемішати ще раз</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const pairs = [
+  ["reliable", "/rɪˈlaɪəbl/", "надійний"],
+  ["show up", "/ʃəʊ ʌp/", "з'явитися, прийти"],
+  ["generous", "/ˈdʒenərəs/", "щедрий"],
+  ["believe in people", "/bɪˈliːv ɪn ˈpiːpl/", "вірити в людей"],
+  ["unreliable", "/ˌʌnrɪˈlaɪəbl/", "ненадійний"],
+  ["have a passion for", "/hæv ə ˈpæʃn fɔːr/", "мати пристрасть до"],
+  ["cheerful", "/ˈtʃɪəfl/", "життєрадісний"],
+  ["selfish", "/ˈselfɪʃ/", "егоїстичний"],
+  ["miserable", "/ˈmɪzrəbl/", "нещасний, пригнічений"],
+  ["quite", "/kwaɪt/", "досить"],
+  ["rather", "/ˈrɑːðər/", "доволі"],
+  ["really", "/ˈrɪəli/", "справді, дуже"],
+  ["pretty", "/ˈprɪti/", "доволі"],
+  ["positive", "/ˈpɒzətɪv/", "позитивний"]
+];
+
+let first = null, done = 0;
+const shuffle = a => [...a].sort(() => Math.random() - .5);
+
+function speak(text, e) {
+  if(e) e.stopPropagation();
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+function start(){
+  first = null; done = 0; 
+  document.getElementById("status").textContent = "";
+  document.getElementById("bar").style.width = "0%";
+  const left = document.getElementById("left"), right = document.getElementById("right");
+  left.innerHTML = ""; right.innerHTML = "";
+
+  // English words
+  shuffle(pairs).forEach(([en, ipa, ua]) => {
+    const b = document.createElement("div");
+    b.className = "word";
+    b.dataset.key = en;
+    b.innerHTML = `
+      <div class="en-info">
+        <span>${en}</span>
+        <span class="phonetic">${ipa}</span>
+      </div>
+      <button class="audio-btn" title="Listen" onclick="speak('${en.replace(/'/g, "\\'")}', event)">🔊</button>
+    `;
+    b.onclick = () => {
+      speak(en);
+      choose(b, "en");
+    };
+    left.appendChild(b);
+  });
+
+  // Ukrainian translations
+  shuffle(pairs).forEach(([en, ipa, ua]) => {
+    const b = document.createElement("div");
+    b.className = "word";
+    b.dataset.key = en;
+    b.textContent = ua;
+    b.onclick = () => choose(b, "ua");
+    right.appendChild(b);
+  });
+}
+
+function choose(btn, type){
+  if(btn.classList.contains("done")) return;
+
+  if(!first){
+    first = {btn, type, key: btn.dataset.key};
+    btn.classList.add("selected");
+    return;
+  }
+
+  if(first.type === type){
+    first.btn.classList.remove("selected");
+    first = {btn, type, key: btn.dataset.key};
+    btn.classList.add("selected");
+    return;
+  }
+
+  if(first.key === btn.dataset.key){
+    first.btn.classList.remove("selected");
+    first.btn.classList.add("done");
+    btn.classList.add("done");
+    done++;
+    document.getElementById("status").innerHTML = '<span class="good">Правильно!</span>';
+    document.getElementById("bar").style.width = (done / pairs.length * 100) + "%";
+    if(done === pairs.length) {
+      document.getElementById("status").innerHTML = '<span class="good">Чудово! Усі пари знайдено.</span>';
+    }
+  } else {
+    first.btn.classList.remove("selected");
+    document.getElementById("status").innerHTML = '<span class="bad">Спробуй ще раз.</span>';
+  }
+  first = null;
+}
+
+start();
+</script>
+</body>
+</html>
