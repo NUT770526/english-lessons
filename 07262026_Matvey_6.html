@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teen Life Presentation Builder</title>
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card-bg: #151d30;
+            --accent-blue: #00f0ff;
+            --accent-purple: #7000ff;
+            --neon-green: #39ff14;
+            --neon-red: #ff0055;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #2a3859;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.12);
+            border: 2px solid var(--border-color);
+        }
+
+        .header {
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        }
+
+        .topic-badge {
+            display: inline-block;
+            background: rgba(112, 0, 255, 0.2);
+            border: 1px solid var(--accent-purple);
+            color: #d8b4fe;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* VOCABULARY TRACKER */
+        .vocab-box {
+            background: #0d1322;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 25px;
+            position: sticky;
+            top: 15px;
+            z-index: 10;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .vocab-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vocab-counter {
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        .vocab-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tag.used {
+            background: rgba(57, 255, 20, 0.15);
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
+        }
+
+        /* STEPS LIST */
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step-card {
+            background: #111827;
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.2s;
+        }
+
+        .step-card:focus-within {
+            border-color: var(--accent-blue);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .step-number {
+            background: var(--accent-purple);
+            color: #fff;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: var(--accent-blue);
+            font-size: 1.05rem;
+        }
+
+        .step-instruction {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        textarea {
+            width: 100%;
+            background: #0d1322;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            resize: vertical;
+            min-height: 70px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-blue);
+        }
+
+        /* OUTPUT SECTION */
+        .output-box {
+            margin-top: 30px;
+            background: #0d1322;
+            border: 2px dashed var(--accent-purple);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .output-title {
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .output-text {
+            color: #cbd5e1;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+            min-height: 60px;
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-copy {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(112, 0, 255, 0.4);
+        }
+
+        .btn-copy:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--neon-green);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🎤 Speech Builder</h1>
+        <div class="topic-badge">Topic: "Comparing Teenage Life in the UK and My Country"</div>
+    </div>
+
+    <!-- Vocabulary Challenge Header -->
+    <div class="vocab-box">
+        <div class="vocab-title">
+            <span>🎯 Required Words Challenge:</span>
+            <span class="vocab-counter" id="vocabCounter">0 / 8 Used</span>
+        </div>
+        <div class="vocab-tags" id="vocabTags"></div>
+    </div>
+
+    <!-- Steps List -->
+    <div class="steps-container" id="stepsContainer"></div>
+
+    <!-- Final Generated Output -->
+    <div class="output-box">
+        <div class="output-title">
+            <span>📝 Your Combined Speech:</span>
+        </div>
+        <div class="output-text" id="outputText">Start typing above to build your speech...</div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetAll()">Reset 🔄</button>
+        <button class="btn btn-copy" onclick="copySpeech()">Copy Speech to Chat 📋</button>
+    </div>
+</div>
+
+<div class="toast" id="toast">Copied to clipboard! 🚀</div>
+
+<script>
+    const requiredVocab = [
+        "Adulthood",
+        "be hooked on",
+        "fast-paced modern life",
+        "historical spots",
+        "independence",
+        "legal",
+        "unique",
+        "vote"
+    ];
+
+    const stepsData = [
+        {
+            id: 1,
+            title: "Introduction",
+            instruction: "Start by introducing your topic. Mention that you will compare school rules, after-school activities, free time, social media, and becoming an adult."
+        },
+        {
+            id: 2,
+            title: "School Rules",
+            instruction: "Explain rules in British schools. Do they wear uniforms? Compare them with rules in your country."
+        },
+        {
+            id: 3,
+            title: "After-School Activities",
+            instruction: "What do teens do after school in the UK (clubs, sports)? Compare this with your country."
+        },
+        {
+            id: 4,
+            title: "How Teens Spend Free Time",
+            instruction: "Discuss how British teens spend their free time vs. teens in your country."
+        },
+        {
+            id: 5,
+            title: "Social Media Use",
+            instruction: "Do teens use social media a lot? Are they hooked on it?"
+        },
+        {
+            id: 6,
+            title: "Historical Places vs. Modern Life",
+            instruction: "Do teens visit historical places, or do they prefer fast-paced modern life?"
+        },
+        {
+            id: 7,
+            title: "Legal Age for Adult Activities",
+            instruction: "At what age can teens start driving or voting? Compare the legal age in both countries."
+        },
+        {
+            id: 8,
+            title: "Conclusion",
+            instruction: "Sum up main similarities/differences. Share which lifestyle you prefer and why it is unique."
+        }
+    ];
+
+    let userInputs = {};
+
+    function init() {
+        renderVocabTags();
+        renderSteps();
+    }
+
+    function renderVocabTags() {
+        const container = document.getElementById('vocabTags');
+        container.innerHTML = '';
+
+        const fullText = Object.values(userInputs).join(' ').toLowerCase();
+        let usedCount = 0;
+
+        requiredVocab.forEach(word => {
+            const tag = document.createElement('span');
+            tag.className = 'tag';
+            tag.textContent = word;
+
+            if (fullText.includes(word.toLowerCase())) {
+                tag.classList.add('used');
+                usedCount++;
+            }
+
+            container.appendChild(tag);
+        });
+
+        document.getElementById('vocabCounter').textContent = `${usedCount} / ${requiredVocab.length} Used`;
+    }
+
+    function renderSteps() {
+        const container = document.getElementById('stepsContainer');
+        container.innerHTML = '';
+
+        stepsData.forEach(step => {
+            const card = document.createElement('div');
+            card.className = 'step-card';
+
+            card.innerHTML = `
+                <div class="step-header">
+                    <div class="step-number">${step.id}</div>
+                    <div class="step-title">${step.title}</div>
+                </div>
+                <div class="step-instruction">${step.instruction}</div>
+                <textarea id="input-${step.id}" 
+                          placeholder="Write here..." 
+                          oninput="handleInput(${step.id}, this.value)"></textarea>
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+    function handleInput(stepId, value) {
+        userInputs[stepId] = value;
+        renderVocabTags();
+        updateOutput();
+    }
+
+    function updateOutput() {
+        const outputEl = document.getElementById('outputText');
+        const textArray = stepsData
+            .map(step => userInputs[step.id]?.trim())
+            .filter(text => text && text.length > 0);
+
+        if (textArray.length === 0) {
+            outputEl.textContent = "Start typing above to build your speech...";
+        } else {
+            outputEl.textContent = textArray.join("\n\n");
+        }
+    }
+
+    function copySpeech() {
+        const textToCopy = document.getElementById('outputText').textContent;
+        if (!textToCopy || textToCopy.startsWith("Start typing")) return;
+
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        });
+    }
+
+    function resetAll() {
+        userInputs = {};
+        renderSteps();
+        renderVocabTags();
+        updateOutput();
+    }
+
+    window.onload = init;
+</script>
+
+</body>
+</html>
