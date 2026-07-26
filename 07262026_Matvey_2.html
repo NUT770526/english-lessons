@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UK Teen Experience: Scramble & Hangman</title>
+    <style>
+        :root {
+            --bg: #090d16;
+            --panel: #131b2e;
+            --neon-blue: #00f0ff;
+            --neon-pink: #ff007f;
+            --neon-green: #39ff14;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .game-card {
+            width: 100%;
+            max-width: 750px;
+            background: var(--panel);
+            border: 2px solid #1e293b;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: var(--neon-blue);
+            margin: 0 0 8px 0;
+            font-size: 2.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .header p {
+            color: var(--text-dim);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        /* Navigation Modes */
+        .mode-switch {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            background: #1c273e;
+            border: 1px solid #334155;
+            color: var(--text);
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .nav-btn.active {
+            background: var(--neon-blue);
+            color: #000;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+
+        /* Layouts */
+        .scramble-box {
+            text-align: center;
+        }
+
+        .hint-text {
+            font-size: 1.1rem;
+            color: var(--neon-pink);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .context-sentence {
+            background: #090d16;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--neon-blue);
+            margin-bottom: 25px;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        /* WORD SCRAMBLE STYLES */
+        .letters-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            min-height: 50px;
+        }
+
+        .letter-tile {
+            width: 45px;
+            height: 45px;
+            background: #1c273e;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.15s, background 0.2s;
+        }
+
+        .letter-tile:hover {
+            transform: translateY(-3px);
+            background: #283858;
+        }
+
+        .letter-tile.used {
+            opacity: 0.2;
+            cursor: default;
+            transform: none;
+        }
+
+        .answer-slots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 25px;
+            min-height: 50px;
+            flex-wrap: wrap;
+        }
+
+        .slot {
+            width: 35px;
+            height: 45px;
+            border-bottom: 3px solid var(--neon-pink);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text);
+        }
+
+        /* HANGMAN STYLES */
+        .shield-bar {
+            font-size: 1.2rem;
+            color: var(--neon-green);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .keyboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+        }
+
+        .key-btn {
+            width: 38px;
+            height: 42px;
+            background: #1c273e;
+            border: 1px solid #334155;
+            color: var(--text);
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+
+        .key-btn:hover:not(:disabled) {
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+        }
+
+        .key-btn:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .key-btn.correct {
+            background: var(--neon-green);
+            color: #000;
+            border-color: var(--neon-green);
+        }
+
+        .key-btn.wrong {
+            background: var(--error);
+            border-color: var(--error);
+        }
+
+        /* Buttons */
+        .action-btn {
+            padding: 12px 25px;
+            background: var(--neon-pink);
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 5px;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+        }
+
+        .secondary-btn {
+            background: #334155;
+            color: var(--text);
+        }
+
+        .status-msg {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            min-height: 25px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-card">
+    <div class="header">
+        <h1>⚡ UK Teen Cyber Arena</h1>
+        <p>Learn British Vocab & Level Up Your English</p>
+    </div>
+
+    <!-- Mode Switcher -->
+    <div class="mode-switch">
+        <button class="nav-btn active" id="btnScramble" onclick="switchMode('scramble')">🧩 Word Scramble</button>
+        <button class="nav-btn" id="btnHangman" onclick="switchMode('hangman')">🎯 Cyber Hangman</button>
+    </div>
+
+    <!-- MODE 1: WORD SCRAMBLE -->
+    <div id="modeScramble">
+        <div class="scramble-box">
+            <div class="hint-text" id="scrambleHint">Переклад: ...</div>
+            <div class="context-sentence" id="scrambleContext">"..."</div>
+
+            <div class="answer-slots" id="answerSlots"></div>
+            <div class="letters-pool" id="lettersPool"></div>
+
+            <button class="action-btn" onclick="checkScramble()">Check Answer ✔️</button>
+            <button class="action-btn secondary-btn" onclick="resetScramble()">Reset 🔄</button>
+
+            <div class="status-msg" id="statusMsg"></div>
+        </div>
+    </div>
+
+    <!-- MODE 2: HANGMAN -->
+    <div id="modeHangman" style="display: none;">
+        <div class="scramble-box">
+            <div class="shield-bar" id="shieldDisplay">🛡️ Shield: 6 / 6</div>
+            <div class="hint-text" id="hangmanHint">Переклад: ...</div>
+            <div class="context-sentence" id="hangmanContext">"..."</div>
+
+            <div class="answer-slots" id="hangmanSlots"></div>
+            <div class="keyboard" id="keyboard"></div>
+
+            <button class="action-btn secondary-btn" onclick="nextHangmanWord()">Skip Word ➡️</button>
+            <div class="status-msg" id="hangmanStatus"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const vocabulary = [
+        { en: "adulthood", ru: "взрослая жизнь", ex: "Adulthood brings more responsibilities." },
+        { en: "fast-paced", ru: "быстрый, насыщенный", ex: "London is a fast-paced city." },
+        { en: "modern life", ru: "современная жизнь", ex: "Modern life can be stressful." },
+        { en: "historical spots", ru: "исторические места", ex: "We visited many historical spots in the UK." },
+        { en: "independence", ru: "независимость", ex: "Teenagers want more independence." },
+        { en: "legal", ru: "законный; легальный", ex: "It is legal to vote at the age of 18 in the UK." },
+        { en: "unique", ru: "уникальный", ex: "Every city has its own unique culture." },
+        { en: "vote", ru: "голосовать", ex: "Adults can vote in elections." },
+        { en: "I wonder", ru: "мне интересно", ex: "I wonder why so many teenagers like living in the UK." },
+        { en: "I am sure", ru: "я уверен(а)", ex: "I am sure you will enjoy this lesson." },
+        { en: "reward", ru: "награда; вознаграждение", ex: "Hard work is its own reward." },
+        { en: "other", ru: "другой; другие", ex: "Other countries have different traditions." },
+        { en: "personality", ru: "личность; характер", ex: "She has a friendly personality." },
+        { en: "pretty", ru: "довольно; достаточно", ex: "The weather is pretty nice today." },
+        { en: "adult", ru: "взрослый", ex: "In the UK, you become an adult at the age of 18." },
+        { en: "to be hooked on", ru: "быть сильно увлечённым", ex: "Many teenagers are hooked on social media." },
+        { en: "to follow strict rules", ru: "следовать строгим правилам", ex: "Students have to follow strict rules at school." },
+        { en: "downsides", ru: "недостатки; минусы", ex: "Every country has its downsides." }
+    ];
+
+    // Helper function to shuffle any array
+    function shuffleArray(array) {
+        return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    // Separate shuffled arrays for each mode
+    let scrambleList = [];
+    let hangmanList = [];
+
+    let scrambleIdx = 0;
+    let userLetters = [];
+    let targetWordScramble = "";
+
+    let hangmanIdx = 0;
+    let hangmanWord = "";
+    let guessedLetters = new Set();
+    let lives = 6;
+
+    function speakWord(text) {
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-GB';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function switchMode(mode) {
+        document.getElementById('btnScramble').classList.toggle('active', mode === 'scramble');
+        document.getElementById('btnHangman').classList.toggle('active', mode === 'hangman');
+
+        document.getElementById('modeScramble').style.display = mode === 'scramble' ? 'block' : 'none';
+        document.getElementById('modeHangman').style.display = mode === 'hangman' ? 'block' : 'none';
+
+        if (mode === 'scramble' && scrambleList.length === 0) initScramble();
+        if (mode === 'hangman' && hangmanList.length === 0) initHangman();
+    }
+
+    /* --- SCRAMBLE MODE --- */
+    function initScramble() {
+        if (scrambleList.length === 0) {
+            scrambleList = shuffleArray(vocabulary);
+        }
+
+        const item = scrambleList[scrambleIdx];
+        targetWordScramble = item.en.toLowerCase();
+        userLetters = [];
+
+        document.getElementById('scrambleHint').textContent = `Переклад: ${item.ru}`;
+        document.getElementById('scrambleContext').textContent = `"${item.ex.replace(new RegExp(item.en, 'gi'), '_______')}"`;
+        document.getElementById('statusMsg').textContent = '';
+
+        const slotsContainer = document.getElementById('answerSlots');
+        slotsContainer.innerHTML = '';
+        for (let i = 0; i < targetWordScramble.length; i++) {
+            const slot = document.createElement('div');
+            slot.className = 'slot';
+            if (targetWordScramble[i] === ' ' || targetWordScramble[i] === '-') {
+                slot.textContent = targetWordScramble[i];
+                slot.style.border = 'none';
+            }
+            slotsContainer.appendChild(slot);
+        }
+
+        const lettersOnly = targetWordScramble.replace(/[\s-]/g, '').split('');
+        const shuffled = [...lettersOnly].sort(() => Math.random() - 0.5);
+
+        const poolContainer = document.getElementById('lettersPool');
+        poolContainer.innerHTML = '';
+
+        shuffled.forEach((char, idx) => {
+            const tile = document.createElement('div');
+            tile.className = 'letter-tile';
+            tile.textContent = char;
+            tile.dataset.id = idx;
+            tile.onclick = () => pickLetter(tile, char);
+            poolContainer.appendChild(tile);
+        });
+    }
+
+    function pickLetter(tile, char) {
+        if (tile.classList.contains('used')) return;
+
+        const slots = document.querySelectorAll('#answerSlots .slot');
+        for (let i = 0; i < targetWordScramble.length; i++) {
+            if (targetWordScramble[i] !== ' ' && targetWordScramble[i] !== '-' && slots[i].textContent === '') {
+                slots[i].textContent = char;
+                tile.classList.add('used');
+                userLetters.push({ tile, char, slotIdx: i });
+                break;
+            }
+        }
+    }
+
+    function resetScramble() {
+        userLetters.forEach(item => item.tile.classList.remove('used'));
+        userLetters = [];
+        const slots = document.querySelectorAll('#answerSlots .slot');
+        slots.forEach((slot, idx) => {
+            if (targetWordScramble[idx] !== ' ' && targetWordScramble[idx] !== '-') slot.textContent = '';
+        });
+        document.getElementById('statusMsg').textContent = '';
+    }
+
+    function checkScramble() {
+        const slots = document.querySelectorAll('#answerSlots .slot');
+        let currentString = "";
+        slots.forEach(s => currentString += s.textContent);
+
+        const msg = document.getElementById('statusMsg');
+        if (currentString.toLowerCase() === targetWordScramble) {
+            msg.style.color = 'var(--neon-green)';
+            msg.textContent = "🎉 Correct! Next word coming...";
+            speakWord(scrambleList[scrambleIdx].en);
+
+            setTimeout(() => {
+                scrambleIdx = (scrambleIdx + 1) % scrambleList.length;
+                initScramble();
+            }, 1500);
+        } else {
+            msg.style.color = 'var(--neon-pink)';
+            msg.textContent = "❌ Not quite! Check again.";
+        }
+    }
+
+    /* --- HANGMAN MODE --- */
+    function initHangman() {
+        if (hangmanList.length === 0) {
+            hangmanList = shuffleArray(vocabulary);
+        }
+
+        const item = hangmanList[hangmanIdx];
+        hangmanWord = item.en.toLowerCase();
+        guessedLetters.clear();
+        lives = 6;
+
+        document.getElementById('hangmanHint').textContent = `Переклад: ${item.ru}`;
+        document.getElementById('hangmanContext').textContent = `"${item.ex.replace(new RegExp(item.en, 'gi'), '_______')}"`;
+        document.getElementById('hangmanStatus').textContent = '';
+        updateShieldDisplay();
+
+        renderHangmanSlots();
+        renderKeyboard();
+    }
+
+    function updateShieldDisplay() {
+        document.getElementById('shieldDisplay').textContent = `🛡️ Shield: ${lives} / 6`;
+    }
+
+    function renderHangmanSlots() {
+        const slotsContainer = document.getElementById('hangmanSlots');
+        slotsContainer.innerHTML = '';
+
+        for (let i = 0; i < hangmanWord.length; i++) {
+            const char = hangmanWord[i];
+            const slot = document.createElement('div');
+            slot.className = 'slot';
+
+            if (char === ' ' || char === '-') {
+                slot.textContent = char;
+                slot.style.border = 'none';
+            } else if (guessedLetters.has(char)) {
+                slot.textContent = char;
+            } else {
+                slot.textContent = '';
+            }
+            slotsContainer.appendChild(slot);
+        }
+    }
+
+    function renderKeyboard() {
+        const kb = document.getElementById('keyboard');
+        kb.innerHTML = '';
+        const alphabet = "abcdefghijklmnopqrstuvwxyz".split('');
+
+        alphabet.forEach(letter => {
+            const btn = document.createElement('button');
+            btn.className = 'key-btn';
+            btn.textContent = letter;
+            btn.onclick = () => guessLetter(btn, letter);
+            kb.appendChild(btn);
+        });
+    }
+
+    function guessLetter(btn, letter) {
+        btn.disabled = true;
+        guessedLetters.add(letter);
+
+        if (hangmanWord.includes(letter)) {
+            btn.classList.add('correct');
+            renderHangmanSlots();
+            checkHangmanWin();
+        } else {
+            btn.classList.add('wrong');
+            lives--;
+            updateShieldDisplay();
+            if (lives <= 0) {
+                document.getElementById('hangmanStatus').style.color = 'var(--error)';
+                document.getElementById('hangmanStatus').textContent = `💥 Shield Broken! Word was: "${hangmanList[hangmanIdx].en}"`;
+                speakWord(hangmanList[hangmanIdx].en);
+                setTimeout(nextHangmanWord, 2500);
+            }
+        }
+    }
+
+    function checkHangmanWin() {
+        let won = true;
+        for (let char of hangmanWord) {
+            if (char !== ' ' && char !== '-' && !guessedLetters.has(char)) {
+                won = false;
+                break;
+            }
+        }
+
+        if (won) {
+            document.getElementById('hangmanStatus').style.color = 'var(--neon-green)';
+            document.getElementById('hangmanStatus').textContent = "🎉 Excellent! Shield intact!";
+            speakWord(hangmanList[hangmanIdx].en);
+            setTimeout(nextHangmanWord, 1800);
+        }
+    }
+
+    function nextHangmanWord() {
+        hangmanIdx = (hangmanIdx + 1) % hangmanList.length;
+        initHangman();
+    }
+
+    window.onload = () => {
+        initScramble();
+    };
+</script>
+
+</body>
+</html>
