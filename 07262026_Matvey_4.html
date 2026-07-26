@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Cyber Gap Fill - UK English</title>
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card-bg: #151d30;
+            --accent-blue: #00f0ff;
+            --accent-purple: #7000ff;
+            --neon-green: #39ff14;
+            --neon-red: #ff0055;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #2a3859;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 820px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.12);
+            border: 2px solid var(--border-color);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        }
+
+        /* WORD BANK */
+        .word-bank-container {
+            background: #0d1322;
+            border: 1px dashed var(--accent-blue);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 25px;
+        }
+
+        .word-bank-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .word-chip {
+            background: #1e2a47;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .word-chip:hover {
+            transform: translateY(-2px);
+            background: var(--accent-blue);
+            color: #000;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+        }
+
+        .word-chip.selected {
+            border-color: #ffffff;
+            box-shadow: 0 0 15px #ffffff;
+            transform: scale(1.05);
+        }
+
+        .word-chip.used {
+            opacity: 0.25;
+            cursor: not-allowed;
+            border-color: var(--border-color);
+            color: var(--text-muted);
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* SENTENCES LIST */
+        .sentences-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sentence-card {
+            background: #111827;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #e2e8f0;
+            transition: border-color 0.2s;
+        }
+
+        .sentence-card:hover {
+            border-color: #3b82f6;
+        }
+
+        .drop-zone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 140px;
+            height: 38px;
+            margin: 0 8px;
+            padding: 0 12px;
+            border: 2px dashed #3b82f6;
+            border-radius: 8px;
+            background: #1a233a;
+            color: var(--accent-blue);
+            font-weight: bold;
+            vertical-align: middle;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .drop-zone.hovered {
+            background: rgba(0, 240, 255, 0.15);
+            border-color: var(--accent-blue);
+        }
+
+        .drop-zone.filled {
+            border-style: solid;
+            background: #1e293b;
+            border-color: var(--accent-blue);
+        }
+
+        .drop-zone.correct {
+            border-color: var(--neon-green) !important;
+            background: rgba(57, 255, 20, 0.1) !important;
+            color: var(--neon-green) !important;
+        }
+
+        .drop-zone.wrong {
+            border-color: var(--neon-red) !important;
+            background: rgba(255, 0, 85, 0.1) !important;
+            color: var(--neon-red) !important;
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 12px;
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(112, 0, 255, 0.4);
+        }
+
+        .btn-check:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-box {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="header-title">
+            <span>🧩</span>
+            <h1>Fill in the gaps</h1>
+        </div>
+    </div>
+
+    <!-- Word Bank -->
+    <div class="word-bank-container">
+        <div class="word-bank-title">Available Words (Click or Drag):</div>
+        <div class="word-bank" id="wordBank"></div>
+    </div>
+
+    <!-- Sentences -->
+    <div class="sentences-list" id="sentencesList"></div>
+
+    <!-- Bottom Controls -->
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetGame()">Reset 🔄</button>
+        <div class="score-box" id="scoreDisplay"></div>
+        <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+    </div>
+</div>
+
+<script>
+    const gameData = [
+        { id: 1, textBefore: "Everyone is ", target: "unique", textAfter: " in their own way, making them special." },
+        { id: 2, textBefore: "People like to visit ", target: "historical spots", textAfter: " to learn about the past." },
+        { id: 3, textBefore: "Life in big cities is always busy, making it ", target: "fast-paced", textAfter: " and modern." },
+        { id: 4, textBefore: "When you turn 18, you can ", target: "vote", textAfter: " in elections." },
+        { id: 5, textBefore: "Many teens are ", target: "hooked on", textAfter: " their phones, using social media for hours." },
+        { id: 6, textBefore: "At 18, you can do ", target: "legal", textAfter: " things, like driving and voting." },
+        { id: 7, textBefore: "Starting a job or going to college helps teens gain ", target: "independence", textAfter: "." },
+        { id: 8, textBefore: "Turning 18 is important because it marks the beginning of ", target: "adulthood", textAfter: "." }
+    ];
+
+    const wordsList = [
+        "adulthood", "legal", "historical spots", "vote", 
+        "unique", "fast-paced", "independence", "hooked on"
+    ];
+
+    let selectedWord = null;
+    let userAnswers = {}; // sentenceId -> chosenWord
+
+    function initGame() {
+        renderWordBank();
+        renderSentences();
+        updateScoreDisplay('');
+    }
+
+    function renderWordBank() {
+        const bank = document.getElementById('wordBank');
+        bank.innerHTML = '';
+
+        wordsList.forEach(word => {
+            const chip = document.createElement('div');
+            chip.className = 'word-chip';
+            chip.textContent = word;
+            chip.draggable = true;
+            chip.dataset.word = word;
+
+            // Check if already used
+            const isUsed = Object.values(userAnswers).includes(word);
+            if (isUsed) {
+                chip.classList.add('used');
+            }
+
+            // Click selection logic
+            chip.onclick = () => {
+                if (chip.classList.contains('used')) return;
+
+                document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected'));
+                if (selectedWord === word) {
+                    selectedWord = null;
+                } else {
+                    selectedWord = word;
+                    chip.classList.add('selected');
+                }
+            };
+
+            // Drag & Drop logic
+            chip.ondragstart = (e) => {
+                if (chip.classList.contains('used')) {
+                    e.preventDefault();
+                    return;
+                }
+                e.dataTransfer.setData('text/plain', word);
+            };
+
+            bank.appendChild(chip);
+        });
+    }
+
+    function renderSentences() {
+        const container = document.getElementById('sentencesList');
+        container.innerHTML = '';
+
+        gameData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'sentence-card';
+
+            const currentWord = userAnswers[item.id] || '';
+
+            card.innerHTML = `
+                <span>● ${item.textBefore}</span>
+                <span class="drop-zone ${currentWord ? 'filled' : ''}" 
+                      id="zone-${item.id}" 
+                      onclick="handleZoneClick(${item.id})">
+                    ${currentWord}
+                </span>
+                <span>${item.textAfter}</span>
+            `;
+
+            const zone = card.querySelector('.drop-zone');
+
+            // Drag & Drop Handlers
+            zone.ondragover = (e) => {
+                e.preventDefault();
+                zone.classList.add('hovered');
+            };
+
+            zone.ondragleave = () => zone.classList.remove('hovered');
+
+            zone.ondrop = (e) => {
+                e.preventDefault();
+                zone.classList.remove('hovered');
+                const droppedWord = e.dataTransfer.getData('text/plain');
+                if (droppedWord) {
+                    placeWord(item.id, droppedWord);
+                }
+            };
+
+            container.appendChild(card);
+        });
+    }
+
+    function handleZoneClick(sentenceId) {
+        // If clicking on an already filled zone, remove word back to bank
+        if (userAnswers[sentenceId] && !selectedWord) {
+            delete userAnswers[sentenceId];
+            refreshUI();
+            return;
+        }
+
+        // If a word is selected from bank, place it
+        if (selectedWord) {
+            placeWord(sentenceId, selectedWord);
+            selectedWord = null;
+        }
+    }
+
+    function placeWord(sentenceId, word) {
+        userAnswers[sentenceId] = word;
+        refreshUI();
+    }
+
+    function refreshUI() {
+        renderWordBank();
+        renderSentences();
+    }
+
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-GB';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        gameData.forEach(item => {
+            const zone = document.getElementById(`zone-${item.id}`);
+            const userWord = userAnswers[item.id];
+
+            zone.classList.remove('correct', 'wrong');
+
+            if (userWord === item.target) {
+                zone.classList.add('correct');
+                correctCount++;
+            } else if (userWord) {
+                zone.classList.add('wrong');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        if (correctCount === gameData.length) {
+            scoreDisplay.style.color = 'var(--neon-green)';
+            scoreDisplay.textContent = `🎯 PERFECT! 8 / 8`;
+            speakText("Excellent job! All answers are correct.");
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+            scoreDisplay.textContent = `Score: ${correctCount} / ${gameData.length}`;
+        }
+    }
+
+    function resetGame() {
+        userAnswers = {};
+        selectedWord = null;
+        initGame();
+    }
+
+    window.onload = initGame;
+</script>
+
+</body>
+</html>
