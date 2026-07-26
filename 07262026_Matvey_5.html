@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will's New York Story - True or False</title>
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card-bg: #151d30;
+            --accent-blue: #00f0ff;
+            --accent-purple: #7000ff;
+            --neon-green: #39ff14;
+            --neon-red: #ff0055;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #2a3859;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 820px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.12);
+            border: 2px solid var(--border-color);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        }
+
+        /* TRANSCRIPT BOX */
+        .transcript-box {
+            background: #0d1322;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            font-size: 0.98rem;
+        }
+
+        .transcript-title {
+            color: var(--accent-blue);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* STATEMENTS LIST */
+        .statements-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .statement-card {
+            background: #111827;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .statement-card:hover {
+            border-color: #3b82f6;
+        }
+
+        .statement-text {
+            font-size: 1rem;
+            line-height: 1.4;
+            color: var(--text-main);
+            flex: 1;
+        }
+
+        /* TOGGLE BUTTONS */
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .tf-btn {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tf-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-main);
+        }
+
+        .tf-btn.selected-true {
+            background: rgba(57, 255, 20, 0.2);
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+        }
+
+        .tf-btn.selected-false {
+            background: rgba(255, 0, 85, 0.2);
+            border-color: var(--neon-red);
+            color: var(--neon-red);
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+        }
+
+        .statement-card.correct {
+            border-color: var(--neon-green);
+            background: rgba(57, 255, 20, 0.05);
+        }
+
+        .statement-card.wrong {
+            border-color: var(--neon-red);
+            background: rgba(255, 0, 85, 0.05);
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 12px;
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(112, 0, 255, 0.4);
+        }
+
+        .btn-check:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-box {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .statement-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .btn-group {
+                width: 100%;
+            }
+            .tf-btn {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="header-title">
+            <span>🎧</span>
+            <h1>Will's Story: True or False</h1>
+        </div>
+    </div>
+
+    <!-- Transcript Box -->
+    <div class="transcript-box">
+        <div class="transcript-title">📜 Transcript</div>
+        "Hi, I'm Will, and I live in New York. Life here is pretty fast-paced, with everything moving quickly – from school to hanging out with friends. Unlike some countries, we don't have to wear uniforms in most American schools, which I like because we can dress how we want. Our school days are pretty busy, and we have a lot of choices for extra-school activities, like sports, music, and clubs. I'm really into basketball and drama club, which are great ways to unwind after class. Like most teens, I'm hooked on my phone, always checking social media or texting. Even though New York has tons of historical spots, I'm usually more focused on what's happening right now. Next year, I'll turn 18. Turning 18 is a big deal because it means stepping into adulthood. We get more independence and can finally do legal things like drive, vote, and start making decisions for ourselves. It's exciting to have a say in how things work around here. Living in a city like New York is definitely unique – it's all about finding a balance between the past and the constantly changing future."
+    </div>
+
+    <!-- Statements List -->
+    <div class="statements-list" id="statementsList"></div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetGame()">Reset 🔄</button>
+        <div class="score-box" id="scoreDisplay"></div>
+        <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+    </div>
+</div>
+
+<script>
+    const statements = [
+        { id: 1, text: "Will lives in the United Kingdom.", correct: false },
+        { id: 2, text: "Will lives in a fast-paced city where everything moves slowly.", correct: false },
+        { id: 3, text: "Most American schools do not require students to wear uniforms.", correct: true },
+        { id: 4, text: "Will enjoys basketball and drama club as extracurricular activities.", correct: true },
+        { id: 5, text: "Will doesn't use his phone much for social media or texting.", correct: false },
+        { id: 6, text: "Turning 18 is important because it marks the start of adulthood and more independence.", correct: true },
+        { id: 7, text: "New York has no historical spots, and Will doesn't care about history.", correct: false },
+        { id: 8, text: "When Will turns 18, he will be able to drive and vote.", correct: true }
+    ];
+
+    let userAnswers = {}; // id -> boolean (true / false)
+
+    function renderStatements() {
+        const container = document.getElementById('statementsList');
+        container.innerHTML = '';
+
+        statements.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'statement-card';
+            card.id = `card-${item.id}`;
+
+            const selected = userAnswers[item.id];
+
+            card.innerHTML = `
+                <div class="statement-text">${index + 1}. ${item.text}</div>
+                <div class="btn-group">
+                    <button class="tf-btn ${selected === true ? 'selected-true' : ''}" 
+                            onclick="selectOption(${item.id}, true)">TRUE</button>
+                    <button class="tf-btn ${selected === false ? 'selected-false' : ''}" 
+                            onclick="selectOption(${item.id}, false)">FALSE</button>
+                </div>
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+    function selectOption(id, choice) {
+        userAnswers[id] = choice;
+        const card = document.getElementById(`card-${id}`);
+        card.classList.remove('correct', 'wrong');
+        renderStatements();
+    }
+
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        statements.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const userChoice = userAnswers[item.id];
+
+            card.classList.remove('correct', 'wrong');
+
+            if (userChoice === item.correct) {
+                card.classList.add('correct');
+                correctCount++;
+            } else if (userChoice !== undefined) {
+                card.classList.add('wrong');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        if (correctCount === statements.length) {
+            scoreDisplay.style.color = 'var(--neon-green)';
+            scoreDisplay.textContent = `🎯 PERFECT! 8 / 8`;
+            speakText("Awesome job! All statements are correctly identified.");
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+            scoreDisplay.textContent = `Score: ${correctCount} / ${statements.length}`;
+        }
+    }
+
+    function resetGame() {
+        userAnswers = {};
+        document.getElementById('scoreDisplay').textContent = '';
+        renderStatements();
+    }
+
+    window.onload = renderStatements;
+</script>
+
+</body>
+</html>
