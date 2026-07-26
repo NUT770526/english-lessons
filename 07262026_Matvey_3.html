@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Type the Missing Letters</title>
+<style>
+*{box-sizing:border-box;}
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#eef5ff;
+    display:flex;
+    justify-content:center;
+    padding:30px;
+}
+.container{
+    background:white;
+    width:1150px;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+h2{
+    color:#2d4cc8;
+    margin-top:0;
+    margin-bottom:25px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.card{
+    border:2px solid #dbe6ff;
+    border-radius:12px;
+    overflow:hidden;
+    background:white;
+}
+
+.card img{
+    width:100%;
+    height:150px;
+    object-fit:cover;
+}
+
+.answer{
+    display:flex;
+    padding:12px;
+    gap:10px;
+}
+
+input{
+    flex:1;
+    padding:10px;
+    font-size:20px;
+    text-align:center;
+    border-radius:8px;
+    border:2px solid #bfcdf5;
+}
+
+button{
+    width:42px;
+    border:none;
+    border-radius:8px;
+    background:#edf2ff;
+    cursor:pointer;
+    font-size:22px;
+}
+
+.correct{
+    background:#bdf3bd !important;
+}
+
+.wrong{
+    background:#ffd2d2 !important;
+}
+
+#score{
+    margin-top:30px;
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+}
+
+#finish{
+    margin:30px auto 0;
+    display:block;
+    padding:14px 40px;
+    font-size:20px;
+    border:none;
+    border-radius:10px;
+    background:#3b67ff;
+    color:white;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>📝 Type the Missing Letters</h2>
+
+<div class="grid">
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80">
+<div class="answer">
+<input id="q1" value="un_q__">
+<button onclick="check('q1','unique')">↩</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1529655683826-aba9b3e77383?auto=format&fit=crop&w=600&q=80">
+<div class="answer">
+<input id="q2" value="hi__r___s__t">
+<button onclick="check('q2','historical spot')">↩</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=600&q=80">
+<div class="answer">
+<input id="q3" value="f__t-p__d">
+<button onclick="check('q3','fast-paced')">↩</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=600&q=80">
+<div class="answer">
+<input id="q4" value="v__e">
+<button onclick="check('q4','vote')">↩</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80">
+<div class="answer">
+<input id="q5" value="be ___ed _n">
+<button onclick="check('q5','be hooked on')">↩</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80">
+<div class="answer">
+<input id="q6" value="_e__l">
+<button onclick="check('q6','legal')">↩</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=600&q=80">
+<div class="answer">
+<input id="q7" value="in__en__ce">
+<button onclick="check('q7','independence')">↩</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80">
+<div class="answer">
+<input id="q8" value="a__h__d">
+<button onclick="check('q8','adulthood')">↩</button>
+</div>
+</div>
+
+</div>
+
+<button id="finish" onclick="finish()">Finish</button>
+
+<div id="score"></div>
+
+</div>
+
+<script>
+
+let answers={
+q1:"unique",
+q2:"historical spot",
+q3:"fast-paced",
+q4:"vote",
+q5:"be hooked on",
+q6:"legal",
+q7:"independence",
+q8:"adulthood"
+};
+
+function normalize(text){
+return text.toLowerCase().replace(/[-]/g,"-").replace(/\s+/g," ").trim();
+}
+
+function check(id,answer){
+
+let box=document.getElementById(id);
+
+if(normalize(box.value)==normalize(answer)){
+box.className="correct";
+}else{
+box.className="wrong";
+}
+
+}
+
+function finish(){
+
+let correct=0;
+
+for(let id in answers){
+
+let box=document.getElementById(id);
+
+if(normalize(box.value)==normalize(answers[id])){
+correct++;
+box.className="correct";
+}else{
+box.className="wrong";
+}
+
+}
+
+document.getElementById("score").innerHTML=
+`🎉 Score: <b>${correct} / ${Object.keys(answers).length}</b>`;
+
+}
+</script>
+
+</body>
+</html>
