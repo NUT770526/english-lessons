@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Teen UK Experience — Vocabulary Game</title>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #ec4899;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #334155;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: var(--secondary);
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #334155;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: #334155;
+            color: var(--text);
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+        }
+
+        /* Mode 1: Matching */
+        .grid-matching {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .match-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .match-btn {
+            padding: 12px 15px;
+            background: #334155;
+            border: 2px solid transparent;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+
+        .match-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .match-btn.selected {
+            border-color: var(--secondary);
+            background: #475569;
+        }
+
+        .match-btn.correct {
+            background: var(--success);
+            border-color: var(--success);
+            cursor: default;
+        }
+
+        /* Mode 2 & 3: Sentence Fill & Quiz */
+        .quiz-card {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .sentence {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 12px;
+            background: #334155;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .option-btn:hover {
+            background: var(--primary);
+        }
+
+        /* Controls & Results */
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .next-btn {
+            padding: 12px 30px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+        }
+
+        .result-screen {
+            text-align: center;
+            display: none;
+        }
+
+        .result-screen h2 {
+            font-size: 2.5rem;
+            color: var(--success);
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <header>
+        <h1>🇬🇧 The Teen UK Experience</h1>
+        <p style="color: #94a3b8; margin: 0;">Master your British English Vocabulary!</p>
+    </header>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="score-board">
+        <span>Score: <span id="score">0</span></span>
+        <span id="levelIndicator">Level 1: Match Words</span>
+    </div>
+
+    <!-- Mode 1: Match Words -->
+    <div id="mode1" class="game-mode">
+        <div class="grid-matching">
+            <div class="match-column" id="englishCol"></div>
+            <div class="match-column" id="russianCol"></div>
+        </div>
+    </div>
+
+    <!-- Mode 2: Context Sentences -->
+    <div id="mode2" class="game-mode" style="display: none;">
+        <div class="quiz-card">
+            <div class="sentence" id="contextSentence">...</div>
+            <div class="options-grid" id="contextOptions"></div>
+        </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="resultScreen" class="result-screen">
+        <h2>🎉 Level Complete!</h2>
+        <p style="font-size: 1.2rem;">You're ready for life in the UK!</p>
+        <p>Final Score: <span id="finalScore">0</span></p>
+        <button class="next-btn" style="display: inline-block;" onclick="restartGame()">Play Again 🔄</button>
+    </div>
+
+    <div class="controls">
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next ➡️</button>
+    </div>
+</div>
+
+<script>
+    const vocabulary = [
+        { en: "adulthood", ru: "взрослая жизнь", sentence: "_____ brings more responsibilities when you grow up." },
+        { en: "fast-paced", ru: "быстрый, насыщенный", sentence: "London is a very _____ city where everyone is always rushing." },
+        { en: "modern life", ru: "современная жизнь", sentence: "_____ can be stressful due to social media and school pressure." },
+        { en: "historical spots", ru: "исторические места", sentence: "We visited many famous _____ in London, like Big Ben." },
+        { en: "independence", ru: "независимость", sentence: "Teenagers want more _____ from their parents as they get older." },
+        { en: "legal", ru: "законный; легальный", sentence: "It is _____ to vote at the age of 18 in the UK." },
+        { en: "unique", ru: "уникальный", sentence: "Every British city has its own _____ culture and vibe." },
+        { en: "vote", ru: "голосовать", sentence: "Adults can _____ in general elections to choose their leader." },
+        { en: "I wonder", ru: "мне интересно", sentence: "_____ why so many teenagers like living in the UK." },
+        { en: "I am sure", ru: "я уверен(а)", sentence: "_____ you will love visiting Scotland this summer!" },
+        { en: "reward", ru: "награда; вознаграждение", sentence: "Hard work is its own _____ when you see your test results." },
+        { en: "other", ru: "другой; другие", sentence: "_____ countries have different traditions from Britain." },
+        { en: "personality", ru: "личность; характер", sentence: "She has a very friendly and open _____." },
+        { en: "pretty", ru: "довольно; достаточно", sentence: "The weather in Manchester is _____ rainy today." },
+        { en: "adult", ru: "взрослый", sentence: "In the UK, you officially become an _____ at 18." },
+        { en: "to be hooked on", ru: "быть сильно увлечённым", sentence: "Many teens are _____ playing video games with friends." },
+        { en: "to follow strict rules", ru: "следовать строгим правилам", sentence: "Students have _____ regarding their school uniform." },
+        { en: "downsides", ru: "недостатки; минусы", sentence: "Living in a large city has both benefits and _____." }
+    ];
+
+    let currentMode = 1;
+    let score = 0;
+    let selectedEn = null;
+    let selectedRu = null;
+    let matchedCount = 0;
+    let currentSentenceIdx = 0;
+
+    // Audio effects using Web Audio API
+    function playSound(type) {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === 'correct') {
+            osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+            osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.3);
+        } else {
+            osc.frequency.setValueAtTime(220, ctx.currentTime); // A3
+            osc.frequency.setValueAtTime(174.61, ctx.currentTime + 0.1); // F3
+            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.3);
+        }
+    }
+
+    function initGame() {
+        score = 0;
+        currentMode = 1;
+        matchedCount = 0;
+        currentSentenceIdx = 0;
+        document.getElementById('score').textContent = score;
+        document.getElementById('resultScreen').style.display = 'none';
+        document.getElementById('progressBar').style.width = '0%';
+        loadMatchMode();
+    }
+
+    // MODE 1: MATCHING
+    function loadMatchMode() {
+        document.getElementById('levelIndicator').textContent = "Level 1: Match Words";
+        document.getElementById('mode1').style.display = 'block';
+        document.getElementById('mode2').style.display = 'none';
+
+        // Select 6 random words for level 1
+        const subset = [...vocabulary].sort(() => 0.5 - Math.random()).slice(0, 6);
+        
+        const enCol = document.getElementById('englishCol');
+        const ruCol = document.getElementById('russianCol');
+        enCol.innerHTML = '';
+        ruCol.innerHTML = '';
+
+        const shuffledRu = [...subset].sort(() => 0.5 - Math.random());
+
+        subset.forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'match-btn';
+            btn.textContent = item.en;
+            btn.onclick = () => selectWord(btn, 'en', item);
+            enCol.appendChild(btn);
+        });
+
+        shuffledRu.forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'match-btn';
+            btn.textContent = item.ru;
+            btn.onclick = () => selectWord(btn, 'ru', item);
+            ruCol.appendChild(btn);
+        });
+    }
+
+    function selectWord(btn, lang, item) {
+        if (btn.classList.contains('correct')) return;
+
+        if (lang === 'en') {
+            document.querySelectorAll('#englishCol .match-btn').forEach(b => b.classList.remove('selected'));
+            selectedEn = { btn, item };
+            btn.classList.add('selected');
+        } else {
+            document.querySelectorAll('#russianCol .match-btn').forEach(b => b.classList.remove('selected'));
+            selectedRu = { btn, item };
+            btn.classList.add('selected');
+        }
+
+        if (selectedEn && selectedRu) {
+            if (selectedEn.item.en === selectedRu.item.en) {
+                // Correct Match
+                playSound('correct');
+                selectedEn.btn.classList.add('correct');
+                selectedRu.btn.classList.add('correct');
+                selectedEn.btn.classList.remove('selected');
+                selectedRu.btn.classList.remove('selected');
+                
+                score += 10;
+                matchedCount++;
+                document.getElementById('score').textContent = score;
+                document.getElementById('progressBar').style.width = `${(matchedCount / 6) * 50}%`;
+
+                selectedEn = null;
+                selectedRu = null;
+
+                if (matchedCount === 6) {
+                    setTimeout(() => {
+                        currentMode = 2;
+                        loadContextMode();
+                    }, 1000);
+                }
+            } else {
+                // Wrong Match
+                playSound('wrong');
+                selectedEn.btn.style.borderColor = 'var(--error)';
+                selectedRu.btn.style.borderColor = 'var(--error)';
+                
+                setTimeout(() => {
+                    if (selectedEn && selectedRu) {
+                        selectedEn.btn.style.borderColor = 'transparent';
+                        selectedRu.btn.style.borderColor = 'transparent';
+                        selectedEn.btn.classList.remove('selected');
+                        selectedRu.btn.classList.remove('selected');
+                        selectedEn = null;
+                        selectedRu = null;
+                    }
+                }, 500);
+            }
+        }
+    }
+
+    // MODE 2: CONTEXT SENTENCES
+    function loadContextMode() {
+        document.getElementById('levelIndicator').textContent = "Level 2: Fill in the Blanks";
+        document.getElementById('mode1').style.display = 'none';
+        document.getElementById('mode2').style.display = 'block';
+
+        showSentence();
+    }
+
+    function showSentence() {
+        document.getElementById('nextBtn').style.display = 'none';
+        const currentItem = vocabulary[currentSentenceIdx];
+        
+        document.getElementById('contextSentence').innerHTML = currentItem.sentence.replace('_____', '<span style="color: var(--secondary); text-decoration: underline;">_______</span>');
+        
+        // Generate options (1 correct + 3 random)
+        const options = [currentItem.en];
+        while (options.length < 4) {
+            const randomWord = vocabulary[Math.floor(Math.random() * vocabulary.length)].en;
+            if (!options.includes(randomWord)) {
+                options.push(randomWord);
+            }
+        }
+        
+        options.sort(() => 0.5 - Math.random());
+
+        const optionsContainer = document.getElementById('contextOptions');
+        optionsContainer.innerHTML = '';
+
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt;
+            btn.onclick = () => checkContextAnswer(btn, opt, currentItem.en);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function checkContextAnswer(btn, selected, correct) {
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(b => b.disabled = true);
+
+        if (selected === correct) {
+            playSound('correct');
+            btn.style.background = 'var(--success)';
+            score += 15;
+            document.getElementById('score').textContent = score;
+        } else {
+            playSound('wrong');
+            btn.style.background = 'var(--error)';
+            allBtns.forEach(b => {
+                if (b.textContent === correct) b.style.background = 'var(--success)';
+            });
+        }
+
+        document.getElementById('progressBar').style.width = `${50 + ((currentSentenceIdx + 1) / 5) * 50}%`;
+        document.getElementById('nextBtn').style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+        currentSentenceIdx++;
+        if (currentSentenceIdx < 5) { // 5 sentence questions
+            showSentence();
+        } else {
+            finishGame();
+        }
+    }
+
+    function finishGame() {
+        document.getElementById('mode2').style.display = 'none';
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('resultScreen').style.display = 'block';
+        document.getElementById('finalScore').textContent = score;
+        document.getElementById('progressBar').style.width = '100%';
+    }
+
+    function restartGame() {
+        initGame();
+    }
+
+    window.onload = initGame;
+</script>
+
+</body>
+</html>
