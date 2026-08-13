@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business English: To Be vs Action Verbs</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-indigo: #6366f1;
+            --neon-green: #22c55e;
+            --neon-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.6rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* RULE BOX */
+        .rule-box {
+            background: #0f172a;
+            border-left: 4px solid var(--accent-indigo);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .rule-title {
+            color: var(--accent-blue);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* QUIZ CARD */
+        .quiz-card {
+            background: #111827;
+            padding: 25px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sentence {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: #ffffff;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: #1e293b;
+            border: 2px solid var(--border-color);
+            color: var(--text-main);
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            border-color: var(--accent-blue);
+            background: #26334d;
+        }
+
+        .option-btn.correct {
+            background: rgba(34, 197, 94, 0.2) !important;
+            border-color: var(--neon-green) !important;
+            color: var(--neon-green) !important;
+        }
+
+        .option-btn.wrong {
+            background: rgba(239, 68, 68, 0.2) !important;
+            border-color: var(--neon-red) !important;
+            color: var(--neon-red) !important;
+        }
+
+        /* FEEDBACK */
+        .feedback {
+            margin-top: 15px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .feedback.correct {
+            display: block;
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+        }
+
+        .feedback.wrong {
+            display: block;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--neon-red);
+            border: 1px solid var(--neon-red);
+        }
+
+        /* CONTROLS */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+            display: none;
+        }
+
+        .btn-next:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-blue);
+        }
+
+        @media (max-width: 500px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>💼 Business English Trainer</h1>
+        <p>Present Simple: "To Be" (am/is/are) vs Action Verbs (do/does/work/send)</p>
+    </div>
+
+    <div class="rule-box">
+        <div class="rule-title">💡 Quick Hint:</div>
+        • <strong>TO BE (am / is / are)</strong> = Кто? Какой? Где? (Нет действия: <i>at the office, busy, late, ready</i>)<br>
+        • <strong>ACTION VERB (do / does / work / check)</strong> = Что делать? (Есть действие: <i>work, send, write, call</i>)
+    </div>
+
+    <div class="quiz-card" id="quizCard">
+        <div class="progress">
+            <span id="questionNum">Question 1 of 12</span>
+            <span id="questionType">Type: Affirmative</span>
+        </div>
+
+        <div class="sentence" id="sentenceText">Loading sentence...</div>
+
+        <div class="options-grid" id="optionsGrid"></div>
+
+        <div class="feedback" id="feedbackText"></div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetQuiz()">Restart 🔄</button>
+        <div class="score-display" id="scoreDisplay">Score: 0</div>
+        <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()">Next Question ➔</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        // AFFIRMATIVE
+        {
+            sentence: "Our project manager _____ very busy today.",
+            options: ["is", "works", "does", "are"],
+            correct: 0,
+            type: "Affirmative (State)",
+            hint: "Здесь НЕТ действия. Описываем состояние (busy — занят). Нужен глагол to be (is)."
+        },
+        {
+            sentence: "She _____ emails to clients every morning.",
+            options: ["is", "sends", "does send", "are"],
+            correct: 1,
+            type: "Affirmative (Action)",
+            hint: "Здесь ЕСТЬ действие (отправляет). Глагол send -> sends для She."
+        },
+        {
+            sentence: "We _____ in a big international company.",
+            options: ["are work", "are", "work", "is"],
+            correct: 2,
+            type: "Affirmative (Action)",
+            hint: "Здесь ЕСТЬ действие (работать). Никогда не говорите 'are work'! Просто 'work'."
+        },
+        {
+            sentence: "They _____ ready for the presentation.",
+            options: ["work", "are", "do", "is"],
+            correct: 1,
+            type: "Affirmative (State)",
+            hint: "Здесь НЕТ действия. Описываем состояние (ready — готовы). Для They берем 'are'."
+        },
+
+        // NEGATIVE
+        {
+            sentence: "My colleague _____ at the office on Fridays.",
+            options: ["doesn't", "isn't", "don't work", "isn't work"],
+            correct: 1,
+            type: "Negative (State/Location)",
+            hint: "Здесь НЕТ действия, только местоположение (at the office). Используем isn't."
+        },
+        {
+            sentence: "We _____ discuss new projects without the manager.",
+            options: ["aren't", "don't", "doesn't", "are not discuss"],
+            correct: 1,
+            type: "Negative (Action)",
+            hint: "Здесь ЕСТЬ действие (discuss — обсуждать). Для отрицания с We берем don't."
+        },
+        {
+            sentence: "The report _____ ready yet.",
+            options: ["doesn't", "isn't", "don't", "not"],
+            correct: 1,
+            type: "Negative (State)",
+            hint: "Здесь НЕТ действия (ready — готовый). Для It (report) берем isn't."
+        },
+        {
+            sentence: "He _____ check his business email on weekends.",
+            options: ["isn't", "don't", "doesn't", "is not"],
+            correct: 2,
+            type: "Negative (Action)",
+            hint: "Здесь ЕСТЬ действие (check — проверять). Для He отрицание — doesn't."
+        },
+
+        // QUESTIONS
+        {
+            sentence: "_____ your manager at the office today?",
+            options: ["Does", "Is", "Do", "Are"],
+            correct: 1,
+            type: "Question (State/Location)",
+            hint: "Здесь НЕТ действия (где? — at the office). Вопрос начинаем с Is."
+        },
+        {
+            sentence: "_____ you check your spreadsheets every day?",
+            options: ["Are", "Is", "Do", "Does"],
+            correct: 2,
+            type: "Question (Action)",
+            hint: "Здесь ЕСТЬ действие (check — проверять). Вопрос к You начинаем с Do."
+        },
+        {
+            sentence: "_____ the client happy with the new proposal?",
+            options: ["Does", "Is", "Do", "Are"],
+            correct: 1,
+            type: "Question (State)",
+            hint: "Здесь НЕТ действия (какой? — happy). Вопрос к The client (he/she) начинаем с Is."
+        },
+        {
+            sentence: "_____ she work from home on Tuesdays?",
+            options: ["Is", "Does", "Do", "Are"],
+            correct: 1,
+            type: "Question (Action)",
+            hint: "Здесь ЕСТЬ действие (work — работать). Вопрос к She начинаем с Does."
+        }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+    let answered = false;
+
+    function loadQuestion() {
+        answered = false;
+        const q = questions[currentQ];
+        
+        document.getElementById('questionNum').textContent = `Question ${currentQ + 1} of ${questions.length}`;
+        document.getElementById('questionType').textContent = `Type: ${q.type}`;
+        document.getElementById('sentenceText').textContent = q.sentence;
+        
+        const feedback = document.getElementById('feedbackText');
+        feedback.className = 'feedback';
+        feedback.style.display = 'none';
+        
+        document.getElementById('nextBtn').style.display = 'none';
+
+        const grid = document.getElementById('optionsGrid');
+        grid.innerHTML = '';
+
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt;
+            btn.onclick = () => selectOption(idx);
+            grid.appendChild(btn);
+        });
+    }
+
+    function selectOption(index) {
+        if (answered) return;
+        answered = true;
+
+        const q = questions[currentQ];
+        const buttons = document.querySelectorAll('.option-btn');
+        const feedback = document.getElementById('feedbackText');
+
+        if (index === q.correct) {
+            buttons[index].classList.add('correct');
+            feedback.className = 'feedback correct';
+            feedback.innerHTML = `<strong>Correct!</strong> ${q.hint}`;
+            score++;
+            document.getElementById('scoreDisplay').textContent = `Score: ${score}`;
+        } else {
+            buttons[index].classList.add('wrong');
+            buttons[q.correct].classList.add('correct');
+            feedback.className = 'feedback wrong';
+            feedback.innerHTML = `<strong>Incorrect.</strong> ${q.hint}`;
+        }
+
+        document.getElementById('nextBtn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentQ++;
+        if (currentQ < questions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        const card = document.getElementById('quizCard');
+        card.innerHTML = `
+            <div style="text-align: center; padding: 20px 0;">
+                <h2 style="color: var(--accent-blue); margin-bottom: 15px;">🎉 Training Completed!</h2>
+                <p style="font-size: 1.3rem; margin-bottom: 20px;">Your Final Score: <strong>${score} / ${questions.length}</strong></p>
+                <p style="color: var(--text-muted); line-height: 1.5;">
+                    ${score === questions.length ? 'Perfect! You mastered the difference between To Be and Action Verbs!' : 'Good job! Keep practicing to never mix up "is work" and "works" again!'}
+                </p>
+            </div>
+        `;
+        document.getElementById('nextBtn').style.display = 'none';
+    }
+
+    function resetQuiz() {
+        currentQ = 0;
+        score = 0;
+        document.getElementById('scoreDisplay').textContent = `Score: 0`;
+        
+        // Restore quiz card HTML structure if it was overwritten by results
+        const card = document.getElementById('quizCard');
+        card.innerHTML = `
+            <div class="progress">
+                <span id="questionNum"></span>
+                <span id="questionType"></span>
+            </div>
+            <div class="sentence" id="sentenceText"></div>
+            <div class="options-grid" id="optionsGrid"></div>
+            <div class="feedback" id="feedbackText"></div>
+        `;
+        
+        loadQuestion();
+    }
+
+    window.onload = loadQuestion;
+</script>
+
+</body>
+</html>
