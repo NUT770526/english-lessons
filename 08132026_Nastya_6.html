@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3. Correct the Mistake ⭐</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --neon-green: #22c55e;
+            --neon-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.6rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .exercise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .sentence-card {
+            background: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .incorrect-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--neon-red);
+            line-height: 1.4;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .input-field {
+            background: #1e293b;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-field:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
+        }
+
+        .correct-hint {
+            display: none;
+            font-size: 0.95rem;
+            color: var(--neon-green);
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* CHECKING STATES */
+        .sentence-card.correct {
+            border-color: var(--neon-green);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .sentence-card.wrong {
+            border-color: var(--neon-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+        }
+
+        .btn-check:hover {
+            transform: scale(1.03);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 500px) {
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>3. Correct the mistake ⭐</h1>
+        <p>Найди ошибку и напиши предложение правильно</p>
+    </div>
+
+    <div class="exercise-list" id="exerciseList"></div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        <div class="score-display" id="scoreDisplay"></div>
+        <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+    </div>
+</div>
+
+<script>
+    const exerciseData = [
+        {
+            id: 1,
+            wrong: "She is look like her mother.",
+            correct: "She looks like her mother."
+        },
+        {
+            id: 2,
+            wrong: "He is taking after his father.",
+            correct: "He takes after his father."
+        },
+        {
+            id: 3,
+            wrong: "They are usually behaving well.",
+            correct: "They usually behave well."
+        },
+        {
+            id: 4,
+            wrong: "I am hearing music.",
+            correct: "I hear music."
+        },
+        {
+            id: 5,
+            wrong: "She is being cheerful every day.",
+            correct: "She is cheerful every day."
+        },
+        {
+            id: 6,
+            wrong: "A stubborn person change his mind easily.",
+            correct: "A stubborn person changes his mind easily."
+        },
+        {
+            id: 7,
+            wrong: "Look! He smiles now.",
+            correct: "Look! He is smiling now."
+        },
+        {
+            id: 8,
+            wrong: "They describe a picture right now.",
+            correct: "They are describing a picture right now."
+        },
+        {
+            id: 9,
+            wrong: "A generous person don't help people.",
+            correct: "A generous person doesn't help people."
+        },
+        {
+            id: 10,
+            wrong: "We talk about our lesson at the moment.",
+            correct: "We are talking about our lesson at the moment."
+        }
+    ];
+
+    let userInputs = {};
+
+    function renderExercise() {
+        const list = document.getElementById('exerciseList');
+        list.innerHTML = '';
+
+        exerciseData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'sentence-card';
+            card.id = `card-${item.id}`;
+
+            const savedValue = userInputs[item.id] || '';
+
+            card.innerHTML = `
+                <div class="incorrect-text">❌ ${item.id}. ${item.wrong}</div>
+                <div class="input-group">
+                    <label for="input-${item.id}">Напиши правильное предложение:</label>
+                    <input 
+                        type="text" 
+                        id="input-${item.id}" 
+                        class="input-field" 
+                        value="${savedValue}" 
+                        placeholder="Type correct sentence here..."
+                        oninput="onInputChange(${item.id}, this.value)"
+                    />
+                </div>
+                <div class="correct-hint" id="hint-${item.id}">
+                    ✔️ Правильно: ${item.correct}
+                </div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function onInputChange(id, val) {
+        userInputs[id] = val;
+        const card = document.getElementById(`card-${id}`);
+        card.classList.remove('correct', 'wrong');
+        document.getElementById(`hint-${id}`).style.display = 'none';
+    }
+
+    function normalizeText(text) {
+        return text.trim().toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ");
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        exerciseData.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const hint = document.getElementById(`hint-${item.id}`);
+            const userVal = userInputs[item.id] || '';
+
+            const isCorrect = normalizeText(userVal) === normalizeText(item.correct);
+
+            card.classList.remove('correct', 'wrong');
+
+            if (isCorrect) {
+                card.classList.add('correct');
+                hint.style.display = 'none';
+                correctCount++;
+            } else {
+                card.classList.add('wrong');
+                hint.style.display = 'block';
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        if (correctCount === exerciseData.length) {
+            scoreDisplay.style.color = 'var(--neon-green)';
+            scoreDisplay.textContent = `🎉 Brilliant! ${correctCount} / ${exerciseData.length}`;
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+            scoreDisplay.textContent = `Score: ${correctCount} / ${exerciseData.length}`;
+        }
+    }
+
+    function resetExercise() {
+        userInputs = {};
+        document.getElementById('scoreDisplay').textContent = '';
+        renderExercise();
+    }
+
+    window.onload = () => {
+        renderExercise();
+    };
+</script>
+
+</body>
+</html>
