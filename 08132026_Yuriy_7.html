@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 6: Translate into English</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --neon-green: #22c55e;
+            --neon-amber: #f59e0b;
+            --neon-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.7rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* RULE HINT BOX */
+        .example-box {
+            background: #111827;
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 25px;
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .example-box strong {
+            color: var(--accent-blue);
+        }
+
+        .example-box .tag {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 0.82rem;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        .example-box .tag-be {
+            background: rgba(129, 140, 248, 0.2);
+            color: var(--accent-purple);
+        }
+
+        /* QUIZ CARDS */
+        .quiz-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .quiz-card {
+            background: #111827;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-card:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .original-sentence {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .arrow-icon {
+            color: var(--accent-purple);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .input-full {
+            background: #1e293b;
+            color: var(--accent-blue);
+            border: 2px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            outline: none;
+            transition: all 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-full:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .quiz-card.correct {
+            border-color: var(--neon-green);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .quiz-card.wrong {
+            border-color: var(--neon-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .hint-text {
+            display: none;
+            font-size: 0.88rem;
+            color: var(--neon-amber);
+            margin-top: 2px;
+        }
+
+        .quiz-card.wrong .hint-text {
+            display: block;
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+        }
+
+        .btn-check:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 650px) {
+            .input-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .arrow-icon {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Translate into English</h1>
+        <p>Mastering Business Vocabulary: Actions vs. States (To Be)</p>
+    </div>
+
+    <!-- HINT BOX -->
+    <div class="example-box">
+        <div><span class="tag">ACTION</span> <strong>Present Simple:</strong> I check... / He doesn't check... / Do you check...?</div>
+        <div style="margin-top: 6px;"><span class="tag tag-be">STATE</span> <strong>Verb TO BE:</strong> She is busy... / They aren't ready... / Is he late...?</div>
+    </div>
+
+    <div class="quiz-list" id="quizList"></div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetAndShuffle()">Shuffle & Reset 🔄</button>
+        <div class="score-display" id="scoreDisplay"></div>
+        <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+    </div>
+</div>
+
+<script>
+    let userAnswers = {};
+    let currentDataset = [];
+
+    const rawDataset = [
+        // 1. Actions (Positive, Negative, Questions)
+        { 
+            id: 1, 
+            ru: "Я проверяю электронную почту каждое утро.", 
+            correct: ["I check emails every morning.", "I check email every morning."], 
+            hint: "I check emails every morning." 
+        },
+        { 
+            id: 2, 
+            ru: "Мы готовим отчет каждый понедельник.", 
+            correct: ["We prepare a report every Monday."], 
+            hint: "We prepare a report every Monday." 
+        },
+        { 
+            id: 3, 
+            ru: "Ты звонишь клиентам каждый день?", 
+            correct: ["Do you call clients every day?", "Do you call a client every day?"], 
+            hint: "Do you call clients every day?" 
+        },
+        { 
+            id: 4, 
+            ru: "Она отвечает на письма быстро.", 
+            correct: ["She answers emails rapidly."], 
+            hint: "She answers emails rapidly." 
+        },
+        { 
+            id: 5, 
+            ru: "Мы не посещаем встречи по средам.", 
+            correct: ["We don't attend meetings on Wednesdays.", "We do not attend meetings on Wednesdays."], 
+            hint: "We don't attend meetings on Wednesdays." 
+        },
+        { 
+            id: 6, 
+            ru: "Я делаю телефонный звонок менеджеру.", 
+            correct: ["I make a phone call to the manager.", "I make a phone call to my manager."], 
+            hint: "I make a phone call to the manager." 
+        },
+        { 
+            id: 7, 
+            ru: "Они отправляют счета вовремя.", 
+            correct: ["They send invoices on time."], 
+            hint: "They send invoices on time." 
+        },
+        { 
+            id: 8, 
+            ru: "Она не решает проблему быстро.", 
+            correct: ["She doesn't solve a problem rapidly.", "She doesn't solve a problem very fast.", "She does not solve a problem rapidly.", "She does not solve a problem very fast."], 
+            hint: "She doesn't solve a problem very fast." 
+        },
+        { 
+            id: 9, 
+            ru: "Вы обновляете таблицу с новыми цифрами?", 
+            correct: ["Do you update a spreadsheet with new figures?", "Do you update the spreadsheet with new figures?"], 
+            hint: "Do you update a spreadsheet with new figures?" 
+        },
+        { 
+            id: 10, 
+            ru: "Он пишет отчет каждую пятницу.", 
+            correct: ["He writes a report every Friday."], 
+            hint: "He writes a report every Friday." 
+        },
+        { 
+            id: 11, 
+            ru: "Вы заканчиваете работу в 5:00 вечера?", 
+            correct: ["Do you finish work at 5:00 PM?", "Do you finish work at 5 PM?"], 
+            hint: "Do you finish work at 5:00 PM?" 
+        },
+        { 
+            id: 12, 
+            ru: "Он присоединяется к онлайн-встрече через Zoom.", 
+            correct: ["He joins an online meeting via Zoom."], 
+            hint: "He joins an online meeting via Zoom." 
+        },
+
+        // 2. States / Verb TO BE (Positive, Negative, Questions)
+        { 
+            id: 13, 
+            ru: "Она занята сегодня.", 
+            correct: ["She is busy today.", "She's busy today."], 
+            hint: "She is busy today." 
+        },
+        { 
+            id: 14, 
+            ru: "Они не готовы.", 
+            correct: ["They aren't ready.", "They are not ready."], 
+            hint: "They aren't ready." 
+        },
+        { 
+            id: 15, 
+            ru: "Он опаздывает на встречу?", 
+            correct: ["Is he late for the meeting?"], 
+            hint: "Is he late for the meeting?" 
+        },
+        { 
+            id: 16, 
+            ru: "Вы ответственны за эту таблицу?", 
+            correct: ["Are you responsible for this spreadsheet?"], 
+            hint: "Are you responsible for this spreadsheet?" 
+        },
+        { 
+            id: 17, 
+            ru: "Офис открыт по выходным?", 
+            correct: ["Is the office open on weekends?"], 
+            hint: "Is the office open on weekends?" 
+        },
+        { 
+            id: 18, 
+            ru: "Я доступен прямо сейчас.", 
+            correct: ["I am available right now.", "I'm available right now."], 
+            hint: "I am available right now." 
+        },
+        { 
+            id: 19, 
+            ru: "Счет неверный.", 
+            correct: ["The invoice isn't correct.", "The invoice is not correct."], 
+            hint: "The invoice isn't correct." 
+        }
+    ];
+
+    function shuffleArray(array) {
+        let arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function renderQuiz() {
+        const container = document.getElementById('quizList');
+        container.innerHTML = '';
+
+        currentDataset.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'quiz-card';
+            card.id = `card-${item.id}`;
+
+            const userVal = userAnswers[item.id] || '';
+
+            card.innerHTML = `
+                <div class="original-sentence">
+                    <strong>${index + 1}.</strong> ${item.ru}
+                </div>
+                <div class="input-row">
+                    <span class="arrow-icon">→</span>
+                    <input type="text" class="input-full" id="input-${item.id}" 
+                        value="${userVal}" 
+                        placeholder="Type English translation here..." 
+                        oninput="registerAnswer(${item.id}, this.value)"
+                    />
+                </div>
+                <div class="hint-text">💡 Correct Translation: ${item.hint}</div>
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+    function registerAnswer(id, val) {
+        userAnswers[id] = val;
+        const card = document.getElementById(`card-${id}`);
+        card.classList.remove('correct', 'wrong');
+    }
+
+    function cleanString(str) {
+        return str
+            .toLowerCase()
+            .replace(/’/g, "'")            // normalize apostrophe
+            .replace(/[.?!,]/g, '')        // remove trailing/ending punctuation
+            .replace(/\s+/g, ' ')          // collapse multiple spaces
+            .trim();
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        currentDataset.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const rawUser = userAnswers[item.id] || '';
+            const cleanedUser = cleanString(rawUser);
+
+            const isCorrect = item.correct.some(target => cleanString(target) === cleanedUser);
+
+            card.classList.remove('correct', 'wrong');
+
+            if (isCorrect) {
+                card.classList.add('correct');
+                correctCount++;
+            } else if (cleanedUser !== '') {
+                card.classList.add('wrong');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        if (correctCount === currentDataset.length) {
+            scoreDisplay.style.color = 'var(--neon-green)';
+            scoreDisplay.textContent = `🎉 EXCELLENT! ${correctCount} / ${currentDataset.length}`;
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+            scoreDisplay.textContent = `Score: ${correctCount} / ${currentDataset.length}`;
+        }
+    }
+
+    function resetAndShuffle() {
+        userAnswers = {};
+        document.getElementById('scoreDisplay').textContent = '';
+        currentDataset = shuffleArray(rawDataset);
+        renderQuiz();
+    }
+
+    window.onload = () => {
+        resetAndShuffle();
+    };
+</script>
+
+</body>
+</html>
