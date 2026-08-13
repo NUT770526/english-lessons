@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Dialogue: Roleplay Translate</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --neon-green: #22c55e;
+            --neon-amber: #f59e0b;
+            --neon-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --bubble-a: #1e293b;
+            --bubble-b: #0f172a;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.7rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* DIALOGUE BLOCK */
+        .dialogue-section {
+            background: #111827;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        .dialogue-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-purple);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .chat-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: #1e293b;
+            transition: all 0.2s ease;
+        }
+
+        .chat-row.speaker-a {
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .chat-row.speaker-b {
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .speaker-tag {
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .speaker-a .speaker-tag { color: var(--accent-blue); }
+        .speaker-b .speaker-tag { color: var(--accent-purple); }
+
+        .ru-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .input-full {
+            background: #0f172a;
+            color: var(--accent-blue);
+            border: 1.5px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.98rem;
+            font-weight: bold;
+            outline: none;
+            transition: all 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-full:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .chat-row.correct {
+            border-color: var(--neon-green);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .chat-row.wrong {
+            border-color: var(--neon-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .hint-text {
+            display: none;
+            font-size: 0.88rem;
+            color: var(--neon-amber);
+            margin-top: 4px;
+        }
+
+        .chat-row.wrong .hint-text {
+            display: block;
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+        }
+
+        .btn-check:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 650px) {
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Office Conversations: Roleplay</h1>
+        <p>Translate the dialogues into English (Actions & States in context)</p>
+    </div>
+
+    <div id="dialoguesContainer"></div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetAnswers()">Reset Form 🔄</button>
+        <div class="score-display" id="scoreDisplay"></div>
+        <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+    </div>
+</div>
+
+<script>
+    let userAnswers = {};
+
+    const dialoguesData = [
+        {
+            title: "Dialogue 1: Morning Check-in ☕",
+            items: [
+                { id: 1, speaker: "A", ru: "Ты в офисе?", correct: ["Are you in the office?", "Are you at the office?"], hint: "Are you in the office?" },
+                { id: 2, speaker: "B", ru: "Да. Я проверяю электронную почту.", correct: ["Yes. I check emails.", "Yes, I check emails.", "Yes. I'm checking emails.", "Yes, I check email."], hint: "Yes. I check emails." },
+                { id: 3, speaker: "A", ru: "Ты готовишь отчет сегодня?", correct: ["Do you prepare a report today?", "Are you preparing a report today?"], hint: "Do you prepare a report today?" },
+                { id: 4, speaker: "B", ru: "Нет. Сегодня я звоню клиентам.", correct: ["No. Today I call clients.", "No, today I call clients.", "No. I call clients today."], hint: "No. Today I call clients." }
+            ]
+        },
+        {
+            title: "Dialogue 2: Status Update 📊",
+            items: [
+                { id: 5, speaker: "A", ru: "Она занята сейчас?", correct: ["Is she busy now?", "Is she busy right now?"], hint: "Is she busy right now?" },
+                { id: 6, speaker: "B", ru: "Нет, она доступна. Она отвечает на письма.", correct: ["No, she is available. She answers emails.", "No, she's available. She answers emails."], hint: "No, she is available. She answers emails." },
+                { id: 7, speaker: "A", ru: "Они готовы презентовать проект?", correct: ["Are they ready to present the project?"], hint: "Are they ready to present the project?" },
+                { id: 8, speaker: "B", ru: "Нет, они не готовы. Они обновляют таблицу.", correct: ["No, they aren't ready. They update a spreadsheet.", "No, they are not ready. They update the spreadsheet."], hint: "No, they aren't ready. They update a spreadsheet." }
+            ]
+        },
+        {
+            title: "Dialogue 3: Problem Solving 💼",
+            items: [
+                { id: 9, speaker: "A", ru: "Счет верный?", correct: ["Is the invoice correct?"], hint: "Is the invoice correct?" },
+                { id: 10, speaker: "B", ru: "Нет, счет неверный. Я не отправляю его.", correct: ["No, the invoice isn't correct. I don't send it.", "No, the invoice is not correct. I don't send it."], hint: "No, the invoice isn't correct. I don't send it." },
+                { id: 11, speaker: "A", ru: "Менеджер свободен?", correct: ["Is the manager available?", "Is the manager free?"], hint: "Is the manager available?" },
+                { id: 12, speaker: "B", ru: "Да. Он решает эту проблему прямо сейчас.", correct: ["Yes. He solves this problem right now.", "Yes, he solves this problem right now."], hint: "Yes. He solves this problem right now." }
+            ]
+        }
+    ];
+
+    function renderDialogues() {
+        const container = document.getElementById('dialoguesContainer');
+        container.innerHTML = '';
+
+        dialoguesData.forEach(dialogue => {
+            const section = document.createElement('div');
+            section.className = 'dialogue-section';
+
+            let itemsHTML = '';
+            dialogue.items.forEach(item => {
+                const userVal = userAnswers[item.id] || '';
+                const speakerClass = item.speaker === 'A' ? 'speaker-a' : 'speaker-b';
+
+                itemsHTML += `
+                    <div class="chat-row ${speakerClass}" id="card-${item.id}">
+                        <div class="speaker-tag">Speaker ${item.speaker}</div>
+                        <div class="ru-text">— ${item.ru}</div>
+                        <input type="text" class="input-full" id="input-${item.id}" 
+                            value="${userVal}" 
+                            placeholder="Type English reply..." 
+                            oninput="registerAnswer(${item.id}, this.value)"
+                        />
+                        <div class="hint-text">💡 Answer: ${item.hint}</div>
+                    </div>
+                `;
+            });
+
+            section.innerHTML = `
+                <div class="dialogue-title">${dialogue.title}</div>
+                <div class="chat-list">${itemsHTML}</div>
+            `;
+
+            container.appendChild(section);
+        });
+    }
+
+    function registerAnswer(id, val) {
+        userAnswers[id] = val;
+        const card = document.getElementById(`card-${id}`);
+        card.classList.remove('correct', 'wrong');
+    }
+
+    function cleanString(str) {
+        return str
+            .toLowerCase()
+            .replace(/’/g, "'")
+            .replace(/[.?!,]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+        let totalCount = 0;
+
+        dialoguesData.forEach(dialogue => {
+            dialogue.items.forEach(item => {
+                totalCount++;
+                const card = document.getElementById(`card-${item.id}`);
+                const rawUser = userAnswers[item.id] || '';
+                const cleanedUser = cleanString(rawUser);
+
+                const isCorrect = item.correct.some(target => cleanString(target) === cleanedUser);
+
+                card.classList.remove('correct', 'wrong');
+
+                if (isCorrect) {
+                    card.classList.add('correct');
+                    correctCount++;
+                } else if (cleanedUser !== '') {
+                    card.classList.add('wrong');
+                }
+            });
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        if (correctCount === totalCount) {
+            scoreDisplay.style.color = 'var(--neon-green)';
+            scoreDisplay.textContent = `🎉 FANTASTIC! ${correctCount} / ${totalCount}`;
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+            scoreDisplay.textContent = `Score: ${correctCount} / ${totalCount}`;
+        }
+    }
+
+    function resetAnswers() {
+        userAnswers = {};
+        document.getElementById('scoreDisplay').textContent = '';
+        renderDialogues();
+    }
+
+    window.onload = () => {
+        renderDialogues();
+    };
+</script>
+
+</body>
+</html>
