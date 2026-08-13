@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1. Find the Question Word ⭐</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --accent-yellow: #facc15;
+            --neon-green: #22c55e;
+            --neon-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 820px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.6rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* VOCABULARY HELPER BOX */
+        .vocab-box {
+            background: #111827;
+            border: 1px solid var(--accent-yellow);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .vocab-title {
+            font-weight: bold;
+            color: var(--accent-yellow);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1rem;
+        }
+
+        .vocab-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        .vocab-item strong {
+            color: var(--accent-blue);
+        }
+
+        .vocab-item span {
+            color: var(--text-muted);
+        }
+
+        /* QUESTION WORDS BANNER */
+        .qw-banner {
+            background: rgba(129, 140, 248, 0.1);
+            border: 1px dashed var(--accent-purple);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--accent-blue);
+            letter-spacing: 1px;
+        }
+
+        .exercise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .question-card {
+            background: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .answer-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            color: var(--text-muted);
+        }
+
+        .answer-label {
+            font-weight: bold;
+            color: var(--accent-purple);
+        }
+
+        .answer-text {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .arrow-down {
+            color: var(--accent-blue);
+            font-size: 1.1rem;
+            margin-left: 28px;
+        }
+
+        .question-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            flex-wrap: wrap;
+        }
+
+        .select-inline {
+            background: #1e293b;
+            border: 1.5px solid var(--border-color);
+            color: var(--accent-blue);
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .select-inline:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+            transform: scale(1.1);
+        }
+
+        /* CHECKING STATES */
+        .question-card.correct {
+            border-color: var(--neon-green);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .question-card.wrong {
+            border-color: var(--neon-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+        }
+
+        .btn-check:hover {
+            transform: scale(1.03);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 500px) {
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>1. Find the Question Word ⭐</h1>
+        <p>Прочитай відповідь та обери правильне питальне слово. Натисни 🔊 для озвучки!</p>
+    </div>
+
+    <!-- VOCABULARY HELPER -->
+    <div class="vocab-box">
+        <div class="vocab-title">💡 Словничок підказка (UA):</div>
+        <div class="vocab-list">
+            <div class="vocab-item"><strong>take after</strong> — <span>бути схожим на когось</span></div>
+            <div class="vocab-item"><strong>stubborn</strong> — <span>упертий</span></div>
+            <div class="vocab-item"><strong>cheerful</strong> — <span>веселий / життєрадісний</span></div>
+            <div class="vocab-item"><strong>generous</strong> — <span>щедрий</span></div>
+            <div class="vocab-item"><strong>behave well</strong> — <span>добре поводитися</span></div>
+            <div class="vocab-item"><strong>perfectionist</strong> — <span>перфекціоніст</span></div>
+        </div>
+    </div>
+
+    <!-- QUESTION WORDS BANNER -->
+    <div class="qw-banner">
+        WHO • WHAT • WHERE • WHEN • WHY • HOW • WHICH • WHOSE
+    </div>
+
+    <div class="exercise-list" id="exerciseList"></div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        <div class="score-display" id="scoreDisplay"></div>
+        <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+    </div>
+</div>
+
+<script>
+    const questionWordsOptions = ["WHO", "WHAT", "WHERE", "WHEN", "WHY", "HOW", "WHICH", "WHOSE"];
+
+    const exerciseData = [
+        {
+            id: 1,
+            answerText: "My father.",
+            questionPrefix: "",
+            questionSuffix: "do you take after?",
+            correct: "WHO",
+            speakFull: "My father. Who do you take after?"
+        },
+        {
+            id: 2,
+            answerText: "In Odesa.",
+            questionPrefix: "",
+            questionSuffix: "do you live?",
+            correct: "WHERE",
+            speakFull: "In Odesa. Where do you live?"
+        },
+        {
+            id: 3,
+            answerText: "Because he is very stubborn.",
+            questionPrefix: "",
+            questionSuffix: "doesn't he change his mind?",
+            correct: "WHY",
+            speakFull: "Because he is very stubborn. Why doesn't he change his mind?"
+        },
+        {
+            id: 4,
+            answerText: "At 7 o'clock in the morning.",
+            questionPrefix: "",
+            questionSuffix: "does she usually wake up?",
+            correct: "WHEN",
+            speakFull: "At 7 o'clock in the morning. When does she usually wake up?"
+        },
+        {
+            id: 5,
+            answerText: "She is describing a picture.",
+            questionPrefix: "",
+            questionSuffix: "is she doing right now?",
+            correct: "WHAT",
+            speakFull: "She is describing a picture. What is she doing right now?"
+        },
+        {
+            id: 6,
+            answerText: "He is very cheerful and generous.",
+            questionPrefix: "",
+            questionSuffix: "is your best friend like?",
+            correct: "WHAT",
+            speakFull: "He is very cheerful and generous. What is your best friend like?"
+        },
+        {
+            id: 7,
+            answerText: "It is my sister's bag.",
+            questionPrefix: "",
+            questionSuffix: "bag is this on the table?",
+            correct: "WHOSE",
+            speakFull: "It is my sister's bag. Whose bag is this on the table?"
+        },
+        {
+            id: 8,
+            answerText: "The blue one, because she is a perfectionist.",
+            questionPrefix: "",
+            questionSuffix: "dress does she prefer?",
+            correct: "WHICH",
+            speakFull: "The blue one, because she is a perfectionist. Which dress does she prefer?"
+        },
+        {
+            id: 9,
+            answerText: "They behave very well every day.",
+            questionPrefix: "",
+            questionSuffix: "do they usually behave at school?",
+            correct: "HOW",
+            speakFull: "They behave very well every day. How do they usually behave at school?"
+        },
+        {
+            id: 10,
+            answerText: "My English teacher.",
+            questionPrefix: "",
+            questionSuffix: "is talking to her right now?",
+            correct: "WHO",
+            speakFull: "My English teacher. Who is talking to her right now?"
+        }
+    ];
+
+    let userSelections = {};
+
+    function playAudio(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Ваш браузер не підтримує озвучку мови.");
+        }
+    }
+
+    function renderExercise() {
+        const list = document.getElementById('exerciseList');
+        list.innerHTML = '';
+
+        exerciseData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `card-${item.id}`;
+
+            const selected = userSelections[item.id] || '';
+
+            let optionsHtml = `<option value="" disabled ${!selected ? 'selected' : ''}>_____</option>`;
+            questionWordsOptions.forEach(qw => {
+                optionsHtml += `<option value="${qw}" ${selected === qw ? 'selected' : ''}>${qw}</option>`;
+            });
+
+            card.innerHTML = `
+                <div class="answer-box">
+                    <button class="audio-btn" onclick="playAudio('${item.speakFull.replace(/'/g, "\\'")}')" title="Прослухати">🔊</button>
+                    <span class="answer-label">Answer:</span>
+                    <span class="answer-text">${item.answerText}</span>
+                </div>
+                <div class="arrow-down">↓</div>
+                <div class="question-box">
+                    <span>${item.id}.</span>
+                    <span>${item.questionPrefix}</span>
+                    <select class="select-inline" id="select-${item.id}" onchange="selectQuestionWord(${item.id}, this.value)">
+                        ${optionsHtml}
+                    </select>
+                    <span>${item.questionSuffix}</span>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function selectQuestionWord(id, value) {
+        userSelections[id] = value;
+        const card = document.getElementById(`card-${id}`);
+        card.classList.remove('correct', 'wrong');
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        exerciseData.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const selected = userSelections[item.id];
+
+            card.classList.remove('correct', 'wrong');
+
+            if (selected === item.correct) {
+                card.classList.add('correct');
+                correctCount++;
+            } else if (selected) {
+                card.classList.add('wrong');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        if (correctCount === exerciseData.length) {
+            scoreDisplay.style.color = 'var(--neon-green)';
+            scoreDisplay.textContent = `🎉 Superb! ${correctCount} / ${exerciseData.length}`;
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+            scoreDisplay.textContent = `Score: ${correctCount} / ${exerciseData.length}`;
+        }
+    }
+
+    function resetExercise() {
+        userSelections = {};
+        document.getElementById('scoreDisplay').textContent = '';
+        renderExercise();
+    }
+
+    window.onload = () => {
+        renderExercise();
+    };
+</script>
+
+</body>
+</html>
