@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5. Time Expressions — Present Simple vs Continuous</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --neon-green: #22c55e;
+            --neon-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.6rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .exercise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .item-card {
+            background: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+        }
+
+        .item-num {
+            font-weight: bold;
+            color: var(--accent-purple);
+        }
+
+        .time-word {
+            font-weight: bold;
+            color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-tense {
+            background: #1e293b;
+            color: var(--text-muted);
+            border: 1.5px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-tense:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-main);
+        }
+
+        .btn-tense.active-simple {
+            background: var(--accent-purple);
+            color: #ffffff;
+            border-color: var(--accent-purple);
+        }
+
+        .btn-tense.active-continuous {
+            background: var(--accent-blue);
+            color: #0f172a;
+            border-color: var(--accent-blue);
+        }
+
+        /* CHECKING STATES */
+        .item-card.correct {
+            border-color: var(--neon-green);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .item-card.wrong {
+            border-color: var(--neon-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+        }
+
+        .btn-check:hover {
+            transform: scale(1.03);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .item-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .button-group {
+                width: 100%;
+            }
+            .btn-tense {
+                flex: 1;
+                text-align: center;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>5. Time Expressions</h1>
+        <p>Соотнеси показатель времени с <b>Present Simple</b> или <b>Present Continuous</b></p>
+    </div>
+
+    <div class="exercise-list" id="exerciseList"></div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        <div class="score-display" id="scoreDisplay"></div>
+        <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+    </div>
+</div>
+
+<script>
+    const exerciseData = [
+        {
+            id: 1,
+            word: "usually",
+            context: "She usually is cheerful.",
+            tense: "Present Simple"
+        },
+        {
+            id: 2,
+            word: "now",
+            context: "He is doing homework now.",
+            tense: "Present Continuous"
+        },
+        {
+            id: 3,
+            word: "every day",
+            context: "They behave well every day.",
+            tense: "Present Simple"
+        },
+        {
+            id: 4,
+            word: "at the moment",
+            context: "She is talking at the moment.",
+            tense: "Present Continuous"
+        },
+        {
+            id: 5,
+            word: "often",
+            context: "A generous person often helps.",
+            tense: "Present Simple"
+        },
+        {
+            id: 6,
+            word: "Look!",
+            context: "Look! He is smiling.",
+            tense: "Present Continuous"
+        },
+        {
+            id: 7,
+            word: "always",
+            context: "He is always stubborn.",
+            tense: "Present Simple"
+        },
+        {
+            id: 8,
+            word: "right now",
+            context: "They are describing a picture right now.",
+            tense: "Present Continuous"
+        },
+        {
+            id: 9,
+            word: "today",
+            context: "He is behaving well today.",
+            tense: "Present Continuous"
+        },
+        {
+            id: 10,
+            word: "this week",
+            context: "We are working hard this week.",
+            tense: "Present Continuous"
+        }
+    ];
+
+    let userSelections = {};
+
+    function renderExercise() {
+        const list = document.getElementById('exerciseList');
+        list.innerHTML = '';
+
+        exerciseData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'item-card';
+            card.id = `card-${item.id}`;
+
+            const selected = userSelections[item.id];
+
+            const btnSimpleClass = selected === 'Present Simple' ? 'btn-tense active-simple' : 'btn-tense';
+            const btnContinuousClass = selected === 'Present Continuous' ? 'btn-tense active-continuous' : 'btn-tense';
+
+            card.innerHTML = `
+                <div class="item-info">
+                    <span class="item-num">${item.id}.</span>
+                    <span class="time-word">${item.word}</span>
+                </div>
+                <div class="button-group">
+                    <button class="${btnSimpleClass}" onclick="selectTense(${item.id}, 'Present Simple')">Present Simple</button>
+                    <button class="${btnContinuousClass}" onclick="selectTense(${item.id}, 'Present Continuous')">Present Continuous</button>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function selectTense(id, tense) {
+        userSelections[id] = tense;
+        const card = document.getElementById(`card-${id}`);
+        card.classList.remove('correct', 'wrong');
+        renderExercise();
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        exerciseData.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const selected = userSelections[item.id];
+
+            card.classList.remove('correct', 'wrong');
+
+            if (selected === item.tense) {
+                card.classList.add('correct');
+                correctCount++;
+            } else if (selected) {
+                card.classList.add('wrong');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        if (correctCount === exerciseData.length) {
+            scoreDisplay.style.color = 'var(--neon-green)';
+            scoreDisplay.textContent = `🎉 Superb! ${correctCount} / ${exerciseData.length}`;
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+            scoreDisplay.textContent = `Score: ${correctCount} / ${exerciseData.length}`;
+        }
+    }
+
+    function resetExercise() {
+        userSelections = {};
+        document.getElementById('scoreDisplay').textContent = '';
+        renderExercise();
+    }
+
+    window.onload = () => {
+        renderExercise();
+    };
+</script>
+
+</body>
+</html>
