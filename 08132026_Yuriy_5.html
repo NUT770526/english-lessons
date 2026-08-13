@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 4: Action vs. State (Negatives)</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --neon-green: #22c55e;
+            --neon-amber: #f59e0b;
+            --neon-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.7rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* EXAMPLE BOX */
+        .example-box {
+            background: #111827;
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .example-box strong {
+            color: var(--accent-blue);
+        }
+
+        .example-box .rule-tag {
+            display: inline-block;
+            background: rgba(129, 140, 248, 0.2);
+            color: var(--accent-purple);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .example-box .arrow {
+            color: var(--neon-green);
+            font-weight: bold;
+        }
+
+        /* QUIZ CARDS */
+        .quiz-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .quiz-card {
+            background: #111827;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-card:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .original-sentence {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .arrow-icon {
+            color: var(--accent-purple);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .input-full {
+            background: #1e293b;
+            color: var(--accent-blue);
+            border: 2px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            outline: none;
+            transition: all 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-full:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .quiz-card.correct {
+            border-color: var(--neon-green);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .quiz-card.wrong {
+            border-color: var(--neon-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .hint-text {
+            display: none;
+            font-size: 0.88rem;
+            color: var(--neon-amber);
+            margin-top: 2px;
+        }
+
+        .quiz-card.wrong .hint-text {
+            display: block;
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+        }
+
+        .btn-check:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 650px) {
+            .input-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .arrow-icon {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Exercise 4. Make the sentence negative</h1>
+        <p>Actions ➔ use <strong>don't / doesn't</strong> | States (to be) ➔ use <strong>am not / isn't / aren't</strong></p>
+    </div>
+
+    <!-- EXAMPLE BOX -->
+    <div class="example-box">
+        <div><span class="rule-tag">ACTION</span> She prepares a report. <span class="arrow">→</span> <em>She doesn't prepare a report.</em></div>
+        <div style="margin-top: 6px;"><span class="rule-tag">STATE</span> She is busy till 5:00 PM. <span class="arrow">→</span> <em>She isn't busy till 5:00 PM.</em></div>
+    </div>
+
+    <div class="quiz-list" id="quizList"></div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetAndShuffle()">Shuffle & Reset 🔄</button>
+        <div class="score-display" id="scoreDisplay"></div>
+        <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+    </div>
+</div>
+
+<script>
+    let userAnswers = {};
+    let currentDataset = [];
+
+    const rawDataset = [
+        // Action sentences (don't / doesn't)
+        { id: 1, original: "She prepares a report.", correct: ["she doesn't prepare a report.", "she doesn't prepare a report", "she does not prepare a report.", "she does not prepare a report"], hint: "She doesn't prepare a report." },
+        { id: 2, original: "We attend meetings.", correct: ["we don't attend meetings.", "we don't attend meetings", "we do not attend meetings.", "we do not attend meetings"], hint: "We don't attend meetings." },
+        { id: 3, original: "He calls a client.", correct: ["he doesn't call a client.", "he doesn't call a client", "he does not call a client.", "he does not call a client"], hint: "He doesn't call a client." },
+        { id: 4, original: "They send invoices.", correct: ["they don't send invoices.", "they don't send invoices", "they do not send invoices.", "they do not send invoices"], hint: "They don't send invoices." },
+        { id: 5, original: "I check emails in the morning.", correct: ["i don't check emails in the morning.", "i don't check emails in the morning", "i do not check emails in the morning.", "i do not check emails in the morning"], hint: "I don't check emails in the morning." },
+        { id: 6, original: "She answers emails rapidly.", correct: ["she doesn't answer emails rapidly.", "she doesn't answer emails rapidly", "she does not answer emails rapidly.", "she does not answer emails rapidly"], hint: "She doesn't answer emails rapidly." },
+        { id: 7, original: "He writes a report every Friday.", correct: ["he doesn't write a report every Friday.", "he doesn't write a report every Friday", "he does not write a report every Friday.", "he does not write a report every Friday"], hint: "He doesn't write a report every Friday." },
+        { id: 8, original: "They talk to customers all day.", correct: ["they don't talk to customers all day.", "they don't talk to customers all day", "they do not talk to customers all day.", "they do not talk to customers all day"], hint: "They don't talk to customers all day." },
+        
+        // State sentences (to be: am not / isn't / aren't)
+        { id: 9, original: "She is busy till 5:00 PM.", correct: ["she isn't busy till 5:00 pm.", "she isn't busy till 5:00 pm", "she is not busy till 5:00 pm.", "she is not busy till 5:00 pm"], hint: "She isn't busy till 5:00 PM." },
+        { id: 10, original: "He is late for the meeting.", correct: ["he isn't late for the meeting.", "he isn't late for the meeting", "he is not late for the meeting.", "he is not late for the meeting"], hint: "He isn't late for the meeting." },
+        { id: 11, original: "They are ready to present the project.", correct: ["they aren't ready to present the project.", "they aren't ready to present the project", "they are not ready to present the project.", "they are not ready to present the project"], hint: "They aren't ready to present the project." },
+        { id: 12, original: "I am available right now.", correct: ["i'm not available right now.", "i'm not available right now", "i am not available right now.", "i am not available right now"], hint: "I'm not available right now." },
+        { id: 13, original: "The office is open on weekends.", correct: ["the office isn't open on weekends.", "the office isn't open on weekends", "the office is not open on weekends.", "the office is not open on weekends"], hint: "The office isn't open on weekends." },
+        { id: 14, original: "We are responsible for this spreadsheet.", correct: ["we aren't responsible for this spreadsheet.", "we aren't responsible for this spreadsheet", "we are not responsible for this spreadsheet.", "we are not responsible for this spreadsheet"], hint: "We aren't responsible for this spreadsheet." },
+        { id: 15, original: "The invoice is correct.", correct: ["the invoice isn't correct.", "the invoice isn't correct", "the invoice is not correct.", "the invoice is not correct"], hint: "The invoice isn't correct." }
+    ];
+
+    function shuffleArray(array) {
+        let arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function renderQuiz() {
+        const container = document.getElementById('quizList');
+        container.innerHTML = '';
+
+        currentDataset.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'quiz-card';
+            card.id = `card-${item.id}`;
+
+            const userVal = userAnswers[item.id] || '';
+
+            card.innerHTML = `
+                <div class="original-sentence">
+                    <strong>${index + 1}.</strong> ${item.original}
+                </div>
+                <div class="input-row">
+                    <span class="arrow-icon">→</span>
+                    <input type="text" class="input-full" id="input-${item.id}" 
+                        value="${userVal}" 
+                        placeholder="Type negative sentence..." 
+                        oninput="registerAnswer(${item.id}, this.value)"
+                    />
+                </div>
+                <div class="hint-text">💡 Correct: ${item.hint}</div>
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+    function registerAnswer(id, val) {
+        userAnswers[id] = val;
+        const card = document.getElementById(`card-${id}`);
+        card.classList.remove('correct', 'wrong');
+    }
+
+    function cleanString(str) {
+        return str
+            .toLowerCase()
+            .replace(/’/g, "'") // handle curly apostrophes
+            .replace(/\s+/g, ' ') // normalize spaces
+            .trim();
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        currentDataset.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const rawUser = userAnswers[item.id] || '';
+            const cleanedUser = cleanString(rawUser);
+
+            const isCorrect = item.correct.some(target => cleanString(target) === cleanedUser);
+
+            card.classList.remove('correct', 'wrong');
+
+            if (isCorrect) {
+                card.classList.add('correct');
+                correctCount++;
+            } else if (cleanedUser !== '') {
+                card.classList.add('wrong');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        if (correctCount === currentDataset.length) {
+            scoreDisplay.style.color = 'var(--neon-green)';
+            scoreDisplay.textContent = `🎉 PERFECT! ${correctCount} / ${currentDataset.length}`;
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+            scoreDisplay.textContent = `Score: ${correctCount} / ${currentDataset.length}`;
+        }
+    }
+
+    function resetAndShuffle() {
+        userAnswers = {};
+        document.getElementById('scoreDisplay').textContent = '';
+        currentDataset = shuffleArray(rawDataset);
+        renderQuiz();
+    }
+
+    window.onload = () => {
+        resetAndShuffle();
+    };
+</script>
+
+</body>
+</html>
