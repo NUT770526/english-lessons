@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Routine Master: Typing Practice</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --neon-green: #22c55e;
+            --neon-amber: #f59e0b;
+            --neon-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.7rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* PHRASE BANK */
+        .word-bank {
+            background: #111827;
+            border: 1px dashed var(--accent-purple);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .word-bank strong {
+            color: var(--accent-purple);
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .chip {
+            display: inline-block;
+            background: #1e293b;
+            color: var(--text-main);
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin: 3px;
+            border: 1px solid var(--border-color);
+            font-weight: 500;
+        }
+
+        /* QUIZ CARDS */
+        .quiz-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-card {
+            background: #111827;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-card:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .sentence-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            flex: 1;
+        }
+
+        .input-inline {
+            background: #1e293b;
+            color: var(--accent-blue);
+            border: 2px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            outline: none;
+            transition: all 0.2s ease;
+            width: 210px;
+        }
+
+        .input-inline:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .quiz-card.correct {
+            border-color: var(--neon-green);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .quiz-card.wrong {
+            border-color: var(--neon-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .hint-text {
+            display: none;
+            font-size: 0.85rem;
+            color: var(--neon-amber);
+            margin-top: 6px;
+        }
+
+        .quiz-card.wrong .hint-text {
+            display: block;
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+        }
+
+        .btn-check:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 650px) {
+            .quiz-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .input-inline {
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>💼 Business Routine Master</h1>
+        <p>Type the missing phrase to complete each sentence</p>
+    </div>
+
+    <!-- PHRASE BANK -->
+    <div class="word-bank">
+        <strong>💡 Phrase Bank</strong>
+        <span class="chip">check emails</span> • <span class="chip">answer emails</span> • 
+        <span class="chip">make a phone call</span> • <span class="chip">call a client</span> • 
+        <span class="chip">meet a client</span> • <span class="chip">prepare a report</span> • 
+        <span class="chip">write a report</span> • <span class="chip">send an invoice</span> • 
+        <span class="chip">check invoices</span> • <span class="chip">attend a meeting</span> • 
+        <span class="chip">join an online meeting</span> • <span class="chip">update a spreadsheet</span> • 
+        <span class="chip">talk to customers</span> • <span class="chip">solve a problem</span> • 
+        <span class="chip">finish work</span>
+    </div>
+
+    <div class="quiz-list" id="quizList"></div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetGame()">Reset 🔄</button>
+        <div class="score-display" id="scoreDisplay"></div>
+        <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+    </div>
+</div>
+
+<script>
+    let userAnswers = {};
+
+    const dataset = [
+        { id: 1, pre: "Every morning I ", post: " before breakfast.", correct: "check emails", hint: "Target phrase: check emails" },
+        { id: 2, pre: "When clients write, she ", post: " rapidly.", correct: "answers emails", hint: "Target phrase: answers emails (Pay attention to -s!)" },
+        { id: 3, pre: "I need to ", post: " to my manager.", correct: "make a phone call", hint: "Target phrase: make a phone call" },
+        { id: 4, pre: "The assistant ", post: " to confirm the time.", correct: "calls a client", hint: "Target phrase: calls a client" },
+        { id: 5, pre: "We usually ", post: " at their office.", correct: "meet a client", hint: "Target phrase: meet a client" },
+        { id: 6, pre: "He must ", post: " for the quarterly meeting.", correct: "prepare a report", hint: "Target phrase: prepare a report" },
+        { id: 7, pre: "She ", post: " every Friday afternoon.", correct: "writes a report", hint: "Target phrase: writes a report" },
+        { id: 8, pre: "They ", post: " to the buyer right now.", correct: "send an invoice", hint: "Target phrase: send an invoice" },
+        { id: 9, pre: "Before paying, we always ", post: " carefully.", correct: "check invoices", hint: "Target phrase: check invoices" },
+        { id: 10, pre: "Our team ", post: " every Monday.", correct: "attends a meeting", hint: "Target phrase: attends a meeting" },
+        { id: 11, pre: "He will ", post: " via Zoom.", correct: "join an online meeting", hint: "Target phrase: join an online meeting" },
+        { id: 12, pre: "Every Friday I ", post: " with new figures.", correct: "update a spreadsheet", hint: "Target phrase: update a spreadsheet" },
+        { id: 13, pre: "Support agents ", post: " all day.", correct: "talk to customers", hint: "Target phrase: talk to customers" },
+        { id: 14, pre: "Together we can ", post: " very fast.", correct: "solve a problem", hint: "Target phrase: solve a problem" },
+        { id: 15, pre: "I usually ", post: " at 5:00 PM.", correct: "finish work", hint: "Target phrase: finish work" }
+    ];
+
+    function renderQuiz() {
+        const container = document.getElementById('quizList');
+        container.innerHTML = '';
+
+        dataset.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'quiz-card';
+            card.id = `card-${item.id}`;
+
+            const userVal = userAnswers[item.id] || '';
+
+            card.innerHTML = `
+                <div class="sentence-text">
+                    <strong>${index + 1}.</strong> ${item.pre}
+                    <input type="text" class="input-inline" id="input-${item.id}" 
+                        value="${userVal}" 
+                        placeholder="type phrase..." 
+                        oninput="registerAnswer(${item.id}, this.value)"
+                    />
+                    ${item.post}
+                    <div class="hint-text">💡 ${item.hint}</div>
+                </div>
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+    function registerAnswer(id, val) {
+        userAnswers[id] = val.trim();
+        const card = document.getElementById(`card-${id}`);
+        card.classList.remove('correct', 'wrong');
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        dataset.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const answer = (userAnswers[item.id] || '').toLowerCase();
+            const target = item.correct.toLowerCase();
+
+            card.classList.remove('correct', 'wrong');
+
+            if (answer === target) {
+                card.classList.add('correct');
+                correctCount++;
+            } else if (answer !== '') {
+                card.classList.add('wrong');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        if (correctCount === dataset.length) {
+            scoreDisplay.style.color = 'var(--neon-green)';
+            scoreDisplay.textContent = `🎉 PERFECT! ${correctCount} / ${dataset.length}`;
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+            scoreDisplay.textContent = `Score: ${correctCount} / ${dataset.length}`;
+        }
+    }
+
+    function resetGame() {
+        userAnswers = {};
+        document.getElementById('scoreDisplay').textContent = '';
+        renderQuiz();
+    }
+
+    window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
