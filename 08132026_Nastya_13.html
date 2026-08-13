@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2. Build the Question ⭐⭐⭐</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --accent-yellow: #facc15;
+            --neon-green: #22c55e;
+            --neon-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --chip-bg: #334155;
+            --chip-selected: #0284c7;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 820px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.6rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* VOCABULARY HELPER BOX */
+        .vocab-box {
+            background: #111827;
+            border: 1px solid var(--accent-yellow);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 25px;
+        }
+
+        .vocab-title {
+            font-weight: bold;
+            color: var(--accent-yellow);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1rem;
+        }
+
+        .vocab-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        .vocab-item strong {
+            color: var(--accent-blue);
+        }
+
+        .vocab-item span {
+            color: var(--text-muted);
+        }
+
+        .exercise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .item-card {
+            background: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .item-num {
+            font-weight: bold;
+            color: var(--accent-purple);
+            font-size: 1.1rem;
+        }
+
+        /* ANSWER ZONE (SLOTS) */
+        .answer-zone {
+            min-height: 48px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            transition: border-color 0.2s ease;
+        }
+
+        .placeholder-text {
+            color: #475569;
+            font-size: 0.9rem;
+            font-style: italic;
+            user-select: none;
+        }
+
+        /* WORD POOL */
+        .word-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: #1e293b;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* CHIPS (CARDS) */
+        .chip {
+            background: var(--chip-bg);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .chip:hover {
+            background: var(--accent-purple);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .chip.in-answer {
+            background: var(--chip-selected);
+            color: #ffffff;
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            margin-left: auto;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+            transform: scale(1.1);
+        }
+
+        /* STATES */
+        .item-card.correct {
+            border-color: var(--neon-green);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .item-card.correct .answer-zone {
+            border-color: var(--neon-green);
+            border-style: solid;
+        }
+
+        .item-card.wrong {
+            border-color: var(--neon-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .item-card.wrong .answer-zone {
+            border-color: var(--neon-red);
+            border-style: solid;
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+        }
+
+        .btn-check:hover {
+            transform: scale(1.03);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 500px) {
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>2. Build the question ⭐⭐⭐</h1>
+        <p>Натискай на слова, щоб скласти правильне запитання. Прослухай 🔊 результат!</p>
+    </div>
+
+    <!-- VOCABULARY HELPER -->
+    <div class="vocab-box">
+        <div class="vocab-title">💡 Словничок підказка (UA):</div>
+        <div class="vocab-list">
+            <div class="vocab-item"><strong>take after</strong> — <span>бути схожим на</span></div>
+            <div class="vocab-item"><strong>stubborn</strong> — <span>упертий</span></div>
+            <div class="vocab-item"><strong>miserable</strong> — <span>нещасний / пригнічений</span></div>
+            <div class="vocab-item"><strong>strict</strong> — <span>суворий</span></div>
+            <div class="vocab-item"><strong>teammates</strong> — <span>партнери по команді</span></div>
+            <div class="vocab-item"><strong>generous</strong> — <span>щедрий</span></div>
+            <div class="vocab-item"><strong>trust</strong> — <span>довіра / довіряти</span></div>
+            <div class="vocab-item"><strong>remain</strong> — <span>залишатися</span></div>
+        </div>
+    </div>
+
+    <div class="exercise-list" id="exerciseList"></div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        <div class="score-display" id="scoreDisplay"></div>
+        <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+    </div>
+</div>
+
+<script>
+    const exerciseData = [
+        { id: 1, correctOrder: ["Who", "do", "you", "take after?"] },
+        { id: 2, correctOrder: ["Why", "are", "you", "feeling", "so", "miserable?"] },
+        { id: 3, correctOrder: ["Why", "is", "he", "so", "stubborn?"] },
+        { id: 4, correctOrder: ["Are", "you", "being", "too", "strict?"] },
+        { id: 5, correctOrder: ["Do", "you", "have", "good", "communication", "skills?"] },
+        { id: 6, correctOrder: ["Do", "you", "enjoy", "playing", "with", "your", "teammates?"] },
+        { id: 7, correctOrder: ["Is", "she", "a", "very", "generous", "person?"] },
+        { id: 8, correctOrder: ["How", "can", "I", "earn", "his", "trust", "again?"] },
+        { id: 9, correctOrder: ["How", "many", "pieces", "of", "fruit", "remain?"] },
+        { id: 10, correctOrder: ["Who", "is", "talking", "to", "you", "right now?"] }
+    ];
+
+    let state = {};
+
+    function shuffleArray(arr) {
+        let shuffled = [...arr];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        // Если случайный порядок совпал с верным, повторим сдвиг
+        if (shuffled.join(' ') === arr.join(' ') && shuffled.length > 1) {
+            shuffled.push(shuffled.shift());
+        }
+        return shuffled;
+    }
+
+    function initData() {
+        exerciseData.forEach(item => {
+            const wordsObj = item.correctOrder.map((word, idx) => ({
+                id: `${item.id}-${idx}-${word}`,
+                text: word
+            }));
+            state[item.id] = {
+                pool: shuffleArray(wordsObj),
+                answer: []
+            };
+        });
+    }
+
+    function playAudio(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Ваш браузер не підтримує озвучку.");
+        }
+    }
+
+    function moveToAnswer(itemId, wordObj) {
+        const itemState = state[itemId];
+        itemState.pool = itemState.pool.filter(w => w.id !== wordObj.id);
+        itemState.answer.push(wordObj);
+        clearCardStatus(itemId);
+        renderExercise();
+    }
+
+    function moveToPool(itemId, wordObj) {
+        const itemState = state[itemId];
+        itemState.answer = itemState.answer.filter(w => w.id !== wordObj.id);
+        itemState.pool.push(wordObj);
+        clearCardStatus(itemId);
+        renderExercise();
+    }
+
+    function clearCardStatus(itemId) {
+        const card = document.getElementById(`card-${itemId}`);
+        if (card) card.classList.remove('correct', 'wrong');
+    }
+
+    function renderExercise() {
+        const list = document.getElementById('exerciseList');
+        list.innerHTML = '';
+
+        exerciseData.forEach(item => {
+            const itemState = state[item.id];
+            const fullSentence = item.correctOrder.join(' ');
+
+            const card = document.createElement('div');
+            card.className = 'item-card';
+            card.id = `card-${item.id}`;
+
+            // Header
+            const header = document.createElement('div');
+            header.className = 'item-header';
+            header.innerHTML = `
+                <span class="item-num">${item.id}.</span>
+                <span>Склади запитання:</span>
+                <button class="audio-btn" onclick="playAudio('${fullSentence.replace(/'/g, "\\'")}')" title="Прослухати правильний варіант">🔊</button>
+            `;
+
+            // Answer Zone
+            const answerZone = document.createElement('div');
+            answerZone.className = 'answer-zone';
+
+            if (itemState.answer.length === 0) {
+                answerZone.innerHTML = `<span class="placeholder-text">Клікай по словах нижче...</span>`;
+            } else {
+                itemState.answer.forEach(wordObj => {
+                    const chip = document.createElement('div');
+                    chip.className = 'chip in-answer';
+                    chip.textContent = wordObj.text;
+                    chip.onclick = () => moveToPool(item.id, wordObj);
+                    answerZone.appendChild(chip);
+                });
+            }
+
+            // Word Pool Zone
+            const wordPool = document.createElement('div');
+            wordPool.className = 'word-pool';
+
+            itemState.pool.forEach(wordObj => {
+                const chip = document.createElement('div');
+                chip.className = 'chip';
+                chip.textContent = wordObj.text;
+                chip.onclick = () => moveToAnswer(item.id, wordObj);
+                wordPool.appendChild(chip);
+            });
+
+            card.appendChild(header);
+            card.appendChild(answerZone);
+            card.appendChild(wordPool);
+
+            list.appendChild(card);
+        });
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        exerciseData.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const itemState = state[item.id];
+
+            const userAnswerStr = itemState.answer.map(w => w.text).join(' ');
+            const targetStr = item.correctOrder.join(' ');
+
+            card.classList.remove('correct', 'wrong');
+
+            if (userAnswerStr === targetStr) {
+                card.classList.add('correct');
+                correctCount++;
+            } else {
+                card.classList.add('wrong');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        if (correctCount === exerciseData.length) {
+            scoreDisplay.style.color = 'var(--neon-green)';
+            scoreDisplay.textContent = `🎉 Brilliant! ${correctCount} / ${exerciseData.length}`;
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+            scoreDisplay.textContent = `Score: ${correctCount} / ${exerciseData.length}`;
+        }
+    }
+
+    function resetExercise() {
+        document.getElementById('scoreDisplay').textContent = '';
+        initData();
+        renderExercise();
+    }
+
+    window.onload = () => {
+        initData();
+        renderExercise();
+    };
+</script>
+
+</body>
+</html>
