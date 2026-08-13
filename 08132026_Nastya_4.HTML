@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1. Warm-up (Simple или Continuous?)</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --neon-green: #22c55e;
+            --neon-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.6rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* TABLE STYLES */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #111827;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: #1e293b;
+            color: var(--accent-purple);
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        th.col-sentence {
+            text-align: left;
+            width: 50%;
+        }
+
+        td.cell-sentence {
+            text-align: left;
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+
+        /* CUSTOM CHECKBOX BUTTONS */
+        .check-btn {
+            background: #1e293b;
+            border: 1.5px solid var(--border-color);
+            color: transparent;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .check-btn:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .check-btn.active {
+            background: var(--accent-blue);
+            color: #0f172a;
+            border-color: var(--accent-blue);
+        }
+
+        tr.row-correct {
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        tr.row-wrong {
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        tr.row-correct td.cell-sentence {
+            color: var(--neon-green);
+        }
+
+        tr.row-wrong td.cell-sentence {
+            color: var(--neon-red);
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+        }
+
+        .btn-check:hover {
+            transform: scale(1.03);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            th.col-sentence, td.cell-sentence {
+                font-size: 0.95rem;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>1. Warm-up (Simple или Continuous?)</h1>
+        <p>Поставить ✔️ в нужную колонку</p>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-sentence">Sentence</th>
+                    <th>Present Simple</th>
+                    <th>Present Continuous</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        <div class="score-display" id="scoreDisplay"></div>
+        <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+    </div>
+</div>
+
+<script>
+    const exerciseData = [
+        { id: 1, text: "She is smiling.", correct: "Continuous" },
+        { id: 2, text: "He is stubborn.", correct: "Simple" },
+        { id: 3, text: "They are talking.", correct: "Continuous" },
+        { id: 4, text: "She looks like her mother.", correct: "Simple" },
+        { id: 5, text: "I am listening.", correct: "Continuous" },
+        { id: 6, text: "He is generous.", correct: "Simple" },
+        { id: 7, text: "We are describing a picture.", correct: "Continuous" },
+        { id: 8, text: "She is cheerful every day.", correct: "Simple" },
+        { id: 9, text: "He is behaving badly now.", correct: "Continuous" },
+        { id: 10, text: "I take after my dad.", correct: "Simple" }
+    ];
+
+    let userAnswers = {};
+
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+
+        exerciseData.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.id = `row-${item.id}`;
+
+            const userVal = userAnswers[item.id];
+            const simpleActive = userVal === 'Simple' ? 'active' : '';
+            const continuousActive = userVal === 'Continuous' ? 'active' : '';
+
+            tr.innerHTML = `
+                <td class="cell-sentence">${item.id}. ${item.text}</td>
+                <td>
+                    <button class="check-btn ${simpleActive}" onclick="selectAnswer(${item.id}, 'Simple')">✔</button>
+                </td>
+                <td>
+                    <button class="check-btn ${continuousActive}" onclick="selectAnswer(${item.id}, 'Continuous')">✔</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function selectAnswer(id, type) {
+        userAnswers[id] = type;
+        const row = document.getElementById(`row-${id}`);
+        row.classList.remove('row-correct', 'row-wrong');
+        renderTable();
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        exerciseData.forEach(item => {
+            const row = document.getElementById(`row-${item.id}`);
+            const userVal = userAnswers[item.id];
+
+            row.classList.remove('row-correct', 'row-wrong');
+
+            if (userVal === item.correct) {
+                row.classList.add('row-correct');
+                correctCount++;
+            } else if (userVal) {
+                row.classList.add('row-wrong');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        if (correctCount === exerciseData.length) {
+            scoreDisplay.style.color = 'var(--neon-green)';
+            scoreDisplay.textContent = `🎉 Excellent! ${correctCount} / ${exerciseData.length}`;
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+            scoreDisplay.textContent = `Score: ${correctCount} / ${exerciseData.length}`;
+        }
+    }
+
+    function resetExercise() {
+        userAnswers = {};
+        document.getElementById('scoreDisplay').textContent = '';
+        renderTable();
+    }
+
+    window.onload = () => {
+        renderTable();
+    };
+</script>
+
+</body>
+</html>
