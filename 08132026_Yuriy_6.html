@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 5: Make a Question</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --neon-green: #22c55e;
+            --neon-amber: #f59e0b;
+            --neon-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.7rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* EXAMPLE BOX */
+        .example-box {
+            background: #111827;
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .example-box strong {
+            color: var(--accent-blue);
+        }
+
+        .example-box .rule-tag {
+            display: inline-block;
+            background: rgba(129, 140, 248, 0.2);
+            color: var(--accent-purple);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .example-box .arrow {
+            color: var(--neon-green);
+            font-weight: bold;
+        }
+
+        /* QUIZ CARDS */
+        .quiz-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .quiz-card {
+            background: #111827;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-card:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .original-sentence {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .arrow-icon {
+            color: var(--accent-purple);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .input-full {
+            background: #1e293b;
+            color: var(--accent-blue);
+            border: 2px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            outline: none;
+            transition: all 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-full:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .quiz-card.correct {
+            border-color: var(--neon-green);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .quiz-card.wrong {
+            border-color: var(--neon-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .hint-text {
+            display: none;
+            font-size: 0.88rem;
+            color: var(--neon-amber);
+            margin-top: 2px;
+        }
+
+        .quiz-card.wrong .hint-text {
+            display: block;
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+        }
+
+        .btn-check:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 650px) {
+            .input-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .arrow-icon {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Exercise 5. Make a question</h1>
+        <p>Actions ➔ <strong>Do / Does ... ?</strong> | States (to be) ➔ <strong>Is / Are / Am ... ?</strong></p>
+    </div>
+
+    <!-- EXAMPLE BOX -->
+    <div class="example-box">
+        <div><span class="rule-tag">ACTION</span> She checks emails. <span class="arrow">→</span> <em>Does she check emails?</em></div>
+        <div style="margin-top: 6px;"><span class="rule-tag">STATE</span> She is busy till 5:00 PM. <span class="arrow">→</span> <em>Is she busy till 5:00 PM?</em></div>
+    </div>
+
+    <div class="quiz-list" id="quizList"></div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetAndShuffle()">Shuffle & Reset 🔄</button>
+        <div class="score-display" id="scoreDisplay"></div>
+        <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+    </div>
+</div>
+
+<script>
+    let userAnswers = {};
+    let currentDataset = [];
+
+    const rawDataset = [
+        // Actions (Do / Does)
+        { id: 1, original: "He prepares a report.", correct: ["does he prepare a report?", "does he prepare a report"], hint: "Does he prepare a report?" },
+        { id: 2, original: "They attend meetings.", correct: ["do they attend meetings?", "do they attend meetings"], hint: "Do they attend meetings?" },
+        { id: 3, original: "She calls a client.", correct: ["does she call a client?", "does she call a client"], hint: "Does she call a client?" },
+        { id: 4, original: "You send invoices.", correct: ["do you send invoices?", "do you send invoices"], hint: "Do you send invoices?" },
+        { id: 5, original: "She answers emails rapidly.", correct: ["does she answer emails rapidly?", "does she answer emails rapidly"], hint: "Does she answer emails rapidly?" },
+        { id: 6, original: "You make a phone call to the manager.", correct: ["do you make a phone call to the manager?", "do you make a phone call to the manager"], hint: "Do you make a phone call to the manager?" },
+        { id: 7, original: "They meet a client at the office.", correct: ["do they meet a client at the office?", "do they meet a client at the office"], hint: "Do they meet a client at the office?" },
+        { id: 8, original: "He writes a report every Friday.", correct: ["does he write a report every Friday?", "does he write a report every Friday"], hint: "Does he write a report every Friday?" },
+        { id: 9, original: "We check invoices carefully.", correct: ["do we check invoices carefully?", "do we check invoices carefully", "do you check invoices carefully?", "do you check invoices carefully"], hint: "Do we check invoices carefully?" },
+        { id: 10, original: "He joins an online meeting via Zoom.", correct: ["does he join an online meeting via Zoom?", "does he join an online meeting via Zoom"], hint: "Does he join an online meeting via Zoom?" },
+        { id: 11, original: "You update a spreadsheet with new figures.", correct: ["do you update a spreadsheet with new figures?", "do you update a spreadsheet with new figures"], hint: "Do you update a spreadsheet with new figures?" },
+        { id: 12, original: "They talk to customers all day.", correct: ["do they talk to customers all day?", "do they talk to customers all day"], hint: "Do they talk to customers all day?" },
+        { id: 13, original: "She solves a problem very fast.", correct: ["does she solve a problem very fast?", "does she solve a problem very fast"], hint: "Does she solve a problem very fast?" },
+        { id: 14, original: "You finish work at 5:00 PM.", correct: ["do you finish work at 5:00 PM?", "do you finish work at 5:00 PM"], hint: "Do you finish work at 5:00 PM?" },
+
+        // States (To Be: Is / Are / Am)
+        { id: 15, original: "She is busy till 5:00 PM.", correct: ["is she busy till 5:00 pm?", "is she busy till 5:00 pm"], hint: "Is she busy till 5:00 PM?" },
+        { id: 16, original: "He is late for the meeting.", correct: ["is he late for the meeting?", "is he late for the meeting"], hint: "Is he late for the meeting?" },
+        { id: 17, original: "They are ready to present the project.", correct: ["are they ready to present the project?", "are they ready to present the project"], hint: "Are they ready to present the project?" },
+        { id: 18, original: "The office is open on weekends.", correct: ["is the office open on weekends?", "is the office open on weekends"], hint: "Is the office open on weekends?" },
+        { id: 19, original: "You are responsible for this spreadsheet.", correct: ["are you responsible for this spreadsheet?", "are you responsible for this spreadsheet"], hint: "Are you responsible for this spreadsheet?" },
+        { id: 20, original: "The invoice is correct.", correct: ["is the invoice correct?", "is the invoice correct"], hint: "Is the invoice correct?" }
+    ];
+
+    function shuffleArray(array) {
+        let arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function renderQuiz() {
+        const container = document.getElementById('quizList');
+        container.innerHTML = '';
+
+        currentDataset.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'quiz-card';
+            card.id = `card-${item.id}`;
+
+            const userVal = userAnswers[item.id] || '';
+
+            card.innerHTML = `
+                <div class="original-sentence">
+                    <strong>${index + 1}.</strong> ${item.original}
+                </div>
+                <div class="input-row">
+                    <span class="arrow-icon">→</span>
+                    <input type="text" class="input-full" id="input-${item.id}" 
+                        value="${userVal}" 
+                        placeholder="Type question here..." 
+                        oninput="registerAnswer(${item.id}, this.value)"
+                    />
+                </div>
+                <div class="hint-text">💡 Correct Question: ${item.hint}</div>
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+    function registerAnswer(id, val) {
+        userAnswers[id] = val;
+        const card = document.getElementById(`card-${id}`);
+        card.classList.remove('correct', 'wrong');
+    }
+
+    function cleanString(str) {
+        return str
+            .toLowerCase()
+            .replace(/’/g, "'")
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        currentDataset.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const rawUser = userAnswers[item.id] || '';
+            const cleanedUser = cleanString(rawUser);
+
+            const isCorrect = item.correct.some(target => cleanString(target) === cleanedUser);
+
+            card.classList.remove('correct', 'wrong');
+
+            if (isCorrect) {
+                card.classList.add('correct');
+                correctCount++;
+            } else if (cleanedUser !== '') {
+                card.classList.add('wrong');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        if (correctCount === currentDataset.length) {
+            scoreDisplay.style.color = 'var(--neon-green)';
+            scoreDisplay.textContent = `🎉 PERFECT! ${correctCount} / ${currentDataset.length}`;
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+            scoreDisplay.textContent = `Score: ${correctCount} / ${currentDataset.length}`;
+        }
+    }
+
+    function resetAndShuffle() {
+        userAnswers = {};
+        document.getElementById('scoreDisplay').textContent = '';
+        currentDataset = shuffleArray(rawDataset);
+        renderQuiz();
+    }
+
+    window.onload = () => {
+        resetAndShuffle();
+    };
+</script>
+
+</body>
+</html>
