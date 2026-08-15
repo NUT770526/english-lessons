@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Replace the words in the gaps with the ones from the list</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --border-color: #334155;
+            --wordlist-bg: rgba(56, 189, 248, 0.08);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 25px;
+        }
+
+        .header-icon {
+            font-size: 1.8rem;
+        }
+
+        /* WORDLIST BOX */
+        .wordlist-box {
+            background: var(--wordlist-bg);
+            border: 1px dashed var(--accent-blue);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+
+        .wordlist-title {
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-right: 6px;
+        }
+
+        /* STORY PASSAGE */
+        .story-card {
+            background: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            line-height: 2.3;
+            font-size: 1.1rem;
+            color: #e2e8f0;
+        }
+
+        .select-inline {
+            background: #1e293b;
+            border: 1.5px solid var(--border-color);
+            color: var(--accent-blue);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0 4px;
+            max-width: 280px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .select-inline:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 600px) {
+            .story-card {
+                font-size: 1rem;
+                line-height: 2.5;
+            }
+            .select-inline {
+                max-width: 100%;
+                width: 100%;
+                margin: 4px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-title">
+        <span class="header-icon">⌨️</span> Replace the words in the gaps with the ones from the list
+    </div>
+
+    <!-- WORDLIST BANNER -->
+    <div class="wordlist-box">
+        <span class="wordlist-title">Wordlist:</span> 
+        argue, be friends, be in a bad mood, be rude, forgive, get angry, get on, say sorry, shout
+    </div>
+
+    <!-- STORY PASSAGE -->
+    <div class="story-card">
+        She 
+        <select class="select-inline" id="gap-1">
+            <option value="" disabled selected>(spoke loudly and angrily) ↵</option>
+        </select> 
+        at me, and I walked away feeling upset. I knew we needed to fix things because we usually 
+        <select class="select-inline" id="gap-2">
+            <option value="" disabled selected>(have a good relationship) ↵</option>
+        </select> 
+        really well. The next day, I decided to 
+        <select class="select-inline" id="gap-3">
+            <option value="" disabled selected>(tell her I feel bad for what I did) ↵</option>
+        </select> 
+        to her. I explained everything, and after a while, Emma 
+        <select class="select-inline" id="gap-4">
+            <option value="" disabled selected>(stopped being angry with me) ↵</option>
+        </select> 
+        me. Now, we’re back to being friends, and everything is fine again.
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+    </div>
+</div>
+
+<script>
+    // Список слов в нужных грамматических формах для контекста
+    const wordlistGap1 = ["argued", "was friends", "was in a bad mood", "was rude", "forgave", "got angry", "got on", "said sorry", "shouted"];
+    const wordlistGap2 = ["argue", "be friends", "be in a bad mood", "be rude", "forgive", "get angry", "get on", "say sorry", "shout"];
+    const wordlistGap3 = ["argue", "be friends", "be in a bad mood", "be rude", "forgive", "get angry", "get on", "say sorry", "shout"];
+    const wordlistGap4 = ["argued", "was friends", "was in a bad mood", "was rude", "forgave", "got angry", "got on", "said sorry", "shouted"];
+
+    function populateSelects() {
+        const gap1 = document.getElementById('gap-1');
+        const gap2 = document.getElementById('gap-2');
+        const gap3 = document.getElementById('gap-3');
+        const gap4 = document.getElementById('gap-4');
+
+        wordlistGap1.forEach(word => {
+            const opt = document.createElement('option');
+            opt.value = word;
+            opt.textContent = word;
+            gap1.appendChild(opt);
+        });
+
+        wordlistGap2.forEach(word => {
+            const opt = document.createElement('option');
+            opt.value = word;
+            opt.textContent = word;
+            gap2.appendChild(opt);
+        });
+
+        wordlistGap3.forEach(word => {
+            const opt = document.createElement('option');
+            opt.value = word;
+            opt.textContent = word;
+            gap3.appendChild(opt);
+        });
+
+        wordlistGap4.forEach(word => {
+            const opt = document.createElement('option');
+            opt.value = word;
+            opt.textContent = word;
+            gap4.appendChild(opt);
+        });
+    }
+
+    function resetExercise() {
+        document.querySelectorAll('.select-inline').forEach(select => {
+            select.selectedIndex = 0;
+        });
+    }
+
+    window.onload = () => {
+        populateSelects();
+    };
+</script>
+
+</body>
+</html>
