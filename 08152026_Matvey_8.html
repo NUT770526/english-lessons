@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listening Comprehension: David's Story</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 820px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+        }
+
+        .header-icon {
+            font-size: 1.8rem;
+        }
+
+        /* TRANSCRIPT ACCORDION */
+        details.transcript-box {
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px dashed var(--accent-blue);
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-bottom: 25px;
+            transition: all 0.2s ease;
+        }
+
+        summary {
+            font-weight: 700;
+            color: var(--accent-blue);
+            cursor: pointer;
+            font-size: 1.05rem;
+            outline: none;
+            user-select: none;
+        }
+
+        .transcript-text {
+            margin-top: 15px;
+            font-size: 0.98rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            white-space: pre-line;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+        }
+
+        /* QUESTIONS LIST */
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .question-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .question-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #1e293b;
+            border: 1.5px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .option-label:hover {
+            border-color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.08);
+        }
+
+        .option-label input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--text-muted);
+            border-radius: 50%;
+            outline: none;
+            margin: 0;
+            display: grid;
+            place-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .option-label input[type="radio"]::before {
+            content: "";
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background-color: var(--accent-blue);
+            transform: scale(0);
+            transition: 0.15s transform ease-in-out;
+        }
+
+        .option-label input[type="radio"]:checked {
+            border-color: var(--accent-blue);
+        }
+
+        .option-label input[type="radio"]:checked::before {
+            transform: scale(1);
+        }
+
+        .option-label:has(input[type="radio"]:checked) {
+            border-color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.12);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            .question-title {
+                font-size: 1rem;
+            }
+            .option-label {
+                font-size: 0.95rem;
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-title">
+        <span class="header-icon">📝</span> Choose the correct option
+    </div>
+
+    <!-- TRANSCRIPT -->
+    <details class="transcript-box">
+        <summary>📜 Click here to read the Transcript</summary>
+        <div class="transcript-text">
+<strong>Host:</strong> David, you mentioned that you helped your friend with a bullying problem at school. Can you tell us what happened?
+<strong>David:</strong> Yeah, my friend Ted was being bullied because of the way he looks. The bullies teased him every day, and he felt really upset and embarrassed.
+<strong>Host:</strong> That’s awful. How did you feel about it?
+<strong>David:</strong> At first, I was just annoyed, but then I got really furious when I saw how bad it was for Ted. He was so depressed and disappointed, and he was really exhausted from trying to avoid them.
+<strong>Host:</strong> Were the bullies jealous of him?
+<strong>David:</strong> Maybe. My friend is good at drawing, but they just focused on his looks.
+<strong>Host:</strong> That’s terrible. Was your friend terrified of them?
+<strong>David:</strong> Yeah, sometimes he was scared to go to school. But I helped him, and we talked to our teacher about the problem. Things are better now.
+<strong>Host:</strong> I’m glad you were there for him. You did a great job.
+        </div>
+    </details>
+
+    <!-- QUESTIONS LIST -->
+    <div class="questions-list" id="questionsList"></div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            id: 1,
+            question: "1. Why was David's friend being bullied?",
+            options: [
+                "Because of his height",
+                "Because of his looks",
+                "Because of his grades",
+                "Because of his family"
+            ]
+        },
+        {
+            id: 2,
+            question: "2. How did Ted feel about being bullied?",
+            options: [
+                "Angry and proud",
+                "Excited and happy",
+                "Upset and embarrassed",
+                "Furious and curious"
+            ]
+        },
+        {
+            id: 3,
+            question: "3. How did David feel at first about the bullying situation?",
+            options: [
+                "Furious",
+                "Depressed",
+                "Jealous",
+                "Annoyed"
+            ]
+        },
+        {
+            id: 4,
+            question: "4. What talent did Ted have that might have made the bullies jealous?",
+            options: [
+                "Playing sports",
+                "Drawing",
+                "Playing the drums",
+                "Writing stories"
+            ]
+        },
+        {
+            id: 5,
+            question: "5. What did David and his friend do to solve the problem?",
+            options: [
+                "They ignored the bullies",
+                "They fought back",
+                "They talked to a teacher",
+                "They moved to another school"
+            ]
+        },
+        {
+            id: 6,
+            question: "6. How are things now after they talked to the teacher?",
+            options: [
+                "Things are still unresolved",
+                "Things got worse",
+                "Things stayed the same",
+                "Things are better now"
+            ]
+        }
+    ];
+
+    function renderQuiz() {
+        const list = document.getElementById('questionsList');
+        list.innerHTML = '';
+
+        quizData.forEach(q => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+
+            let optionsHtml = '';
+            q.options.forEach((opt, idx) => {
+                const optionId = `q${q.id}_opt${idx}`;
+                optionsHtml += `
+                    <label class="option-label" for="${optionId}">
+                        <input type="radio" id="${optionId}" name="question_${q.id}" value="${opt}">
+                        <span>${opt}</span>
+                    </label>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="question-title">${q.question}</div>
+                <div class="options-group">${optionsHtml}</div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function resetExercise() {
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.checked = false;
+        });
+    }
+
+    window.onload = () => {
+        renderQuiz();
+    };
+</script>
+
+</body>
+</html>
