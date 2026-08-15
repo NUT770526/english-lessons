@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match the phrases</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --item-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .matching-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .match-card {
+            background: var(--item-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 0.98rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            user-select: none;
+            min-height: 52px;
+            box-sizing: border-box;
+        }
+
+        .match-card:hover:not(.matched) {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .match-card.selected {
+            border-color: var(--accent-purple);
+            background: rgba(129, 140, 248, 0.15);
+            box-shadow: 0 0 12px rgba(129, 140, 248, 0.3);
+        }
+
+        .match-card.matched {
+            border-color: var(--accent-green);
+            background: rgba(74, 222, 128, 0.1);
+            color: var(--accent-green);
+            cursor: default;
+            opacity: 0.85;
+        }
+
+        .match-card.error {
+            border-color: var(--accent-red);
+            background: rgba(248, 113, 113, 0.15);
+            animation: shake 0.3s ease-in-out;
+        }
+
+        .card-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .num-badge {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            font-size: 0.85rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+            transform: scale(1.1);
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .score-box {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--accent-blue);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        @media (max-width: 680px) {
+            .matching-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-title">
+        <span>🔗</span> 1. Match the phrases
+    </div>
+    <div class="header-subtitle">
+        З'єднай фразу англійською мовою з відповідним українським перекладом.
+    </div>
+
+    <div class="matching-grid">
+        <div class="column" id="englishColumn"></div>
+        <div class="column" id="ukrainianColumn"></div>
+    </div>
+
+    <div class="controls">
+        <div class="score-box" id="scoreDisplay">Progress: 0 / 15</div>
+        <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+    </div>
+</div>
+
+<script>
+    const vocabulary = [
+        { id: 1, en: "believe in people", uk: "вірити в людей" },
+        { id: 2, en: "be a good listener", uk: "бути хорошим слухачем" },
+        { id: 3, en: "have a passion for something", uk: "мати пристрасть до чогось" },
+        { id: 4, en: "work well in a team", uk: "добре працювати в команді" },
+        { id: 5, en: "be organised", uk: "бути організованим" },
+        { id: 6, en: "be encouraging", uk: "підбадьорювати; підтримувати інших" },
+        { id: 7, en: "have good communication skills", uk: "мати хороші комунікативні навички" },
+        { id: 8, en: "like helping other people", uk: "любити допомагати іншим" },
+        { id: 9, en: "be hard-working", uk: "бути працьовитим" },
+        { id: 10, en: "be a role model", uk: "бути прикладом для наслідування" },
+        { id: 11, en: "cheerful", uk: "веселий; життєрадісний" },
+        { id: 12, en: "useful", uk: "корисний" },
+        { id: 13, en: "skills", uk: "навички; уміння" },
+        { id: 14, en: "success", uk: "успіх" },
+        { id: 15, en: "employee", uk: "працівник; співробітник" }
+    ];
+
+    let selectedEn = null;
+    let selectedUk = null;
+    let matchedCount = 0;
+
+    function shuffleArray(array) {
+        return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    function playAudio(event, text) {
+        event.stopPropagation();
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function renderGrid() {
+        const enCol = document.getElementById('englishColumn');
+        const ukCol = document.getElementById('ukrainianColumn');
+        
+        enCol.innerHTML = '';
+        ukCol.innerHTML = '';
+
+        const shuffledEn = [...vocabulary];
+        const shuffledUk = shuffleArray(vocabulary);
+
+        shuffledEn.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            card.dataset.id = item.id;
+            card.dataset.type = 'en';
+
+            card.innerHTML = `
+                <div class="card-content">
+                    <span class="num-badge">${index + 1}</span>
+                    <span>${item.en}</span>
+                </div>
+                <button class="audio-btn" onclick="playAudio(event, '${item.en.replace(/'/g, "\\'")}')" title="Listen">🔊</button>
+            `;
+
+            card.onclick = () => selectCard(card, 'en', item.id);
+            enCol.appendChild(card);
+        });
+
+        shuffledUk.forEach((item) => {
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            card.dataset.id = item.id;
+            card.dataset.type = 'uk';
+
+            card.innerHTML = `
+                <div class="card-content">
+                    <span>${item.uk}</span>
+                </div>
+            `;
+
+            card.onclick = () => selectCard(card, 'uk', item.id);
+            ukCol.appendChild(card);
+        });
+
+        updateScore();
+    }
+
+    function selectCard(card, type, id) {
+        if (card.classList.contains('matched')) return;
+
+        if (type === 'en') {
+            document.querySelectorAll('#englishColumn .match-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedEn = { element: card, id: id };
+        } else {
+            document.querySelectorAll('#ukrainianColumn .match-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedUk = { element: card, id: id };
+        }
+
+        checkMatch();
+    }
+
+    function checkMatch() {
+        if (selectedEn && selectedUk) {
+            if (selectedEn.id === selectedUk.id) {
+                selectedEn.element.classList.remove('selected');
+                selectedUk.element.classList.remove('selected');
+
+                selectedEn.element.classList.add('matched');
+                selectedUk.element.classList.add('matched');
+
+                matchedCount++;
+                updateScore();
+
+                selectedEn = null;
+                selectedUk = null;
+            } else {
+                const enEl = selectedEn.element;
+                const ukEl = selectedUk.element;
+
+                enEl.classList.add('error');
+                ukEl.classList.add('error');
+
+                setTimeout(() => {
+                    enEl.classList.remove('error', 'selected');
+                    ukEl.classList.remove('error', 'selected');
+                }, 500);
+
+                selectedEn = null;
+                selectedUk = null;
+            }
+        }
+    }
+
+    function updateScore() {
+        document.getElementById('scoreDisplay').textContent = `Progress: ${matchedCount} / ${vocabulary.length}`;
+    }
+
+    function resetExercise() {
+        selectedEn = null;
+        selectedUk = null;
+        matchedCount = 0;
+        renderGrid();
+    }
+
+    window.onload = () => {
+        renderGrid();
+    };
+</script>
+
+</body>
+</html>
