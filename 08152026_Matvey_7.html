@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correct the mistakes</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+        }
+
+        .header-icon {
+            font-size: 1.8rem;
+        }
+
+        /* EXAMPLES BOX */
+        .examples-box {
+            background: rgba(56, 189, 248, 0.06);
+            border: 1px dashed var(--accent-blue);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 25px;
+            font-size: 0.98rem;
+            line-height: 1.6;
+        }
+
+        .examples-title {
+            font-weight: 700;
+            font-style: italic;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+        }
+
+        .example-item {
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+
+        .example-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .example-item strong {
+            color: var(--text-main);
+        }
+
+        /* SENTENCES LIST */
+        .sentences-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sentence-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .sentence-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .edit-input {
+            width: 100%;
+            background: #1e293b;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .edit-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+
+        /* PERSONAL ATTITUDE TOGGLE */
+        .attitude-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-top: 5px;
+            border-top: 1px border-color;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .btn-toggle {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #1e293b;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-toggle.active-true {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+            color: #4ade80;
+        }
+
+        .btn-toggle.active-false {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #f87171;
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 600px) {
+            .sentence-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .input-row {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-title">
+        <span class="header-icon">⌨️</span> Correct the mistakes. Say if the sentences are true for you
+    </div>
+
+    <!-- EXAMPLES -->
+    <div class="examples-box">
+        <div class="examples-title">Examples:</div>
+        <div class="example-item">
+            ➞ I allowed hang drawings and paintings all over the walls in my room. ➔ <strong>I’m allowed to hang</strong> drawings and paintings all over the walls in my room.
+        </div>
+        <div class="example-item">
+            ➞ My parents don’t let me to make a mess in the kitchen because they want it to stay neat. ➔ My parents don’t <strong>let me make</strong> a mess in the kitchen because they want it to stay neat.
+        </div>
+    </div>
+
+    <!-- SENTENCES LIST -->
+    <div class="sentences-list" id="sentencesList"></div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+    </div>
+</div>
+
+<script>
+    const sentencesData = [
+        {
+            id: 1,
+            avatar: "🎧",
+            original: "I’m not allowed creating too much chaos in the living room."
+        },
+        {
+            id: 2,
+            avatar: "👩‍🦰",
+            original: "My parents let me to expressing myself by decorating my room."
+        },
+        {
+            id: 3,
+            avatar: "🎧",
+            original: "I’m allow to express myself by keeping some clutter on my desk."
+        },
+        {
+            id: 4,
+            avatar: "👩‍🦰",
+            original: "My mom isn’t let me leaving any mess on my desk while I’m working."
+        }
+    ];
+
+    function renderSentences() {
+        const list = document.getElementById('sentencesList');
+        list.innerHTML = '';
+
+        sentencesData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'sentence-card';
+
+            card.innerHTML = `
+                <div class="sentence-header">
+                    <div class="avatar">${item.avatar}</div>
+                    <div class="input-row">
+                        <input type="text" class="edit-input" id="input-${item.id}" value="${item.original}">
+                    </div>
+                </div>
+                <div class="attitude-box">
+                    <span>Is this sentence true for you?</span>
+                    <button class="btn-toggle" id="btn-true-${item.id}" onclick="setAttitude(${item.id}, true)">True for me 👍</button>
+                    <button class="btn-toggle" id="btn-false-${item.id}" onclick="setAttitude(${item.id}, false)">False for me 👎</button>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function setAttitude(id, isTrue) {
+        const btnTrue = document.getElementById(`btn-true-${id}`);
+        const btnFalse = document.getElementById(`btn-false-${id}`);
+
+        if (isTrue) {
+            btnTrue.classList.add('active-true');
+            btnFalse.classList.remove('active-false');
+        } else {
+            btnFalse.classList.add('active-false');
+            btnTrue.classList.remove('active-true');
+        }
+    }
+
+    function resetExercise() {
+        sentencesData.forEach(item => {
+            const input = document.getElementById(`input-${item.id}`);
+            const btnTrue = document.getElementById(`btn-true-${item.id}`);
+            const btnFalse = document.getElementById(`btn-false-${item.id}`);
+
+            if (input) input.value = item.original;
+            if (btnTrue) btnTrue.classList.remove('active-true');
+            if (btnFalse) btnFalse.classList.remove('active-false');
+        });
+    }
+
+    window.onload = () => {
+        renderSentences();
+    };
+</script>
+
+</body>
+</html>
