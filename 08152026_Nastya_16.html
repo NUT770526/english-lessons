@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Give Advice - Guided Practice</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --accent-yellow: #facc15;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .header-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        /* Блок с образцом выполнения */
+        .example-box {
+            background: rgba(250, 204, 21, 0.08);
+            border: 1px dashed var(--accent-yellow);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        .example-title {
+            font-weight: 700;
+            color: var(--accent-yellow);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .example-content {
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        .example-answer {
+            color: var(--accent-green);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .vocab-box {
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid var(--accent-blue);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+        }
+
+        .vocab-title {
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .vocab-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-color);
+            color: #e2e8f0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.88rem;
+        }
+
+        .sentences-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sentence-card {
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .sentence-card.correct {
+            border-color: var(--accent-green) !important;
+            background: rgba(74, 222, 128, 0.08) !important;
+        }
+
+        .sentence-card.incorrect {
+            border-color: var(--accent-red) !important;
+            background: rgba(248, 113, 113, 0.08) !important;
+        }
+
+        .situation-text {
+            font-size: 0.98rem;
+            font-weight: 600;
+            display: flex;
+            gap: 10px;
+            line-height: 1.4;
+        }
+
+        .num-badge {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            font-weight: 700;
+            font-size: 0.88rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .input-box {
+            width: 100%;
+            background: #1e293b;
+            color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .input-box:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-title">3. Give Advice</div>
+    <div class="header-subtitle">Прочитай ситуацію та дай пораду, використовуючи <strong>should</strong> або <strong>shouldn’t</strong>.</div>
+
+    <!-- Пример решения -->
+    <div class="example-box">
+        <div class="example-title">📌 EXAMPLE (Образец):</div>
+        <div class="example-content">
+            <em>Situation:</em> Tom plays video games all night and is always tired.<br>
+            <div class="example-answer">
+                ➔ Answer: He <strong>should be organised</strong>. / He <strong>shouldn't play games all night</strong>.
+            </div>
+        </div>
+    </div>
+
+    <!-- Банк слов -->
+    <div class="vocab-box">
+        <div class="vocab-title">💡 Word Bank (Слова-підказки):</div>
+        <div class="vocab-tags">
+            <span class="tag">believe in people</span>
+            <span class="tag">be a good listener</span>
+            <span class="tag">work well in a team</span>
+            <span class="tag">be organised</span>
+            <span class="tag">be encouraging</span>
+            <span class="tag">have good communication skills</span>
+            <span class="tag">like helping other people</span>
+            <span class="tag">be hard-working</span>
+            <span class="tag">be a role model</span>
+            <span class="tag">cheerful</span>
+        </div>
+    </div>
+
+    <div class="sentences-list" id="exerciseList"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Score: - / 8</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const data = [
+        { id: 1, text: "Anna wants to get success at school, but she is lazy and doesn't study." },
+        { id: 2, text: "Mark talks all the time and never listens to his friends." },
+        { id: 3, text: "Lisa is a team leader, but she doesn't talk to her team members." },
+        { id: 4, text: "Ben plays games alone and doesn't want to work with other students." },
+        { id: 5, text: "Emma loses her books and forgets her homework every day." },
+        { id: 6, text: "Alex has a younger brother, but Alex acts like a rude person." },
+        { id: 7, text: "Dan sees that a new student has a problem, but Dan doesn't care." },
+        { id: 8, text: "A new employee thinks he cannot do his job well." }
+    ];
+
+    function normalizeText(str) {
+        return str.trim().toLowerCase().replace(/’/g, "'");
+    }
+
+    function renderExercise() {
+        const list = document.getElementById('exerciseList');
+        list.innerHTML = '';
+
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'sentence-card';
+            card.id = `card-${item.id}`;
+
+            card.innerHTML = `
+                <div class="situation-text">
+                    <span class="num-badge">${item.id}</span>
+                    <span>${item.text}</span>
+                </div>
+                <input type="text" class="input-box" id="input-${item.id}" placeholder="Type your advice (e.g. He should...)" autocomplete="off">
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        data.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const input = document.getElementById(`input-${item.id}`);
+            const val = normalizeText(input.value);
+
+            card.classList.remove('correct', 'incorrect');
+
+            const hasModal = val.includes("should") || val.includes("shouldn't") || val.includes("should not");
+
+            if (val.length > 5 && hasModal) {
+                card.classList.add('correct');
+                correctCount++;
+            } else {
+                card.classList.add('incorrect');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: ${correctCount} / ${data.length}`;
+        scoreDisplay.style.color = correctCount === data.length ? 'var(--accent-green)' : 'var(--accent-blue)';
+    }
+
+    function resetExercise() {
+        data.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const input = document.getElementById(`input-${item.id}`);
+
+            card.classList.remove('correct', 'incorrect');
+            input.value = '';
+        });
+
+        document.getElementById('scoreDisplay').textContent = `Score: - / ${data.length}`;
+        document.getElementById('scoreDisplay').style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = renderExercise;
+</script>
+
+</body>
+</html>
