@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2. Complete the sentences (Auto-Check)</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --input-bg: #111827;
+            --chip-bg: rgba(56, 189, 248, 0.12);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 6px;
+        }
+
+        .header-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        /* WORD BANK */
+        .word-bank-box {
+            background: rgba(129, 140, 248, 0.08);
+            border: 1.5px dashed var(--accent-purple);
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+        }
+
+        .bank-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .words-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .word-chip {
+            background: var(--chip-bg);
+            border: 1px solid var(--border-color);
+            color: var(--accent-blue);
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .word-chip:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        /* SENTENCES */
+        .sentences-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sentence-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            transition: border-color 0.2s ease;
+        }
+
+        .sentence-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            flex-wrap: wrap;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .num-badge {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            font-weight: 700;
+            font-size: 0.95rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .sentence-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            color: var(--text-main);
+        }
+
+        .gap-input {
+            background: #1e293b;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px 12px;
+            color: var(--accent-blue);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            outline: none;
+            min-width: 170px;
+            transition: all 0.2s ease;
+        }
+
+        .gap-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+
+        .gap-input.correct {
+            border-color: var(--accent-green) !important;
+            background: rgba(74, 222, 128, 0.1) !important;
+            color: var(--accent-green) !important;
+        }
+
+        .gap-input.incorrect {
+            border-color: var(--accent-red) !important;
+            background: rgba(248, 113, 113, 0.1) !important;
+            color: var(--accent-red) !important;
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+            transform: scale(1.1);
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+            .gap-input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-title">
+        <span>✏️</span> 2. Complete the sentences
+    </div>
+    <div class="header-subtitle">
+        Встав слова та фрази з рамки. За потреби зміни форму дієслова.
+    </div>
+
+    <!-- WORD BANK -->
+    <div class="word-bank-box">
+        <div class="bank-title">💡 Word Bank (click to fill in):</div>
+        <div class="words-wrapper" id="wordBank"></div>
+    </div>
+
+    <!-- SENTENCES LIST -->
+    <div class="sentences-list" id="sentencesList"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Score: - / 12</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const wordBankWords = [
+        "organised",
+        "role model",
+        "good listener",
+        "hard-working",
+        "passion for",
+        "communication skills",
+        "believes in",
+        "works well",
+        "encouraging",
+        "cheerful",
+        "useful",
+        "employee"
+    ];
+
+    const sentencesData = [
+        { id: 1, part1: "My sister studies a lot. She is very", part2: ".", answer: "hard-working" },
+        { id: 2, part1: "Kate always listens when her friends have problems. She is a", part2: ".", answer: "good listener" },
+        { id: 3, part1: "Our class leader has good", part2: ".", answer: "communication skills" },
+        { id: 4, part1: "My mother is my", part2: "because she helps and supports me.", answer: "role model" },
+        { id: 5, part1: "I have a", part2: "music and photography.", answer: "passion for" },
+        { id: 6, part1: "Lisa always plans her day. She is very", part2: ".", answer: "organised" },
+        { id: 7, part1: "A good leader always", part2: "people and helps them grow.", answer: "believes in" },
+        { id: 8, part1: "Alex is friendly and", part2: "in a team with everyone.", answer: "works well" },
+        { id: 9, part1: "Our teacher is very", part2: "when we make mistakes.", answer: "encouraging" },
+        { id: 10, part1: "My classmate is always happy and", part2: "even on Mondays.", answer: "cheerful" },
+        { id: 11, part1: "Learning new vocabulary is very", part2: "for your English.", answer: "useful" },
+        { id: 12, part1: "He is a great", part2: "who works hard every day.", answer: "employee" }
+    ];
+
+    let activeInputId = 1;
+
+    function renderWordBank() {
+        const bank = document.getElementById('wordBank');
+        bank.innerHTML = '';
+        wordBankWords.forEach(word => {
+            const chip = document.createElement('span');
+            chip.className = 'word-chip';
+            chip.textContent = word;
+            chip.onclick = () => insertWord(word);
+            bank.appendChild(chip);
+        });
+    }
+
+    function renderSentences() {
+        const list = document.getElementById('sentencesList');
+        list.innerHTML = '';
+
+        sentencesData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'sentence-card';
+
+            card.innerHTML = `
+                <div class="sentence-content">
+                    <span class="num-badge">${item.id}</span>
+                    <div class="sentence-text">
+                        <span>${item.part1}</span>
+                        <input type="text" class="gap-input" id="input-${item.id}" onfocus="activeInputId = ${item.id}">
+                        <span>${item.part2}</span>
+                    </div>
+                </div>
+                <button class="audio-btn" onclick="playAudio(${item.id})" title="Listen">🔊</button>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function insertWord(word) {
+        const input = document.getElementById(`input-${activeInputId}`);
+        if (input) {
+            input.value = word;
+            input.focus();
+            if (activeInputId < sentencesData.length) {
+                activeInputId++;
+            }
+        }
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        sentencesData.forEach(item => {
+            const input = document.getElementById(`input-${item.id}`);
+            if (!input) return;
+
+            const userVal = input.value.trim().toLowerCase();
+            const correctVal = item.answer.toLowerCase();
+
+            input.classList.remove('correct', 'incorrect');
+
+            if (userVal === correctVal) {
+                input.classList.add('correct');
+                correctCount++;
+            } else {
+                input.classList.add('incorrect');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: ${correctCount} / ${sentencesData.length}`;
+        if (correctCount === sentencesData.length) {
+            scoreDisplay.style.color = 'var(--accent-green)';
+        } else {
+            scoreDisplay.style.color = 'var(--accent-blue)';
+        }
+    }
+
+    function playAudio(id) {
+        const item = sentencesData.find(s => s.id === id);
+        const input = document.getElementById(`input-${id}`);
+        const userText = input ? input.value.trim() : '';
+        const fullText = `${item.part1} ${userText || '___'} ${item.part2}`;
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(fullText);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Ваш браузер не поддерживает озвучку.");
+        }
+    }
+
+    function resetExercise() {
+        sentencesData.forEach(item => {
+            const input = document.getElementById(`input-${item.id}`);
+            if (input) {
+                input.value = '';
+                input.classList.remove('correct', 'incorrect');
+            }
+        });
+        activeInputId = 1;
+        document.getElementById('scoreDisplay').textContent = `Score: - / ${sentencesData.length}`;
+        document.getElementById('scoreDisplay').style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = () => {
+        renderWordBank();
+        renderSentences();
+    };
+</script>
+
+</body>
+</html>
