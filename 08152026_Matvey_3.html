@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fill in the gaps</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 820px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 25px;
+        }
+
+        .header-icon {
+            font-size: 1.8rem;
+        }
+
+        /* WORD BANK BANNER */
+        .words-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .word-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .word-chip.used {
+            opacity: 0.3;
+            text-decoration: line-through;
+            border-color: var(--border-color);
+        }
+
+        /* TEXT AREA */
+        .story-card {
+            background: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            line-height: 2.2;
+            font-size: 1.1rem;
+            color: #e2e8f0;
+        }
+
+        .select-inline {
+            background: #1e293b;
+            border: 1.5px solid var(--border-color);
+            color: var(--accent-blue);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0 4px;
+            min-width: 140px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .select-inline:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 600px) {
+            .story-card {
+                font-size: 1rem;
+                line-height: 2.4;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-title">
+        <span class="header-icon">🧩</span> Fill in the gaps
+    </div>
+
+    <!-- WORD BANK -->
+    <div class="words-bank" id="wordsBank"></div>
+
+    <!-- STORY PASSAGE WITH GAPS -->
+    <div class="story-card">
+        Last weekend, I couldn’t go to a sleepover at my friend Emma’s house because my family had plans. 
+        When I told her, she 
+        <select class="select-inline" id="gap-1" onchange="updateSelections()">
+            <option value="" disabled selected></option>
+        </select> 
+        with me and didn’t talk to me. She was 
+        <select class="select-inline" id="gap-2" onchange="updateSelections()">
+            <option value="" disabled selected></option>
+        </select> 
+        and started to 
+        <select class="select-inline" id="gap-3" onchange="updateSelections()">
+            <option value="" disabled selected></option>
+        </select> 
+        to me at school. We even started to 
+        <select class="select-inline" id="gap-4" onchange="updateSelections()">
+            <option value="" disabled selected></option>
+        </select> 
+        about it at lunch. Can you imagine?
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+    </div>
+</div>
+
+<script>
+    const availableWords = ["got angry", "argue", "be rude", "in a bad mood"];
+
+    function renderWordsBank() {
+        const bank = document.getElementById('wordsBank');
+        bank.innerHTML = '';
+        
+        // Count selected occurrences
+        const selectedValues = Array.from(document.querySelectorAll('.select-inline'))
+            .map(select => select.value)
+            .filter(val => val !== "");
+
+        availableWords.forEach(word => {
+            const chip = document.createElement('div');
+            chip.className = 'word-chip';
+            chip.textContent = word;
+
+            if (selectedValues.includes(word)) {
+                chip.classList.add('used');
+            }
+
+            bank.appendChild(chip);
+        });
+    }
+
+    function populateSelects() {
+        const selects = document.querySelectorAll('.select-inline');
+        
+        selects.forEach(select => {
+            const currentValue = select.value;
+            select.innerHTML = '<option value="" disabled selected></option>';
+            
+            availableWords.forEach(word => {
+                const opt = document.createElement('option');
+                opt.value = word;
+                opt.textContent = word;
+                if (word === currentValue) {
+                    opt.selected = true;
+                }
+                select.appendChild(opt);
+            });
+        });
+    }
+
+    function updateSelections() {
+        renderWordsBank();
+    }
+
+    function resetExercise() {
+        document.querySelectorAll('.select-inline').forEach(select => {
+            select.value = '';
+        });
+        renderWordsBank();
+    }
+
+    window.onload = () => {
+        populateSelects();
+        renderWordsBank();
+    };
+</script>
+
+</body>
+</html>
