@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7. Complete the mini-interview</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .header-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .hint-box {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        .hint-title {
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+
+        .hint-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 10px 20px;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        .hint-item {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .hint-item span.code {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .hint-item span.trans {
+            color: var(--accent-blue);
+            font-style: italic;
+        }
+
+        .sentences-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sentence-card {
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .sentence-card.correct {
+            border-color: var(--accent-green) !important;
+            background: rgba(74, 222, 128, 0.08) !important;
+        }
+
+        .sentence-card.incorrect {
+            border-color: var(--accent-red) !important;
+            background: rgba(248, 113, 113, 0.08) !important;
+        }
+
+        .original-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .num-badge {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            font-weight: 700;
+            font-size: 0.95rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .text-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .translation-hint {
+            font-size: 0.88rem;
+            color: var(--accent-blue);
+            font-style: italic;
+            font-weight: normal;
+        }
+
+        .input-box {
+            width: 100%;
+            background: #1e293b;
+            color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .input-box:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .feedback-text {
+            font-size: 0.85rem;
+            color: var(--accent-red);
+            display: none;
+            margin-top: -4px;
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-title">7. Complete the mini-interview</div>
+    <div class="header-subtitle">Доповни відповіді правдивою інформацією про себе.</div>
+
+    <div class="hint-box">
+        <div class="hint-title">💡 Як давати короткі відповіді:</div>
+        <div class="hint-grid">
+            <div class="hint-item"><span class="code">Have you got...?</span><br><span class="trans">→ Yes, I have. / No, I haven't.</span></div>
+            <div class="hint-item"><span class="code">Has he/she got...?</span><br><span class="trans">→ Yes, he/she has. / No, he/she hasn't.</span></div>
+            <div class="hint-item"><span class="code">Do you/they have to...?</span><br><span class="trans">→ Yes, I/they do. / No, I/they don't.</span></div>
+            <div class="hint-item"><span class="code">Does he/she have to...?</span><br><span class="trans">→ Yes, he/she does. / No, he/she doesn't.</span></div>
+        </div>
+    </div>
+
+    <div class="sentences-list" id="exerciseList"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Score: - / 10</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const data = [
+        { 
+            id: 1, 
+            question: "Have you got good communication skills?", 
+            ua: "Чи маєш ти хороші комунікативні навички?", 
+            example: "Yes, I have. / No, I haven't.",
+            acceptable: ["yes, i have", "no, i haven't", "no, i have not", "yes, i have got good communication skills", "no, i haven't got good communication skills"]
+        },
+        { 
+            id: 2, 
+            question: "Have you got a passion for anything?", 
+            ua: "Чи маєш ти пристрасть/захоплення чимось?", 
+            example: "Yes, I have. / No, I haven't.",
+            acceptable: ["yes, i have", "no, i haven't", "no, i have not", "yes, i have got a passion for music", "yes, i have got a passion for sport", "yes, i have got a passion"]
+        },
+        { 
+            id: 3, 
+            question: "Do you have to work well in a team at school?", 
+            ua: "Чи мусиш ти добре працювати в команді у школі?", 
+            example: "Yes, I do. / No, I don't.",
+            acceptable: ["yes, i do", "no, i don't", "no, i do not", "yes, i have to work well in a team", "no, i don't have to work well in a team"]
+        },
+        { 
+            id: 4, 
+            question: "Do you have to be organised?", 
+            ua: "Чи мусиш ти бути організованим?", 
+            example: "Yes, I do. / No, I don't.",
+            acceptable: ["yes, i do", "no, i don't", "no, i do not", "yes, i have to be organised", "no, i don't have to be organised"]
+        },
+        { 
+            id: 5, 
+            question: "Has your best friend got a cheerful personality?", 
+            ua: "Чи має твій найкращий друг життєрадісний характер?", 
+            example: "Yes, he/she has. / No, he/she hasn't.",
+            acceptable: ["yes, he has", "yes, she has", "no, he hasn't", "no, she hasn't", "no, he has not", "no, she has not"]
+        },
+        { 
+            id: 6, 
+            question: "Does a good leader have to believe in people?", 
+            ua: "Чи мусить хороший лідер вірити в людей?", 
+            example: "Yes, he/she does. / No, he/she doesn't.",
+            acceptable: ["yes, he does", "yes, she does", "yes, a leader does", "no, he doesn't", "no, she doesn't", "no, he does not", "no, she does not"]
+        },
+        { 
+            id: 7, 
+            question: "Have you got useful skills for your future job?", 
+            ua: "Чи маєш ти корисні навички для майбутньої роботи?", 
+            example: "Yes, I have. / No, I haven't.",
+            acceptable: ["yes, i have", "no, i haven't", "no, i have not", "yes, i have got useful skills"]
+        },
+        { 
+            id: 8, 
+            question: "Do students have to work hard for success?", 
+            ua: "Чи мусять студенти наполегливо працювати для успіху?", 
+            example: "Yes, they do. / No, they don't.",
+            acceptable: ["yes, they do", "no, they don't", "no, they do not", "yes, students do"]
+        },
+        { 
+            id: 9, 
+            question: "Does an employee have to be a role model?", 
+            ua: "Чи мусить працівник бути прикладом для наслідування?", 
+            example: "Yes, he/she does. / No, he/she doesn't.",
+            acceptable: ["yes, he does", "yes, she does", "no, he doesn't", "no, she doesn't", "no, he does not", "no, she does not"]
+        },
+        { 
+            id: 10, 
+            question: "Have you got a lot of homework today?", 
+            ua: "Чи маєш ти багато домашнього завдання сьогодні?", 
+            example: "Yes, I have. / No, I haven't.",
+            acceptable: ["yes, i have", "no, i haven't", "no, i have not", "yes, i have got a lot of homework"]
+        }
+    ];
+
+    function normalizeText(str) {
+        return str
+            .trim()
+            .replace(/’/g, "'")
+            .replace(/\s+/g, ' ')
+            .replace(/[.!?]$/, '');
+    }
+
+    function renderExercise() {
+        const list = document.getElementById('exerciseList');
+        list.innerHTML = '';
+
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'sentence-card';
+            card.id = `card-${item.id}`;
+
+            card.innerHTML = `
+                <div class="original-text">
+                    <span class="num-badge">${item.id}</span>
+                    <div class="text-group">
+                        <span>${item.question}</span>
+                        <span class="translation-hint">(${item.ua})</span>
+                    </div>
+                </div>
+                <input type="text" class="input-box" id="input-${item.id}" placeholder="Type your answer here..." autocomplete="off">
+                <div class="feedback-text" id="feedback-${item.id}">Example answers: ${item.example}</div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        data.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const input = document.getElementById(`input-${item.id}`);
+            const feedback = document.getElementById(`feedback-${item.id}`);
+
+            const userVal = normalizeText(input.value).toLowerCase();
+
+            card.classList.remove('correct', 'incorrect');
+            feedback.style.display = 'none';
+
+            // Проверка по списку допустимых ответов или ключевым конструкциям
+            const isMatch = item.acceptable.some(acc => userVal.startsWith(acc) || userVal === acc);
+
+            if (isMatch && userVal.length > 0) {
+                card.classList.add('correct');
+                correctCount++;
+            } else {
+                card.classList.add('incorrect');
+                feedback.style.display = 'block';
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: ${correctCount} / ${data.length}`;
+        scoreDisplay.style.color = correctCount === data.length ? 'var(--accent-green)' : 'var(--accent-blue)';
+    }
+
+    function resetExercise() {
+        data.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const input = document.getElementById(`input-${item.id}`);
+            const feedback = document.getElementById(`feedback-${item.id}`);
+
+            card.classList.remove('correct', 'incorrect');
+            input.value = '';
+            feedback.style.display = 'none';
+        });
+
+        document.getElementById('scoreDisplay').textContent = `Score: - / ${data.length}`;
+        document.getElementById('scoreDisplay').style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = renderExercise;
+</script>
+
+</body>
+</html>
