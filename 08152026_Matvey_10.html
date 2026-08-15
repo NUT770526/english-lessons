@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read and find 3 incorrect statements</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --input-bg: #111827;
+            --word-bg: rgba(56, 189, 248, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+        }
+
+        .header-icon {
+            font-size: 1.8rem;
+        }
+
+        /* TEXT PASSAGE */
+        .passage-box {
+            background: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            color: #e2e8f0;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .passage-box p {
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        .passage-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* HARD WORDS */
+        .hard-word {
+            background: var(--word-bg);
+            color: var(--accent-blue);
+            border-bottom: 2px dashed var(--accent-blue);
+            padding: 2px 6px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+
+        .hard-word:hover {
+            background: rgba(56, 189, 248, 0.3);
+        }
+
+        /* TOOLTIP POPUP */
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%) translateY(5px);
+            background: #1e293b;
+            border: 1px solid var(--accent-blue);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            white-space: nowrap;
+            z-index: 100;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: var(--accent-blue) transparent transparent transparent;
+        }
+
+        .hard-word:hover .tooltip, .hard-word.active .tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .tooltip-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .tooltip-ipa {
+            color: var(--accent-purple);
+            font-size: 0.85rem;
+        }
+
+        .tooltip-translation {
+            color: #4ade80;
+            font-weight: 600;
+        }
+
+        .speaker-btn {
+            background: rgba(56, 189, 248, 0.2);
+            border: none;
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: transform 0.15s ease;
+        }
+
+        .speaker-btn:hover {
+            transform: scale(1.15);
+        }
+
+        /* EXERCISE SECTION */
+        .exercise-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .statements-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .statement-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px 20px;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .statement-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .statement-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        .flag-btn {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .statement-card.is-incorrect {
+            border-color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .statement-card.is-incorrect .flag-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .correction-box {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .statement-card.is-incorrect .correction-box {
+            display: flex;
+        }
+
+        .correction-input {
+            width: 100%;
+            background: #1e293b;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease;
+        }
+
+        .correction-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 600px) {
+            .statement-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .flag-btn {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-title">
+        <span class="header-icon">📖</span> Read and find 3 incorrect statements. Correct them
+    </div>
+
+    <!-- READING PASSAGE WITH HIGHLIGHTED WORDS -->
+    <div class="passage-box">
+        <p>
+            British teens live in a world that 
+            <span class="hard-word" onclick="toggleWord(event, 'mixes')">
+                mixes
+                <span class="tooltip">
+                    <span class="tooltip-header">
+                        <span><strong>mixes</strong> <span class="tooltip-ipa">[/ˈmɪksɪz/]</span></span>
+                        <button class="speaker-btn" onclick="speakWord(event, 'mixes')">🔊</button>
+                    </span>
+                    <span class="tooltip-translation">смешивает, сочетает</span>
+                </span>
+            </span> 
+            old traditions with 
+            <span class="hard-word" onclick="toggleWord(event, 'fast-paced')">
+                fast-paced
+                <span class="tooltip">
+                    <span class="tooltip-header">
+                        <span><strong>fast-paced</strong> <span class="tooltip-ipa">[/ˌfɑːstˈpeɪst/]</span></span>
+                        <button class="speaker-btn" onclick="speakWord(event, 'fast-paced')">🔊</button>
+                    </span>
+                    <span class="tooltip-translation">быстрый, стремительный</span>
+                </span>
+            </span> 
+            modern life. They aren’t 
+            <span class="hard-word" onclick="toggleWord(event, 'hooked on')">
+                hooked on
+                <span class="tooltip">
+                    <span class="tooltip-header">
+                        <span><strong>hooked on</strong> <span class="tooltip-ipa">[/hʊkt ɒn/]</span></span>
+                        <button class="speaker-btn" onclick="speakWord(event, 'hooked on')">🔊</button>
+                    </span>
+                    <span class="tooltip-translation">«подсажены» на, подсели на</span>
+                </span>
+            </span> 
+            social media unlike teens from other countries; they prefer visiting 
+            <span class="hard-word" onclick="toggleWord(event, 'historical spots')">
+                historical spots
+                <span class="tooltip">
+                    <span class="tooltip-header">
+                        <span><strong>historical spots</strong> <span class="tooltip-ipa">[/hɪˈstɒrɪkl spɒts/]</span></span>
+                        <button class="speaker-btn" onclick="speakWord(event, 'historical spots')">🔊</button>
+                    </span>
+                    <span class="tooltip-translation">исторические места</span>
+                </span>
+            </span> 
+            like castles and museums.
+        </p>
+
+        <p>
+            As they get closer to 
+            <span class="hard-word" onclick="toggleWord(event, 'adulthood')">
+                adulthood
+                <span class="tooltip">
+                    <span class="tooltip-header">
+                        <span><strong>adulthood</strong> <span class="tooltip-ipa">[/ˈædʌlthʊd/]</span></span>
+                        <button class="speaker-btn" onclick="speakWord(event, 'adulthood')">🔊</button>
+                    </span>
+                    <span class="tooltip-translation">взрослая жизнь, совершеннолетие</span>
+                </span>
+            </span>, 
+            they start 
+            <span class="hard-word" onclick="toggleWord(event, 'gaining independence')">
+                gaining independence
+                <span class="tooltip">
+                    <span class="tooltip-header">
+                        <span><strong>gaining independence</strong> <span class="tooltip-ipa">[/ˈɡeɪnɪŋ ˌɪndɪˈpendəns/]</span></span>
+                        <button class="speaker-btn" onclick="speakWord(event, 'gaining independence')">🔊</button>
+                    </span>
+                    <span class="tooltip-translation">обретать самостоятельность</span>
+                </span>
+            </span>. 
+            At 16, they become 
+            <span class="hard-word" onclick="toggleWord(event, 'legal adults')">
+                legal adults
+                <span class="tooltip">
+                    <span class="tooltip-header">
+                        <span><strong>legal adults</strong> <span class="tooltip-ipa">[/ˈliːɡl ˈædʌlts/]</span></span>
+                        <button class="speaker-btn" onclick="speakWord(event, 'legal adults')">🔊</button>
+                    </span>
+                    <span class="tooltip-translation">совершеннолетние по закону</span>
+                </span>
+            </span>, 
+            which means they can vote and make more decisions for themselves. Even though British teens enjoy being more independent, they also face 
+            <span class="hard-word" onclick="toggleWord(event, 'pressures')">
+                pressures
+                <span class="tooltip">
+                    <span class="tooltip-header">
+                        <span><strong>pressures</strong> <span class="tooltip-ipa">[/ˈpreʃəz/]</span></span>
+                        <button class="speaker-btn" onclick="speakWord(event, 'pressures')">🔊</button>
+                    </span>
+                    <span class="tooltip-translation">давление, стрессы</span>
+                </span>
+            </span> 
+            from school and thinking about their future. It’s all part of growing up in today’s world.
+        </p>
+
+        <p>
+            However, British teens are known for their 
+            <span class="hard-word" onclick="toggleWord(event, 'creativity')">
+                creativity
+                <span class="tooltip">
+                    <span class="tooltip-header">
+                        <span><strong>creativity</strong> <span class="tooltip-ipa">[/ˌkriːeɪˈtɪvəti/]</span></span>
+                        <button class="speaker-btn" onclick="speakWord(event, 'creativity')">🔊</button>
+                    </span>
+                    <span class="tooltip-translation">творчество, креативность</span>
+                </span>
+            </span>. 
+            Many of them have hobbies, play baseball (a national sport), or 
+            <span class="hard-word" onclick="toggleWord(event, 'volunteer')">
+                volunteer
+                <span class="tooltip">
+                    <span class="tooltip-header">
+                        <span><strong>volunteer</strong> <span class="tooltip-ipa">[/ˌvɒlənˈtɪə/]</span></span>
+                        <button class="speaker-btn" onclick="speakWord(event, 'volunteer')">🔊</button>
+                    </span>
+                    <span class="tooltip-translation">заниматься волонтерством</span>
+                </span>
+            </span>, 
+            which helps them stay active and happy. They also have a strong sense of friendship, which helps them support each other. Overall, British teens feel positive about their future and are excited for what’s coming.
+        </p>
+    </div>
+
+    <!-- STATEMENTS EXERCISE -->
+    <div class="exercise-title">
+        🔍 Click "Incorrect ❌" on the 3 wrong statements and write the correction:
+    </div>
+
+    <div class="statements-list" id="statementsList"></div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+    </div>
+</div>
+
+<script>
+    const statementsData = [
+        { id: 1, text: "British teens live in a world that mixes old traditions with fast-paced modern life." },
+        { id: 2, text: "They aren’t hooked on social media and prefer visiting historical spots like castles." },
+        { id: 3, text: "At 16, British teens become legal adults, can vote, and make decisions for themselves." },
+        { id: 4, text: "British teens face pressures from school and thinking about their future." },
+        { id: 5, text: "Baseball is the national sport that many British teens play." },
+        { id: 6, text: "British teens feel positive about their future and have a strong sense of friendship." }
+    ];
+
+    function renderStatements() {
+        const list = document.getElementById('statementsList');
+        list.innerHTML = '';
+
+        statementsData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'statement-card';
+            card.id = `card-${item.id}`;
+
+            card.innerHTML = `
+                <div class="statement-header">
+                    <div class="statement-text">${item.text}</div>
+                    <button class="flag-btn" id="flag-btn-${item.id}" onclick="toggleIncorrect(${item.id})">Mark Incorrect ❌</button>
+                </div>
+                <div class="correction-box">
+                    <input type="text" class="correction-input" id="input-${item.id}" placeholder="Write the correct statement here...">
+                </div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function toggleIncorrect(id) {
+        const card = document.getElementById(`card-${id}`);
+        const btn = document.getElementById(`flag-btn-${id}`);
+
+        if (card.classList.contains('is-incorrect')) {
+            card.classList.remove('is-incorrect');
+            btn.textContent = 'Mark Incorrect ❌';
+        } else {
+            card.classList.add('is-incorrect');
+            btn.textContent = 'Incorrect ❌';
+        }
+    }
+
+    function speakWord(event, text) {
+        event.stopPropagation();
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-GB';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Ваш браузер не поддерживает озвучку.");
+        }
+    }
+
+    function toggleWord(event, wordKey) {
+        event.stopPropagation();
+        const element = event.currentTarget;
+        const isActive = element.classList.contains('active');
+        
+        document.querySelectorAll('.hard-word').forEach(el => el.classList.remove('active'));
+        
+        if (!isActive) {
+            element.classList.add('active');
+        }
+    }
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.hard-word').forEach(el => el.classList.remove('active'));
+    });
+
+    function resetExercise() {
+        statementsData.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            const btn = document.getElementById(`flag-btn-${item.id}`);
+            const input = document.getElementById(`input-${item.id}`);
+
+            if (card) card.classList.remove('is-incorrect');
+            if (btn) btn.textContent = 'Mark Incorrect ❌';
+            if (input) input.value = '';
+        });
+    }
+
+    window.onload = () => {
+        renderStatements();
+    };
+</script>
+
+</body>
+</html>
