@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete the text with the words from the list</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --border-color: #334155;
+            --wordlist-bg: rgba(56, 189, 248, 0.08);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 25px;
+        }
+
+        .header-icon {
+            font-size: 1.8rem;
+        }
+
+        /* WORDLIST BOX */
+        .wordlist-box {
+            background: var(--wordlist-bg);
+            border: 1px dashed var(--accent-blue);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+
+        .wordlist-title {
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-right: 6px;
+        }
+
+        /* STORY PASSAGE */
+        .story-card {
+            background: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            line-height: 2.3;
+            font-size: 1.1rem;
+            color: #e2e8f0;
+        }
+
+        .select-inline {
+            background: #1e293b;
+            border: 1.5px solid var(--border-color);
+            color: var(--accent-blue);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0 4px;
+            min-width: 140px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .select-inline:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 600px) {
+            .story-card {
+                font-size: 1rem;
+                line-height: 2.5;
+            }
+            .select-inline {
+                min-width: 120px;
+                margin: 4px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-title">
+        <span class="header-icon">⌨️</span> Complete the text with the words from the list
+    </div>
+
+    <!-- WORDLIST BANNER -->
+    <div class="wordlist-box">
+        <span class="wordlist-title">Wordlist:</span> 
+        chaos, clutter, express oneself, mess, middle ground, nag, neat, path, pile, trip
+    </div>
+
+    <!-- STORY PASSAGE -->
+    <div class="story-card">
+        Okay, now I’m embarrassed. That was my room before I cleaned it. There was 
+        <select class="select-inline" id="gap-1">
+            <option value="" disabled selected></option>
+        </select> 
+        everywhere – a 
+        <select class="select-inline" id="gap-2">
+            <option value="" disabled selected></option>
+        </select> 
+        of clothes on the bed, a 
+        <select class="select-inline" id="gap-3">
+            <option value="" disabled selected></option>
+        </select> 
+        of books all over the place, and no clear 
+        <select class="select-inline" id="gap-4">
+            <option value="" disabled selected></option>
+        </select> 
+        to walk without tripping. It was such a 
+        <select class="select-inline" id="gap-5">
+            <option value="" disabled selected></option>
+        </select> 
+        that I could 
+        <select class="select-inline" id="gap-6">
+            <option value="" disabled selected></option>
+        </select> 
+        over stuff just trying to get to the door! I liked the clutter because it helped me 
+        <select class="select-inline" id="gap-7">
+            <option value="" disabled selected></option>
+        </select>, 
+        but my friends used to 
+        <select class="select-inline" id="gap-8">
+            <option value="" disabled selected></option>
+        </select> 
+        me to clean it up. So, I had to find a 
+        <select class="select-inline" id="gap-9">
+            <option value="" disabled selected></option>
+        </select> 
+        between being messy and keeping things 
+        <select class="select-inline" id="gap-10">
+            <option value="" disabled selected></option>
+        </select>. 
+        Now it looks better, but I kind of miss the mess.
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+    </div>
+</div>
+
+<script>
+    const wordlist = [
+        "chaos",
+        "clutter",
+        "express oneself",
+        "mess",
+        "middle ground",
+        "nag",
+        "neat",
+        "path",
+        "pile",
+        "trip"
+    ];
+
+    function populateSelects() {
+        const selects = document.querySelectorAll('.select-inline');
+        
+        selects.forEach(select => {
+            wordlist.forEach(word => {
+                const opt = document.createElement('option');
+                opt.value = word;
+                opt.textContent = word;
+                select.appendChild(opt);
+            });
+        });
+    }
+
+    function resetExercise() {
+        document.querySelectorAll('.select-inline').forEach(select => {
+            select.selectedIndex = 0;
+        });
+    }
+
+    window.onload = () => {
+        populateSelects();
+    };
+</script>
+
+</body>
+</html>
