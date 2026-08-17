@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Упражнение 2 — Pre-Intermediate</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --accent-yellow: #facc15;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .word-bank {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .word-chip {
+            background: #1e293b;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.2);
+            border: none;
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .sentence-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sentence-item {
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .sentence-item.correct {
+            border-color: var(--accent-green) !important;
+            background: rgba(74, 222, 128, 0.08) !important;
+        }
+
+        .sentence-item.incorrect {
+            border-color: var(--accent-red) !important;
+            background: rgba(248, 113, 113, 0.08) !important;
+        }
+
+        .sentence-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #ffffff;
+            flex-grow: 1;
+        }
+
+        .num-badge {
+            color: var(--accent-blue);
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        select.word-select {
+            background: #1e293b;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+            min-width: 130px;
+        }
+
+        select.word-select:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-title">2. Выберите подходящее слово</div>
+    
+    <div class="word-bank" id="wordBank"></div>
+
+    <div class="sentence-list" id="sentenceList"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Результат: - / 15</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Проверить ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Сбросить 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const words = [
+        "honest", "reliable", "mature", "helpful", "selfish", 
+        "friendly", "intelligent", "organized", "ambitious", "attractive", 
+        "employed", "happy", "possible", "truth", "rather"
+    ];
+
+    const sentences = [
+        { id: 1, part1: "Anna keeps her promises. She is very ", part2: ".", correct: "reliable" },
+        { id: 2, part1: "Mark thinks only about himself. He is ", part2: " selfish.", correct: "rather" },
+        { id: 3, part1: "She has a good job, so she is ", part2: ".", correct: "employed" },
+        { id: 4, part1: "Is it ", part2: " to finish this work today?", correct: "possible" },
+        { id: 5, part1: "Kate always plans her day. She is very ", part2: ".", correct: "organized" },
+        { id: 6, part1: "This city is very ", part2: " in spring.", correct: "attractive" },
+        { id: 7, part1: "He acts like an adult. He is quite ", part2: " for his age.", correct: "mature" },
+        { id: 8, part1: "She has a good family and feels very ", part2: ".", correct: "happy" },
+        { id: 9, part1: "David wants to build a great career. He is very ", part2: ".", correct: "ambitious" },
+        { id: 10, part1: "If you need help, ask Alex. He is always ", part2: ".", correct: "helpful" },
+        { id: 11, part1: "You can trust Maria. She always tells the ", part2: ".", correct: "truth" },
+        { id: 12, part1: "It is easy to talk to my team because they are ", part2: ".", correct: "friendly" },
+        { id: 13, part1: "He solves difficult problems easily. He is very ", part2: ".", correct: "intelligent" },
+        { id: 14, part1: "Always tell your manager what happened. Be ", part2: ".", correct: "honest" },
+        { id: 15, part1: "Jack is a ", part2: " friend. He always helps in difficult times.", correct: "reliable" }
+    ];
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function renderWordBank() {
+        const bank = document.getElementById('wordBank');
+        bank.innerHTML = '';
+        words.forEach(w => {
+            const chip = document.createElement('div');
+            chip.className = 'word-chip';
+            chip.innerHTML = `${w} <button class="audio-btn" onclick="speak('${w}')" title="Прослушать слово">🔊</button>`;
+            bank.appendChild(chip);
+        });
+    }
+
+    function renderSentences() {
+        const list = document.getElementById('sentenceList');
+        list.innerHTML = '';
+
+        sentences.forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'sentence-item';
+            div.id = `item-${s.id}`;
+
+            let selectHtml = `<select class="word-select" id="select-${s.id}">
+                <option value="">_______</option>`;
+            words.forEach(w => {
+                selectHtml += `<option value="${w}">${w}</option>`;
+            });
+            selectHtml += `</select>`;
+
+            const fullText = s.part1 + s.correct + s.part2;
+
+            div.innerHTML = `
+                <div class="sentence-text">
+                    <span class="num-badge">${s.id}.</span>
+                    ${s.part1}${selectHtml}${s.part2}
+                </div>
+                <button class="audio-btn" onclick="speak('${fullText.replace(/'/g, "\\'")}')" title="Прослушать предложение">🔊</button>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        sentences.forEach(s => {
+            const row = document.getElementById(`item-${s.id}`);
+            const select = document.getElementById(`select-${s.id}`);
+            
+            row.classList.remove('correct', 'incorrect');
+
+            if (select.value === s.correct) {
+                row.classList.add('correct');
+                correctCount++;
+            } else {
+                row.classList.add('incorrect');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Результат: ${correctCount} / ${sentences.length}`;
+        scoreDisplay.style.color = correctCount === sentences.length ? 'var(--accent-green)' : 'var(--accent-blue)';
+    }
+
+    function resetExercise() {
+        sentences.forEach(s => {
+            const row = document.getElementById(`item-${s.id}`);
+            const select = document.getElementById(`select-${s.id}`);
+            row.classList.remove('correct', 'incorrect');
+            select.value = '';
+        });
+
+        document.getElementById('scoreDisplay').textContent = `Результат: - / ${sentences.length}`;
+        document.getElementById('scoreDisplay').style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = () => {
+        renderWordBank();
+        renderSentences();
+    };
+</script>
+
+</body>
+</html>
