@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Словарь и Упражнение 3</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --accent-yellow: #facc15;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Vocab Table */
+        .vocab-table-container {
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .vocab-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--input-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .vocab-table th, .vocab-table td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        .vocab-table th {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            font-weight: 700;
+        }
+
+        .vocab-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.2);
+            border: none;
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        /* Exercise Styles */
+        .word-bank {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .word-chip {
+            background: #1e293b;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sentence-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sentence-item {
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .sentence-item.correct {
+            border-color: var(--accent-green) !important;
+            background: rgba(74, 222, 128, 0.08) !important;
+        }
+
+        .sentence-item.incorrect {
+            border-color: var(--accent-red) !important;
+            background: rgba(248, 113, 113, 0.08) !important;
+        }
+
+        .sentence-text {
+            font-size: 0.98rem;
+            line-height: 1.5;
+            color: #ffffff;
+            flex-grow: 1;
+        }
+
+        .num-badge {
+            color: var(--accent-blue);
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        select.word-select {
+            background: #1e293b;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 0.92rem;
+            outline: none;
+            cursor: pointer;
+            min-width: 160px;
+        }
+
+        select.word-select:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- VOCABULARY SECTION -->
+    <div class="section-title">📖 Словарь фраз (с озвучкой)</div>
+    <div class="vocab-table-container">
+        <table class="vocab-table">
+            <thead>
+                <tr>
+                    <th>Фраза / Выражение</th>
+                    <th>Перевод</th>
+                    <th style="text-align: center;">Озвучка</th>
+                </tr>
+            </thead>
+            <tbody id="vocabTableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- EXERCISE SECTION -->
+    <div class="section-title">✏️ 3. Вставьте подходящую фразу</div>
+    
+    <div class="word-bank" id="phraseBank"></div>
+
+    <div class="sentence-list" id="sentenceList"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Результат: - / 15</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Проверить ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Сбросить 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const dictionary = [
+        { phrase: "be considerate of", translation: "быть внимательным к / считаться с" },
+        { phrase: "be sure", translation: "быть уверенным" },
+        { phrase: "be polite to", translation: "быть вежливым с" },
+        { phrase: "describe", translation: "описывать" },
+        { phrase: "attitude to", translation: "отношение к" },
+        { phrase: "let somebody down", translation: "подводить кого-либо" },
+        { phrase: "achieve success", translation: "добиваться успеха" },
+        { phrase: "would rather", translation: "предпочёл бы" },
+        { phrase: "take care of", translation: "заботиться о" },
+        { phrase: "pay attention to", translation: "обращать внимание на" },
+        { phrase: "depend on", translation: "зависеть от / полагаться на" },
+        { phrase: "make mistakes", translation: "совершать ошибки" },
+        { phrase: "look for", translation: "искать" },
+        { phrase: "agree with", translation: "соглашаться с" },
+        { phrase: "spend time with", translation: "проводить время с" }
+    ];
+
+    const sentences = [
+        { id: 1, part1: "You should ", part2: " other people’s feelings.", correct: "be considerate of" },
+        { id: 2, part1: "Please ", part2: " our customers and say hello.", correct: "be polite to" },
+        { id: 3, part1: "Can you ", part2: " your best friend in three words?", correct: "describe" },
+        { id: 4, part1: "What is your ", part2: " working from home?", correct: "attitude to" },
+        { id: 5, part1: "You can ", part2: " that I will help you tomorrow.", correct: "be sure" },
+        { id: 6, part1: "A reliable person never wants to ", part2: " his friends.", correct: "let somebody down" },
+        { id: 7, part1: "You need to work hard to ", part2: " in your job.", correct: "achieve success" },
+        { id: 8, part1: "I ", part2: " stay at home tonight than go out.", correct: "would rather" },
+        { id: 9, part1: "Parents always try to ", part2: " their children.", correct: "take care of" },
+        { id: 10, part1: "Please ", part2: " what the teacher is saying.", correct: "pay attention to" },
+        { id: 11, part1: "You can always ", part2: " me when you have a problem.", correct: "depend on" },
+        { id: 12, part1: "Don't worry, everyone can ", part2: " when learning a language.", correct: "make mistakes" },
+        { id: 13, part1: "I need to ", part2: " my keys; I can't find them anywhere.", correct: "look for" },
+        { id: 14, part1: "I completely ", part2: " you; that is a great idea!", correct: "agree with" },
+        { id: 15, part1: "I love to ", part2: " my family at the weekend.", correct: "spend time with" }
+    ];
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function renderVocabTable() {
+        const tbody = document.getElementById('vocabTableBody');
+        tbody.innerHTML = '';
+        dictionary.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${item.phrase}</strong></td>
+                <td style="color: var(--text-muted);">${item.translation}</td>
+                <td style="text-align: center;">
+                    <button class="audio-btn" onclick="speak('${item.phrase}')" title="Прослушать">🔊</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function renderPhraseBank() {
+        const bank = document.getElementById('phraseBank');
+        bank.innerHTML = '';
+        dictionary.forEach(item => {
+            const chip = document.createElement('div');
+            chip.className = 'word-chip';
+            chip.innerHTML = `${item.phrase} <button class="audio-btn" onclick="speak('${item.phrase}')" title="Прослушать фразу">🔊</button>`;
+            bank.appendChild(chip);
+        });
+    }
+
+    function renderSentences() {
+        const list = document.getElementById('sentenceList');
+        list.innerHTML = '';
+
+        sentences.forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'sentence-item';
+            div.id = `item-${s.id}`;
+
+            let selectHtml = `<select class="word-select" id="select-${s.id}">
+                <option value="">_______</option>`;
+            dictionary.forEach(item => {
+                selectHtml += `<option value="${item.phrase}">${item.phrase}</option>`;
+            });
+            selectHtml += `</select>`;
+
+            const fullText = s.part1 + s.correct + s.part2;
+
+            div.innerHTML = `
+                <div class="sentence-text">
+                    <span class="num-badge">${s.id}.</span>
+                    ${s.part1}${selectHtml}${s.part2}
+                </div>
+                <button class="audio-btn" onclick="speak('${fullText.replace(/'/g, "\\'")}')" title="Прослушать предложение">🔊</button>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        sentences.forEach(s => {
+            const row = document.getElementById(`item-${s.id}`);
+            const select = document.getElementById(`select-${s.id}`);
+            
+            row.classList.remove('correct', 'incorrect');
+
+            if (select.value === s.correct) {
+                row.classList.add('correct');
+                correctCount++;
+            } else {
+                row.classList.add('incorrect');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Результат: ${correctCount} / ${sentences.length}`;
+        scoreDisplay.style.color = correctCount === sentences.length ? 'var(--accent-green)' : 'var(--accent-blue)';
+    }
+
+    function resetExercise() {
+        sentences.forEach(s => {
+            const row = document.getElementById(`item-${s.id}`);
+            const select = document.getElementById(`select-${s.id}`);
+            row.classList.remove('correct', 'incorrect');
+            select.value = '';
+        });
+
+        document.getElementById('scoreDisplay').textContent = `Результат: - / ${sentences.length}`;
+        document.getElementById('scoreDisplay').style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = () => {
+        renderVocabTable();
+        renderPhraseBank();
+        renderSentences();
+    };
+</script>
+
+</body>
+</html>
