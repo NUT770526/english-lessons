@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete the Sentences</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f4f7f6;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 850px;
+      width: 100%;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 15px;
+    }
+
+    .header-icon {
+      font-size: 1.8rem;
+      background: #eff6ff;
+      padding: 8px 12px;
+      border-radius: 10px;
+    }
+
+    h2 {
+      color: #1e293b;
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .sentence-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sentence-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 18px 20px;
+      line-height: 1.8;
+      font-size: 1.05rem;
+      color: #334155;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .sentence-card:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .sentence-num {
+      font-weight: bold;
+      color: #0284c7;
+      margin-right: 5px;
+    }
+
+    /* Custom Select Styling */
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: #ffffff;
+      border: 2px solid #94a3b8;
+      border-radius: 8px;
+      padding: 6px 32px 6px 12px;
+      font-size: 1rem;
+      color: #0f172a;
+      cursor: pointer;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s ease;
+      margin: 0 4px;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%3c64748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 16px;
+    }
+
+    select:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+
+    select.correct {
+      border-color: #22c55e;
+      background-color: #dcfce7;
+      color: #15803d;
+    }
+
+    select.incorrect {
+      border-color: #ef4444;
+      background-color: #fee2e2;
+      color: #b91c1c;
+    }
+
+    /* Audio Button */
+    .audio-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      margin-left: 8px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+      vertical-align: middle;
+    }
+
+    .audio-btn:hover {
+      opacity: 1;
+    }
+
+    /* Controls */
+    .controls {
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-check {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-check:hover {
+      background-color: #0369a1;
+    }
+
+    .btn-reset {
+      background-color: #e2e8f0;
+      color: #475569;
+    }
+
+    .btn-reset:hover {
+      background-color: #cbd5e1;
+    }
+
+    .result-score {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #1e293b;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">▶️</span>
+    <h2>Complete the sentences</h2>
+  </div>
+
+  <div class="sentence-list" id="exerciseBoard"></div>
+
+  <div class="controls">
+    <div>
+      <button class="btn btn-check" onclick="checkAnswers()">Проверить</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Сбросить</button>
+    </div>
+    <div class="result-score" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const sentencesData = [
+    {
+      id: 1,
+      prefix: "Many young people are learning English not only because they must study it at school, ",
+      suffix: ".",
+      options: [
+        "but for difficult other reasons.",
+        "but only for various other reasons.",
+        "but for various other reasons."
+      ],
+      correct: "but for various other reasons."
+    },
+    {
+      id: 2,
+      prefix: "Learning jargon and slang is cool but knowing only ",
+      suffix: " won't skyrocket your English.",
+      options: [
+        "those special words",
+        "those specific words",
+        "those specialised words"
+      ],
+      correct: "those special words"
+    },
+    {
+      id: 3,
+      prefix: "Speaking is about communicating and connecting ",
+      suffix: ".",
+      options: [
+        "with others",
+        "with people",
+        "with pupils"
+      ],
+      correct: "with others"
+    },
+    {
+      id: 4,
+      prefix: "But, if you ",
+      suffix: " to think about the correct grammar tense, then the person you are speaking to will get bored and lose interest in the conversation.",
+      options: [
+        "gap every five seconds",
+        "stop every five seconds",
+        "stop five seconds"
+      ],
+      correct: "stop every five seconds"
+    },
+    {
+      id: 5,
+      prefix: "Sometimes they make mistakes, but the conversation ",
+      suffix: ", doesn't stop and sounds natural.",
+      options: [
+        "continues to fly",
+        "continues to flow"
+      ],
+      correct: "continues to flow"
+    },
+    {
+      id: 6,
+      prefix: "Have you ",
+      suffix: "?",
+      options: [
+        "ever talked to native speakers",
+        "never talked to native speakers",
+        "ever talk to native speakers"
+      ],
+      correct: "ever talked to native speakers"
+    }
+  ];
+
+  // Web Speech API для озвучки
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function playSentence(id) {
+    const item = sentencesData.find(s => s.id === id);
+    const select = document.getElementById(`select-${id}`);
+    const selectedValue = select.value || "...";
+    const fullText = item.prefix + selectedValue + item.suffix;
+    speak(fullText);
+  }
+
+  // Отрисовка упражнения
+  function renderExercise() {
+    const board = document.getElementById("exerciseBoard");
+    board.innerHTML = "";
+
+    sentencesData.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "sentence-card";
+
+      const numSpan = document.createElement("span");
+      numSpan.className = "sentence-num";
+      numSpan.innerText = `${item.id}. `;
+
+      const select = document.createElement("select");
+      select.id = `select-${item.id}`;
+
+      // Дефолтный пустотный вариант
+      const defaultOpt = document.createElement("option");
+      defaultOpt.value = "";
+      defaultOpt.innerText = "Выберите вариант...";
+      defaultOpt.disabled = true;
+      defaultOpt.selected = true;
+      select.appendChild(defaultOpt);
+
+      // Варианты ответов
+      item.options.forEach(opt => {
+        const option = document.createElement("option");
+        option.value = opt;
+        option.innerText = opt;
+        select.appendChild(option);
+      });
+
+      // Озвучка при выборе элемента
+      select.addEventListener("change", () => {
+        select.classList.remove("correct", "incorrect");
+        speak(select.value);
+      });
+
+      // Кнопка прослушивания предложения целиком
+      const audioBtn = document.createElement("button");
+      audioBtn.className = "audio-btn";
+      audioBtn.innerHTML = "🔊";
+      audioBtn.title = "Прослушать предложение";
+      audioBtn.onclick = () => playSentence(item.id);
+
+      card.appendChild(numSpan);
+      card.appendChild(document.createTextNode(item.prefix));
+      card.appendChild(select);
+      card.appendChild(document.createTextNode(item.suffix));
+      card.appendChild(audioBtn);
+
+      board.appendChild(card);
+    });
+  }
+
+  // Проверка ответов
+  function checkAnswers() {
+    let score = 0;
+    sentencesData.forEach(item => {
+      const select = document.getElementById(`select-${item.id}`);
+      if (select.value === item.correct) {
+        select.className = "correct";
+        score++;
+      } else {
+        select.className = "incorrect";
+      }
+    });
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.innerText = `Результат: ${score} / ${sentencesData.length}`;
+  }
+
+  // Сброс
+  function resetExercise() {
+    renderExercise();
+    document.getElementById("scoreDisplay").innerText = "";
+  }
+
+  init: renderExercise();
+</script>
+
+</body>
+</html>
