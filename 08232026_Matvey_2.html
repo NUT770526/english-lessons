@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listen and Fill in the Gaps</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f4f7f6; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    
+    .container { max-width: 800px; width: 100%; background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    
+    h2 { color: #2c3e50; margin-top: 0; display: flex; align-items: center; gap: 10px; }
+    
+    /* Word Bank */
+    .word-bank {
+      display: flex; flex-wrap: wrap; gap: 8px; background: #f8fafc; padding: 15px;
+      border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px;
+    }
+    .word-chip {
+      background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 6px 14px;
+      border-radius: 20px; font-weight: 600; cursor: grab; user-select: none;
+      transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .word-chip:hover { background: #e0f2fe; border-color: #0284c7; color: #0369a1; }
+    .word-chip.dragging { opacity: 0.4; }
+    .word-chip.used { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+    /* Dialogue Section */
+    .dialogue { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+    .msg { padding: 15px 18px; border-radius: 12px; line-height: 1.8; position: relative; font-size: 1.05rem; }
+    .msg-michelle { background-color: #fff5f5; border: 1px solid #fecaca; color: #991b1b; }
+    .msg-stan { background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+    
+    .avatar { font-weight: bold; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 5px; display: inline-block; padding: 2px 8px; border-radius: 4px; }
+    .avatar-michelle { background: #fca5a5; color: #7f1d1d; }
+    .avatar-stan { background: #93c5fd; color: #1e3a8a; }
+
+    /* Drop Slots */
+    .drop-slot {
+      display: inline-block; min-width: 110px; height: 32px; border: 2px dashed #94a3b8;
+      border-radius: 6px; vertical-align: middle; margin: 0 4px; padding: 0 8px;
+      text-align: center; line-height: 28px; background: #fff; font-weight: bold;
+      color: #0f172a; transition: all 0.2s ease;
+    }
+    .drop-slot.drag-over { background: #f1f5f9; border-color: #0284c7; }
+    .drop-slot.correct { border: 2px solid #22c55e; background-color: #dcfce7; color: #15803d; }
+    .drop-slot.incorrect { border: 2px solid #ef4444; background-color: #fee2e2; color: #b91c1c; }
+
+    /* Audio Controls */
+    .audio-control { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; background: #f1f5f9; padding: 10px 15px; border-radius: 10px; }
+    .play-btn { background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .play-btn:hover { background: #1d4ed8; }
+    
+    .read-msg-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; margin-left: 8px; opacity: 0.7; }
+    .read-msg-btn:hover { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🧩 Listen and fill in the gaps</h2>
+  
+  <div class="audio-control">
+    <button class="play-btn" onclick="readFullDialogue()">▶ Прослушать диалог</button>
+    <span style="font-size: 0.9rem; color: #64748b;">(Нажмите на 🔊 возле реплики, чтобы озвучить её отдельно)</span>
+  </div>
+
+  <!-- Word Bank -->
+  <div class="word-bank" id="wordBank"></div>
+
+  <!-- Dialogue Board -->
+  <div class="dialogue" id="dialogueBoard"></div>
+</div>
+
+<script>
+  const words = ["Statistics", "consult", "native tongue", "French", "connect", "Geography", "important", "study", "subjects", "Science", "unites"];
+
+  const dialogueData = [
+    {
+      speaker: "Michelle",
+      text: "Stan, I need your help! I've taken too many <span class='drop-slot' data-ans='subjects'></span>, and now I feel tired. I need to refuse some of them."
+    },
+    {
+      speaker: "Stan",
+      text: "Hmm... Let me see... You have Math, <span class='drop-slot' data-ans='Geography'></span>, Sociology, PE, Art, Music, <span class='drop-slot' data-ans='French'></span>, Turkish, English, History, Literature, Statistics, <span class='drop-slot' data-ans='Science'></span>, and others. Yeah, it's too much. No wonder, you're tired."
+    },
+    {
+      speaker: "Michelle",
+      text: "I'm thinking about English, <span class='drop-slot' data-ans='Statistics'></span>, Music and one more."
+    },
+    {
+      speaker: "Stan",
+      text: "I agree with Statistics and Music. But I can't agree with English. Just think about it..."
+    },
+    {
+      speaker: "Michelle",
+      text: "Wait-wait-wait! I speak English very well. I just waste time with it. Do you <span class='drop-slot' data-ans='study'></span> English?"
+    },
+    {
+      speaker: "Stan",
+      text: "Many young people are learning English not only because they must study it at school, but for various other reasons. One <span class='drop-slot' data-ans='important'></span> reason is that English <span class='drop-slot' data-ans='unites'></span> people across cultures. Jump onto YouTube, Instagram, TikTok, or any other social media platform, and you will find people speaking to their subscribers and viewers not only in their <span class='drop-slot' data-ans='native tongue'></span> but in English. Davie504 is a famous YouTuber from Italy who creates all his videos in English, and not Italian, because he can <span class='drop-slot' data-ans='connect'></span> with more people that way. I have a book. The book is a smart one. Let's <span class='drop-slot' data-ans='consult'></span> it."
+    },
+    {
+      speaker: "Michelle",
+      text: "Ok-ok! Show me your book."
+    }
+  ];
+
+  // Synthesis Voice Setup
+  function speakText(text) {
+    window.speechSynthesis.cancel();
+    // Clear slot tags for proper speech
+    const cleanText = text.replace(/<[^>]*>/g, "___");
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function readFullDialogue() {
+    window.speechSynthesis.cancel();
+    dialogueData.forEach(item => {
+      const cleanText = item.speaker + " says: " + item.text.replace(/<[^>]*>/g, " ");
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    });
+  }
+
+  // Render UI
+  function init() {
+    const wordBank = document.getElementById('wordBank');
+    const dialogueBoard = document.getElementById('dialogueBoard');
+
+    // Shuffle and render words
+    [...words].sort(() => Math.random() - 0.5).forEach((word, idx) => {
+      const chip = document.createElement('div');
+      chip.className = 'word-chip';
+      chip.innerText = word;
+      chip.draggable = true;
+      chip.id = `word-${idx}`;
+
+      chip.addEventListener('click', () => speakText(word));
+      chip.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', word);
+        e.dataTransfer.setData('chip-id', chip.id);
+        chip.classList.add('dragging');
+      });
+      chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+
+      wordBank.appendChild(chip);
+    });
+
+    // Render dialogue
+    dialogueData.forEach(item => {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `msg msg-${item.speaker.toLowerCase()}`;
+
+      const avatar = document.createElement('span');
+      avatar.className = `avatar avatar-${item.speaker.toLowerCase()}`;
+      avatar.innerText = item.speaker;
+
+      const audioBtn = document.createElement('button');
+      audioBtn.className = 'read-msg-btn';
+      audioBtn.innerHTML = '🔊';
+      audioBtn.onclick = () => speakText(item.text);
+
+      const textDiv = document.createElement('div');
+      textDiv.innerHTML = item.text;
+
+      msgDiv.appendChild(avatar);
+      msgDiv.appendChild(audioBtn);
+      msgDiv.appendChild(textDiv);
+      dialogueBoard.appendChild(msgDiv);
+    });
+
+    // Setup Drop Zones
+    document.querySelectorAll('.drop-slot').forEach(slot => {
+      slot.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        slot.classList.add('drag-over');
+      });
+
+      slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+
+      slot.addEventListener('drop', (e) => {
+        e.preventDefault();
+        slot.classList.remove('drag-over');
+
+        const draggedWord = e.dataTransfer.getData('text/plain');
+        const chipId = e.dataTransfer.getData('chip-id');
+        const expectedWord = slot.dataset.ans;
+
+        if (draggedWord.toLowerCase() === expectedWord.toLowerCase()) {
+          slot.innerText = draggedWord;
+          slot.className = 'drop-slot correct';
+          const chip = document.getElementById(chipId);
+          if (chip) chip.classList.add('used');
+          speakText(draggedWord);
+        } else {
+          slot.innerText = '✕';
+          slot.classList.add('incorrect');
+          setTimeout(() => {
+            if (!slot.classList.contains('correct')) {
+              slot.innerText = '';
+              slot.classList.remove('incorrect');
+            }
+          }, 1000);
+        }
+      });
+    });
+  }
+
+  init();
+</script>
+
+</body>
+</html>
