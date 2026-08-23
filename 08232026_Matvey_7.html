@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вправа 2. Вибери правильний варіант</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #121212;
+      color: #f1f5f9;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      border: 1px solid #2d2d2d;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #333333;
+      padding-bottom: 15px;
+    }
+
+    .header-icon {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .quiz-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .quiz-card {
+      background: #262626;
+      border: 1px solid #3b3b3b;
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.2s ease;
+    }
+
+    .quiz-question {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #38bdf8;
+      margin-bottom: 15px;
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #1e1e1e;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #3a3a3a;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+    }
+
+    .option-label:hover {
+      background: #333333;
+      border-color: #38bdf8;
+    }
+
+    .option-label input[type="radio"] {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #64748b;
+      border-radius: 50%;
+      outline: none;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .option-label input[type="radio"]:checked {
+      border-color: #38bdf8;
+      background-color: #38bdf8;
+    }
+
+    /* Validation Styles */
+    .quiz-card.correct-card {
+      border-color: #22c55e;
+    }
+
+    .quiz-card.incorrect-card {
+      border-color: #ef4444;
+    }
+
+    .option-label.correct {
+      background-color: #14532d;
+      border-color: #22c55e;
+      color: #f0fdf4;
+    }
+
+    .option-label.incorrect {
+      background-color: #7f1d1d;
+      border-color: #ef4444;
+      color: #fef2f2;
+    }
+
+    /* Audio Button */
+    .audio-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      margin-left: auto;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .audio-btn:hover {
+      opacity: 1;
+    }
+
+    /* Controls */
+    .controls {
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 2px solid #333333;
+      padding-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-check {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-check:hover {
+      background-color: #0369a1;
+    }
+
+    .btn-reset {
+      background-color: #334155;
+      color: #f1f5f9;
+    }
+
+    .btn-reset:hover {
+      background-color: #475569;
+    }
+
+    .score-display {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">📝</span>
+    <h2>Вправа 2. Вибери правильний варіант</h2>
+  </div>
+
+  <div class="quiz-list" id="quizContainer"></div>
+
+  <div class="controls">
+    <div>
+      <button class="btn btn-check" onclick="checkAnswers()">Перевірити</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const quizData = [
+    {
+      id: 1,
+      question: "1. Рідна мова — це:",
+      options: [
+        { key: "a", text: "foreign language" },
+        { key: "b", text: "native language" },
+        { key: "c", text: "learning strategies" }
+      ],
+      correct: "b"
+    },
+    {
+      id: 2,
+      question: "2. Носій мови — це:",
+      options: [
+        { key: "a", text: "native speaker" },
+        { key: "b", text: "slang" },
+        { key: "c", text: "accuracy" }
+      ],
+      correct: "a"
+    },
+    {
+      id: 3,
+      question: "3. Надійний — це:",
+      options: [
+        { key: "a", text: "foreign" },
+        { key: "b", text: "bilingual" },
+        { key: "c", text: "reliable" }
+      ],
+      correct: "c"
+    },
+    {
+      id: 4,
+      question: "4. Вільне володіння мовою — це:",
+      options: [
+        { key: "a", text: "fluency" },
+        { key: "b", text: "learning" },
+        { key: "c", text: "jargon" }
+      ],
+      correct: "a"
+    },
+    {
+      id: 5,
+      question: "5. На мою думку — це:",
+      options: [
+        { key: "a", text: "I believe" },
+        { key: "b", text: "in my opinion" },
+        { key: "c", text: "speak English" }
+      ],
+      correct: "b"
+    },
+    {
+      id: 6,
+      question: "6. Слухати пісні — це:",
+      options: [
+        { key: "a", text: "listen to songs" },
+        { key: "b", text: "learning strategies" },
+        { key: "c", text: "native speaker" }
+      ],
+      correct: "a"
+    },
+    {
+      id: 7,
+      question: "7. Двомовний — це:",
+      options: [
+        { key: "a", text: "reliable" },
+        { key: "b", text: "bilingual" },
+        { key: "c", text: "foreign" }
+      ],
+      correct: "b"
+    },
+    {
+      id: 8,
+      question: "8. Точність — це:",
+      options: [
+        { key: "a", text: "fluency" },
+        { key: "b", text: "accuracy" },
+        { key: "c", text: "slang" }
+      ],
+      correct: "b"
+    }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function renderQuiz() {
+    const container = document.getElementById("quizContainer");
+    container.innerHTML = "";
+
+    quizData.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "quiz-card";
+      card.id = `card-${item.id}`;
+
+      const questionTitle = document.createElement("div");
+      questionTitle.className = "quiz-question";
+      questionTitle.innerText = item.question;
+      card.appendChild(questionTitle);
+
+      const optionsGroup = document.createElement("div");
+      optionsGroup.className = "options-group";
+
+      item.options.forEach(opt => {
+        const label = document.createElement("label");
+        label.className = "option-label";
+        label.id = `label-${item.id}-${opt.key}`;
+
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = `q-${item.id}`;
+        radio.value = opt.key;
+
+        radio.addEventListener("change", () => {
+          speak(opt.text);
+          clearCardValidation(item.id);
+        });
+
+        const spanText = document.createElement("span");
+        spanText.innerText = `${opt.key}. ${opt.text}`;
+
+        const audioBtn = document.createElement("button");
+        audioBtn.className = "audio-btn";
+        audioBtn.innerHTML = "🔊";
+        audioBtn.type = "button";
+        audioBtn.title = "Прослухати";
+        audioBtn.onclick = (e) => {
+          e.stopPropagation();
+          speak(opt.text);
+        };
+
+        label.appendChild(radio);
+        label.appendChild(spanText);
+        label.appendChild(audioBtn);
+        optionsGroup.appendChild(label);
+      });
+
+      card.appendChild(optionsGroup);
+      container.appendChild(card);
+    });
+  }
+
+  function clearCardValidation(id) {
+    const card = document.getElementById(`card-${id}`);
+    card.classList.remove("correct-card", "incorrect-card");
+    
+    const labels = card.querySelectorAll(".option-label");
+    labels.forEach(l => l.classList.remove("correct", "incorrect"));
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    quizData.forEach(item => {
+      clearCardValidation(item.id);
+
+      const selected = document.querySelector(`input[name="q-${item.id}"]:checked`);
+      const card = document.getElementById(`card-${item.id}`);
+
+      if (selected) {
+        const userChoice = selected.value;
+        const selectedLabel = document.getElementById(`label-${item.id}-${userChoice}`);
+
+        if (userChoice === item.correct) {
+          selectedLabel.classList.add("correct");
+          card.classList.add("correct-card");
+          score++;
+        } else {
+          selectedLabel.classList.add("incorrect");
+          // Підсвічуємо правильний варіант
+          const correctLabel = document.getElementById(`label-${item.id}-${item.correct}`);
+          correctLabel.classList.add("correct");
+          card.classList.add("incorrect-card");
+        }
+      } else {
+        // Якщо відповідь не обрана
+        const correctLabel = document.getElementById(`label-${item.id}-${item.correct}`);
+        correctLabel.classList.add("correct");
+        card.classList.add("incorrect-card");
+      }
+    });
+
+    document.getElementById("scoreDisplay").innerText = `Результат: ${score} / ${quizData.length}`;
+  }
+
+  function resetExercise() {
+    renderQuiz();
+    document.getElementById("scoreDisplay").innerText = "";
+  }
+
+  renderQuiz();
+</script>
+
+</body>
+</html>
