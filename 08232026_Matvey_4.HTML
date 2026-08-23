@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Put the words in the correct order</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f4f7f6;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 850px;
+      width: 100%;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 15px;
+    }
+
+    .header-icon {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      color: #1e293b;
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .exercise-item {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    /* Word Bank */
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
+      min-height: 42px;
+      background: #f8fafc;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px dashed #cbd5e1;
+    }
+
+    .word-chip {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: inline-block;
+    }
+
+    .word-chip:hover {
+      background: #e0f2fe;
+      border-color: #0284c7;
+      color: #0369a1;
+      transform: translateY(-1px);
+    }
+
+    .word-chip.dragging {
+      opacity: 0.4;
+    }
+
+    /* Sentence slots layout */
+    .sentence-container {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      line-height: 2.2;
+    }
+
+    .item-num {
+      font-weight: bold;
+      color: #0284c7;
+      font-size: 1.1rem;
+      margin-right: 5px;
+    }
+
+    .slot {
+      display: inline-block;
+      min-width: 110px;
+      height: 38px;
+      border: 2px dashed #94a3b8;
+      border-radius: 8px;
+      vertical-align: middle;
+      background: #fff;
+      text-align: center;
+      line-height: 34px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .slot.drag-over {
+      background: #f1f5f9;
+      border-color: #0284c7;
+    }
+
+    .slot.correct {
+      border: 2px solid #22c55e;
+      background-color: #dcfce7;
+    }
+
+    .slot.incorrect {
+      border: 2px solid #ef4444;
+      background-color: #fee2e2;
+    }
+
+    .punct {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #334155;
+      margin-left: 2px;
+    }
+
+    /* Controls */
+    .controls {
+      margin-top: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 2px solid #e2e8f0;
+      padding-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-check {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-check:hover {
+      background-color: #0369a1;
+    }
+
+    .btn-reset {
+      background-color: #e2e8f0;
+      color: #475569;
+    }
+
+    .btn-reset:hover {
+      background-color: #cbd5e1;
+    }
+
+    .audio-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      margin-left: 8px;
+      opacity: 0.7;
+    }
+
+    .audio-btn:hover {
+      opacity: 1;
+    }
+
+    .score-display {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #1e293b;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">🧩</span>
+    <h2>Put the words in the correct order</h2>
+  </div>
+
+  <div id="exerciseContainer"></div>
+
+  <div class="controls">
+    <div>
+      <button class="btn btn-check" onclick="checkAnswers()">Проверить</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Сбросить</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const exerciseData = [
+    {
+      id: 1,
+      bank: ["trip", "are", "they", "the", "ready", "for"],
+      correctOrder: ["Are", "they", "ready", "for", "the", "trip"],
+      punct: "?"
+    },
+    {
+      id: 2,
+      bank: ["need", "this", "for", "how", "do", "eggs", "cake", "many", "we"],
+      correctOrder: ["How", "many", "eggs", "do", "we", "need", "for", "this", "cake"],
+      punct: "?"
+    },
+    {
+      id: 3,
+      bank: ["you", "your", "done", "homework", "have"],
+      correctOrder: ["Have", "you", "done", "your", "homework"],
+      punct: "?"
+    },
+    {
+      id: 4,
+      bank: ["buy", "they", "she", "that", "or", "did", "house", "Did"],
+      correctOrder: ["Did", "she", "buy", "that", "house", "or", "did", "they"],
+      punct: "?"
+    },
+    {
+      id: 5,
+      bank: ["come", "our", "dad", "soon", "won't", "he", "will"],
+      correctOrder: ["Our", "dad", "will", "come", "soon", "won't", "he"],
+      punct: "?",
+      commaIndex: 4 // Запятая перед сплит-тегом (перед won't)
+    },
+    {
+      id: 6,
+      bank: ["skirts", "who", "wears", "here"],
+      correctOrder: ["Who", "wears", "skirts", "here"],
+      punct: "?"
+    }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function playSentence(id) {
+    const item = exerciseData.find(ex => ex.id === id);
+    const slots = document.querySelectorAll(`#slots-${id} .slot`);
+    const currentWords = Array.from(slots).map(s => s.innerText.trim()).filter(w => w !== "");
+    if (currentWords.length > 0) {
+      speak(currentWords.join(" ") + item.punct);
+    }
+  }
+
+  function renderExercise() {
+    const container = document.getElementById("exerciseContainer");
+    container.innerHTML = "";
+
+    exerciseData.forEach(item => {
+      const exDiv = document.createElement("div");
+      exDiv.className = "exercise-item";
+
+      // Word Bank
+      const bankDiv = document.createElement("div");
+      bankDiv.className = "word-bank";
+      bankDiv.id = `bank-${item.id}`;
+
+      // Shuffle bank items
+      const shuffledBank = [...item.bank].sort(() => Math.random() - 0.5);
+
+      shuffledBank.forEach((word, wIdx) => {
+        const chip = document.createElement("div");
+        chip.className = "word-chip";
+        chip.innerText = word;
+        chip.draggable = true;
+        chip.id = `chip-${item.id}-${wIdx}`;
+
+        chip.onclick = () => {
+          speak(word);
+          moveChipToFirstEmptySlot(chip, item.id);
+        };
+
+        chip.ondragstart = (e) => {
+          e.dataTransfer.setData("chipId", chip.id);
+          e.dataTransfer.setData("exId", item.id);
+          chip.classList.add("dragging");
+        };
+
+        chip.ondragend = () => chip.classList.remove("dragging");
+
+        bankDiv.appendChild(chip);
+      });
+
+      // Sentence Slots
+      const sentenceDiv = document.createElement("div");
+      sentenceDiv.className = "sentence-container";
+      sentenceDiv.id = `slots-${item.id}`;
+
+      const numSpan = document.createElement("span");
+      numSpan.className = "item-num";
+      numSpan.innerText = `${item.id}. `;
+      sentenceDiv.appendChild(numSpan);
+
+      item.correctOrder.forEach((_, sIdx) => {
+        // Добавление запятой для разделительных вопросов (разделительный вопрос №5)
+        if (item.commaIndex && sIdx === item.commaIndex) {
+          const comma = document.createElement("span");
+          comma.className = "punct";
+          comma.innerText = ",";
+          sentenceDiv.appendChild(comma);
+        }
+
+        const slot = document.createElement("div");
+        slot.className = "slot";
+        slot.dataset.exId = item.id;
+        slot.dataset.slotIdx = sIdx;
+
+        slot.onclick = () => {
+          const chip = slot.querySelector(".word-chip");
+          if (chip) {
+            bankDiv.appendChild(chip);
+            slot.classList.remove("correct", "incorrect");
+          }
+        };
+
+        slot.ondragover = (e) => {
+          e.preventDefault();
+          slot.classList.add("drag-over");
+        };
+
+        slot.ondragleave = () => slot.classList.remove("drag-over");
+
+        slot.ondrop = (e) => {
+          e.preventDefault();
+          slot.classList.remove("drag-over");
+          const chipId = e.dataTransfer.getData("chipId");
+          const exId = e.dataTransfer.getData("exId");
+
+          if (exId == item.id) {
+            const chip = document.getElementById(chipId);
+            // Если в слоте уже есть карточка, возвращаем её в банк
+            if (slot.children.length > 0) {
+              bankDiv.appendChild(slot.children[0]);
+            }
+            slot.appendChild(chip);
+            slot.classList.remove("correct", "incorrect");
+          }
+        };
+
+        sentenceDiv.appendChild(slot);
+      });
+
+      const punctSpan = document.createElement("span");
+      punctSpan.className = "punct";
+      punctSpan.innerText = item.punct;
+      sentenceDiv.appendChild(punctSpan);
+
+      const audioBtn = document.createElement("button");
+      audioBtn.className = "audio-btn";
+      audioBtn.innerHTML = "🔊";
+      audioBtn.title = "Прослушать построенное предложение";
+      audioBtn.onclick = () => playSentence(item.id);
+      sentenceDiv.appendChild(audioBtn);
+
+      exDiv.appendChild(bankDiv);
+      exDiv.appendChild(sentenceDiv);
+      container.appendChild(exDiv);
+    });
+  }
+
+  function moveChipToFirstEmptySlot(chip, exId) {
+    const slots = document.querySelectorAll(`#slots-${exId} .slot`);
+    for (let slot of slots) {
+      if (slot.children.length === 0) {
+        slot.appendChild(chip);
+        slot.classList.remove("correct", "incorrect");
+        break;
+      }
+    }
+  }
+
+  function checkAnswers() {
+    let totalScore = 0;
+
+    exerciseData.forEach(item => {
+      const slots = document.querySelectorAll(`#slots-${item.id} .slot`);
+      let isSentenceCorrect = true;
+
+      slots.forEach((slot, idx) => {
+        const chip = slot.children[0];
+        const userWord = chip ? chip.innerText.trim().toLowerCase() : "";
+        const targetWord = item.correctOrder[idx].toLowerCase();
+
+        if (userWord === targetWord) {
+          slot.className = "slot correct";
+        } else {
+          slot.className = "slot incorrect";
+          isSentenceCorrect = false;
+        }
+      });
+
+      if (isSentenceCorrect) totalScore++;
+    });
+
+    document.getElementById("scoreDisplay").innerText = `Результат: ${totalScore} / ${exerciseData.length}`;
+  }
+
+  function resetExercise() {
+    renderExercise();
+    document.getElementById("scoreDisplay").innerText = "";
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
