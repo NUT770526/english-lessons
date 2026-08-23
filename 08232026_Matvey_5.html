@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask for the underlined word or words</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f4f7f6; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    
+    .container { max-width: 900px; width: 100%; background: #ffffff; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    
+    .header { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; }
+    .header-icon { font-size: 1.8rem; }
+    h2 { color: #1e293b; margin: 0; font-size: 1.5rem; }
+
+    /* Table Grid */
+    .task-table { display: flex; flex-direction: column; gap: 15px; }
+    .task-row {
+      display: grid; grid-template-columns: 1.8fr 120px 2fr; gap: 15px; align-items: center;
+      background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 15px;
+      transition: border-color 0.2s;
+    }
+    
+    .sentence-box { font-size: 1.05rem; color: #1e293b; line-height: 1.5; background: #fff1f2; padding: 12px 15px; border-radius: 8px; border: 1px solid #fecdd3; }
+    .underline { text-decoration: underline; font-weight: bold; color: #be123c; }
+
+    .img-box { width: 100%; height: 80px; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f1f5f9; }
+    .img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+    .input-box { display: flex; flex-direction: column; gap: 8px; }
+    .input-wrapper { display: flex; align-items: center; gap: 8px; }
+    
+    input[type="text"] {
+      width: 100%; padding: 10px 14px; border: 2px solid #cbd5e1; border-radius: 8px;
+      font-size: 1rem; outline: none; transition: all 0.2s;
+    }
+    input[type="text"]:focus { border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); }
+    input[type="text"].correct { border-color: #22c55e; background-color: #dcfce7; color: #15803d; }
+    input[type="text"].incorrect { border-color: #ef4444; background-color: #fee2e2; color: #b91c1c; }
+
+    .feedback { font-size: 0.85rem; font-weight: 600; min-height: 18px; }
+    .feedback.correct { color: #16a34a; }
+    .feedback.incorrect { color: #dc2626; }
+
+    .audio-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; opacity: 0.7; transition: opacity 0.2s; }
+    .audio-btn:hover { opacity: 1; }
+
+    /* Controls */
+    .controls { margin-top: 30px; display: flex; align-items: center; justify-content: space-between; border-top: 2px solid #e2e8f0; padding-top: 20px; }
+    .btn { padding: 12px 24px; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-check { background-color: #0284c7; color: #ffffff; }
+    .btn-check:hover { background-color: #0369a1; }
+    .btn-reset { background-color: #e2e8f0; color: #475569; }
+    .btn-reset:hover { background-color: #cbd5e1; }
+    .score-display { font-size: 1.1rem; font-weight: bold; color: #1e293b; }
+
+    @media (max-width: 768px) {
+      .task-row { grid-template-columns: 1fr; }
+      .img-box { height: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">📣</span>
+    <h2>Ask for the underlined word or words</h2>
+  </div>
+
+  <div class="task-table" id="taskBoard"></div>
+
+  <div class="controls">
+    <div>
+      <button class="btn btn-check" onclick="checkAnswers()">Проверить</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Сбросить</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const tasksData = [
+    {
+      id: 1,
+      text: 'Columbus discovered <span class="underline">America</span> in 1492.',
+      speakSentence: 'Columbus discovered America in 1492.',
+      img: 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=300&auto=format&fit=crop&q=60',
+      answers: ['What did Columbus discover in 1492?', 'What did Columbus discover in 1492']
+    },
+    {
+      id: 2,
+      text: 'I don\'t want to go outside. <span class="underline">It\'s too cold.</span>',
+      speakSentence: 'I don\'t want to go outside. It\'s too cold.',
+      img: 'https://images.unsplash.com/photo-1517299321609-52687d1bc55a?w=300&auto=format&fit=crop&q=60',
+      answers: ['Why don\'t you want to go outside?', 'Why don\'t you want to go outside', 'Why do you not want to go outside?']
+    },
+    {
+      id: 3,
+      text: 'They were ready <span class="underline">before</span> we came.',
+      speakSentence: 'They were ready before we came.',
+      img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=300&auto=format&fit=crop&q=60',
+      answers: ['When were they ready?', 'When were they ready']
+    },
+    {
+      id: 4,
+      text: '<span class="underline">The mechanic</span> repaired the car last week.',
+      speakSentence: 'The mechanic repaired the car last week.',
+      img: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=300&auto=format&fit=crop&q=60',
+      answers: ['Who repaired the car last week?', 'Who repaired the car last week']
+    },
+    {
+      id: 5,
+      text: 'You can go swimming <span class="underline">after lunch</span>.',
+      speakSentence: 'You can go swimming after lunch.',
+      img: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=300&auto=format&fit=crop&q=60',
+      answers: ['When can I go swimming?', 'When can we go swimming?', 'When can you go swimming?', 'When can I go swimming', 'When can we go swimming']
+    },
+    {
+      id: 6,
+      text: 'That book is <span class="underline">mine</span>.',
+      speakSentence: 'That book is mine.',
+      img: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=300&auto=format&fit=crop&q=60',
+      answers: ['Whose book is that?', 'Whose is that book?', 'Whose book is that', 'Whose is that book']
+    },
+    {
+      id: 7,
+      text: 'You have <span class="underline">5 minutes</span> to finish the test.',
+      speakSentence: 'You have 5 minutes to finish the test.',
+      img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=300&auto=format&fit=crop&q=60',
+      answers: ['How much time do I have to finish the test?', 'How many minutes do I have to finish the test?', 'How much time do we have to finish the test?', 'How long do I have to finish the test?']
+    },
+    {
+      id: 8,
+      text: 'John is talking to <span class="underline">my sister</span>.',
+      speakSentence: 'John is talking to my sister.',
+      img: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=300&auto=format&fit=crop&q=60',
+      answers: ['Who is John talking to?', 'Whom is John talking to?', 'Who is John talking to', 'Whom is John talking to']
+    }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function renderExercise() {
+    const board = document.getElementById("taskBoard");
+    board.innerHTML = "";
+
+    tasksData.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "task-row";
+
+      // Sentence Column
+      const sentenceDiv = document.createElement("div");
+      sentenceDiv.className = "sentence-box";
+      sentenceDiv.innerHTML = `${item.id}. ${item.text} `;
+      
+      const audioBtn = document.createElement("button");
+      audioBtn.className = "audio-btn";
+      audioBtn.innerHTML = "🔊";
+      audioBtn.title = "Прослушать предложение";
+      audioBtn.onclick = () => speak(item.speakSentence);
+      sentenceDiv.appendChild(audioBtn);
+
+      // Image Column
+      const imgDiv = document.createElement("div");
+      imgDiv.className = "img-box";
+      const img = document.createElement("img");
+      img.src = item.img;
+      img.alt = "Illustration";
+      imgDiv.appendChild(img);
+
+      // Input Column
+      const inputDiv = document.createElement("div");
+      inputDiv.className = "input-box";
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "input-wrapper";
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.id = `input-${item.id}`;
+      input.placeholder = "Напишите вопрос...";
+
+      input.addEventListener("input", () => {
+        input.classList.remove("correct", "incorrect");
+        document.getElementById(`feedback-${item.id}`).innerText = "";
+      });
+
+      const qAudioBtn = document.createElement("button");
+      qAudioBtn.className = "audio-btn";
+      qAudioBtn.innerHTML = "🔊";
+      qAudioBtn.title = "Прослушать ваш вопрос";
+      qAudioBtn.onclick = () => {
+        if (input.value.trim() !== "") speak(input.value);
+      };
+
+      const feedback = document.createElement("div");
+      feedback.className = "feedback";
+      feedback.id = `feedback-${item.id}`;
+
+      wrapper.appendChild(input);
+      wrapper.appendChild(qAudioBtn);
+      inputDiv.appendChild(wrapper);
+      inputDiv.appendChild(feedback);
+
+      row.appendChild(sentenceDiv);
+      row.appendChild(imgDiv);
+      row.appendChild(inputDiv);
+
+      board.appendChild(row);
+    });
+  }
+
+  function cleanString(str) {
+    return str.trim().toLowerCase().replace(/[?.,!]/g, "").replace(/\s+/g, " ");
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    tasksData.forEach(item => {
+      const input = document.getElementById(`input-${item.id}`);
+      const feedback = document.getElementById(`feedback-${item.id}`);
+      const userVal = cleanString(input.value);
+
+      const isCorrect = item.answers.some(ans => cleanString(ans) === userVal);
+
+      if (isCorrect && userVal !== "") {
+        input.className = "correct";
+        feedback.className = "feedback correct";
+        feedback.innerText = "Правильно!";
+        score++;
+      } else {
+        input.className = "incorrect";
+        feedback.className = "feedback incorrect";
+        feedback.innerText = `Правильный ответ: ${item.answers[0]}`;
+      }
+    });
+
+    document.getElementById("scoreDisplay").innerText = `Результат: ${score} / ${tasksData.length}`;
+  }
+
+  function resetExercise() {
+    renderExercise();
+    document.getElementById("scoreDisplay").innerText = "";
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
