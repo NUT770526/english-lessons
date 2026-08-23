@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match questions to the answers</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f4f7f6;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 850px;
+      width: 100%;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 15px;
+    }
+
+    .header-icon {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      color: #1e293b;
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    /* Word / Question Bank */
+    .bank-title {
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .question-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+      min-height: 120px;
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 12px;
+      border: 2px dashed #cbd5e1;
+    }
+
+    .question-chip {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .question-chip:hover {
+      background: #e0f2fe;
+      border-color: #0284c7;
+      color: #0369a1;
+      transform: translateY(-2px);
+    }
+
+    .question-chip.dragging {
+      opacity: 0.4;
+    }
+
+    /* Matching Rows */
+    .match-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .match-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #ffffff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #f1f5f9;
+    }
+
+    .answer-label {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #334155;
+      min-width: 140px;
+    }
+
+    .answer-num {
+      color: #0284c7;
+      margin-right: 6px;
+    }
+
+    .arrow {
+      color: #94a3b8;
+      font-weight: bold;
+    }
+
+    .slot {
+      flex: 1;
+      min-height: 44px;
+      border: 2px dashed #94a3b8;
+      border-radius: 10px;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      padding: 4px 8px;
+      transition: all 0.2s ease;
+    }
+
+    .slot.drag-over {
+      background: #f1f5f9;
+      border-color: #0284c7;
+    }
+
+    .slot.correct {
+      border: 2px solid #22c55e;
+      background-color: #dcfce7;
+    }
+
+    .slot.incorrect {
+      border: 2px solid #ef4444;
+      background-color: #fee2e2;
+    }
+
+    /* Audio Icon */
+    .audio-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+      padding: 2px;
+    }
+
+    .audio-btn:hover {
+      opacity: 1;
+    }
+
+    /* Controls */
+    .controls {
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 2px solid #e2e8f0;
+      padding-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-check {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-check:hover {
+      background-color: #0369a1;
+    }
+
+    .btn-reset {
+      background-color: #e2e8f0;
+      color: #475569;
+    }
+
+    .btn-reset:hover {
+      background-color: #cbd5e1;
+    }
+
+    .score-display {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #1e293b;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">▶️</span>
+    <h2>Match questions to the answers</h2>
+  </div>
+
+  <div class="bank-title">Перетащите или нажмите на вопрос, чтобы сопоставить с ответом:</div>
+  <div class="question-bank" id="questionBank"></div>
+
+  <div class="match-list" id="matchList"></div>
+
+  <div class="controls">
+    <div>
+      <button class="btn btn-check" onclick="checkAnswers()">Проверить</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Сбросить</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const matchData = [
+    { id: 1, answer: "Jack", correctQuestion: "What's your name?" },
+    { id: 2, answer: "11", correctQuestion: "How old are you?" },
+    { id: 3, answer: "London", correctQuestion: "Where are you from?" },
+    { id: 4, answer: "2345678", correctQuestion: "What's your telephone number?" },
+    { id: 5, answer: "blue", correctQuestion: "What's your favourite colour?" },
+    { id: 6, answer: "No, I don't.", correctQuestion: "Do you have any pets?" },
+    { id: 7, answer: "volleyball", correctQuestion: "What's your favourite sport?" },
+    { id: 8, answer: "Yes, I have.", correctQuestion: "Have you got sisters or brothers?" },
+    { id: 9, answer: "It's 10 o'clock.", correctQuestion: "What's the time?" },
+    { id: 10, answer: "geography", correctQuestion: "What's your favourite subject at school?" }
+  ];
+
+  // Синтез речи
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function renderExercise() {
+    const bankDiv = document.getElementById("questionBank");
+    const listDiv = document.getElementById("matchList");
+
+    bankDiv.innerHTML = "";
+    listDiv.innerHTML = "";
+
+    // Собираем все вопросы и перемешиваем
+    const allQuestions = matchData.map(item => item.correctQuestion);
+    const shuffledQuestions = [...allQuestions].sort(() => Math.random() - 0.5);
+
+    // Отрисовка Банка вопросов
+    shuffledQuestions.forEach((qText, qIdx) => {
+      const chip = createQuestionChip(qText, `q-chip-${qIdx}`);
+      bankDiv.appendChild(chip);
+    });
+
+    // Отрисовка строк с ответами
+    matchData.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "match-row";
+
+      const label = document.createElement("div");
+      label.className = "answer-label";
+      label.innerHTML = `<span class="answer-num">${item.id}.</span> ${item.answer} <span class="arrow">→</span>`;
+
+      // Кнопка озвучки ответа
+      const ansAudioBtn = document.createElement("button");
+      ansAudioBtn.className = "audio-btn";
+      ansAudioBtn.innerText = "🔊";
+      ansAudioBtn.title = "Прослушать ответ";
+      ansAudioBtn.onclick = () => speak(item.answer);
+      label.appendChild(ansAudioBtn);
+
+      const slot = document.createElement("div");
+      slot.className = "slot";
+      slot.dataset.id = item.id;
+
+      slot.onclick = () => {
+        // Клик по слоту возвращает вопрос обратно в банк
+        const chip = slot.querySelector(".question-chip");
+        if (chip) {
+          bankDiv.appendChild(chip);
+          slot.classList.remove("correct", "incorrect");
+        }
+      };
+
+      slot.ondragover = (e) => {
+        e.preventDefault();
+        slot.classList.add("drag-over");
+      };
+
+      slot.ondragleave = () => slot.classList.remove("drag-over");
+
+      slot.ondrop = (e) => {
+        e.preventDefault();
+        slot.classList.remove("drag-over");
+        const chipId = e.dataTransfer.getData("text/plain");
+        const chip = document.getElementById(chipId);
+
+        if (chip) {
+          // Если в слоте уже есть карточка, переносим её в банк
+          if (slot.children.length > 0) {
+            bankDiv.appendChild(slot.children[0]);
+          }
+          slot.appendChild(chip);
+          slot.classList.remove("correct", "incorrect");
+        }
+      };
+
+      row.appendChild(label);
+      row.appendChild(slot);
+      listDiv.appendChild(row);
+    });
+  }
+
+  function createQuestionChip(text, id) {
+    const chip = document.createElement("div");
+    chip.className = "question-chip";
+    chip.innerText = text;
+    chip.draggable = true;
+    chip.id = id;
+
+    chip.onclick = (e) => {
+      e.stopPropagation();
+      speak(text);
+      moveChipToFirstEmptySlot(chip);
+    };
+
+    chip.ondragstart = (e) => {
+      e.dataTransfer.setData("text/plain", chip.id);
+      chip.classList.add("dragging");
+    };
+
+    chip.ondragend = () => chip.classList.remove("dragging");
+
+    return chip;
+  }
+
+  function moveChipToFirstEmptySlot(chip) {
+    const slots = document.querySelectorAll(".slot");
+    for (let slot of slots) {
+      if (slot.children.length === 0) {
+        slot.appendChild(chip);
+        slot.classList.remove("correct", "incorrect");
+        break;
+      }
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    matchData.forEach(item => {
+      const slot = document.querySelector(`.slot[data-id="${item.id}"]`);
+      const chip = slot.children[0];
+
+      if (chip && chip.innerText.trim() === item.correctQuestion) {
+        slot.className = "slot correct";
+        score++;
+      } else {
+        slot.className = "slot incorrect";
+      }
+    });
+
+    document.getElementById("scoreDisplay").innerText = `Результат: ${score} / ${matchData.length}`;
+  }
+
+  function resetExercise() {
+    renderExercise();
+    document.getElementById("scoreDisplay").innerText = "";
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
