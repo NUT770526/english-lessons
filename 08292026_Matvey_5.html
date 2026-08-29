@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5. Знайдіть і виправте помилку — Інтерактивна вправа</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .sentence-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .sentence-item {
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sentence-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.05rem;
+            line-height: 1.4;
+        }
+
+        .num-badge {
+            color: var(--accent-blue);
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        .corr-input {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+
+        .corr-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: none;
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #1f293d;
+            color: var(--text-muted);
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="title">5. Знайдіть і виправте помилку</div>
+        <div class="subtitle">Знайдіть помилку в кожному реченні та напишіть правильний варіант повністю.</div>
+    </div>
+
+    <div class="sentence-list" id="sentenceList"></div>
+
+    <div class="controls">
+        <button class="btn" onclick="resetExercise()">Очистити 🔄</button>
+    </div>
+</div>
+
+<script>
+    const sentences = [
+        {
+            id: 1,
+            text: "She is preferring to work with a partner.",
+            correctText: "She prefers to work with a partner."
+        },
+        {
+            id: 2,
+            text: "My boss employ many students.",
+            correctText: "My boss employs many students."
+        },
+        {
+            id: 3,
+            text: "The employee does research now.",
+            correctText: "The employee is doing research now."
+        },
+        {
+            id: 4,
+            text: "Did the company employed your classmate?",
+            correctText: "Did the company employ your classmate?"
+        },
+        {
+            id: 5,
+            text: "The teammates were do research at five o'clock.",
+            correctText: "The teammates were doing research at five o'clock."
+        },
+        {
+            id: 6,
+            text: "Our mentor didn't helped the new employee.",
+            correctText: "Our mentor didn't help the new employee."
+        },
+        {
+            id: 7,
+            text: "Are the student working with the mentor now?",
+            correctText: "Is the student working with the mentor now?"
+        },
+        {
+            id: 8,
+            text: "The boss was talk to a team member when I entered.",
+            correctText: "The boss was talking to a team member when I entered."
+        }
+    ];
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function renderSentences() {
+        const list = document.getElementById('sentenceList');
+        list.innerHTML = '';
+
+        sentences.forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'sentence-item';
+
+            div.innerHTML = `
+                <div class="sentence-header">
+                    <div><span class="num-badge">${s.id}.</span> ${s.text}</div>
+                    <button class="audio-btn" onclick="speak('${s.correctText.replace(/'/g, "\\'")}')" title="Прослухати правильне речення">🔊</button>
+                </div>
+                <input type="text" class="corr-input" id="input-${s.id}" placeholder="Напишіть правильне речення..." autocomplete="off" spellcheck="false">
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    function resetExercise() {
+        sentences.forEach(s => {
+            const input = document.getElementById(`input-${s.id}`);
+            if (input) input.value = '';
+        });
+    }
+
+    window.onload = renderSentences;
+</script>
+
+</body>
+</html>
