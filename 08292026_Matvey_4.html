@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3. Утворіть заперечення та питання — Інтерактивна вправа</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .subtitle ul {
+            margin: 6px 0 0 0;
+            padding-left: 20px;
+        }
+
+        .task-card {
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .original-sentence {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .num-badge {
+            color: var(--accent-blue);
+            margin-right: 6px;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .row-label {
+            font-weight: 700;
+            width: 20px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .row-label.neg { color: var(--accent-red); }
+        .row-label.q { color: var(--accent-blue); }
+
+        .text-input {
+            flex-grow: 1;
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .text-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
+        }
+
+        .text-input.correct {
+            border-color: var(--accent-green) !important;
+            background: rgba(74, 222, 128, 0.05);
+        }
+
+        .text-input.incorrect {
+            border-color: var(--accent-red) !important;
+            background: rgba(248, 113, 113, 0.05);
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: none;
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="title">3. Утворіть заперечення та питання</div>
+        <div class="subtitle">
+            Для кожного речення напишіть:
+            <ul>
+                <li><strong>–</strong> заперечну форму</li>
+                <li><strong>?</strong> питальну форму</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="exerciseContainer"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Результат: - / 16</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Перевірити ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Скинути 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const items = [
+        {
+            id: 1,
+            orig: "My boss employs students.",
+            negAnswers: ["my boss doesn't employ students.", "my boss does not employ students.", "my boss doesn't employ students", "my boss does not employ students"],
+            qAnswers: ["does my boss employ students?", "does my boss employ students"]
+        },
+        {
+            id: 2,
+            orig: "Our employees do research every week.",
+            negAnswers: ["our employees don't do research every week.", "our employees do not do research every week.", "our employees don't do research every week", "our employees do not do research every week"],
+            qAnswers: ["do our employees do research every week?", "do our employees do research every week"]
+        },
+        {
+            id: 3,
+            orig: "The student is doing research now.",
+            negAnswers: ["the student isn't doing research now.", "the student is not doing research now.", "the student isn't doing research now", "the student is not doing research now"],
+            qAnswers: ["is the student doing research now?", "is the student doing research now"]
+        },
+        {
+            id: 4,
+            orig: "The teammates are talking to their mentor.",
+            negAnswers: ["the teammates aren't talking to their mentor.", "the teammates are not talking to their mentor.", "the teammates aren't talking to their mentor", "the teammates are not talking to their mentor"],
+            qAnswers: ["are the teammates talking to their mentor?", "are the teammates talking to their mentor"]
+        },
+        {
+            id: 5,
+            orig: "The company employed my classmate last summer.",
+            negAnswers: ["the company didn't employ my classmate last summer.", "the company did not employ my classmate last summer.", "the company didn't employ my classmate last summer", "the company did not employ my classmate last summer"],
+            qAnswers: ["did the company employ my classmate last summer?", "did the company employ my classmate last summer"]
+        },
+        {
+            id: 6,
+            orig: "The mentor helped the new employee yesterday.",
+            negAnswers: ["the mentor didn't help the new employee yesterday.", "the mentor did not help the new employee yesterday.", "the mentor didn't help the new employee yesterday", "the mentor did not help the new employee yesterday"],
+            qAnswers: ["did the mentor help the new employee yesterday?", "did the mentor help the new employee yesterday"]
+        },
+        {
+            id: 7,
+            orig: "The boss was speaking to the partner at five o'clock.",
+            negAnswers: ["the boss wasn't speaking to the partner at five o'clock.", "the boss was not speaking to the partner at five o'clock.", "the boss wasn't speaking to the partner at five o'clock", "the boss was not speaking to the partner at five o'clock"],
+            qAnswers: ["was the boss speaking to the partner at five o'clock?", "was the boss speaking to the partner at five o'clock"]
+        },
+        {
+            id: 8,
+            orig: "The team members were doing research when the mentor arrived.",
+            negAnswers: ["the team members weren't doing research when the mentor arrived.", "the team members were not doing research when the mentor arrived.", "the team members weren't doing research when the mentor arrived", "the team members were not doing research when the mentor arrived"],
+            qAnswers: ["were the team members doing research when the mentor arrived?", "were the team members doing research when the mentor arrived"]
+        }
+    ];
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function renderExercise() {
+        const container = document.getElementById('exerciseContainer');
+        container.innerHTML = '';
+
+        items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'task-card';
+
+            card.innerHTML = `
+                <div class="original-sentence">
+                    <span><span class="num-badge">${item.id}.</span> ${item.orig}</span>
+                    <button class="audio-btn" onclick="speak('${item.orig.replace(/'/g, "\\'")}')" title="Прослухати">🔊</button>
+                </div>
+                <div class="input-row">
+                    <span class="row-label neg">–</span>
+                    <input type="text" class="text-input" id="neg-${item.id}" placeholder="Заперечна форма..." autocomplete="off">
+                </div>
+                <div class="input-row">
+                    <span class="row-label q">?</span>
+                    <input type="text" class="text-input" id="q-${item.id}" placeholder="Питальна форма..." autocomplete="off">
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function cleanString(str) {
+        return str.trim().toLowerCase().replace(/’/g, "'");
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+        const totalInputs = items.length * 2;
+
+        items.forEach(item => {
+            const negInput = document.getElementById(`neg-${item.id}`);
+            const qInput = document.getElementById(`q-${item.id}`);
+
+            const userNeg = cleanString(negInput.value);
+            const userQ = cleanString(qInput.value);
+
+            negInput.classList.remove('correct', 'incorrect');
+            qInput.classList.remove('correct', 'incorrect');
+
+            if (item.negAnswers.map(cleanString).includes(userNeg)) {
+                negInput.classList.add('correct');
+                correctCount++;
+            } else {
+                negInput.classList.add('incorrect');
+            }
+
+            if (item.qAnswers.map(cleanString).includes(userQ)) {
+                qInput.classList.add('correct');
+                correctCount++;
+            } else {
+                qInput.classList.add('incorrect');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Результат: ${correctCount} / ${totalInputs}`;
+        scoreDisplay.style.color = correctCount === totalInputs ? 'var(--accent-green)' : 'var(--accent-blue)';
+    }
+
+    function resetExercise() {
+        items.forEach(item => {
+            const negInput = document.getElementById(`neg-${item.id}`);
+            const qInput = document.getElementById(`q-${item.id}`);
+
+            negInput.value = '';
+            qInput.value = '';
+
+            negInput.classList.remove('correct', 'incorrect');
+            qInput.classList.remove('correct', 'incorrect');
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Результат: - / 16`;
+        scoreDisplay.style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = renderExercise;
+</script>
+
+</body>
+</html>
