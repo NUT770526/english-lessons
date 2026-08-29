@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6. Перекладіть англійською — Інтерактивна вправа</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .sentence-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .sentence-item {
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .sentence-item.correct {
+            border-color: var(--accent-green) !important;
+            background: rgba(74, 222, 128, 0.05) !important;
+        }
+
+        .sentence-item.incorrect {
+            border-color: var(--accent-red) !important;
+            background: rgba(248, 113, 113, 0.05) !important;
+        }
+
+        .sentence-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.05rem;
+            line-height: 1.4;
+        }
+
+        .num-badge {
+            color: var(--accent-blue);
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        .trans-input {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+
+        .trans-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: none;
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="title">6. Перекладіть англійською</div>
+        <div class="subtitle">Перекладіть речення англійською мовою.</div>
+    </div>
+
+    <div class="sentence-list" id="sentenceList"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Результат: - / 8</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Перевірити ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Скинути 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const sentences = [
+        {
+            id: 1,
+            ua: "Мій керівник часто наймає студентів.",
+            audioText: "My boss often employs students.",
+            valid: [
+                "my boss often employs students.",
+                "my boss often employs students",
+                "my manager often employs students.",
+                "my manager often employs students",
+                "my supervisor often employs students.",
+                "my supervisor often employs students"
+            ]
+        },
+        {
+            id: 2,
+            ua: "Працівник зараз проводить дослідження.",
+            audioText: "The employee is doing research now.",
+            valid: [
+                "the employee is doing research now.",
+                "the employee is doing research now",
+                "the employee is doing research at the moment.",
+                "the employee is doing research at the moment",
+                "an employee is doing research now.",
+                "an employee is doing research now"
+            ]
+        },
+        {
+            id: 3,
+            ua: "Я надаю перевагу роботі зі своїм партнером.",
+            audioText: "I prefer to work with my partner.",
+            valid: [
+                "i prefer to work with my partner.",
+                "i prefer to work with my partner",
+                "i prefer working with my partner.",
+                "i prefer working with my partner"
+            ]
+        },
+        {
+            id: 4,
+            ua: "Компанія найняла мого одногрупника минулого літа.",
+            audioText: "The company employed my classmate last summer.",
+            valid: [
+                "the company employed my classmate last summer.",
+                "the company employed my classmate last summer",
+                "the company employed my groupmate last summer.",
+                "the company employed my groupmate last summer",
+                "a company employed my classmate last summer.",
+                "a company employed my classmate last summer"
+            ]
+        },
+        {
+            id: 5,
+            ua: "Наставник розмовляв із членом команди о п'ятій годині вчора.",
+            audioText: "The mentor was talking to a team member at five o'clock yesterday.",
+            valid: [
+                "the mentor was talking to a team member at five o'clock yesterday.",
+                "the mentor was talking to a team member at five o'clock yesterday",
+                "the mentor was speaking to a team member at five o'clock yesterday.",
+                "the mentor was speaking to a team member at five o'clock yesterday",
+                "the mentor was talking with a team member at five o'clock yesterday.",
+                "the mentor was talking with a team member at five o'clock yesterday"
+            ]
+        },
+        {
+            id: 6,
+            ua: "Працівники проводили дослідження, коли прийшов керівник.",
+            audioText: "The employees were doing research when the boss arrived.",
+            valid: [
+                "the employees were doing research when the boss arrived.",
+                "the employees were doing research when the boss arrived",
+                "the employees were doing research when the boss came.",
+                "the employees were doing research when the boss came",
+                "the workers were doing research when the boss arrived.",
+                "the workers were doing research when the boss arrived"
+            ]
+        },
+        {
+            id: 7,
+            ua: "Твій напарник працює з цим партнером?",
+            audioText: "Is your teammate working with this partner?",
+            valid: [
+                "is your teammate working with this partner?",
+                "is your teammate working with this partner",
+                "does your teammate work with this partner?",
+                "does your teammate work with this partner"
+            ]
+        },
+        {
+            id: 8,
+            ua: "Компанія найняла нових студентів минулого року?",
+            audioText: "Did the company employ new students last year?",
+            valid: [
+                "did the company employ new students last year?",
+                "did the company employ new students last year",
+                "did the company hire new students last year?",
+                "did the company hire new students last year"
+            ]
+        }
+    ];
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function renderSentences() {
+        const list = document.getElementById('sentenceList');
+        list.innerHTML = '';
+
+        sentences.forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'sentence-item';
+            div.id = `item-${s.id}`;
+
+            div.innerHTML = `
+                <div class="sentence-header">
+                    <div><span class="num-badge">${s.id}.</span> ${s.ua}</div>
+                    <button class="audio-btn" onclick="speak('${s.audioText.replace(/'/g, "\\'")}')" title="Прослухати етлонний переклад">🔊</button>
+                </div>
+                <input type="text" class="trans-input" id="input-${s.id}" placeholder="Введіть переклад англійською..." autocomplete="off" spellcheck="false">
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    function cleanString(str) {
+        return str.trim().toLowerCase().replace(/’/g, "'");
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        sentences.forEach(s => {
+            const row = document.getElementById(`item-${s.id}`);
+            const input = document.getElementById(`input-${s.id}`);
+            const userAns = cleanString(input.value);
+
+            row.classList.remove('correct', 'incorrect');
+
+            if (s.valid.map(cleanString).includes(userAns)) {
+                row.classList.add('correct');
+                correctCount++;
+            } else {
+                row.classList.add('incorrect');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Результат: ${correctCount} / ${sentences.length}`;
+        scoreDisplay.style.color = correctCount === sentences.length ? 'var(--accent-green)' : 'var(--accent-blue)';
+    }
+
+    function resetExercise() {
+        sentences.forEach(s => {
+            const row = document.getElementById(`item-${s.id}`);
+            const input = document.getElementById(`input-${s.id}`);
+
+            row.classList.remove('correct', 'incorrect');
+            if (input) input.value = '';
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Результат: - / ${sentences.length}`;
+        scoreDisplay.style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = renderSentences;
+</script>
+
+</body>
+</html>
