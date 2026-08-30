@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Rules — Interactive Exercises</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --accent-yellow: #f59e0b;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .notice-board {
+            background: #1e293b;
+            border: 2px dashed var(--accent-yellow);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            font-size: 0.85rem;
+        }
+
+        .rule-box {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid var(--accent-yellow);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .rule-box h4 {
+            margin: 0 0 6px 0;
+            color: var(--accent-yellow);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .task-card {
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .task-card.correct {
+            border-color: var(--accent-green) !important;
+            background: rgba(74, 222, 128, 0.05) !important;
+        }
+
+        .task-card.incorrect {
+            border-color: var(--accent-red) !important;
+            background: rgba(248, 113, 113, 0.05) !important;
+        }
+
+        .sentence-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .num-badge {
+            color: var(--accent-blue);
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        .gap-input {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s ease;
+            margin: 0 2px;
+        }
+
+        .gap-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 6px rgba(56, 189, 248, 0.3);
+        }
+
+        .tf-select {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: none;
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 35px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="notice-board">
+        <div class="rule-box">
+            <h4>Uniforms</h4>
+            Full uniform (white shirt, green pullover, black shoes, no trainers). Girls: black skirts (no mini-skirts, make-up, jewellery). Boys: black trousers, tie.
+        </div>
+        <div class="rule-box">
+            <h4>Bikes & Skates</h4>
+            Lock on bike rack. Wear helmet. Working brakes required. No wheels inside.
+        </div>
+        <div class="rule-box">
+            <h4>Gadgets & Pets</h4>
+            Switch off mobile phones. No tablets. No pets at school.
+        </div>
+        <div class="rule-box">
+            <h4>Notices</h4>
+            Come on time. No noise in corridors. Stay in playground during breaks.
+        </div>
+    </div>
+
+    <!-- Ex 1 -->
+    <div class="section-title">1. Look at the rules in Emma's school and fill in the sentences</div>
+    <div class="section-desc">Complete the sentences based on the school rules.</div>
+    <div id="ex1Container"></div>
+
+    <hr>
+
+    <!-- Ex 2 -->
+    <div class="section-title">2. True or False?</div>
+    <div class="section-desc">Select True or False for each statement.</div>
+    <div id="ex2Container"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Score: - / 18</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Check ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ex1Data = [
+        {
+            id: 1,
+            parts: ["Students have to come to school on ", "."],
+            answers: [["time"]],
+            fullText: "Students have to come to school on time."
+        },
+        {
+            id: 2,
+            parts: ["They have to stay in the ", " during breaks."],
+            answers: [["playground"]],
+            fullText: "They have to stay in the playground during breaks."
+        },
+        {
+            id: 3,
+            parts: ["Girls have to wear ", ", ", ", ", " and ", "."],
+            answers: [["a white shirt"], ["a green pullover"], ["black shoes"], ["black skirts"]],
+            fullText: "Girls have to wear a white shirt, a green pullover, black shoes and black skirts."
+        },
+        {
+            id: 4,
+            parts: ["Boys have to put on ", ", ", ", ", " and ", "."],
+            answers: [["a white shirt"], ["a green pullover"], ["black trousers"], ["a tie"]],
+            fullText: "Boys have to put on a white shirt, a green pullover, black trousers and a tie."
+        },
+        {
+            id: 5,
+            parts: ["Girls mustn't wear ", ", ", " or ", "."],
+            answers: [["mini-skirts", "miniskirts"], ["make-up", "makeup"], ["jewellery", "jewelry"]],
+            fullText: "Girls mustn't wear mini-skirts, make-up or jewellery."
+        },
+        {
+            id: 6,
+            parts: ["Students mustn't bring ", " or ", " to school."],
+            answers: [["tablets"], ["pets"]],
+            fullText: "Students mustn't bring tablets or pets to school."
+        },
+        {
+            id: 7,
+            parts: ["They mustn't make a ", " in the corridors."],
+            answers: [["noise"]],
+            fullText: "They mustn't make a noise in the corridors."
+        },
+        {
+            id: 8,
+            parts: ["Students mustn't use their mobile ", "."],
+            answers: [["phones", "phone"]],
+            fullText: "Students mustn't use their mobile phones."
+        }
+    ];
+
+    const ex2Data = [
+        { id: 1, text: "Students wear a white shirt and a green pullover.", answer: "true" },
+        { id: 2, text: "Students can wear trainers to school.", answer: "false" },
+        { id: 3, text: "Girls can wear make-up and jewellery.", answer: "false" },
+        { id: 4, text: "Boys wear black trousers and a tie.", answer: "true" },
+        { id: 5, text: "Students leave their bikes locked on the bike rack.", answer: "true" },
+        { id: 6, text: "Students don't have to wear a helmet.", answer: "false" },
+        { id: 7, text: "Students can bring tablets to school.", answer: "false" },
+        { id: 8, text: "Students can bring their pets to school.", answer: "false" },
+        { id: 9, text: "Students have to come to school on time.", answer: "true" },
+        { id: 10, text: "Students stay in the playground during breaks.", answer: "true" }
+    ];
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function renderEx1() {
+        const container = document.getElementById('ex1Container');
+        container.innerHTML = '';
+
+        ex1Data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'task-card';
+            card.id = `ex1-card-${item.id}`;
+
+            let html = `<div class="sentence-content"><span class="num-badge">${item.id}.</span>`;
+            item.parts.forEach((part, idx) => {
+                html += part;
+                if (idx < item.answers.length) {
+                    html += `<input type="text" class="gap-input" id="ex1-in-${item.id}-${idx}" style="width:${Math.max(80, item.answers[idx][0].length * 9)}px" autocomplete="off" spellcheck="false">`;
+                }
+            });
+            html += `</div>`;
+            html += `<button class="audio-btn" onclick="speak('${item.fullText.replace(/'/g, "\\'")}')" title="Listen">🔊</button>`;
+
+            card.innerHTML = html;
+            container.appendChild(card);
+        });
+    }
+
+    function renderEx2() {
+        const container = document.getElementById('ex2Container');
+        container.innerHTML = '';
+
+        ex2Data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'task-card';
+            card.id = `ex2-card-${item.id}`;
+
+            card.innerHTML = `
+                <div class="sentence-content">
+                    <span class="num-badge">${item.id}.</span>
+                    ${item.text}
+                </div>
+                <select class="tf-select" id="ex2-sel-${item.id}">
+                    <option value="">Select...</option>
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+                <button class="audio-btn" onclick="speak('${item.text.replace(/'/g, "\\'")}')" title="Listen">🔊</button>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function cleanString(str) {
+        return str.trim().toLowerCase().replace(/’/g, "'");
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+        let totalItems = 0;
+
+        ex1Data.forEach(item => {
+            const card = document.getElementById(`ex1-card-${item.id}`);
+            let itemCorrect = true;
+
+            item.answers.forEach((ansGroup, idx) => {
+                totalItems++;
+                const input = document.getElementById(`ex1-in-${item.id}-${idx}`);
+                const val = cleanString(input.value);
+                const isGroupCorrect = ansGroup.map(cleanString).includes(val);
+
+                if (isGroupCorrect) {
+                    correctCount++;
+                } else {
+                    itemCorrect = false;
+                }
+            });
+
+            card.classList.remove('correct', 'incorrect');
+            card.classList.add(itemCorrect ? 'correct' : 'incorrect');
+        });
+
+        ex2Data.forEach(item => {
+            totalItems++;
+            const card = document.getElementById(`ex2-card-${item.id}`);
+            const select = document.getElementById(`ex2-sel-${item.id}`);
+
+            card.classList.remove('correct', 'incorrect');
+
+            if (select.value === item.answer) {
+                card.classList.add('correct');
+                correctCount++;
+            } else {
+                card.classList.add('incorrect');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: ${correctCount} / ${totalItems}`;
+        scoreDisplay.style.color = correctCount === totalItems ? 'var(--accent-green)' : 'var(--accent-blue)';
+    }
+
+    function resetExercise() {
+        ex1Data.forEach(item => {
+            const card = document.getElementById(`ex1-card-${item.id}`);
+            card.classList.remove('correct', 'incorrect');
+            item.answers.forEach((_, idx) => {
+                const input = document.getElementById(`ex1-in-${item.id}-${idx}`);
+                if (input) input.value = '';
+            });
+        });
+
+        ex2Data.forEach(item => {
+            const card = document.getElementById(`ex2-card-${item.id}`);
+            const select = document.getElementById(`ex2-sel-${item.id}`);
+            card.classList.remove('correct', 'incorrect');
+            if (select) select.value = '';
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: - / 18`;
+        scoreDisplay.style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = () => {
+        renderEx1();
+        renderEx2();
+    };
+</script>
+
+</body>
+</html>
