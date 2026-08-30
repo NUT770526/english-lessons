@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 1: Choose sentences with past tenses</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --box-bg: #111827;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-yellow: #f59e0b;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --list-bg: #1e293b;
+            --hover-bg: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .task-icon {
+            font-size: 1.8rem;
+        }
+
+        .task-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .sentences-pool {
+            background: rgba(74, 222, 128, 0.08);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            border-radius: 14px;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+        }
+
+        .pool-list {
+            margin: 0;
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pool-item {
+            color: var(--text-main);
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+
+        .slots-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .slot-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slot-num {
+            width: 38px;
+            height: 38px;
+            border: 2px solid var(--accent-yellow);
+            color: var(--accent-yellow);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .select-wrapper {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        select {
+            width: 100%;
+            background: var(--box-bg);
+            color: var(--text-main);
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%3c38bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 18px;
+            padding-right: 45px;
+        }
+
+        select:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+
+        select.correct {
+            border-color: var(--accent-green);
+            background-color: rgba(74, 222, 128, 0.1);
+        }
+
+        select.incorrect {
+            border-color: var(--accent-red);
+            background-color: rgba(248, 113, 113, 0.1);
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: none;
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="task-header">
+        <span class="task-icon">▶️</span>
+        <div class="task-title">Step 1: look at these sentences and choose only the sentences with past tenses</div>
+    </div>
+
+    <div class="sentences-pool">
+        <ul class="pool-list" id="poolList"></ul>
+    </div>
+
+    <div class="slots-container" id="slotsContainer"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Score: - / 5</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Check ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const allSentences = [
+        "I’m not an expert on sociology, really.",
+        "We went to some schools and offices and interviewed employees and students.",
+        "The students and their classmates said almost the same about their teachers.",
+        "We did a research and this is what they said.",
+        "So, students and workers think exactly the same way?",
+        "They preferred to have a male boss.",
+        "He can’t remember what he was doing yesterday."
+    ];
+
+    const pastSentences = [
+        "We went to some schools and offices and interviewed employees and students.",
+        "The students and their classmates said almost the same about their teachers.",
+        "We did a research and this is what they said.",
+        "They preferred to have a male boss.",
+        "He can’t remember what he was doing yesterday."
+    ];
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function initExercise() {
+        const poolList = document.getElementById('poolList');
+        poolList.innerHTML = allSentences.map(s => `<li class="pool-item">${s}</li>`).join('');
+
+        const slotsContainer = document.getElementById('slotsContainer');
+        slotsContainer.innerHTML = '';
+
+        for (let i = 1; i <= 5; i++) {
+            const slotRow = document.createElement('div');
+            slotRow.className = 'slot-row';
+
+            let optionsHtml = '<option value="">-- Choose a sentence --</option>';
+            allSentences.forEach((s, idx) => {
+                optionsHtml += `<option value="${idx}">${s}</option>`;
+            });
+
+            slotRow.innerHTML = `
+                <div class="slot-num">${i}</div>
+                <div class="select-wrapper">
+                    <select id="select-${i}">
+                        ${optionsHtml}
+                    </select>
+                </div>
+                <button class="audio-btn" onclick="playSelected(${i})" title="Listen selected">🔊</button>
+            `;
+
+            slotsContainer.appendChild(slotRow);
+        }
+    }
+
+    function playSelected(slotIndex) {
+        const select = document.getElementById(`select-${slotIndex}`);
+        const val = select.value;
+        if (val !== "") {
+            speak(allSentences[val]);
+        }
+    }
+
+    function checkAnswers() {
+        const selectedIndexes = [];
+        let score = 0;
+
+        for (let i = 1; i <= 5; i++) {
+            const select = document.getElementById(`select-${i}`);
+            const val = select.value;
+            select.classList.remove('correct', 'incorrect');
+
+            if (val !== "") {
+                const text = allSentences[val];
+                if (pastSentences.includes(text) && !selectedIndexes.includes(val)) {
+                    score++;
+                    select.classList.add('correct');
+                    selectedIndexes.push(val);
+                } else {
+                    select.classList.add('incorrect');
+                }
+            } else {
+                select.classList.add('incorrect');
+            }
+        }
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: ${score} / 5`;
+        scoreDisplay.style.color = score === 5 ? 'var(--accent-green)' : 'var(--accent-blue)';
+    }
+
+    function resetExercise() {
+        for (let i = 1; i <= 5; i++) {
+            const select = document.getElementById(`select-${i}`);
+            select.value = "";
+            select.classList.remove('correct', 'incorrect');
+        }
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: - / 5`;
+        scoreDisplay.style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = () => {
+        initExercise();
+    };
+</script>
+
+</body>
+</html>
