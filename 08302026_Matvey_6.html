@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select the correct words to complete these sentences</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-yellow: #f59e0b;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --option-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .task-icon {
+            font-size: 1.8rem;
+        }
+
+        .task-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .questions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .question-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .item-num {
+            color: var(--accent-yellow);
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            background: var(--option-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .option-label:hover {
+            border-color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .option-label input[type="radio"] {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--text-muted);
+            border-radius: 50%;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .option-label input[type="radio"]:checked {
+            border-color: var(--accent-blue);
+            background-color: var(--accent-blue);
+            box-shadow: inset 0 0 0 3px var(--option-bg);
+        }
+
+        .option-label.correct {
+            border-color: var(--accent-green) !important;
+            background: rgba(74, 222, 128, 0.12) !important;
+        }
+
+        .option-label.incorrect {
+            border-color: var(--accent-red) !important;
+            background: rgba(248, 113, 113, 0.12) !important;
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: none;
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="task-header">
+        <span class="task-icon">▶️</span>
+        <div class="task-title">Select the correct words to complete these sentences</div>
+    </div>
+
+    <div class="questions-container" id="questionsContainer"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Score: - / 5</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Check ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            id: 1,
+            text: "Hi, my name is Stan. Nice to ___ you!",
+            options: ["met", "meet"],
+            correct: "meet",
+            fullSentence: "Hi, my name is Stan. Nice to meet you!"
+        },
+        {
+            id: 2,
+            text: "I have really ___ hobbies.",
+            options: ["a lot of", "lots"],
+            correct: "a lot of",
+            fullSentence: "I have really a lot of hobbies."
+        },
+        {
+            id: 3,
+            text: "I love nature, I am ___ in ecology.",
+            options: ["interested", "interesting"],
+            correct: "interested",
+            fullSentence: "I love nature, I am interested in ecology."
+        },
+        {
+            id: 4,
+            text: "I ___ like music.",
+            options: ["too", "also"],
+            correct: "also",
+            fullSentence: "I also like music."
+        },
+        {
+            id: 5,
+            text: "I really like to ___.",
+            options: ["study", "studying"],
+            correct: "study",
+            fullSentence: "I really like to study."
+        }
+    ];
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function renderQuiz() {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
+
+        quizData.forEach(q => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+
+            let optionsHtml = q.options.map(opt => `
+                <label class="option-label" id="label-${q.id}-${opt.replace(/\s+/g, '_')}">
+                    <input type="radio" name="question-${q.id}" value="${opt}">
+                    <span>${opt}</span>
+                </label>
+            `).join('');
+
+            card.innerHTML = `
+                <div class="question-header">
+                    <div class="question-text"><span class="item-num">${q.id}.</span> ${q.text}</div>
+                    <button class="audio-btn" onclick="speak('${q.fullSentence.replace(/'/g, "\\'")}')" title="Listen full sentence">🔊</button>
+                </div>
+                <div class="options-group">
+                    ${optionsHtml}
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function checkAnswers() {
+        let score = 0;
+
+        quizData.forEach(q => {
+            const selected = document.querySelector(`input[name="question-${q.id}"]:checked`);
+            
+            q.options.forEach(opt => {
+                const label = document.getElementById(`label-${q.id}-${opt.replace(/\s+/g, '_')}`);
+                label.classList.remove('correct', 'incorrect');
+            });
+
+            if (selected) {
+                const userChoice = selected.value;
+                const selectedLabel = document.getElementById(`label-${q.id}-${userChoice.replace(/\s+/g, '_')}`);
+                
+                if (userChoice === q.correct) {
+                    score++;
+                    selectedLabel.classList.add('correct');
+                } else {
+                    selectedLabel.classList.add('incorrect');
+                    const correctLabel = document.getElementById(`label-${q.id}-${q.correct.replace(/\s+/g, '_')}`);
+                    correctLabel.classList.add('correct');
+                }
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: ${score} / ${quizData.length}`;
+        scoreDisplay.style.color = score === quizData.length ? 'var(--accent-green)' : 'var(--accent-blue)';
+    }
+
+    function resetExercise() {
+        quizData.forEach(q => {
+            const radios = document.getElementsByName(`question-${q.id}`);
+            radios.forEach(radio => radio.checked = false);
+
+            q.options.forEach(opt => {
+                const label = document.getElementById(`label-${q.id}-${opt.replace(/\s+/g, '_')}`);
+                label.classList.remove('correct', 'incorrect');
+            });
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: - / ${quizData.length}`;
+        scoreDisplay.style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
