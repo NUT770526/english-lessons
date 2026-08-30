@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1. З'єднай слово з перекладом — Інтерактивна вправа</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .word-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .word-item {
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .word-item.correct {
+            border-color: var(--accent-green) !important;
+            background: rgba(74, 222, 128, 0.08) !important;
+        }
+
+        .word-item.incorrect {
+            border-color: var(--accent-red) !important;
+            background: rgba(248, 113, 113, 0.08) !important;
+        }
+
+        .left-part {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            flex-grow: 1;
+        }
+
+        .num-badge {
+            color: var(--accent-blue);
+            font-weight: 700;
+            min-width: 24px;
+        }
+
+        .translation-select {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+            max-width: 320px;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .translation-select:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: none;
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="title">1. З'єднай слово з перекладом</div>
+        <div class="subtitle">Оберіть правильний переклад для кожного слова та прослухайте вимову 🔊</div>
+    </div>
+
+    <div class="word-list" id="wordList"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Результат: - / 10</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Перевірити ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Скинути 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const translations = [
+        { code: "a", text: "a. коридор" },
+        { code: "b", text: "b. повна шкільна форма" },
+        { code: "c", text: "c. гальма" },
+        { code: "d", text: "d. спортивне взуття, кросівки" },
+        { code: "e", text: "e. шолом" },
+        { code: "f", text: "f. роликові ковзани" },
+        { code: "g", text: "g. ювелірні прикраси" },
+        { code: "h", text: "h. майданчик для велосипедів" },
+        { code: "i", text: "i. ґаджети" },
+        { code: "j", text: "j. шкільний майданчик" }
+    ];
+
+    const words = [
+        { id: 1, word: "a full uniform", correctCode: "b" },
+        { id: 2, word: "trainers", correctCode: "d" },
+        { id: 3, word: "jewellery", correctCode: "g" },
+        { id: 4, word: "in-line skates", correctCode: "f" },
+        { id: 5, word: "a bike rack", correctCode: "h" },
+        { id: 6, word: "a helmet", correctCode: "e" },
+        { id: 7, word: "brakes", correctCode: "c" },
+        { id: 8, word: "gadgets", correctCode: "i" },
+        { id: 9, word: "a corridor", correctCode: "a" },
+        { id: 10, word: "a playground", correctCode: "j" }
+    ];
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function renderWords() {
+        const list = document.getElementById('wordList');
+        list.innerHTML = '';
+
+        words.forEach(w => {
+            const div = document.createElement('div');
+            div.className = 'word-item';
+            div.id = `item-${w.id}`;
+
+            let optionsHtml = `<option value="">Оберіть переклад...</option>`;
+            translations.forEach(t => {
+                optionsHtml += `<option value="${t.code}">${t.text}</option>`;
+            });
+
+            div.innerHTML = `
+                <div class="left-part">
+                    <span class="num-badge">${w.id}.</span>
+                    <span>${w.word}</span>
+                    <button class="audio-btn" onclick="speak('${w.word.replace(/'/g, "\\'")}')" title="Прослухати вимову">🔊</button>
+                </div>
+                <select class="translation-select" id="select-${w.id}">
+                    ${optionsHtml}
+                </select>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        words.forEach(w => {
+            const row = document.getElementById(`item-${w.id}`);
+            const select = document.getElementById(`select-${w.id}`);
+
+            row.classList.remove('correct', 'incorrect');
+
+            if (select.value === w.correctCode) {
+                row.classList.add('correct');
+                correctCount++;
+            } else {
+                row.classList.add('incorrect');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Результат: ${correctCount} / ${words.length}`;
+        scoreDisplay.style.color = correctCount === words.length ? 'var(--accent-green)' : 'var(--accent-blue)';
+    }
+
+    function resetExercise() {
+        words.forEach(w => {
+            const row = document.getElementById(`item-${w.id}`);
+            const select = document.getElementById(`select-${w.id}`);
+
+            row.classList.remove('correct', 'incorrect');
+            if (select) select.value = '';
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Результат: - / ${words.length}`;
+        scoreDisplay.style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = renderWords;
+</script>
+
+</body>
+</html>
