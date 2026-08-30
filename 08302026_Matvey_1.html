@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Stan understand what sociology is</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-yellow: #f59e0b;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .task-header {
+            background: rgba(74, 222, 128, 0.08);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+        }
+
+        .task-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .check-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        .check-icon {
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        /* БЛОК С ТЕКСТОМ ДИАЛОГА */
+        .dialogue-box {
+            background: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .dialogue-box h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+            color: var(--accent-yellow);
+        }
+
+        .dialogue-content {
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        .dialogue-line {
+            margin-bottom: 8px;
+        }
+
+        .dialogue-line strong {
+            color: var(--accent-blue);
+        }
+
+        /* Кастомная полоса прокрутки */
+        .dialogue-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .dialogue-box::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        .dialogue-box::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .table-container {
+            border: 1.5px solid var(--accent-yellow);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            background: var(--input-bg);
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 50px 220px 1fr 45px;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 16px;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row.correct {
+            background: rgba(74, 222, 128, 0.08) !important;
+        }
+
+        .table-row.incorrect {
+            background: rgba(248, 113, 113, 0.08) !important;
+        }
+
+        .row-num {
+            color: var(--accent-yellow);
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .row-label {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .row-input-wrap {
+            width: 100%;
+        }
+
+        .table-input {
+            width: 100%;
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.95rem;
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+
+        .table-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: none;
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 600px) {
+            .table-row {
+                grid-template-columns: 35px 1fr 40px;
+                grid-template-rows: auto auto;
+            }
+            .row-label {
+                grid-column: 2 / 3;
+            }
+            .audio-btn {
+                grid-column: 3 / 4;
+            }
+            .row-input-wrap {
+                grid-column: 1 / 4;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="task-header">
+        <div class="task-title">🎬 Read the task!</div>
+        <ul class="check-list">
+            <li class="check-item"><span class="check-icon">✔</span> Help Stan understand what sociology is.</li>
+            <li class="check-item"><span class="check-icon">✔</span> Read the dialogue text below.</li>
+            <li class="check-item"><span class="check-icon">✔</span> Fill in the table.</li>
+        </ul>
+    </div>
+
+    <div class="dialogue-box">
+        <h3>📖 Read the dialogue:</h3>
+        <div class="dialogue-content">
+            <div class="dialogue-line"><strong>Ann:</strong> Hey, Stan. I haven't seen you for a while. What are you doing here?</div>
+            <div class="dialogue-line"><strong>Stan:</strong> Hey, Ann. Long time no see. At the moment I am learning English here. American English! How are you and your brother?</div>
+            <div class="dialogue-line"><strong>Ann:</strong> My brother, don't ask. He can't remember what he was doing yesterday. As for me, I'm studying here too. I've been studying here for the last two years. I'm in the sociology department.</div>
+            <div class="dialogue-line"><strong>Stan:</strong> That's cool, but what are you studying exactly? Different countries? People? I'm not an expert on sociology, really.</div>
+            <div class="dialogue-line"><strong>Ann:</strong> Well, I started a really interesting class this semester. It's about how people think differently.</div>
+            <div class="dialogue-line"><strong>Stan:</strong> Really? So tell me then, how do people think differently?</div>
+            <div class="dialogue-line"><strong>Ann:</strong> Let me give you an example. We did a research last week. We went to some schools and offices and interviewed employees and students. Employees and teammates in offices said that they see their bosses as mentors — like people who can help them get better. The students and their classmates said almost the same about their teachers. They see their teachers as mentors that can help them learn and improve their skills.</div>
+            <div class="dialogue-line"><strong>Stan:</strong> So, students and workers think exactly the same way?</div>
+            <div class="dialogue-line"><strong>Ann:</strong> No! Not exactly. Just that both students and employees are members of a team. The team has a head, and this head has more experience. Since this person has more experience, students and employees ask them for help.</div>
+            <div class="dialogue-line"><strong>Stan:</strong> I see, but what about students and employees from different countries? I'm sure people from different countries think differently?</div>
+            <div class="dialogue-line"><strong>Ann:</strong> Yes, that's because people have different cultures. In one research, some people from other countries said that they preferred a male boss. Others said they preferred a female. It all depends on the country.</div>
+            <div class="dialogue-line"><strong>Stan:</strong> Well, I'm studying English now. How does all that help me?</div>
+            <div class="dialogue-line"><strong>Ann:</strong> This is a good question. English is global, tons of people speak English — at schools, universities, and at work. However, we have to understand the different cultures of different speakers.</div>
+            <div class="dialogue-line"><strong>Stan:</strong> I don't really get what you are saying...</div>
+            <div class="dialogue-line"><strong>Ann:</strong> OK, Stan. Let me give you an example. In some cultures, people are very friendly and open. Don't be surprised if people you've just met act like your best friends in these cultures. In other cultures, it takes time to open up and talk freely. So, don't be surprised here when a new person won't give you their life story.</div>
+            <div class="dialogue-line"><strong>Stan:</strong> I think I got you... I guess you're from a culture that is open and likes to talk, yeah?</div>
+        </div>
+    </div>
+
+    <div class="table-container" id="tableContainer"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Score: - / 4</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Check ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const tableData = [
+        {
+            id: 1,
+            label: "Sociology is about",
+            placeholder: "how people...",
+            valid: ["how people think differently", "how people think differently."],
+            fullText: "Sociology is about how people think differently."
+        },
+        {
+            id: 2,
+            label: "People have",
+            placeholder: "different...",
+            valid: ["different cultures", "different cultures."],
+            fullText: "People have different cultures."
+        },
+        {
+            id: 3,
+            label: "Students and employees are",
+            placeholder: "members of...",
+            valid: ["members of a team", "members of a team."],
+            fullText: "Students and employees are members of a team."
+        },
+        {
+            id: 4,
+            label: "Our thoughts depend on",
+            placeholder: "culture / country...",
+            valid: ["culture", "our culture", "the country", "culture.", "our culture.", "different cultures"],
+            fullText: "Our thoughts depend on culture."
+        }
+    ];
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function renderTable() {
+        const container = document.getElementById('tableContainer');
+        container.innerHTML = '';
+
+        tableData.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'table-row';
+            row.id = `row-${item.id}`;
+
+            row.innerHTML = `
+                <div class="row-num">${item.id}</div>
+                <div class="row-label">${item.label}</div>
+                <div class="row-input-wrap">
+                    <input type="text" class="table-input" id="input-${item.id}" placeholder="${item.placeholder}" autocomplete="off" spellcheck="false">
+                </div>
+                <button class="audio-btn" onclick="speak('${item.fullText.replace(/'/g, "\\'")}')" title="Listen sentence">🔊</button>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function cleanString(str) {
+        return str.trim().toLowerCase().replace(/’/g, "'");
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        tableData.forEach(item => {
+            const row = document.getElementById(`row-${item.id}`);
+            const input = document.getElementById(`input-${item.id}`);
+            const userVal = cleanString(input.value);
+
+            row.classList.remove('correct', 'incorrect');
+
+            if (item.valid.map(cleanString).includes(userVal)) {
+                row.classList.add('correct');
+                correctCount++;
+            } else {
+                row.classList.add('incorrect');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: ${correctCount} / ${tableData.length}`;
+        scoreDisplay.style.color = correctCount === tableData.length ? 'var(--accent-green)' : 'var(--accent-blue)';
+    }
+
+    function resetExercise() {
+        tableData.forEach(item => {
+            const row = document.getElementById(`row-${item.id}`);
+            const input = document.getElementById(`input-${item.id}`);
+
+            row.classList.remove('correct', 'incorrect');
+            if (input) input.value = '';
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: - / ${tableData.length}`;
+        scoreDisplay.style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = () => {
+        renderTable();
+    };
+</script>
+
+</body>
+</html>
