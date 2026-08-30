@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 2: Put these words in the correct form</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-yellow: #f59e0b;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --input-bg: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .task-icon {
+            font-size: 1.8rem;
+        }
+
+        .task-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .sentences-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .sentence-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .sentence-card.correct {
+            border-color: var(--accent-green);
+            background: rgba(74, 222, 128, 0.08);
+        }
+
+        .sentence-card.incorrect {
+            border-color: var(--accent-red);
+            background: rgba(248, 113, 113, 0.08);
+        }
+
+        .sentence-content {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-main);
+            flex-grow: 1;
+        }
+
+        .item-num {
+            color: var(--accent-yellow);
+            font-weight: 700;
+            margin-right: 4px;
+        }
+
+        .gap-input {
+            background: var(--card-bg);
+            color: var(--accent-blue);
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            outline: none;
+            min-width: 110px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .gap-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .gap-input::placeholder {
+            color: var(--text-muted);
+            font-weight: normal;
+            font-size: 0.9rem;
+        }
+
+        .audio-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: none;
+            color: var(--accent-blue);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .btn-check:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-reset {
+            background: #1f293d;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background: #2d3d5c;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 600px) {
+            .sentence-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .audio-btn {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="task-header">
+        <span class="task-icon">✏️</span>
+        <div class="task-title">Step 2: put these words in the correct form</div>
+    </div>
+
+    <div class="sentences-container" id="sentencesContainer"></div>
+
+    <div class="controls">
+        <div class="score-display" id="scoreDisplay">Score: - / 8</div>
+        <div class="btn-group">
+            <button class="btn btn-check" onclick="checkAnswers()">Check ✔️</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const exerciseData = [
+        {
+            id: 1,
+            parts: ["That's cool, but what are you", "exactly?"],
+            inputs: [
+                { placeholder: "to study", valid: ["studying"] }
+            ],
+            fullText: "That's cool, but what are you studying exactly?"
+        },
+        {
+            id: 2,
+            parts: ["They", "their teachers as mentors that can help them learn and", "their skills."],
+            inputs: [
+                { placeholder: "to see", valid: ["see"] },
+                { placeholder: "to improve", valid: ["improve"] }
+            ],
+            fullText: "They see their teachers as mentors that can help them learn and improve their skills."
+        },
+        {
+            id: 3,
+            parts: ["So, students and workers", "exactly the same way?"],
+            inputs: [
+                { placeholder: "to think", valid: ["think"] }
+            ],
+            fullText: "So, students and workers think exactly the same way?"
+        },
+        {
+            id: 4,
+            parts: ["The team", "a head, and this head has more experience."],
+            inputs: [
+                { placeholder: "to have", valid: ["has"] }
+            ],
+            fullText: "The team has a head, and this head has more experience."
+        },
+        {
+            id: 5,
+            parts: ["I", "sure people from different countries think differently."],
+            inputs: [
+                { placeholder: "to be", valid: ["am", "'m"] }
+            ],
+            fullText: "I am sure people from different countries think differently."
+        },
+        {
+            id: 6,
+            parts: ["It all", "on the country."],
+            inputs: [
+                { placeholder: "to depend", valid: ["depends"] }
+            ],
+            fullText: "It all depends on the country."
+        },
+        {
+            id: 7,
+            parts: ["I", "what you are saying..."],
+            inputs: [
+                { placeholder: "not really get", valid: ["don't really get", "do not really get", "don’t really get"] }
+            ],
+            fullText: "I don't really get what you are saying..."
+        }
+    ];
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    function renderExercise() {
+        const container = document.getElementById('sentencesContainer');
+        container.innerHTML = '';
+
+        exerciseData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'sentence-card';
+            card.id = `card-${item.id}`;
+
+            let html = `<div class="sentence-content"><span class="item-num">${item.id}.</span> `;
+            
+            item.parts.forEach((part, index) => {
+                html += `<span>${part}</span>`;
+                if (index < item.inputs.length) {
+                    const inputInfo = item.inputs[index];
+                    html += `<input type="text" class="gap-input" id="input-${item.id}-${index}" placeholder="${inputInfo.placeholder}" autocomplete="off" spellcheck="false">`;
+                }
+            });
+
+            html += `</div>
+                <button class="audio-btn" onclick="speak('${item.fullText.replace(/'/g, "\\'")}')" title="Listen sentence">🔊</button>
+            `;
+
+            card.innerHTML = html;
+            container.appendChild(card);
+        });
+    }
+
+    function cleanString(str) {
+        return str.trim().toLowerCase().replace(/’/g, "'");
+    }
+
+    function checkAnswers() {
+        let totalInputs = 0;
+        let correctInputs = 0;
+
+        exerciseData.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            let allCardCorrect = true;
+
+            item.inputs.forEach((inputInfo, index) => {
+                totalInputs++;
+                const inputEl = document.getElementById(`input-${item.id}-${index}`);
+                const userVal = cleanString(inputEl.value);
+
+                const isCorrect = inputInfo.valid.map(cleanString).includes(userVal);
+
+                if (isCorrect) {
+                    correctInputs++;
+                    inputEl.style.borderColor = 'var(--accent-green)';
+                } else {
+                    allCardCorrect = false;
+                    inputEl.style.borderColor = 'var(--accent-red)';
+                }
+            });
+
+            card.classList.remove('correct', 'incorrect');
+            if (allCardCorrect) {
+                card.classList.add('correct');
+            } else {
+                card.classList.add('incorrect');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: ${correctInputs} / ${totalInputs}`;
+        scoreDisplay.style.color = correctInputs === totalInputs ? 'var(--accent-green)' : 'var(--accent-blue)';
+    }
+
+    function resetExercise() {
+        exerciseData.forEach(item => {
+            const card = document.getElementById(`card-${item.id}`);
+            card.classList.remove('correct', 'incorrect');
+
+            item.inputs.forEach((_, index) => {
+                const inputEl = document.getElementById(`input-${item.id}-${index}`);
+                if (inputEl) {
+                    inputEl.value = '';
+                    inputEl.style.borderColor = 'var(--border-color)';
+                }
+            });
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Score: - / 8`;
+        scoreDisplay.style.color = 'var(--accent-blue)';
+    }
+
+    window.onload = () => {
+        renderExercise();
+    };
+</script>
+
+</body>
+</html>
