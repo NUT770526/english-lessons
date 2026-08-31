@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 2. Present Simple or Past Simple?</title>
+  <style>
+    :root {
+      --bg-color: #121214;
+      --card-bg: #1e1e24;
+      --accent: #6c5ce7;
+      --accent-hover: #5a4bcf;
+      --text: #f1f2f6;
+      --text-muted: #a4b0be;
+      --time-marker: #fdcb6e;
+      --correct: #2ed573;
+      --incorrect: #ff4757;
+      --border: #2f3542;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 850px;
+      width: 100%;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-top: 0;
+      color: var(--text);
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 25px;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 25px;
+    }
+
+    .sentence-card {
+      background: #252530;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .sentence-text {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    .time-marker {
+      color: var(--time-marker);
+      font-weight: 600;
+      text-decoration: underline dotted;
+    }
+
+    select.option-select {
+      background-color: #1a1a24;
+      color: var(--text);
+      border: 2px solid var(--accent);
+      padding: 6px 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    select.option-select:focus {
+      border-color: #8c7ae6;
+      box-shadow: 0 0 8px rgba(108, 92, 231, 0.4);
+    }
+
+    .audio-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .audio-btn:hover {
+      background: rgba(108, 92, 231, 0.2);
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    button.action-btn {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button.action-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    button.reset-btn {
+      background-color: transparent;
+      border: 2px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    button.reset-btn:hover {
+      background-color: var(--border);
+      color: var(--text);
+    }
+
+    .result {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .correct-card {
+      border-color: var(--correct) !important;
+      background: rgba(46, 213, 115, 0.1) !important;
+    }
+
+    .incorrect-card {
+      border-color: var(--incorrect) !important;
+      background: rgba(255, 71, 87, 0.1) !important;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Exercise 2. Present Simple or Past Simple?</h1>
+  <p class="subtitle">Обери правильний варіант. Звертай увагу на слова часу.</p>
+
+  <div class="exercise-list" id="exercise-list"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Проверить</button>
+    <button class="action-btn reset-btn" onclick="resetExercise()">Сбросить</button>
+    <div class="result" id="result-text"></div>
+  </div>
+</div>
+
+<script>
+  const sentencesData = [
+    {
+      num: 1,
+      before: "Kelly ",
+      marker: "usually",
+      between: " ",
+      after: " part-time at a bookshop.",
+      options: ["works", "worked"],
+      correct: "works"
+    },
+    {
+      num: 2,
+      before: "",
+      marker: "Last summer",
+      between: " Kelly ",
+      after: " full-time.",
+      options: ["works", "worked"],
+      correct: "worked"
+    },
+    {
+      num: 3,
+      before: "She ",
+      marker: "",
+      between: "",
+      after: " spending time with people ",
+      marker2: "every day",
+      after2: ".",
+      options: ["enjoys", "enjoyed"],
+      correct: "enjoys"
+    },
+    {
+      num: 4,
+      before: "",
+      marker: "Two days ago",
+      between: " she ",
+      after: " time with Julie.",
+      options: ["spends", "spent"],
+      correct: "spent"
+    },
+    {
+      num: 5,
+      before: "Julie ",
+      marker: "",
+      between: "",
+      after: " very reliable ",
+      marker2: "now",
+      after2: ".",
+      options: ["is", "was"],
+      correct: "is"
+    },
+    {
+      num: 6,
+      before: "",
+      marker: "Yesterday",
+      between: " Julie ",
+      after: " at Kelly’s house.",
+      options: ["is", "was"],
+      correct: "was"
+    },
+    {
+      num: 7,
+      before: "Kelly ",
+      marker: "often",
+      between: " ",
+      after: " to Julie for advice.",
+      options: ["goes", "went"],
+      correct: "goes"
+    },
+    {
+      num: 8,
+      before: "",
+      marker: "Last week",
+      between: " Kelly ",
+      after: " to Julie for advice.",
+      options: ["goes", "went"],
+      correct: "went"
+    },
+    {
+      num: 9,
+      before: "Tracy ",
+      marker: "always",
+      between: " ",
+      after: " Kelly laugh.",
+      options: ["makes", "made"],
+      correct: "makes"
+    },
+    {
+      num: 10,
+      before: "",
+      marker: "Yesterday",
+      between: " Tracy ",
+      after: " Kelly laugh.",
+      options: ["makes", "made"],
+      correct: "made"
+    }
+  ];
+
+  function renderExercise() {
+    const listEl = document.getElementById('exercise-list');
+    listEl.innerHTML = '';
+    document.getElementById('result-text').textContent = '';
+
+    sentencesData.forEach((item, idx) => {
+      const card = document.createElement('div');
+      card.className = 'sentence-card';
+      card.id = `card-${idx}`;
+
+      let sentenceHtml = `<span>${item.num}. `;
+
+      if (item.marker) {
+        sentenceHtml += item.before + `<span class="time-marker">${item.marker}</span>` + item.between;
+      } else {
+        sentenceHtml += item.before;
+      }
+
+      sentenceHtml += `<select class="option-select" data-correct="${item.correct}" id="select-${idx}">
+        <option value="" disabled selected>?</option>
+        ${item.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+      </select>`;
+
+      sentenceHtml += item.after;
+
+      if (item.marker2) {
+        sentenceHtml += `<span class="time-marker">${item.marker2}</span>` + (item.after2 || '');
+      }
+
+      sentenceHtml += `</span>`;
+
+      card.innerHTML = sentenceHtml + `
+        <button class="audio-btn" title="Listen" onclick="speakSentence(${idx})">🔊</button>
+      `;
+
+      listEl.appendChild(card);
+    });
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+
+    sentencesData.forEach((item, idx) => {
+      const card = document.getElementById(`card-${idx}`);
+      const select = document.getElementById(`select-${idx}`);
+      const selectedValue = select.value;
+
+      card.classList.remove('correct-card', 'incorrect-card');
+
+      if (selectedValue === item.correct) {
+        correctCount++;
+        card.classList.add('correct-card');
+      } else {
+        card.classList.add('incorrect-card');
+      }
+    });
+
+    const resultText = document.getElementById('result-text');
+    resultText.textContent = `Результат: ${correctCount} / ${sentencesData.length}`;
+    resultText.style.color = correctCount === sentencesData.length ? 'var(--correct)' : 'var(--text)';
+  }
+
+  function resetExercise() {
+    renderExercise();
+  }
+
+  function speakSentence(idx) {
+    const item = sentencesData[idx];
+    const select = document.getElementById(`select-${idx}`);
+    const chosenWord = select.value || item.options[0];
+
+    const fullText = (item.before + (item.marker || '') + item.between + ' ' + chosenWord + ' ' + item.after + (item.marker2 || '') + (item.after2 || ''))
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(fullText);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  window.onload = renderExercise;
+</script>
+
+</body>
+</html>
