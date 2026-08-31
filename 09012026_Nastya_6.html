@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 6. Put the words in the correct order</title>
+  <style>
+    :root {
+      --bg-color: #121214;
+      --card-bg: #1e1e24;
+      --accent: #6c5ce7;
+      --accent-hover: #5a4bcf;
+      --text: #f1f2f6;
+      --text-muted: #a4b0be;
+      --correct: #2ed573;
+      --incorrect: #ff4757;
+      --border: #2f3542;
+      --chip-bg: #2d3436;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 850px;
+      width: 100%;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-top: 0;
+      color: var(--text);
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 25px;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+
+    .sentence-card {
+      background: #252530;
+      padding: 18px 20px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+    }
+
+    .word-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 48px;
+      padding: 8px;
+      background-color: #1a1a24;
+      border-radius: 8px;
+      border: 1px dashed var(--border);
+    }
+
+    .word-chip {
+      background-color: var(--accent);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.15s ease, background-color 0.15s;
+    }
+
+    .word-chip:active {
+      cursor: grabbing;
+      transform: scale(1.05);
+    }
+
+    .word-chip.dragging {
+      opacity: 0.5;
+    }
+
+    .audio-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+
+    .audio-btn:hover {
+      background: rgba(108, 92, 231, 0.2);
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    button.action-btn {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button.action-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    button.reset-btn {
+      background-color: transparent;
+      border: 2px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    button.reset-btn:hover {
+      background-color: var(--border);
+      color: var(--text);
+    }
+
+    .result {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .correct-card {
+      border-color: var(--correct) !important;
+      background: rgba(46, 213, 115, 0.1) !important;
+    }
+
+    .incorrect-card {
+      border-color: var(--incorrect) !important;
+      background: rgba(255, 71, 87, 0.1) !important;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Exercise 6. Put the words in the correct order</h1>
+  <p class="subtitle">Постав слова у правильному порядку (перетягуй блоки зі словами мишкою або пальцем).</p>
+
+  <div class="exercise-list" id="exercise-list"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Перевірити</button>
+    <button class="action-btn reset-btn" onclick="resetExercise()">Скинути</button>
+    <div class="result" id="result-text"></div>
+  </div>
+</div>
+
+<script>
+  const sentencesData = [
+    {
+      num: 1,
+      shuffled: ["outgoing person", "Kelly", "an", "is"],
+      correct: ["Kelly", "is", "an", "outgoing person"]
+    },
+    {
+      num: 2,
+      shuffled: ["work", "Kelly", "yesterday", "didn't"],
+      correct: ["Kelly", "didn't", "work", "yesterday"]
+    },
+    {
+      num: 3,
+      shuffled: ["Kelly", "books", "Does", "enjoy", "?"],
+      correct: ["Does", "Kelly", "enjoy", "books", "?"]
+    },
+    {
+      num: 4,
+      shuffled: ["reliable", "Julie", "was"],
+      correct: ["Julie", "was", "reliable"]
+    },
+    {
+      num: 5,
+      shuffled: ["online", "Were", "last night", "the girls", "?"],
+      correct: ["Were", "the girls", "online", "last night", "?"]
+    },
+    {
+      num: 6,
+      shuffled: ["doesn't", "Tracy", "full-time", "work"],
+      correct: ["Tracy", "doesn't", "work", "full-time"]
+    },
+    {
+      num: 7,
+      shuffled: ["together", "yesterday", "They", "time", "spent"],
+      correct: ["They", "spent", "time", "together", "yesterday"]
+    },
+    {
+      num: 8,
+      shuffled: ["Kelly", "Did", "for advice", "go to Julie", "?"],
+      correct: ["Did", "Kelly", "go to Julie", "for advice", "?"]
+    },
+    {
+      num: 9,
+      shuffled: ["aren't", "quick-tempered", "Kelly and Julie"],
+      correct: ["Kelly and Julie", "aren't", "quick-tempered"]
+    },
+    {
+      num: 10,
+      shuffled: ["Kelly", "yesterday", "Tracy", "laugh", "made"],
+      correct: ["Tracy", "made", "Kelly", "laugh", "yesterday"]
+    }
+  ];
+
+  function renderExercise() {
+    const listEl = document.getElementById('exercise-list');
+    listEl.innerHTML = '';
+    document.getElementById('result-text').textContent = '';
+
+    sentencesData.forEach((item, idx) => {
+      const card = document.createElement('div');
+      card.className = 'sentence-card';
+      card.id = `card-${idx}`;
+
+      const header = document.createElement('div');
+      header.className = 'card-header';
+      header.innerHTML = `
+        <span>${item.num}.</span>
+        <button class="audio-btn" title="Listen sentence" onclick="speakSentence(${idx})">🔊</button>
+      `;
+
+      const wordBox = document.createElement('div');
+      wordBox.className = 'word-container';
+      wordBox.id = `box-${idx}`;
+
+      item.shuffled.forEach((text, wIdx) => {
+        const chip = document.createElement('div');
+        chip.className = 'word-chip';
+        chip.textContent = text;
+        chip.draggable = true;
+        chip.id = `chip-${idx}-${wIdx}`;
+
+        chip.addEventListener('dragstart', handleDragStart);
+        chip.addEventListener('dragend', handleDragEnd);
+
+        wordBox.appendChild(chip);
+      });
+
+      wordBox.addEventListener('dragover', handleDragOver);
+
+      card.appendChild(header);
+      card.appendChild(wordBox);
+      listEl.appendChild(card);
+    });
+  }
+
+  let draggedItem = null;
+
+  function handleDragStart(e) {
+    draggedItem = this;
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function handleDragEnd(e) {
+    this.classList.remove('dragging');
+    draggedItem = null;
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    const container = this;
+    const afterElement = getDragAfterElement(container, e.clientX, e.clientY);
+    if (draggedItem) {
+      if (afterElement == null) {
+        container.appendChild(draggedItem);
+      } else {
+        container.insertBefore(draggedItem, afterElement);
+      }
+    }
+  }
+
+  function getDragAfterElement(container, x, y) {
+    const draggableElements = [...container.querySelectorAll('.word-chip:not(.dragging)')];
+
+    return draggableElements.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offsetX = x - box.left - box.width / 2;
+      const offsetY = y - box.top - box.height / 2;
+      
+      const distance = Math.hypot(offsetX, offsetY);
+      if (distance < closest.distance) {
+        return { distance: distance, element: child };
+      } else {
+        return closest;
+      }
+    }, { distance: Number.POSITIVE_INFINITY }).element;
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+
+    sentencesData.forEach((item, idx) => {
+      const card = document.getElementById(`card-${idx}`);
+      const box = document.getElementById(`box-${idx}`);
+      const currentOrder = [...box.querySelectorAll('.word-chip')].map(chip => chip.textContent.trim());
+
+      card.classList.remove('correct-card', 'incorrect-card');
+
+      const isCorrect = JSON.stringify(currentOrder) === JSON.stringify(item.correct);
+
+      if (isCorrect) {
+        correctCount++;
+        card.classList.add('correct-card');
+      } else {
+        card.classList.add('incorrect-card');
+      }
+    });
+
+    const resultText = document.getElementById('result-text');
+    resultText.textContent = `Результат: ${correctCount} / ${sentencesData.length}`;
+    resultText.style.color = correctCount === sentencesData.length ? 'var(--correct)' : 'var(--text)';
+  }
+
+  function resetExercise() {
+    renderExercise();
+  }
+
+  function speakSentence(idx) {
+    const box = document.getElementById(`box-${idx}`);
+    const words = [...box.querySelectorAll('.word-chip')].map(chip => chip.textContent.trim());
+    let sentence = words.join(' ').replace(/\s+\?/g, '?').replace(/\s+\./g, '.');
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(sentence);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  window.onload = renderExercise;
+</script>
+
+</body>
+</html>
