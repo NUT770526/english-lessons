@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 4. Make the sentences negative</title>
+  <style>
+    :root {
+      --bg-color: #121214;
+      --card-bg: #1e1e24;
+      --accent: #6c5ce7;
+      --accent-hover: #5a4bcf;
+      --text: #f1f2f6;
+      --text-muted: #a4b0be;
+      --correct: #2ed573;
+      --incorrect: #ff4757;
+      --border: #2f3542;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 850px;
+      width: 100%;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-top: 0;
+      color: var(--text);
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 25px;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+
+    .sentence-card {
+      background: #252530;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .original-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .input-wrapper {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input.text-input {
+      flex-grow: 1;
+      background-color: #1a1a24;
+      color: var(--text);
+      border: 2px solid var(--border);
+      padding: 10px 14px;
+      font-size: 1rem;
+      border-radius: 8px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input.text-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 8px rgba(108, 92, 231, 0.4);
+    }
+
+    .audio-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .audio-btn:hover {
+      background: rgba(108, 92, 231, 0.2);
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    button.action-btn {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button.action-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    button.reset-btn {
+      background-color: transparent;
+      border: 2px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    button.reset-btn:hover {
+      background-color: var(--border);
+      color: var(--text);
+    }
+
+    .result {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .correct-card {
+      border-color: var(--correct) !important;
+      background: rgba(46, 213, 115, 0.1) !important;
+    }
+
+    .incorrect-card {
+      border-color: var(--incorrect) !important;
+      background: rgba(255, 71, 87, 0.1) !important;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Exercise 4. Make the sentences negative</h1>
+  <p class="subtitle">Зроби речення заперечними (напиши заперечну форму речення у поле нижче).</p>
+
+  <div class="exercise-list" id="exercise-list"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Перевірити</button>
+    <button class="action-btn reset-btn" onclick="resetExercise()">Скинути</button>
+    <div class="result" id="result-text"></div>
+  </div>
+</div>
+
+<script>
+  const sentencesData = [
+    {
+      num: 1,
+      original: "Kelly works full-time.",
+      answers: ["kelly doesn't work full-time.", "kelly does not work full-time."]
+    },
+    {
+      num: 2,
+      original: "She worked on Sunday.",
+      answers: ["she didn't work on sunday.", "she did not work on sunday."]
+    },
+    {
+      num: 3,
+      original: "Julie is quick-tempered.",
+      answers: ["julie isn't quick-tempered.", "julie is not quick-tempered."]
+    },
+    {
+      num: 4,
+      original: "Julie was at the bookshop yesterday.",
+      answers: ["julie wasn't at the bookshop yesterday.", "julie was not at the bookshop yesterday."]
+    },
+    {
+      num: 5,
+      original: "Kelly and Tracy are sisters.",
+      answers: ["kelly and tracy aren't sisters.", "kelly and tracy are not sisters."]
+    },
+    {
+      num: 6,
+      original: "They were online last night.",
+      answers: ["they weren't online last night.", "they were not online last night."]
+    },
+    {
+      num: 7,
+      original: "Kelly earns money as an author now.",
+      answers: ["kelly doesn't earn money as an author now.", "kelly does not earn money as an author now."]
+    },
+    {
+      num: 8,
+      original: "She won an award last year.",
+      answers: ["she didn't win an award last year.", "she did not win an award last year."]
+    },
+    {
+      num: 9,
+      original: "The girls hang out every morning.",
+      answers: ["the girls don't hang out every morning.", "the girls do not hang out every morning."]
+    },
+    {
+      num: 10,
+      original: "They spent time together yesterday.",
+      answers: ["they didn't spend time together yesterday.", "they did not spend time together yesterday."]
+    }
+  ];
+
+  function renderExercise() {
+    const listEl = document.getElementById('exercise-list');
+    listEl.innerHTML = '';
+    document.getElementById('result-text').textContent = '';
+
+    sentencesData.forEach((item, idx) => {
+      const card = document.createElement('div');
+      card.className = 'sentence-card';
+      card.id = `card-${idx}`;
+
+      card.innerHTML = `
+        <div class="original-text">
+          <span>${item.num}. ${item.original}</span>
+          <button class="audio-btn" title="Listen original" onclick="speakText('${item.original.replace(/'/g, "\\'")}')">🔊</button>
+        </div>
+        <div class="input-wrapper">
+          <input type="text" class="text-input" id="input-${idx}" placeholder="Type negative sentence here..." autocomplete="off">
+        </div>
+      `;
+
+      listEl.appendChild(card);
+    });
+  }
+
+  function normalizeText(text) {
+    return text
+      .trim()
+      .toLowerCase()
+      .replace(/’/g, "'")
+      .replace(/\s+/g, ' ');
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+
+    sentencesData.forEach((item, idx) => {
+      const card = document.getElementById(`card-${idx}`);
+      const input = document.getElementById(`input-${idx}`);
+      const userValue = normalizeText(input.value);
+
+      card.classList.remove('correct-card', 'incorrect-card');
+
+      const isCorrect = item.answers.some(ans => normalizeText(ans) === userValue);
+
+      if (isCorrect) {
+        correctCount++;
+        card.classList.add('correct-card');
+      } else {
+        card.classList.add('incorrect-card');
+      }
+    });
+
+    const resultText = document.getElementById('result-text');
+    resultText.textContent = `Результат: ${correctCount} / ${sentencesData.length}`;
+    resultText.style.color = correctCount === sentencesData.length ? 'var(--correct)' : 'var(--text)';
+  }
+
+  function resetExercise() {
+    renderExercise();
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  window.onload = renderExercise;
+</script>
+
+</body>
+</html>
