@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 1. Match the words</title>
+  <style>
+    :root {
+      --bg-color: #121214;
+      --card-bg: #1e1e24;
+      --accent: #6c5ce7;
+      --accent-hover: #5a4bcf;
+      --text: #f1f2f6;
+      --text-muted: #a4b0be;
+      --correct: #2ed573;
+      --incorrect: #ff4757;
+      --border: #2f3542;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 950px;
+      width: 100%;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-top: 0;
+      color: var(--text);
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 25px;
+    }
+
+    /* Равномерная сетка из двух основных колонок одинаковой ширины */
+    .matching-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 25px;
+    }
+
+    @media (max-width: 768px) {
+      .matching-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Левая и правая колонки с фиксированным шагом между элементами */
+    .words-column, .targets-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Общий стиль для карточек со словами и переводами */
+    .item-card {
+      height: 52px;
+      background: #2a2a35;
+      padding: 0 16px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .english-item {
+      cursor: grab;
+      background: #2a2a35;
+    }
+
+    .english-item:active {
+      cursor: grabbing;
+    }
+
+    .word-text {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .audio-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .audio-btn:hover {
+      background: rgba(108, 92, 231, 0.2);
+    }
+
+    /* Блок перевода с интерактивной зоной внутри */
+    .target-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (max-width: 500px) {
+      .target-pair {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ukrainian-card {
+      height: 52px;
+      background: #252530;
+      padding: 0 14px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .drop-zone {
+      height: 52px;
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+      transition: background 0.2s, border-color 0.2s;
+      box-sizing: border-box;
+    }
+
+    .drop-zone .english-item {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: rgba(108, 92, 231, 0.2);
+    }
+
+    .drop-zone.drag-over {
+      background: rgba(108, 92, 231, 0.15);
+      border-color: var(--accent);
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    button.action-btn {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button.action-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    button.reset-btn {
+      background-color: transparent;
+      border: 2px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    button.reset-btn:hover {
+      background-color: var(--border);
+      color: var(--text);
+    }
+
+    .result {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .correct-border {
+      border-color: var(--correct) !important;
+      background: rgba(46, 213, 115, 0.1) !important;
+    }
+
+    .incorrect-border {
+      border-color: var(--incorrect) !important;
+      background: rgba(255, 71, 87, 0.1) !important;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Exercise 1. Match the words</h1>
+  <p class="subtitle">З'єднай слово з перекладом (перетягни английское слово в пустую рамку рядом с переводом).</p>
+
+  <div class="matching-container">
+    <!-- Левая колонка со словами -->
+    <div class="words-column" id="words-column"></div>
+
+    <!-- Правая колонка: Перевод + Зона для сброса -->
+    <div class="targets-column" id="targets-column"></div>
+  </div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Проверить</button>
+    <button class="action-btn reset-btn" onclick="resetExercise()">Сбросить</button>
+    <div class="result" id="result-text"></div>
+  </div>
+</div>
+
+<script>
+  const data = [
+    { id: '1', en: 'an outgoing person', ua: 'товариська людина' },
+    { id: '2', en: 'easy-going', ua: 'спокійний, легкий у спілкуванні' },
+    { id: '3', en: 'quick-tempered', ua: 'запальний' },
+    { id: '4', en: 'ambitious', ua: 'амбітний, цілеспрямований' },
+    { id: '5', en: 'reliable', ua: 'надійний' },
+    { id: '6', en: 'mature', ua: 'зрілий' },
+    { id: '7', en: 'hang out', ua: 'проводити час разом, гуляти' },
+    { id: '8', en: 'earn money', ua: 'заробляти гроші' },
+    { id: '9', en: 'count on somebody', ua: 'покладатися на когось' },
+    { id: '10', en: 'advice', ua: 'порада' }
+  ];
+
+  let draggedElement = null;
+
+  function initExercise() {
+    const wordsCol = document.getElementById('words-column');
+    const targetsCol = document.getElementById('targets-column');
+    
+    wordsCol.innerHTML = '';
+    targetsCol.innerHTML = '';
+    document.getElementById('result-text').textContent = '';
+
+    const shuffledEn = [...data].sort(() => Math.random() - 0.5);
+    const shuffledUa = [...data].sort(() => Math.random() - 0.5);
+
+    shuffledEn.forEach(item => {
+      const wordEl = document.createElement('div');
+      wordEl.className = 'item-card english-item';
+      wordEl.draggable = true;
+      wordEl.dataset.id = item.id;
+      wordEl.id = `en-${item.id}`;
+
+      wordEl.innerHTML = `
+        <span class="word-text">${item.en}</span>
+        <button class="audio-btn" title="Listen" onclick="event.stopPropagation(); speakText('${item.en.replace(/'/g, "\\'")}')">🔊</button>
+      `;
+
+      wordEl.addEventListener('dragstart', handleDragStart);
+      wordEl.addEventListener('dragend', handleDragEnd);
+
+      wordsCol.appendChild(wordEl);
+    });
+
+    shuffledUa.forEach(item => {
+      const pairContainer = document.createElement('div');
+      pairContainer.className = 'target-pair';
+
+      const label = document.createElement('div');
+      label.className = 'ukrainian-card';
+      label.textContent = item.ua;
+
+      const dropZone = document.createElement('div');
+      dropZone.className = 'drop-zone';
+      dropZone.dataset.targetId = item.id;
+
+      dropZone.addEventListener('dragover', handleDragOver);
+      dropZone.addEventListener('dragleave', handleDragLeave);
+      dropZone.addEventListener('drop', handleDrop);
+
+      pairContainer.appendChild(label);
+      pairContainer.appendChild(dropZone);
+      targetsCol.appendChild(pairContainer);
+    });
+  }
+
+  function handleDragStart(e) {
+    draggedElement = this;
+    e.dataTransfer.setData('text/plain', this.id);
+    setTimeout(() => this.style.opacity = '0.4', 0);
+  }
+
+  function handleDragEnd() {
+    this.style.opacity = '1';
+    draggedElement = null;
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    this.classList.add('drag-over');
+  }
+
+  function handleDragLeave() {
+    this.classList.remove('drag-over');
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    this.classList.remove('drag-over');
+
+    if (draggedElement) {
+      if (this.children.length > 0) {
+        document.getElementById('words-column').appendChild(this.children[0]);
+      }
+      this.appendChild(draggedElement);
+    }
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+    const dropZones = document.querySelectorAll('.drop-zone');
+
+    dropZones.forEach(zone => {
+      const targetId = zone.dataset.targetId;
+      const child = zone.querySelector('.english-item');
+
+      zone.classList.remove('correct-border', 'incorrect-border');
+
+      if (child) {
+        if (child.dataset.id === targetId) {
+          correctCount++;
+          zone.classList.add('correct-border');
+        } else {
+          zone.classList.add('incorrect-border');
+        }
+      } else {
+        zone.classList.add('incorrect-border');
+      }
+    });
+
+    const resultText = document.getElementById('result-text');
+    resultText.textContent = `Результат: ${correctCount} / ${data.length}`;
+    resultText.style.color = correctCount === data.length ? 'var(--correct)' : 'var(--text)';
+  }
+
+  function resetExercise() {
+    initExercise();
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  window.onload = initExercise;
+</script>
+
+</body>
+</html>
