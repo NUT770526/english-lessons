@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 1. Complete the sentences</title>
+  <style>
+    :root {
+      --bg-color: #121214;
+      --card-bg: #1e1e24;
+      --accent: #6c5ce7;
+      --accent-hover: #5a4bcf;
+      --text: #f1f2f6;
+      --text-muted: #a4b0be;
+      --correct: #2ed573;
+      --incorrect: #ff4757;
+      --border: #2f3542;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 850px;
+      width: 100%;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-top: 0;
+      color: var(--text);
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 25px;
+    }
+
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: #252530;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 25px;
+    }
+
+    .word-badge {
+      background-color: #1a1a24;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      border: 1px solid var(--border);
+    }
+
+    .word-badge.used {
+      text-decoration: line-through;
+      opacity: 0.4;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+
+    .sentence-card {
+      background: #252530;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .sentence-text {
+      font-size: 1.05rem;
+      color: var(--text);
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    select.dropdown {
+      background-color: #1a1a24;
+      color: var(--text);
+      border: 2px solid var(--border);
+      padding: 8px 12px;
+      font-size: 1rem;
+      border-radius: 8px;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    select.dropdown:focus {
+      border-color: var(--accent);
+    }
+
+    .audio-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .audio-btn:hover {
+      background: rgba(108, 92, 231, 0.2);
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    button.action-btn {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button.action-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    button.reset-btn {
+      background-color: transparent;
+      border: 2px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    button.reset-btn:hover {
+      background-color: var(--border);
+      color: var(--text);
+    }
+
+    .result {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .correct-card {
+      border-color: var(--correct) !important;
+      background: rgba(46, 213, 115, 0.1) !important;
+    }
+
+    .incorrect-card {
+      border-color: var(--incorrect) !important;
+      background: rgba(255, 71, 87, 0.1) !important;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Exercise 1. Complete the sentences</h1>
+  <p class="subtitle">Use each word or phrase once from the list below:</p>
+
+  <div class="word-bank" id="word-bank"></div>
+
+  <div class="exercise-list" id="exercise-list"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers</button>
+    <button class="action-btn reset-btn" onclick="resetExercise()">Reset</button>
+    <div class="result" id="result-text"></div>
+  </div>
+</div>
+
+<script>
+  const wordList = [
+    "square", "monument", "at the side of", "in front of", 
+    "round", "two blocks away", "pavement", "lorry", 
+    "direction", "control"
+  ];
+
+  const sentencesData = [
+    {
+      num: 1,
+      before: "Our new office is ",
+      after: " the city bank.",
+      correct: "in front of"
+    },
+    {
+      num: 2,
+      before: "The conference centre is only ",
+      after: " from the hotel.",
+      correct: "two blocks away"
+    },
+    {
+      num: 3,
+      before: "Please stay on the ",
+      after: " while you are waiting for a taxi.",
+      correct: "pavement"
+    },
+    {
+      num: 4,
+      before: "The delivery ",
+      after: " arrived at the warehouse at 8 a.m.",
+      correct: "lorry"
+    },
+    {
+      num: 5,
+      before: "Could you point me in the right ",
+      after: "?",
+      correct: "direction"
+    },
+    {
+      num: 6,
+      before: "We usually meet our international clients in the main ",
+      after: ".",
+      correct: "square"
+    },
+    {
+      num: 7,
+      before: "These traffic lights ",
+      after: " the traffic near our office.",
+      correct: "control"
+    },
+    {
+      num: 8,
+      before: "We walked ",
+      after: " the building but couldn’t find the entrance.",
+      correct: "round"
+    },
+    {
+      num: 9,
+      before: "The staff car park is ",
+      after: " the building.",
+      correct: "at the side of"
+    },
+    {
+      num: 10,
+      before: "There is a ",
+      after: " to the company’s founder near the entrance.",
+      correct: "monument"
+    }
+  ];
+
+  function renderWordBank() {
+    const bankEl = document.getElementById('word-bank');
+    bankEl.innerHTML = '';
+    
+    const usedWords = sentencesData.map((_, idx) => {
+      const select = document.getElementById(`select-${idx}`);
+      return select ? select.value : '';
+    });
+
+    wordList.forEach(word => {
+      const badge = document.createElement('span');
+      badge.className = 'word-badge';
+      if (usedWords.includes(word)) {
+        badge.classList.add('used');
+      }
+      badge.textContent = word;
+      bankEl.appendChild(badge);
+    });
+  }
+
+  function renderExercise() {
+    const listEl = document.getElementById('exercise-list');
+    listEl.innerHTML = '';
+    document.getElementById('result-text').textContent = '';
+
+    sentencesData.forEach((item, idx) => {
+      const card = document.createElement('div');
+      card.className = 'sentence-card';
+      card.id = `card-${idx}`;
+
+      const sentenceText = document.createElement('div');
+      sentenceText.className = 'sentence-text';
+      sentenceText.innerHTML = `
+        ${item.num}. ${item.before}
+        <select class="dropdown" id="select-${idx}" onchange="updateWordBank()">
+          <option value="">-- select --</option>
+          ${wordList.map(w => `<option value="${w}">${w}</option>`).join('')}
+        </select>
+        ${item.after}
+      `;
+
+      const audioBtn = document.createElement('button');
+      audioBtn.className = 'audio-btn';
+      audioBtn.title = 'Listen sentence';
+      audioBtn.textContent = '🔊';
+      audioBtn.onclick = () => speakSentence(idx);
+
+      card.appendChild(sentenceText);
+      card.appendChild(audioBtn);
+      listEl.appendChild(card);
+    });
+
+    renderWordBank();
+  }
+
+  function updateWordBank() {
+    renderWordBank();
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+
+    sentencesData.forEach((item, idx) => {
+      const card = document.getElementById(`card-${idx}`);
+      const select = document.getElementById(`select-${idx}`);
+      const userValue = select.value;
+
+      card.classList.remove('correct-card', 'incorrect-card');
+
+      if (userValue === item.correct) {
+        correctCount++;
+        card.classList.add('correct-card');
+      } else {
+        card.classList.add('incorrect-card');
+      }
+    });
+
+    const resultText = document.getElementById('result-text');
+    resultText.textContent = `Score: ${correctCount} / ${sentencesData.length}`;
+    resultText.style.color = correctCount === sentencesData.length ? 'var(--correct)' : 'var(--text)';
+  }
+
+  function resetExercise() {
+    renderExercise();
+  }
+
+  function speakSentence(idx) {
+    const item = sentencesData[idx];
+    const select = document.getElementById(`select-${idx}`);
+    const word = select.value || '______';
+    const fullSentence = `${item.before} ${word} ${item.after}`;
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(fullSentence);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  window.onload = renderExercise;
+</script>
+
+</body>
+</html>
