@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вправа 4. Перекладіть мікродіалоги англійською</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #121212;
+      color: #f1f5f9;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 850px;
+      width: 100%;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      border: 1px solid #2d2d2d;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #333333;
+      padding-bottom: 15px;
+    }
+
+    .header-icon {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .instruction {
+      background: #262626;
+      border-left: 4px solid #38bdf8;
+      padding: 14px 16px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .exercise-card {
+      background: #262626;
+      border: 1px solid #3b3b3b;
+      border-radius: 12px;
+      padding: 18px 20px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .dialog-uk {
+      font-size: 1rem;
+      color: #94a3b8;
+      border-left: 3px solid #38bdf8;
+      padding-left: 10px;
+      margin-bottom: 4px;
+      line-height: 1.5;
+    }
+
+    .dialog-uk span {
+      color: #38bdf8;
+      font-weight: bold;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .speaker-label {
+      font-weight: bold;
+      color: #cbd5e1;
+      min-width: 20px;
+    }
+
+    .text-input {
+      flex-grow: 1;
+      background-color: #1e1e1e;
+      color: #38bdf8;
+      border: 2px solid #3b3b3b;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .text-input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Validation Styles */
+    .text-input.correct {
+      border-color: #22c55e;
+      color: #4ade80;
+      background-color: #14532d;
+    }
+
+    .text-input.incorrect {
+      border-color: #ef4444;
+      color: #f87171;
+      background-color: #7f1d1d;
+    }
+
+    .correct-answer-hint {
+      font-size: 0.85rem;
+      color: #4ade80;
+      padding-left: 30px;
+      display: none;
+      line-height: 1.4;
+    }
+
+    /* Audio Button */
+    .audio-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      flex-shrink: 0;
+    }
+
+    .audio-btn:hover {
+      opacity: 1;
+    }
+
+    /* Controls */
+    .controls {
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 2px solid #333333;
+      padding-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-check {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-check:hover {
+      background-color: #0369a1;
+    }
+
+    .btn-reset {
+      background-color: #334155;
+      color: #f1f5f9;
+    }
+
+    .btn-reset:hover {
+      background-color: #475569;
+    }
+
+    .score-display {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">💬</span>
+    <h2>Вправа 4. Перекладіть мікродіалоги англійською</h2>
+  </div>
+
+  <div class="instruction">
+    Перекладіть кожну репліку мікродіалогу англійською мовою, використовуючи відповідні часові форми та конструкції узгодження (<strong>So do I / Neither do I / ... too / ... either</strong>).
+  </div>
+
+  <div class="exercise-list" id="exerciseContainer"></div>
+
+  <div class="controls">
+    <div>
+      <button class="btn btn-check" onclick="checkAnswers()">Перевірити</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const exerciseData = [
+    {
+      id: 1,
+      uk: ["Я затверджую рахунки щоп'ятниці.", "Я теж."],
+      line1: ["I approve the invoices every Friday", "I approve invoices every Friday", "I approve payments every Friday"],
+      line2: ["So do I", "I do too", "Me too"]
+    },
+    {
+      id: 2,
+      uk: ["Наш бухгалтер сьогодні доступний.", "Наш менеджер теж."],
+      line1: ["Our accountant is available today"],
+      line2: ["So is our manager", "Our manager is too"]
+    },
+    {
+      id: 3,
+      uk: ["Ми відвідали конференцію минулого тижня.", "Вони теж."],
+      line1: ["We attended the conference last week"],
+      line2: ["So did they", "They did too"]
+    },
+    {
+      id: 4,
+      uk: ["Я зараз показую звіт клієнту.", "Анна теж."],
+      line1: ["I am showing the report to the client now", "I'm showing the report to the client now", "I am showing the client the report now", "I'm showing the client the report now"],
+      line2: ["So is Anna", "Anna is too"]
+    },
+    {
+      id: 5,
+      uk: ["Ми задоволені результатами.", "Наші клієнти теж."],
+      line1: ["We are pleased with the results", "We're pleased with the results", "We are satisfied with the results", "We're satisfied with the results"],
+      line2: ["So are our clients", "Our clients are too", "So are our customers", "Our customers are too"]
+    },
+    {
+      id: 6,
+      uk: ["Я не працюю на вихідних.", "Я теж не працюю."],
+      line1: ["I don't work at the weekend", "I do not work at the weekend", "I don't work on the weekend", "I do not work on the weekend", "I don't work on weekends", "I don't work at weekends"],
+      line2: ["Neither do I", "I don't either", "Nor do I"]
+    },
+    {
+      id: 7,
+      uk: ["Менеджер не затвердив платіж учора.", "Бухгалтер теж."],
+      line1: ["The manager didn't approve the payment yesterday", "The manager did not approve the payment yesterday", "The manager didn't approve the invoice yesterday"],
+      line2: ["Neither did the accountant", "Nor did the accountant", "The accountant didn't either"]
+    },
+    {
+      id: 8,
+      uk: ["Ми зараз не рахуємо ці платежі.", "Вони теж."],
+      line1: ["We aren't counting these payments now", "We are not counting these payments now"],
+      line2: ["Neither are they", "Nor are they", "They aren't either"]
+    },
+    {
+      id: 9,
+      uk: ["Клієнт не був задоволений презентацією.", "Я теж."],
+      line1: ["The client wasn't pleased with the presentation", "The client was not pleased with the presentation", "The customer wasn't pleased with the presentation", "The client wasn't satisfied with the presentation"],
+      line2: ["Neither was I", "Nor was I", "I wasn't either"]
+    },
+    {
+      id: 10,
+      uk: ["Анна не відвідує щотижневі зустрічі.", "Марк теж."],
+      line1: ["Anna doesn't attend weekly meetings", "Anna does not attend weekly meetings", "Anna doesn't attend the weekly meeting", "Anna doesn't attend weekly meeting"],
+      line2: ["Neither does Mark", "Nor does Mark", "Mark doesn't either"]
+    },
+    {
+      id: 11,
+      uk: ["Учора я не був доступний.", "Мій колега теж."],
+      line1: ["I wasn't available yesterday", "I was not available yesterday"],
+      line2: ["Neither was my colleague", "Nor was my colleague", "My colleague wasn't either"]
+    },
+    {
+      id: 12,
+      uk: ["Вони зараз не показують нову систему.", "Ми теж."],
+      line1: ["They aren't showing the new system now", "They are not showing the new system now"],
+      line2: ["Neither are we", "Nor are we", "We aren't either"]
+    }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function normalizeText(text) {
+    return text
+      .trim()
+      .toLowerCase()
+      .replace(/’/g, "'")
+      .replace(/[.,?!]/g, "")
+      .replace(/\s+/g, " ");
+  }
+
+  function renderExercise() {
+    const container = document.getElementById("exerciseContainer");
+    container.innerHTML = "";
+
+    exerciseData.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "exercise-card";
+
+      // UK Ukrainian Text
+      const ukDiv = document.createElement("div");
+      ukDiv.className = "dialog-uk";
+      ukDiv.innerHTML = `<span>${item.id}.</span> — ${item.uk[0]}<br>&nbsp;&nbsp;&nbsp;&nbsp;— ${item.uk[1]}`;
+
+      // Inputs
+      const inputGroup = document.createElement("div");
+      inputGroup.className = "input-group";
+
+      // First line
+      const row1 = document.createElement("div");
+      row1.className = "input-row";
+      
+      const label1 = document.createElement("span");
+      label1.className = "speaker-label";
+      label1.innerText = "—";
+
+      const input1 = document.createElement("input");
+      input1.type = "text";
+      input1.className = "text-input";
+      input1.id = `input-${item.id}-1`;
+      input1.placeholder = "Перша репліка...";
+
+      const audioBtn = document.createElement("button");
+      audioBtn.className = "audio-btn";
+      audioBtn.innerHTML = "🔊";
+      audioBtn.title = "Прослухати зразок";
+      audioBtn.onclick = () => speak(`${item.line1[0]}. ${item.line2[0]}.`);
+
+      row1.appendChild(label1);
+      row1.appendChild(input1);
+      row1.appendChild(audioBtn);
+
+      // Second line
+      const row2 = document.createElement("div");
+      row2.className = "input-row";
+
+      const label2 = document.createElement("span");
+      label2.className = "speaker-label";
+      label2.innerText = "—";
+
+      const input2 = document.createElement("input");
+      input2.type = "text";
+      input2.className = "text-input";
+      input2.id = `input-${item.id}-2`;
+      input2.placeholder = "Друга репліка...";
+
+      row2.appendChild(label2);
+      row2.appendChild(input2);
+
+      // Event listeners to clear status
+      [input1, input2].forEach(inp => {
+        inp.addEventListener("input", () => {
+          inp.classList.remove("correct", "incorrect");
+          document.getElementById(`hint-${item.id}`).style.display = "none";
+        });
+      });
+
+      // Hint
+      const hint = document.createElement("div");
+      hint.className = "correct-answer-hint";
+      hint.id = `hint-${item.id}`;
+
+      inputGroup.appendChild(row1);
+      inputGroup.appendChild(row2);
+
+      card.appendChild(ukDiv);
+      card.appendChild(inputGroup);
+      card.appendChild(hint);
+
+      container.appendChild(card);
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    const totalLines = exerciseData.length * 2;
+
+    exerciseData.forEach(item => {
+      const input1 = document.getElementById(`input-${item.id}-1`);
+      const input2 = document.getElementById(`input-${item.id}-2`);
+      const hint = document.getElementById(`hint-${item.id}`);
+
+      const userVal1 = normalizeText(input1.value);
+      const userVal2 = normalizeText(input2.value);
+
+      const isCorrect1 = item.line1.some(opt => normalizeText(opt) === userVal1);
+      const isCorrect2 = item.line2.some(opt => normalizeText(opt) === userVal2);
+
+      if (isCorrect1) {
+        input1.className = "text-input correct";
+        score++;
+      } else {
+        input1.className = "text-input incorrect";
+      }
+
+      if (isCorrect2) {
+        input2.className = "text-input correct";
+        score++;
+      } else {
+        input2.className = "text-input incorrect";
+      }
+
+      if (!isCorrect1 || !isCorrect2) {
+        hint.innerText = `Зразок: — ${item.line1[0]}.\n— ${item.line2[0]}.`;
+        hint.style.display = "block";
+      } else {
+        hint.style.display = "none";
+      }
+    });
+
+    document.getElementById("scoreDisplay").innerText = `Результат: ${score} / ${totalLines}`;
+  }
+
+  function resetExercise() {
+    renderExercise();
+    document.getElementById("scoreDisplay").innerText = "";
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
