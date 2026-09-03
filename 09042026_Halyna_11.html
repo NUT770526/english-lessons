@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English - Exercise 5: Find and Correct the Error</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 30px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 900px; width: 100%; background: #1e293b; padding: 30px; border-radius: 16px; border: 1px solid #334155; }
+    h2 { color: #38bdf8; margin-top: 0; }
+    .instruction { background: #0f172a; border-left: 4px solid #38bdf8; padding: 12px; border-radius: 6px; margin-bottom: 25px; color: #cbd5e1; }
+    
+    .card-list { display: flex; flex-direction: column; gap: 16px; }
+    .card { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .sentence-row { font-size: 1.05rem; line-height: 1.5; color: #f8fafc; font-weight: 500; }
+    .num { color: #38bdf8; font-weight: bold; margin-right: 6px; }
+    .error-part { color: #f87171; font-weight: bold; text-decoration: underline; }
+    
+    .input-group { display: flex; gap: 10px; align-items: center; }
+    .input-box {
+      flex-grow: 1;
+      background: #1e293b;
+      color: #38bdf8;
+      border: 2px solid #475569;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 0.98rem;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .input-box:focus { border-color: #38bdf8; }
+    .input-box.correct { border-color: #22c55e; color: #4ade80; background-color: #064e3b; }
+    .input-box.incorrect { border-color: #ef4444; color: #f87171; background-color: #7f1d1d; }
+
+    .hint { color: #4ade80; font-size: 0.9rem; display: none; margin-top: 4px; padding-left: 4px; }
+    .audio-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; opacity: 0.8; transition: opacity 0.2s; }
+    .audio-btn:hover { opacity: 1; }
+
+    .controls { margin-top: 25px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 20px; }
+    .btn { padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; }
+    .btn-check { background: #0284c7; color: white; margin-right: 10px; }
+    .btn-reset { background: #475569; color: white; }
+    .score { font-size: 1.1rem; color: #38bdf8; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Вправа 5. Знайдіть і виправте помилку</h2>
+  <div class="instruction">
+    Напишіть правильний варіант для підкресленого виразу (або введіть повністю виправлене речення).
+  </div>
+
+  <div class="card-list" id="exerciseContainer"></div>
+
+  <div class="controls">
+    <div>
+      <button class="btn btn-check" onclick="checkAnswers()">Перевірити</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const sentences = [
+    { 
+      id: 1, 
+      before: "Our office is ", 
+      err: "in the corner of", 
+      after: " King Street and Park Road.", 
+      correctFrags: ["at the corner of", "on the corner of"], 
+      fullSentence: "Our office is at the corner of King Street and Park Road." 
+    },
+    { 
+      id: 2, 
+      before: "The accountant is waiting ", 
+      err: "in front the", 
+      after: " reception desk.", 
+      correctFrags: ["in front of the"], 
+      fullSentence: "The accountant is waiting in front of the reception desk." 
+    },
+    { 
+      id: 3, 
+      before: "The printer stands ", 
+      err: "on the corner of", 
+      after: " the finance office.", 
+      correctFrags: ["in the corner of"], 
+      fullSentence: "The printer stands in the corner of the finance office." 
+    },
+    { 
+      id: 4, 
+      before: "The manager wrote the deadline ", 
+      err: "on the top right-hand corner", 
+      after: " of the report.", 
+      correctFrags: ["in the top right-hand corner"], 
+      fullSentence: "The manager wrote the deadline in the top right-hand corner of the report." 
+    },
+    { 
+      id: 5, 
+      before: "The conference centre is two ", 
+      err: "block away", 
+      after: ".", 
+      correctFrags: ["blocks away"], 
+      fullSentence: "The conference centre is two blocks away." 
+    },
+    { 
+      id: 6, 
+      before: "The client is walking ", 
+      err: "at this direction", 
+      after: " now.", 
+      correctFrags: ["in this direction"], 
+      fullSentence: "The client is walking in this direction now." 
+    },
+    { 
+      id: 7, 
+      before: "The finance department is ", 
+      err: "in the right-hand side", 
+      after: " of the corridor.", 
+      correctFrags: ["on the right-hand side"], 
+      fullSentence: "The finance department is on the right-hand side of the corridor." 
+    },
+    { 
+      id: 8, 
+      before: "There are offices ", 
+      err: "in all sides of", 
+      after: " the square.", 
+      correctFrags: ["on all sides of"], 
+      fullSentence: "There are offices on all sides of the square." 
+    },
+    { 
+      id: 9, 
+      before: "Yesterday, the accountant ", 
+      err: "turn the corner", 
+      after: " after the bank.", 
+      correctFrags: ["turned the corner"], 
+      fullSentence: "Yesterday, the accountant turned the corner after the bank." 
+    },
+    { 
+      id: 10, 
+      before: "The car park is ", 
+      err: "in the side of", 
+      after: " the office building.", 
+      correctFrags: ["at the side of"], 
+      fullSentence: "The car park is at the side of the office building." 
+    },
+    { 
+      id: 11, 
+      before: "The client walked ", 
+      err: "around the corner of", 
+      after: " the building because he was looking for the entrance.", 
+      correctFrags: ["round the building", "around the building"], 
+      fullSentence: "The client walked round the building because he was looking for the entrance." 
+    },
+    { 
+      id: 12, 
+      before: "The manager is showing the monthly results ", 
+      err: "in front the", 
+      after: " meeting room.", 
+      correctFrags: ["in front of the"], 
+      fullSentence: "The manager is showing the monthly results in front of the meeting room." 
+    }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    window.speechSynthesis.speak(u);
+  }
+
+  function normalize(text) {
+    return text.trim().toLowerCase().replace(/’/g, "'").replace(/[.,?!]/g, "").replace(/\s+/g, " ");
+  }
+
+  function render() {
+    const container = document.getElementById("exerciseContainer");
+    container.innerHTML = "";
+
+    sentences.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="sentence-row">
+          <span class="num">${item.id}.</span> ${item.before}<span class="error-part">${item.err}</span>${item.after}
+        </div>
+        <div class="input-group">
+          <input type="text" class="input-box" id="in-${item.id}" placeholder="Введіть виправлений вираз...">
+          <button class="audio-btn" onclick="speak('${item.fullSentence.replace(/'/g, "\\'")}')" title="Прослухати правильне речення">🔊</button>
+        </div>
+        <div class="hint" id="hint-${item.id}"></div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    sentences.forEach(item => {
+      const input = document.getElementById(`in-${item.id}`);
+      const hint = document.getElementById(`hint-${item.id}`);
+      const userVal = normalize(input.value);
+
+      const isFragCorrect = item.correctFrags.some(f => normalize(f) === userVal);
+      const isFullCorrect = normalize(item.fullSentence) === userVal;
+
+      if (isFragCorrect || isFullCorrect) {
+        input.className = "input-box correct";
+        hint.style.display = "none";
+        score++;
+      } else {
+        input.className = "input-box incorrect";
+        hint.innerText = `Правильний вираз: "${item.correctFrags[0]}"`;
+        hint.style.display = "block";
+      }
+    });
+
+    document.getElementById("scoreDisplay").innerText = `Результат: ${score} / ${sentences.length}`;
+  }
+
+  function resetExercise() {
+    render();
+    document.getElementById("scoreDisplay").innerText = "";
+  }
+
+  render();
+</script>
+</body>
+</html>
