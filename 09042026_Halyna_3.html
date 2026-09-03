@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вправа 3. Перефразуйте відповідь</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #121212;
+      color: #f1f5f9;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 850px;
+      width: 100%;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      border: 1px solid #2d2d2d;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #333333;
+      padding-bottom: 15px;
+    }
+
+    .header-icon {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .instruction {
+      background: #262626;
+      border-left: 4px solid #38bdf8;
+      padding: 14px 16px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .sample-box {
+      margin-top: 8px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .exercise-card {
+      background: #262626;
+      border: 1px solid #3b3b3b;
+      border-radius: 12px;
+      padding: 16px 20px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sentence-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .item-num {
+      color: #38bdf8;
+      margin-right: 6px;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .arrow {
+      color: #38bdf8;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .text-input {
+      flex-grow: 1;
+      background-color: #1e1e1e;
+      color: #38bdf8;
+      border: 2px solid #3b3b3b;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 1rem;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .text-input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Validation Styles */
+    .text-input.correct {
+      border-color: #22c55e;
+      color: #4ade80;
+      background-color: #14532d;
+    }
+
+    .text-input.incorrect {
+      border-color: #ef4444;
+      color: #f87171;
+      background-color: #7f1d1d;
+    }
+
+    .correct-answer-hint {
+      font-size: 0.85rem;
+      color: #4ade80;
+      margin-left: 28px;
+      display: none;
+    }
+
+    /* Audio Button */
+    .audio-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      flex-shrink: 0;
+    }
+
+    .audio-btn:hover {
+      opacity: 1;
+    }
+
+    /* Controls */
+    .controls {
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 2px solid #333333;
+      padding-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-check {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-check:hover {
+      background-color: #0369a1;
+    }
+
+    .btn-reset {
+      background-color: #334155;
+      color: #f1f5f9;
+    }
+
+    .btn-reset:hover {
+      background-color: #475569;
+    }
+
+    .score-display {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">🔄</span>
+    <h2>Вправа 3. Перефразуйте відповідь</h2>
+  </div>
+
+  <div class="instruction">
+    Замініть конструкцію <strong>Neither/Nor...</strong> на конструкцію з <strong>either</strong> або навпаки.
+    <div class="sample-box">Зразок: Neither do I. &rarr; I don’t either.</div>
+  </div>
+
+  <div class="exercise-list" id="exerciseContainer"></div>
+
+  <div class="controls">
+    <div>
+      <button class="btn btn-check" onclick="checkAnswers()">Перевірити</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const exerciseData = [
+    { id: 1, original: "Neither does our accountant.", target: "Our accountant doesn't either." },
+    { id: 2, original: "I didn't either.", target: "Neither did I." },
+    { id: 3, original: "Nor is the manager.", target: "The manager isn't either." },
+    { id: 4, original: "We aren't either.", target: "Neither are we." },
+    { id: 5, original: "Neither did Anna.", target: "Anna didn't either." },
+    { id: 6, original: "The client wasn't either.", target: "Neither was the client." },
+    { id: 7, original: "Nor do we.", target: "We don't either." },
+    { id: 8, original: "My colleagues don't either.", target: "Neither do my colleagues." },
+    { id: 9, original: "Neither are they.", target: "They aren't either." },
+    { id: 10, original: "John isn't either.", target: "Neither is John." },
+    { id: 11, original: "Neither was the customer.", target: "The customer wasn't either." },
+    { id: 12, original: "The finance team didn't either.", target: "Neither did the finance team." }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function normalizeText(text) {
+    return text
+      .trim()
+      .toLowerCase()
+      .replace(/’/g, "'") // Замена типографского апострофа на обычный
+      .replace(/\s+/g, " ") // Убираем лишние пробелы
+      .replace(/\.$/, ""); // Игнорируем точку в конце
+  }
+
+  function renderExercise() {
+    const container = document.getElementById("exerciseContainer");
+    container.innerHTML = "";
+
+    exerciseData.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "exercise-card";
+
+      // Original Sentence Row
+      const sentenceRow = document.createElement("div");
+      sentenceRow.className = "sentence-row";
+
+      const textSpan = document.createElement("span");
+      textSpan.innerHTML = `<span class="item-num">${item.id}.</span> ${item.original}`;
+
+      const audioBtn = document.createElement("button");
+      audioBtn.className = "audio-btn";
+      audioBtn.innerHTML = "🔊";
+      audioBtn.title = "Прослухати";
+      audioBtn.onclick = () => speak(item.original);
+
+      sentenceRow.appendChild(textSpan);
+      sentenceRow.appendChild(audioBtn);
+
+      // Input Row
+      const inputRow = document.createElement("div");
+      inputRow.className = "input-row";
+
+      const arrow = document.createElement("span");
+      arrow.className = "arrow";
+      arrow.innerHTML = "&rarr;";
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.className = "text-input";
+      input.id = `input-${item.id}`;
+      input.placeholder = "Введіть перефразоване речення...";
+
+      input.addEventListener("input", () => {
+        input.classList.remove("correct", "incorrect");
+        document.getElementById(`hint-${item.id}`).style.display = "none";
+      });
+
+      inputRow.appendChild(arrow);
+      inputRow.appendChild(input);
+
+      // Hint Element
+      const hint = document.createElement("div");
+      hint.className = "correct-answer-hint";
+      hint.id = `hint-${item.id}`;
+
+      card.appendChild(sentenceRow);
+      card.appendChild(inputRow);
+      card.appendChild(hint);
+      container.appendChild(card);
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    exerciseData.forEach(item => {
+      const input = document.getElementById(`input-${item.id}`);
+      const hint = document.getElementById(`hint-${item.id}`);
+      const userVal = normalizeText(input.value);
+      const targetVal = normalizeText(item.target);
+
+      if (userVal === targetVal) {
+        input.className = "text-input correct";
+        hint.style.display = "none";
+        score++;
+      } else {
+        input.className = "text-input incorrect";
+        hint.innerText = `Правильна відповідь: ${item.target}`;
+        hint.style.display = "block";
+      }
+    });
+
+    document.getElementById("scoreDisplay").innerText = `Результат: ${score} / ${exerciseData.length}`;
+  }
+
+  function resetExercise() {
+    renderExercise();
+    document.getElementById("scoreDisplay").innerText = "";
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
