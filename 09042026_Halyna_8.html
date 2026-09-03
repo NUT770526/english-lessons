@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English - Exercise 2: Fill in the Blanks</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 30px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 900px; width: 100%; background: #1e293b; padding: 30px; border-radius: 16px; border: 1px solid #334155; }
+    h2 { color: #38bdf8; margin-top: 0; }
+    .instruction { background: #0f172a; border-left: 4px solid #38bdf8; padding: 12px; border-radius: 6px; margin-bottom: 20px; color: #cbd5e1; }
+    
+    .word-bank {
+      background: #0f172a;
+      border: 1px dashed #475569;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 25px;
+      color: #38bdf8;
+      font-weight: 600;
+      line-height: 1.8;
+      font-size: 0.95rem;
+    }
+
+    .card-list { display: flex; flex-direction: column; gap: 14px; }
+    .card { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px; }
+    .row { display: flex; justify-content: space-between; align-items: center; font-size: 1.05rem; line-height: 1.6; }
+    .num { color: #38bdf8; font-weight: bold; }
+    
+    .input-box {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 2px solid #475569;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .input-box:focus { border-color: #38bdf8; }
+    .input-box.correct { border-color: #22c55e; color: #4ade80; background-color: #064e3b; }
+    .input-box.incorrect { border-color: #ef4444; color: #f87171; background-color: #7f1d1d; }
+
+    .hint { color: #4ade80; font-size: 0.85rem; display: none; }
+    .audio-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; opacity: 0.8; transition: opacity 0.2s; }
+    .audio-btn:hover { opacity: 1; }
+
+    .controls { margin-top: 25px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 20px; }
+    .btn { padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; }
+    .btn-check { background: #0284c7; color: white; margin-right: 10px; }
+    .btn-reset { background: #475569; color: white; }
+    .score { font-size: 1.1rem; color: #38bdf8; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Вправа 2. Заповніть пропуски</h2>
+  <div class="instruction">
+    Використайте вирази з рамки. За потреби змініть форму дієслова.
+  </div>
+
+  <div class="word-bank">
+    in front of • at the side of • on all sides of • round the building • two blocks away • in this direction • on the right-hand side • at the corner • in the corner • round the corner • turn the corner • in the left-hand corner • in the top right-hand corner
+  </div>
+
+  <div class="card-list" id="exerciseContainer"></div>
+
+  <div class="controls">
+    <div>
+      <button class="btn btn-check" onclick="checkAnswers()">Перевірити</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const sentences = [
+    { id: 1, text: "Our accountant is waiting ____________ the office now.", ans: ["in front of"], speech: "Our accountant is waiting in front of the office now." },
+    { id: 2, text: "The company that approves invoices is ____________ King Street and Park Road.", ans: ["at the corner", "on the corner", "at the corner of", "on the corner of"], speech: "The company that approves invoices is at the corner King Street and Park Road." },
+    { id: 3, text: "The printer stands ____________ of the accountant's office.", ans: ["in the corner"], speech: "The printer stands in the corner of the accountant's office." },
+    { id: 4, text: "The invoice number appears ____________ of the document.", ans: ["in the top right-hand corner", "in the left-hand corner"], speech: "The invoice number appears in the top right-hand corner of the document." },
+    { id: 5, text: "Yesterday, the accountant wrote the payment reference ____________ of the invoice.", ans: ["in the left-hand corner", "in the top right-hand corner"], speech: "Yesterday, the accountant wrote the payment reference in the left-hand corner of the invoice." },
+    { id: 6, text: "The meeting room is just ____________, next to the reception desk.", ans: ["round the corner"], speech: "The meeting room is just round the corner, next to the reception desk." },
+    { id: 7, text: "The client ____________ after the bank and found our office.", ans: ["turned the corner"], speech: "The client turned the corner after the bank and found our office." },
+    { id: 8, text: "The conference centre is only ____________.", ans: ["two blocks away"], speech: "The conference centre is only two blocks away." },
+    { id: 9, text: "The manager is showing the new employee where to go. They are walking ____________ now.", ans: ["in this direction"], speech: "The manager is showing the new employee where to go. They are walking in this direction now." },
+    { id: 10, text: "The accountant's office is ____________ of the corridor.", ans: ["on the right-hand side"], speech: "The accountant's office is on the right-hand side of the corridor." },
+    { id: 11, text: "There are modern office buildings ____________ the square.", ans: ["on all sides of"], speech: "There are modern office buildings on all sides of the square." },
+    { id: 12, text: "The company car park is ____________ the main office.", ans: ["at the side of"], speech: "The company car park is at the side of the main office." },
+    { id: 13, text: "The clients walked ____________ because the manager wasn't available.", ans: ["round the building"], speech: "The clients walked round the building because the manager wasn't available." }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    window.speechSynthesis.speak(u);
+  }
+
+  function normalize(t) {
+    return t.trim().toLowerCase().replace(/’/g, "'").replace(/[.,?!]/g, "").replace(/\s+/g, " ");
+  }
+
+  function render() {
+    const container = document.getElementById("exerciseContainer");
+    container.innerHTML = "";
+
+    sentences.forEach((item) => {
+      const parts = item.text.split("____________");
+      const card = document.createElement("div");
+      card.className = "card";
+      
+      card.innerHTML = `
+        <div class="row">
+          <div>
+            <span class="num">${item.id}.</span> ${parts[0]}
+            <input type="text" class="input-box" id="in-${item.id}" style="width: 220px;">
+            ${parts[1] || ""}
+          </div>
+          <button class="audio-btn" onclick="speak('${item.speech.replace(/'/g, "\\'")}')" title="Прослухати">🔊</button>
+        </div>
+        <div class="hint" id="hint-${item.id}"></div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    sentences.forEach(item => {
+      const input = document.getElementById(`in-${item.id}`);
+      const hint = document.getElementById(`hint-${item.id}`);
+      const val = normalize(input.value);
+
+      if (item.ans.some(a => normalize(a) === val)) {
+        input.className = "input-box correct";
+        hint.style.display = "none";
+        score++;
+      } else {
+        input.className = "input-box incorrect";
+        hint.innerText = `Правильна відповідь: "${item.ans[0]}"`;
+        hint.style.display = "block";
+      }
+    });
+    document.getElementById("scoreDisplay").innerText = `Результат: ${score} / ${sentences.length}`;
+  }
+
+  function resetExercise() {
+    render();
+    document.getElementById("scoreDisplay").innerText = "";
+  }
+
+  render();
+</script>
+</body>
+</html>
