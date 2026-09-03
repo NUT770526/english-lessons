@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English - Exercise 3: Multiple Choice</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 30px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 900px; width: 100%; background: #1e293b; padding: 30px; border-radius: 16px; border: 1px solid #334155; }
+    h2 { color: #38bdf8; margin-top: 0; }
+    .instruction { background: #0f172a; border-left: 4px solid #38bdf8; padding: 12px; border-radius: 6px; margin-bottom: 25px; color: #cbd5e1; }
+    
+    .card-list { display: flex; flex-direction: column; gap: 14px; }
+    .card { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .sentence-row { display: flex; justify-content: space-between; align-items: flex-start; font-size: 1.05rem; line-height: 1.6; }
+    .num { color: #38bdf8; font-weight: bold; margin-right: 6px; }
+    
+    .options-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 5px; }
+    .opt-btn {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #475569;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .opt-btn:hover { border-color: #38bdf8; background: #334155; }
+    .opt-btn.selected { border-color: #38bdf8; background: #0284c7; color: #ffffff; }
+    .opt-btn.correct { border-color: #22c55e; background-color: #064e3b; color: #4ade80; }
+    .opt-btn.incorrect { border-color: #ef4444; background-color: #7f1d1d; color: #f87171; }
+
+    .audio-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; opacity: 0.8; transition: opacity 0.2s; padding: 0 0 0 10px; }
+    .audio-btn:hover { opacity: 1; }
+
+    .controls { margin-top: 25px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 20px; }
+    .btn { padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; }
+    .btn-check { background: #0284c7; color: white; margin-right: 10px; }
+    .btn-reset { background: #475569; color: white; }
+    .score { font-size: 1.1rem; color: #38bdf8; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Вправа 3. Оберіть правильний варіант</h2>
+  <div class="instruction">
+    Натисніть на правильний варіант виразу для кожного речення.
+  </div>
+
+  <div class="card-list" id="exerciseContainer"></div>
+
+  <div class="controls">
+    <div>
+      <button class="btn btn-check" onclick="checkAnswers()">Перевірити</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const questions = [
+    { id: 1, part1: "The accountant is waiting ", part2: " the office building.", options: ["in front of", "in the corner of"], correct: 0 },
+    { id: 2, part1: "Our new office is ", part2: " Green Street and Park Road.", options: ["at the corner of", "in the corner of"], correct: 0 },
+    { id: 3, part1: "The printer is ", part2: " the meeting room.", options: ["in the corner of", "on the corner of"], correct: 0 },
+    { id: 4, part1: "The accountant writes the invoice number ", part2: ".", options: ["in the top right-hand corner", "round the corner"], correct: 0 },
+    { id: 5, part1: "The café where we discuss monthly results is ", part2: ".", options: ["round the corner", "on all sides"], correct: 0 },
+    { id: 6, part1: "Yesterday, the manager ", part2: " after the bank.", options: ["turned the corner", "was two blocks away"], correct: 0 },
+    { id: 7, part1: "The conference centre where we attend meetings is ", part2: ".", options: ["two blocks away", "in the corner"], correct: 0 },
+    { id: 8, part1: "The client is walking ", part2: " now.", options: ["in this direction", "in the left-hand corner"], correct: 0 },
+    { id: 9, part1: "There are company offices ", part2: " the main square.", options: ["on all sides of", "in front"], correct: 0 },
+    { id: 10, part1: "The parking area is ", part2: " the office building.", options: ["at the side of", "in this direction"], correct: 0 },
+    { id: 11, part1: "Yesterday, the new accountant walked ", part2: " the building.", options: ["round", "in the corner of"], correct: 0 },
+    { id: 12, part1: "The finance department is ", part2: " the corridor.", options: ["on the right-hand side", "in the top right-hand corner"], correct: 0 },
+    { id: 13, part1: "Our supplier's office is ", part2: " Hill Street.", options: ["on the corner of", "in the corner of"], correct: 0 },
+    { id: 14, part1: "The manager who is showing the report is standing ", part2: " the screen.", options: ["in front of", "two blocks away"], correct: 0 }
+  ];
+
+  let userAnswers = {};
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    window.speechSynthesis.speak(u);
+  }
+
+  function selectOption(qId, optIdx) {
+    userAnswers[qId] = optIdx;
+    const btns = document.querySelectorAll(`#opts-${qId} .opt-btn`);
+    btns.forEach((btn, idx) => {
+      btn.className = idx === optIdx ? "opt-btn selected" : "opt-btn";
+    });
+  }
+
+  function render() {
+    const container = document.getElementById("exerciseContainer");
+    container.innerHTML = "";
+
+    questions.forEach((q) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const fullSentence = `${q.part1}${q.options[q.correct]}${q.part2}`;
+
+      card.innerHTML = `
+        <div class="sentence-row">
+          <div>
+            <span class="num">${q.id}.</span>
+            ${q.part1} <strong>[ ... ]</strong> ${q.part2}
+          </div>
+          <button class="audio-btn" onclick="speak('${fullSentence.replace(/'/g, "\\'")}')" title="Прослухати правильне речення">🔊</button>
+        </div>
+        <div class="options-group" id="opts-${q.id}">
+          <button class="opt-btn" onclick="selectOption(${q.id}, 0)">${q.options[0]}</button>
+          <button class="opt-btn" onclick="selectOption(${q.id}, 1)">${q.options[1]}</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    questions.forEach(q => {
+      const selected = userAnswers[q.id];
+      const btns = document.querySelectorAll(`#opts-${q.id} .opt-btn`);
+
+      btns.forEach((btn, idx) => {
+        btn.classList.remove("selected", "correct", "incorrect");
+        if (idx === q.correct) {
+          btn.classList.add("correct");
+        }
+        if (selected === idx && selected !== q.correct) {
+          btn.classList.add("incorrect");
+        }
+      });
+
+      if (selected === q.correct) {
+        score++;
+      }
+    });
+
+    document.getElementById("scoreDisplay").innerText = `Результат: ${score} / ${questions.length}`;
+  }
+
+  function resetExercise() {
+    userAnswers = {};
+    render();
+    document.getElementById("scoreDisplay").innerText = "";
+  }
+
+  render();
+</script>
+</body>
+</html>
