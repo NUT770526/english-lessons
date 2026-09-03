@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вправа 2. Заповніть пропуски</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #121212;
+      color: #f1f5f9;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 850px;
+      width: 100%;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      border: 1px solid #2d2d2d;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #333333;
+      padding-bottom: 15px;
+    }
+
+    .header-icon {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .instruction {
+      background: #262626;
+      border-left: 4px solid #38bdf8;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .exercise-card {
+      background: #262626;
+      border: 1px solid #3b3b3b;
+      border-radius: 12px;
+      padding: 16px 20px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .sentence-box {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #ffffff;
+      flex-grow: 1;
+    }
+
+    .item-num {
+      font-weight: bold;
+      color: #38bdf8;
+      margin-right: 6px;
+    }
+
+    /* Custom Dropdown Styling */
+    .gap-select {
+      background-color: #1e1e1e;
+      color: #38bdf8;
+      border: 2px solid #38bdf8;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .gap-select:focus {
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+    }
+
+    /* Validation Styles */
+    .gap-select.correct {
+      border-color: #22c55e;
+      color: #4ade80;
+      background-color: #14532d;
+    }
+
+    .gap-select.incorrect {
+      border-color: #ef4444;
+      color: #f87171;
+      background-color: #7f1d1d;
+    }
+
+    /* Audio Button */
+    .audio-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      flex-shrink: 0;
+    }
+
+    .audio-btn:hover {
+      opacity: 1;
+    }
+
+    /* Controls */
+    .controls {
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 2px solid #333333;
+      padding-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-check {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-check:hover {
+      background-color: #0369a1;
+    }
+
+    .btn-reset {
+      background-color: #334155;
+      color: #f1f5f9;
+    }
+
+    .btn-reset:hover {
+      background-color: #475569;
+    }
+
+    .score-display {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">✍️</span>
+    <h2>Вправа 2. Заповніть пропуски</h2>
+  </div>
+
+  <div class="instruction">
+    <strong>Вставте відповідне допоміжне дієслово:</strong> <code>do</code>, <code>does</code>, <code>did</code>, <code>am</code>, <code>is</code>, <code>are</code>, <code>was</code>, <code>were</code>.
+  </div>
+
+  <div class="exercise-list" id="exerciseContainer"></div>
+
+  <div class="controls">
+    <div>
+      <button class="btn btn-check" onclick="checkAnswers()">Перевірити</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const exerciseData = [
+    {
+      id: 1,
+      part1: '“I approve all payments.” — “So ',
+      part2: ' I.”',
+      correct: 'do'
+    },
+    {
+      id: 2,
+      part1: '“The accountant is available now.” — “So ',
+      part2: ' the manager.”',
+      correct: 'is'
+    },
+    {
+      id: 3,
+      part1: '“We attended the meeting yesterday.” — “So ',
+      part2: ' they.”',
+      correct: 'did'
+    },
+    {
+      id: 4,
+      part1: '“I’m showing the new system to the client.” — “So ',
+      part2: ' Anna.”',
+      correct: 'is'
+    },
+    {
+      id: 5,
+      part1: '“Our team is pleased with the results.” — “So ',
+      part2: ' their team.”',
+      correct: 'is'
+    },
+    {
+      id: 6,
+      part1: '“I don’t work at the weekend.” — “Neither ',
+      part2: ' I.”',
+      correct: 'do'
+    },
+    {
+      id: 7,
+      part1: '“The manager didn’t approve the invoice.” — “Neither ',
+      part2: ' the accountant.”',
+      correct: 'did'
+    },
+    {
+      id: 8,
+      part1: '“We aren’t counting the employees now.” — “Neither ',
+      part2: ' they.”',
+      correct: 'are'
+    },
+    {
+      id: 9,
+      part1: '“The customer wasn’t pleased with the service.” — “Neither ',
+      part2: ' I.”',
+      correct: 'was'
+    },
+    {
+      id: 10,
+      part1: '“Anna doesn’t attend the weekly meeting.” — “Neither ',
+      part2: ' Mark.”',
+      correct: 'does'
+    },
+    {
+      id: 11,
+      part1: '“I was available yesterday.” — “So ',
+      part2: ' my colleague.”',
+      correct: 'was'
+    },
+    {
+      id: 12,
+      part1: '“They are showing the presentation now.” — “So ',
+      part2: ' we.”',
+      correct: 'are'
+    }
+  ];
+
+  const verbOptions = ["", "do", "does", "did", "am", "is", "are", "was", "were"];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function playSentence(id) {
+    const item = exerciseData.find(ex => ex.id === id);
+    const select = document.getElementById(`select-${id}`);
+    const selectedValue = select.value || "___";
+    const fullText = item.part1 + selectedValue + item.part2;
+    speak(fullText.replace(/“|”/g, ""));
+  }
+
+  function renderExercise() {
+    const container = document.getElementById("exerciseContainer");
+    container.innerHTML = "";
+
+    exerciseData.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "exercise-card";
+
+      const sentenceDiv = document.createElement("div");
+      sentenceDiv.className = "sentence-box";
+
+      const numSpan = document.createElement("span");
+      numSpan.className = "item-num";
+      numSpan.innerText = `${item.id}. `;
+
+      const select = document.createElement("select");
+      select.className = "gap-select";
+      select.id = `select-${item.id}`;
+
+      select.addEventListener("change", () => {
+        select.classList.remove("correct", "incorrect");
+        if (select.value) {
+          playSentence(item.id);
+        }
+      });
+
+      verbOptions.forEach(opt => {
+        const optionEl = document.createElement("option");
+        optionEl.value = opt;
+        optionEl.innerText = opt === "" ? "—" : opt;
+        select.appendChild(optionEl);
+      });
+
+      sentenceDiv.appendChild(numSpan);
+      sentenceDiv.appendChild(document.createTextNode(item.part1));
+      sentenceDiv.appendChild(select);
+      sentenceDiv.appendChild(document.createTextNode(item.part2));
+
+      const audioBtn = document.createElement("button");
+      audioBtn.className = "audio-btn";
+      audioBtn.innerHTML = "🔊";
+      audioBtn.title = "Прослухати речення";
+      audioBtn.onclick = () => playSentence(item.id);
+
+      card.appendChild(sentenceDiv);
+      card.appendChild(audioBtn);
+      container.appendChild(card);
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    exerciseData.forEach(item => {
+      const select = document.getElementById(`select-${item.id}`);
+      const userVal = select.value;
+
+      if (userVal === item.correct) {
+        select.className = "gap-select correct";
+        score++;
+      } else {
+        select.className = "gap-select incorrect";
+      }
+    });
+
+    document.getElementById("scoreDisplay").innerText = `Результат: ${score} / ${exerciseData.length}`;
+  }
+
+  function resetExercise() {
+    renderExercise();
+    document.getElementById("scoreDisplay").innerText = "";
+  }
+
+  renderQuiz = renderExercise;
+  renderExercise();
+</script>
+
+</body>
+</html>
