@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English - Exercise 4: Translation</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 30px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 900px; width: 100%; background: #1e293b; padding: 30px; border-radius: 16px; border: 1px solid #334155; }
+    h2 { color: #38bdf8; margin-top: 0; }
+    .instruction { background: #0f172a; border-left: 4px solid #38bdf8; padding: 12px; border-radius: 6px; margin-bottom: 25px; color: #cbd5e1; }
+    
+    .card-list { display: flex; flex-direction: column; gap: 16px; }
+    .card { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .sentence-row { font-size: 1.05rem; line-height: 1.5; color: #f8fafc; font-weight: 500; }
+    .num { color: #38bdf8; font-weight: bold; margin-right: 6px; }
+    
+    .input-group { display: flex; gap: 10px; align-items: center; }
+    .input-box {
+      flex-grow: 1;
+      background: #1e293b;
+      color: #38bdf8;
+      border: 2px solid #475569;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 0.98rem;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .input-box:focus { border-color: #38bdf8; }
+    .input-box.correct { border-color: #22c55e; color: #4ade80; background-color: #064e3b; }
+    .input-box.incorrect { border-color: #ef4444; color: #f87171; background-color: #7f1d1d; }
+
+    .hint { color: #4ade80; font-size: 0.9rem; display: none; margin-top: 4px; padding-left: 4px; }
+    .audio-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; opacity: 0.8; transition: opacity 0.2s; }
+    .audio-btn:hover { opacity: 1; }
+
+    .controls { margin-top: 25px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 20px; }
+    .btn { padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; }
+    .btn-check { background: #0284c7; color: white; margin-right: 10px; }
+    .btn-reset { background: #475569; color: white; }
+    .score { font-size: 1.1rem; color: #38bdf8; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Вправа 4. Перекладіть англійською</h2>
+  <div class="instruction">
+    Введіть англійський переклад для кожного речення у відповідне поле.
+  </div>
+
+  <div class="card-list" id="exerciseContainer"></div>
+
+  <div class="controls">
+    <div>
+      <button class="btn btn-check" onclick="checkAnswers()">Перевірити</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const sentences = [
+    { id: 1, ua: "Наш бухгалтер зараз чекає перед офісом.", en: ["Our accountant is waiting in front of the office now.", "Our accountant is waiting in front of the office right now."] },
+    { id: 2, ua: "Офіс компанії знаходиться на розі Кінг-стріт і Парк-роуд.", en: ["The company's office is at the corner of King Street and Park Road.", "The company office is at the corner of King Street and Park Road.", "The company's office is on the corner of King Street and Park Road.", "The company office is on the corner of King Street and Park Road."] },
+    { id: 3, ua: "Принтер стоїть у кутку бухгалтерії.", en: ["The printer stands in the corner of the accounting office.", "The printer is in the corner of the accountant's office.", "The printer stands in the corner of the accountant's office."] },
+    { id: 4, ua: "Учора бухгалтер написав номер рахунку у правому верхньому куті.", en: ["Yesterday, the accountant wrote the invoice number in the top right-hand corner.", "Yesterday the accountant wrote the invoice number in the top right-hand corner."] },
+    { id: 5, ua: "Клієнт, який був задоволений звітом, зараз іде в цьому напрямку.", en: ["The client who was satisfied with the report is walking in this direction now.", "The client, who was satisfied with the report, is walking in this direction now.", "The client who was happy with the report is walking in this direction now."] },
+    { id: 6, ua: "Учора менеджер повернув за ріг після банку.", en: ["Yesterday, the manager turned the corner after the bank.", "Yesterday the manager turned the corner after the bank."] },
+    { id: 7, ua: "Конференц-центр знаходиться за два квартали звідси.", en: ["The conference centre is two blocks away.", "The conference center is two blocks away."] },
+    { id: 8, ua: "Фінансовий відділ знаходиться з правого боку коридору.", en: ["The finance department is on the right-hand side of the corridor."] },
+    { id: 9, ua: "Працівники зараз ідуть навколо офісної будівлі.", en: ["The workers are walking round the office building now.", "The employees are walking round the office building now."] },
+    { id: 10, ua: "З усіх боків площі знаходяться офісні будівлі.", en: ["There are office buildings on all sides of the square.", "On all sides of the square there are office buildings."] },
+    { id: 11, ua: "Паркувальний майданчик знаходиться збоку від нашого офісу.", en: ["The parking area is at the side of our office.", "The car park is at the side of our office.", "The parking lot is at the side of our office."] },
+    { id: 12, ua: "Кафе, де ми обговорюємо місячні результати, знаходиться за рогом.", en: ["The café where we discuss monthly results is round the corner.", "The cafe where we discuss monthly results is round the corner."] },
+    { id: 13, ua: "Бухгалтер, який відповідає за платежі, сидить у лівому куті.", en: ["The accountant who is responsible for payments is sitting in the left-hand corner.", "The accountant who is in charge of payments sits in the left-hand corner.", "The accountant responsible for payments is sitting in the left-hand corner."] },
+    { id: 14, ua: "На вихідних менеджер перевіряє електронну пошту в офісі за рогом.", en: ["At the weekend, the manager checks email in the office round the corner.", "On the weekend, the manager checks emails in the office round the corner.", "At the weekend the manager checks email in the office round the corner."] }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    window.speechSynthesis.speak(u);
+  }
+
+  function normalize(text) {
+    return text.trim().toLowerCase().replace(/’/g, "'").replace(/[.,?!]/g, "").replace(/\s+/g, " ");
+  }
+
+  function render() {
+    const container = document.getElementById("exerciseContainer");
+    container.innerHTML = "";
+
+    sentences.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="sentence-row">
+          <span class="num">${item.id}.</span> ${item.ua}
+        </div>
+        <div class="input-group">
+          <input type="text" class="input-box" id="in-${item.id}" placeholder="Введіть переклад англійською...">
+          <button class="audio-btn" onclick="speak('${item.en[0].replace(/'/g, "\\'")}')" title="Прослухати эталонный вариант">🔊</button>
+        </div>
+        <div class="hint" id="hint-${item.id}"></div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    sentences.forEach(item => {
+      const input = document.getElementById(`in-${item.id}`);
+      const hint = document.getElementById(`hint-${item.id}`);
+      const userVal = normalize(input.value);
+
+      const isCorrect = item.en.some(ans => normalize(ans) === userVal);
+
+      if (isCorrect) {
+        input.className = "input-box correct";
+        hint.style.display = "none";
+        score++;
+      } else {
+        input.className = "input-box incorrect";
+        hint.innerText = `Правильна відповідь: "${item.en[0]}"`;
+        hint.style.display = "block";
+      }
+    });
+
+    document.getElementById("scoreDisplay").innerText = `Результат: ${score} / ${sentences.length}`;
+  }
+
+  function resetExercise() {
+    render();
+    document.getElementById("scoreDisplay").innerText = "";
+  }
+
+  render();
+</script>
+</body>
+</html>
