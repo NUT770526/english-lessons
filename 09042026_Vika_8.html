@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phrases Practice (a/an & Plural -s/-es)</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', sans-serif; }
+    body { background-color: #f0fdf4; color: #1e293b; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 850px; width: 100%; background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 3px solid #86efac; }
+    
+    h2 { color: #16a34a; text-align: center; margin-top: 0; font-size: 1.8rem; }
+    .instruction { background: #e0f2fe; border-left: 5px solid #38bdf8; padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; color: #0369a1; font-weight: bold; line-height: 1.5; }
+    
+    .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+    @media (max-width: 650px) { .grid-container { grid-template-columns: 1fr; } }
+
+    .card-list { display: flex; flex-direction: column; gap: 12px; }
+    .card { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    
+    .item-label { font-size: 1.1rem; color: #334155; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .num { color: #0284c7; min-width: 24px; }
+
+    input[type="text"] {
+      width: 100%;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      outline: none;
+      color: #0f172a;
+      background-color: #ffffff;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #38bdf8;
+      background-color: #f0f9ff;
+    }
+
+    .btn-icon { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #475569; }
+    .btn-icon:hover { background: #e2e8f0; color: #0f172a; }
+
+    .hint-box {
+      display: none;
+      background: #fffbeb;
+      border: 1px dashed #f59e0b;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      color: #b45309;
+    }
+    .hint-box.open { display: block; }
+
+    .rule-banner {
+      background: #fef3c7;
+      border: 2px solid #fde047;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 10px;
+      color: #78350f;
+    }
+    .rule-banner h3 { margin-top: 0; margin-bottom: 8px; color: #92400e; font-size: 1.1rem; }
+    .rule-banner ul { margin: 0; padding-left: 20px; line-height: 1.5; }
+
+    .controls { display: flex; justify-content: flex-end; margin-top: 20px; border-top: 2px solid #f1f5f9; padding-top: 15px; }
+    .btn-main { padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; background: #94a3b8; color: white; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🌟 Grammar Practice: Articles & Plurals 🌟</h2>
+  <div class="instruction">
+    <b>Вправа 2. Напиши словосполучення</b><br>
+    Обери правильний артикль (<b>a / an</b>) або напиши числівник і додай закінчення (<b>-s / -es</b>).
+  </div>
+
+  <div class="grid-container">
+    <div class="card-list" id="col1"></div>
+    <div class="card-list" id="col2"></div>
+  </div>
+
+  <!-- Grammar Reference Banner -->
+  <div class="rule-banner">
+    <h3>📌 Підказка / Нагадування:</h3>
+    <ul>
+      <li>Якщо предмет <b>один</b> → пишемо артикль <b>a</b> або <b>an</b> (наприклад: <i>a desk, an eraser</i>).</li>
+      <li>Якщо предметів <b>декілька</b> → пишемо число словами та додаємо закінчення <b>-s / -es</b> (наприклад: <i>two erasers, three pencils</i>).</li>
+    </ul>
+  </div>
+
+  <div class="controls">
+    <button class="btn-main" onclick="resetExercise()">Очистити поля 🔄</button>
+  </div>
+</div>
+
+<script>
+  const items = [
+    { id: 1, ua: "один стіл", speakText: "a desk", hint: "Предмет один. Стіл = desk (починається з приголосного [d])." },
+    { id: 2, ua: "дві гумки", speakText: "two erasers", hint: "Предметів два (two). До слова eraser додаємо закінчення -s." },
+    { id: 3, ua: "один шкільний рюкзак", speakText: "a school bag", hint: "Предмет один. Рюкзак = school bag (починається з [s])." },
+    { id: 4, ua: "три олівці", speakText: "three pencils", hint: "Предметів три (three). До слова pencil додаємо закінчення -s." },
+    { id: 5, ua: "одна точилка", speakText: "a sharpener", hint: "Предмет один. Точилка = sharpener (починається з [ʃ])." },
+    { id: 6, ua: "чотири книжки", speakText: "four books", hint: "Предметів чотири (four). До слова book додаємо закінчення -s." },
+    { id: 7, ua: "одна ручка", speakText: "a pen", hint: "Предмет один. Ручка = pen (починається з [p])." },
+    { id: 8, ua: "дві лінійки", speakText: "two rulers", hint: "Предметів два (two). До слова ruler додаємо закінчення -s." },
+    { id: 9, ua: "один пенал", speakText: "a pencil case", hint: "Предмет один. Пенал = pencil case." },
+    { id: 10, ua: "п'ять стільців", speakText: "five chairs", hint: "Предметів п'ять (five). До слова chair додаємо закінчення -s." }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    window.speechSynthesis.speak(u);
+  }
+
+  function toggleHint(id) {
+    const hintBox = document.getElementById(`hint-${id}`);
+    hintBox.classList.toggle('open');
+  }
+
+  function createCard(item) {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="item-label"><span class="num">${item.id}.</span> ${item.ua}</div>
+        <div class="action-group">
+          <button class="btn-icon" onclick="toggleHint(${item.id})">💡 Підказка</button>
+          <button class="btn-icon" onclick="speak('${item.speakText}')">🔊 Озвучка</button>
+        </div>
+      </div>
+      <div>
+        <input type="text" id="input-${item.id}" placeholder="Напиши англійською..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="hint-box" id="hint-${item.id}">
+        📌 ${item.hint}
+      </div>
+    `;
+    return card;
+  }
+
+  function render() {
+    const col1 = document.getElementById("col1");
+    const col2 = document.getElementById("col2");
+
+    col1.innerHTML = "";
+    col2.innerHTML = "";
+
+    items.forEach((item, index) => {
+      if (index < 5) {
+        col1.appendChild(createCard(item));
+      } else {
+        col2.appendChild(createCard(item));
+      }
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll("input[type='text']").forEach(input => input.value = "");
+  }
+
+  render();
+</script>
+</body>
+</html>
