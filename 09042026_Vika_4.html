@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Present Simple Practice - Section C</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', sans-serif; }
+    body { background-color: #f0fdf4; color: #1e293b; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 800px; width: 100%; background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 3px solid #86efac; }
+    
+    h2 { color: #16a34a; text-align: center; margin-top: 0; font-size: 1.8rem; }
+    .instruction { background: #e0f2fe; border-left: 5px solid #38bdf8; padding: 12px 16px; border-radius: 10px; margin-bottom: 25px; color: #0369a1; font-weight: bold; }
+
+    .card-list { display: flex; flex-direction: column; gap: 16px; }
+    .card { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    
+    .card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .sentence-original { font-size: 1.15rem; color: #334155; font-weight: 600; line-height: 1.5; }
+    .num { color: #0284c7; font-weight: bold; margin-right: 6px; }
+
+    .input-row { display: flex; align-items: center; gap: 8px; width: 100%; }
+    
+    /* Input Field Styling */
+    input[type="text"] {
+      width: 100%;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      outline: none;
+      color: #0f172a;
+      background-color: #ffffff;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #38bdf8;
+      background-color: #f0f9ff;
+    }
+
+    /* Action Buttons */
+    .action-group { display: flex; align-items: center; gap: 8px; }
+    .btn-icon { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #475569; }
+    .btn-icon:hover { background: #e2e8f0; color: #0f172a; }
+
+    /* Hint Box */
+    .hint-box {
+      display: none;
+      background: #fffbeb;
+      border: 1px dashed #f59e0b;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      color: #b45309;
+    }
+    .hint-box.open { display: block; }
+
+    /* Rule Banner */
+    .rule-banner {
+      background: #fef3c7;
+      border: 2px solid #fde047;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 25px;
+      color: #78350f;
+    }
+    .rule-banner h3 { margin-top: 0; margin-bottom: 8px; color: #92400e; font-size: 1.1rem; }
+    .rule-banner ul { margin: 0; padding-left: 20px; line-height: 1.5; }
+
+    .controls { display: flex; justify-content: flex-end; margin-top: 25px; border-top: 2px solid #f1f5f9; padding-top: 20px; }
+    .btn-main { padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; background: #94a3b8; color: white; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🌟 Grammar Practice: Negative Sentences 🌟</h2>
+  <div class="instruction">
+    C. Зроби речення заперечним. Перепиши речення, додавши заперечну форму.
+  </div>
+
+  <div class="card-list" id="exerciseContainer"></div>
+
+  <!-- Grammar Reference Banner -->
+  <div class="rule-banner">
+    <h3>📌 Підказка / Напоминалка:</h3>
+    <ul>
+      <li>Якщо є глагол <b>is</b> → змінюємо на <b>is not (isn't)</b>.</li>
+      <li>Для діяльних глаголів (carries, spells, completes) → використовуємо <b>does not (doesn't)</b>, а с самого глагола <b>прибираємо закінчення -s / -es / -ies</b>!</li>
+    </ul>
+  </div>
+
+  <div class="controls">
+    <button class="btn-main" onclick="resetExercise()">Очистити поля 🔄</button>
+  </div>
+</div>
+
+<script>
+  const tasks = [
+    { 
+      id: 1, 
+      sentence: "She carries a comb in her bag.", 
+      hint: "Використовуй 'doesn't'. Не забудь змінити 'carries' назад на початкову форму 'carry'!" 
+    },
+    { 
+      id: 2, 
+      sentence: "This sharpener is here.", 
+      hint: "Тут є глагол 'is'. Просто додай частку 'not' (is not або isn't)." 
+    },
+    { 
+      id: 3, 
+      sentence: "Tom spells his surname correctly.", 
+      hint: "Використовуй 'doesn't'. Прибери закінчення -s у глагола 'spells'!" 
+    },
+    { 
+      id: 4, 
+      sentence: "That pencil is sharp.", 
+      hint: "Тут є глагол 'is'. Зроби з нього 'is not' (isn't)." 
+    },
+    { 
+      id: 5, 
+      sentence: "Anna completes the exercise.", 
+      hint: "Використовуй 'doesn't'. Прибери закінчення -s у глагола 'completes'!" 
+    }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    window.speechSynthesis.speak(u);
+  }
+
+  function toggleHint(id) {
+    const hintBox = document.getElementById(`hint-${id}`);
+    hintBox.classList.toggle('open');
+  }
+
+  function render() {
+    const container = document.getElementById("exerciseContainer");
+    container.innerHTML = "";
+
+    tasks.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="sentence-original">
+            <span class="num">${item.id}.</span> ${item.sentence}
+          </div>
+          <div class="action-group">
+            <button class="btn-icon" onclick="toggleHint(${item.id})">💡 Правило</button>
+            <button class="btn-icon" onclick="speak('${item.sentence.replace(/'/g, "\\'")}')">🔊 Озвучка</button>
+          </div>
+        </div>
+        <div class="input-row">
+          <input type="text" id="input-${item.id}" placeholder="Напиши заперечне речення тут..." autocomplete="off" spellcheck="false">
+        </div>
+        <div class="hint-box" id="hint-${item.id}">
+          📌 ${item.hint}
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll("input[type='text']").forEach(input => input.value = "");
+  }
+
+  render();
+</script>
+</body>
+</html>
