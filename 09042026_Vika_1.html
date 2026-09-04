@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Grammar Practice</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', sans-serif; }
+    body { background-color: #f0fdf4; color: #1e293b; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 800px; width: 100%; background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 3px solid #86efac; }
+    
+    h2 { color: #16a34a; text-align: center; margin-top: 0; font-size: 1.8rem; }
+    .instruction { background: #e0f2fe; border-left: 5px solid #38bdf8; padding: 12px 16px; border-radius: 10px; margin-bottom: 25px; color: #0369a1; font-weight: 500; }
+
+    .card-list { display: flex; flex-direction: column; gap: 14px; }
+    .card { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    
+    .sentence-row { font-size: 1.1rem; line-height: 1.6; color: #334155; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+    .num { color: #0284c7; font-weight: bold; margin-right: 4px; }
+
+    /* Interactive Choice Buttons */
+    .option-btn {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 4px 12px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: #0f172a;
+      cursor: pointer;
+      transition: all 0.2s;
+      outline: none;
+    }
+    .option-btn:hover { border-color: #38bdf8; background: #f0f9ff; }
+    .option-btn.selected { border-color: #0284c7; background: #bae6fd; color: #0369a1; }
+
+    /* Action Buttons */
+    .action-group { display: flex; align-items: center; gap: 8px; }
+    .btn-icon { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: #475569; }
+    .btn-icon:hover { background: #e2e8f0; color: #0f172a; }
+
+    /* Hint Panel */
+    .hint-box {
+      display: none;
+      background: #fffbeb;
+      border: 1px dashed #f59e0b;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      color: #b45309;
+      line-height: 1.4;
+    }
+    .hint-box.open { display: block; }
+
+    .controls { display: flex; justify-content: flex-end; margin-top: 25px; border-top: 2px solid #f1f5f9; padding-top: 20px; }
+    .btn-main { padding: 12px 24px; border-radius: 12px; font-weight: bold; cursor: pointer; border: none; font-size: 1.1rem; transition: transform 0.1s; background: #94a3b8; color: white; }
+    .btn-main:active { transform: scale(0.98); }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🌟 Grammar Practice: Choose the Word! 🌟</h2>
+  <div class="instruction">
+    Прочитай предложение, вспомни правило и выбери правильное слово. Если сомневаешься, нажми на кнопку 💡 **Правило**.
+  </div>
+
+  <div class="card-list" id="exerciseContainer"></div>
+
+  <div class="controls">
+    <button class="btn-main" onclick="resetExercise()">Сбросить ответы 🔄</button>
+  </div>
+</div>
+
+<script>
+  const sentences = [
+    { id: 1, before: "My pencil", opt1: "is", opt2: "are", after: "sharp.", full: "My pencil is sharp.", hint: "Pencil (карандаш) — это 'it' (единственное число). С 'it' мы используем IS или ARE?" },
+    { id: 2, before: "I", opt1: "carry", opt2: "carries", after: "a sharpener in my schoolbag.", full: "I carry a sharpener in my schoolbag.", hint: "Запомни: с местоимением 'I' глагол остается без окончания -s." },
+    { id: 3, before: "She", opt1: "spell", opt2: "spells", after: "her surname correctly.", full: "She spells her surname correctly.", hint: "Правило: с местоимениями 'he / she / it' к глаголу добавляется окончание -s!" },
+    { id: 4, before: "The comb", opt1: "is", opt2: "are", after: "here.", full: "The comb is here.", hint: "Comb (расческа) — это один предмет ('it')." },
+    { id: 5, before: "These pencils", opt1: "is", opt2: "are", after: "sharp.", full: "These pencils are sharp.", hint: "Pencils (карандаши) — это множественное число ('they')." },
+    { id: 6, before: "Our teacher", opt1: "repeat", opt2: "repeats", after: "the question.", full: "Our teacher repeats the question.", hint: "Teacher — это 'he' или 'she'. Не забудь про окончание -s у глагола." },
+    { id: 7, before: "My first name", opt1: "am", opt2: "is", after: "Anna.", full: "My first name is Anna.", hint: "First name (имя) — это 'it'. Форма 'am' используется только с местоимением 'I'." },
+    { id: 8, before: "We", opt1: "complete", opt2: "completes", after: "the exercise.", full: "We complete the exercise.", hint: "С местоимением 'we' (мы) окончание -s глаголу НЕ требуется." },
+    { id: 9, before: "He", opt1: "carry", opt2: "carries", after: "a comb in his bag.", full: "He carries a comb in his bag.", hint: "С местоимением 'he' добавляем окончание -es (буква 'y' меняется на 'i')." },
+    { id: 10, before: "Your books", opt1: "is", opt2: "are", after: "there.", full: "Your books are there.", hint: "Books (книги) — множественное число ('they')." },
+    { id: 11, before: "I", opt1: "repeat", opt2: "repeats", after: "the word and then write it.", full: "I repeat the word and then write it.", hint: "С местоимением 'I' глагол используется в начальной форме." },
+    { id: 12, before: "The sharpener", opt1: "am", opt2: "is", after: "on the desk.", full: "The sharpener is on the desk.", hint: "Sharpener (точилка) — это один предмет ('it')." }
+  ];
+
+  const userSelections = {};
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    window.speechSynthesis.speak(u);
+  }
+
+  function toggleHint(id) {
+    const hintBox = document.getElementById(`hint-${id}`);
+    hintBox.classList.toggle('open');
+  }
+
+  function selectOption(id, opt) {
+    userSelections[id] = opt;
+    
+    const btn1 = document.getElementById(`opt-${id}-1`);
+    const btn2 = document.getElementById(`opt-${id}-2`);
+    
+    btn1.className = 'option-btn' + (opt === btn1.innerText ? ' selected' : '');
+    btn2.className = 'option-btn' + (opt === btn2.innerText ? ' selected' : '');
+  }
+
+  function render() {
+    const container = document.getElementById("exerciseContainer");
+    container.innerHTML = "";
+
+    sentences.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="sentence-row">
+            <span class="num">${item.id}.</span> ${item.before}
+            <button class="option-btn" id="opt-${item.id}-1" onclick="selectOption(${item.id}, '${item.opt1}')">${item.opt1}</button>
+            /
+            <button class="option-btn" id="opt-${item.id}-2" onclick="selectOption(${item.id}, '${item.opt2}')">${item.opt2}</button>
+            ${item.after}
+          </div>
+          <div class="action-group">
+            <button class="btn-icon" onclick="toggleHint(${item.id})">💡 Правило</button>
+            <button class="btn-icon" onclick="speak('${item.full.replace(/'/g, "\\'")}')">🔊 Озвучка</button>
+          </div>
+        </div>
+        <div class="hint-box" id="hint-${item.id}">
+          📌 <b>Подсказка:</b> ${item.hint}
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function resetExercise() {
+    Object.keys(userSelections).forEach(k => delete userSelections[k]);
+    render();
+  }
+
+  render();
+</script>
+</body>
+</html>
