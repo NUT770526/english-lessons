@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Present Simple Practice - Part B</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', sans-serif; }
+    body { background-color: #f0fdf4; color: #1e293b; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 800px; width: 100%; background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 3px solid #86efac; }
+    
+    h2 { color: #16a34a; text-align: center; margin-top: 0; font-size: 1.8rem; }
+    .instruction { background: #e0f2fe; border-left: 5px solid #38bdf8; padding: 12px 16px; border-radius: 10px; margin-bottom: 25px; color: #0369a1; font-weight: bold; }
+
+    .card-list { display: flex; flex-direction: column; gap: 14px; }
+    .card { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    
+    .sentence-row { font-size: 1.1rem; color: #334155; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; line-height: 1.6; }
+    .num { color: #0284c7; font-weight: bold; margin-right: 4px; min-width: 24px; }
+
+    /* Input Field Styling */
+    input[type="text"] {
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      outline: none;
+      width: 140px;
+      color: #0f172a;
+      background-color: #ffffff;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #38bdf8;
+      background-color: #f0f9ff;
+    }
+
+    /* Action Buttons */
+    .action-group { display: flex; align-items: center; gap: 8px; }
+    .btn-icon { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #475569; }
+    .btn-icon:hover { background: #e2e8f0; color: #0f172a; }
+
+    /* Hint Box */
+    .hint-box {
+      display: none;
+      background: #fffbeb;
+      border: 1px dashed #f59e0b;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      color: #b45309;
+    }
+    .hint-box.open { display: block; }
+
+    /* Rule Banner */
+    .rule-banner {
+      background: #fef3c7;
+      border: 2px solid #fde047;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 25px;
+      color: #78350f;
+    }
+    .rule-banner h3 { margin-top: 0; margin-bottom: 8px; color: #92400e; font-size: 1.1rem; }
+    .rule-banner ul { margin: 0; padding-left: 20px; line-height: 1.5; }
+
+    .controls { display: flex; justify-content: flex-end; margin-top: 25px; border-top: 2px solid #f1f5f9; padding-top: 20px; }
+    .btn-main { padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; background: #94a3b8; color: white; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🌟 Grammar Practice: Present Simple 🌟</h2>
+  <div class="instruction">
+    B. Розкрий дужки. Заповни пропуски правильною формою дієслова.
+  </div>
+
+  <div class="card-list" id="exerciseContainer"></div>
+
+  <!-- Grammar Reference Banner -->
+  <div class="rule-banner">
+    <h3>📌 Підказка / Напоминалка:</h3>
+    <ul>
+      <li><b>he / she / it</b> → дієслово з <b>-s, -es, -ies</b> або форма <b>is</b> <i>(наприклад: She carries, It is)</i></li>
+      <li><b>I / you / we / they</b> → дієслово <b>без закінчення</b> або форма <b>am / are</b> <i>(наприклад: I carry, I am)</i></li>
+    </ul>
+  </div>
+
+  <div class="controls">
+    <button class="btn-main" onclick="resetExercise()">Очистити поля 🔄</button>
+  </div>
+</div>
+
+<script>
+  const tasks = [
+    { id: 1, before: "I", verb: "spell", after: "my surname.", hint: "З местоимением 'I' глагол остается в начальной форме (без окончаний)." },
+    { id: 2, before: "This comb", verb: "be", after: "here.", hint: "Comb (расческа) — это один предмет ('it'). Выбери форму глагола to be (am, is или are)." },
+    { id: 3, before: "She", verb: "complete", after: "the exercise and then checks it.", hint: "С местоимением 'she' добавляем к глаголу окончание -s." },
+    { id: 4, before: "I", verb: "carry", after: "this book to school.", hint: "С местоимением 'I' глагол не меняется." },
+    { id: 5, before: "That pencil", verb: "be", after: "sharp.", hint: "Pencil (карандаш) — это 'it'. Выбери нужную форму глагола to be (am, is или are)." }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    window.speechSynthesis.speak(u);
+  }
+
+  function toggleHint(id) {
+    const hintBox = document.getElementById(`hint-${id}`);
+    hintBox.classList.toggle('open');
+  }
+
+  function render() {
+    const container = document.getElementById("exerciseContainer");
+    container.innerHTML = "";
+
+    tasks.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="sentence-row">
+            <span class="num">${item.id}.</span> ${item.before}
+            <input type="text" id="input-${item.id}" placeholder="(${item.verb})" autocomplete="off" spellcheck="false">
+            ${item.after}
+          </div>
+          <div class="action-group">
+            <button class="btn-icon" onclick="toggleHint(${item.id})">💡 Правило</button>
+            <button class="btn-icon" onclick="speak('${item.before.replace(/'/g, "\\'")} ${item.verb} ${item.after.replace(/'/g, "\\'")}')">🔊 Озвучка</button>
+          </div>
+        </div>
+        <div class="hint-box" id="hint-${item.id}">
+          📌 ${item.hint}
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll("input[type='text']").forEach(input => input.value = "");
+  }
+
+  render();
+</script>
+</body>
+</html>
