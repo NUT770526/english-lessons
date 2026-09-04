@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Present Simple Practice - Parts D, E, F</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', sans-serif; }
+    body { background-color: #f0fdf4; color: #1e293b; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 850px; width: 100%; background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 3px solid #86efac; }
+    
+    h2 { color: #16a34a; text-align: center; margin-top: 0; font-size: 1.8rem; }
+    .instruction { background: #e0f2fe; border-left: 5px solid #38bdf8; padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; color: #0369a1; font-weight: bold; }
+    
+    .section-title { font-size: 1.3rem; color: #0284c7; margin: 25px 0 12px 0; border-bottom: 2px solid #bae6fd; padding-bottom: 4px; }
+
+    .card-list { display: flex; flex-direction: column; gap: 14px; }
+    .card { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    
+    .sentence-row { font-size: 1.1rem; color: #334155; font-weight: 600; line-height: 1.5; }
+    .num { color: #0284c7; font-weight: bold; margin-right: 6px; min-width: 28px; display: inline-block; }
+
+    /* Input Field Styling */
+    input[type="text"] {
+      width: 100%;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      outline: none;
+      color: #0f172a;
+      background-color: #ffffff;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #38bdf8;
+      background-color: #f0f9ff;
+    }
+
+    /* Action Buttons */
+    .action-group { display: flex; align-items: center; gap: 8px; }
+    .btn-icon { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #475569; }
+    .btn-icon:hover { background: #e2e8f0; color: #0f172a; }
+
+    /* Hint Box */
+    .hint-box {
+      display: none;
+      background: #fffbeb;
+      border: 1px dashed #f59e0b;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      color: #b45309;
+    }
+    .hint-box.open { display: block; }
+
+    /* Rule Banner */
+    .rule-banner {
+      background: #fef3c7;
+      border: 2px solid #fde047;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 25px;
+      color: #78350f;
+    }
+    .rule-banner h3 { margin-top: 0; margin-bottom: 8px; color: #92400e; font-size: 1.1rem; }
+    .rule-banner ul { margin: 0; padding-left: 20px; line-height: 1.5; }
+
+    .controls { display: flex; justify-content: flex-end; margin-top: 25px; border-top: 2px solid #f1f5f9; padding-top: 20px; }
+    .btn-main { padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; background: #94a3b8; color: white; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🌟 Grammar Practice: Present Simple 🌟</h2>
+  <div class="instruction">
+    Выполняй задания по порядку. Если сомневаешься, воспользуйся подсказкой 💡!
+  </div>
+
+  <div class="section-title">D. Склади запитання</div>
+  <div class="card-list" id="sectionD"></div>
+
+  <div class="section-title">E. Склади речення зі слів</div>
+  <div class="card-list" id="sectionE"></div>
+
+  <div class="section-title">F. Переклади англійською</div>
+  <div class="card-list" id="sectionF"></div>
+
+  <!-- Grammar Reference Banner -->
+  <div class="rule-banner">
+    <h3>📌 Подсказка / Напоминалка:</h3>
+    <ul>
+      <li><b>Вопросы с is:</b> переносим <b>Is</b> в самое начало предложения.</li>
+      <li><b>Вопросы с глаголами действия:</b> начинаем с <b>Does</b> (для <i>he / she / it</i>) и убираем окончание -s у основного глагола.</li>
+      <li><b>Порядок слов:</b> Подлежащее → Глагол → Остальные слова.</li>
+    </ul>
+  </div>
+
+  <div class="controls">
+    <button class="btn-main" onclick="resetExercise()">Очистить поля 🔄</button>
+  </div>
+</div>
+
+<script>
+  const tasksD = [
+    { id: 16, text: "Her first name is Maria.", speakText: "Her first name is Maria.", hint: "Перенеси глагол 'Is' в начало предложения." },
+    { id: 17, text: "He carries a sharpener.", speakText: "He carries a sharpener.", hint: "Начни вопрос с 'Does'. Глагол 'carries' изменится на 'carry'." },
+    { id: 18, text: "That comb is there.", speakText: "That comb is there.", hint: "Поставь глагол 'Is' в самое начало." },
+    { id: 19, text: "She repeats the word.", speakText: "She repeats the word.", hint: "Используй 'Does' в начале. Убери -s у 'repeats'." },
+    { id: 20, text: "Tom completes the exercise.", speakText: "Tom completes the exercise.", hint: "Используй 'Does' в начале. Убери -s у 'completes'." }
+  ];
+
+  const tasksE = [
+    { id: 21, text: "sharp / pencil / this / is", speakText: "this pencil is sharp", hint: "Начни с 'This pencil...', затем поставь глагол 'is'." },
+    { id: 22, text: "surname / spells / her / she", speakText: "she spells her surname", hint: "Кто делает действие? (She). Что делает? (spells)..." },
+    { id: 23, text: "sharpener / this / is / here", speakText: "this sharpener is here", hint: "Сначала подлежащее: 'This sharpener...', затем 'is here'." },
+    { id: 24, text: "a comb / carries / Emma", speakText: "Emma carries a comb", hint: "Начни с имени (Emma), затем глагол (carries)..." },
+    { id: 25, text: "repeat / I / the word / and then / write / it", speakText: "I repeat the word and then write it", hint: "Начни с 'I repeat...'" }
+  ];
+
+  const tasksF = [
+    { id: 26, text: "Ця точилка знаходиться тут.", speakText: "This sharpener is here.", hint: "Ця точилка = This sharpener, знаходиться = is, тут = here." },
+    { id: 27, text: "Вона носить гребінець у своїй сумці.", speakText: "She carries a comb in her bag.", hint: "Вона носить = She carries, гребінець = a comb, у своїй сумці = in her bag." },
+    { id: 28, text: "Як ти пишеш своє прізвище по літерах?", speakText: "How do you spell your surname?", hint: "Вопрос начинаем с 'How do you spell...'." },
+    { id: 29, text: "Учитель повторює це запитання.", speakText: "The teacher repeats this question.", hint: "Учитель = The teacher, повторяет = repeats, это вопрос = this question." },
+    { id: 30, text: "Ми завершуємо вправу, а потім перевіряємо її.", speakText: "We complete the exercise and then check it.", hint: "Мы завершаем = We complete, упражнение = the exercise, а потом = and then, проверяем = check it." }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    window.speechSynthesis.speak(u);
+  }
+
+  function toggleHint(id) {
+    const hintBox = document.getElementById(`hint-${id}`);
+    hintBox.classList.toggle('open');
+  }
+
+  function createCard(item, isEnglish = true) {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="sentence-row">
+          <span class="num">${item.id}.</span> ${item.text}
+        </div>
+        <div class="action-group">
+          <button class="btn-icon" onclick="toggleHint(${item.id})">💡 Правило</button>
+          <button class="btn-icon" onclick="speak('${item.speakText.replace(/'/g, "\\'")}')">🔊 Озвучка</button>
+        </div>
+      </div>
+      <div>
+        <input type="text" id="input-${item.id}" placeholder="Напиши предложение здесь..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="hint-box" id="hint-${item.id}">
+        📌 ${item.hint}
+      </div>
+    `;
+    return card;
+  }
+
+  function render() {
+    const containerD = document.getElementById("sectionD");
+    const containerE = document.getElementById("sectionE");
+    const containerF = document.getElementById("sectionF");
+
+    containerD.innerHTML = "";
+    containerE.innerHTML = "";
+    containerF.innerHTML = "";
+
+    tasksD.forEach(item => containerD.appendChild(createCard(item)));
+    tasksE.forEach(item => containerE.appendChild(createCard(item)));
+    tasksF.forEach(item => containerF.appendChild(createCard(item, false)));
+  }
+
+  function resetExercise() {
+    document.querySelectorAll("input[type='text']").forEach(input => input.value = "");
+  }
+
+  render();
+</script>
+</body>
+</html>
