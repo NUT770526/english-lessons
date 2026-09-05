@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Past Simple vs Past Continuous Practice</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 850px; width: 100%; background: #1e293b; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    h2 { color: #60a5fa; text-align: center; margin-top: 0; font-size: 1.8rem; letter-spacing: 0.5px; }
+    .instruction { background: #1e3a8a; border-left: 5px solid #60a5fa; padding: 12px 16px; border-radius: 10px; margin-bottom: 25px; color: #dbeafe; font-weight: bold; line-height: 1.5; }
+    
+    .grid-container { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+
+    .card { background: #0f172a; border: 1.5px solid #334155; border-radius: 12px; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s; }
+    .card:hover { border-color: #3b82f6; }
+    
+    .card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    
+    .sentence-box { font-size: 1.1rem; color: #f1f5f9; font-weight: 500; line-height: 1.6; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .num { color: #38bdf8; font-weight: bold; min-width: 24px; }
+    .verb-hint { color: #f59e0b; font-weight: bold; }
+
+    /* Input Field Styling */
+    input[type="text"] {
+      min-width: 110px;
+      max-width: 160px;
+      border: 2px solid #475569;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      outline: none;
+      color: #38bdf8;
+      background-color: #1e293b;
+      font-weight: bold;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+      background-color: #0f172a;
+    }
+
+    /* Action Buttons */
+    .btn-icon { background: #334155; border: 1px solid #475569; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; transition: all 0.2s; }
+    .btn-icon:hover { background: #475569; color: #ffffff; }
+
+    /* Hint Box */
+    .hint-box {
+      display: none;
+      background: #312e81;
+      border: 1px dashed #818cf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      color: #c7d2fe;
+    }
+    .hint-box.open { display: block; }
+
+    /* Rule Banner */
+    .rule-banner {
+      background: #1e1b4b;
+      border: 2px solid #6366f1;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 10px;
+      color: #e0e7ff;
+    }
+    .rule-banner h3 { margin-top: 0; margin-bottom: 8px; color: #a5b4fc; font-size: 1.1rem; }
+    .rule-banner ul { margin: 0; padding-left: 20px; line-height: 1.5; }
+
+    .controls { display: flex; justify-content: flex-end; margin-top: 20px; border-top: 2px solid #334155; padding-top: 15px; }
+    .btn-main { padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; background: #475569; color: white; transition: background 0.2s; }
+    .btn-main:hover { background: #64748b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>⚡ Grammar Practice: Past Simple vs Past Continuous ⚡</h2>
+  <div class="instruction">
+    <b>Exercise 3. Past Simple або Past Continuous</b><br>
+    Розкрий дужки, використовуючи <b>Past Continuous</b> (тривала дія в минулому) або <b>Past Simple</b> (коротка/раптова дія, що перервала іншу).
+  </div>
+
+  <div class="grid-container" id="sentences-list"></div>
+
+  <!-- Grammar Reference Banner -->
+  <div class="rule-banner">
+    <h3>📌 Шпори-підказки:</h3>
+    <ul>
+      <li><b>While</b> (поки / в той час як) → зазвичай використовується з <b>Past Continuous</b> (was/were + V-ing).</li>
+      <li><b>When</b> (коли) → зазвичай використовується з <b>Past Simple</b> (V2 / -ed) для короткої дії, що перериває фоновий процесс.</li>
+      <li>Якщо дві дії відбувалися <i>одночасно</i> в минулому (паралельні процеси) → обидві в <b>Past Continuous</b>.</li>
+    </ul>
+  </div>
+
+  <div class="controls">
+    <button class="btn-main" onclick="resetExercise()">Очистити поля 🔄</button>
+  </div>
+</div>
+
+<script>
+  const data = [
+    {
+      id: 1,
+      inputs: [ { id: "1a", placeholder: "was/were + Ving" }, { id: "1b", placeholder: "V2" } ],
+      template: (inp) => `While I ${inp[0]} <span class="verb-hint">(do)</span> some research, my friend ${inp[1]} <span class="verb-hint">(call)</span> me.`,
+      audio: "While I was doing some research, my friend called me.",
+      hint: "Після 'While' йде тривалий процесс: was doing (Continuous). Дзвінок перервав його: called (Simple)."
+    },
+    {
+      id: 2,
+      inputs: [ { id: "2a", placeholder: "was/were + Ving" }, { id: "2b", placeholder: "V2" } ],
+      template: (inp) => `We ${inp[0]} <span class="verb-hint">(have)</span> a meeting when the fire alarm ${inp[1]} <span class="verb-hint">(ring)</span>.`,
+      audio: "We were having a meeting when the fire alarm rang.",
+      hint: "Тривалий процесс: were having (Continuous). Коротка раптова дія після 'when': rang (Simple)."
+    },
+    {
+      id: 3,
+      inputs: [ { id: "3a", placeholder: "V2" }, { id: "3b", placeholder: "was/were + Ving" } ],
+      template: (inp) => `The interviewer ${inp[0]} <span class="verb-hint">(enter)</span> while I ${inp[1]} <span class="verb-hint">(read)</span> my notes.`,
+      audio: "The interviewer entered while I was reading my notes.",
+      hint: "Коротка дія: entered (Simple). Фоновий тривалий процесс після 'while': was reading (Continuous)."
+    },
+    {
+      id: 4,
+      inputs: [ { id: "4a", placeholder: "was/were + Ving" }, { id: "4b", placeholder: "V2" } ],
+      template: (inp) => `While the candidates ${inp[0]} <span class="verb-hint">(wait)</span>, the manager ${inp[1]} <span class="verb-hint">(arrive)</span>.`,
+      audio: "While the candidates were waiting, the manager arrived.",
+      hint: "Кандидати чекали (тривалий процесс після 'while'): were waiting. Менеджер прибув: arrived."
+    },
+    {
+      id: 5,
+      inputs: [ { id: "5a", placeholder: "was/were + Ving" }, { id: "5b", placeholder: "V2" } ],
+      template: (inp) => `Mia ${inp[0]} <span class="verb-hint">(speak)</span> clearly when the microphone ${inp[1]} <span class="verb-hint">(stop)</span> working.`,
+      audio: "Mia was speaking clearly when the microphone stopped working.",
+      hint: "Міа розмовляла (процесс): was speaking. Мікрофон вимкнувся (коротка дія після 'when'): stopped."
+    },
+    {
+      id: 6,
+      inputs: [ { id: "6a", placeholder: "was/were + Ving" }, { id: "6b", placeholder: "was/were + Ving" } ],
+      template: (inp) => `The interviewer ${inp[0]} <span class="verb-hint">(write)</span> notes while Leo ${inp[1]} <span class="verb-hint">(answer)</span> briefly.`,
+      audio: "The interviewer was writing notes while Leo was answering briefly.",
+      hint: "Дві паралельні тривалі дії одночасно: was writing та was answering (обидві в Continuous)."
+    },
+    {
+      id: 7,
+      inputs: [ { id: "7a", placeholder: "V2" }, { id: "7b", placeholder: "was/were + Ving" } ],
+      template: (inp) => `I ${inp[0]} <span class="verb-hint">(meet)</span> the manager while I ${inp[1]} <span class="verb-hint">(leave)</span> the office.`,
+      audio: "I met the manager while I was leaving the office.",
+      hint: "Коротка зустріч: met (Simple). Фоновий процесс виходу з офісу після 'while': was leaving."
+    },
+    {
+      id: 8,
+      inputs: [ { id: "8a", placeholder: "was/were + Ving" }, { id: "8b", placeholder: "V2" } ],
+      template: (inp) => `They ${inp[0]} <span class="verb-hint">(discuss)</span> their strengths when the lesson ${inp[1]} <span class="verb-hint">(finish)</span>.`,
+      audio: "They were discussing their strengths when the lesson finished.",
+      hint: "Обговорення (процесс): were discussing. Завершення уроку після 'when': finished."
+    },
+    {
+      id: 9,
+      inputs: [ { id: "9a", placeholder: "didn't + V1" }, { id: "9b", placeholder: "was/were + Ving" } ],
+      template: (inp) => `Ben ${inp[0]} <span class="verb-hint">(not avoid)</span> eye contact while he ${inp[1]} <span class="verb-hint">(speak)</span>.`,
+      audio: "Ben didn't avoid eye contact while he was speaking.",
+      hint: "Заперечення факт/коротка дія: didn't avoid. Процесс мовлення після 'while': was speaking."
+    },
+    {
+      id: 10,
+      inputs: [ { id: "10a", placeholder: "was/were + Ving" }, { id: "10b", placeholder: "V2" } ],
+      template: (inp) => `We ${inp[0]} <span class="verb-hint">(prepare)</span> the references when the computer ${inp[1]} <span class="verb-hint">(crash)</span>.`,
+      audio: "We were preparing the references when the computer crashed.",
+      hint: "Підготовка (тривалий процесс): were preparing. Комп'ютер зламався після 'when': crashed."
+    }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-GB';
+    window.speechSynthesis.speak(u);
+  }
+
+  function toggleHint(id) {
+    const hintBox = document.getElementById(`hint-${id}`);
+    hintBox.classList.toggle('open');
+  }
+
+  function render() {
+    const list = document.getElementById("sentences-list");
+    list.innerHTML = "";
+
+    data.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const inputsHTML = item.inputs.map(inp => 
+        `<input type="text" id="input-${inp.id}" placeholder="${inp.placeholder}" autocomplete="off" spellcheck="false">`
+      );
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="sentence-box">
+            <span class="num">${item.id}.</span>
+            ${item.template(inputsHTML)}
+          </div>
+          <div class="action-group">
+            <button class="btn-icon" onclick="toggleHint(${item.id})">💡 Підказка</button>
+            <button class="btn-icon" onclick="speak('${item.audio.replace(/'/g, "\\'")}')">🔊 Озвучка</button>
+          </div>
+        </div>
+        <div class="hint-box" id="hint-${item.id}">
+          📌 ${item.hint}
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll("input[type='text']").forEach(input => input.value = "");
+  }
+
+  render();
+</script>
+</body>
+</html>
