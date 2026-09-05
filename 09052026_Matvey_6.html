@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mixed Tenses Practice</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 850px; width: 100%; background: #1e293b; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    h2 { color: #60a5fa; text-align: center; margin-top: 0; font-size: 1.8rem; letter-spacing: 0.5px; }
+    .instruction { background: #1e3a8a; border-left: 5px solid #60a5fa; padding: 12px 16px; border-radius: 10px; margin-bottom: 25px; color: #dbeafe; font-weight: bold; line-height: 1.5; }
+    
+    .grid-container { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+
+    .card { background: #0f172a; border: 1.5px solid #334155; border-radius: 12px; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s; }
+    .card:hover { border-color: #3b82f6; }
+    
+    .card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    
+    .sentence-box { font-size: 1.05rem; color: #f1f5f9; font-weight: 500; line-height: 1.6; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .num { color: #38bdf8; font-weight: bold; min-width: 28px; }
+    .verb-hint { color: #f59e0b; font-weight: bold; }
+
+    /* Input Field Styling */
+    input[type="text"] {
+      min-width: 100px;
+      max-width: 160px;
+      border: 2px solid #475569;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      outline: none;
+      color: #38bdf8;
+      background-color: #1e293b;
+      font-weight: bold;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+      background-color: #0f172a;
+    }
+
+    /* Action Buttons */
+    .btn-icon { background: #334155; border: 1px solid #475569; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; transition: all 0.2s; }
+    .btn-icon:hover { background: #475569; color: #ffffff; }
+
+    .controls { display: flex; justify-content: flex-end; margin-top: 20px; border-top: 2px solid #334155; padding-top: 15px; }
+    .btn-main { padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; background: #475569; color: white; transition: background 0.2s; }
+    .btn-main:hover { background: #64748b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>⚡ Exercise 5. Mixed Tenses ⚡</h2>
+  <div class="instruction">
+    <b>Використай правильний час:</b> Present Simple, Present Continuous, Present Perfect, Past Simple або Past Continuous.
+  </div>
+
+  <div class="grid-container" id="sentences-list"></div>
+
+  <div class="controls">
+    <button class="btn-main" onclick="resetExercise()">Очистити поля 🔄</button>
+  </div>
+</div>
+
+<script>
+  const data = [
+    {
+      id: 1,
+      inputsCount: 1,
+      template: (inp) => `My uncle ${inp[0]} <span class="verb-hint">(meet)</span> clients every Friday.`,
+      audio: "My uncle meets clients every Friday."
+    },
+    {
+      id: 2,
+      inputsCount: 1,
+      template: (inp) => `Be quiet! Ava ${inp[0]} <span class="verb-hint">(have)</span> an online meeting.`,
+      audio: "Be quiet! Ava is having an online meeting."
+    },
+    {
+      id: 3,
+      inputsCount: 2,
+      template: (inp) => `I ${inp[0]} just ${inp[1]} <span class="verb-hint">(send)</span> my references.`,
+      audio: "I have just sent my references."
+    },
+    {
+      id: 4,
+      inputsCount: 1,
+      template: (inp) => `We ${inp[0]} <span class="verb-hint">(arrive)</span> ten minutes early yesterday.`,
+      audio: "We arrived ten minutes early yesterday."
+    },
+    {
+      id: 5,
+      inputsCount: 1,
+      template: (inp) => `At six o'clock last night, I ${inp[0]} <span class="verb-hint">(do)</span> some research.`,
+      audio: "At six o'clock last night, I was doing some research."
+    },
+    {
+      id: 6,
+      inputsCount: 2,
+      template: (inp) => `Leo usually ${inp[0]} <span class="verb-hint">(answer)</span> briefly, but today he ${inp[1]} <span class="verb-hint">(give)</span> a very long answer.`,
+      audio: "Leo usually answers briefly, but today he is giving a very long answer."
+    },
+    {
+      id: 7,
+      inputsCount: 2,
+      template: (inp) => `${inp[0]} you ever ${inp[1]} <span class="verb-hint">(shake)</span> hands with a famous person?`,
+      audio: "Have you ever shaken hands with a famous person?"
+    },
+    {
+      id: 8,
+      inputsCount: 2,
+      template: (inp) => `While Maya ${inp[0]} <span class="verb-hint">(speak)</span>, the interviewer ${inp[1]} <span class="verb-hint">(write)</span> notes.`,
+      audio: "While Maya was speaking, the interviewer was writing notes."
+    },
+    {
+      id: 9,
+      inputsCount: 1,
+      template: (inp) => `He ${inp[0]} <span class="verb-hint">(not prepare)</span> for the interview last week.`,
+      audio: "He didn't prepare for the interview last week."
+    },
+    {
+      id: 10,
+      inputsCount: 1,
+      template: (inp) => `She ${inp[0]} <span class="verb-hint">(have)</span> three interviews so far this month.`,
+      audio: "She has had three interviews so far this month."
+    }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-GB';
+    window.speechSynthesis.speak(u);
+  }
+
+  function render() {
+    const list = document.getElementById("sentences-list");
+    list.innerHTML = "";
+
+    data.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const inputsHTML = Array.from({ length: item.inputsCount }, (_, i) => 
+        `<input type="text" id="input-${item.id}-${i}" placeholder="..." autocomplete="off" spellcheck="false">`
+      );
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="sentence-box">
+            <span class="num">${item.id}.</span>
+            ${item.template(inputsHTML)}
+          </div>
+          <div class="action-group">
+            <button class="btn-icon" onclick="speak('${item.audio.replace(/'/g, "\\'")}')">🔊 Озвучка</button>
+          </div>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll("input[type='text']").forEach(input => input.value = "");
+  }
+
+  render();
+</script>
+</body>
+</html>
