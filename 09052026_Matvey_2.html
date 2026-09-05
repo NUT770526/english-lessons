@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Present Simple vs Present Continuous Practice</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 850px; width: 100%; background: #1e293b; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    h2 { color: #60a5fa; text-align: center; margin-top: 0; font-size: 1.8rem; letter-spacing: 0.5px; }
+    .instruction { background: #1e3a8a; border-left: 5px solid #60a5fa; padding: 12px 16px; border-radius: 10px; margin-bottom: 25px; color: #dbeafe; font-weight: bold; line-height: 1.5; }
+    
+    .grid-container { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+
+    .card { background: #0f172a; border: 1.5px solid #334155; border-radius: 12px; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s; }
+    .card:hover { border-color: #3b82f6; }
+    
+    .card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    
+    .sentence-box { font-size: 1.1rem; color: #f1f5f9; font-weight: 500; line-height: 1.6; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .num { color: #38bdf8; font-weight: bold; min-width: 24px; }
+    .verb-hint { color: #f59e0b; font-weight: bold; }
+
+    /* Input Field Styling */
+    input[type="text"] {
+      min-width: 160px;
+      border: 2px solid #475569;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      outline: none;
+      color: #38bdf8;
+      background-color: #1e293b;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+      background-color: #0f172a;
+    }
+
+    /* Action Buttons */
+    .btn-icon { background: #334155; border: 1px solid #475569; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; transition: all 0.2s; }
+    .btn-icon:hover { background: #475569; color: #ffffff; }
+
+    /* Hint Box */
+    .hint-box {
+      display: none;
+      background: #312e81;
+      border: 1px dashed #818cf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      color: #c7d2fe;
+    }
+    .hint-box.open { display: block; }
+
+    /* Rule Banner */
+    .rule-banner {
+      background: #1e1b4b;
+      border: 2px solid #6366f1;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 10px;
+      color: #e0e7ff;
+    }
+    .rule-banner h3 { margin-top: 0; margin-bottom: 8px; color: #a5b4fc; font-size: 1.1rem; }
+    .rule-banner ul { margin: 0; padding-left: 20px; line-height: 1.5; }
+
+    .controls { display: flex; justify-content: flex-end; margin-top: 20px; border-top: 2px solid #334155; padding-top: 15px; }
+    .btn-main { padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; background: #475569; color: white; transition: background 0.2s; }
+    .btn-main:hover { background: #64748b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>⚡ Grammar Practice: Present Simple vs Continuous ⚡</h2>
+  <div class="instruction">
+    <b>Exercise 1. Present Simple або Present Continuous</b><br>
+    Розкрий дужки, використовуючи <b>Present Simple</b> (регулярна дія) або <b>Present Continuous</b> (дія відбувається прямо зараз).
+  </div>
+
+  <div class="grid-container" id="sentences-list"></div>
+
+  <!-- Grammar Reference Banner -->
+  <div class="rule-banner">
+    <h3>📌 Шпори-маркери часу:</h3>
+    <ul>
+      <li><b>Present Simple</b> (звичайна, регулярна дія): <i>usually, often, always, every Monday/day</i>. Кінцівка <b>-s / -es</b> для he/she/it.</li>
+      <li><b>Present Continuous</b> (дія в цю хвилину): <i>now, right now, at the moment, Listen!, Look!</i> Схема: <b>am / is / are + V-ing</b>.</li>
+    </ul>
+  </div>
+
+  <div class="controls">
+    <button class="btn-main" onclick="resetExercise()">Очистити поля 🔄</button>
+  </div>
+</div>
+
+<script>
+  const data = [
+    { id: 1, part1: "Daniel usually ", verb: "dress smartly", part2: " for important events.", hint: "Маркер 'usually' вказує на регулярну дію (Present Simple). Для Daniel додаємо закінчення -es." },
+    { id: 2, part1: "Listen! He ", verb: "speak clearly", part2: " to the interviewer.", hint: "Маркер 'Listen!' вказує на дію прямо зараз (Present Continuous): is + speaking." },
+    { id: 3, part1: "Good candidates often ", verb: "answer briefly", part2: ".", hint: "Маркер 'often' вказує на регулярну дію (Present Simple). Суб'єкт 'candidates' (множина)." },
+    { id: 4, part1: "I ", verb: "do some research", part2: " about the company right now.", hint: "Маркер 'right now' вказує на Present Continuous: am + doing." },
+    { id: 5, part1: "My dad ", verb: "meet", part2: " clients every Monday.", hint: "Маркер 'every Monday' вказує на регулярний розклад (Present Simple). Для dad (he) додаємо -s." },
+    { id: 6, part1: "We ", verb: "prepare", part2: " for an interview at the moment.", hint: "Маркер 'at the moment' вказує на Present Continuous: are + preparing (буква 'e' випадає)." },
+    { id: 7, part1: "Anna always ", verb: "arrive on time", part2: " for meetings.", hint: "Маркер 'always' вказує на регулярну звичку (Present Simple). Для Anna додаємо -s." },
+    { id: 8, part1: "Look! Ben ", verb: "show enthusiasm", part2: " during the conversation.", hint: "Маркер 'Look!' вказує на момент мовлення (Present Continuous): is + showing." },
+    { id: 9, part1: "Our coach ", verb: "not avoid eye contact", part2: " when he speaks.", hint: "Заперечення у Present Simple для coach (he): doesn't avoid." },
+    { id: 10, part1: "They ", verb: "have", part2: " an online meeting now.", hint: "Маркер 'now' вказує на Present Continuous: are + having (буква 'e' випадає)." }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-GB';
+    window.speechSynthesis.speak(u);
+  }
+
+  function toggleHint(id) {
+    const hintBox = document.getElementById(`hint-${id}`);
+    hintBox.classList.toggle('open');
+  }
+
+  function render() {
+    const list = document.getElementById("sentences-list");
+    list.innerHTML = "";
+
+    data.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const fullPhrase = `${item.part1} ${item.verb} ${item.part2}`;
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="sentence-box">
+            <span class="num">${item.id}.</span>
+            <span>${item.part1}</span>
+            <input type="text" id="input-${item.id}" placeholder="..." autocomplete="off" spellcheck="false">
+            <span class="verb-hint">(${item.verb})</span>
+            <span>${item.part2}</span>
+          </div>
+          <div class="action-group">
+            <button class="btn-icon" onclick="toggleHint(${item.id})">💡 Підказка</button>
+            <button class="btn-icon" onclick="speak('${fullPhrase.replace(/'/g, "\\'")}')">🔊 Озвучка</button>
+          </div>
+        </div>
+        <div class="hint-box" id="hint-${item.id}">
+          📌 ${item.hint}
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll("input[type='text']").forEach(input => input.value = "");
+  }
+
+  render();
+</script>
+</body>
+</html>
