@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Present Perfect vs Past Simple Practice</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 850px; width: 100%; background: #1e293b; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    h2 { color: #60a5fa; text-align: center; margin-top: 0; font-size: 1.8rem; letter-spacing: 0.5px; }
+    .instruction { background: #1e3a8a; border-left: 5px solid #60a5fa; padding: 12px 16px; border-radius: 10px; margin-bottom: 25px; color: #dbeafe; font-weight: bold; line-height: 1.5; }
+    
+    .grid-container { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+
+    .card { background: #0f172a; border: 1.5px solid #334155; border-radius: 12px; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s; }
+    .card:hover { border-color: #3b82f6; }
+    
+    .card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    
+    .sentence-box { font-size: 1.1rem; color: #f1f5f9; font-weight: 500; line-height: 1.6; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .num { color: #38bdf8; font-weight: bold; min-width: 24px; }
+    .verb-hint { color: #f59e0b; font-weight: bold; }
+
+    /* Input Field Styling */
+    input[type="text"] {
+      min-width: 100px;
+      max-width: 150px;
+      border: 2px solid #475569;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      outline: none;
+      color: #38bdf8;
+      background-color: #1e293b;
+      font-weight: bold;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+      background-color: #0f172a;
+    }
+
+    /* Action Buttons */
+    .btn-icon { background: #334155; border: 1px solid #475569; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; transition: all 0.2s; }
+    .btn-icon:hover { background: #475569; color: #ffffff; }
+
+    /* Hint Box */
+    .hint-box {
+      display: none;
+      background: #312e81;
+      border: 1px dashed #818cf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      color: #c7d2fe;
+    }
+    .hint-box.open { display: block; }
+
+    /* Rule Banner */
+    .rule-banner {
+      background: #1e1b4b;
+      border: 2px solid #6366f1;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 10px;
+      color: #e0e7ff;
+    }
+    .rule-banner h3 { margin-top: 0; margin-bottom: 8px; color: #a5b4fc; font-size: 1.1rem; }
+    .rule-banner ul { margin: 0; padding-left: 20px; line-height: 1.5; }
+
+    .controls { display: flex; justify-content: flex-end; margin-top: 20px; border-top: 2px solid #334155; padding-top: 15px; }
+    .btn-main { padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; background: #475569; color: white; transition: background 0.2s; }
+    .btn-main:hover { background: #64748b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>⚡ Grammar Practice: Present Perfect vs Past Simple ⚡</h2>
+  <div class="instruction">
+    <b>Exercise 2. Present Perfect або Past Simple</b><br>
+    Розкрий дужки, використовуючи <b>Present Perfect</b> (життєвий досвід, результат, немає точного часу) або <b>Past Simple</b> (точний час у минулому).
+  </div>
+
+  <div class="grid-container" id="sentences-list"></div>
+
+  <!-- Grammar Reference Banner -->
+  <div class="rule-banner">
+    <h3>📌 Шпори-маркери часу:</h3>
+    <ul>
+      <li><b>Present Perfect</b> (результат / досвід): <i>ever, never, just, already, recently, yet</i>. Схема: <b>have / has + V3</b>.</li>
+      <li><b>Past Simple</b> (завершено в минулому): <i>yesterday, last Monday/Friday, two days ago, at 9 o'clock</i>. Схема: <b>V2</b> (или <b>-ed</b>).</li>
+    </ul>
+  </div>
+
+  <div class="controls">
+    <button class="btn-main" onclick="resetExercise()">Очистити поля 🔄</button>
+  </div>
+</div>
+
+<script>
+  const data = [
+    {
+      id: 1,
+      inputs: [ { id: "1a", placeholder: "have/has" }, { id: "1b", placeholder: "V3" } ],
+      template: (inp) => `${inp[0]} you ever ${inp[1]} <span class="verb-hint">(have)</span> a job interview?`,
+      audio: "Have you ever had a job interview?",
+      hint: "Маркер 'ever' вказує на досвід (Present Perfect): Have + V3 (had)."
+    },
+    {
+      id: 2,
+      inputs: [ { id: "2a", placeholder: "have/has" }, { id: "2b", placeholder: "V3" } ],
+      template: (inp) => `I ${inp[0]} recently ${inp[1]} <span class="verb-hint">(send)</span> my references.`,
+      audio: "I have recently sent my references.",
+      hint: "Маркер 'recently' вказує на Present Perfect: have + V3 (sent)."
+    },
+    {
+      id: 3,
+      inputs: [ { id: "3", placeholder: "V2" } ],
+      template: (inp) => `We ${inp[0]} <span class="verb-hint">(meet)</span> the manager yesterday.`,
+      audio: "We met the manager yesterday.",
+      hint: "Маркер 'yesterday' вказує на точний час у минулому (Past Simple): met."
+    },
+    {
+      id: 4,
+      inputs: [ { id: "4a", placeholder: "have/has" }, { id: "4b", placeholder: "V3" } ],
+      template: (inp) => `Mia ${inp[0]} already ${inp[1]} <span class="verb-hint">(do)</span> some research about the company.`,
+      audio: "Mia has already done some research about the company.",
+      hint: "Маркер 'already' вказує на Present Perfect. Для Mia використовуємо has + V3 (done)."
+    },
+    {
+      id: 5,
+      inputs: [ { id: "5", placeholder: "V2" } ],
+      template: (inp) => `Leo ${inp[0]} <span class="verb-hint">(arrive)</span> at the office at nine o'clock last Monday.`,
+      audio: "Leo arrived at the office at nine o'clock last Monday.",
+      hint: "Маркери 'at nine o'clock' та 'last Monday' вказують на Past Simple: arrived."
+    },
+    {
+      id: 6,
+      inputs: [ { id: "6a", placeholder: "have/has" }, { id: "6b", placeholder: "V3" } ],
+      template: (inp) => `I ${inp[0]} not ${inp[1]} <span class="verb-hint">(prepare)</span> my concise answer yet.`,
+      audio: "I have not prepared my concise answer yet.",
+      hint: "Маркер 'yet' вказує на Present Perfect: have + V3 (prepared)."
+    },
+    {
+      id: 7,
+      inputs: [ { id: "7a", placeholder: "have/has" }, { id: "7b", placeholder: "V3" } ],
+      template: (inp) => `Tom ${inp[0]} never ${inp[1]} <span class="verb-hint">(shake)</span> hands with an interviewer before.`,
+      audio: "Tom has never shaken hands with an interviewer before.",
+      hint: "Маркер 'never' вказує на Present Perfect. Для Tom (he) — has + V3 (shaken)."
+    },
+    {
+      id: 8,
+      inputs: [ { id: "8", placeholder: "V2" } ],
+      template: (inp) => `They ${inp[0]} <span class="verb-hint">(have)</span> an important meeting two days ago.`,
+      audio: "They had an important meeting two days ago.",
+      hint: "Маркер 'two days ago' вказує на Past Simple: had."
+    },
+    {
+      id: 9,
+      inputs: [ { id: "9a", placeholder: "have/has" }, { id: "9b", placeholder: "V3" } ],
+      template: (inp) => `She ${inp[0]} just ${inp[1]} <span class="verb-hint">(finish)</span> reading the content of the website.`,
+      audio: "She has just finished reading the content of the website.",
+      hint: "Маркер 'just' вказує на Present Perfect. Для She — has + V3 (finished)."
+    },
+    {
+      id: 10,
+      inputs: [ { id: "10", placeholder: "V2" } ],
+      template: (inp) => `He ${inp[0]} <span class="verb-hint">(show)</span> a lot of enthusiasm during the interview last Friday.`,
+      audio: "He showed a lot of enthusiasm during the interview last Friday.",
+      hint: "Маркер 'last Friday' вказує на Past Simple: showed."
+    }
+  ];
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-GB';
+    window.speechSynthesis.speak(u);
+  }
+
+  function toggleHint(id) {
+    const hintBox = document.getElementById(`hint-${id}`);
+    hintBox.classList.toggle('open');
+  }
+
+  function render() {
+    const list = document.getElementById("sentences-list");
+    list.innerHTML = "";
+
+    data.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const inputsHTML = item.inputs.map(inp => 
+        `<input type="text" id="input-${inp.id}" placeholder="${inp.placeholder}" autocomplete="off" spellcheck="false">`
+      );
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="sentence-box">
+            <span class="num">${item.id}.</span>
+            ${item.template(inputsHTML)}
+          </div>
+          <div class="action-group">
+            <button class="btn-icon" onclick="toggleHint(${item.id})">💡 Підказка</button>
+            <button class="btn-icon" onclick="speak('${item.audio.replace(/'/g, "\\'")}')">🔊 Озвучка</button>
+          </div>
+        </div>
+        <div class="hint-box" id="hint-${item.id}">
+          📌 ${item.hint}
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll("input[type='text']").forEach(input => input.value = "");
+  }
+
+  render();
+</script>
+</body>
+</html>
