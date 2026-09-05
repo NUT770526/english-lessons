@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mark Zuckerberg - Interactive Profile & Questions</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 850px; width: 100%; background: #1e293b; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    .section-title { display: flex; align-items: center; gap: 10px; color: #60a5fa; margin-top: 0; margin-bottom: 20px; font-size: 1.5rem; }
+    .icon { font-size: 1.8rem; }
+
+    /* Profile Layout (Without Image) */
+    .profile-card {
+      background: #0f172a;
+      border: 1.5px solid #334155;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .info-box {
+      background: #1e293b;
+      border: 1px solid #475569;
+      border-left: 4px solid #f97316;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #e2e8f0;
+    }
+
+    /* Tooltip / Vocabulary Styling */
+    .word-hint {
+      position: relative;
+      color: #38bdf8;
+      font-weight: bold;
+      border-bottom: 2px dashed #38bdf8;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .word-hint:hover {
+      color: #f59e0b;
+      border-bottom-color: #f59e0b;
+    }
+
+    /* Floating Tooltip */
+    .word-hint .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      width: 210px;
+      background-color: #090d16;
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 8px 10px;
+      position: absolute;
+      z-index: 10;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 1px solid #38bdf8;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      transition: opacity 0.2s, visibility 0.2s;
+      font-size: 0.9rem;
+      font-weight: normal;
+      pointer-events: none;
+    }
+
+    .word-hint .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -6px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: #38bdf8 transparent transparent transparent;
+    }
+
+    .word-hint:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .transcription { color: #a5b4fc; font-family: monospace; font-size: 0.85rem; display: block; margin-bottom: 2px; }
+    .translation { color: #4ade80; font-weight: bold; display: block; }
+
+    /* Question Inputs Section */
+    .questions-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+
+    .q-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .q-num {
+      width: 32px;
+      height: 32px;
+      border: 2px solid #f97316;
+      border-radius: 8px;
+      color: #f97316;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      background: #0f172a;
+    }
+
+    .q-input {
+      width: 100%;
+      background: #0f172a;
+      border: 1.5px solid #475569;
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #f8fafc;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .q-input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+    }
+
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; border-top: 2px solid #334155; padding-top: 15px; }
+    .btn-main { padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; background: #475569; color: white; transition: background 0.2s; }
+    .btn-main:hover { background: #64748b; }
+    .btn-audio-all { background: #1e3a8a; border: 1px solid #3b82f6; color: #60a5fa; }
+    .btn-audio-all:hover { background: #2563eb; color: white; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <h2 class="section-title">
+    <span class="icon">📖</span> Read this information!
+  </h2>
+
+  <div class="profile-card">
+    <div class="info-list">
+      
+      <div class="info-box">
+        Mark Zuckerberg 
+        <span class="word-hint" onclick="speak('co-founded')">co-founded
+          <span class="tooltip"><span class="transcription">[/ˌkəʊˈfaʊndɪd/]</span><span class="translation">співзаснував</span></span>
+        </span> 
+        Facebook in 2004 while studying at Harvard University, 
+        <span class="word-hint" onclick="speak('initially')">initially
+          <span class="tooltip"><span class="transcription">[/ɪˈnɪʃ.əl.i/]</span><span class="translation">спочатку / початково</span></span>
+        </span> 
+        as a 
+        <span class="word-hint" onclick="speak('social networking site')">social networking site
+          <span class="tooltip"><span class="transcription">[/ˈsəʊ.ʃəl ˈnet.wɜː.kɪŋ saɪt/]</span><span class="translation">соціальна мережа</span></span>
+        </span> 
+        for college students.
+      </div>
+
+      <div class="info-box">
+        He is the 
+        <span class="word-hint" onclick="speak('CEO')">CEO
+          <span class="tooltip"><span class="transcription">[/ˌsiː.iːˈəʊ/]</span><span class="translation">генеральний директор</span></span>
+        </span> 
+        of Meta Platforms, Inc., the 
+        <span class="word-hint" onclick="speak('parent company')">parent company
+          <span class="tooltip"><span class="transcription">[/ˈpeə.rənt ˌkʌm.pə.ni/]</span><span class="translation">материнська компанія</span></span>
+        </span> 
+        of Facebook, Instagram, and WhatsApp.
+      </div>
+
+      <div class="info-box">
+        Mark Zuckerberg became one of the youngest 
+        <span class="word-hint" onclick="speak('self-made')">self-made
+          <span class="tooltip"><span class="transcription">[/ˌselfˈmeɪd/]</span><span class="translation">той, хто досяг усього сам</span></span>
+        </span> 
+        <span class="word-hint" onclick="speak('billionaires')">billionaires
+          <span class="tooltip"><span class="transcription">[/ˌbɪl.jəˈneəz/]</span><span class="translation">мільярдери</span></span>
+        </span> 
+        in history at the age of 23.
+      </div>
+
+      <div class="info-box">
+        Zuckerberg began 
+        <span class="word-hint" onclick="speak('programming')">programming
+          <span class="tooltip"><span class="transcription">[/ˈprəʊ.ɡræm.ɪŋ/]</span><span class="translation">програмування</span></span>
+        </span> 
+        at a young age and developed several 
+        <span class="word-hint" onclick="speak('software')">software
+          <span class="tooltip"><span class="transcription">[/ˈsɒft.weər/]</span><span class="translation">програмне забезпечення</span></span>
+        </span> 
+        programs before creating Facebook.
+      </div>
+
+    </div>
+  </div>
+
+  <h2 class="section-title">
+    <span class="icon">✏️</span> Ask Mark Zuckerberg as many questions as possible!
+  </h2>
+
+  <div class="questions-container">
+    <div class="q-row">
+      <div class="q-num">1</div>
+      <input type="text" class="q-input" placeholder="Write your question here..." autocomplete="off">
+    </div>
+    <div class="q-row">
+      <div class="q-num">2</div>
+      <input type="text" class="q-input" placeholder="Write your question here..." autocomplete="off">
+    </div>
+    <div class="q-row">
+      <div class="q-num">3</div>
+      <input type="text" class="q-input" placeholder="Write your question here..." autocomplete="off">
+    </div>
+    <div class="q-row">
+      <div class="q-num">4</div>
+      <input type="text" class="q-input" placeholder="Write your question here..." autocomplete="off">
+    </div>
+    <div class="q-row">
+      <div class="q-num">5</div>
+      <input type="text" class="q-input" placeholder="Write your question here..." autocomplete="off">
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-audio-all" onclick="readFullText()">🔊 Прослухати весь текст</button>
+    <button class="btn-main" onclick="resetQuestions()">Очистити поля 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function readFullText() {
+    const fullText = "Mark Zuckerberg co-founded Facebook in 2004 while studying at Harvard University, initially as a social networking site for college students. He is the CEO of Meta Platforms, Inc., the parent company of Facebook, Instagram, and WhatsApp. Mark Zuckerberg became one of the youngest self-made billionaires in history at the age of 23. Zuckerberg began programming at a young age and developed several software programs before creating Facebook.";
+    speak(fullText);
+  }
+
+  function resetQuestions() {
+    document.querySelectorAll('.q-input').forEach(input => input.value = '');
+  }
+</script>
+
+</body>
+</html>
