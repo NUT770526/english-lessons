@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Irregular Verbs Audio Exercise</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 980px; width: 100%; background: #1e293b; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    .section-title { display: flex; align-items: center; gap: 10px; color: #60a5fa; margin-top: 0; margin-bottom: 20px; font-size: 1.4rem; }
+    .icon { font-size: 1.6rem; }
+
+    .table-container { overflow-x: auto; margin-bottom: 20px; }
+    
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 12px 8px; border-bottom: 1px solid #334155; font-size: 0.95rem; vertical-align: middle; }
+    th { color: #94a3b8; font-weight: 600; background: #0f172a; }
+
+    .num { color: #f97316; font-weight: bold; width: 30px; text-align: center; }
+    .translation-col { color: #4ade80; font-weight: 500; font-size: 0.9rem; }
+
+    .select-group { display: flex; align-items: center; gap: 6px; }
+
+    select {
+      width: 100%;
+      background: #0f172a;
+      color: #f8fafc;
+      border: 1.5px solid #475569;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    select:focus { border-color: #38bdf8; box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
+
+    .sound-btn {
+      background: #334155;
+      border: none;
+      color: #38bdf8;
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .sound-btn:hover { background: #475569; color: #f59e0b; }
+    .sound-btn:active { transform: scale(0.95); }
+
+    .word-group { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+
+    /* Correct / Incorrect Styles */
+    select.correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.1) !important; color: #4ade80 !important; }
+    select.incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.1) !important; color: #f87171 !important; }
+
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 2px solid #334155; padding-top: 20px; }
+    .btn-main { padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; }
+    .btn-check { background: #2563eb; color: white; }
+    .btn-check:hover { background: #1d4ed8; }
+    .btn-reset { background: #475569; color: white; }
+    .btn-reset:hover { background: #64748b; }
+
+    .result-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <h2 class="section-title">
+    <span class="icon">🎯</span> Обери та прослухай правильну форму дієслова
+  </h2>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>№</th>
+          <th>V1 (Infinitive)</th>
+          <th>V2 (Past Simple)</th>
+          <th>V3 (Past Participle)</th>
+          <th>Переклад</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <!-- 1. BE -->
+        <tr data-v2="was / were" data-v3="been">
+          <td class="num">1</td>
+          <td>
+            <div class="word-group">
+              <span>be</span>
+              <button class="sound-btn" title="Прослухати V1" onclick="speak('be')">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v2-select">
+                <option value="">-- Оберіть V2 --</option>
+                <option value="was / were">was / were</option>
+                <option value="had">had</option>
+                <option value="did">did</option>
+                <option value="went">went</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v3-select">
+                <option value="">-- Оберіть V3 --</option>
+                <option value="been">been</option>
+                <option value="done">done</option>
+                <option value="gone">gone</option>
+                <option value="had">had</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td class="translation-col">бути (був / була / було / були)</td>
+        </tr>
+
+        <!-- 2. HAVE -->
+        <tr data-v2="had" data-v3="had">
+          <td class="num">2</td>
+          <td>
+            <div class="word-group">
+              <span>have</span>
+              <button class="sound-btn" title="Прослухати V1" onclick="speak('have')">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v2-select">
+                <option value="">-- Оберіть V2 --</option>
+                <option value="had">had</option>
+                <option value="made">made</option>
+                <option value="took">took</option>
+                <option value="saw">saw</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v3-select">
+                <option value="">-- Оберіть V3 --</option>
+                <option value="had">had</option>
+                <option value="taken">taken</option>
+                <option value="made">made</option>
+                <option value="seen">seen</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td class="translation-col">мати (мав / мала / мали)</td>
+        </tr>
+
+        <!-- 3. DO -->
+        <tr data-v2="did" data-v3="done">
+          <td class="num">3</td>
+          <td>
+            <div class="word-group">
+              <span>do</span>
+              <button class="sound-btn" title="Прослухати V1" onclick="speak('do')">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v2-select">
+                <option value="">-- Оберіть V2 --</option>
+                <option value="did">did</option>
+                <option value="came">came</option>
+                <option value="went">went</option>
+                <option value="said">said</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v3-select">
+                <option value="">-- Оберіть V3 --</option>
+                <option value="done">done</option>
+                <option value="gone">gone</option>
+                <option value="come">come</option>
+                <option value="said">said</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td class="translation-col">робити (робив / робила / зробив)</td>
+        </tr>
+
+        <!-- 4. GO -->
+        <tr data-v2="went" data-v3="gone">
+          <td class="num">4</td>
+          <td>
+            <div class="word-group">
+              <span>go</span>
+              <button class="sound-btn" title="Прослухати V1" onclick="speak('go')">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v2-select">
+                <option value="">-- Оберіть V2 --</option>
+                <option value="went">went</option>
+                <option value="came">came</option>
+                <option value="was / were">was / were</option>
+                <option value="bought">bought</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v3-select">
+                <option value="">-- Оберіть V3 --</option>
+                <option value="gone">gone</option>
+                <option value="been">been</option>
+                <option value="come">come</option>
+                <option value="bought">bought</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td class="translation-col">йти, їхати (ішов / їхав / пішов)</td>
+        </tr>
+
+        <!-- 5. COME -->
+        <tr data-v2="came" data-v3="come">
+          <td class="num">5</td>
+          <td>
+            <div class="word-group">
+              <span>come</span>
+              <button class="sound-btn" title="Прослухати V1" onclick="speak('come')">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v2-select">
+                <option value="">-- Оберіть V2 --</option>
+                <option value="came">came</option>
+                <option value="went">went</option>
+                <option value="saw">saw</option>
+                <option value="took">took</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v3-select">
+                <option value="">-- Оберіть V3 --</option>
+                <option value="come">come</option>
+                <option value="gone">gone</option>
+                <option value="seen">seen</option>
+                <option value="taken">taken</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td class="translation-col">приходити (прийшов / прийшла / пришли)</td>
+        </tr>
+
+        <!-- 6. SEE -->
+        <tr data-v2="saw" data-v3="seen">
+          <td class="num">6</td>
+          <td>
+            <div class="word-group">
+              <span>see</span>
+              <button class="sound-btn" title="Прослухати V1" onclick="speak('see')">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v2-select">
+                <option value="">-- Оберіть V2 --</option>
+                <option value="saw">saw</option>
+                <option value="said">said</option>
+                <option value="took">took</option>
+                <option value="made">made</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v3-select">
+                <option value="">-- Оберіть V3 --</option>
+                <option value="seen">seen</option>
+                <option value="said">said</option>
+                <option value="taken">taken</option>
+                <option value="made">made</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td class="translation-col">бачити (бачив / побачив)</td>
+        </tr>
+
+        <!-- 7. SAY -->
+        <tr data-v2="said" data-v3="said">
+          <td class="num">7</td>
+          <td>
+            <div class="word-group">
+              <span>say</span>
+              <button class="sound-btn" title="Прослухати V1" onclick="speak('say')">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v2-select">
+                <option value="">-- Оберіть V2 --</option>
+                <option value="said">said</option>
+                <option value="saw">saw</option>
+                <option value="did">did</option>
+                <option value="made">made</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v3-select">
+                <option value="">-- Оберіть V3 --</option>
+                <option value="said">said</option>
+                <option value="seen">seen</option>
+                <option value="done">done</option>
+                <option value="made">made</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td class="translation-col">казати, говорить (сказав / сказала)</td>
+        </tr>
+
+        <!-- 8. MAKE -->
+        <tr data-v2="made" data-v3="made">
+          <td class="num">8</td>
+          <td>
+            <div class="word-group">
+              <span>make</span>
+              <button class="sound-btn" title="Прослухати V1" onclick="speak('make')">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v2-select">
+                <option value="">-- Оберіть V2 --</option>
+                <option value="made">made</option>
+                <option value="did">did</option>
+                <option value="had">had</option>
+                <option value="bought">bought</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v3-select">
+                <option value="">-- Оберіть V3 --</option>
+                <option value="made">made</option>
+                <option value="done">done</option>
+                <option value="had">had</option>
+                <option value="bought">bought</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td class="translation-col">робити, створювати (зробив / створив)</td>
+        </tr>
+
+        <!-- 9. TAKE -->
+        <tr data-v2="took" data-v3="taken">
+          <td class="num">9</td>
+          <td>
+            <div class="word-group">
+              <span>take</span>
+              <button class="sound-btn" title="Прослухати V1" onclick="speak('take')">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v2-select">
+                <option value="">-- Оберіть V2 --</option>
+                <option value="took">took</option>
+                <option value="came">came</option>
+                <option value="saw">saw</option>
+                <option value="went">went</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v3-select">
+                <option value="">-- Оберіть V3 --</option>
+                <option value="taken">taken</option>
+                <option value="come">come</option>
+                <option value="seen">seen</option>
+                <option value="gone">gone</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td class="translation-col">брати, взяти (брав / узяв)</td>
+        </tr>
+
+        <!-- 10. BUY -->
+        <tr data-v2="bought" data-v3="bought">
+          <td class="num">10</td>
+          <td>
+            <div class="word-group">
+              <span>buy</span>
+              <button class="sound-btn" title="Прослухати V1" onclick="speak('buy')">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v2-select">
+                <option value="">-- Оберіть V2 --</option>
+                <option value="bought">bought</option>
+                <option value="made">made</option>
+                <option value="had">had</option>
+                <option value="took">took</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td>
+            <div class="select-group">
+              <select class="v3-select">
+                <option value="">-- Оберіть V3 --</option>
+                <option value="bought">bought</option>
+                <option value="made">made</option>
+                <option value="had">had</option>
+                <option value="taken">taken</option>
+              </select>
+              <button class="sound-btn" title="Прослухати обране слово" onclick="speakSelected(this)">🔊</button>
+            </div>
+          </td>
+          <td class="translation-col">купувати (купив / купила / купили)</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-check" onclick="checkAnswers()">Перевірити ✅</button>
+    <div class="result-score" id="score"></div>
+    <button class="btn-main btn-reset" onclick="resetAnswers()">Скинути 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function speak(text) {
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    
+    // Озвучка для "was / were"
+    if (text === 'was / were') {
+      text = 'was, were';
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.85; // Спокойный темп речи
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function speakSelected(btn) {
+    const select = btn.parentElement.querySelector('select');
+    const selectedText = select.value;
+    
+    if (selectedText) {
+      speak(selectedText);
+    } else {
+      // Если слово ещё не выбрано, озвучить правильный ответ строки для тренировки
+      const row = btn.closest('tr');
+      const isV2 = select.classList.contains('v2-select');
+      const correctWord = isV2 ? row.getAttribute('data-v2') : row.getAttribute('data-v3');
+      speak(correctWord);
+    }
+  }
+
+  function checkAnswers() {
+    const rows = document.querySelectorAll('tbody tr');
+    let correctCount = 0;
+    let totalFields = rows.length * 2;
+
+    rows.forEach(row => {
+      const v2Select = row.querySelector('.v2-select');
+      const v3Select = row.querySelector('.v3-select');
+
+      const expectedV2 = row.getAttribute('data-v2');
+      const expectedV3 = row.getAttribute('data-v3');
+
+      // Check V2
+      v2Select.classList.remove('correct', 'incorrect');
+      if (v2Select.value === expectedV2) {
+        v2Select.classList.add('correct');
+        correctCount++;
+      } else if (v2Select.value !== '') {
+        v2Select.classList.add('incorrect');
+      }
+
+      // Check V3
+      v3Select.classList.remove('correct', 'incorrect');
+      if (v3Select.value === expectedV3) {
+        v3Select.classList.add('correct');
+        correctCount++;
+      } else if (v3Select.value !== '') {
+        v3Select.classList.add('incorrect');
+      }
+    });
+
+    document.getElementById('score').textContent = `Результат: ${correctCount} / ${totalFields}`;
+  }
+
+  function resetAnswers() {
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
