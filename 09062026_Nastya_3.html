@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 2. Choose the correct option</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 900px; width: 100%; background: #1e293b; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    .section-title { display: flex; align-items: center; gap: 10px; color: #60a5fa; margin-top: 0; margin-bottom: 10px; font-size: 1.5rem; }
+    .instructions { color: #94a3b8; margin-bottom: 25px; font-size: 1rem; line-height: 1.5; }
+
+    .exercise-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .item-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 16px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .sentence-container { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 280px; }
+    .num { color: #f97316; font-weight: bold; font-size: 1.1rem; width: 25px; }
+    .text-part { font-size: 1.05rem; color: #f1f5f9; }
+
+    .control-group { display: flex; align-items: center; gap: 10px; }
+
+    select {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1.5px solid #475569;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      cursor: pointer;
+      min-width: 220px;
+      transition: all 0.2s;
+    }
+
+    select:focus { border-color: #38bdf8; box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
+
+    .sound-btn {
+      background: #334155;
+      border: none;
+      color: #38bdf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .sound-btn:hover { background: #475569; color: #f59e0b; }
+    .sound-btn:active { transform: scale(0.95); }
+
+    /* Validation States */
+    select.correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.15) !important; color: #4ade80 !important; }
+    select.incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; }
+
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #334155; padding-top: 20px; }
+    .btn-main { padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; }
+    .btn-check { background: #2563eb; color: white; }
+    .btn-check:hover { background: #1d4ed8; }
+    .btn-reset { background: #475569; color: white; }
+    .btn-reset:hover { background: #64748b; }
+
+    .result-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <h2 class="section-title">
+    <span>Exercise 2. Обери правильний варіант</span>
+  </h2>
+  <p class="instructions">
+    Обери відповідну форму дієслова зі списку для кожного речення. Натисни 🔊, щоб прослухати правильне речення.
+  </p>
+
+  <div class="exercise-list">
+    
+    <!-- 1 -->
+    <div class="item-card" data-answer="is" data-audio="My sister is ambitious and wants to become a doctor.">
+      <div class="sentence-container">
+        <span class="num">1.</span>
+        <span class="text-part">My sister</span>
+        <select class="option-select">
+          <option value="">-- Обери варіант --</option>
+          <option value="is">is</option>
+          <option value="was">was</option>
+          <option value="has been">has been</option>
+        </select>
+        <span class="text-part">ambitious and wants to become a doctor.</span>
+      </div>
+      <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+    </div>
+
+    <!-- 2 -->
+    <div class="item-card" data-answer="gave" data-audio="Yesterday our teacher gave us some good advice.">
+      <div class="sentence-container">
+        <span class="num">2.</span>
+        <span class="text-part">Yesterday our teacher</span>
+        <select class="option-select">
+          <option value="">-- Обери варіант --</option>
+          <option value="gives">gives</option>
+          <option value="gave">gave</option>
+          <option value="has given">has given</option>
+        </select>
+        <span class="text-part">us some good advice.</span>
+      </div>
+      <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+    </div>
+
+    <!-- 3 -->
+    <div class="item-card" data-answer="have never met" data-audio="I have never met such an unreliable person.">
+      <div class="sentence-container">
+        <span class="num">3.</span>
+        <span class="text-part">I</span>
+        <select class="option-select">
+          <option value="">-- Обери варіант --</option>
+          <option value="never met">never met</option>
+          <option value="have never met">have never met</option>
+          <option value="never meet">never meet</option>
+        </select>
+        <span class="text-part">such an unreliable person.</span>
+      </div>
+      <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+    </div>
+
+    <!-- 4 -->
+    <div class="item-card" data-answer="Does Mia usually keep" data-audio="Does Mia usually keep quiet during lessons?">
+      <div class="sentence-container">
+        <span class="num">4.</span>
+        <select class="option-select">
+          <option value="">-- Обери варіант --</option>
+          <option value="Does Mia usually keep">Does Mia usually keep</option>
+          <option value="Did Mia usually keep">Did Mia usually keep</option>
+          <option value="Has Mia kept">Has Mia kept</option>
+        </select>
+        <span class="text-part">quiet during lessons?</span>
+      </div>
+      <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+    </div>
+
+    <!-- 5 -->
+    <div class="item-card" data-answer="Did you hang out" data-audio="Did you hang out with your mates last weekend?">
+      <div class="sentence-container">
+        <span class="num">5.</span>
+        <select class="option-select">
+          <option value="">-- Обери варіант --</option>
+          <option value="Did you hang out">Did you hang out</option>
+          <option value="Have you hung out">Have you hung out</option>
+          <option value="Do you hang out">Do you hang out</option>
+        </select>
+        <span class="text-part">with your mates last weekend?</span>
+      </div>
+      <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+    </div>
+
+    <!-- 6 -->
+    <div class="item-card" data-answer="has just bought" data-audio="Tom has just bought a book suitable for teenagers.">
+      <div class="sentence-container">
+        <span class="num">6.</span>
+        <span class="text-part">Tom</span>
+        <select class="option-select">
+          <option value="">-- Обери варіант --</option>
+          <option value="just bought">just bought</option>
+          <option value="has just bought">has just bought</option>
+          <option value="buys">buys</option>
+        </select>
+        <span class="text-part">a book suitable for teenagers.</span>
+      </div>
+      <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+    </div>
+
+    <!-- 7 -->
+    <div class="item-card" data-answer="doesn't get" data-audio="My brother doesn't get on well with our eldest sibling.">
+      <div class="sentence-container">
+        <span class="num">7.</span>
+        <span class="text-part">My brother</span>
+        <select class="option-select">
+          <option value="">-- Обери варіант --</option>
+          <option value="doesn't get">doesn't get</option>
+          <option value="didn't get">didn't get</option>
+          <option value="hasn't got">hasn't got</option>
+        </select>
+        <span class="text-part">on well with our eldest sibling.</span>
+      </div>
+      <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+    </div>
+
+    <!-- 8 -->
+    <div class="item-card" data-answer="felt" data-audio="She felt miserable after the argument two days ago.">
+      <div class="sentence-container">
+        <span class="num">8.</span>
+        <span class="text-part">She</span>
+        <select class="option-select">
+          <option value="">-- Обери варіант --</option>
+          <option value="feels">feels</option>
+          <option value="felt">felt</option>
+          <option value="has felt">has felt</option>
+        </select>
+        <span class="text-part">miserable after the argument two days ago.</span>
+      </div>
+      <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+    </div>
+
+    <!-- 9 -->
+    <div class="item-card" data-answer="Has Kate ever worked" data-audio="Has Kate ever worked part-time?">
+      <div class="sentence-container">
+        <span class="num">9.</span>
+        <select class="option-select">
+          <option value="">-- Обери варіант --</option>
+          <option value="Did Kate ever work">Did Kate ever work</option>
+          <option value="Does Kate ever work">Does Kate ever work</option>
+          <option value="Has Kate ever worked">Has Kate ever worked</option>
+        </select>
+        <span class="text-part">part-time?</span>
+      </div>
+      <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+    </div>
+
+    <!-- 10 -->
+    <div class="item-card" data-answer="haven't bought" data-audio="We haven't bought this book yet.">
+      <div class="sentence-container">
+        <span class="num">10.</span>
+        <span class="text-part">We</span>
+        <select class="option-select">
+          <option value="">-- Обери варіант --</option>
+          <option value="didn't buy">didn't buy</option>
+          <option value="haven't bought">haven't bought</option>
+          <option value="don't buy">don't buy</option>
+        </select>
+        <span class="text-part">this book yet.</span>
+      </div>
+      <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-check" onclick="checkAnswers()">Перевірити ✅</button>
+    <div class="result-score" id="score"></div>
+    <button class="btn-main btn-reset" onclick="resetAnswers()">Скинути 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function speak(text) {
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function speakFromCard(btn) {
+    const card = btn.closest('.item-card');
+    const audioText = card.getAttribute('data-audio');
+    speak(audioText);
+  }
+
+  function checkAnswers() {
+    const items = document.querySelectorAll('.item-card');
+    let correctCount = 0;
+    let total = items.length;
+
+    items.forEach(item => {
+      const select = item.querySelector('.option-select');
+      const expected = item.getAttribute('data-answer');
+
+      select.classList.remove('correct', 'incorrect');
+
+      if (select.value === expected) {
+        select.classList.add('correct');
+        correctCount++;
+      } else if (select.value !== '') {
+        select.classList.add('incorrect');
+      }
+    });
+
+    document.getElementById('score').textContent = `Результат: ${correctCount} / ${total}`;
+  }
+
+  function resetAnswers() {
+    const selects = document.querySelectorAll('.option-select');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
