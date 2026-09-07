@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Matching Exercise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --accent-bg: #EEF2FF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding: 30px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .instructions {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        /* Collapsible Transcript Styling */
+        .transcript-section {
+            margin-bottom: 28px;
+            border: 1px solid #E0E7FF;
+            border-radius: 12px;
+            overflow: visible;
+            background-color: #F5F7FF;
+        }
+
+        .transcript-toggle {
+            width: 100%;
+            padding: 14px 20px;
+            background-color: var(--accent-bg);
+            border: none;
+            outline: none;
+            text-align: left;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px;
+            transition: background-color 0.2s ease;
+        }
+
+        .transcript-toggle:hover {
+            background-color: #E0E7FF;
+        }
+
+        .transcript-toggle .icon {
+            transition: transform 0.3s ease;
+            font-size: 14px;
+        }
+
+        .transcript-toggle.active .icon {
+            transform: rotate(180deg);
+        }
+
+        .transcript-content {
+            display: none;
+            padding: 16px 20px;
+            background-color: #FFFFFF;
+            border-top: 1px solid #E0E7FF;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .transcript-content.open {
+            display: block;
+        }
+
+        .transcript-list {
+            list-style: none;
+        }
+
+        .transcript-list li {
+            font-size: 15px;
+            line-height: 2.2;
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        .transcript-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Tooltip & Word Styling */
+        .vocab-word {
+            position: relative;
+            color: var(--primary);
+            font-weight: 600;
+            border-bottom: 2px dashed var(--primary);
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            background-color: #EEF2FF;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .vocab-word:hover {
+            background-color: #E0E7FF;
+        }
+
+        .vocab-word .audio-icon {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* Inline badge showing Ukrainian translation clearly */
+        .translation-badge {
+            font-size: 12px;
+            font-weight: 500;
+            color: #065F46;
+            background-color: #D1FAE5;
+            border: 1px solid #A7F3D0;
+            padding: 1px 6px;
+            border-radius: 6px;
+            margin-left: 2px;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1.4;
+        }
+
+        /* Tooltip Bubble (Popup on Hover) */
+        .vocab-word .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            width: max-content;
+            max-width: 250px;
+            background-color: #1E293B;
+            color: #FFF;
+            text-align: center;
+            border-radius: 8px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 9999;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+        }
+
+        .vocab-word .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #1E293B transparent transparent transparent;
+        }
+
+        .vocab-word:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Matching Grid Area */
+        .matching-area {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .matching-row {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .statement-card {
+            flex: 1;
+            background-color: #F3F4F6;
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-size: 15px;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .select-box {
+            width: 150px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1.5px solid var(--border);
+            background-color: #FFFFFF;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-main);
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .select-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        /* Status colors after check */
+        .matching-row.correct .select-box {
+            border-color: var(--success);
+            background-color: #ECFDF5;
+            color: #065F46;
+        }
+
+        .matching-row.incorrect .select-box {
+            border-color: var(--error);
+            background-color: #FEF2F2;
+            color: #991B1B;
+        }
+
+        /* Action Buttons & Results */
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: #E5E7EB;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background-color: #D1D5DB;
+        }
+
+        .result-msg {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .result-msg.success {
+            color: var(--success);
+        }
+
+        .result-msg.error {
+            color: var(--error);
+        }
+
+        @media (max-width: 600px) {
+            .matching-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .select-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Matching Exercise</h1>
+    <p class="instructions">Match each statement with the correct person based on the transcript.</p>
+
+    <!-- Collapsible Transcript -->
+    <div class="transcript-section">
+        <button class="transcript-toggle" id="transcriptBtn">
+            <span>📝 Show Transcript / Підказки</span>
+            <span class="icon">▼</span>
+        </button>
+        <div class="transcript-content" id="transcriptContent">
+            <ul class="transcript-list">
+                <li>
+                    1. Josh usually goes to work by bike. The 
+                    <span class="vocab-word" onclick="speak('bus fare')">
+                        bus fare <span class="audio-icon">🔊</span>
+                        <span class="tooltip">🔊 Клікніть для прослуховування</span>
+                    </span> 
+                    <span class="translation-badge">вартість проїзду</span> is 
+                    <span class="vocab-word" onclick="speak('too expensive')">
+                        too expensive <span class="audio-icon">🔊</span>
+                        <span class="tooltip">🔊 Клікніть для прослуховування</span>
+                    </span>
+                    <span class="translation-badge">занадто дорогий</span>.
+                </li>
+                <li>
+                    2. Parker prefers to walk at 
+                    <span class="vocab-word" onclick="speak('peak hours')">
+                        peak hours <span class="audio-icon">🔊</span>
+                        <span class="tooltip">🔊 Клікніть для прослуховування</span>
+                    </span>
+                    <span class="translation-badge">години пік</span>. It’s faster.
+                </li>
+                <li>
+                    3. Ashley chooses to use 
+                    <span class="vocab-word" onclick="speak('express trains')">
+                        express trains <span class="audio-icon">🔊</span>
+                        <span class="tooltip">🔊 Клікніть для прослуховування</span>
+                    </span>
+                    <span class="translation-badge">швидкісні поїзди</span> during 
+                    <span class="vocab-word" onclick="speak('off-peak hours')">
+                        off-peak hours <span class="audio-icon">🔊</span>
+                        <span class="tooltip">🔊 Клікніть для прослуховування</span>
+                    </span>
+                    <span class="translation-badge">міжпікові години</span>.
+                </li>
+                <li>
+                    4. Koss spent 4 hours in the 
+                    <span class="vocab-word" onclick="speak('traffic jam')">
+                        traffic jam <span class="audio-icon">🔊</span>
+                        <span class="tooltip">🔊 Клікніть для прослуховування</span>
+                    </span>
+                    <span class="translation-badge">затор / пробка</span> yesterday.
+                </li>
+                <li>
+                    5. It’s hard for Marty to find a 
+                    <span class="vocab-word" onclick="speak('parking lot')">
+                        parking lot <span class="audio-icon">🔊</span>
+                        <span class="tooltip">🔊 Клікніть для прослуховування</span>
+                    </span>
+                    <span class="translation-badge">парковка</span> in the morning.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Matching Questions Area -->
+    <div class="matching-area">
+        <div class="matching-row" data-correct="Josh">
+            <div class="statement-card">"The bus fare is too expensive for me."</div>
+            <select class="select-box">
+                <option value="">Choose...</option>
+                <option value="Josh">Josh</option>
+                <option value="Parker">Parker</option>
+                <option value="Ashley">Ashley</option>
+                <option value="Koss">Koss</option>
+                <option value="Marty">Marty</option>
+            </select>
+        </div>
+
+        <div class="matching-row" data-correct="Parker">
+            <div class="statement-card">"I prefer to walk at peak hours."</div>
+            <select class="select-box">
+                <option value="">Choose...</option>
+                <option value="Josh">Josh</option>
+                <option value="Parker">Parker</option>
+                <option value="Ashley">Ashley</option>
+                <option value="Koss">Koss</option>
+                <option value="Marty">Marty</option>
+            </select>
+        </div>
+
+        <div class="matching-row" data-correct="Ashley">
+            <div class="statement-card">"I choose to use express trains during off-peak hours."</div>
+            <select class="select-box">
+                <option value="">Choose...</option>
+                <option value="Josh">Josh</option>
+                <option value="Parker">Parker</option>
+                <option value="Ashley">Ashley</option>
+                <option value="Koss">Koss</option>
+                <option value="Marty">Marty</option>
+            </select>
+        </div>
+
+        <div class="matching-row" data-correct="Marty">
+            <div class="statement-card">"It’s so hard to find a free parking lot in the morning!"</div>
+            <select class="select-box">
+                <option value="">Choose...</option>
+                <option value="Josh">Josh</option>
+                <option value="Parker">Parker</option>
+                <option value="Ashley">Ashley</option>
+                <option value="Koss">Koss</option>
+                <option value="Marty">Marty</option>
+            </select>
+        </div>
+
+        <div class="matching-row" data-correct="Koss">
+            <div class="statement-card">"I spent 4 hours in the traffic jam yesterday!"</div>
+            <select class="select-box">
+                <option value="">Choose...</option>
+                <option value="Josh">Josh</option>
+                <option value="Parker">Parker</option>
+                <option value="Ashley">Ashley</option>
+                <option value="Koss">Koss</option>
+                <option value="Marty">Marty</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Control Buttons & Score -->
+    <div class="controls">
+        <button class="btn btn-primary" onclick="checkAnswers()">Check Answers</button>
+        <button class="btn btn-secondary" onclick="resetAnswers()">Reset</button>
+        <span class="result-msg" id="resultMsg"></span>
+    </div>
+</div>
+
+<script>
+    // Collapsible Transcript Functionality
+    const transcriptBtn = document.getElementById('transcriptBtn');
+    const transcriptContent = document.getElementById('transcriptContent');
+
+    transcriptBtn.addEventListener('click', () => {
+        transcriptBtn.classList.toggle('active');
+        transcriptContent.classList.toggle('open');
+    });
+
+    // Text-to-Speech Function for vocabulary
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert('Text-to-speech is not supported in your browser.');
+        }
+    }
+
+    // Interactive Check Answers Logic
+    function checkAnswers() {
+        const rows = document.querySelectorAll('.matching-row');
+        let correctCount = 0;
+
+        rows.forEach(row => {
+            const select = row.querySelector('.select-box');
+            const expected = row.getAttribute('data-correct');
+            const userVal = select.value;
+
+            row.classList.remove('correct', 'incorrect');
+
+            if (userVal === expected) {
+                row.classList.add('correct');
+                correctCount++;
+            } else if (userVal !== '') {
+                row.classList.add('incorrect');
+            } else {
+                row.classList.add('incorrect');
+            }
+        });
+
+        const resultMsg = document.getElementById('resultMsg');
+        if (correctCount === rows.length) {
+            resultMsg.textContent = `Great job! All ${correctCount}/${rows.length} correct! 🎉`;
+            resultMsg.className = 'result-msg success';
+        } else {
+            resultMsg.textContent = `Score: ${correctCount}/${rows.length}. Try again!`;
+            resultMsg.className = 'result-msg error';
+        }
+    }
+
+    // Reset Functionality
+    function resetAnswers() {
+        const rows = document.querySelectorAll('.matching-row');
+        rows.forEach(row => {
+            row.classList.remove('correct', 'incorrect');
+            row.querySelector('.select-box').value = '';
+        });
+        const resultMsg = document.getElementById('resultMsg');
+        resultMsg.textContent = '';
+    }
+</script>
+
+</body>
+</html>
