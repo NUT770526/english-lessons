@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English Exercise 2 - Choose the Correct Form</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 900px; width: 100%; background: #1e293b; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    .section-title { color: #60a5fa; margin-top: 0; margin-bottom: 8px; font-size: 1.5rem; }
+    .instructions { color: #94a3b8; margin-bottom: 20px; font-size: 1rem; line-height: 1.5; }
+
+    .exercise-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .item-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 16px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .sentence-container { display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap; font-size: 1.05rem; line-height: 2.2; }
+    .num { color: #f97316; font-weight: bold; width: 28px; flex-shrink: 0; }
+
+    select {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1.5px solid #475569;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    select:focus { border-color: #38bdf8; box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
+
+    .sound-btn {
+      background: #334155;
+      border: none;
+      color: #38bdf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .sound-btn:hover { background: #475569; color: #f59e0b; }
+    .sound-btn:active { transform: scale(0.95); }
+
+    /* Validation States */
+    select.correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.15) !important; color: #4ade80 !important; font-weight: bold; }
+    select.incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; }
+
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #334155; padding-top: 20px; }
+    .btn-main { padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; }
+    .btn-check { background: #2563eb; color: white; }
+    .btn-check:hover { background: #1d4ed8; }
+    .btn-reset { background: #475569; color: white; }
+    .btn-reset:hover { background: #64748b; }
+
+    .result-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <h2 class="section-title">Exercise 2. Complete the sentences</h2>
+  <p class="instructions">
+    Оберіть правильну форму дієслова (<strong>Present Simple</strong>, <strong>Past Simple</strong>, <strong>Present Continuous</strong> або <strong>Present Perfect</strong>). Натисніть 🔊, щоб прослухати речення.
+  </p>
+
+  <div class="exercise-list">
+    
+    <!-- 1 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">1.</span>
+        <span>I</span>
+        <select class="gap-select" data-ans="have">
+          <option value="">-- варіант --</option>
+          <option value="am">am</option>
+          <option value="have">have</option>
+          <option value="was">was</option>
+        </select>
+        <span>never</span>
+        <select class="gap-select" data-ans="seen">
+          <option value="">-- варіант --</option>
+          <option value="saw">saw</option>
+          <option value="seen">seen</option>
+          <option value="see">see</option>
+        </select>
+        <span>a report like this before.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 2 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">2.</span>
+        <span>She</span>
+        <select class="gap-select" data-ans="is writing">
+          <option value="">-- варіант --</option>
+          <option value="writes">writes</option>
+          <option value="wrote">wrote</option>
+          <option value="is writing">is writing</option>
+          <option value="has written">has written</option>
+        </select>
+        <span>the monthly summary at the moment.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 3 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">3.</span>
+        <span>We</span>
+        <select class="gap-select" data-ans="did">
+          <option value="">-- варіант --</option>
+          <option value="do">do</option>
+          <option value="are doing">are doing</option>
+          <option value="did">did</option>
+          <option value="have done">have done</option>
+        </select>
+        <span>all the calculations yesterday.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 4 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">4.</span>
+        <span>The new accountant usually</span>
+        <select class="gap-select" data-ans="comes">
+          <option value="">-- варіант --</option>
+          <option value="is coming">is coming</option>
+          <option value="comes">comes</option>
+          <option value="came">came</option>
+          <option value="has come">has come</option>
+        </select>
+        <span>to the office at 9 a.m.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 5 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">5.</span>
+        <span>I</span>
+        <select class="gap-select" data-ans="have">
+          <option value="">-- варіант --</option>
+          <option value="am">am</option>
+          <option value="was">was</option>
+          <option value="have">have</option>
+        </select>
+        <span>just</span>
+        <select class="gap-select" data-ans="made a call">
+          <option value="">-- варіант --</option>
+          <option value="make a call">make a call</option>
+          <option value="made a call">made a call</option>
+          <option value="making a call">making a call</option>
+        </select>
+        <span>to the supplier.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 6 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">6.</span>
+        <span>The company</span>
+        <select class="gap-select" data-ans="signed a contract">
+          <option value="">-- варіант --</option>
+          <option value="signs a contract">signs a contract</option>
+          <option value="signed a contract">signed a contract</option>
+          <option value="has signed a contract">has signed a contract</option>
+          <option value="is signing a contract">is signing a contract</option>
+        </select>
+        <span>last Friday.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 7 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">7.</span>
+        <span>We</span>
+        <select class="gap-select" data-ans="have">
+          <option value="">-- варіант --</option>
+          <option value="are">are</option>
+          <option value="were">were</option>
+          <option value="have">have</option>
+        </select>
+        <span>already</span>
+        <select class="gap-select" data-ans="sent an invoice">
+          <option value="">-- варіант --</option>
+          <option value="send an invoice">send an invoice</option>
+          <option value="sent an invoice">sent an invoice</option>
+          <option value="sending an invoice">sending an invoice</option>
+        </select>
+        <span>to the client.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 8 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">8.</span>
+        <span>They</span>
+        <select class="gap-select" data-ans="are having a lunch break">
+          <option value="">-- варіант --</option>
+          <option value="have a lunch break">have a lunch break</option>
+          <option value="are having a lunch break">are having a lunch break</option>
+          <option value="had a lunch break">had a lunch break</option>
+          <option value="have had a lunch break">have had a lunch break</option>
+        </select>
+        <span>at the moment.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 9 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">9.</span>
+        <span>Our team</span>
+        <select class="gap-select" data-ans="is looking for">
+          <option value="">-- варіант --</option>
+          <option value="looks for">looks for</option>
+          <option value="is looking for">is looking for</option>
+          <option value="looked for">looked for</option>
+          <option value="has looked for">has looked for</option>
+        </select>
+        <span>the missing invoice right now.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 10 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">10.</span>
+        <span>The client</span>
+        <select class="gap-select" data-ans="hasn't replied">
+          <option value="">-- варіант --</option>
+          <option value="didn't reply">didn't reply</option>
+          <option value="doesn't reply">doesn't reply</option>
+          <option value="hasn't replied">hasn't replied</option>
+          <option value="isn't replying">isn't replying</option>
+        </select>
+        <span>to my email yet.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 11 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">11.</span>
+        <span>The meeting</span>
+        <select class="gap-select" data-ans="was">
+          <option value="">-- варіант --</option>
+          <option value="is">is</option>
+          <option value="was">was</option>
+          <option value="has been">has been</option>
+        </select>
+        <span>very productive yesterday.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 12 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">12.</span>
+        <span>She usually</span>
+        <select class="gap-select" data-ans="does homework">
+          <option value="">-- варіант --</option>
+          <option value="does homework">does homework</option>
+          <option value="is doing homework">is doing homework</option>
+          <option value="did homework">did homework</option>
+          <option value="has done homework">has done homework</option>
+        </select>
+        <span>after her English lesson.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-check" onclick="checkAnswers()">Перевірити ✅</button>
+    <div class="result-score" id="score"></div>
+    <button class="btn-main btn-reset" onclick="resetAnswers()">Скинути 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function speak(text) {
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function speakSentence(btn) {
+    const card = btn.closest('.item-card');
+    const container = card.querySelector('.sentence-container');
+    
+    let fullText = "";
+    container.childNodes.forEach(node => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        if (node.tagName === 'SPAN' && !node.classList.contains('num')) {
+          fullText += " " + node.textContent;
+        } else if (node.tagName === 'SELECT') {
+          const val = node.value;
+          fullText += " " + (val !== "" ? val : node.getAttribute('data-ans'));
+        }
+      }
+    });
+
+    speak(fullText.trim());
+  }
+
+  function checkAnswers() {
+    const selects = document.querySelectorAll('.gap-select');
+    let correctCount = 0;
+    let totalSelects = selects.length;
+
+    selects.forEach(select => {
+      const userVal = select.value;
+      const mainAns = select.getAttribute('data-ans');
+
+      select.classList.remove('correct', 'incorrect');
+
+      if (userVal !== "" && userVal === mainAns) {
+        select.classList.add('correct');
+        correctCount++;
+      } else if (userVal !== "") {
+        select.classList.add('incorrect');
+      }
+    });
+
+    document.getElementById('score').textContent = `Результат: ${correctCount} / ${totalSelects}`;
+  }
+
+  function resetAnswers() {
+    const selects = document.querySelectorAll('.gap-select');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
