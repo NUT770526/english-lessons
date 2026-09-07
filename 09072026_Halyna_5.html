@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English - Exercise 3: Correct the Mistakes</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 900px; width: 100%; background: #1e293b; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    .section-title { color: #60a5fa; margin-top: 0; margin-bottom: 8px; font-size: 1.5rem; }
+    .instructions { color: #94a3b8; margin-bottom: 25px; font-size: 1rem; line-height: 1.5; }
+
+    .exercise-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .item-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 18px 20px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .original-sentence {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 1.05rem;
+    }
+
+    .sentence-text { color: #cbd5e1; flex: 1; }
+    .num { color: #f97316; font-weight: bold; width: 28px; flex-shrink: 0; }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1.5px solid #475569;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
+    }
+
+    .sound-btn {
+      background: #334155;
+      border: none;
+      color: #38bdf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .sound-btn:hover { background: #475569; color: #f59e0b; }
+    .sound-btn:active { transform: scale(0.95); }
+
+    /* Validation States */
+    input.correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.15) !important; color: #4ade80 !important; font-weight: bold; }
+    input.incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; }
+
+    .correct-ans-hint {
+      display: none;
+      color: #4ade80;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #334155; padding-top: 20px; }
+    .btn-main { padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; }
+    .btn-check { background: #2563eb; color: white; }
+    .btn-check:hover { background: #1d4ed8; }
+    .btn-reset { background: #475569; color: white; }
+    .btn-reset:hover { background: #64748b; }
+
+    .result-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <h2 class="section-title">Exercise 3. Correct the mistakes</h2>
+  <p class="instructions">
+    Знайдіть і виправте помилку в кожному реченні. Напишіть <strong>повне виправлене речення</strong> у полі нижче. Натисніть 🔊, щоб прослухати правильний варіант.
+  </p>
+
+  <div class="exercise-list">
+    
+    <!-- 1 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">1.</span>
+        <span class="sentence-text">I have seen the client yesterday.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Напишіть виправлене речення..." data-target="I saw the client yesterday.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">2.</span>
+        <span class="sentence-text">She has wrote the monthly report.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Напишіть виправлене речення..." data-target="She has written the monthly report.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 3 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">3.</span>
+        <span class="sentence-text">Did you ever look through a contract like this?</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Напишіть виправлене речення..." data-target="Have you ever looked through a contract like this?">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">4.</span>
+        <span class="sentence-text">The client hasn’t replied to my email last week.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Напишіть виправлене речення..." data-target="The client didn't reply to my email last week.|The client didn’t reply to my email last week.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 5 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">5.</span>
+        <span class="sentence-text">We have make a call to the supplier.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Напишіть виправлене речення..." data-target="We have made a call to the supplier.|We've made a call to the supplier.|We’ve made a call to the supplier.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 6 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">6.</span>
+        <span class="sentence-text">He reads the contract right now.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Напишіть виправлене речення..." data-target="He is reading the contract right now.|He's reading the contract right now.|He’s reading the contract right now.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 7 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">7.</span>
+        <span class="sentence-text">Our managers have went to the conference.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Напишіть виправлене речення..." data-target="Our managers have gone to the conference.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 8 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">8.</span>
+        <span class="sentence-text">I am usually having a lunch break at 1 p.m.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Напишіть виправлене речення..." data-target="I usually have a lunch break at 1 p.m.|I usually have a lunch break at 1pm.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 9 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">9.</span>
+        <span class="sentence-text">Has she made a call yesterday?</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Напишіть виправлене речення..." data-target="Did she make a call yesterday?">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 10 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">10.</span>
+        <span class="sentence-text">We didn’t finish the report yet.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Напишіть виправлене речення..." data-target="We haven't finished the report yet.|We haven’t finished the report yet.|We have not finished the report yet.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-check" onclick="checkAnswers()">Перевірити ✅</button>
+    <div class="result-score" id="score"></div>
+    <button class="btn-main btn-reset" onclick="resetAnswers()">Скинути 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function normalizeText(str) {
+    return str
+      .toLowerCase()
+      .replace(/[’']/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function speak(text) {
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function speakTarget(btn) {
+    const card = btn.closest('.item-card');
+    const input = card.querySelector('.sentence-input');
+    const target = input.getAttribute('data-target').split('|')[0];
+    speak(target);
+  }
+
+  function checkAnswers() {
+    const inputs = document.querySelectorAll('.sentence-input');
+    let correctCount = 0;
+
+    inputs.forEach(input => {
+      const userVal = normalizeText(input.value);
+      const validAnswers = input.getAttribute('data-target').split('|').map(normalizeText);
+      const card = input.closest('.item-card');
+      const hint = card.querySelector('.correct-ans-hint');
+
+      input.classList.remove('correct', 'incorrect');
+      hint.style.display = 'none';
+
+      if (userVal !== '') {
+        if (validAnswers.includes(userVal)) {
+          input.classList.add('correct');
+          correctCount++;
+        } else {
+          input.classList.add('incorrect');
+          const primaryTarget = input.getAttribute('data-target').split('|')[0];
+          hint.textContent = `Правильно: ${primaryTarget}`;
+          hint.style.display = 'block';
+        }
+      }
+    });
+
+    document.getElementById('score').textContent = `Результат: ${correctCount} / ${inputs.length}`;
+  }
+
+  function resetAnswers() {
+    const inputs = document.querySelectorAll('.sentence-input');
+    inputs.forEach(input => {
+      input.value = '';
+      input.classList.remove('correct', 'incorrect');
+      const card = input.closest('.item-card');
+      const hint = card.querySelector('.correct-ans-hint');
+      hint.style.display = 'none';
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
