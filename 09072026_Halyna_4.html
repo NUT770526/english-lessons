@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English - Exercise 2: Choose the Correct Tense</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 900px; width: 100%; background: #1e293b; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    .section-title { color: #60a5fa; margin-top: 0; margin-bottom: 8px; font-size: 1.5rem; }
+    .instructions { color: #94a3b8; margin-bottom: 25px; font-size: 1rem; line-height: 1.5; }
+
+    .exercise-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .item-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 16px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .sentence-container { display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap; font-size: 1.05rem; line-height: 2.2; }
+    .num { color: #f97316; font-weight: bold; width: 28px; flex-shrink: 0; }
+    .verb-hint { color: #94a3b8; font-style: italic; font-weight: bold; }
+
+    select {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1.5px solid #475569;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    select:focus { border-color: #38bdf8; box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
+
+    .sound-btn {
+      background: #334155;
+      border: none;
+      color: #38bdf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .sound-btn:hover { background: #475569; color: #f59e0b; }
+    .sound-btn:active { transform: scale(0.95); }
+
+    /* Validation States */
+    select.correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.15) !important; color: #4ade80 !important; font-weight: bold; }
+    select.incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; }
+
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #334155; padding-top: 20px; }
+    .btn-main { padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; }
+    .btn-check { background: #2563eb; color: white; }
+    .btn-check:hover { background: #1d4ed8; }
+    .btn-reset { background: #475569; color: white; }
+    .btn-reset:hover { background: #64748b; }
+
+    .result-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <h2 class="section-title">Exercise 2. Choose the correct tense</h2>
+  <p class="instructions">
+    Поставте дієслово в <strong>Present Simple</strong>, <strong>Past Simple</strong>, <strong>Present Continuous</strong> або <strong>Present Perfect</strong>. Оберіть правильний варіант з випадаючого списку.
+  </p>
+
+  <div class="exercise-list">
+    
+    <!-- 1 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">1.</span>
+        <span>Our accountant usually</span>
+        <select class="gap-select" data-ans="sends">
+          <option value="">-- варіант --</option>
+          <option value="sends">sends</option>
+          <option value="sent">sent</option>
+          <option value="is sending">is sending</option>
+          <option value="has sent">has sent</option>
+        </select>
+        <span>invoices on Mondays.</span>
+        <span class="verb-hint">(send)</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 2 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">2.</span>
+        <span>I</span>
+        <select class="gap-select" data-ans="sent">
+          <option value="">-- варіант --</option>
+          <option value="send">send</option>
+          <option value="sent">sent</option>
+          <option value="am sending">am sending</option>
+          <option value="have sent">have sent</option>
+        </select>
+        <span>the invoice yesterday.</span>
+        <span class="verb-hint">(send)</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 3 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">3.</span>
+        <span>She</span>
+        <select class="gap-select" data-ans="is writing">
+          <option value="">-- варіант --</option>
+          <option value="writes">writes</option>
+          <option value="wrote">wrote</option>
+          <option value="is writing">is writing</option>
+          <option value="has written">has written</option>
+        </select>
+        <span>the monthly report at the moment.</span>
+        <span class="verb-hint">(write)</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 4 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">4.</span>
+        <span>She</span>
+        <select class="gap-select" data-ans="has">
+          <option value="">-- варіант --</option>
+          <option value="is">is</option>
+          <option value="have">have</option>
+          <option value="has">has</option>
+        </select>
+        <span>just</span>
+        <select class="gap-select" data-ans="written">
+          <option value="">-- варіант --</option>
+          <option value="wrote">wrote</option>
+          <option value="written">written</option>
+          <option value="writing">writing</option>
+        </select>
+        <span>the monthly report.</span>
+        <span class="verb-hint">(write)</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 5 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">5.</span>
+        <span>So far, we</span>
+        <select class="gap-select" data-ans="have signed">
+          <option value="">-- варіант --</option>
+          <option value="sign">sign</option>
+          <option value="signed">signed</option>
+          <option value="are signing">are signing</option>
+          <option value="have signed">have signed</option>
+        </select>
+        <span>three new contracts.</span>
+        <span class="verb-hint">(sign)</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 6 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">6.</span>
+        <span>Our accountants</span>
+        <select class="gap-select" data-ans="are looking for">
+          <option value="">-- варіант --</option>
+          <option value="look for">look for</option>
+          <option value="looked for">looked for</option>
+          <option value="are looking for">are looking for</option>
+          <option value="have looked for">have looked for</option>
+        </select>
+        <span>the missing invoice right now.</span>
+        <span class="verb-hint">(look for)</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 7 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">7.</span>
+        <span>He</span>
+        <select class="gap-select" data-ans="has">
+          <option value="">-- варіант --</option>
+          <option value="is">is</option>
+          <option value="does">does</option>
+          <option value="has">has</option>
+        </select>
+        <span>never</span>
+        <select class="gap-select" data-ans="missed">
+          <option value="">-- варіант --</option>
+          <option value="miss">miss</option>
+          <option value="misses">misses</option>
+          <option value="missed">missed</option>
+        </select>
+        <span>a deadline.</span>
+        <span class="verb-hint">(miss)</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 8 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">8.</span>
+        <span>The new manager</span>
+        <select class="gap-select" data-ans="came">
+          <option value="">-- варіант --</option>
+          <option value="comes">comes</option>
+          <option value="came">came</option>
+          <option value="is coming">is coming</option>
+          <option value="has come">has come</option>
+        </select>
+        <span>to the office at 8 a.m. yesterday.</span>
+        <span class="verb-hint">(come)</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 9 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">9.</span>
+        <span>Julia usually</span>
+        <select class="gap-select" data-ans="looks after">
+          <option value="">-- варіант --</option>
+          <option value="looks after">looks after</option>
+          <option value="looked after">looked after</option>
+          <option value="is looking after">is looking after</option>
+          <option value="has looked after">has looked after</option>
+        </select>
+        <span>our visitors when they come to the office.</span>
+        <span class="verb-hint">(look after)</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 10 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">10.</span>
+        <select class="gap-select" data-ans="Have">
+          <option value="">-- варіант --</option>
+          <option value="Do">Do</option>
+          <option value="Did">Did</option>
+          <option value="Have">Have</option>
+          <option value="Are">Are</option>
+        </select>
+        <span>you</span>
+        <select class="gap-select" data-ans="had a look">
+          <option value="">-- варіант --</option>
+          <option value="have a look">have a look</option>
+          <option value="had a look">had a look</option>
+          <option value="having a look">having a look</option>
+        </select>
+        <span>at the figures yet?</span>
+        <span class="verb-hint">(have a look)</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-check" onclick="checkAnswers()">Перевірити ✅</button>
+    <div class="result-score" id="score"></div>
+    <button class="btn-main btn-reset" onclick="resetAnswers()">Скинути 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function speak(text) {
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function speakSentence(btn) {
+    const card = btn.closest('.item-card');
+    const container = card.querySelector('.sentence-container');
+    
+    let fullText = "";
+    container.childNodes.forEach(node => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        if (node.tagName === 'SPAN' && !node.classList.contains('num') && !node.classList.contains('verb-hint')) {
+          fullText += " " + node.textContent;
+        } else if (node.tagName === 'SELECT') {
+          const val = node.value;
+          fullText += " " + (val !== "" ? val : node.getAttribute('data-ans'));
+        }
+      }
+    });
+
+    speak(fullText.trim());
+  }
+
+  function checkAnswers() {
+    const selects = document.querySelectorAll('.gap-select');
+    let correctCount = 0;
+    let totalSelects = selects.length;
+
+    selects.forEach(select => {
+      const userVal = select.value;
+      const mainAns = select.getAttribute('data-ans');
+
+      select.classList.remove('correct', 'incorrect');
+
+      if (userVal !== "" && userVal === mainAns) {
+        select.classList.add('correct');
+        correctCount++;
+      } else if (userVal !== "") {
+        select.classList.add('incorrect');
+      }
+    });
+
+    document.getElementById('score').textContent = `Результат: ${correctCount} / ${totalSelects}`;
+  }
+
+  function resetAnswers() {
+    const selects = document.querySelectorAll('.gap-select');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
