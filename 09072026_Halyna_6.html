@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English - Exercise 4: Translate into English</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 900px; width: 100%; background: #1e293b; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    .section-title { color: #60a5fa; margin-top: 0; margin-bottom: 8px; font-size: 1.5rem; }
+    .instructions { color: #94a3b8; margin-bottom: 25px; font-size: 1rem; line-height: 1.5; }
+
+    .exercise-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .item-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 18px 20px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .original-sentence {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 1.05rem;
+    }
+
+    .sentence-text { color: #f8fafc; font-weight: 500; flex: 1; }
+    .num { color: #f97316; font-weight: bold; width: 28px; flex-shrink: 0; }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1.5px solid #475569;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
+    }
+
+    .sound-btn {
+      background: #334155;
+      border: none;
+      color: #38bdf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .sound-btn:hover { background: #475569; color: #f59e0b; }
+    .sound-btn:active { transform: scale(0.95); }
+
+    /* Validation States */
+    input.correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.15) !important; color: #4ade80 !important; font-weight: bold; }
+    input.incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; }
+
+    .correct-ans-hint {
+      display: none;
+      color: #4ade80;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #334155; padding-top: 20px; }
+    .btn-main { padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; }
+    .btn-check { background: #2563eb; color: white; }
+    .btn-check:hover { background: #1d4ed8; }
+    .btn-reset { background: #475569; color: white; }
+    .btn-reset:hover { background: #64748b; }
+
+    .result-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <h2 class="section-title">Exercise 4. Translate into English</h2>
+  <p class="instructions">
+    Перекладіть речення англійською мовою. Виберіть правильний час. Напишіть <strong>повне речення</strong> англійською у полі нижче. Натисніть 🔊, щоб прослухати правильний переклад.
+  </p>
+
+  <div class="exercise-list">
+    
+    <!-- 1 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">1.</span>
+        <span class="sentence-text">Ми вже надіслали рахунок клієнту.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Перекладіть англійською..." data-target="We have already sent the invoice to the client.|We've already sent the invoice to the client.|We have already sent the client the invoice.|We've already sent the client the invoice.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">2.</span>
+        <span class="sentence-text">Вона щойно написала місячний звіт.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Перекладіть англійською..." data-target="She has just written the monthly report.|She's just written the monthly report.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 3 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">3.</span>
+        <span class="sentence-text">Ви коли-небудь бачили цей контракт?</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Перекладіть англійською..." data-target="Have you ever seen this contract?">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">4.</span>
+        <span class="sentence-text">Клієнт ще не відповів на мій електронний лист.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Перекладіть англійською..." data-target="The client hasn't replied to my email yet.|The client hasn’t replied to my email yet.|The client has not replied to my email yet.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 5 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">5.</span>
+        <span class="sentence-text">Учора я переглянув договір.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Перекладіть англійською..." data-target="Yesterday I looked through the contract.|I looked through the contract yesterday.|Yesterday I reviewed the contract.|I reviewed the contract yesterday.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 6 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">6.</span>
+        <span class="sentence-text">Бухгалтери зараз шукають загублений рахунок.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Перекладіть англійською..." data-target="The accountants are looking for the missing invoice right now.|The accountants are looking for the missing invoice now.|Accountants are looking for the missing invoice right now.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 7 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">7.</span>
+        <span class="sentence-text">Фінансовий директор зазвичай затверджує бюджети по п’ятницях.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Перекладіть англійською..." data-target="The finance director usually approves budgets on Fridays.|The financial director usually approves budgets on Fridays.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 8 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">8.</span>
+        <span class="sentence-text">Наші менеджери поїхали на конференцію і досі перебувають там.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Перекладіть англійською..." data-target="Our managers have gone to the conference.|Our managers have gone to the conference and are still there.|Our managers have left for the conference.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 9 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">9.</span>
+        <span class="sentence-text">Минулого місяця ми вклалися у встановлений термін.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Перекладіть англійською..." data-target="Last month we met the deadline.|We met the deadline last month.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+    <!-- 10 -->
+    <div class="item-card">
+      <div class="original-sentence">
+        <span class="num">10.</span>
+        <span class="sentence-text">Я вже переглянув показники.</span>
+        <button class="sound-btn" onclick="speakTarget(this)">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" class="sentence-input" placeholder="Перекладіть англійською..." data-target="I have already had a look at the figures.|I've already had a look at the figures.|I have already looked at the figures.|I've already looked at the figures.|I have already reviewed the figures.|I've already reviewed the figures.">
+      </div>
+      <div class="correct-ans-hint"></div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-check" onclick="checkAnswers()">Перевірити ✅</button>
+    <div class="result-score" id="score"></div>
+    <button class="btn-main btn-reset" onclick="resetAnswers()">Скинути 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function normalizeText(str) {
+    return str
+      .toLowerCase()
+      .replace(/[’']/g, "'")
+      .replace(/[.,?!]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function speak(text) {
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function speakTarget(btn) {
+    const card = btn.closest('.item-card');
+    const input = card.querySelector('.sentence-input');
+    const target = input.getAttribute('data-target').split('|')[0];
+    speak(target);
+  }
+
+  function checkAnswers() {
+    const inputs = document.querySelectorAll('.sentence-input');
+    let correctCount = 0;
+
+    inputs.forEach(input => {
+      const userVal = normalizeText(input.value);
+      const validAnswers = input.getAttribute('data-target').split('|').map(normalizeText);
+      const card = input.closest('.item-card');
+      const hint = card.querySelector('.correct-ans-hint');
+
+      input.classList.remove('correct', 'incorrect');
+      hint.style.display = 'none';
+
+      if (userVal !== '') {
+        if (validAnswers.includes(userVal)) {
+          input.classList.add('correct');
+          correctCount++;
+        } else {
+          input.classList.add('incorrect');
+          const primaryTarget = input.getAttribute('data-target').split('|')[0];
+          hint.textContent = `Варіант перекладу: ${primaryTarget}`;
+          hint.style.display = 'block';
+        }
+      }
+    });
+
+    document.getElementById('score').textContent = `Результат: ${correctCount} / ${inputs.length}`;
+  }
+
+  function resetAnswers() {
+    const inputs = document.querySelectorAll('.sentence-input');
+    inputs.forEach(input => {
+      input.value = '';
+      input.classList.remove('correct', 'incorrect');
+      const card = input.closest('.item-card');
+      const hint = card.querySelector('.correct-ans-hint');
+      hint.style.display = 'none';
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
