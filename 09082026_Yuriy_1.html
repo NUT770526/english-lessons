@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English - Transportation Vocabulary Drag & Drop</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 900px; width: 100%; background: #1e293b; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    .section-title { color: #60a5fa; margin-top: 0; margin-bottom: 8px; font-size: 1.5rem; }
+    .instructions { color: #94a3b8; margin-bottom: 20px; font-size: 1rem; line-height: 1.5; }
+
+    /* Word Bank Container */
+    .word-bank-wrapper {
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+    .word-bank-title { font-weight: bold; color: #f59e0b; margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .word-bank { display: flex; flex-wrap: wrap; gap: 10px; min-height: 45px; align-items: center; }
+
+    /* Drag Chip / Button */
+    .word-chip {
+      background: #1e293b;
+      border: 1.5px solid #38bdf8;
+      color: #38bdf8;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: grab;
+      user-select: none;
+      transition: all 0.2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .word-chip:hover { background: #38bdf8; color: #0f172a; transform: translateY(-2px); }
+    .word-chip:active { cursor: grabbing; transform: translateY(0); }
+    .word-chip.selected { border-color: #f59e0b; background: #f59e0b; color: #0f172a; }
+    .word-chip.used { opacity: 0.3; cursor: not-allowed; border-color: #475569; color: #94a3b8; background: #1e293b; }
+
+    /* Exercise Items */
+    .exercise-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .item-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 18px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .sentence-container { display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap; font-size: 1.05rem; line-height: 2.3; }
+    .num { color: #f97316; font-weight: bold; width: 28px; flex-shrink: 0; }
+
+    /* Drop Slots */
+    .drop-slot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 140px;
+      height: 38px;
+      border: 2px dashed #475569;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.5);
+      color: #38bdf8;
+      font-weight: 600;
+      padding: 0 10px;
+      margin: 0 4px;
+      vertical-align: middle;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .drop-slot.drag-over { border-color: #38bdf8; background: rgba(56, 189, 248, 0.15); scale: 1.05; }
+    .drop-slot.filled { border-style: solid; border-color: #38bdf8; background: #1e293b; }
+
+    /* Validation States */
+    .drop-slot.correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.2) !important; color: #4ade80 !important; }
+    .drop-slot.incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.2) !important; color: #f87171 !important; }
+
+    .sound-btn {
+      background: #334155;
+      border: none;
+      color: #38bdf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 4px;
+    }
+    .sound-btn:hover { background: #475569; color: #f59e0b; }
+    .sound-btn:active { transform: scale(0.95); }
+
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #334155; padding-top: 20px; }
+    .btn-main { padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; }
+    .btn-check { background: #2563eb; color: white; }
+    .btn-check:hover { background: #1d4ed8; }
+    .btn-reset { background: #475569; color: white; }
+    .btn-reset:hover { background: #64748b; }
+
+    .result-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <h2 class="section-title">Transportation Vocabulary Practice</h2>
+  <p class="instructions">
+    Перетащите плашку со словом в свободное поле или кликните по слову, а затем по нужной ячейке.
+  </p>
+
+  <div class="word-bank-wrapper">
+    <div class="word-bank-title">Word bank (выберите или перетащите):</div>
+    <div class="word-bank" id="wordBank">
+      <div class="word-chip" draggable="true" data-word="off-peak">off-peak</div>
+      <div class="word-chip" draggable="true" data-word="public transport">public transport</div>
+      <div class="word-chip" draggable="true" data-word="parking lot">parking lot</div>
+      <div class="word-chip" draggable="true" data-word="schedule">schedule</div>
+      <div class="word-chip" draggable="true" data-word="bicycle lane">bicycle lane</div>
+      <div class="word-chip" draggable="true" data-word="commute">commute</div>
+      <div class="word-chip" draggable="true" data-word="fare">fare</div>
+      <div class="word-chip" draggable="true" data-word="train station">train station</div>
+      <div class="word-chip" draggable="true" data-word="peak hours">peak hours</div>
+      <div class="word-chip" draggable="true" data-word="tickets">tickets</div>
+      <div class="word-chip" draggable="true" data-word="traffic jam">traffic jam</div>
+      <div class="word-chip" draggable="true" data-word="bus stop">bus stop</div>
+    </div>
+  </div>
+
+  <div class="exercise-list">
+    
+    <!-- 1 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">1.</span>
+        <span>Every morning, I</span>
+        <div class="drop-slot" data-ans="commute"></div>
+        <span>to school by bus and my mom uses</span>
+        <div class="drop-slot" data-ans="public transport"></div>
+        <span>.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 2 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">2.</span>
+        <span>You can buy</span>
+        <div class="drop-slot" data-ans="tickets"></div>
+        <span>at the</span>
+        <div class="drop-slot" data-ans="train station"></div>
+        <span>before you board the train.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 3 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">3.</span>
+        <span>During</span>
+        <div class="drop-slot" data-ans="peak hours"></div>
+        <span>, it takes longer to reach the office because of the</span>
+        <div class="drop-slot" data-ans="traffic jam"></div>
+        <span>.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 4 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">4.</span>
+        <span>The</span>
+        <div class="drop-slot" data-ans="fare"></div>
+        <span>for the bus is cheaper if you travel during</span>
+        <div class="drop-slot" data-ans="off-peak"></div>
+        <span>times.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 5 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">5.</span>
+        <span>There is a</span>
+        <div class="drop-slot" data-ans="bicycle lane"></div>
+        <span>next to the road, which makes it safer for people to cycle.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 6 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">6.</span>
+        <span>Let’s meet at the</span>
+        <div class="drop-slot" data-ans="bus stop"></div>
+        <span>near the library to catch the bus together.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 7 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">7.</span>
+        <span>Check the</span>
+        <div class="drop-slot" data-ans="schedule"></div>
+        <span>to find out when the next bus arrives at the bus stop.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+    <!-- 8 -->
+    <div class="item-card">
+      <div class="sentence-container">
+        <span class="num">8.</span>
+        <span>When we go to the mall, we always park our car in the</span>
+        <div class="drop-slot" data-ans="parking lot"></div>
+        <span>.</span>
+      </div>
+      <button class="sound-btn" onclick="speakSentence(this)">🔊</button>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-check" onclick="checkAnswers()">Check Answers ✅</button>
+    <div class="result-score" id="score"></div>
+    <button class="btn-main btn-reset" onclick="resetAnswers()">Reset 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  let selectedChip = null;
+
+  // Initialize Drag & Drop and Click logic
+  document.addEventListener('DOMContentLoaded', () => {
+    const chips = document.querySelectorAll('.word-chip');
+    const slots = document.querySelectorAll('.drop-slot');
+
+    chips.forEach(chip => {
+      chip.addEventListener('dragstart', handleDragStart);
+      chip.addEventListener('click', handleChipClick);
+    });
+
+    slots.forEach(slot => {
+      slot.addEventListener('dragover', handleDragOver);
+      slot.addEventListener('dragleave', handleDragLeave);
+      slot.addEventListener('drop', handleDrop);
+      slot.addEventListener('click', handleSlotClick);
+    });
+  });
+
+  function handleDragStart(e) {
+    if (this.classList.contains('used')) {
+      e.preventDefault();
+      return;
+    }
+    e.dataTransfer.setData('text/plain', this.dataset.word);
+    selectChip(this);
+  }
+
+  function handleChipClick() {
+    if (this.classList.contains('used')) return;
+    if (selectedChip === this) {
+      clearSelection();
+    } else {
+      selectChip(this);
+    }
+  }
+
+  function selectChip(chip) {
+    clearSelection();
+    selectedChip = chip;
+    chip.classList.add('selected');
+  }
+
+  function clearSelection() {
+    if (selectedChip) {
+      selectedChip.classList.remove('selected');
+      selectedChip = null;
+    }
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    this.classList.add('drag-over');
+  }
+
+  function handleDragLeave() {
+    this.classList.remove('drag-over');
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    this.classList.remove('drag-over');
+    const word = e.dataTransfer.getData('text/plain');
+    if (word) {
+      const chip = Array.from(document.querySelectorAll('.word-chip')).find(c => c.dataset.word === word && !c.classList.contains('used'));
+      if (chip) placeWord(chip, this);
+    }
+  }
+
+  function handleSlotClick() {
+    if (this.classList.contains('filled')) {
+      // Clear slot and return word
+      const word = this.textContent;
+      const chip = Array.from(document.querySelectorAll('.word-chip')).find(c => c.dataset.word === word);
+      if (chip) chip.classList.remove('used');
+      
+      this.textContent = '';
+      this.classList.remove('filled', 'correct', 'incorrect');
+      return;
+    }
+
+    if (selectedChip) {
+      placeWord(selectedChip, this);
+      clearSelection();
+    }
+  }
+
+  function placeWord(chip, slot) {
+    // If slot had previous word, return it back
+    if (slot.classList.contains('filled')) {
+      const oldWord = slot.textContent;
+      const oldChip = Array.from(document.querySelectorAll('.word-chip')).find(c => c.dataset.word === oldWord);
+      if (oldChip) oldChip.classList.remove('used');
+    }
+
+    slot.textContent = chip.dataset.word;
+    slot.classList.add('filled');
+    slot.classList.remove('correct', 'incorrect');
+    chip.classList.add('used');
+  }
+
+  function checkAnswers() {
+    const slots = document.querySelectorAll('.drop-slot');
+    let correctCount = 0;
+
+    slots.forEach(slot => {
+      const userVal = slot.textContent.trim();
+      const targetVal = slot.dataset.ans.trim();
+
+      slot.classList.remove('correct', 'incorrect');
+
+      if (userVal !== '') {
+        if (userVal === targetVal) {
+          slot.classList.add('correct');
+          correctCount++;
+        } else {
+          slot.classList.add('incorrect');
+        }
+      }
+    });
+
+    document.getElementById('score').textContent = `Score: ${correctCount} / ${slots.length}`;
+  }
+
+  function resetAnswers() {
+    const slots = document.querySelectorAll('.drop-slot');
+    const chips = document.querySelectorAll('.word-chip');
+
+    slots.forEach(slot => {
+      slot.textContent = '';
+      slot.classList.remove('filled', 'correct', 'incorrect');
+    });
+
+    chips.forEach(chip => {
+      chip.classList.remove('used', 'selected');
+    });
+
+    clearSelection();
+    document.getElementById('score').textContent = '';
+  }
+
+  function speak(text) {
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function speakSentence(btn) {
+    const card = btn.closest('.item-card');
+    const container = card.querySelector('.sentence-container');
+    
+    let fullText = "";
+    container.childNodes.forEach(node => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        if (node.tagName === 'SPAN' && !node.classList.contains('num')) {
+          fullText += " " + node.textContent;
+        } else if (node.classList.contains('drop-slot')) {
+          const val = node.textContent.trim();
+          fullText += " " + (val !== "" ? val : node.dataset.ans);
+        }
+      }
+    });
+
+    speak(fullText.trim());
+  }
+</script>
+
+</body>
+</html>
