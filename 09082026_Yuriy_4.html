@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English - Make Sentences Negative</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 850px; width: 100%; background: #1e293b; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    .section-title { color: #60a5fa; margin-top: 0; margin-bottom: 8px; font-size: 1.6rem; }
+    .instructions { color: #94a3b8; margin-bottom: 25px; font-size: 1rem; line-height: 1.5; border-bottom: 1px solid #334155; padding-bottom: 15px; }
+
+    /* Exercise Items */
+    .exercise-list { display: flex; flex-direction: column; gap: 20px; }
+
+    .item-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 18px 20px;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s;
+    }
+
+    .original-sentence {
+      font-size: 1.05rem;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .num { color: #f97316; font-weight: bold; width: 26px; flex-shrink: 0; }
+    .prompt-text { font-weight: 600; color: #f8fafc; }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .user-input {
+      flex: 1;
+      min-width: 280px;
+      background: #1e293b;
+      border: 2px solid #475569;
+      color: #38bdf8;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .user-input:focus { border-color: #38bdf8; box-shadow: 0 0 8px rgba(56, 189, 248, 0.3); }
+    .user-input.correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.1) !important; color: #4ade80 !important; }
+    .user-input.incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.1) !important; color: #f87171 !important; }
+
+    .action-btn {
+      background: #334155;
+      border: none;
+      color: #94a3b8;
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .action-btn:hover { background: #475569; color: #f8fafc; }
+    .action-btn.sound-btn { color: #38bdf8; font-size: 1.1rem; }
+    .action-btn.sound-btn:hover { color: #f59e0b; }
+
+    .feedback-msg {
+      font-size: 0.9rem;
+      margin-top: -4px;
+      display: none;
+      padding-left: 36px;
+    }
+    .feedback-msg.hint { color: #f59e0b; display: block; }
+    .feedback-msg.correct-msg { color: #4ade80; display: block; }
+
+    /* Bottom Controls */
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #334155; padding-top: 20px; flex-wrap: wrap; gap: 15px; }
+    .btn-main { padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; }
+    .btn-check { background: #2563eb; color: white; }
+    .btn-check:hover { background: #1d4ed8; }
+    .btn-reset { background: #475569; color: white; }
+    .btn-reset:hover { background: #64748b; }
+
+    .result-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <h2 class="section-title">Exercise 2. Make the sentences negative</h2>
+  <p class="instructions">
+    Перепишите предложения в отрицательной форме (**don't** / **doesn't**). Заглавные буквы и точки в конце предложений не учитываются при проверке.
+  </p>
+
+  <div class="exercise-list">
+    
+    <!-- Item 1 -->
+    <div class="item-card" data-answers='["I do not commute to the office every day.", "I don&#39;t commute to the office every day.", "I dont commute to the office every day."]'>
+      <div class="original-sentence">
+        <span class="num">1.</span>
+        <span class="prompt-text">I commute to the office every day.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="user-input" placeholder="Type negative sentence..." spellcheck="false">
+        <button class="action-btn sound-btn" onclick="speakTarget(this)">🔊</button>
+        <button class="action-btn" onclick="toggleHint(this)">Show Answer</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="item-card" data-answers='["Sarah does not get to work by car.", "Sarah doesn&#39;t get to work by car.", "Sarah doesnt get to work by car."]'>
+      <div class="original-sentence">
+        <span class="num">2.</span>
+        <span class="prompt-text">Sarah gets to work by car.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="user-input" placeholder="Type negative sentence..." spellcheck="false">
+        <button class="action-btn sound-btn" onclick="speakTarget(this)">🔊</button>
+        <button class="action-btn" onclick="toggleHint(this)">Show Answer</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="item-card" data-answers='["We do not meet clients on Fridays.", "We don&#39;t meet clients on Fridays.", "We dont meet clients on Fridays."]'>
+      <div class="original-sentence">
+        <span class="num">3.</span>
+        <span class="prompt-text">We meet clients on Fridays.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="user-input" placeholder="Type negative sentence..." spellcheck="false">
+        <button class="action-btn sound-btn" onclick="speakTarget(this)">🔊</button>
+        <button class="action-btn" onclick="toggleHint(this)">Show Answer</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="item-card" data-answers='["The meeting does not start at nine.", "The meeting doesn&#39;t start at nine.", "The meeting doesnt start at nine."]'>
+      <div class="original-sentence">
+        <span class="num">4.</span>
+        <span class="prompt-text">The meeting starts at nine.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="user-input" placeholder="Type negative sentence..." spellcheck="false">
+        <button class="action-btn sound-btn" onclick="speakTarget(this)">🔊</button>
+        <button class="action-btn" onclick="toggleHint(this)">Show Answer</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 5 -->
+    <div class="item-card" data-answers='["He does not work in the finance department.", "He doesn&#39;t work in the finance department.", "He doesnt work in the finance department."]'>
+      <div class="original-sentence">
+        <span class="num">5.</span>
+        <span class="prompt-text">He works in the finance department.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="user-input" placeholder="Type negative sentence..." spellcheck="false">
+        <button class="action-btn sound-btn" onclick="speakTarget(this)">🔊</button>
+        <button class="action-btn" onclick="toggleHint(this)">Show Answer</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 6 -->
+    <div class="item-card" data-answers='["They do not work with international customers.", "They don&#39;t work with international customers.", "They dont work with international customers."]'>
+      <div class="original-sentence">
+        <span class="num">6.</span>
+        <span class="prompt-text">They work with international customers.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="user-input" placeholder="Type negative sentence..." spellcheck="false">
+        <button class="action-btn sound-btn" onclick="speakTarget(this)">🔊</button>
+        <button class="action-btn" onclick="toggleHint(this)">Show Answer</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 7 -->
+    <div class="item-card" data-answers='["My manager does not prefer public transport.", "My manager doesn&#39;t prefer public transport.", "My manager doesnt prefer public transport."]'>
+      <div class="original-sentence">
+        <span class="num">7.</span>
+        <span class="prompt-text">My manager prefers public transport.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="user-input" placeholder="Type negative sentence..." spellcheck="false">
+        <button class="action-btn sound-btn" onclick="speakTarget(this)">🔊</button>
+        <button class="action-btn" onclick="toggleHint(this)">Show Answer</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 8 -->
+    <div class="item-card" data-answers='["I do not get stuck in traffic every morning.", "I don&#39;t get stuck in traffic every morning.", "I dont get stuck in traffic every morning."]'>
+      <div class="original-sentence">
+        <span class="num">8.</span>
+        <span class="prompt-text">I get stuck in traffic every morning.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="user-input" placeholder="Type negative sentence..." spellcheck="false">
+        <button class="action-btn sound-btn" onclick="speakTarget(this)">🔊</button>
+        <button class="action-btn" onclick="toggleHint(this)">Show Answer</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 9 -->
+    <div class="item-card" data-answers='["Our schedule does not change every week.", "Our schedule doesn&#39;t change every week.", "Our schedule doesnt change every week."]'>
+      <div class="original-sentence">
+        <span class="num">9.</span>
+        <span class="prompt-text">Our schedule changes every week.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="user-input" placeholder="Type negative sentence..." spellcheck="false">
+        <button class="action-btn sound-btn" onclick="speakTarget(this)">🔊</button>
+        <button class="action-btn" onclick="toggleHint(this)">Show Answer</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 10 -->
+    <div class="item-card" data-answers='["She does not find out about changes during meetings.", "She doesn&#39;t find out about changes during meetings.", "She doesnt find out about changes during meetings."]'>
+      <div class="original-sentence">
+        <span class="num">10.</span>
+        <span class="prompt-text">She finds out about changes during meetings.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="user-input" placeholder="Type negative sentence..." spellcheck="false">
+        <button class="action-btn sound-btn" onclick="speakTarget(this)">🔊</button>
+        <button class="action-btn" onclick="toggleHint(this)">Show Answer</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-check" onclick="checkAnswers()">Check Answers ✅</button>
+    <div class="result-score" id="score"></div>
+    <button class="btn-main btn-reset" onclick="resetAnswers()">Reset 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function normalize(str) {
+    return str
+      .trim()
+      .toLowerCase()
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+      .replace(/’/g, "'")
+      .replace(/\s+/g, " ");
+  }
+
+  function checkAnswers() {
+    const cards = document.querySelectorAll('.item-card');
+    let correctCount = 0;
+
+    cards.forEach(card => {
+      const input = card.querySelector('.user-input');
+      const msg = card.querySelector('.feedback-msg');
+      const possibleAnswers = JSON.parse(card.dataset.answers);
+      const userVal = normalize(input.value);
+
+      input.classList.remove('correct', 'incorrect');
+      msg.className = 'feedback-msg';
+
+      if (userVal !== '') {
+        const isCorrect = possibleAnswers.some(ans => normalize(ans) === userVal);
+        if (isCorrect) {
+          input.classList.add('correct');
+          correctCount++;
+        } else {
+          input.classList.add('incorrect');
+          msg.textContent = `💡 Correct answer: ${possibleAnswers[1]}`;
+          msg.classList.add('hint');
+        }
+      }
+    });
+
+    document.getElementById('score').textContent = `Score: ${correctCount} / ${cards.length}`;
+  }
+
+  function toggleHint(btn) {
+    const card = btn.closest('.item-card');
+    const msg = card.querySelector('.feedback-msg');
+    const possibleAnswers = JSON.parse(card.dataset.answers);
+    
+    if (msg.classList.contains('hint')) {
+      msg.className = 'feedback-msg';
+      btn.textContent = 'Show Answer';
+    } else {
+      msg.textContent = `💡 Answer: ${possibleAnswers[1]}`;
+      msg.className = 'feedback-msg hint';
+      btn.textContent = 'Hide Answer';
+    }
+  }
+
+  function resetAnswers() {
+    const cards = document.querySelectorAll('.item-card');
+
+    cards.forEach(card => {
+      const input = card.querySelector('.user-input');
+      const msg = card.querySelector('.feedback-msg');
+      const btn = card.querySelector('.action-btn:not(.sound-btn)');
+
+      input.value = '';
+      input.classList.remove('correct', 'incorrect');
+      msg.className = 'feedback-msg';
+      msg.textContent = '';
+      if (btn) btn.textContent = 'Show Answer';
+    });
+
+    document.getElementById('score').textContent = '';
+  }
+
+  function speakTarget(btn) {
+    const card = btn.closest('.item-card');
+    const input = card.querySelector('.user-input');
+    const possibleAnswers = JSON.parse(card.dataset.answers);
+
+    // Speak user input if typed and correct, otherwise speak standard negative answer
+    let textToSpeak = input.value.trim() !== '' ? input.value : possibleAnswers[1];
+
+    if (!textToSpeak) return;
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+</script>
+
+</body>
+</html>
