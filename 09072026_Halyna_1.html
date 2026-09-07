@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English Exercise 1 - Matching</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 900px; width: 100%; background: #1e293b; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    .section-title { color: #60a5fa; margin-top: 0; margin-bottom: 10px; font-size: 1.5rem; }
+    .instructions { color: #94a3b8; margin-bottom: 25px; font-size: 1rem; line-height: 1.5; }
+
+    .exercise-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .item-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 14px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .phrase-container { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 250px; }
+    .num { color: #f97316; font-weight: bold; font-size: 1.1rem; width: 25px; flex-shrink: 0; }
+    .english-phrase { font-size: 1.05rem; font-weight: 600; color: #f1f5f9; }
+
+    .control-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+    select {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1.5px solid #475569;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      cursor: pointer;
+      min-width: 280px;
+      transition: all 0.2s;
+    }
+
+    select:focus { border-color: #38bdf8; box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
+
+    .sound-btn {
+      background: #334155;
+      border: none;
+      color: #38bdf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .sound-btn:hover { background: #475569; color: #f59e0b; }
+    .sound-btn:active { transform: scale(0.95); }
+
+    /* Validation States */
+    select.correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.15) !important; color: #4ade80 !important; font-weight: bold; }
+    select.incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; }
+
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #334155; padding-top: 20px; }
+    .btn-main { padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; }
+    .btn-check { background: #2563eb; color: white; }
+    .btn-check:hover { background: #1d4ed8; }
+    .btn-reset { background: #475569; color: white; }
+    .btn-reset:hover { background: #64748b; }
+
+    .result-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <h2 class="section-title">Exercise 1. Match the phrases</h2>
+  <p class="instructions">
+    З'єднайте англійські словосполучення з відповідним українським перекладом. Натисніть 🔊, щоб прослухати вимову словосполучення.
+  </p>
+
+  <div class="exercise-list">
+    
+    <!-- 1 -->
+    <div class="item-card" data-answer="E" data-phrase="make a call">
+      <div class="phrase-container">
+        <span class="num">1.</span>
+        <span class="english-phrase">make a call</span>
+        <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+      </div>
+      <div class="control-group">
+        <select class="match-select">
+          <option value="">-- Обери переклад --</option>
+          <option value="A">A — затвердити бюджет</option>
+          <option value="B">B — шукати</option>
+          <option value="C">C — обідня перерва</option>
+          <option value="D">D — піклуватися про; доглядати за</option>
+          <option value="E">E — зателефонувати; зробити дзвінок</option>
+          <option value="F">F — переглядати; проглядати</option>
+          <option value="G">G — підписати договір</option>
+          <option value="H">H — вкластися у встановлений термін</option>
+          <option value="I">I — поглянути на; перевірити</option>
+          <option value="J">J — відповісти на електронний лист</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="item-card" data-answer="B" data-phrase="look for">
+      <div class="phrase-container">
+        <span class="num">2.</span>
+        <span class="english-phrase">look for</span>
+        <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+      </div>
+      <div class="control-group">
+        <select class="match-select">
+          <option value="">-- Обери переклад --</option>
+          <option value="A">A — затвердити бюджет</option>
+          <option value="B">B — шукати</option>
+          <option value="C">C — обідня перерва</option>
+          <option value="D">D — піклуватися про; доглядати за</option>
+          <option value="E">E — зателефонувати; зробити дзвінок</option>
+          <option value="F">F — переглядати; проглядати</option>
+          <option value="G">G — підписати договір</option>
+          <option value="H">H — вкластися у встановлений термін</option>
+          <option value="I">I — поглянути на; перевірити</option>
+          <option value="J">J — відповісти на електронний лист</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="item-card" data-answer="F" data-phrase="look through">
+      <div class="phrase-container">
+        <span class="num">3.</span>
+        <span class="english-phrase">look through</span>
+        <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+      </div>
+      <div class="control-group">
+        <select class="match-select">
+          <option value="">-- Обери переклад --</option>
+          <option value="A">A — затвердити бюджет</option>
+          <option value="B">B — шукати</option>
+          <option value="C">C — обідня перерва</option>
+          <option value="D">D — піклуватися про; доглядати за</option>
+          <option value="E">E — зателефонувати; зробити дзвінок</option>
+          <option value="F">F — переглядати; проглядати</option>
+          <option value="G">G — підписати договір</option>
+          <option value="H">H — вкластися у встановлений термін</option>
+          <option value="I">I — поглянути на; перевірити</option>
+          <option value="J">J — відповісти на електронний лист</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="item-card" data-answer="D" data-phrase="look after">
+      <div class="phrase-container">
+        <span class="num">4.</span>
+        <span class="english-phrase">look after</span>
+        <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+      </div>
+      <div class="control-group">
+        <select class="match-select">
+          <option value="">-- Обери переклад --</option>
+          <option value="A">A — затвердити бюджет</option>
+          <option value="B">B — шукати</option>
+          <option value="C">C — обідня перерва</option>
+          <option value="D">D — піклуватися про; доглядати за</option>
+          <option value="E">E — зателефонувати; зробити дзвінок</option>
+          <option value="F">F — переглядати; проглядати</option>
+          <option value="G">G — підписати договір</option>
+          <option value="H">H — вкластися у встановлений термін</option>
+          <option value="I">I — поглянути на; перевірити</option>
+          <option value="J">J — відповісти на електронний лист</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="item-card" data-answer="I" data-phrase="have a look at">
+      <div class="phrase-container">
+        <span class="num">5.</span>
+        <span class="english-phrase">have a look at</span>
+        <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+      </div>
+      <div class="control-group">
+        <select class="match-select">
+          <option value="">-- Обери переклад --</option>
+          <option value="A">A — затвердити бюджет</option>
+          <option value="B">B — шукати</option>
+          <option value="C">C — обідня перерва</option>
+          <option value="D">D — піклуватися про; доглядати за</option>
+          <option value="E">E — зателефонувати; зробити дзвінок</option>
+          <option value="F">F — переглядати; проглядати</option>
+          <option value="G">G — підписати договір</option>
+          <option value="H">H — вкластися у встановлений термін</option>
+          <option value="I">I — поглянути на; перевірити</option>
+          <option value="J">J — відповісти на електронний лист</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="item-card" data-answer="H" data-phrase="meet a deadline">
+      <div class="phrase-container">
+        <span class="num">6.</span>
+        <span class="english-phrase">meet a deadline</span>
+        <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+      </div>
+      <div class="control-group">
+        <select class="match-select">
+          <option value="">-- Обери переклад --</option>
+          <option value="A">A — затвердити бюджет</option>
+          <option value="B">B — шукати</option>
+          <option value="C">C — обідня перерва</option>
+          <option value="D">D — піклуватися про; доглядати за</option>
+          <option value="E">E — зателефонувати; зробити дзвінок</option>
+          <option value="F">F — переглядати; проглядати</option>
+          <option value="G">G — підписати договір</option>
+          <option value="H">H — вкластися у встановлений термін</option>
+          <option value="I">I — поглянути на; перевірити</option>
+          <option value="J">J — відповісти на електронний лист</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="item-card" data-answer="G" data-phrase="sign a contract">
+      <div class="phrase-container">
+        <span class="num">7.</span>
+        <span class="english-phrase">sign a contract</span>
+        <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+      </div>
+      <div class="control-group">
+        <select class="match-select">
+          <option value="">-- Обери переклад --</option>
+          <option value="A">A — затвердити бюджет</option>
+          <option value="B">B — шукати</option>
+          <option value="C">C — обідня перерва</option>
+          <option value="D">D — піклуватися про; доглядати за</option>
+          <option value="E">E — зателефонувати; зробити дзвінок</option>
+          <option value="F">F — переглядати; проглядати</option>
+          <option value="G">G — підписати договір</option>
+          <option value="H">H — вкластися у встановлений термін</option>
+          <option value="I">I — поглянути на; перевірити</option>
+          <option value="J">J — відповісти на електронний лист</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="item-card" data-answer="A" data-phrase="approve a budget">
+      <div class="phrase-container">
+        <span class="num">8.</span>
+        <span class="english-phrase">approve a budget</span>
+        <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+      </div>
+      <div class="control-group">
+        <select class="match-select">
+          <option value="">-- Обери переклад --</option>
+          <option value="A">A — затвердити бюджет</option>
+          <option value="B">B — шукати</option>
+          <option value="C">C — обідня перерва</option>
+          <option value="D">D — піклуватися про; доглядати за</option>
+          <option value="E">E — зателефонувати; зробити дзвінок</option>
+          <option value="F">F — переглядати; проглядати</option>
+          <option value="G">G — підписати договір</option>
+          <option value="H">H — вкластися у встановлений термін</option>
+          <option value="I">I — поглянути на; перевірити</option>
+          <option value="J">J — відповісти на електронний лист</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="item-card" data-answer="J" data-phrase="reply to an email">
+      <div class="phrase-container">
+        <span class="num">9.</span>
+        <span class="english-phrase">reply to an email</span>
+        <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+      </div>
+      <div class="control-group">
+        <select class="match-select">
+          <option value="">-- Обери переклад --</option>
+          <option value="A">A — затвердити бюджет</option>
+          <option value="B">B — шукати</option>
+          <option value="C">C — обідня перерва</option>
+          <option value="D">D — піклуватися про; доглядати за</option>
+          <option value="E">E — зателефонувати; зробити дзвінок</option>
+          <option value="F">F — переглядати; проглядати</option>
+          <option value="G">G — підписати договір</option>
+          <option value="H">H — вкластися у встановлений термін</option>
+          <option value="I">I — поглянути на; перевірити</option>
+          <option value="J">J — відповісти на електронний лист</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="item-card" data-answer="C" data-phrase="lunch break">
+      <div class="phrase-container">
+        <span class="num">10.</span>
+        <span class="english-phrase">lunch break</span>
+        <button class="sound-btn" onclick="speakFromCard(this)">🔊</button>
+      </div>
+      <div class="control-group">
+        <select class="match-select">
+          <option value="">-- Обери переклад --</option>
+          <option value="A">A — затвердити бюджет</option>
+          <option value="B">B — шукати</option>
+          <option value="C">C — обідня перерва</option>
+          <option value="D">D — піклуватися про; доглядати за</option>
+          <option value="E">E — зателефонувати; зробити дзвінок</option>
+          <option value="F">F — переглядати; проглядати</option>
+          <option value="G">G — підписати договір</option>
+          <option value="H">H — вкластися у встановлений термін</option>
+          <option value="I">I — поглянути на; перевірити</option>
+          <option value="J">J — відповісти на електронний лист</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-check" onclick="checkAnswers()">Перевірити ✅</button>
+    <div class="result-score" id="score"></div>
+    <button class="btn-main btn-reset" onclick="resetAnswers()">Скинути 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function speak(text) {
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function speakFromCard(btn) {
+    const card = btn.closest('.item-card');
+    const text = card.getAttribute('data-phrase');
+    speak(text);
+  }
+
+  function checkAnswers() {
+    const cards = document.querySelectorAll('.item-card');
+    let correctCount = 0;
+    let total = cards.length;
+
+    cards.forEach(card => {
+      const select = card.querySelector('.match-select');
+      const expected = card.getAttribute('data-answer');
+
+      select.classList.remove('correct', 'incorrect');
+
+      if (select.value === expected) {
+        select.classList.add('correct');
+        correctCount++;
+      } else if (select.value !== '') {
+        select.classList.add('incorrect');
+      }
+    });
+
+    document.getElementById('score').textContent = `Результат: ${correctCount} / ${total}`;
+  }
+
+  function resetAnswers() {
+    const selects = document.querySelectorAll('.match-select');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
