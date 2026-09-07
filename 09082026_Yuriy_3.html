@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Grammar Exercise</title>
+<style>
+  :root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --border-color: #e2e8f0;
+    --correct-bg: #dcfce7;
+    --correct-color: #166534;
+    --correct-border: #86efac;
+    --incorrect-bg: #fee2e2;
+    --incorrect-color: #991b1b;
+    --incorrect-border: #fca5a5;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 650px;
+    width: 100%;
+    background: var(--card-bg);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #0f172a;
+    font-size: 1.5rem;
+  }
+
+  p.description {
+    color: #64748b;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .item {
+    padding: 14px 16px;
+    background: #f1f5f9;
+    border-radius: 10px;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+  }
+
+  .item.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-color);
+  }
+
+  .item.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-color);
+  }
+
+  select {
+    font-size: 1rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #0f172a;
+    cursor: pointer;
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  }
+
+  .actions {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .btn-check {
+    background-color: var(--primary-color);
+    color: white;
+  }
+
+  .btn-check:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .result {
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-left: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Exercise 1. Choose the correct option</h2>
+  <p class="description">Выберите правильную форму глагола из выпадающего списка для каждого предложения.</p>
+
+  <div class="exercise-list">
+    <div class="item" id="item-1">
+      <span>1. I usually</span>
+      <select id="q1">
+        <option value="">-- select --</option>
+        <option value="commute">commute</option>
+        <option value="commutes">commutes</option>
+      </select>
+      <span>to work by bus.</span>
+    </div>
+
+    <div class="item" id="item-2">
+      <span>2. Our manager</span>
+      <select id="q2">
+        <option value="">-- select --</option>
+        <option value="get">get</option>
+        <option value="gets">gets</option>
+      </select>
+      <span>to work at 8:30.</span>
+    </div>
+
+    <div class="item" id="item-3">
+      <span>3. We</span>
+      <select id="q3">
+        <option value="">-- select --</option>
+        <option value="meet">meet</option>
+        <option value="meets">meets</option>
+      </select>
+      <span>our clients every Monday.</span>
+    </div>
+
+    <div class="item" id="item-4">
+      <span>4. The weekly meeting</span>
+      <select id="q4">
+        <option value="">-- select --</option>
+        <option value="start">start</option>
+        <option value="starts">starts</option>
+      </select>
+      <span>at 10:00.</span>
+    </div>
+
+    <div class="item" id="item-5">
+      <span>5. Anna</span>
+      <select id="q5">
+        <option value="">-- select --</option>
+        <option value="work">work</option>
+        <option value="works">works</option>
+      </select>
+      <span>in the finance department.</span>
+    </div>
+
+    <div class="item" id="item-6">
+      <span>6. I</span>
+      <select id="q6">
+        <option value="">-- select --</option>
+        <option value="prefer">prefer</option>
+        <option value="prefers">prefers</option>
+      </select>
+      <span>to use public transport.</span>
+    </div>
+
+    <div class="item" id="item-7">
+      <span>7. Our company</span>
+      <select id="q7">
+        <option value="">-- select --</option>
+        <option value="work">work</option>
+        <option value="works">works</option>
+      </select>
+      <span>with international clients.</span>
+    </div>
+
+    <div class="item" id="item-8">
+      <span>8. Traffic jams often</span>
+      <select id="q8">
+        <option value="">-- select --</option>
+        <option value="affect">affect</option>
+        <option value="affects">affects</option>
+      </select>
+      <span>our schedule.</span>
+    </div>
+
+    <div class="item" id="item-9">
+      <span>9. The team</span>
+      <select id="q9">
+        <option value="">-- select --</option>
+        <option value="find out">find out</option>
+        <option value="finds out">finds out</option>
+      </select>
+      <span>about changes by email.</span>
+    </div>
+
+    <div class="item" id="item-10">
+      <span>10. Peter</span>
+      <select id="q10">
+        <option value="">-- select --</option>
+        <option value="go">go</option>
+        <option value="goes">goes</option>
+      </select>
+      <span>to work by metro.</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-check" onclick="checkAnswers()">Проверить</button>
+    <button class="btn-reset" onclick="resetAnswers()">Сбросить</button>
+    <span class="result" id="result-text"></span>
+  </div>
+</div>
+
+<script>
+  const answers = {
+    q1: 'commute',
+    q2: 'gets',
+    q3: 'meet',
+    q4: 'starts',
+    q5: 'works',
+    q6: 'prefer',
+    q7: 'works',
+    q8: 'affect',
+    q9: 'finds out',
+    q10: 'goes'
+  };
+
+  function checkAnswers() {
+    let score = 0;
+    let total = Object.keys(answers).length;
+
+    for (let key in answers) {
+      const select = document.getElementById(key);
+      const parent = document.getElementById('item-' + key.substring(1));
+      
+      parent.classList.remove('correct', 'incorrect');
+
+      if (select.value === answers[key]) {
+        parent.classList.add('correct');
+        score++;
+      } else {
+        parent.classList.add('incorrect');
+      }
+    }
+
+    const resultText = document.getElementById('result-text');
+    resultText.textContent = `Результат: ${score} / ${total}`;
+    resultText.style.color = score === total ? '#166534' : '#0f172a';
+  }
+
+  function resetAnswers() {
+    for (let key in answers) {
+      const select = document.getElementById(key);
+      const parent = document.getElementById('item-' + key.substring(1));
+      
+      select.value = '';
+      parent.classList.remove('correct', 'incorrect');
+    }
+    document.getElementById('result-text').textContent = '';
+  }
+</script>
+
+</body>
+</html>
