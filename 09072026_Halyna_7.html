@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English - Exercise 5: Complete the Conversations</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 900px; width: 100%; background: #1e293b; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    .section-title { color: #60a5fa; margin-top: 0; margin-bottom: 8px; font-size: 1.5rem; }
+    .instructions { color: #94a3b8; margin-bottom: 20px; font-size: 1rem; line-height: 1.5; }
+
+    .word-bank {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 25px;
+    }
+    .word-bank-title { font-weight: bold; color: #f59e0b; margin-bottom: 10px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .word-bank-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag { background: #1e293b; border: 1px solid #475569; color: #38bdf8; padding: 6px 12px; border-radius: 6px; font-size: 0.9rem; font-weight: 500; }
+
+    .exercise-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .item-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 18px 20px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .dialogue-header { display: flex; justify-content: space-between; align-items: center; }
+    .num { color: #f97316; font-weight: bold; font-size: 1.1rem; }
+
+    .speaker-line { font-size: 1.05rem; line-height: 2.2; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .speaker-label { color: #94a3b8; font-weight: bold; width: 24px; flex-shrink: 0; }
+
+    select {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1.5px solid #475569;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    select:focus { border-color: #38bdf8; box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
+
+    .sound-btn {
+      background: #334155;
+      border: none;
+      color: #38bdf8;
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .sound-btn:hover { background: #475569; color: #f59e0b; }
+    .sound-btn:active { transform: scale(0.95); }
+
+    /* Validation States */
+    select.correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.15) !important; color: #4ade80 !important; font-weight: bold; }
+    select.incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; }
+
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #334155; padding-top: 20px; }
+    .btn-main { padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; }
+    .btn-check { background: #2563eb; color: white; }
+    .btn-check:hover { background: #1d4ed8; }
+    .btn-reset { background: #475569; color: white; }
+    .btn-reset:hover { background: #64748b; }
+
+    .result-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <h2 class="section-title">Exercise 5. Complete the business conversations</h2>
+  <p class="instructions">
+    Доповніть діалоги, використовуючи відповідне словосполучення у правильному часі.
+  </p>
+
+  <div class="word-bank">
+    <div class="word-bank-title">Word bank:</div>
+    <div class="word-bank-tags">
+      <span class="tag">make a call</span>
+      <span class="tag">do homework</span>
+      <span class="tag">look for</span>
+      <span class="tag">look through</span>
+      <span class="tag">look after</span>
+      <span class="tag">have a look at</span>
+      <span class="tag">send an invoice</span>
+      <span class="tag">meet a deadline</span>
+      <span class="tag">sign a contract</span>
+      <span class="tag">reply to an email</span>
+    </div>
+  </div>
+
+  <div class="exercise-list">
+    
+    <!-- 1 -->
+    <div class="item-card">
+      <div class="dialogue-header">
+        <span class="num">1.</span>
+        <button class="sound-btn" onclick="speakDialogue(this)">🔊</button>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">A:</span>
+        <span class="line-text">Is the client still waiting for the invoice?</span>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">B:</span>
+        <span>No, I</span>
+        <select class="gap-select" data-ans="have sent an invoice|have sent it|have already sent an invoice|have already sent it">
+          <option value="">-- варіант --</option>
+          <option value="sent an invoice">sent an invoice</option>
+          <option value="have sent an invoice">have sent an invoice</option>
+          <option value="am sending an invoice">am sending an invoice</option>
+        </select>
+        <span>.</span>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="item-card">
+      <div class="dialogue-header">
+        <span class="num">2.</span>
+        <button class="sound-btn" onclick="speakDialogue(this)">🔊</button>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">A:</span>
+        <span class="line-text">What is Tom doing at the moment?</span>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">B:</span>
+        <span>He</span>
+        <select class="gap-select" data-ans="is making a call">
+          <option value="">-- варіант --</option>
+          <option value="makes a call">makes a call</option>
+          <option value="made a call">made a call</option>
+          <option value="is making a call">is making a call</option>
+          <option value="has made a call">has made a call</option>
+        </select>
+        <span>to the supplier.</span>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="item-card">
+      <div class="dialogue-header">
+        <span class="num">3.</span>
+        <button class="sound-btn" onclick="speakDialogue(this)">🔊</button>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">A:</span>
+        <span class="line-text">Do you understand all the conditions?</span>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">B:</span>
+        <span>Yes, I</span>
+        <select class="gap-select" data-ans="have looked through">
+          <option value="">-- варіант --</option>
+          <option value="look through">look through</option>
+          <option value="looked through">looked through</option>
+          <option value="have looked through">have looked through</option>
+        </select>
+        <span>the contract.</span>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="item-card">
+      <div class="dialogue-header">
+        <span class="num">4.</span>
+        <button class="sound-btn" onclick="speakDialogue(this)">🔊</button>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">A:</span>
+        <span class="line-text">Where is the missing invoice?</span>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">B:</span>
+        <span>We don't know. We</span>
+        <select class="gap-select" data-ans="are looking for">
+          <option value="">-- варіант --</option>
+          <option value="look for">look for</option>
+          <option value="looked for">looked for</option>
+          <option value="are looking for">are looking for</option>
+        </select>
+        <span>it now.</span>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="item-card">
+      <div class="dialogue-header">
+        <span class="num">5.</span>
+        <button class="sound-btn" onclick="speakDialogue(this)">🔊</button>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">A:</span>
+        <span class="line-text">Are our visitors comfortable?</span>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">B:</span>
+        <span>Yes, Nina</span>
+        <select class="gap-select" data-ans="has looked after">
+          <option value="">-- варіант --</option>
+          <option value="looks after">looks after</option>
+          <option value="is looking after">is looking after</option>
+          <option value="has looked after">has looked after</option>
+        </select>
+        <span>them since they arrived.</span>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="item-card">
+      <div class="dialogue-header">
+        <span class="num">6.</span>
+        <button class="sound-btn" onclick="speakDialogue(this)">🔊</button>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">A:</span>
+        <span class="line-text">Are these figures correct?</span>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">B:</span>
+        <span>I don't know. I</span>
+        <select class="gap-select" data-ans="haven't had a look at">
+          <option value="">-- варіант --</option>
+          <option value="didn't have a look at">didn't have a look at</option>
+          <option value="haven't had a look at">haven't had a look at</option>
+          <option value="don't have a look at">don't have a look at</option>
+        </select>
+        <span>them yet.</span>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="item-card">
+      <div class="dialogue-header">
+        <span class="num">7.</span>
+        <button class="sound-btn" onclick="speakDialogue(this)">🔊</button>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">A:</span>
+        <span>When did the company</span>
+        <select class="gap-select" data-ans="sign a contract">
+          <option value="">-- варіант --</option>
+          <option value="sign a contract">sign a contract</option>
+          <option value="signed a contract">signed a contract</option>
+          <option value="has signed a contract">has signed a contract</option>
+        </select>
+        <span>?</span>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">B:</span>
+        <span class="line-text">It signed it last Friday.</span>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="item-card">
+      <div class="dialogue-header">
+        <span class="num">8.</span>
+        <button class="sound-btn" onclick="speakDialogue(this)">🔊</button>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">A:</span>
+        <span class="line-text">Did the team finish the project on time?</span>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">B:</span>
+        <span>Yes, they</span>
+        <select class="gap-select" data-ans="met a deadline">
+          <option value="">-- варіант --</option>
+          <option value="meet a deadline">meet a deadline</option>
+          <option value="met a deadline">met a deadline</option>
+          <option value="have met a deadline">have met a deadline</option>
+        </select>
+        <span>.</span>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="item-card">
+      <div class="dialogue-header">
+        <span class="num">9.</span>
+        <button class="sound-btn" onclick="speakDialogue(this)">🔊</button>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">A:</span>
+        <span class="line-text">Has the supplier answered our message?</span>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">B:</span>
+        <span>No, he</span>
+        <select class="gap-select" data-ans="hasn't replied to an email">
+          <option value="">-- варіант --</option>
+          <option value="didn't reply to an email">didn't reply to an email</option>
+          <option value="hasn't replied to an email">hasn't replied to an email</option>
+          <option value="doesn't reply to an email">doesn't reply to an email</option>
+        </select>
+        <span>yet.</span>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="item-card">
+      <div class="dialogue-header">
+        <span class="num">10.</span>
+        <button class="sound-btn" onclick="speakDialogue(this)">🔊</button>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">A:</span>
+        <span class="line-text">Are the students ready for the lesson?</span>
+      </div>
+      <div class="speaker-line">
+        <span class="speaker-label">B:</span>
+        <span>Yes, they</span>
+        <select class="gap-select" data-ans="have done homework">
+          <option value="">-- варіант --</option>
+          <option value="did homework">did homework</option>
+          <option value="have done homework">have done homework</option>
+          <option value="are doing homework">are doing homework</option>
+        </select>
+        <span>.</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-check" onclick="checkAnswers()">Перевірити ✅</button>
+    <div class="result-score" id="score"></div>
+    <button class="btn-main btn-reset" onclick="resetAnswers()">Скинути 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function speak(text) {
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function speakDialogue(btn) {
+    const card = btn.closest('.item-card');
+    const lines = card.querySelectorAll('.speaker-line');
+    
+    let dialogueText = [];
+    lines.forEach(line => {
+      let lineContent = "";
+      line.childNodes.forEach(node => {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          if (node.tagName === 'SPAN' && !node.classList.contains('speaker-label')) {
+            lineContent += " " + node.textContent;
+          } else if (node.tagName === 'SELECT') {
+            const val = node.value;
+            const primaryAns = node.getAttribute('data-ans').split('|')[0];
+            lineContent += " " + (val !== "" ? val : primaryAns);
+          }
+        }
+      });
+      dialogueText.push(lineContent.trim());
+    });
+
+    speak(dialogueText.join('. '));
+  }
+
+  function checkAnswers() {
+    const selects = document.querySelectorAll('.gap-select');
+    let correctCount = 0;
+    let totalSelects = selects.length;
+
+    selects.forEach(select => {
+      const userVal = select.value;
+      const validAnswers = select.getAttribute('data-ans').split('|');
+
+      select.classList.remove('correct', 'incorrect');
+
+      if (userVal !== "" && validAnswers.includes(userVal)) {
+        select.classList.add('correct');
+        correctCount++;
+      } else if (userVal !== "") {
+        select.classList.add('incorrect');
+      }
+    });
+
+    document.getElementById('score').textContent = `Результат: ${correctCount} / ${totalSelects}`;
+  }
+
+  function resetAnswers() {
+    const selects = document.querySelectorAll('.gap-select');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
