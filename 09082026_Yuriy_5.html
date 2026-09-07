@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English - Sentence Ordering Game</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; padding: 25px 15px; display: flex; justify-content: center; margin: 0; }
+    .container { max-width: 850px; width: 100%; background: #1e293b; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #3b82f6; }
+    
+    .section-title { color: #60a5fa; margin-top: 0; margin-bottom: 8px; font-size: 1.6rem; }
+    .instructions { color: #94a3b8; margin-bottom: 25px; font-size: 1rem; line-height: 1.5; border-bottom: 1px solid #334155; padding-bottom: 15px; }
+
+    /* Exercise Items */
+    .exercise-list { display: flex; flex-direction: column; gap: 20px; }
+
+    .item-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 18px 20px;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s;
+    }
+
+    .item-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      color: #94a3b8;
+    }
+    .num { color: #f97316; font-weight: bold; width: 26px; flex-shrink: 0; font-size: 1.1rem; }
+
+    /* Word Bank for each item */
+    .word-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 40px;
+      align-items: center;
+      background: rgba(30, 41, 59, 0.5);
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px dashed #475569;
+    }
+
+    /* Target Drop Area / Built Sentence */
+    .target-sentence {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 48px;
+      align-items: center;
+      background: #1e293b;
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid #3b82f6;
+      transition: all 0.2s;
+    }
+    .target-sentence.correct { border-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.1) !important; }
+    .target-sentence.incorrect { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.1) !important; }
+
+    /* Word Chips */
+    .word-chip {
+      background: #1e293b;
+      border: 1.5px solid #38bdf8;
+      color: #38bdf8;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .word-chip:hover { background: #38bdf8; color: #0f172a; transform: translateY(-2px); }
+    .word-chip:active { transform: translateY(0); }
+
+    .target-sentence .word-chip {
+      background: #38bdf8;
+      color: #0f172a;
+      border-color: #38bdf8;
+    }
+    .target-sentence .word-chip:hover {
+      background: #ef4444;
+      color: #ffffff;
+      border-color: #ef4444;
+    }
+
+    .item-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .action-btn {
+      background: #334155;
+      border: none;
+      color: #94a3b8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .action-btn:hover { background: #475569; color: #f8fafc; }
+    .action-btn.sound-btn { color: #38bdf8; font-size: 1rem; }
+    .action-btn.sound-btn:hover { color: #f59e0b; }
+
+    /* Bottom Controls */
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #334155; padding-top: 20px; flex-wrap: wrap; gap: 15px; }
+    .btn-main { padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; }
+    .btn-check { background: #2563eb; color: white; }
+    .btn-check:hover { background: #1d4ed8; }
+    .btn-reset { background: #475569; color: white; }
+    .btn-reset:hover { background: #64748b; }
+
+    .result-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <h2 class="section-title">Exercise 3. Put the words in the correct order</h2>
+  <p class="instructions">
+    Нажимайте на слова, чтобы составить правильные вопросы. Чтобы удалить слово из ответа, нажмите на него еще раз.
+  </p>
+
+  <div class="exercise-list">
+    
+    <!-- 1 -->
+    <div class="item-card" data-correct="How do you get to work?">
+      <div class="item-header"><span class="num">1.</span><span>Build the question:</span></div>
+      <div class="word-pool">
+        <div class="word-chip" onclick="moveChip(this)">you</div>
+        <div class="word-chip" onclick="moveChip(this)">How</div>
+        <div class="word-chip" onclick="moveChip(this)">get</div>
+        <div class="word-chip" onclick="moveChip(this)">do</div>
+        <div class="word-chip" onclick="moveChip(this)">to work?</div>
+      </div>
+      <div class="target-sentence"></div>
+      <div class="item-actions">
+        <button class="action-btn sound-btn" onclick="speakSentence(this)">🔊 Listen</button>
+        <button class="action-btn" onclick="resetCard(this)">Clear</button>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="item-card" data-correct="Do you commute every day?">
+      <div class="item-header"><span class="num">2.</span><span>Build the question:</span></div>
+      <div class="word-pool">
+        <div class="word-chip" onclick="moveChip(this)">commute</div>
+        <div class="word-chip" onclick="moveChip(this)">you</div>
+        <div class="word-chip" onclick="moveChip(this)">Do</div>
+        <div class="word-chip" onclick="moveChip(this)">every day?</div>
+      </div>
+      <div class="target-sentence"></div>
+      <div class="item-actions">
+        <button class="action-btn sound-btn" onclick="speakSentence(this)">🔊 Listen</button>
+        <button class="action-btn" onclick="resetCard(this)">Clear</button>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="item-card" data-correct="Where do you work?">
+      <div class="item-header"><span class="num">3.</span><span>Build the question:</span></div>
+      <div class="word-pool">
+        <div class="word-chip" onclick="moveChip(this)">work</div>
+        <div class="word-chip" onclick="moveChip(this)">Where</div>
+        <div class="word-chip" onclick="moveChip(this)">you</div>
+        <div class="word-chip" onclick="moveChip(this)">do?</div>
+      </div>
+      <div class="target-sentence"></div>
+      <div class="item-actions">
+        <button class="action-btn sound-btn" onclick="speakSentence(this)">🔊 Listen</button>
+        <button class="action-btn" onclick="resetCard(this)">Clear</button>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="item-card" data-correct="Does she work in finance?">
+      <div class="item-header"><span class="num">4.</span><span>Build the question:</span></div>
+      <div class="word-pool">
+        <div class="word-chip" onclick="moveChip(this)">she</div>
+        <div class="word-chip" onclick="moveChip(this)">Does</div>
+        <div class="word-chip" onclick="moveChip(this)">work</div>
+        <div class="word-chip" onclick="moveChip(this)">finance</div>
+        <div class="word-chip" onclick="moveChip(this)">in?</div>
+      </div>
+      <div class="target-sentence"></div>
+      <div class="item-actions">
+        <button class="action-btn sound-btn" onclick="speakSentence(this)">🔊 Listen</button>
+        <button class="action-btn" onclick="resetCard(this)">Clear</button>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="item-card" data-correct="Who do you work for?">
+      <div class="item-header"><span class="num">5.</span><span>Build the question:</span></div>
+      <div class="word-pool">
+        <div class="word-chip" onclick="moveChip(this)">work</div>
+        <div class="word-chip" onclick="moveChip(this)">Who</div>
+        <div class="word-chip" onclick="moveChip(this)">you</div>
+        <div class="word-chip" onclick="moveChip(this)">do</div>
+        <div class="word-chip" onclick="moveChip(this)">for?</div>
+      </div>
+      <div class="target-sentence"></div>
+      <div class="item-actions">
+        <button class="action-btn sound-btn" onclick="speakSentence(this)">🔊 Listen</button>
+        <button class="action-btn" onclick="resetCard(this)">Clear</button>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="item-card" data-correct="Do you work with international clients?">
+      <div class="item-header"><span class="num">6.</span><span>Build the question:</span></div>
+      <div class="word-pool">
+        <div class="word-chip" onclick="moveChip(this)">clients</div>
+        <div class="word-chip" onclick="moveChip(this)">Do</div>
+        <div class="word-chip" onclick="moveChip(this)">international</div>
+        <div class="word-chip" onclick="moveChip(this)">with</div>
+        <div class="word-chip" onclick="moveChip(this)">work</div>
+        <div class="word-chip" onclick="moveChip(this)">you?</div>
+      </div>
+      <div class="target-sentence"></div>
+      <div class="item-actions">
+        <button class="action-btn sound-btn" onclick="speakSentence(this)">🔊 Listen</button>
+        <button class="action-btn" onclick="resetCard(this)">Clear</button>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="item-card" data-correct="When does the meeting start?">
+      <div class="item-header"><span class="num">7.</span><span>Build the question:</span></div>
+      <div class="word-pool">
+        <div class="word-chip" onclick="moveChip(this)">the meeting</div>
+        <div class="word-chip" onclick="moveChip(this)">When</div>
+        <div class="word-chip" onclick="moveChip(this)">start</div>
+        <div class="word-chip" onclick="moveChip(this)">does?</div>
+      </div>
+      <div class="target-sentence"></div>
+      <div class="item-actions">
+        <button class="action-btn sound-btn" onclick="speakSentence(this)">🔊 Listen</button>
+        <button class="action-btn" onclick="resetCard(this)">Clear</button>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="item-card" data-correct="Does your manager prefer public transport?">
+      <div class="item-header"><span class="num">8.</span><span>Build the question:</span></div>
+      <div class="word-pool">
+        <div class="word-chip" onclick="moveChip(this)">your manager</div>
+        <div class="word-chip" onclick="moveChip(this)">Does</div>
+        <div class="word-chip" onclick="moveChip(this)">public transport</div>
+        <div class="word-chip" onclick="moveChip(this)">prefer?</div>
+      </div>
+      <div class="target-sentence"></div>
+      <div class="item-actions">
+        <button class="action-btn sound-btn" onclick="speakSentence(this)">🔊 Listen</button>
+        <button class="action-btn" onclick="resetCard(this)">Clear</button>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="item-card" data-correct="How do employees find out about changes?">
+      <div class="item-header"><span class="num">9.</span><span>Build the question:</span></div>
+      <div class="word-pool">
+        <div class="word-chip" onclick="moveChip(this)">find out</div>
+        <div class="word-chip" onclick="moveChip(this)">How</div>
+        <div class="word-chip" onclick="moveChip(this)">employees</div>
+        <div class="word-chip" onclick="moveChip(this)">about changes</div>
+        <div class="word-chip" onclick="moveChip(this)">do?</div>
+      </div>
+      <div class="target-sentence"></div>
+      <div class="item-actions">
+        <button class="action-btn sound-btn" onclick="speakSentence(this)">🔊 Listen</button>
+        <button class="action-btn" onclick="resetCard(this)">Clear</button>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="item-card" data-correct="Do you meet clients during the week?">
+      <div class="item-header"><span class="num">10.</span><span>Build the question:</span></div>
+      <div class="word-pool">
+        <div class="word-chip" onclick="moveChip(this)">meet</div>
+        <div class="word-chip" onclick="moveChip(this)">Do</div>
+        <div class="word-chip" onclick="moveChip(this)">during the week</div>
+        <div class="word-chip" onclick="moveChip(this)">clients</div>
+        <div class="word-chip" onclick="moveChip(this)">you?</div>
+      </div>
+      <div class="target-sentence"></div>
+      <div class="item-actions">
+        <button class="action-btn sound-btn" onclick="speakSentence(this)">🔊 Listen</button>
+        <button class="action-btn" onclick="resetCard(this)">Clear</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-check" onclick="checkAnswers()">Check Answers ✅</button>
+    <div class="result-score" id="score"></div>
+    <button class="btn-main btn-reset" onclick="resetAll()">Reset All 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function moveChip(chip) {
+    const card = chip.closest('.item-card');
+    const pool = card.querySelector('.word-pool');
+    const target = card.querySelector('.target-sentence');
+
+    // Remove status classes when editing
+    target.classList.remove('correct', 'incorrect');
+
+    if (chip.parentElement === pool) {
+      target.appendChild(chip);
+    } else {
+      pool.appendChild(chip);
+    }
+  }
+
+  function resetCard(btn) {
+    const card = btn.closest('.item-card');
+    const pool = card.querySelector('.word-pool');
+    const target = card.querySelector('.target-sentence');
+
+    const chips = Array.from(target.querySelectorAll('.word-chip'));
+    chips.forEach(chip => pool.appendChild(chip));
+
+    target.classList.remove('correct', 'incorrect');
+  }
+
+  function checkAnswers() {
+    const cards = document.querySelectorAll('.item-card');
+    let correctCount = 0;
+
+    cards.forEach(card => {
+      const target = card.querySelector('.target-sentence');
+      const expectedText = card.dataset.correct.trim().toLowerCase();
+      
+      const userChips = Array.from(target.querySelectorAll('.word-chip'));
+      const userText = userChips.map(c => c.textContent.trim()).join(' ').toLowerCase();
+
+      target.classList.remove('correct', 'incorrect');
+
+      if (userText === expectedText) {
+        target.classList.add('correct');
+        correctCount++;
+      } else {
+        target.classList.add('incorrect');
+      }
+    });
+
+    document.getElementById('score').textContent = `Score: ${correctCount} / ${cards.length}`;
+  }
+
+  function resetAll() {
+    const cards = document.querySelectorAll('.item-card');
+    cards.forEach(card => {
+      const pool = card.querySelector('.word-pool');
+      const target = card.querySelector('.target-sentence');
+
+      const chips = Array.from(card.querySelectorAll('.word-chip'));
+      chips.forEach(chip => pool.appendChild(chip));
+
+      target.classList.remove('correct', 'incorrect');
+    });
+
+    document.getElementById('score').textContent = '';
+  }
+
+  function speakSentence(btn) {
+    const card = btn.closest('.item-card');
+    const target = card.querySelector('.target-sentence');
+    const userChips = Array.from(target.querySelectorAll('.word-chip'));
+
+    let textToSpeak = "";
+    if (userChips.length > 0) {
+      textToSpeak = userChips.map(c => c.textContent.trim()).join(' ');
+    } else {
+      textToSpeak = card.dataset.correct;
+    }
+
+    if (!textToSpeak) return;
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+</script>
+
+</body>
+</html>
