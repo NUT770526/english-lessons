@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Verb 'To Be' Magic Game! 🦄</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+
+    * { box-sizing: border-box; font-family: 'Fredoka', 'Comic Sans MS', sans-serif; }
+    
+    body {
+      background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 780px;
+      width: 100%;
+      background: #ffffff;
+      padding: 30px 25px;
+      border-radius: 30px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      border: 4px solid #ff9a9e;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .title {
+      color: #ff5e7e;
+      font-size: 2.1rem;
+      margin: 0 0 10px 0;
+      text-shadow: 2px 2px 0px #ffe5ec;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 1.05rem;
+      margin: 0;
+      background: #fff0f3;
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 2px dashed #ffb3c1;
+    }
+
+    /* Dialogue Card */
+    .dialogue-card {
+      background: #f8f0fc;
+      border: 3px solid #e0aaff;
+      padding: 20px;
+      border-radius: 24px;
+      margin-bottom: 25px;
+      position: relative;
+      box-shadow: 0 8px 16px rgba(157, 78, 221, 0.08);
+      transition: transform 0.2s;
+    }
+
+    .dialogue-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .dialogue-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #ebd9fc;
+      padding-bottom: 10px;
+    }
+
+    .dialogue-title {
+      color: #7b2cbf;
+      font-size: 1.3rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .line {
+      font-size: 1.15rem;
+      line-height: 2.2;
+      color: #3c096c;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .speaker {
+      font-weight: 700;
+      background: #7209b7;
+      color: white;
+      padding: 3px 12px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      min-width: 80px;
+      text-align: center;
+    }
+
+    /* Input Box Styling */
+    input.inline-input {
+      background: #ffffff;
+      color: #5a189a;
+      border: 3px solid #c77dff;
+      border-radius: 14px;
+      padding: 4px 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      outline: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      transition: all 0.2s;
+      width: 110px;
+      text-align: center;
+    }
+
+    input.inline-input:hover {
+      border-color: #9d4edd;
+    }
+
+    input.inline-input:focus {
+      border-color: #ff5e7e;
+      box-shadow: 0 0 10px rgba(255, 94, 126, 0.4);
+    }
+
+    input.inline-input.correct {
+      border-color: #2ec4b6 !important;
+      background-color: #cbf3f0 !important;
+      color: #0f9f90 !important;
+      animation: pop 0.3s ease;
+    }
+
+    input.inline-input.incorrect {
+      border-color: #ff5964 !important;
+      background-color: #ffe5e7 !important;
+      color: #d90429 !important;
+      animation: shake 0.3s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+
+    .listen-btn {
+      background: #ff9e00;
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 6px 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #cc7e00;
+      transition: all 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .listen-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #cc7e00;
+    }
+
+    /* Controls Bottom */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn-main {
+      padding: 14px 28px;
+      border-radius: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      font-size: 1.1rem;
+      transition: all 0.1s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-check {
+      background: #4cc9f0;
+      color: white;
+      box-shadow: 0 5px 0 #43aa8b;
+    }
+    .btn-check:hover { background: #3a86ff; }
+    .btn-check:active { transform: translateY(4px); box-shadow: 0 1px 0 #43aa8b; }
+
+    .btn-reset {
+      background: #ff70a6;
+      color: white;
+      box-shadow: 0 5px 0 #d94e80;
+    }
+    .btn-reset:hover { background: #ff477e; }
+    .btn-reset:active { transform: translateY(4px); box-shadow: 0 1px 0 #d94e80; }
+
+    .score-badge {
+      font-size: 1.3rem;
+      font-weight: 700;
+      background: #f15bb5;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 18px;
+      box-shadow: 0 4px 10px rgba(241, 91, 181, 0.3);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="header">
+    <h1 class="title">✨ Complete with the verb 'be' ✨</h1>
+    <p class="subtitle">Впиши правильну форму дієслова <b>be</b> (am, is, are, aren't...)! 🎀</p>
+  </div>
+
+  <!-- Dialogue 1 -->
+  <div class="dialogue-card" id="dialogue1">
+    <div class="dialogue-header">
+      <span class="dialogue-title">💬 Діалог 1</span>
+      <button class="listen-btn" onclick="speakDialogue('dialogue1')">🔊 Послухати</button>
+    </div>
+    
+    <div class="line">
+      <span class="speaker">Angie</span>
+      <span>Hi.</span>
+      <input type="text" class="inline-input" data-ans="Are" placeholder="...">
+      <span>you Australian?</span>
+    </div>
+
+    <div class="line">
+      <span class="speaker">John</span>
+      <span>No, we</span>
+      <input type="text" class="inline-input" data-ans="aren't|are not" placeholder="...">
+      <span>. We</span>
+      <input type="text" class="inline-input" data-ans="are|'re" placeholder="...">
+      <span>Canadian.</span>
+    </div>
+
+    <div class="line">
+      <span class="speaker">Angie</span>
+      <span>I</span>
+      <input type="text" class="inline-input" data-ans="am|'m" placeholder="...">
+      <span>Australian.</span>
+    </div>
+  </div>
+
+  <!-- Dialogue 2 -->
+  <div class="dialogue-card" id="dialogue2">
+    <div class="dialogue-header">
+      <span class="dialogue-title">💬 Діалог 2</span>
+      <button class="listen-btn" onclick="speakDialogue('dialogue2')">🔊 Послухати</button>
+    </div>
+
+    <div class="line">
+      <span class="speaker">Susan</span>
+      <input type="text" class="inline-input" data-ans="Are" placeholder="...">
+      <span>you James?</span>
+    </div>
+
+    <div class="line">
+      <span class="speaker">Tom</span>
+      <span>No, I</span>
+      <input type="text" class="inline-input" data-ans="am not|'m not" placeholder="...">
+      <span>. I</span>
+      <input type="text" class="inline-input" data-ans="am|'m" placeholder="...">
+      <span>Tom. This is James.</span>
+    </div>
+
+    <div class="line">
+      <span class="speaker">Susan</span>
+      <span>Oh. Hello, James.</span>
+    </div>
+  </div>
+
+  <!-- Dialogue 3 -->
+  <div class="dialogue-card" id="dialogue3">
+    <div class="dialogue-header">
+      <span class="dialogue-title">💬 Діалог 3</span>
+      <button class="listen-btn" onclick="speakDialogue('dialogue3')">🔊 Послухати</button>
+    </div>
+
+    <div class="line">
+      <span class="speaker">Gerard</span>
+      <input type="text" class="inline-input" data-ans="Are" placeholder="...">
+      <span>you and Lisa classmates?</span>
+    </div>
+
+    <div class="line">
+      <span class="speaker">Oliver</span>
+      <span>No, we</span>
+      <input type="text" class="inline-input" data-ans="aren't|are not" placeholder="...">
+      <span>classmates,</span>
+    </div>
+
+    <div class="line">
+      <span class="speaker"></span>
+      <span>but we</span>
+      <input type="text" class="inline-input" data-ans="are|'re" placeholder="...">
+      <span>friends.</span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-main btn-check" onclick="checkAnswers()">Перевірити 🎯</button>
+    <div class="score-badge" id="score">Результат: 0/10 🌟</div>
+    <button class="btn-main btn-reset" onclick="resetAnswers()">Спробувати знову 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function normalizeText(str) {
+    return str.trim().toLowerCase().replace(/’/g, "'");
+  }
+
+  function checkAnswers() {
+    const inputs = document.querySelectorAll('input.inline-input');
+    let correctCount = 0;
+
+    inputs.forEach(input => {
+      const userVal = normalizeText(input.value);
+      const possibleAnswers = input.dataset.ans.split('|').map(a => normalizeText(a));
+
+      input.classList.remove('correct', 'incorrect');
+
+      if (userVal !== '') {
+        if (possibleAnswers.includes(userVal)) {
+          input.classList.add('correct');
+          correctCount++;
+        } else {
+          input.classList.add('incorrect');
+        }
+      }
+    });
+
+    const scoreBadge = document.getElementById('score');
+    scoreBadge.style.display = 'block';
+    
+    if (correctCount === inputs.length) {
+      scoreBadge.textContent = `Чудово! ${correctCount}/${inputs.length} 🏆⭐`;
+    } else {
+      scoreBadge.textContent = `Результат: ${correctCount}/${inputs.length} 🌟`;
+    }
+  }
+
+  function resetAnswers() {
+    const inputs = document.querySelectorAll('input.inline-input');
+    inputs.forEach(input => {
+      input.value = '';
+      input.classList.remove('correct', 'incorrect');
+    });
+
+    const scoreBadge = document.getElementById('score');
+    scoreBadge.style.display = 'none';
+  }
+
+  function speakDialogue(dialogueId) {
+    const dialogueCard = document.getElementById(dialogueId);
+    const lines = dialogueCard.querySelectorAll('.line');
+
+    let scriptText = [];
+
+    lines.forEach(line => {
+      const speaker = line.querySelector('.speaker').textContent;
+      
+      let lineText = "";
+      line.childNodes.forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          lineText += node.textContent;
+        } else if (node.tagName === 'SPAN' && !node.classList.contains('speaker')) {
+          lineText += node.textContent;
+        } else if (node.tagName === 'INPUT') {
+          // Якщо введено слово — читаємо його, інакше читаємо першу правильну відповідь
+          const firstAns = node.dataset.ans.split('|')[0];
+          const val = node.value.trim() !== "" ? node.value.trim() : firstAns;
+          lineText += " " + val + " ";
+        }
+      });
+
+      if (speaker) {
+        scriptText.push(`${speaker}: ${lineText.trim()}`);
+      } else {
+        scriptText.push(lineText.trim());
+      }
+    });
+
+    const fullSpeech = scriptText.join(". ");
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(fullSpeech);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85; 
+    window.speechSynthesis.speak(utterance);
+  }
+</script>
+
+</body>
+</html>
