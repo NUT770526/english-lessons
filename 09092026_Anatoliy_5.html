@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English Grammar Practice | Business Dialogue</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      margin: 0;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background-color: #1e293b;
+      max-width: 820px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 35px 30px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      border: 1px solid #334155;
+    }
+
+    .header {
+      margin-bottom: 25px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #0284c7;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    p.instruction {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .dialogue-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 25px;
+      margin-bottom: 30px;
+    }
+
+    .dialogue-line {
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 1.05rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .dialogue-line:hover {
+      border-color: #3b82f6;
+    }
+
+    .speaker {
+      font-weight: 700;
+      min-width: 110px;
+      padding-top: 4px;
+    }
+
+    .speaker.assistant {
+      color: #38bdf8;
+    }
+
+    .speaker.ms-brown {
+      color: #f43f5e;
+    }
+
+    .line-content {
+      flex: 1;
+      line-height: 1.8;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    select {
+      background-color: #1e293b;
+      color: #38bdf8;
+      border: 2px solid #38bdf8;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    select:focus {
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+    }
+
+    select.correct {
+      background-color: #064e3b;
+      border-color: #10b981;
+      color: #a7f3d0;
+    }
+
+    select.incorrect {
+      background-color: #7f1d1d;
+      border-color: #ef4444;
+      color: #fecaca;
+    }
+
+    .audio-btn {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color 0.2s ease, background 0.2s ease;
+      margin-top: 2px;
+    }
+
+    .audio-btn:hover {
+      color: #38bdf8;
+      background-color: #1e293b;
+    }
+
+    .correct-answer-hint {
+      color: #f87171;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-top: 1px solid #334155;
+      padding-top: 25px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #0369a1;
+    }
+
+    .btn-secondary {
+      background-color: #334155;
+      color: #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .score-display {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: none;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background-color: #334155;
+      border-radius: 3px;
+      margin-top: 15px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #10b981;
+      transition: width 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <span class="badge">Business Grammar Practice</span>
+    <h1>Exercise 5. Complete the business dialogue</h1>
+    <p class="instruction">Заповніть пропуски словами <strong>am, is, are, am not, isn't</strong> або <strong>aren't</strong>.</p>
+  </div>
+
+  <div class="dialogue-container" id="dialogueContainer"></div>
+
+  <div class="progress-bar-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="actions">
+    <div>
+      <button class="btn btn-primary" onclick="checkAnswers()">Перевірити відповіді</button>
+      <button class="btn btn-secondary" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const dialogue = [
+    {
+      speaker: "Assistant",
+      speakerClass: "assistant",
+      parts: [
+        { text: "Good morning, Madam." },
+        { gapId: 0, answer: "Are", options: ["Am", "Is", "Are"] },
+        { text: "you Ms Brown?" }
+      ]
+    },
+    {
+      speaker: "Ms Brown",
+      speakerClass: "ms-brown",
+      parts: [
+        { text: "Yes, I" },
+        { gapId: 1, answer: "am", options: ["am", "is", "are"] },
+        { text: "." }
+      ]
+    },
+    {
+      speaker: "Assistant",
+      speakerClass: "assistant",
+      parts: [
+        { text: "Welcome! I" },
+        { gapId: 2, answer: "am", options: ["am", "is", "are"] },
+        { text: "Anna. I" },
+        { gapId: 3, answer: "am", options: ["am", "is", "are"] },
+        { text: "your assistant." }
+      ]
+    },
+    {
+      speaker: "Ms Brown",
+      speakerClass: "ms-brown",
+      parts: [
+        { text: "Nice to meet you." },
+        { gapId: 4, answer: "Am", options: ["Am", "Is", "Are"] },
+        { text: "I late?" }
+      ]
+    },
+    {
+      speaker: "Assistant",
+      speakerClass: "assistant",
+      parts: [
+        { text: "No, you" },
+        { gapId: 5, answer: "aren't", options: ["am not", "isn't", "aren't"] },
+        { text: ". You" },
+        { gapId: 6, answer: "are", options: ["am", "is", "are"] },
+        { text: "in time." }
+      ]
+    },
+    {
+      speaker: "Ms Brown",
+      speakerClass: "ms-brown",
+      parts: [
+        { text: "Where" },
+        { gapId: 7, answer: "are", options: ["am", "is", "are"] },
+        { text: "the businessmen from Italy?" }
+      ]
+    },
+    {
+      speaker: "Assistant",
+      speakerClass: "assistant",
+      parts: [
+        { text: "They" },
+        { gapId: 8, answer: "are", options: ["am", "is", "are"] },
+        { text: "in the meeting room." }
+      ]
+    },
+    {
+      speaker: "Ms Brown",
+      speakerClass: "ms-brown",
+      parts: [
+        { gapId: 9, answer: "Are", options: ["Am", "Is", "Are"] },
+        { text: "they busy now?" }
+      ]
+    },
+    {
+      speaker: "Assistant",
+      speakerClass: "assistant",
+      parts: [
+        { text: "No, they" },
+        { gapId: 10, answer: "aren't", options: ["am not", "isn't", "aren't"] },
+        { text: ". The meeting is at ten." }
+      ]
+    }
+  ];
+
+  const totalGaps = 11;
+
+  function renderDialogue() {
+    const container = document.getElementById('dialogueContainer');
+    container.innerHTML = '';
+
+    dialogue.forEach((line, lineIdx) => {
+      let lineHtml = `
+        <div class="dialogue-line">
+          <span class="speaker ${line.speakerClass}">${line.speaker}:</span>
+          <div class="line-content">
+      `;
+
+      line.parts.forEach(p => {
+        if (p.text) {
+          lineHtml += `<span>${p.text}</span>`;
+        } else if (p.gapId !== undefined) {
+          const selectHtml = `
+            <select id="gap-${p.gapId}" data-answer="${p.answer}">
+              <option value="">---</option>
+              ${p.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+            </select>
+            <span id="hint-${p.gapId}" class="correct-answer-hint"></span>
+          `;
+          lineHtml += selectHtml;
+        }
+      });
+
+      lineHtml += `
+          </div>
+          <button class="audio-btn" title="Прослухати репліку" onclick="speakLine(${lineIdx})">🔊</button>
+        </div>
+      `;
+
+      container.insertAdjacentHTML('beforeend', lineHtml);
+    });
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+
+    for (let i = 0; i < totalGaps; i++) {
+      const select = document.getElementById(`gap-${i}`);
+      const hint = document.getElementById(`hint-${i}`);
+      const answer = select.getAttribute('data-answer');
+      const val = select.value;
+
+      select.classList.remove('correct', 'incorrect');
+      hint.textContent = '';
+
+      if (val === answer) {
+        select.classList.add('correct');
+        correctCount++;
+      } else {
+        select.classList.add('incorrect');
+        hint.textContent = `(${answer})`;
+      }
+    }
+
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+
+    const percentage = Math.round((correctCount / totalGaps) * 100);
+    scoreDisplay.textContent = `Результат: ${correctCount} / ${totalGaps} (${percentage}%)`;
+    scoreDisplay.style.display = 'block';
+
+    progressContainer.style.display = 'block';
+    progressBar.style.width = percentage + '%';
+  }
+
+  function resetExercise() {
+    for (let i = 0; i < totalGaps; i++) {
+      const select = document.getElementById(`gap-${i}`);
+      const hint = document.getElementById(`hint-${i}`);
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+      hint.textContent = '';
+    }
+
+    document.getElementById('scoreDisplay').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
+    document.getElementById('progressBar').style.width = '0%';
+    window.speechSynthesis.cancel();
+  }
+
+  function speakLine(lineIdx) {
+    const line = dialogue[lineIdx];
+    let fullText = "";
+
+    line.parts.forEach(p => {
+      if (p.text) {
+        fullText += p.text + " ";
+      } else if (p.gapId !== undefined) {
+        const select = document.getElementById(`gap-${p.gapId}`);
+        const word = select.value || p.answer;
+        fullText += word + " ";
+      }
+    });
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(fullText.trim());
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  renderDialogue();
+</script>
+
+</body>
+</html>
