@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English Grammar Practice | To Be</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      margin: 0;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background-color: #1e293b;
+      max-width: 780px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 35px 30px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      border: 1px solid #334155;
+    }
+
+    .header {
+      margin-bottom: 25px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #0284c7;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    p.instruction {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 30px;
+    }
+
+    .exercise-item {
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.05rem;
+      transition: border-color 0.2s ease;
+      flex-wrap: wrap;
+    }
+
+    .exercise-item:hover {
+      border-color: #3b82f6;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: #38bdf8;
+      min-width: 25px;
+    }
+
+    .sentence {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      line-height: 1.6;
+    }
+
+    select {
+      background-color: #1e293b;
+      color: #38bdf8;
+      border: 2px solid #38bdf8;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    select:focus {
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Input states after check */
+    select.correct {
+      background-color: #064e3b;
+      border-color: #10b981;
+      color: #a7f3d0;
+    }
+
+    select.incorrect {
+      background-color: #7f1d1d;
+      border-color: #ef4444;
+      color: #fecaca;
+    }
+
+    .audio-btn {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .audio-btn:hover {
+      color: #38bdf8;
+      background-color: #1e293b;
+    }
+
+    .correct-answer-hint {
+      color: #f87171;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-top: 1px solid #334155;
+      padding-top: 25px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #0369a1;
+    }
+
+    .btn-secondary {
+      background-color: #334155;
+      color: #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .score-display {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: none;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background-color: #334155;
+      border-radius: 3px;
+      margin-top: 15px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #10b981;
+      transition: width 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <span class="badge">Business Grammar Practice</span>
+    <h1>Exercise 1. Am, is or are?</h1>
+    <p class="instruction">Вставте відповідне дієслово <strong>am</strong>, <strong>is</strong> або <strong>are</strong> у порожні місця.</p>
+  </div>
+
+  <div class="exercise-list" id="exerciseList"></div>
+
+  <div class="progress-bar-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="actions">
+    <div>
+      <button class="btn btn-primary" onclick="checkAnswers()">Перевірити відповіді</button>
+      <button class="btn btn-secondary" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const data = [
+    { prefix: "I", suffix: "a businessman.", answer: "am" },
+    { prefix: "She", suffix: "my assistant.", answer: "is" },
+    { prefix: "We", suffix: "at a business meeting.", answer: "are" },
+    { prefix: "He", suffix: "from Italy.", answer: "is" },
+    { prefix: "You", suffix: "in time.", answer: "are" },
+    { prefix: "They", suffix: "business partners.", answer: "are" },
+    { prefix: "It", suffix: "lemon tea.", answer: "is" },
+    { prefix: "I", suffix: "not late.", answer: "am" },
+    { prefix: "The assistant", suffix: "busy.", answer: "is" },
+    { prefix: "The businessmen", suffix: "from Finland.", answer: "are" },
+    { prefix: "She", suffix: "not in hospital.", answer: "is" },
+    { prefix: "", suffix: "you a shop assistant?", answer: "Are", isCapital: true }
+  ];
+
+  function renderExercise() {
+    const list = document.getElementById('exerciseList');
+    list.innerHTML = '';
+
+    data.forEach((item, index) => {
+      const options = item.isCapital 
+        ? ['---', 'Am', 'Is', 'Are'] 
+        : ['---', 'am', 'is', 'are'];
+
+      const selectHtml = `
+        <select id="select-${index}">
+          ${options.map(opt => `<option value="${opt === '---' ? '' : opt}">${opt}</option>`).join('')}
+        </select>
+      `;
+
+      const itemHtml = `
+        <div class="exercise-item">
+          <span class="q-number">${index + 1}.</span>
+          <div class="sentence">
+            ${item.prefix ? item.prefix + ' ' : ''}
+            ${selectHtml}
+            ${item.suffix}
+            <span id="hint-${index}" class="correct-answer-hint"></span>
+          </div>
+          <button class="audio-btn" title="Прослухати вимову" onclick="speakSentence(${index})">🔊</button>
+        </div>
+      `;
+      list.insertAdjacentHTML('beforeend', itemHtml);
+    });
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+
+    data.forEach((item, index) => {
+      const select = document.getElementById(`select-${index}`);
+      const hint = document.getElementById(`hint-${index}`);
+      const val = select.value;
+
+      select.classList.remove('correct', 'incorrect');
+      hint.textContent = '';
+
+      if (val === item.answer) {
+        select.classList.add('correct');
+        correctCount++;
+      } else {
+        select.classList.add('incorrect');
+        hint.textContent = `(правильно: ${item.answer})`;
+      }
+    });
+
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+
+    const percentage = Math.round((correctCount / data.length) * 100);
+    scoreDisplay.textContent = `Результат: ${correctCount} / ${data.length} (${percentage}%)`;
+    scoreDisplay.style.display = 'block';
+
+    progressContainer.style.display = 'block';
+    progressBar.style.width = percentage + '%';
+  }
+
+  function resetExercise() {
+    data.forEach((_, index) => {
+      const select = document.getElementById(`select-${index}`);
+      const hint = document.getElementById(`hint-${index}`);
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+      hint.textContent = '';
+    });
+
+    document.getElementById('scoreDisplay').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
+    document.getElementById('progressBar').style.width = '0%';
+    window.speechSynthesis.cancel();
+  }
+
+  function speakSentence(index) {
+    const item = data[index];
+    const select = document.getElementById(`select-${index}`);
+    const word = select.value || item.answer;
+
+    let fullSentence = "";
+    if (item.isCapital) {
+      fullSentence = `${word} ${item.suffix}`;
+    } else {
+      fullSentence = `${item.prefix} ${word} ${item.suffix}`;
+    }
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(fullSentence);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
