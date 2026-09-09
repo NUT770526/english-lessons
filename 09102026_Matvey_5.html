@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 5. Translate into English</title>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --border: #cbd5e1;
+    --correct-bg: #dcfce7;
+    --correct-border: #4ade80;
+    --correct-text: #166534;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #f87171;
+    --incorrect-text: #991b1b;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 24px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.5rem;
+  }
+
+  .sub-instruction {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .tense-badge {
+    display: inline-block;
+    background-color: #eff6ff;
+    color: #1e40af;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 16px;
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    transition: all 0.2s ease;
+  }
+
+  .item.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .item.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  .sentence-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .sentence-text {
+    font-weight: 500;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  input[type="text"] {
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    font-weight: 500;
+    color: #1e293b;
+    background-color: #fff;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-size: 1.1rem;
+    line-height: 1;
+    border-radius: 4px;
+    transition: transform 0.1s;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:active {
+    transform: scale(1.2);
+  }
+
+  .actions {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  button.main-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .btn-check {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  .btn-check:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .result {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Exercise 5. Translate into English</h2>
+  <div class="sub-instruction">Переведи предложения на английский язык, используя время, указанное под фразой. Нажми 🔊, чтобы услышать верный вариант.</div>
+
+  <div class="exercise-list">
+    <div class="item" id="item-1">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">1. Підлітковий вік включає багато фізичних та емоційних змін.</span><br>
+          <span class="tense-badge">(Present Simple)</span>
+        </div>
+        <button class="audio-btn" onclick="speakItem(1)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q1" placeholder="Введи перевод..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-2">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">2. Зараз він намагається впоратися зі складною проблемою.</span><br>
+          <span class="tense-badge">(Present Continuous)</span>
+        </div>
+        <button class="audio-btn" onclick="speakItem(2)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q2" placeholder="Введи перевод..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-3">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">3. Минулого року вона вступила до нової школи.</span><br>
+          <span class="tense-badge">(Past Simple)</span>
+        </div>
+        <button class="audio-btn" onclick="speakItem(3)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q3" placeholder="Введи перевод..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-4">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">4. Ми вже досягли трьох важных цілей.</span><br>
+          <span class="tense-badge">(Present Perfect)</span>
+        </div>
+        <button class="audio-btn" onclick="speakItem(4)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q4" placeholder="Введи перевод..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-5">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">5. Учора о п'ятій годині вони обговорювали добробут дітей.</span><br>
+          <span class="tense-badge">(Past Continuous)</span>
+        </div>
+        <button class="audio-btn" onclick="speakItem(5)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q5" placeholder="Введи перевод..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-6">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">6. Підлітки із сільських районів іноді мають менше можливостей.</span><br>
+          <span class="tense-badge">(Present Simple)</span>
+        </div>
+        <button class="audio-btn" onclick="speakItem(6)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q6" placeholder="Введи перевод..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-7">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">7. Останнім часом він став більш зрілим.</span><br>
+          <span class="tense-badge">(Present Perfect)</span>
+        </div>
+        <button class="audio-btn" onclick="speakItem(7)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q7" placeholder="Введи перевод..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-8">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">8. Коли я побачив її, вона допомагала вразливому підлітку.</span><br>
+          <span class="tense-badge">(Past Continuous + Past Simple)</span>
+        </div>
+        <button class="audio-btn" onclick="speakItem(8)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q8" placeholder="Введи перевод..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-9">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">9. Зараз учні говорять про нерівність у суспільстві.</span><br>
+          <span class="tense-badge">(Present Continuous)</span>
+        </div>
+        <button class="audio-btn" onclick="speakItem(9)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q9" placeholder="Введи перевод..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-10">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">10. Незважаючи на труднощі, Том завершив проєкт учора.</span><br>
+          <span class="tense-badge">(Past Simple)</span>
+        </div>
+        <button class="audio-btn" onclick="speakItem(10)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q10" placeholder="Введи перевод..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-11">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">11. Ця розмова значно покращила його самооцінку.</span><br>
+          <span class="tense-badge">(Present Perfect)</span>
+        </div>
+        <button class="audio-btn" onclick="speakItem(11)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q11" placeholder="Введи перевод..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-12">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">12. Лікарі часто говорять, що ожиріння є серйозною проблемою.</span><br>
+          <span class="tense-badge">(Present Simple)</span>
+        </div>
+        <button class="audio-btn" onclick="speakItem(12)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q12" placeholder="Введи перевод..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="main-btn btn-check" onclick="checkAnswers()">Проверить</button>
+    <button class="main-btn btn-reset" onclick="resetAnswers()">Сбросить</button>
+    <span class="result" id="result-text"></span>
+  </div>
+</div>
+
+<script>
+  // Варианты корректных переводов для каждого пункта
+  const answers = {
+    q1: [
+      "adolescence involves many physical and emotional changes",
+      "adolescence involves a lot of physical and emotional changes"
+    ],
+    q2: [
+      "he is trying to deal with a difficult problem now",
+      "now he is trying to deal with a difficult problem",
+      "he is trying to deal with a hard problem now",
+      "he is trying to cope with a difficult problem now",
+      "he is dealing with a difficult problem now"
+    ],
+    q3: [
+      "last year she enrolled in a new school",
+      "she enrolled in a new school last year",
+      "last year she enrolled in a new secondary school",
+      "she enrolled in a new secondary school last year"
+    ],
+    q4: [
+      "we have already accomplished three important goals",
+      "we've already accomplished three important goals",
+      "we have already achieved three important goals",
+      "we've already achieved three important goals"
+    ],
+    q5: [
+      "yesterday at five o'clock they were discussing the welfare of children",
+      "yesterday at 5 pm they were discussing the welfare of children",
+      "at 5 pm yesterday they were discussing the welfare of children",
+      "they were discussing the welfare of children at 5 pm yesterday",
+      "they were discussing the welfare of children at five o'clock yesterday"
+    ],
+    q6: [
+      "teenagers from rural areas sometimes have fewer opportunities",
+      "teenagers in rural communities sometimes have fewer opportunities",
+      "teenagers from rural communities sometimes have fewer opportunities"
+    ],
+    q7: [
+      "recently he has become more mature",
+      "he has become more mature recently",
+      "lately he has become more mature",
+      "he's become more mature recently"
+    ],
+    q8: [
+      "when i saw her she was helping a vulnerable teenager",
+      "when i saw her, she was helping a vulnerable teenager",
+      "she was helping a vulnerable teenager when i saw her"
+    ],
+    q9: [
+      "now students are talking about inequality in society",
+      "now the students are talking about inequality in society",
+      "the students are talking about economic disparity now",
+      "students are talking about economic disparity right now",
+      "the students are talking about inequality in society right now"
+    ],
+    q10: [
+      "regardless of the difficulties tom completed the project yesterday",
+      "regardless of the difficulties, tom completed the project yesterday",
+      "tom completed the project yesterday regardless of the difficulties",
+      "despite the difficulties tom completed the project yesterday",
+      "despite the difficulties, tom completed the project yesterday"
+    ],
+    q11: [
+      "this conversation has significantly improved his self-esteem",
+      "this conversation has improved his self-esteem significantly",
+      "this talk has significantly improved his self-esteem"
+    ],
+    q12: [
+      "doctors often say that obesity is a serious problem",
+      "doctors often say obesity is a serious problem"
+    ]
+  };
+
+  const sentences = {
+    1: "Adolescence involves many physical and emotional changes.",
+    2: "Now he is trying to deal with a difficult problem.",
+    3: "Last year she enrolled in a new school.",
+    4: "We have already accomplished three important goals.",
+    5: "Yesterday at five o'clock they were discussing the welfare of children.",
+    6: "Teenagers in rural communities sometimes have fewer opportunities.",
+    7: "Recently he has become more mature.",
+    8: "When I saw her, she was helping a vulnerable teenager.",
+    9: "Now the students are talking about economic disparity.",
+    10: "Regardless of the difficulties, Tom completed the project yesterday.",
+    11: "This conversation has significantly improved his self-esteem.",
+    12: "Doctors often say that obesity is a serious problem."
+  };
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function speakItem(num) {
+    speakText(sentences[num]);
+  }
+
+  function cleanString(str) {
+    return str
+      .toLowerCase()
+      .replace(/[.,!?'’`]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function checkAnswers() {
+    let totalItems = 12;
+    let score = 0;
+
+    for (let i = 1; i <= totalItems; i++) {
+      const input = document.getElementById('q' + i);
+      const parent = document.getElementById('item-' + i);
+      const valClean = cleanString(input.value);
+      
+      parent.classList.remove('correct', 'incorrect');
+
+      const validAnswers = answers['q' + i].map(a => cleanString(a));
+
+      if (valClean.length > 0 && validAnswers.some(ans => valClean === ans || valClean.includes(ans))) {
+        parent.classList.add('correct');
+        score++;
+      } else {
+        parent.classList.add('incorrect');
+      }
+    }
+
+    const resultText = document.getElementById('result-text');
+    resultText.textContent = `Результат: ${score} / ${totalItems}`;
+    resultText.style.color = score === totalItems ? '#166534' : '#0f172a';
+  }
+
+  function resetAnswers() {
+    for (let i = 1; i <= 12; i++) {
+      const input = document.getElementById('q' + i);
+      const parent = document.getElementById('item-' + i);
+      input.value = '';
+      parent.classList.remove('correct', 'incorrect');
+    }
+    document.getElementById('result-text').textContent = '';
+  }
+</script>
+
+</body>
+</html>
