@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 4. Find and correct the mistake</title>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --border: #cbd5e1;
+    --correct-bg: #dcfce7;
+    --correct-border: #4ade80;
+    --correct-text: #166534;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #f87171;
+    --incorrect-text: #991b1b;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 24px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.5rem;
+  }
+
+  .sub-instruction {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 16px;
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    transition: all 0.2s ease;
+  }
+
+  .item.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .item.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  .sentence-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  input[type="text"] {
+    font-size: 1rem;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    font-weight: 500;
+    color: #1e293b;
+    background-color: #fff;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-size: 1.1rem;
+    line-height: 1;
+    border-radius: 4px;
+    transition: transform 0.1s;
+  }
+
+  .audio-btn:active {
+    transform: scale(1.2);
+  }
+
+  .actions {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  button.main-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .btn-check {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  .btn-check:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .result {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Exercise 4. Find and correct the mistake</h2>
+  <div class="sub-instruction">В каждом предложении есть одна ошибка. Напиши предложение правильно или исправь ошибку в поле ввода. Нажми 🔊, чтобы услышать верный вариант.</div>
+
+  <div class="exercise-list">
+    <div class="item" id="item-1">
+      <div class="sentence-row">
+        <span>1. Adolescence involve many important changes.</span>
+        <button class="audio-btn" onclick="speakItem(1)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q1" placeholder="Исправь предложение или слово..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-2">
+      <div class="sentence-row">
+        <span>2. My friend has enrolled in this school last year.</span>
+        <button class="audio-btn" onclick="speakItem(2)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q2" placeholder="Исправь предложение или слово..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-3">
+      <div class="sentence-row">
+        <span>3. We are usually dealing with problems together.</span>
+        <button class="audio-btn" onclick="speakItem(3)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q3" placeholder="Исправь предложение или слово..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-4">
+      <div class="sentence-row">
+        <span>4. Ben have already accomplished his main goal.</span>
+        <button class="audio-btn" onclick="speakItem(4)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q4" placeholder="Исправь предложение или слово..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-5">
+      <div class="sentence-row">
+        <span>5. They discussed the welfare of vulnerable children when I entered the room.</span>
+        <button class="audio-btn" onclick="speakItem(5)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q5" placeholder="Исправь предложение или слово..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-6">
+      <div class="sentence-row">
+        <span>6. She is understanding this profound question now.</span>
+        <button class="audio-btn" onclick="speakItem(6)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q6" placeholder="Исправь предложение или слово..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-7">
+      <div class="sentence-row">
+        <span>7. Last week, we have visited a small rural community.</span>
+        <button class="audio-btn" onclick="speakItem(7)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q7" placeholder="Исправь предложение или слово..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-8">
+      <div class="sentence-row">
+        <span>8. The students was learning about economic disparity.</span>
+        <button class="audio-btn" onclick="speakItem(8)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q8" placeholder="Исправь предложение или слово..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-9">
+      <div class="sentence-row">
+        <span>9. He has became more mature since last year.</span>
+        <button class="audio-btn" onclick="speakItem(9)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q9" placeholder="Исправь предложение или слово..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-10">
+      <div class="sentence-row">
+        <span>10. Regardless the difficulties, she completed the project.</span>
+        <button class="audio-btn" onclick="speakItem(10)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q10" placeholder="Исправь предложение или слово..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-11">
+      <div class="sentence-row">
+        <span>11. Our teacher is talking about obesity every Monday.</span>
+        <button class="audio-btn" onclick="speakItem(11)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q11" placeholder="Исправь предложение или слово..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-12">
+      <div class="sentence-row">
+        <span>12. His self-esteem improve after he won the competition.</span>
+        <button class="audio-btn" onclick="speakItem(12)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q12" placeholder="Исправь предложение или слово..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="main-btn btn-check" onclick="checkAnswers()">Проверить</button>
+    <button class="main-btn btn-reset" onclick="resetAnswers()">Сбросить</button>
+    <span class="result" id="result-text"></span>
+  </div>
+</div>
+
+<script>
+  // Варианты верных ответов (принимаются как отдельные исправленные слова, так и всё предложение целиком)
+  const answers = {
+    q1: ["involves", "adolescence involves many important changes.", "adolescence involves many important changes"],
+    q2: ["enrolled", "my friend enrolled in this school last year.", "my friend enrolled in this school last year"],
+    q3: ["usually deal", "deal", "we usually deal with problems together.", "we usually deal with problems together"],
+    q4: ["has", "has already accomplished", "ben has already accomplished his main goal.", "ben has already accomplished his main goal"],
+    q5: ["were discussing", "they were discussing the welfare of vulnerable children when i entered the room.", "they were discussing the welfare of vulnerable children when i entered the room"],
+    q6: ["understands", "she understands this profound question now.", "she understands this profound question now"],
+    q7: ["visited", "last week, we visited a small rural community.", "last week we visited a small rural community.", "last week, we visited a small rural community"],
+    q8: ["were", "were learning", "the students were learning about economic disparity.", "the students were learning about economic disparity"],
+    q9: ["become", "has become", "he has become more mature since last year.", "he has become more mature since last year"],
+    q10: ["regardless of", "regardless of the difficulties, she completed the project.", "regardless of the difficulties she completed the project"],
+    q11: ["talks", "our teacher talks about obesity every monday.", "our teacher talks about obesity every monday"],
+    q12: ["improved", "his self-esteem improved after he won the competition.", "his self-esteem improved after he won the competition"]
+  };
+
+  const sentences = {
+    1: "Adolescence involves many important changes.",
+    2: "My friend enrolled in this school last year.",
+    3: "We usually deal with problems together.",
+    4: "Ben has already accomplished his main goal.",
+    5: "They were discussing the welfare of vulnerable children when I entered the room.",
+    6: "She understands this profound question now.",
+    7: "Last week, we visited a small rural community.",
+    8: "The students were learning about economic disparity.",
+    9: "He has become more mature since last year.",
+    10: "Regardless of the difficulties, she completed the project.",
+    11: "Our teacher talks about obesity every Monday.",
+    12: "His self-esteem improved after he won the competition."
+  };
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function speakItem(num) {
+    speakText(sentences[num]);
+  }
+
+  function checkAnswers() {
+    let totalItems = 12;
+    let score = 0;
+
+    for (let i = 1; i <= totalItems; i++) {
+      const input = document.getElementById('q' + i);
+      const parent = document.getElementById('item-' + i);
+      const val = input.value.trim().toLowerCase().replace(/[.,!]/g, "");
+      
+      parent.classList.remove('correct', 'incorrect');
+
+      const validAnswers = answers['q' + i].map(a => a.toLowerCase().replace(/[.,!]/g, ""));
+
+      if (validAnswers.includes(val)) {
+        parent.classList.add('correct');
+        score++;
+      } else {
+        parent.classList.add('incorrect');
+      }
+    }
+
+    const resultText = document.getElementById('result-text');
+    resultText.textContent = `Результат: ${score} / ${totalItems}`;
+    resultText.style.color = score === totalItems ? '#166534' : '#0f172a';
+  }
+
+  function resetAnswers() {
+    for (let i = 1; i <= 12; i++) {
+      const input = document.getElementById('q' + i);
+      const parent = document.getElementById('item-' + i);
+      input.value = '';
+      parent.classList.remove('correct', 'incorrect');
+    }
+    document.getElementById('result-text').textContent = '';
+  }
+</script>
+
+</body>
+</html>
