@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading Exercise. True or False</title>
+<style>
+  :root {
+    --primary: #2563eb;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --border: #cbd5e1;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 24px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.5rem;
+  }
+
+  .sub-instruction {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .reading-text {
+    background: #f1f5f9;
+    padding: 20px;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 28px;
+    color: #334155;
+    border-left: 4px solid var(--primary);
+  }
+
+  .reading-text p {
+    margin: 0 0 12px 0;
+  }
+
+  .reading-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .statement-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .statement-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  select {
+    font-size: 0.95rem;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    font-weight: 600;
+    color: #1e293b;
+    background-color: #fff;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.2s;
+  }
+
+  select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  }
+
+  .correction-box {
+    display: none;
+    width: 100%;
+    margin-top: 6px;
+  }
+
+  .correction-box input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    color: #1e293b;
+    background-color: #fff;
+  }
+
+  .correction-box input[type="text"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-size: 1.1rem;
+    line-height: 1;
+    border-radius: 4px;
+    transition: transform 0.1s;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:active {
+    transform: scale(1.2);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Reading Exercise. True or False</h2>
+  <div class="sub-instruction">Прочитай текст ниже и определи, являются ли утверждения правдой (True) или ложью (False). Если ответ <b>False</b>, напиши правильный вариант. Нажми 🔊, чтобы прослушать утверждение.</div>
+
+  <div class="reading-text">
+    <p>Adolescence is a time of change and learning. Teens and young people are dealing with profound questions every day. They are learning who they are, what they want in the future, what interests them, what university they want to enroll at (if they want to), what society wants from them, and what life is all about. These questions, and even more, can be very confusing and difficult to solve. These questions also involve emotions. Teens are learning to understand their emotions and understand who they are. Sometimes if we don't know why we are having such emotions, or how to deal with them, we lose confidence in ourselves. This can be very dangerous because a teenager can accomplish any goal they want with great results, but without confidence then they may not even try. In this situation, teens need help and guidance. Parents can help their children and teen by helping them build self-esteem and confidence.</p>
+    <p>Dealing with all of this is no easy task, but it is normal. It takes a long time to mature, and even many adults are learning, growing and developing their maturity and emotions every day. All people, from children to teens to adults, need support and help from those around them to learn, grow and become better people. Life questions can be even harder for teenagers living in more rural, poorer, and vulnerable communities. University might never be an option for them because their families don't have money. Their biggest worry is food, clothing, shelter and the welfare of themselves and their family. The economic disparity makes the questions of life even more challenging because it is about survival. Regardless of the country or economic level of the family, and no matter where a teen lives, he is sure to experience intense and profound physical, emotional and social changes as he matures.</p>
+  </div>
+
+  <div class="exercise-list">
+    <div class="item">
+      <div class="statement-row">
+        <div class="statement-content">
+          <span>1. Teenagers often struggle with questions about their identity and their plans for the future.</span>
+          <button class="audio-btn" onclick="speakItem(1)" title="Прослушать">🔊</button>
+        </div>
+        <select onchange="toggleCorrection(this)">
+          <option value="">-- выбери --</option>
+          <option value="True">True</option>
+          <option value="False">False</option>
+        </select>
+      </div>
+      <div class="correction-box">
+        <input type="text" placeholder="Напиши правильный вариант на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="statement-row">
+        <div class="statement-content">
+          <span>2. According to the text, a lack of confidence can stop teenagers from trying to reach their goals.</span>
+          <button class="audio-btn" onclick="speakItem(2)" title="Прослушать">🔊</button>
+        </div>
+        <select onchange="toggleCorrection(this)">
+          <option value="">-- выбери --</option>
+          <option value="True">True</option>
+          <option value="False">False</option>
+        </select>
+      </div>
+      <div class="correction-box">
+        <input type="text" placeholder="Напиши правильный вариант на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="statement-row">
+        <div class="statement-content">
+          <span>3. The text suggests that only teenagers go through the process of emotional growth and development.</span>
+          <button class="audio-btn" onclick="speakItem(3)" title="Прослушать">🔊</button>
+        </div>
+        <select onchange="toggleCorrection(this)">
+          <option value="">-- выбери --</option>
+          <option value="True">True</option>
+          <option value="False">False</option>
+        </select>
+      </div>
+      <div class="correction-box">
+        <input type="text" placeholder="Напиши правильный вариант на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="statement-row">
+        <div class="statement-content">
+          <span>4. Parents can play an important role in helping their children develop confidence and self-esteem.</span>
+          <button class="audio-btn" onclick="speakItem(4)" title="Прослушать">🔊</button>
+        </div>
+        <select onchange="toggleCorrection(this)">
+          <option value="">-- выбери --</option>
+          <option value="True">True</option>
+          <option value="False">False</option>
+        </select>
+      </div>
+      <div class="correction-box">
+        <input type="text" placeholder="Напиши правильный вариант на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="statement-row">
+        <div class="statement-content">
+          <span>5. Teenagers from poorer communities often face the same life challenges as those from wealthier backgrounds.</span>
+          <button class="audio-btn" onclick="speakItem(5)" title="Прослушать">🔊</button>
+        </div>
+        <select onchange="toggleCorrection(this)">
+          <option value="">-- выбери --</option>
+          <option value="True">True</option>
+          <option value="False">False</option>
+        </select>
+      </div>
+      <div class="correction-box">
+        <input type="text" placeholder="Напиши правильный вариант на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="statement-row">
+        <div class="statement-content">
+          <span>6. For some teenagers, getting enough food and having a safe place to live is a bigger concern than going to university.</span>
+          <button class="audio-btn" onclick="speakItem(6)" title="Прослушать">🔊</button>
+        </div>
+        <select onchange="toggleCorrection(this)">
+          <option value="">-- выбери --</option>
+          <option value="True">True</option>
+          <option value="False">False</option>
+        </select>
+      </div>
+      <div class="correction-box">
+        <input type="text" placeholder="Напиши правильный вариант на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="statement-row">
+        <div class="statement-content">
+          <span>7. The text states that economic difficulties make life questions easier for teenagers because they focus on simpler goals.</span>
+          <button class="audio-btn" onclick="speakItem(7)" title="Прослушать">🔊</button>
+        </div>
+        <select onchange="toggleCorrection(this)">
+          <option value="">-- выбери --</option>
+          <option value="True">True</option>
+          <option value="False">False</option>
+        </select>
+      </div>
+      <div class="correction-box">
+        <input type="text" placeholder="Напиши правильный вариант на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="statement-row">
+        <div class="statement-content">
+          <span>8. All teenagers, no matter where they live or what their family's situation is, will go through major physical, emotional, and social changes.</span>
+          <button class="audio-btn" onclick="speakItem(8)" title="Прослушать">🔊</button>
+        </div>
+        <select onchange="toggleCorrection(this)">
+          <option value="">-- выбери --</option>
+          <option value="True">True</option>
+          <option value="False">False</option>
+        </select>
+      </div>
+      <div class="correction-box">
+        <input type="text" placeholder="Напиши правильный вариант на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="statement-row">
+        <div class="statement-content">
+          <span>9. The text suggests that teenagers who do not understand their emotions may begin to lose trust in themselves.</span>
+          <button class="audio-btn" onclick="speakItem(9)" title="Прослушать">🔊</button>
+        </div>
+        <select onchange="toggleCorrection(this)">
+          <option value="">-- выбери --</option>
+          <option value="True">True</option>
+          <option value="False">False</option>
+        </select>
+      </div>
+      <div class="correction-box">
+        <input type="text" placeholder="Напиши правильный вариант на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="statement-row">
+        <div class="statement-content">
+          <span>10. According to the text, maturity is something that only young people need to work on, not adults.</span>
+          <button class="audio-btn" onclick="speakItem(10)" title="Прослушать">🔊</button>
+        </div>
+        <select onchange="toggleCorrection(this)">
+          <option value="">-- выбери --</option>
+          <option value="True">True</option>
+          <option value="False">False</option>
+        </select>
+      </div>
+      <div class="correction-box">
+        <input type="text" placeholder="Напиши правильный вариант на английском..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const statements = {
+    1: "Teenagers often struggle with questions about their identity and their plans for the future.",
+    2: "According to the text, a lack of confidence can stop teenagers from trying to reach their goals.",
+    3: "The text suggests that only teenagers go through the process of emotional growth and development.",
+    4: "Parents can play an important role in helping their children develop confidence and self-esteem.",
+    5: "Teenagers from poorer communities often face the same life challenges as those from wealthier backgrounds.",
+    6: "For some teenagers, getting enough food and having a safe place to live is a bigger concern than going to university.",
+    7: "The text states that economic difficulties make life questions easier for teenagers because they focus on simpler goals.",
+    8: "All teenagers, no matter where they live or what their family's situation is, will go through major physical, emotional, and social changes.",
+    9: "The text suggests that teenagers who do not understand their emotions may begin to lose trust in themselves.",
+    10: "According to the text, maturity is something that only young people need to work on, not adults."
+  };
+
+  function toggleCorrection(selectElement) {
+    const itemContainer = selectElement.parentElement.parentElement;
+    const correctionBox = itemContainer.querySelector('.correction-box');
+    
+    if (selectElement.value === 'False') {
+      correctionBox.style.display = 'block';
+    } else {
+      correctionBox.style.display = 'none';
+      const inputField = correctionBox.querySelector('input');
+      if (inputField) {
+        inputField.value = '';
+      }
+    }
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function speakItem(num) {
+    speakText(statements[num]);
+  }
+</script>
+
+</body>
+</html>
