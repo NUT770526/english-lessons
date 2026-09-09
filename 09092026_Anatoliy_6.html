@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English Grammar Practice | Translate into English</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      margin: 0;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background-color: #1e293b;
+      max-width: 820px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 35px 30px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      border: 1px solid #334155;
+    }
+
+    .header {
+      margin-bottom: 25px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #0284c7;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    p.instruction {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 25px;
+      margin-bottom: 30px;
+    }
+
+    .exercise-item {
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.05rem;
+      transition: border-color 0.2s ease;
+      flex-wrap: wrap;
+    }
+
+    .exercise-item:hover {
+      border-color: #3b82f6;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: #38bdf8;
+      min-width: 25px;
+    }
+
+    .source-text {
+      color: #cbd5e1;
+      font-weight: 500;
+      min-width: 220px;
+      border-right: 1px solid #334155;
+      padding-right: 12px;
+    }
+
+    .sentence-target {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    input[type="text"] {
+      background-color: #1e293b;
+      color: #f8fafc;
+      border: 2px solid #38bdf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 1rem;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s ease;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+    }
+
+    input[type="text"].correct {
+      background-color: #064e3b;
+      border-color: #10b981;
+      color: #a7f3d0;
+    }
+
+    input[type="text"].incorrect {
+      background-color: #7f1d1d;
+      border-color: #ef4444;
+      color: #fecaca;
+    }
+
+    .audio-btn {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .audio-btn:hover {
+      color: #38bdf8;
+      background-color: #1e293b;
+    }
+
+    .correct-answer-hint {
+      color: #f87171;
+      font-size: 0.85rem;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-top: 1px solid #334155;
+      padding-top: 25px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #0369a1;
+    }
+
+    .btn-secondary {
+      background-color: #334155;
+      color: #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .score-display {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: none;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background-color: #334155;
+      border-radius: 3px;
+      margin-top: 15px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #10b981;
+      transition: width 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <span class="badge">Business Grammar Practice</span>
+    <h1>Exercise 6. Translate into English</h1>
+    <p class="instruction">Перекладіть речення англійською мовою.</p>
+  </div>
+
+  <div class="exercise-list" id="exerciseList"></div>
+
+  <div class="progress-bar-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="actions">
+    <div>
+      <button class="btn btn-primary" onclick="checkAnswers()">Перевірити відповіді</button>
+      <button class="btn btn-secondary" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const data = [
+    {
+      uk: "1. Я бізнесмен.",
+      valid: ["i am a businessman", "i'm a businessman"],
+      display: "I am a businessman."
+    },
+    {
+      uk: "2. Я не запізнився.",
+      valid: ["i am not late", "i'm not late"],
+      display: "I am not late."
+    },
+    {
+      uk: "3. Ви мій помічник?",
+      valid: ["are you my assistant", "are you my assistant?"],
+      display: "Are you my assistant?"
+    },
+    {
+      uk: "4. Вона лаборантка.",
+      valid: ["she is a lab assistant", "she's a lab assistant"],
+      display: "She is a lab assistant."
+    },
+    {
+      uk: "5. Вона не з Італії.",
+      valid: ["she is not from italy", "she isn't from italy", "she's not from italy"],
+      display: "She is not from Italy."
+    },
+    {
+      uk: "6. Він зараз у лікарні?",
+      valid: ["is he in hospital now", "is he in hospital now?", "is he in hospital", "is he in the hospital now", "is he in the hospital"],
+      display: "Is he in hospital now?"
+    },
+    {
+      uk: "7. Ми на діловій зустрічі.",
+      valid: ["we are at a business meeting", "we're at a business meeting"],
+      display: "We are at a business meeting."
+    },
+    {
+      uk: "8. Ми не зайняті.",
+      valid: ["we are not busy", "we aren't busy", "we're not busy"],
+      display: "We are not busy."
+    },
+    {
+      uk: "9. Вони бізнесмени з Фінляндії.",
+      valid: ["they are businessmen from finland", "they're businessmen from finland"],
+      display: "They are businessmen from Finland."
+    },
+    {
+      uk: "10. Вони запізнилися?",
+      valid: ["are they late", "are they late?"],
+      display: "Are they late?"
+    },
+    {
+      uk: "11. Ти вчасно.",
+      valid: ["you are in time", "you're in time", "you are on time", "you're on time"],
+      display: "You are in time."
+    },
+    {
+      uk: "12. Я італієць / італійка.",
+      valid: ["i am italian", "i'm italian"],
+      display: "I am Italian."
+    }
+  ];
+
+  function renderExercise() {
+    const list = document.getElementById('exerciseList');
+    list.innerHTML = '';
+
+    data.forEach((item, index) => {
+      const itemHtml = `
+        <div class="exercise-item">
+          <span class="source-text">${item.uk}</span>
+          <div class="sentence-target">
+            <input type="text" id="input-${index}" placeholder="Введіть переклад..." autocomplete="off" />
+            <span id="hint-${index}" class="correct-answer-hint"></span>
+          </div>
+          <button class="audio-btn" title="Прослухати вимову" onclick="speakSentence(${index})">🔊</button>
+        </div>
+      `;
+      list.insertAdjacentHTML('beforeend', itemHtml);
+    });
+  }
+
+  function normalize(str) {
+    return str
+      .toLowerCase()
+      .replace(/[.,?!]/g, '')
+      .replace(/’/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+
+    data.forEach((item, index) => {
+      const input = document.getElementById(`input-${index}`);
+      const hint = document.getElementById(`hint-${index}`);
+      const val = normalize(input.value);
+
+      input.classList.remove('correct', 'incorrect');
+      hint.textContent = '';
+
+      if (val !== '' && item.valid.includes(val)) {
+        input.classList.add('correct');
+        correctCount++;
+      } else {
+        input.classList.add('incorrect');
+        hint.textContent = `(Правильно: ${item.display})`;
+      }
+    });
+
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+
+    const percentage = Math.round((correctCount / data.length) * 100);
+    scoreDisplay.textContent = `Результат: ${correctCount} / ${data.length} (${percentage}%)`;
+    scoreDisplay.style.display = 'block';
+
+    progressContainer.style.display = 'block';
+    progressBar.style.width = percentage + '%';
+  }
+
+  function resetExercise() {
+    data.forEach((_, index) => {
+      const input = document.getElementById(`input-${index}`);
+      const hint = document.getElementById(`hint-${index}`);
+      input.value = '';
+      input.classList.remove('correct', 'incorrect');
+      hint.textContent = '';
+    });
+
+    document.getElementById('scoreDisplay').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
+    document.getElementById('progressBar').style.width = '0%';
+    window.speechSynthesis.cancel();
+  }
+
+  function speakSentence(index) {
+    const item = data[index];
+    const input = document.getElementById(`input-${index}`);
+    const textToSpeak = input.value.trim() || item.display;
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
