@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Exercise with Audio</title>
+<style>
+  :root {
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --border: #cbd5e1;
+    --correct-bg: #dcfce7;
+    --correct-border: #4ade80;
+    --correct-text: #166534;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #f87171;
+    --incorrect-text: #991b1b;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 24px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 780px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.5rem;
+  }
+
+  .sub-instruction {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+  }
+
+  .word-bank {
+    background: #f1f5f9;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .word-chip {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #334155;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .word-chip:hover {
+    border-color: var(--primary);
+    background: #eff6ff;
+    color: var(--primary);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-size: 1rem;
+    line-height: 1;
+    border-radius: 4px;
+    transition: transform 0.1s;
+  }
+
+  .audio-btn:active {
+    transform: scale(1.2);
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 12px 16px;
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    transition: all 0.2s ease;
+  }
+
+  .item.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .item.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  input[type="text"] {
+    font-size: 1rem;
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    font-weight: 600;
+    width: 130px;
+    color: #1e293b;
+    background-color: #fff;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  }
+
+  .actions {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  button.main-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .btn-check {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  .btn-check:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .result {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Exercise 1. Complete the sentences</h2>
+  <div class="sub-instruction">Нажми на значок 🔊 рядом со словом, чтобы прослушать его произношение.</div>
+
+  <!-- Интерактивный список слов с озвучкой -->
+  <div class="word-bank">
+    <div class="word-chip" onclick="speak('adolescence')">adolescence <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('involve')">involve <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('profound')">profound <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('deal with')">deal with <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('accomplish')">accomplish <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('mature')">mature <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('welfare')">welfare <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('rural')">rural <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('enroll')">enroll <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('disparity')">disparity <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('obesity')">obesity <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('vulnerable')">vulnerable <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('self-esteem')">self-esteem <button class="audio-btn">🔊</button></div>
+    <div class="word-chip" onclick="speak('regardless')">regardless <button class="audio-btn">🔊</button></div>
+  </div>
+
+  <div class="exercise-list">
+    <div class="item" id="item-1">
+      <span>1.</span>
+      <input type="text" id="q1" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q1')">🔊</button>
+      <span>is an important period between childhood and adulthood.</span>
+    </div>
+
+    <div class="item" id="item-2">
+      <span>2. Teenagers often ask</span>
+      <input type="text" id="q2" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q2')">🔊</button>
+      <span>questions about their future.</span>
+    </div>
+
+    <div class="item" id="item-3">
+      <span>3. My cousin</span>
+      <input type="text" id="q3" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q3')">🔊</button>
+      <span>in a new school last September.</span>
+    </div>
+
+    <div class="item" id="item-4">
+      <span>4. At the moment, Kate is learning how to</span>
+      <input type="text" id="q4" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q4')">🔊</button>
+      <span>stress.</span>
+    </div>
+
+    <div class="item" id="item-5">
+      <span>5. Tom has already</span>
+      <input type="text" id="q5" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q5')">🔊</button>
+      <span>several important goals this year.</span>
+    </div>
+
+    <div class="item" id="item-6">
+      <span>6. Many teenagers in</span>
+      <input type="text" id="q6" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q6')">🔊</button>
+      <span>areas study online.</span>
+    </div>
+
+    <div class="item" id="item-7">
+      <span>7. There is still a significant</span>
+      <input type="text" id="q7" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q7')">🔊</button>
+      <span>between rich and poor communities.</span>
+    </div>
+
+    <div class="item" id="item-8">
+      <span>8. The organisation is working to improve the</span>
+      <input type="text" id="q8" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q8')">🔊</button>
+      <span>of local children.</span>
+    </div>
+
+    <div class="item" id="item-9">
+      <span>9. Younger teenagers can be especially</span>
+      <input type="text" id="q9" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q9')">🔊</button>
+      <span>to online bullying.</span>
+    </div>
+
+    <div class="item" id="item-10">
+      <span>10. Doctors often explain that regular exercise helps prevent</span>
+      <input type="text" id="q10" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q10')">🔊</button>
+      <span>.</span>
+    </div>
+
+    <div class="item" id="item-11">
+      <span>11. Winning the competition improved his</span>
+      <input type="text" id="q11" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q11')">🔊</button>
+      <span>.</span>
+    </div>
+
+    <div class="item" id="item-12">
+      <span>12. She continued studying</span>
+      <input type="text" id="q12" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q12')">🔊</button>
+      <span>of the difficulties.</span>
+    </div>
+
+    <div class="item" id="item-13">
+      <span>13. This school project will</span>
+      <input type="text" id="q13" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q13')">🔊</button>
+      <span>interviewing teenagers from different countries.</span>
+    </div>
+
+    <div class="item" id="item-14">
+      <span>14. Daniel has become more</span>
+      <input type="text" id="q14" autocomplete="off">
+      <button class="audio-btn" onclick="speakInput('q14')">🔊</button>
+      <span>since he started helping his family.</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="main-btn btn-check" onclick="checkAnswers()">Проверить</button>
+    <button class="main-btn btn-reset" onclick="resetAnswers()">Сбросить</button>
+    <span class="result" id="result-text"></span>
+  </div>
+</div>
+
+<script>
+  // Функция озвучки текста
+  function speak(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel(); // Остановить текущее воспроизведение
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9; // Слегка замедленный темп для четкости
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+
+  // Озвучка слова, которое введено в поле
+  function speakInput(inputId) {
+    const val = document.getElementById(inputId).value.trim();
+    if (val) {
+      speak(val);
+    } else {
+      // Если поле пустое, можно озвучить правильный ответ из объекта
+      const correctAns = answers[inputId];
+      const wordToSpeak = Array.isArray(correctAns) ? correctAns[0] : correctAns;
+      speak(wordToSpeak);
+    }
+  }
+
+  const answers = {
+    q1: 'adolescence',
+    q2: 'profound',
+    q3: ['enrolled', 'enrolment'],
+    q4: 'deal with',
+    q5: 'accomplished',
+    q6: 'rural',
+    q7: 'disparity',
+    q8: 'welfare',
+    q9: 'vulnerable',
+    q10: 'obesity',
+    q11: 'self-esteem',
+    q12: 'regardless',
+    q13: 'involve',
+    q14: 'mature'
+  };
+
+  function checkAnswers() {
+    let score = 0;
+    const keys = Object.keys(answers);
+
+    keys.forEach((key, index) => {
+      const input = document.getElementById(key);
+      const parent = document.getElementById('item-' + (index + 1));
+      const val = input.value.trim().toLowerCase();
+      
+      parent.classList.remove('correct', 'incorrect');
+
+      const correctAns = answers[key];
+      let isCorrect = false;
+
+      if (Array.isArray(correctAns)) {
+        isCorrect = correctAns.includes(val);
+      } else {
+        isCorrect = (val === correctAns);
+      }
+
+      if (isCorrect) {
+        parent.classList.add('correct');
+        score++;
+      } else {
+        parent.classList.add('incorrect');
+      }
+    });
+
+    const resultText = document.getElementById('result-text');
+    resultText.textContent = `Результат: ${score} / ${keys.length}`;
+    resultText.style.color = score === keys.length ? '#166534' : '#0f172a';
+  }
+
+  function resetAnswers() {
+    Object.keys(answers).forEach((key, index) => {
+      const input = document.getElementById(key);
+      const parent = document.getElementById('item-' + (index + 1));
+      input.value = '';
+      parent.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('result-text').textContent = '';
+  }
+</script>
+
+</body>
+</html>
