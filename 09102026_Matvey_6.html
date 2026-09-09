@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 6. Answer the questions</title>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --border: #cbd5e1;
+    --correct-bg: #dcfce7;
+    --correct-border: #4ade80;
+    --correct-text: #166534;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #f87171;
+    --incorrect-text: #991b1b;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 24px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.5rem;
+  }
+
+  .sub-instruction {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .hint-badge {
+    display: inline-block;
+    background-color: #eff6ff;
+    color: #1e40af;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 16px;
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    transition: all 0.2s ease;
+  }
+
+  .item.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .item.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  .sentence-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .sentence-text {
+    font-weight: 600;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  input[type="text"] {
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    font-weight: 500;
+    color: #1e293b;
+    background-color: #fff;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-size: 1.1rem;
+    line-height: 1;
+    border-radius: 4px;
+    transition: transform 0.1s;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:active {
+    transform: scale(1.2);
+  }
+
+  .actions {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  button.main-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .btn-check {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  .btn-check:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .result {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Exercise 6. Answer the questions</h2>
+  <div class="sub-instruction">Ответь полными предложениями. Используй слово в скобках и указанное время. Нажми 🔊, чтобы услышать вопрос.</div>
+
+  <div class="exercise-list">
+    <div class="item" id="item-1">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">1. What changes do teenagers experience?</span><br>
+          <span class="hint-badge">(adolescence — Present Simple)</span>
+        </div>
+        <button class="audio-btn" onclick="speakQuestion(1)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q1" placeholder="Напиши полный ответ на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-2">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">2. What difficult problem are you trying to solve now?</span><br>
+          <span class="hint-badge">(deal with — Present Continuous)</span>
+        </div>
+        <button class="audio-btn" onclick="speakQuestion(2)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q2" placeholder="Напиши полный ответ на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-3">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">3. What important goal did you reach last year?</span><br>
+          <span class="hint-badge">(accomplish — Past Simple)</span>
+        </div>
+        <button class="audio-btn" onclick="speakQuestion(3)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q3" placeholder="Напиши полный ответ на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-4">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">4. What useful skills have you learned this year?</span><br>
+          <span class="hint-badge">(mature — Present Perfect)</span>
+        </div>
+        <button class="audio-btn" onclick="speakQuestion(4)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q4" placeholder="Напиши полный ответ на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-5">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">5. What were you doing when your teacher entered the classroom?</span><br>
+          <span class="hint-badge">(profound — Past Continuous)</span>
+        </div>
+        <button class="audio-btn" onclick="speakQuestion(5)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q5" placeholder="Напиши полный ответ на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-6">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">6. Have you ever joined a new course or school programme?</span><br>
+          <span class="hint-badge">(enroll — Present Perfect)</span>
+        </div>
+        <button class="audio-btn" onclick="speakQuestion(6)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q6" placeholder="Напиши полный ответ на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-7">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">7. How does sport help teenagers?</span><br>
+          <span class="hint-badge">(obesity — Present Simple)</span>
+        </div>
+        <button class="audio-btn" onclick="speakQuestion(7)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q7" placeholder="Напиши полный ответ на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-8">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">8. What was your class discussing during the last lesson?</span><br>
+          <span class="hint-badge">(disparity — Past Continuous)</span>
+        </div>
+        <button class="audio-btn" onclick="speakQuestion(8)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q8" placeholder="Напиши полный ответ на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-9">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">9. How can adults support teenagers who need help?</span><br>
+          <span class="hint-badge">(vulnerable — Present Simple)</span>
+        </div>
+        <button class="audio-btn" onclick="speakQuestion(9)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q9" placeholder="Напиши полный ответ на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-10">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">10. What are you doing to become more confident?</span><br>
+          <span class="hint-badge">(self-esteem — Present Continuous)</span>
+        </div>
+        <button class="audio-btn" onclick="speakQuestion(10)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q10" placeholder="Напиши полный ответ на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-11">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">11. What has your school done to help its students?</span><br>
+          <span class="hint-badge">(welfare — Present Perfect)</span>
+        </div>
+        <button class="audio-btn" onclick="speakQuestion(11)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q11" placeholder="Напиши полный ответ на английском..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="item" id="item-12">
+      <div class="sentence-row">
+        <div>
+          <span class="sentence-text">12. What did you continue doing despite a difficulty?</span><br>
+          <span class="hint-badge">(regardless — Past Simple)</span>
+        </div>
+        <button class="audio-btn" onclick="speakQuestion(12)" title="Прослушать">🔊</button>
+      </div>
+      <div class="input-row">
+        <input type="text" id="q12" placeholder="Напиши полный ответ на английском..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="main-btn btn-check" onclick="checkAnswers()">Проверить</button>
+    <button class="main-btn btn-reset" onclick="resetAnswers()">Сбросить</button>
+    <span class="result" id="result-text"></span>
+  </div>
+</div>
+
+<script>
+  const questions = {
+    1: "What changes do teenagers experience?",
+    2: "What difficult problem are you trying to solve now?",
+    3: "What important goal did you reach last year?",
+    4: "What useful skills have you learned this year?",
+    5: "What were you doing when your teacher entered the classroom?",
+    6: "Have you ever joined a new course or school programme?",
+    7: "How does sport help teenagers?",
+    8: "What was your class discussing during the last lesson?",
+    9: "How can adults support teenagers who need help?",
+    10: "What are you doing to become more confident?",
+    11: "What has your school done to help its students?",
+    12: "What did you continue doing despite a difficulty?"
+  };
+
+  // Гибкие критерии проверки (необходимое ключевое слово + характерный глагол/время)
+  const validationRules = {
+    q1: { keywords: ["adolescence"], forms: ["experience", "experiences", "brings", "involves", "have", "has"] },
+    q2: { keywords: ["deal", "dealing"], forms: ["am", "is", "are", "dealing"] },
+    q3: { keywords: ["accomplish", "accomplished"], forms: ["accomplished", "reached", "achieved"] },
+    q4: { keywords: ["mature", "matured"], forms: ["have", "has", "'ve", "'s"] },
+    q5: { keywords: ["profound"], forms: ["was", "were"] },
+    q6: { keywords: ["enroll", "enrolled"], forms: ["have", "has", "'ve", "'s"] },
+    q7: { keywords: ["obesity"], forms: ["helps", "prevents", "fights", "is", "reduces", "protects"] },
+    q8: { keywords: ["disparity"], forms: ["was", "were", "discussing"] },
+    q9: { keywords: ["vulnerable"], forms: ["can", "help", "helps", "support", "supports"] },
+    q10: { keywords: ["self-esteem"], forms: ["am", "is", "are", "working", "improving", "doing", "trying"] },
+    q11: { keywords: ["welfare"], forms: ["have", "has", "'ve", "'s", "improved", "helped", "supported", "created"] },
+    q12: { keywords: ["regardless"], forms: ["continued", "kept", "finished", "worked", "completed", "did"] }
+  };
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function speakQuestion(num) {
+    speakText(questions[num]);
+  }
+
+  function cleanString(str) {
+    return str
+      .toLowerCase()
+      .replace(/[.,!?'’`]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function checkAnswers() {
+    let totalItems = 12;
+    let score = 0;
+
+    for (let i = 1; i <= totalItems; i++) {
+      const input = document.getElementById('q' + i);
+      const parent = document.getElementById('item-' + i);
+      const valClean = cleanString(input.value);
+      const rule = validationRules['q' + i];
+
+      parent.classList.remove('correct', 'incorrect');
+
+      const hasKeyword = rule.keywords.some(kw => valClean.includes(kw));
+      const hasForm = rule.forms.some(f => valClean.includes(f));
+
+      if (valClean.length > 5 && hasKeyword && hasForm) {
+        parent.classList.add('correct');
+        score++;
+      } else {
+        parent.classList.add('incorrect');
+      }
+    }
+
+    const resultText = document.getElementById('result-text');
+    resultText.textContent = `Результат: ${score} / ${totalItems}`;
+    resultText.style.color = score === totalItems ? '#166534' : '#0f172a';
+  }
+
+  function resetAnswers() {
+    for (let i = 1; i <= 12; i++) {
+      const input = document.getElementById('q' + i);
+      const parent = document.getElementById('item-' + i);
+      input.value = '';
+      parent.classList.remove('correct', 'incorrect');
+    }
+    document.getElementById('result-text').textContent = '';
+  }
+</script>
+
+</body>
+</html>
