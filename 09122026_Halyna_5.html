@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English Grammar Practice | Present Perfect Substitution</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      margin: 0;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background-color: #1e293b;
+      max-width: 860px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 35px 30px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      border: 1px solid #334155;
+    }
+
+    .header {
+      margin-bottom: 25px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #0284c7;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    p.instruction {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #38bdf8;
+      margin: 25px 0 15px 0;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #334155;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .exercise-item {
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
+      flex-wrap: wrap;
+    }
+
+    .exercise-item:hover {
+      border-color: #3b82f6;
+    }
+
+    .prompt-tag {
+      background-color: #334155;
+      color: #f1f5f9;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      min-width: 140px;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 220px;
+    }
+
+    input[type="text"] {
+      background-color: #1e293b;
+      color: #f8fafc;
+      border: 2px solid #38bdf8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+    }
+
+    input[type="text"].correct {
+      background-color: #064e3b;
+      border-color: #10b981;
+      color: #a7f3d0;
+    }
+
+    input[type="text"].incorrect {
+      background-color: #7f1d1d;
+      border-color: #ef4444;
+      color: #fecaca;
+    }
+
+    .audio-btn {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px;
+      border-radius: 6px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .audio-btn:hover {
+      color: #38bdf8;
+      background-color: #1e293b;
+    }
+
+    .correct-answer-hint {
+      color: #f87171;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-top: 1px solid #334155;
+      padding-top: 25px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #0369a1;
+    }
+
+    .btn-secondary {
+      background-color: #334155;
+      color: #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .score-display {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: none;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background-color: #334155;
+      border-radius: 3px;
+      margin-top: 15px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #10b981;
+      transition: width 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <span class="badge">Business Grammar Practice</span>
+    <h1>Exercise 1. Substitution Drill (Present Perfect)</h1>
+    <p class="instruction">Повторіть речення, замінюючи виділену частину підказаними словами.</p>
+  </div>
+
+  <div id="exerciseContainer"></div>
+
+  <div class="progress-bar-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="actions">
+    <div>
+      <button class="btn btn-primary" onclick="checkAnswers()">Перевірити відповіді</button>
+      <button class="btn btn-secondary" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const exercises = [
+    {
+      title: "1. Model: I've already seen it.",
+      items: [
+        { prompt: "written it", valid: ["i've already written it", "i have already written it"], display: "I've already written it." },
+        { prompt: "prepared it", valid: ["i've already prepared it", "i have already prepared it"], display: "I've already prepared it." },
+        { prompt: "solved it", valid: ["i've already solved it", "i have already solved it"], display: "I've already solved it." },
+        { prompt: "thought about it", valid: ["i've already thought about it", "i have already thought about it"], display: "I've already thought about it." },
+        { prompt: "looked through it", valid: ["i've already looked through it", "i have already looked through it"], display: "I've already looked through it." },
+        { prompt: "been there", valid: ["i've already been there", "i have already been there"], display: "I've already been there." },
+        { prompt: "met him", valid: ["i've already met him", "i have already met him"], display: "I've already met him." },
+        { prompt: "tried that", valid: ["i've already tried that", "i have already tried that"], display: "I've already tried that." },
+        { prompt: "done it", valid: ["i've already done it", "i have already done it"], display: "I've already done it." },
+        { prompt: "sent it off", valid: ["i've already sent it off", "i have already sent it off"], display: "I've already sent it off." }
+      ]
+    },
+    {
+      title: "2. Model: We haven't talked about it yet.",
+      items: [
+        { prompt: "thought of it", valid: ["we haven't thought of it yet", "we have not thought of it yet"], display: "We haven't thought of it yet." },
+        { prompt: "heard of it", valid: ["we haven't heard of it yet", "we have not heard of it yet"], display: "We haven't heard of it yet." },
+        { prompt: "received it", valid: ["we haven't received it yet", "we have not received it yet"], display: "We haven't received it yet." },
+        { prompt: "tested it", valid: ["we haven't tested it yet", "we have not tested it yet"], display: "We haven't tested it yet." },
+        { prompt: "paid for it", valid: ["we haven't paid for it yet", "we have not paid for it yet"], display: "We haven't paid for it yet." },
+        { prompt: "settled it", valid: ["we haven't settled it yet", "we have not settled it yet"], display: "We haven't settled it yet." },
+        { prompt: "finished it", valid: ["we haven't finished it yet", "we have not finished it yet"], display: "We haven't finished it yet." },
+        { prompt: "called them", valid: ["we haven't called them yet", "we have not called them yet"], display: "We haven't called them yet." },
+        { prompt: "found it out", valid: ["we haven't found it out yet", "we have not found it out yet"], display: "We haven't found it out yet." },
+        { prompt: "sent it off", valid: ["we haven't sent it off yet", "we have not sent it off yet"], display: "We haven't sent it off yet." }
+      ]
+    },
+    {
+      title: "3. Model: He's just called you.",
+      items: [
+        { prompt: "been here", valid: ["he's just been here", "he has just been here"], display: "He's just been here." },
+        { prompt: "said it", valid: ["he's just said it", "he has just said it"], display: "He's just said it." },
+        { prompt: "answered it", valid: ["he's just answered it", "he has just answered it"], display: "He's just answered it." },
+        { prompt: "remembered it", valid: ["he's just remembered it", "he has just remembered it"], display: "He's just remembered it." },
+        { prompt: "brought it back", valid: ["he's just brought it back", "he has just brought it back"], display: "He's just brought it back." },
+        { prompt: "given it back", valid: ["he's just given it back", "he has just given it back"], display: "He's just given it back." },
+        { prompt: "taken it away", valid: ["he's just taken it away", "he has just taken it away"], display: "He's just taken it away." },
+        { prompt: "put it on your desk", valid: ["he's just put it on your desk", "he has just put it on your desk"], display: "He's just put it on your desk." }
+      ]
+    },
+    {
+      title: "4. Model: Have you ever thought of it?",
+      items: [
+        { prompt: "heard of it", valid: ["have you ever heard of it", "have you ever heard of it?"], display: "Have you ever heard of it?" },
+        { prompt: "read it", valid: ["have you ever read it", "have you ever read it?"], display: "Have you ever read it?" },
+        { prompt: "seen it", valid: ["have you ever seen it", "have you ever seen it?"], display: "Have you ever seen it?" },
+        { prompt: "discussed it", valid: ["have you ever discussed it", "have you ever discussed it?"], display: "Have you ever discussed it?" },
+        { prompt: "eaten Chinese food", valid: ["have you ever eaten chinese food", "have you ever eaten chinese food?"], display: "Have you ever eaten Chinese food?" },
+        { prompt: "tried that", valid: ["have you ever tried that", "have you ever tried that?"], display: "Have you ever tried that?" },
+        { prompt: "been there", valid: ["have you ever been there", "have you ever been there?"], display: "Have you ever been there?" },
+        { prompt: "been to that restaurant", valid: ["have you ever been to that restaurant", "have you ever been to that restaurant?"], display: "Have you ever been to that restaurant?" }
+      ]
+    },
+    {
+      title: "5. Model: I've never been to Paris.",
+      items: [
+        { prompt: "France", valid: ["i've never been to france", "i have never been to france"], display: "I've never been to France." },
+        { prompt: "Japan", valid: ["i've never been to japan", "i have never been to japan"], display: "I've never been to Japan." },
+        { prompt: "China", valid: ["i've never been to china", "i have never been to china"], display: "I've never been to China." },
+        { prompt: "India", valid: ["i've never been to india", "i have never been to india"], display: "I've never been to India." },
+        { prompt: "Canada", valid: ["i've never been to canada", "i have never been to canada"], display: "I've never been to Canada." },
+        { prompt: "England", valid: ["i've never been to england", "i have never been to england"], display: "I've never been to England." }
+      ]
+    }
+  ];
+
+  let totalQuestions = 0;
+
+  function renderExercises() {
+    const container = document.getElementById('exerciseContainer');
+    container.innerHTML = '';
+    let globalIndex = 0;
+
+    exercises.forEach((ex) => {
+      let sectionHtml = `<div class="section-title">${ex.title}</div><div class="exercise-list">`;
+
+      ex.items.forEach((item) => {
+        sectionHtml += `
+          <div class="exercise-item">
+            <span class="prompt-tag">+ ${item.prompt}</span>
+            <div class="input-wrapper">
+              <input type="text" id="input-${globalIndex}" data-display="${item.display}" placeholder="Введіть повне речення..." autocomplete="off" />
+              <span id="hint-${globalIndex}" class="correct-answer-hint"></span>
+            </div>
+            <button class="audio-btn" title="Прослухати вимову" onclick="speakSentence(${globalIndex})">🔊</button>
+          </div>
+        `;
+        globalIndex++;
+      });
+
+      sectionHtml += `</div>`;
+      container.insertAdjacentHTML('beforeend', sectionHtml);
+    });
+
+    totalQuestions = globalIndex;
+  }
+
+  function normalize(str) {
+    return str
+      .toLowerCase()
+      .replace(/[.,?!]/g, '')
+      .replace(/’/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+    let globalIndex = 0;
+
+    exercises.forEach((ex) => {
+      ex.items.forEach((item) => {
+        const input = document.getElementById(`input-${globalIndex}`);
+        const hint = document.getElementById(`hint-${globalIndex}`);
+        const val = normalize(input.value);
+
+        input.classList.remove('correct', 'incorrect');
+        hint.textContent = '';
+
+        if (val !== '' && item.valid.includes(val)) {
+          input.classList.add('correct');
+          correctCount++;
+        } else {
+          input.classList.add('incorrect');
+          hint.textContent = `(Правильно: ${item.display})`;
+        }
+        globalIndex++;
+      });
+    });
+
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+
+    const percentage = Math.round((correctCount / totalQuestions) * 100);
+    scoreDisplay.textContent = `Результат: ${correctCount} / ${totalQuestions} (${percentage}%)`;
+    scoreDisplay.style.display = 'block';
+
+    progressContainer.style.display = 'block';
+    progressBar.style.width = percentage + '%';
+  }
+
+  function resetExercise() {
+    for (let i = 0; i < totalQuestions; i++) {
+      const input = document.getElementById(`input-${i}`);
+      const hint = document.getElementById(`hint-${i}`);
+      input.value = '';
+      input.classList.remove('correct', 'incorrect');
+      hint.textContent = '';
+    }
+
+    document.getElementById('scoreDisplay').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
+    document.getElementById('progressBar').style.width = '0%';
+    window.speechSynthesis.cancel();
+  }
+
+  function speakSentence(index) {
+    const input = document.getElementById(`input-${index}`);
+    const display = input.getAttribute('data-display');
+    const textToSpeak = input.value.trim() || display;
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  renderExercises();
+</script>
+
+</body>
+</html>
