@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading & Reading Comprehension Practice | Teen Life</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      margin: 0;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background-color: #1e293b;
+      max-width: 860px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 35px 30px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      border: 1px solid #334155;
+    }
+
+    .header {
+      margin-bottom: 25px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #8b5cf6;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: 'Fredoka', cursive, sans-serif;
+      margin: 0 0 8px 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+    }
+
+    p.instruction {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .text-box {
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 30px;
+      line-height: 1.75;
+      font-size: 1.05rem;
+      color: #cbd5e1;
+    }
+
+    .text-box h3 {
+      font-family: 'Fredoka', cursive, sans-serif;
+      color: #38bdf8;
+      margin: 0 0 12px 0;
+      font-weight: 600;
+    }
+
+    .vocab {
+      color: #38bdf8;
+      font-weight: 600;
+      border-bottom: 2px dashed #38bdf8;
+      position: relative;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 2px;
+      transition: all 0.2s ease;
+    }
+
+    .vocab:hover {
+      background-color: rgba(56, 189, 248, 0.15);
+      border-radius: 4px;
+    }
+
+    .vocab .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      width: max-content;
+      max-width: 200px;
+      background-color: #0284c7;
+      color: #ffffff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 6px 10px;
+      position: absolute;
+      z-index: 10;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+
+    .vocab .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #0284c7 transparent transparent transparent;
+    }
+
+    .vocab:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .inline-audio {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    .questions-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .q-card {
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s ease;
+    }
+
+    .q-card:hover {
+      border-color: #8b5cf6;
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #f1f5f9;
+      display: flex;
+      gap: 10px;
+    }
+
+    .q-num {
+      color: #8b5cf6;
+      font-weight: 700;
+    }
+
+    .options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .opt-btn {
+      background-color: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .opt-btn:hover {
+      background-color: #334155;
+      color: #ffffff;
+    }
+
+    .opt-btn.selected-true {
+      background-color: #064e3b !important;
+      border-color: #10b981 !important;
+      color: #a7f3d0 !important;
+    }
+
+    .opt-btn.selected-false {
+      background-color: #7f1d1d !important;
+      border-color: #ef4444 !important;
+      color: #fecaca !important;
+    }
+
+    /* Input area for False correction */
+    .correction-box {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .correction-box label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #f43f5e;
+    }
+
+    .correction-input {
+      background-color: #1e293b;
+      color: #f8fafc;
+      border: 1.5px solid #f43f5e;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      outline: none;
+      width: 100%;
+    }
+
+    .correction-input:focus {
+      box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25);
+    }
+
+    .hint-text {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #f87171;
+      display: none;
+      line-height: 1.4;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-top: 1px solid #334155;
+      padding-top: 25px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: #8b5cf6;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #7c3aed;
+    }
+
+    .btn-secondary {
+      background-color: #334155;
+      color: #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .score-display {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: none;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background-color: #334155;
+      border-radius: 3px;
+      margin-top: 15px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #10b981;
+      transition: width 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <span class="badge">Teen Reading Practice</span>
+    <h1>Understanding Adolescence</h1>
+    <p class="instruction">Прочитайте текст. Дайте відповіді: <strong>True</strong>, <strong>False</strong> або <strong>Not Stated</strong>. Якщо ви обираєте <strong>False</strong>, запишіть виправлене речення у поле нижче.</p>
+  </div>
+
+  <div class="text-box">
+    <h3>Text 1</h3>
+    <p>
+      <span class="vocab" onclick="speakWord('Adolescence')">Adolescence<span class="tooltip">Підлітковий вік</span><span class="inline-audio">🔊</span></span> is a time of change and learning. Teens and young people are dealing with 
+      <span class="vocab" onclick="speakWord('profound')">profound<span class="tooltip">глибокі / серйозні</span><span class="inline-audio">🔊</span></span> questions every day. They are learning who they are, what they want in the future, what interests them, what university they want to 
+      <span class="vocab" onclick="speakWord('enroll at')">enroll at<span class="tooltip">вступити до</span><span class="inline-audio">🔊</span></span> (if they want to), what society wants from them, and what life is all about. These questions, and even more, can be very 
+      <span class="vocab" onclick="speakWord('confusing')">confusing<span class="tooltip">заплутані</span><span class="inline-audio">🔊</span></span> and difficult to solve. These questions also involve emotions. Teens are learning to understand their emotions and understand who they are.
+    </p>
+    <p>
+      Sometimes if we don't know why we are having such emotions, or how to deal with them, we lose 
+      <span class="vocab" onclick="speakWord('confidence')">confidence<span class="tooltip">впевненість</span><span class="inline-audio">🔊</span></span> in ourselves. This can be very dangerous because a teenager can 
+      <span class="vocab" onclick="speakWord('accomplish')">accomplish<span class="tooltip">досягти</span><span class="inline-audio">🔊</span></span> any goal they want with great results, but without confidence then they may not even try. In this situation, teens need help and 
+      <span class="vocab" onclick="speakWord('guidance')">guidance<span class="tooltip">порада / наставництво</span><span class="inline-audio">🔊</span></span>. Parents can help their children and teen by helping them build 
+      <span class="vocab" onclick="speakWord('self-esteem')">self-esteem<span class="tooltip">самооцінка</span><span class="inline-audio">🔊</span></span> and confidence.
+    </p>
+
+    <h3>Text 2</h3>
+    <p>
+      Dealing with all of this is no easy task, but it is normal. It takes a long time to 
+      <span class="vocab" onclick="speakWord('mature')">mature<span class="tooltip">ставати дорослим</span><span class="inline-audio">🔊</span></span>, and even many adults are learning, growing and developing their 
+      <span class="vocab" onclick="speakWord('maturity')">maturity<span class="tooltip">зрілість</span><span class="inline-audio">🔊</span></span> and emotions every day. All people, from children to teens to adults, need support and help from those around them to learn, grow and become better people.
+    </p>
+    <p>
+      Life questions can be even harder for teenagers living in more 
+      <span class="vocab" onclick="speakWord('rural')">rural<span class="tooltip">сільський</span><span class="inline-audio">🔊</span></span>, poorer, and 
+      <span class="vocab" onclick="speakWord('vulnerable')">vulnerable<span class="tooltip">уразливі / незахищені</span><span class="inline-audio">🔊</span></span> communities. University might never be an option for them because their families don't have money. Their biggest 
+      <span class="vocab" onclick="speakWord('worry')">worry<span class="tooltip">хвилювання / турбота</span><span class="inline-audio">🔊</span></span> is food, clothing, shelter, and the 
+      <span class="vocab" onclick="speakWord('welfare')">welfare<span class="tooltip">добробут</span><span class="inline-audio">🔊</span></span> of themselves and their family. The economic 
+      <span class="vocab" onclick="speakWord('disparity')">disparity<span class="tooltip">нерівність</span><span class="inline-audio">🔊</span></span> makes the questions of life even more challenging because it is about survival.
+    </p>
+    <p>
+      Regardless of the country or economic level of the family, and no matter where a teen lives, he is sure to experience intense and profound physical, emotional and social changes as he matures.
+    </p>
+  </div>
+
+  <div class="questions-container" id="questionsContainer"></div>
+
+  <div class="progress-bar-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="actions">
+    <div>
+      <button class="btn btn-primary" onclick="checkAnswers()">Перевірити відповіді</button>
+      <button class="btn btn-secondary" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const questions = [
+    { text: "Teenagers often think about what they want to do in the future.", answer: "True" },
+    { text: "Losing confidence can stop a teenager from trying to reach their goals.", answer: "True" },
+    { text: "Parents can help their children feel more confident and build self-esteem.", answer: "True" },
+    { text: "It is easy for everyone to deal with growing up and changing.", answer: "False", correction: "It is not easy / no easy task for everyone to deal with growing up and changing." },
+    { text: "Only teenagers need support from the people around them to grow and improve.", answer: "False", correction: "All people, from children to teens to adults, need support." },
+    { text: "For teens in poorer communities, going to university is sometimes not possible.", answer: "True" },
+    { text: "Teenagers in poor communities worry most about getting good grades at school.", answer: "False", correction: "Their biggest worry is food, clothing, shelter, and welfare." },
+    { text: "All teenagers go through strong physical, emotional, and social changes as they grow up.", answer: "True" },
+    { text: "Many adults are still learning and growing every day, just like teenagers.", answer: "True" },
+    { text: "A teenager who feels confident may not try to reach their goals.", answer: "False", correction: "A teenager without confidence may not try to reach their goals." }
+  ];
+
+  const userAnswers = Array(questions.length).fill(null);
+
+  function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+
+    questions.forEach((q, idx) => {
+      const qHtml = `
+        <div class="q-card">
+          <div class="q-text">
+            <span class="q-num">${idx + 1}.</span>
+            <span>${q.text}</span>
+          </div>
+          <div class="options">
+            <button class="opt-btn" id="btn-${idx}-True" onclick="selectOption(${idx}, 'True')">True</button>
+            <button class="opt-btn" id="btn-${idx}-False" onclick="selectOption(${idx}, 'False')">False</button>
+            <button class="opt-btn" id="btn-${idx}-NotStated" onclick="selectOption(${idx}, 'Not Stated')">Not Stated</button>
+          </div>
+          
+          <div class="correction-box" id="corr-box-${idx}">
+            <label for="corr-input-${idx}">✍️ Перепишіть або виправте речення англійською мовою:</label>
+            <input type="text" class="correction-input" id="corr-input-${idx}" placeholder="Write the correct sentence..." autocomplete="off">
+          </div>
+
+          <div class="hint-text" id="hint-${idx}"></div>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', qHtml);
+    });
+  }
+
+  function selectOption(qIdx, val) {
+    userAnswers[qIdx] = val;
+    ['True', 'False', 'Not Stated'].forEach(opt => {
+      const btn = document.getElementById(`btn-${qIdx}-${opt}`);
+      btn.classList.remove('selected-true', 'selected-false');
+      if (opt === val) {
+        btn.classList.add('selected-true');
+      }
+    });
+
+    const corrBox = document.getElementById(`corr-box-${qIdx}`);
+    if (val === 'False') {
+      corrBox.style.display = 'flex';
+    } else {
+      corrBox.style.display = 'none';
+    }
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+
+    questions.forEach((q, idx) => {
+      const hint = document.getElementById(`hint-${idx}`);
+      const selected = userAnswers[idx];
+
+      ['True', 'False', 'Not Stated'].forEach(opt => {
+        const btn = document.getElementById(`btn-${idx}-${opt}`);
+        btn.classList.remove('selected-true', 'selected-false');
+      });
+
+      if (selected === q.answer) {
+        correctCount++;
+        if (selected) {
+          document.getElementById(`btn-${idx}-${selected}`).classList.add('selected-true');
+        }
+        hint.style.display = 'none';
+      } else {
+        if (selected) {
+          document.getElementById(`btn-${idx}-${selected}`).classList.add('selected-false');
+        }
+        document.getElementById(`btn-${idx}-${q.answer}`).classList.add('selected-true');
+        
+        let hintMsg = `Правильна відповідь: ${q.answer}`;
+        if (q.answer === 'False' && q.correction) {
+          hintMsg += `<br><em>Зразок виправлення: ${q.correction}</em>`;
+        }
+        hint.innerHTML = hintMsg;
+        hint.style.display = 'block';
+      }
+    });
+
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+
+    const percentage = Math.round((correctCount / questions.length) * 100);
+    scoreDisplay.textContent = `Результат: ${correctCount} / ${questions.length} (${percentage}%)`;
+    scoreDisplay.style.display = 'block';
+
+    progressContainer.style.display = 'block';
+    progressBar.style.width = percentage + '%';
+  }
+
+  function resetExercise() {
+    userAnswers.fill(null);
+    questions.forEach((_, idx) => {
+      ['True', 'False', 'Not Stated'].forEach(opt => {
+        const btn = document.getElementById(`btn-${idx}-${opt}`);
+        btn.classList.remove('selected-true', 'selected-false');
+      });
+      const hint = document.getElementById(`hint-${idx}`);
+      hint.style.display = 'none';
+
+      const corrBox = document.getElementById(`corr-box-${idx}`);
+      const corrInput = document.getElementById(`corr-input-${idx}`);
+      corrBox.style.display = 'none';
+      corrInput.value = '';
+    });
+
+    document.getElementById('scoreDisplay').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
+    document.getElementById('progressBar').style.width = '0%';
+    window.speechSynthesis.cancel();
+  }
+
+  function speakWord(word) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  renderQuestions();
+</script>
+
+</body>
+</html>
