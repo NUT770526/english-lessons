@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 3. Match the sentence halves</title>
+<style>
+  :root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #1f2937;
+    --border: #c7d2fe;
+    --correct-bg: #dcfce7;
+    --correct-border: #22c55e;
+    --correct-text: #15803d;
+    --wrong-bg: #fee2e2;
+    --wrong-border: #ef4444;
+    --wrong-text: #b91c1c;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--border);
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.4rem;
+    color: #312e81;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #4b5563;
+    font-style: italic;
+  }
+
+  .matching-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .match-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 12px 16px;
+    gap: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .match-row:hover {
+    border-color: #a5b4fc;
+  }
+
+  .left-part {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .letter-tag {
+    font-weight: 700;
+    color: #4f46e5;
+    background: #e0e7ff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.95rem;
+  }
+
+  .sentence-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e1b4b;
+  }
+
+  .audio-btn {
+    background: #f3f4f6;
+    border: none;
+    cursor: pointer;
+    padding: 5px 8px;
+    font-size: 1rem;
+    line-height: 1;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background-color: #e0e7ff;
+    transform: scale(1.05);
+  }
+
+  select {
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #1f2937;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 140px;
+  }
+
+  select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+
+  select.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  select.wrong {
+    background-color: var(--wrong-bg);
+    border-color: var(--wrong-border);
+    color: var(--wrong-text);
+  }
+
+  .endings-card {
+    background-color: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 10px;
+  }
+
+  .endings-card h3 {
+    margin: 0 0 12px 0;
+    font-size: 1.1rem;
+    color: #334155;
+  }
+
+  .endings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+  }
+
+  @media (max-width: 600px) {
+    .endings-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .ending-item {
+    font-size: 0.93rem;
+    color: #475569;
+    line-height: 1.4;
+  }
+
+  .ending-item span {
+    font-weight: 700;
+    color: #0284c7;
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .check-btn {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .check-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2>Exercise 3. Match the sentence halves</h2>
+    <div class="subtitle">З'єднай початок речення з правильним закінченням.</div>
+  </div>
+
+  <div class="matching-list">
+
+    <div class="match-row" data-correct="5">
+      <div class="left-part">
+        <span class="letter-tag">A</span>
+        <span class="sentence-text">Although Harold was only four,</span>
+        <button class="audio-btn" onclick="speakSentence('Although Harold was only four,')" title="Listen">🔊</button>
+      </div>
+      <select>
+        <option value="">Select ending...</option>
+        <option value="1">1. so as to keep him safe.</option>
+        <option value="2">2. so as not to get injured.</option>
+        <option value="3">3. his mum kept calm.</option>
+        <option value="4">4. she managed to lift the bookcase.</option>
+        <option value="5">5. he survived the earthquake unharmed.</option>
+        <option value="6">6. that some furniture fell.</option>
+        <option value="7">7. that Harold never forgot his mum’s bravery.</option>
+        <option value="8">8. he managed to crawl out.</option>
+        <option value="9">9. although the family was in the living room.</option>
+        <option value="10">10. so as to help her son escape.</option>
+      </select>
+    </div>
+
+    <div class="match-row" data-correct="3">
+      <div class="left-part">
+        <span class="letter-tag">B</span>
+        <span class="sentence-text">Despite the danger,</span>
+        <button class="audio-btn" onclick="speakSentence('Despite the danger,')" title="Listen">🔊</button>
+      </div>
+      <select>
+        <option value="">Select ending...</option>
+        <option value="1">1. so as to keep him safe.</option>
+        <option value="2">2. so as not to get injured.</option>
+        <option value="3">3. his mum kept calm.</option>
+        <option value="4">4. she managed to lift the bookcase.</option>
+        <option value="5">5. he survived the earthquake unharmed.</option>
+        <option value="6">6. that some furniture fell.</option>
+        <option value="7">7. that Harold never forgot his mum’s bravery.</option>
+        <option value="8">8. he managed to crawl out.</option>
+        <option value="9">9. although the family was in the living room.</option>
+        <option value="10">10. so as to help her son escape.</option>
+      </select>
+    </div>
+
+    <div class="match-row" data-correct="4">
+      <div class="left-part">
+        <span class="letter-tag">C</span>
+        <span class="sentence-text">In spite of not being strong,</span>
+        <button class="audio-btn" onclick="speakSentence('In spite of not being strong,')" title="Listen">🔊</button>
+      </div>
+      <select>
+        <option value="">Select ending...</option>
+        <option value="1">1. so as to keep him safe.</option>
+        <option value="2">2. so as not to get injured.</option>
+        <option value="3">3. his mum kept calm.</option>
+        <option value="4">4. she managed to lift the bookcase.</option>
+        <option value="5">5. he survived the earthquake unharmed.</option>
+        <option value="6">6. that some furniture fell.</option>
+        <option value="7">7. that Harold never forgot his mum’s bravery.</option>
+        <option value="8">8. he managed to crawl out.</option>
+        <option value="9">9. although the family was in the living room.</option>
+        <option value="10">10. so as to help her son escape.</option>
+      </select>
+    </div>
+
+    <div class="match-row" data-correct="1">
+      <div class="left-part">
+        <span class="letter-tag">D</span>
+        <span class="sentence-text">Mum put Harold under the table</span>
+        <button class="audio-btn" onclick="speakSentence('Mum put Harold under the table')" title="Listen">🔊</button>
+      </div>
+      <select>
+        <option value="">Select ending...</option>
+        <option value="1">1. so as to keep him safe.</option>
+        <option value="2">2. so as not to get injured.</option>
+        <option value="3">3. his mum kept calm.</option>
+        <option value="4">4. she managed to lift the bookcase.</option>
+        <option value="5">5. he survived the earthquake unharmed.</option>
+        <option value="6">6. that some furniture fell.</option>
+        <option value="7">7. that Harold never forgot his mum’s bravery.</option>
+        <option value="8">8. he managed to crawl out.</option>
+        <option value="9">9. although the family was in the living room.</option>
+        <option value="10">10. so as to help her son escape.</option>
+      </select>
+    </div>
+
+    <div class="match-row" data-correct="2">
+      <div class="left-part">
+        <span class="letter-tag">E</span>
+        <span class="sentence-text">She moved carefully</span>
+        <button class="audio-btn" onclick="speakSentence('She moved carefully')" title="Listen">🔊</button>
+      </div>
+      <select>
+        <option value="">Select ending...</option>
+        <option value="1">1. so as to keep him safe.</option>
+        <option value="2">2. so as not to get injured.</option>
+        <option value="3">3. his mum kept calm.</option>
+        <option value="4">4. she managed to lift the bookcase.</option>
+        <option value="5">5. he survived the earthquake unharmed.</option>
+        <option value="6">6. that some furniture fell.</option>
+        <option value="7">7. that Harold never forgot his mum’s bravery.</option>
+        <option value="8">8. he managed to crawl out.</option>
+        <option value="9">9. although the family was in the living room.</option>
+        <option value="10">10. so as to help her son escape.</option>
+      </select>
+    </div>
+
+    <div class="match-row" data-correct="6">
+      <div class="left-part">
+        <span class="letter-tag">F</span>
+        <span class="sentence-text">The earthquake was so huge</span>
+        <button class="audio-btn" onclick="speakSentence('The earthquake was so huge')" title="Listen">🔊</button>
+      </div>
+      <select>
+        <option value="">Select ending...</option>
+        <option value="1">1. so as to keep him safe.</option>
+        <option value="2">2. so as not to get injured.</option>
+        <option value="3">3. his mum kept calm.</option>
+        <option value="4">4. she managed to lift the bookcase.</option>
+        <option value="5">5. he survived the earthquake unharmed.</option>
+        <option value="6">6. that some furniture fell.</option>
+        <option value="7">7. that Harold never forgot his mum’s bravery.</option>
+        <option value="8">8. he managed to crawl out.</option>
+        <option value="9">9. although the family was in the living room.</option>
+        <option value="10">10. so as to help her son escape.</option>
+      </select>
+    </div>
+
+    <div class="match-row" data-correct="7">
+      <div class="left-part">
+        <span class="letter-tag">G</span>
+        <span class="sentence-text">It was such a frightening experience</span>
+        <button class="audio-btn" onclick="speakSentence('It was such a frightening experience')" title="Listen">🔊</button>
+      </div>
+      <select>
+        <option value="">Select ending...</option>
+        <option value="1">1. so as to keep him safe.</option>
+        <option value="2">2. so as not to get injured.</option>
+        <option value="3">3. his mum kept calm.</option>
+        <option value="4">4. she managed to lift the bookcase.</option>
+        <option value="5">5. he survived the earthquake unharmed.</option>
+        <option value="6">6. that some furniture fell.</option>
+        <option value="7">7. that Harold never forgot his mum’s bravery.</option>
+        <option value="8">8. he managed to crawl out.</option>
+        <option value="9">9. although the family was in the living room.</option>
+        <option value="10">10. so as to help her son escape.</option>
+      </select>
+    </div>
+
+    <div class="match-row" data-correct="8">
+      <div class="left-part">
+        <span class="letter-tag">H</span>
+        <span class="sentence-text">Although Harold was trapped,</span>
+        <button class="audio-btn" onclick="speakSentence('Although Harold was trapped,')" title="Listen">🔊</button>
+      </div>
+      <select>
+        <option value="">Select ending...</option>
+        <option value="1">1. so as to keep him safe.</option>
+        <option value="2">2. so as not to get injured.</option>
+        <option value="3">3. his mum kept calm.</option>
+        <option value="4">4. she managed to lift the bookcase.</option>
+        <option value="5">5. he survived the earthquake unharmed.</option>
+        <option value="6">6. that some furniture fell.</option>
+        <option value="7">7. that Harold never forgot his mum’s bravery.</option>
+        <option value="8">8. he managed to crawl out.</option>
+        <option value="9">9. although the family was in the living room.</option>
+        <option value="10">10. so as to help her son escape.</option>
+      </select>
+    </div>
+
+    <div class="match-row" data-correct="9">
+      <div class="left-part">
+        <span class="letter-tag">I</span>
+        <span class="sentence-text">The furniture suddenly started shaking,</span>
+        <button class="audio-btn" onclick="speakSentence('The furniture suddenly started shaking,')" title="Listen">🔊</button>
+      </div>
+      <select>
+        <option value="">Select ending...</option>
+        <option value="1">1. so as to keep him safe.</option>
+        <option value="2">2. so as not to get injured.</option>
+        <option value="3">3. his mum kept calm.</option>
+        <option value="4">4. she managed to lift the bookcase.</option>
+        <option value="5">5. he survived the earthquake unharmed.</option>
+        <option value="6">6. that some furniture fell.</option>
+        <option value="7">7. that Harold never forgot his mum’s bravery.</option>
+        <option value="8">8. he managed to crawl out.</option>
+        <option value="9">9. although the family was in the living room.</option>
+        <option value="10">10. so as to help her son escape.</option>
+      </select>
+    </div>
+
+    <div class="match-row" data-correct="10">
+      <div class="left-part">
+        <span class="letter-tag">J</span>
+        <span class="sentence-text">Mum lifted the heavy bookcase</span>
+        <button class="audio-btn" onclick="speakSentence('Mum lifted the heavy bookcase')" title="Listen">🔊</button>
+      </div>
+      <select>
+        <option value="">Select ending...</option>
+        <option value="1">1. so as to keep him safe.</option>
+        <option value="2">2. so as not to get injured.</option>
+        <option value="3">3. his mum kept calm.</option>
+        <option value="4">4. she managed to lift the bookcase.</option>
+        <option value="5">5. he survived the earthquake unharmed.</option>
+        <option value="6">6. that some furniture fell.</option>
+        <option value="7">7. that Harold never forgot his mum’s bravery.</option>
+        <option value="8">8. he managed to crawl out.</option>
+        <option value="9">9. although the family was in the living room.</option>
+        <option value="10">10. so as to help her son escape.</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="endings-card">
+    <h3>Окончания предложений (Endings):</h3>
+    <div class="endings-grid">
+      <div class="ending-item"><span>1.</span> so as to keep him safe.</div>
+      <div class="ending-item"><span>2.</span> so as not to get injured.</div>
+      <div class="ending-item"><span>3.</span> his mum kept calm.</div>
+      <div class="ending-item"><span>4.</span> she managed to lift the bookcase.</div>
+      <div class="ending-item"><span>5.</span> he survived the earthquake unharmed.</div>
+      <div class="ending-item"><span>6.</span> that some furniture fell.</div>
+      <div class="ending-item"><span>7.</span> that Harold never forgot his mum’s bravery.</div>
+      <div class="ending-item"><span>8.</span> he managed to crawl out.</div>
+      <div class="ending-item"><span>9.</span> although the family was in the living room.</div>
+      <div class="ending-item"><span>10.</span> so as to help her son escape.</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="check-btn" onclick="checkAnswers()">Check Answers</button>
+  </div>
+</div>
+
+<script>
+  function speakSentence(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    const rows = document.querySelectorAll('.match-row');
+
+    rows.forEach(row => {
+      const correctVal = row.getAttribute('data-correct');
+      const select = row.querySelector('select');
+      
+      select.classList.remove('correct', 'wrong');
+
+      if (select.value === correctVal) {
+        select.classList.add('correct');
+      } else {
+        select.classList.add('wrong');
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
