@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Write down your answers!</title>
+<style>
+  :root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #1f2937;
+    --border: #fca5a5;
+    --header-bg: #fee2e2;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 780px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid #fecaca;
+  }
+
+  .header-icon {
+    font-size: 2rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #991b1b;
+    font-weight: 700;
+  }
+
+  .qa-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .qa-table td {
+    padding: 16px;
+    border-bottom: 1px solid #fecaca;
+    vertical-align: top;
+  }
+
+  .qa-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .qa-table tr:nth-child(even) {
+    background-color: #fff5f5;
+  }
+
+  .num-col {
+    width: 40px;
+    font-weight: 700;
+    color: #ef4444;
+    text-align: center;
+    font-size: 1.1rem;
+    background-color: #fee2e2;
+  }
+
+  .question-col {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1f2937;
+    width: 45%;
+  }
+
+  .question-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    line-height: 1.4;
+  }
+
+  .input-wrapper {
+    width: 100%;
+  }
+
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    padding: 10px 12px;
+    border: 1.5px solid #fca5a5;
+    border-radius: 8px;
+    outline: none;
+    font-weight: 500;
+    color: #1f2937;
+    background-color: #ffffff;
+    resize: vertical;
+    min-height: 80px;
+    transition: all 0.2s ease;
+  }
+
+  textarea:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  }
+
+  .audio-btn {
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 1.1rem;
+    line-height: 1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background-color: #fee2e2;
+    transform: scale(1.05);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">✏️</span>
+    <h2>Write down your answers!</h2>
+  </div>
+
+  <table class="qa-table">
+    <tbody>
+
+      <tr>
+        <td class="num-col">1</td>
+        <td class="question-col">
+          <div class="question-content">
+            <span>What is your favourite country?</span>
+            <button class="audio-btn" onclick="speakQuestion('What is your favourite country?')" title="Listen">🔊</button>
+          </div>
+        </td>
+        <td>
+          <div class="input-wrapper">
+            <textarea rows="3" placeholder="Type 2-3 sentences here..."></textarea>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="num-col">2</td>
+        <td class="question-col">
+          <div class="question-content">
+            <span>What country do you want to live in?</span>
+            <button class="audio-btn" onclick="speakQuestion('What country do you want to live in?')" title="Listen">🔊</button>
+          </div>
+        </td>
+        <td>
+          <div class="input-wrapper">
+            <textarea rows="3" placeholder="Type 2-3 sentences here..."></textarea>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="num-col">3</td>
+        <td class="question-col">
+          <div class="question-content">
+            <span>What country do you want to study in?</span>
+            <button class="audio-btn" onclick="speakQuestion('What country do you want to study in?')" title="Listen">🔊</button>
+          </div>
+        </td>
+        <td>
+          <div class="input-wrapper">
+            <textarea rows="3" placeholder="Type 2-3 sentences here..."></textarea>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="num-col">4</td>
+        <td class="question-col">
+          <div class="question-content">
+            <span>What is your place of birth?</span>
+            <button class="audio-btn" onclick="speakQuestion('What is your place of birth?')" title="Listen">🔊</button>
+          </div>
+        </td>
+        <td>
+          <div class="input-wrapper">
+            <textarea rows="3" placeholder="Type 2-3 sentences here..."></textarea>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="num-col">5</td>
+        <td class="question-col">
+          <div class="question-content">
+            <span>What is the country of your living?</span>
+            <button class="audio-btn" onclick="speakQuestion('What is the country of your living?')" title="Listen">🔊</button>
+          </div>
+        </td>
+        <td>
+          <div class="input-wrapper">
+            <textarea rows="3" placeholder="Type 2-3 sentences here..."></textarea>
+          </div>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function speakQuestion(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
