@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 1. Choose the correct option</title>
+<style>
+  :root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #1f2937;
+    --border: #c7d2fe;
+    --correct-bg: #dcfce7;
+    --correct-border: #22c55e;
+    --correct-text: #15803d;
+    --wrong-bg: #fee2e2;
+    --wrong-border: #ef4444;
+    --wrong-text: #b91c1c;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 760px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--border);
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.4rem;
+    color: #312e81;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #4b5563;
+    font-style: italic;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .quiz-card {
+    background: #ffffff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: all 0.2s ease;
+  }
+
+  .quiz-card:hover {
+    border-color: #a5b4fc;
+  }
+
+  .sentence-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .sentence-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e1b4b;
+    line-height: 1.4;
+  }
+
+  .audio-btn {
+    background: #f3f4f6;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 1.1rem;
+    line-height: 1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background-color: #e0e7ff;
+    transform: scale(1.05);
+  }
+
+  .options-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #374151;
+    transition: all 0.15s ease;
+  }
+
+  .option-label:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+  }
+
+  .option-label input[type="radio"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #9ca3af;
+    border-radius: 50%;
+    outline: none;
+    transition: all 0.15s ease;
+    margin: 0;
+  }
+
+  .option-label input[type="radio"]:checked {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    box-shadow: inset 0 0 0 2.5px #ffffff;
+  }
+
+  .option-label:has(input[type="radio"]:checked) {
+    background-color: #e0e7ff;
+    border-color: #818cf8;
+    color: #312e81;
+  }
+
+  /* Классы подсветки ответов */
+  .option-label.correct {
+    background-color: var(--correct-bg) !important;
+    border-color: var(--correct-border) !important;
+    color: var(--correct-text) !important;
+  }
+
+  .option-label.wrong {
+    background-color: var(--wrong-bg) !important;
+    border-color: var(--wrong-border) !important;
+    color: var(--wrong-text) !important;
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .check-btn {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .check-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2>Exercise 1. Choose the correct option</h2>
+    <div class="subtitle">Обери правильний варіант.</div>
+  </div>
+
+  <div class="quiz-list">
+
+    <!-- Item 1 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">1. _____ she was frightened, she kept calm.</span>
+        <button class="audio-btn" onclick="speakSentence('Although she was frightened, she kept calm.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="Although">
+        <label class="option-label"><input type="radio" name="q1" value="Although"><span>Although</span></label>
+        <label class="option-label"><input type="radio" name="q1" value="Despite"><span>Despite</span></label>
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">2. _____ the danger, she helped her son.</span>
+        <button class="audio-btn" onclick="speakSentence('Despite the danger, she helped her son.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="Despite">
+        <label class="option-label"><input type="radio" name="q2" value="Although"><span>Although</span></label>
+        <label class="option-label"><input type="radio" name="q2" value="Despite"><span>Despite</span></label>
+      </div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">3. _____ being very young, Harold remembers some details.</span>
+        <button class="audio-btn" onclick="speakSentence('In spite of being very young, Harold remembers some details.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="In spite of">
+        <label class="option-label"><input type="radio" name="q3" value="In spite of"><span>In spite of</span></label>
+        <label class="option-label"><input type="radio" name="q3" value="Although"><span>Although</span></label>
+      </div>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">4. Mum put Harold under the table _____ protect him.</span>
+        <button class="audio-btn" onclick="speakSentence('Mum put Harold under the table so as to protect him.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="so as to">
+        <label class="option-label"><input type="radio" name="q4" value="so as to"><span>so as to</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="such"><span>such</span></label>
+      </div>
+    </div>
+
+    <!-- Item 5 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">5. He hid under the table _____ get injured.</span>
+        <button class="audio-btn" onclick="speakSentence('He hid under the table so as not to get injured.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="so as not to">
+        <label class="option-label"><input type="radio" name="q5" value="so as not to"><span>so as not to</span></label>
+        <label class="option-label"><input type="radio" name="q5" value="although"><span>although</span></label>
+      </div>
+    </div>
+
+    <!-- Item 6 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">6. The bookcase was _____ heavy that Harold could not move it.</span>
+        <button class="audio-btn" onclick="speakSentence('The bookcase was so heavy that Harold could not move it.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="so">
+        <label class="option-label"><input type="radio" name="q6" value="so"><span>so</span></label>
+        <label class="option-label"><input type="radio" name="q6" value="such"><span>such</span></label>
+      </div>
+    </div>
+
+    <!-- Item 7 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">7. It was _____ frightening experience.</span>
+        <button class="audio-btn" onclick="speakSentence('It was such a frightening experience.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="such a">
+        <label class="option-label"><input type="radio" name="q7" value="so"><span>so</span></label>
+        <label class="option-label"><input type="radio" name="q7" value="such a"><span>such a</span></label>
+      </div>
+    </div>
+
+    <!-- Item 8 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">8. _____ the furniture was shaking, Mum stayed calm.</span>
+        <button class="audio-btn" onclick="speakSentence('Although the furniture was shaking, Mum stayed calm.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="Although">
+        <label class="option-label"><input type="radio" name="q8" value="Although"><span>Although</span></label>
+        <label class="option-label"><input type="radio" name="q8" value="Despite"><span>Despite</span></label>
+      </div>
+    </div>
+
+    <!-- Item 9 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">9. _____ not being a strong woman, she lifted the bookcase.</span>
+        <button class="audio-btn" onclick="speakSentence('Despite not being a strong woman, she lifted the bookcase.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="Despite">
+        <label class="option-label"><input type="radio" name="q9" value="Despite"><span>Despite</span></label>
+        <label class="option-label"><input type="radio" name="q9" value="Although"><span>Although</span></label>
+      </div>
+    </div>
+
+    <!-- Item 10 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">10. Harold was _____ young that he could not remember everything.</span>
+        <button class="audio-btn" onclick="speakSentence('Harold was so young that he could not remember everything.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="so">
+        <label class="option-label"><input type="radio" name="q10" value="so"><span>so</span></label>
+        <label class="option-label"><input type="radio" name="q10" value="such"><span>such</span></label>
+      </div>
+    </div>
+
+    <!-- Item 11 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">11. His mum was _____ brave woman!</span>
+        <button class="audio-btn" onclick="speakSentence('His mum was such a brave woman!')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="such a">
+        <label class="option-label"><input type="radio" name="q11" value="so"><span>so</span></label>
+        <label class="option-label"><input type="radio" name="q11" value="such a"><span>such a</span></label>
+      </div>
+    </div>
+
+    <!-- Item 12 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">12. _____ her fear, she managed to help her son.</span>
+        <button class="audio-btn" onclick="speakSentence('In spite of her fear, she managed to help her son.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="In spite of">
+        <label class="option-label"><input type="radio" name="q12" value="In spite of"><span>In spite of</span></label>
+        <label class="option-label"><input type="radio" name="q12" value="Although"><span>Although</span></label>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="check-btn" onclick="checkAnswers()">Check Answers</button>
+  </div>
+</div>
+
+<script>
+  function speakSentence(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    const groups = document.querySelectorAll('.options-group');
+
+    groups.forEach(group => {
+      const correctAnswer = group.getAttribute('data-correct');
+      const labels = group.querySelectorAll('.option-label');
+
+      labels.forEach(label => {
+        label.classList.remove('correct', 'wrong');
+        const input = label.querySelector('input');
+        
+        // Всегда подсвечиваем верный вариант зелёным
+        if (input.value === correctAnswer) {
+          label.classList.add('correct');
+        } 
+        // Если выбран ошибочный вариант — подсвечиваем красным
+        else if (input.checked && input.value !== correctAnswer) {
+          label.classList.add('wrong');
+        }
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
