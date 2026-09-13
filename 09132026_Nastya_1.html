@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 2. Rewrite the sentences</title>
+<style>
+  :root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #1f2937;
+    --border: #c7d2fe;
+    --correct-bg: #f0fdf4;
+    --correct-border: #22c55e;
+    --correct-text: #15803d;
+    --wrong-bg: #fef2f2;
+    --wrong-border: #ef4444;
+    --wrong-text: #b91c1c;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 760px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--border);
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.4rem;
+    color: #312e81;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #4b5563;
+    font-style: italic;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .quiz-card {
+    background: #ffffff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: all 0.2s ease;
+  }
+
+  .quiz-card:hover {
+    border-color: #a5b4fc;
+  }
+
+  .sentence-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .sentence-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e1b4b;
+    line-height: 1.4;
+  }
+
+  .keyword {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #4f46e5;
+    background-color: #e0e7ff;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-top: 6px;
+  }
+
+  .audio-btn {
+    background: #f3f4f6;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 1.1rem;
+    line-height: 1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background-color: #e0e7ff;
+    transform: scale(1.05);
+  }
+
+  .input-wrapper {
+    margin-top: 8px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 0.98rem;
+    padding: 10px 12px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    font-weight: 500;
+    color: #1f2937;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+
+  input[type="text"].correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  input[type="text"].wrong {
+    background-color: var(--wrong-bg);
+    border-color: var(--wrong-border);
+    color: var(--wrong-text);
+  }
+
+  .feedback-hint {
+    display: none;
+    margin-top: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--correct-text);
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .check-btn {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .check-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2>Exercise 2. Rewrite the sentences</h2>
+    <div class="subtitle">Перебудуй речення, використовуючи слово в дужках. Не змінюй значення.</div>
+  </div>
+
+  <div class="quiz-list">
+
+    <!-- Item 1 -->
+    <div class="quiz-card" data-answers='["despite being frightened, she kept calm.", "despite being frightened she kept calm.", "despite her fear, she kept calm.", "despite her fear she kept calm.", "despite being frightened, she kept calm", "despite her fear, she kept calm"]'>
+      <div class="sentence-row">
+        <div>
+          <div class="sentence-text">1. Although she was frightened, she kept calm.</div>
+          <span class="keyword">(DESPITE)</span>
+        </div>
+        <button class="audio-btn" onclick="speakSentence('Although she was frightened, she kept calm.')" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type your rewritten sentence..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>Despite being frightened, she kept calm.</span></div>
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="quiz-card" data-answers='["although there was a huge earthquake, harold survived unharmed.", "although there was a huge earthquake harold survived unharmed.", "although the earthquake was huge, harold survived unharmed.", "although the earthquake was huge harold survived unharmed.", "although there was a huge earthquake, harold survived unharmed", "although the earthquake was huge, harold survived unharmed"]'>
+      <div class="sentence-row">
+        <div>
+          <div class="sentence-text">2. Despite the huge earthquake, Harold survived unharmed.</div>
+          <span class="keyword">(ALTHOUGH)</span>
+        </div>
+        <button class="audio-btn" onclick="speakSentence('Despite the huge earthquake, Harold survived unharmed.')" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type your rewritten sentence..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>Although there was a huge earthquake, Harold survived unharmed.</span></div>
+      </div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="quiz-card" data-answers='["although she was afraid, mum lifted the bookcase.", "although she was afraid mum lifted the bookcase.", "although she was frightened, mum lifted the bookcase.", "pre_alt3", "although she was afraid, mum lifted the bookcase", "although she had fear, mum lifted the bookcase."]'>
+      <div class="sentence-row">
+        <div>
+          <div class="sentence-text">3. In spite of her fear, Mum lifted the bookcase.</div>
+          <span class="keyword">(ALTHOUGH)</span>
+        </div>
+        <button class="audio-btn" onclick="speakSentence('In spite of her fear, Mum lifted the bookcase.')" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type your rewritten sentence..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>Although she was afraid, Mum lifted the bookcase.</span></div>
+      </div>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="quiz-card" data-answers='["mum put harold under the table so as to protect him.", "mum put harold under the table so as to protect him"]'>
+      <div class="sentence-row">
+        <div>
+          <div class="sentence-text">4. Mum put Harold under the table because she wanted to protect him.</div>
+          <span class="keyword">(SO AS TO)</span>
+        </div>
+        <button class="audio-btn" onclick="speakSentence('Mum put Harold under the table because she wanted to protect him.')" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type your rewritten sentence..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>Mum put Harold under the table so as to protect him.</span></div>
+      </div>
+    </div>
+
+    <!-- Item 5 -->
+    <div class="quiz-card" data-answers='["she moved carefully so as not to get injured.", "she moved carefully so as not to get injured"]'>
+      <div class="sentence-row">
+        <div>
+          <div class="sentence-text">5. She moved carefully because she didn’t want to get injured.</div>
+          <span class="keyword">(SO AS NOT TO)</span>
+        </div>
+        <button class="audio-btn" onclick="speakSentence('She moved carefully because she didn’t want to get injured.')" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type your rewritten sentence..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>She moved carefully so as not to get injured.</span></div>
+      </div>
+    </div>
+
+    <!-- Item 6 -->
+    <div class="quiz-card" data-answers='["the earthquake was so frightening that harold never forgot it.", "the earthquake was so frightening that harold never forgot it"]'>
+      <div class="sentence-row">
+        <div>
+          <div class="sentence-text">6. The earthquake was very frightening. Harold never forgot it.</div>
+          <span class="keyword">(SO ... THAT)</span>
+        </div>
+        <button class="audio-btn" onclick="speakSentence('The earthquake was very frightening. Harold never forgot it.')" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type your rewritten sentence..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>The earthquake was so frightening that Harold never forgot it.</span></div>
+      </div>
+    </div>
+
+    <!-- Item 7 -->
+    <div class="quiz-card" data-answers='["it was such a frightening experience.", "it was such a frightening experience"]'>
+      <div class="sentence-row">
+        <div>
+          <div class="sentence-text">7. It was a very frightening experience.</div>
+          <span class="keyword">(SUCH)</span>
+        </div>
+        <button class="audio-btn" onclick="speakSentence('It was a very frightening experience.')" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type your rewritten sentence..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>It was such a frightening experience.</span></div>
+      </div>
+    </div>
+
+    <!-- Item 8 -->
+    <div class="quiz-card" data-answers='["the woman was so brave.", "the woman was so brave"]'>
+      <div class="sentence-row">
+        <div>
+          <div class="sentence-text">8. The woman was very brave.</div>
+          <span class="keyword">(SO)</span>
+        </div>
+        <button class="audio-btn" onclick="speakSentence('The woman was very brave.')" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type your rewritten sentence..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>The woman was so brave.</span></div>
+      </div>
+    </div>
+
+    <!-- Item 9 -->
+    <div class="quiz-card" data-answers='["she was such a brave woman.", "she was such a brave woman"]'>
+      <div class="sentence-row">
+        <div>
+          <div class="sentence-text">9. She was a very brave woman.</div>
+          <span class="keyword">(SUCH)</span>
+        </div>
+        <button class="audio-btn" onclick="speakSentence('She was a very brave woman.')" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type your rewritten sentence..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>She was such a brave woman.</span></div>
+      </div>
+    </div>
+
+    <!-- Item 10 -->
+    <div class="quiz-card" data-answers='["the furniture was so heavy that she could hardly lift it.", "the furniture was so heavy that she could hardly lift it"]'>
+      <div class="sentence-row">
+        <div>
+          <div class="sentence-text">10. The furniture was very heavy. She could hardly lift it.</div>
+          <span class="keyword">(SO ... THAT)</span>
+        </div>
+        <button class="audio-btn" onclick="speakSentence('The furniture was very heavy. She could hardly lift it.')" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type your rewritten sentence..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>The furniture was so heavy that she could hardly lift it.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="check-btn" onclick="checkAnswers()">Check Answers</button>
+  </div>
+</div>
+
+<script>
+  function speakSentence(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function cleanText(str) {
+    return str.toLowerCase().replace(/['’]/g, "'").replace(/\s+/g, ' ').trim();
+  }
+
+  function checkAnswers() {
+    const cards = document.querySelectorAll('.quiz-card');
+
+    cards.forEach(card => {
+      const validAnswers = JSON.parse(card.getAttribute('data-answers'));
+      const input = card.querySelector('input[type="text"]');
+      const hint = card.querySelector('.feedback-hint');
+      const userVal = cleanText(input.value);
+
+      input.classList.remove('correct', 'wrong');
+      hint.style.display = 'none';
+
+      if (userVal !== '') {
+        const isCorrect = validAnswers.some(ans => cleanText(ans) === userVal);
+        if (isCorrect) {
+          input.classList.add('correct');
+        } else {
+          input.classList.add('wrong');
+          hint.style.display = 'block';
+        }
+      } else {
+        input.classList.add('wrong');
+        hint.style.display = 'block';
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
