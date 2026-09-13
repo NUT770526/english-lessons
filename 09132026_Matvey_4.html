@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Continue these sentences about you!</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      margin: 0;
+      padding: 25px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background-color: #1e293b;
+      max-width: 800px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      border: 1px solid #334155;
+    }
+
+    .header {
+      margin-bottom: 25px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 15px;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #f59e0b;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-family: 'Fredoka', cursive, sans-serif;
+      margin: 0 0 6px 0;
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    p.instruction {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .sentences-container {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .sentence-row {
+      background-color: #0f172a;
+      border: 1.5px solid #334155;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #f1f5f9;
+      transition: border-color 0.2s ease;
+    }
+
+    .sentence-row:focus-within {
+      border-color: #38bdf8;
+    }
+
+    .num {
+      color: #38bdf8;
+      font-weight: 700;
+      min-width: 24px;
+    }
+
+    .prompt-text {
+      position: relative;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    .prompt-text .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      width: max-content;
+      max-width: 250px;
+      background-color: #0284c7;
+      color: #ffffff;
+      text-align: left;
+      border-radius: 8px;
+      padding: 6px 10px;
+      position: absolute;
+      z-index: 20;
+      bottom: 125%;
+      left: 0;
+      font-size: 0.82rem;
+      font-weight: 400;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      pointer-events: none;
+    }
+
+    .prompt-text:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .audio-btn {
+      font-size: 0.9rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s ease, transform 0.1s ease;
+    }
+
+    .audio-btn:hover {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+
+    .input-box {
+      flex: 1;
+      min-width: 200px;
+      background-color: #1e293b;
+      border: 1.5px solid #475569;
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: #f8fafc;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input-box:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .input-box.filled {
+      border-color: #10b981;
+      background-color: rgba(16, 185, 129, 0.05);
+    }
+
+    .dot {
+      color: #f1f5f9;
+      font-weight: 700;
+    }
+
+    /* Actions Footer */
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-top: 1px solid #334155;
+      padding-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: #38bdf8;
+      color: #0f172a;
+    }
+
+    .btn-primary:hover {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    .btn-secondary {
+      background-color: #334155;
+      color: #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .status-display {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #10b981;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <span class="badge">Speaking & Writing Practice</span>
+    <h1>▶️ Continue these sentences about you!</h1>
+    <p class="instruction">Доповніть речення власною інформацією англійською мовою. Наведіть на початок речення для підказки, або натисніть 🔊 для озвучки.</p>
+  </div>
+
+  <div class="sentences-container" id="sentencesContainer"></div>
+
+  <div class="actions">
+    <div>
+      <button class="btn btn-primary" onclick="checkCompletion()">Зберегти відповіді</button>
+      <button class="btn btn-secondary" onclick="resetForm()">Очистити</button>
+    </div>
+    <div class="status-display" id="statusDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const sentenceData = [
+    { num: 1, prompt: "I have learned", uk: "Я навчився(-лась) / дізнався(-лась)... (напр.: how to code / many new English words)" },
+    { num: 2, prompt: "Usually I", uk: "Зазвичай я... (напр.: play video games after school / walk in the park)" },
+    { num: 3, prompt: "I am", uk: "Я... (напр.: very creative / interested in space / 12 years old)" },
+    { num: 4, prompt: "I have", uk: "У мене є / я маю... (напр.: a pet cat / two brothers / a cool bicycle)" },
+    { num: 5, prompt: "I like", uk: "Мені подобається... (напр.: listening to music / drawing / eating pizza)" }
+  ];
+
+  function renderSentences() {
+    const container = document.getElementById('sentencesContainer');
+    container.innerHTML = '';
+
+    sentenceData.forEach((item, idx) => {
+      const row = document.createElement('div');
+      row.className = 'sentence-row';
+
+      row.innerHTML = `
+        <span class="num">${item.num}.</span>
+        <span class="prompt-text">
+          ${item.prompt}
+          <span class="audio-btn" onclick="speakText('${item.prompt}')">🔊</span>
+          <span class="tooltip">${item.uk}</span>
+        </span>
+        <input type="text" class="input-box" id="input-${idx}" placeholder="continue sentence..." oninput="handleInput(${idx})">
+        <span class="dot">.</span>
+      `;
+
+      container.appendChild(row);
+    });
+  }
+
+  function handleInput(idx) {
+    const input = document.getElementById(`input-${idx}`);
+    if (input.value.trim() !== '') {
+      input.classList.add('filled');
+    } else {
+      input.classList.remove('filled');
+    }
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkCompletion() {
+    let filledCount = 0;
+    sentenceData.forEach((_, idx) => {
+      const input = document.getElementById(`input-${idx}`);
+      if (input.value.trim() !== '') {
+        filledCount++;
+      }
+    });
+
+    const statusDisplay = document.getElementById('statusDisplay');
+    if (filledCount === sentenceData.length) {
+      statusDisplay.textContent = `Чудово! Усі ${filledCount} з ${sentenceData.length} речень заповнені! 🎉`;
+      statusDisplay.style.color = '#10b981';
+    } else {
+      statusDisplay.textContent = `Заповнено ${filledCount} з ${sentenceData.length} речень.`;
+      statusDisplay.style.color = '#38bdf8';
+    }
+    statusDisplay.style.display = 'block';
+  }
+
+  function resetForm() {
+    sentenceData.forEach((_, idx) => {
+      const input = document.getElementById(`input-${idx}`);
+      input.value = '';
+      input.classList.remove('filled');
+    });
+    document.getElementById('statusDisplay').style.display = 'none';
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  renderSentences();
+</script>
+
+</body>
+</html>
