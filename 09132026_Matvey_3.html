@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Grammar Quiz - Tenses</title>
+<style>
+  :root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #1f2937;
+    --accent: #8b5cf6;
+    --option-bg: #f9fafb;
+    --option-hover: #f3f4f6;
+    --option-selected: #e0e7ff;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 720px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid #e5e7eb;
+  }
+
+  .header-icon {
+    font-size: 2rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #312e81;
+    font-weight: 700;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .quiz-card {
+    background: #ffffff;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .quiz-card:hover {
+    border-color: #c7d2fe;
+  }
+
+  .sentence-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .sentence-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e1b4b;
+    line-height: 1.5;
+  }
+
+  .audio-btn {
+    background: #f3f4f6;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 1.2rem;
+    line-height: 1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background-color: #e0e7ff;
+    transform: scale(1.05);
+  }
+
+  .options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background-color: var(--option-bg);
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #374151;
+    transition: all 0.15s ease;
+  }
+
+  .option-label:hover {
+    background-color: var(--option-hover);
+    border-color: #cbd5e1;
+  }
+
+  .option-label input[type="radio"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #9ca3af;
+    border-radius: 50%;
+    outline: none;
+    transition: all 0.15s ease;
+    position: relative;
+    margin: 0;
+  }
+
+  .option-label input[type="radio"]:checked {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    box-shadow: inset 0 0 0 3px #ffffff;
+  }
+
+  .option-label:has(input[type="radio"]:checked) {
+    background-color: var(--option-selected);
+    border-color: #a5b4fc;
+    color: #312e81;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">🎬</span>
+    <h2>Look at these sentences and choose what tense is it</h2>
+  </div>
+
+  <div class="quiz-list">
+
+    <!-- Item 1 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">1. Adolescence is a time of change and learning.</span>
+        <button class="audio-btn" onclick="speakSentence('Adolescence is a time of change and learning.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q1" value="Present Simple">
+          <span>Present Simple</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q1" value="Present Continuous">
+          <span>Present Continuous</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q1" value="Present Perfect">
+          <span>Present Perfect</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">2. They are learning who they are, what they want in the future, etc.</span>
+        <button class="audio-btn" onclick="speakSentence('They are learning who they are, what they want in the future, etc.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q2" value="Present Simple">
+          <span>Present Simple</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q2" value="Present Continuous">
+          <span>Present Continuous</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q2" value="Present Perfect">
+          <span>Present Perfect</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">3. It takes a long time to mature.</span>
+        <button class="audio-btn" onclick="speakSentence('It takes a long time to mature.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q3" value="Present Simple">
+          <span>Present Simple</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q3" value="Present Continuous">
+          <span>Present Continuous</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q3" value="Present Perfect">
+          <span>Present Perfect</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">4. Teens are learning to understand their emotions and understand who they are.</span>
+        <button class="audio-btn" onclick="speakSentence('Teens are learning to understand their emotions and understand who they are.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q4" value="Present Simple">
+          <span>Present Simple</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q4" value="Present Continuous">
+          <span>Present Continuous</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q4" value="Present Perfect">
+          <span>Present Perfect</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Item 5 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">5. These questions also involve emotions.</span>
+        <button class="audio-btn" onclick="speakSentence('These questions also involve emotions.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q5" value="Present Simple">
+          <span>Present Simple</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q5" value="Present Continuous">
+          <span>Present Continuous</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q5" value="Present Perfect">
+          <span>Present Perfect</span>
+        </label>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function speakSentence(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
