@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete your wordbox! | Parts of Speech</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background-color: #1e293b;
+      max-width: 900px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      border: 1px solid #334155;
+    }
+
+    .header {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #f43f5e;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      font-family: 'Fredoka', cursive, sans-serif;
+      margin: 0 0 6px 0;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    p.instruction {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+
+    /* Horizontal Compact Wordbank */
+    .wordbank-container {
+      background-color: #fca5a5;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+      border: 2px solid #ef4444;
+    }
+
+    .wordbank-label {
+      background-color: #ef4444;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 12px 18px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wordbank-pool {
+      padding: 10px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      min-height: 52px;
+    }
+
+    /* Draggable Word Pill */
+    .word-pill {
+      background-color: #ffffff;
+      color: #1e293b;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      cursor: grab;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+    }
+
+    .word-pill:active {
+      cursor: grabbing;
+      transform: scale(1.03);
+    }
+
+    .word-pill .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      width: max-content;
+      background-color: #0f172a;
+      color: #38bdf8;
+      text-align: center;
+      border-radius: 6px;
+      padding: 4px 8px;
+      position: absolute;
+      z-index: 20;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      font-weight: 500;
+      pointer-events: none;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+
+    .word-pill:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .audio-btn {
+      font-size: 0.85rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s ease, transform 0.1s ease;
+      display: inline-block;
+      padding: 0 2px;
+    }
+
+    .audio-btn:hover {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+
+    /* Category Columns Layout */
+    .columns-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .columns-grid {
+        grid-template-columns: 1fr;
+      }
+      .wordbank-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .wordbank-label {
+        text-align: center;
+      }
+    }
+
+    .column {
+      background-color: #fca5a5;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 2px solid #ef4444;
+    }
+
+    .column-header {
+      background-color: #ef4444;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-align: center;
+      padding: 10px;
+      text-transform: lowercase;
+    }
+
+    .dropzone {
+      padding: 10px;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      transition: background-color 0.2s ease;
+    }
+
+    .dropzone.drag-over {
+      background-color: #f87171;
+    }
+
+    .word-pill.correct {
+      background-color: #10b981 !important;
+      color: #ffffff !important;
+    }
+
+    .word-pill.incorrect {
+      background-color: #ef4444 !important;
+      color: #ffffff !important;
+    }
+
+    /* Actions Footer */
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-top: 1px solid #334155;
+      padding-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: #ef4444;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #dc2626;
+    }
+
+    .btn-secondary {
+      background-color: #334155;
+      color: #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .score-display {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: none;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background-color: #334155;
+      border-radius: 3px;
+      margin-top: 10px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #10b981;
+      transition: width 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <span class="badge">Vocabulary Practice</span>
+    <h1>📺 Complete your wordbox!</h1>
+    <p class="instruction">Перетягніть слова з горизонтального блоку <strong>Words</strong> у відповідну колонку: <strong>nouns</strong>, <strong>verbs</strong> або <strong>adjectives</strong>. Натисніть 🔊 для озвучки.</p>
+  </div>
+
+  <!-- Horizontal Wordbank -->
+  <div class="wordbank-container">
+    <div class="wordbank-label">Words:</div>
+    <div class="wordbank-pool dropzone" id="pool" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+  </div>
+
+  <!-- Category Columns -->
+  <div class="columns-grid">
+    <div class="column">
+      <div class="column-header">nouns</div>
+      <div class="dropzone" id="nouns" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+    </div>
+    <div class="column">
+      <div class="column-header">verbs</div>
+      <div class="dropzone" id="verbs" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+    </div>
+    <div class="column">
+      <div class="column-header">adjectives</div>
+      <div class="dropzone" id="adjectives" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+    </div>
+  </div>
+
+  <div class="progress-bar-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="actions">
+    <div>
+      <button class="btn btn-primary" onclick="checkAnswers()">Перевірити відповіді</button>
+      <button class="btn btn-secondary" onclick="resetExercise()">Скинути</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const wordData = [
+    { id: "w1", text: "adolescence", type: "nouns", uk: "підлітковий вік" },
+    { id: "w2", text: "profound", type: "adjectives", uk: "глибокий / серйозний" },
+    { id: "w3", text: "enroll", type: "verbs", uk: "вступати / реєструватися" },
+    { id: "w4", text: "self-esteem", type: "nouns", uk: "самооцінка" },
+    { id: "w5", text: "maturity", type: "nouns", uk: "зрілість" },
+    { id: "w6", text: "rural", type: "adjectives", uk: "сільський" },
+    { id: "w7", text: "vulnerable", type: "adjectives", uk: "уразливий" },
+    { id: "w8", text: "welfare", type: "nouns", uk: "добробут" },
+    { id: "w9", text: "disparity", type: "nouns", uk: "нерівність" }
+  ];
+
+  function initPool() {
+    const pool = document.getElementById('pool');
+    pool.innerHTML = '';
+    
+    wordData.forEach(item => {
+      const pill = document.createElement('div');
+      pill.className = 'word-pill';
+      pill.id = item.id;
+      pill.draggable = true;
+      pill.ondragstart = drag;
+
+      const textSpan = document.createElement('span');
+      textSpan.textContent = item.text;
+
+      const audioBtn = document.createElement('span');
+      audioBtn.className = 'audio-btn';
+      audioBtn.innerHTML = '🔊';
+      audioBtn.onclick = (e) => {
+        e.stopPropagation();
+        speakWord(item.text);
+      };
+
+      const tooltip = document.createElement('span');
+      tooltip.className = 'tooltip';
+      tooltip.textContent = item.uk;
+
+      pill.appendChild(textSpan);
+      pill.appendChild(audioBtn);
+      pill.appendChild(tooltip);
+
+      pool.appendChild(pill);
+    });
+
+    ['nouns', 'verbs', 'adjectives'].forEach(cat => {
+      document.getElementById(cat).innerHTML = '';
+    });
+  }
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function drag(ev) {
+    ev.dataTransfer.setData("text/plain", ev.target.id);
+  }
+
+  function allowDrop(ev) {
+    ev.preventDefault();
+    if (ev.target.classList.contains('dropzone')) {
+      ev.target.classList.add('drag-over');
+    }
+  }
+
+  document.addEventListener('dragleave', function(ev) {
+    if (ev.target.classList.contains('dropzone')) {
+      ev.target.classList.remove('drag-over');
+    }
+  });
+
+  function drop(ev) {
+    ev.preventDefault();
+    const dropzone = ev.target.closest('.dropzone');
+    if (dropzone) {
+      dropzone.classList.remove('drag-over');
+      const dataId = ev.dataTransfer.getData("text/plain");
+      const draggedEl = document.getElementById(dataId);
+      if (draggedEl) {
+        draggedEl.classList.remove('correct', 'incorrect');
+        dropzone.appendChild(draggedEl);
+      }
+    }
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+
+    wordData.forEach(item => {
+      const el = document.getElementById(item.id);
+      const parentZone = el.parentElement.id;
+
+      el.classList.remove('correct', 'incorrect');
+
+      if (parentZone === item.type) {
+        el.classList.add('correct');
+        correctCount++;
+      } else if (parentZone !== 'pool') {
+        el.classList.add('incorrect');
+      }
+    });
+
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+
+    const percentage = Math.round((correctCount / wordData.length) * 100);
+    scoreDisplay.textContent = `Результат: ${correctCount} / ${wordData.length} (${percentage}%)`;
+    scoreDisplay.style.display = 'block';
+
+    progressContainer.style.display = 'block';
+    progressBar.style.width = percentage + '%';
+  }
+
+  function resetExercise() {
+    initPool();
+    document.getElementById('scoreDisplay').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
+    document.getElementById('progressBar').style.width = '0%';
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  initPool();
+</script>
+
+</body>
+</html>
