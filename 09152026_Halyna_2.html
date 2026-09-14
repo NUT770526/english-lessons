@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 2. Choose the correct option</title>
+<style>
+  :root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #1f2937;
+    --border: #c7d2fe;
+    --correct-bg: #dcfce7;
+    --correct-border: #22c55e;
+    --correct-text: #15803d;
+    --wrong-bg: #fee2e2;
+    --wrong-border: #ef4444;
+    --wrong-text: #b91c1c;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 760px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--border);
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.4rem;
+    color: #312e81;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #4b5563;
+    font-style: italic;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .quiz-card {
+    background: #ffffff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: all 0.2s ease;
+  }
+
+  .quiz-card:hover {
+    border-color: #a5b4fc;
+  }
+
+  .sentence-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .sentence-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e1b4b;
+    line-height: 1.4;
+  }
+
+  .audio-btn {
+    background: #f3f4f6;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 1.1rem;
+    line-height: 1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background-color: #e0e7ff;
+    transform: scale(1.05);
+  }
+
+  .options-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #374151;
+    transition: all 0.15s ease;
+  }
+
+  .option-label:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+  }
+
+  .option-label input[type="radio"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #9ca3af;
+    border-radius: 50%;
+    outline: none;
+    transition: all 0.15s ease;
+    margin: 0;
+  }
+
+  .option-label input[type="radio"]:checked {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    box-shadow: inset 0 0 0 2.5px #ffffff;
+  }
+
+  .option-label:has(input[type="radio"]:checked) {
+    background-color: #e0e7ff;
+    border-color: #818cf8;
+    color: #312e81;
+  }
+
+  .option-label.correct {
+    background-color: var(--correct-bg) !important;
+    border-color: var(--correct-border) !important;
+    color: var(--correct-text) !important;
+  }
+
+  .option-label.wrong {
+    background-color: var(--wrong-bg) !important;
+    border-color: var(--wrong-border) !important;
+    color: var(--wrong-text) !important;
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .check-btn {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .check-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2>Exercise 2. Choose the correct option</h2>
+    <div class="subtitle">Обери правильний варіант.</div>
+  </div>
+
+  <div class="quiz-list">
+
+    <!-- 1 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">1. Our manager has already _____ the monthly report.</span>
+        <button class="audio-btn" onclick="speakSentence('Our manager has already done the monthly report.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="done">
+        <label class="option-label"><input type="radio" name="q1" value="did"><span>did</span></label>
+        <label class="option-label"><input type="radio" name="q1" value="done"><span>done</span></label>
+        <label class="option-label"><input type="radio" name="q1" value="do"><span>do</span></label>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">2. The accounting team _____ an audit now.</span>
+        <button class="audio-btn" onclick="speakSentence('The accounting team is performing an audit now.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="is performing">
+        <label class="option-label"><input type="radio" name="q2" value="performs"><span>performs</span></label>
+        <label class="option-label"><input type="radio" name="q2" value="is performing"><span>is performing</span></label>
+        <label class="option-label"><input type="radio" name="q2" value="performed"><span>performed</span></label>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">3. We _____ the problem yesterday.</span>
+        <button class="audio-btn" onclick="speakSentence('We solved the problem yesterday.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="solved">
+        <label class="option-label"><input type="radio" name="q3" value="solve"><span>solve</span></label>
+        <label class="option-label"><input type="radio" name="q3" value="solved"><span>solved</span></label>
+        <label class="option-label"><input type="radio" name="q3" value="have solve"><span>have solve</span></label>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">4. Have you ever _____ this new system?</span>
+        <button class="audio-btn" onclick="speakSentence('Have you ever tried this new system?')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="tried">
+        <label class="option-label"><input type="radio" name="q4" value="try"><span>try</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="tried"><span>tried</span></label>
+        <label class="option-label"><input type="radio" name="q4" value="trying"><span>trying</span></label>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">5. Anna usually _____ customer questions.</span>
+        <button class="audio-btn" onclick="speakSentence('Anna usually answers customer questions.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="answers">
+        <label class="option-label"><input type="radio" name="q5" value="answer"><span>answer</span></label>
+        <label class="option-label"><input type="radio" name="q5" value="answers"><span>answers</span></label>
+        <label class="option-label"><input type="radio" name="q5" value="is answering"><span>is answering</span></label>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">6. Did you _____ the signed documents?</span>
+        <button class="audio-btn" onclick="speakSentence('Did you bring back the signed documents?')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="bring back">
+        <label class="option-label"><input type="radio" name="q6" value="brought back"><span>brought back</span></label>
+        <label class="option-label"><input type="radio" name="q6" value="bring back"><span>bring back</span></label>
+        <label class="option-label"><input type="radio" name="q6" value="brought"><span>brought</span></label>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">7. The courier _____ the documents an hour ago.</span>
+        <button class="audio-btn" onclick="speakSentence('The courier took away the documents an hour ago.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="took away">
+        <label class="option-label"><input type="radio" name="q7" value="took away"><span>took away</span></label>
+        <label class="option-label"><input type="radio" name="q7" value="has take away"><span>has take away</span></label>
+        <label class="option-label"><input type="radio" name="q7" value="takes away"><span>takes away</span></label>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">8. We _____ an online meeting at the moment.</span>
+        <button class="audio-btn" onclick="speakSentence('We are arranging an online meeting at the moment.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="are arranging">
+        <label class="option-label"><input type="radio" name="q8" value="arrange"><span>arrange</span></label>
+        <label class="option-label"><input type="radio" name="q8" value="are arranging"><span>are arranging</span></label>
+        <label class="option-label"><input type="radio" name="q8" value="arranged"><span>arranged</span></label>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">9. I haven't _____ from the client yet.</span>
+        <button class="audio-btn" onclick="speakSentence('I haven\'t heard from the client yet.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="heard">
+        <label class="option-label"><input type="radio" name="q9" value="hear"><span>hear</span></label>
+        <label class="option-label"><input type="radio" name="q9" value="heard"><span>heard</span></label>
+        <label class="option-label"><input type="radio" name="q9" value="hearing"><span>hearing</span></label>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">10. The director _____ that the invoice was incorrect.</span>
+        <button class="audio-btn" onclick="speakSentence('The director said that the invoice was incorrect.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="said">
+        <label class="option-label"><input type="radio" name="q10" value="said"><span>said</span></label>
+        <label class="option-label"><input type="radio" name="q10" value="say"><span>say</span></label>
+        <label class="option-label"><input type="radio" name="q10" value="has say"><span>has say</span></label>
+      </div>
+    </div>
+
+    <!-- 11 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">11. We haven't _____ a solution yet.</span>
+        <button class="audio-btn" onclick="speakSentence('We haven\'t found a solution yet.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="found">
+        <label class="option-label"><input type="radio" name="q11" value="find"><span>find</span></label>
+        <label class="option-label"><input type="radio" name="q11" value="found"><span>found</span></label>
+        <label class="option-label"><input type="radio" name="q11" value="finding"><span>finding</span></label>
+      </div>
+    </div>
+
+    <!-- 12 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">12. Have you _____ their email?</span>
+        <button class="audio-btn" onclick="speakSentence('Have you got their email?')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="got">
+        <label class="option-label"><input type="radio" name="q12" value="got"><span>got</span></label>
+        <label class="option-label"><input type="radio" name="q12" value="get"><span>get</span></label>
+        <label class="option-label"><input type="radio" name="q12" value="getting"><span>getting</span></label>
+      </div>
+    </div>
+
+    <!-- 13 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">13. "I have prepared the report for you." — "_____"</span>
+        <button class="audio-btn" onclick="speakSentence('I have prepared the report for you. That\'s very kind of you.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="That's very kind of you.">
+        <label class="option-label"><input type="radio" name="q13" value="Not at all."><span>Not at all.</span></label>
+        <label class="option-label"><input type="radio" name="q13" value="That's very kind of you."><span>That's very kind of you.</span></label>
+        <label class="option-label"><input type="radio" name="q13" value="Several times."><span>Several times.</span></label>
+      </div>
+    </div>
+
+    <!-- 14 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">14. "Thank you for solving the problem." — "_____"</span>
+        <button class="audio-btn" onclick="speakSentence('Thank you for solving the problem. Not at all.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="Not at all.">
+        <label class="option-label"><input type="radio" name="q14" value="Not at all."><span>Not at all.</span></label>
+        <label class="option-label"><input type="radio" name="q14" value="Take away."><span>Take away.</span></label>
+        <label class="option-label"><input type="radio" name="q14" value="Have a look at it."><span>Have a look at it.</span></label>
+      </div>
+    </div>
+
+    <!-- 15 -->
+    <div class="quiz-card">
+      <div class="sentence-row">
+        <span class="sentence-text">15. She has called the supplier _____.</span>
+        <button class="audio-btn" onclick="speakSentence('She has called the supplier several times.')" title="Listen">🔊</button>
+      </div>
+      <div class="options-group" data-correct="several times">
+        <label class="option-label"><input type="radio" name="q15" value="yesterday"><span>yesterday</span></label>
+        <label class="option-label"><input type="radio" name="q15" value="several times"><span>several times</span></label>
+        <label class="option-label"><input type="radio" name="q15" value="now"><span>now</span></label>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="check-btn" onclick="checkAnswers()">Check Answers</button>
+  </div>
+</div>
+
+<script>
+  function speakSentence(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    const groups = document.querySelectorAll('.options-group');
+
+    groups.forEach(group => {
+      const correctAnswer = group.getAttribute('data-correct');
+      const labels = group.querySelectorAll('.option-label');
+
+      labels.forEach(label => {
+        label.classList.remove('correct', 'wrong');
+        const input = label.querySelector('input');
+        
+        if (input.value === correctAnswer) {
+          label.classList.add('correct');
+        } else if (input.checked && input.value !== correctAnswer) {
+          label.classList.add('wrong');
+        }
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
