@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Translate into English: Present Perfect</title>
+<style>
+  :root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #1f2937;
+    --border: #c7d2fe;
+    --correct-bg: #f0fdf4;
+    --correct-border: #22c55e;
+    --correct-text: #15803d;
+    --wrong-bg: #fef2f2;
+    --wrong-border: #ef4444;
+    --wrong-text: #b91c1c;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--border);
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.4rem;
+    color: #312e81;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #4b5563;
+    font-style: italic;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .quiz-card {
+    background: #ffffff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: all 0.2s ease;
+  }
+
+  .quiz-card:hover {
+    border-color: #a5b4fc;
+  }
+
+  .sentence-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .sentence-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e1b4b;
+    line-height: 1.4;
+  }
+
+  .audio-btn {
+    background: #f3f4f6;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 1.1rem;
+    line-height: 1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background-color: #e0e7ff;
+    transform: scale(1.05);
+  }
+
+  .input-wrapper {
+    margin-top: 8px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 0.98rem;
+    padding: 10px 12px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    font-weight: 500;
+    color: #1f2937;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+
+  input[type="text"].correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  input[type="text"].wrong {
+    background-color: var(--wrong-bg);
+    border-color: var(--wrong-border);
+    color: var(--wrong-text);
+  }
+
+  .feedback-hint {
+    display: none;
+    margin-top: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--correct-text);
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .check-btn {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .check-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2>3. Переведите на английский язык, употребляя Present Perfect</h2>
+    <div class="subtitle">Переведите предложения, используя глаголы в Present Perfect.</div>
+  </div>
+
+  <div class="quiz-list">
+
+    <!-- 1 -->
+    <div class="quiz-card" data-answers='["I have had a lot of work this week.", "I have had a lot of work this week", "I have had much work this week.", "I have had lots of work this week."]'>
+      <div class="sentence-row">
+        <div class="sentence-text">1. У меня было много работы на этой неделе.</div>
+        <button class="audio-btn" onclick="speakSentence(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type translation in English..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>I have had a lot of work this week.</span></div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="quiz-card" data-answers='["He has read a lot of books this month.", "He has read a lot of books this month", "He has read plenty of books this month.", "He has read lots of books this month."]'>
+      <div class="sentence-row">
+        <div class="sentence-text">2. Он прочитал массу книг за этот месяц.</div>
+        <button class="audio-btn" onclick="speakSentence(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type translation in English..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>He has read a lot of books this month.</span></div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="quiz-card" data-answers='["I have been very busy this week.", "I have been very busy this week"]'>
+      <div class="sentence-row">
+        <div class="sentence-text">3. Я был очень занят на этой неделе.</div>
+        <button class="audio-btn" onclick="speakSentence(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type translation in English..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>I have been very busy this week.</span></div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="quiz-card" data-answers='["Have you been to any exhibitions this month?", "Have you been to any exhibitions this month", "Have you visited any exhibitions this month?"]'>
+      <div class="sentence-row">
+        <div class="sentence-text">4. Вы были на каких-либо выставках в этом месяце?</div>
+        <button class="audio-btn" onclick="speakSentence(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type translation in English..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>Have you been to any exhibitions this month?</span></div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="quiz-card" data-answers='["We have had a lot of interesting discussions this year.", "We have had a lot of interesting discussions this year", "We have had many interesting discussions this year."]'>
+      <div class="sentence-row">
+        <div class="sentence-text">5. У нас было много интересных дискуссий в этом году.</div>
+        <button class="audio-btn" onclick="speakSentence(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type translation in English..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>We have had a lot of interesting discussions this year.</span></div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="quiz-card" data-answers='["Have you had a vacation this year? - Not yet.", "Have you had a vacation this year? Not yet.", "Have you had a holiday this year? - Not yet.", "Have you had a holiday this year? Not yet."]'>
+      <div class="sentence-row">
+        <div class="sentence-text">6. — У вас был отпуск в этом году? — Нет еще.</div>
+        <button class="audio-btn" onclick="speakSentence(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type translation in English..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>"Have you had a vacation this year?" — "Not yet."</span></div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="quiz-card" data-answers='["I have not seen him today.", "I havent seen him today.", "I haven’t seen him today.", "I haven’t seen him today"]'>
+      <div class="sentence-row">
+        <div class="sentence-text">7. Я не видел его сегодня.</div>
+        <button class="audio-btn" onclick="speakSentence(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type translation in English..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>I haven’t seen him today.</span></div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="quiz-card" data-answers='["We have not been to the theatre this month.", "We haven’t been to the theatre this month.", "We havent been to the theatre this month.", "We haven’t gone to the theatre this month.", "We haven’t been to the theater this month."]'>
+      <div class="sentence-row">
+        <div class="sentence-text">8. Мы не ходили в театр в этом месяце.</div>
+        <button class="audio-btn" onclick="speakSentence(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type translation in English..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>We haven’t been to the theatre this month.</span></div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="quiz-card" data-answers='["Have you had any meetings this week? - Yes, there were two.", "Have you had any meetings this week? - Yes, we have had two.", "Have you had any meetings this week? - Yes, two.", "Have you had any meetings this week? Yes, there have been two.", "Have you had any meetings this week? - Yes, there have been two."]'>
+      <div class="sentence-row">
+        <div class="sentence-text">9. — У вас были какие-нибудь собрания на этой неделе? — Да, было два.</div>
+        <button class="audio-btn" onclick="speakSentence(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Type translation in English..." autocomplete="off">
+        <div class="feedback-hint">Correct: <span>"Have you had any meetings this week?" — "Yes, there have been two."</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="check-btn" onclick="checkAnswers()">Check Answers</button>
+  </div>
+</div>
+
+<script>
+  function speakSentence(btn) {
+    const card = btn.closest('.quiz-card');
+    const hintText = card.querySelector('.feedback-hint span').innerText;
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(hintText);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function cleanText(str) {
+    return str.toLowerCase()
+      .replace(/['’`"]/g, "'")
+      .replace(/[.,?!—–-]/g, "")
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function checkAnswers() {
+    const cards = document.querySelectorAll('.quiz-card');
+
+    cards.forEach(card => {
+      const validAnswers = JSON.parse(card.getAttribute('data-answers'));
+      const input = card.querySelector('input[type="text"]');
+      const hint = card.querySelector('.feedback-hint');
+      const userVal = cleanText(input.value);
+
+      input.classList.remove('correct', 'wrong');
+      hint.style.display = 'none';
+
+      if (userVal !== '') {
+        const isCorrect = validAnswers.some(ans => cleanText(ans) === userVal);
+        if (isCorrect) {
+          input.classList.add('correct');
+        } else {
+          input.classList.add('wrong');
+          hint.style.display = 'block';
+        }
+      } else {
+        input.classList.add('wrong');
+        hint.style.display = 'block';
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
