@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English | Complete the Sentences</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      min-height: 100vh;
+      margin: 0;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background-color: #0a0a0a;
+      max-width: 860px;
+      width: 100%;
+      border-radius: 16px;
+      padding: 35px 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      border: 1px solid #222222;
+    }
+
+    .header {
+      margin-bottom: 25px;
+      border-bottom: 1px solid #222222;
+      padding-bottom: 15px;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #3b82f6;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 6px 0;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    p.instruction {
+      margin: 0;
+      color: #a1a1aa;
+      font-size: 0.95rem;
+      font-style: italic;
+    }
+
+    .sentences-container {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 30px;
+    }
+
+    .q-row {
+      background-color: #121212;
+      border: 1px solid #27272a;
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #f4f4f5;
+    }
+
+    .q-num {
+      color: #3b82f6;
+      font-weight: 700;
+      min-width: 26px;
+    }
+
+    .audio-btn {
+      font-size: 0.85rem;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s ease, transform 0.1s ease;
+      margin-right: 4px;
+    }
+
+    .audio-btn:hover {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+
+    /* Tooltip styling for vocabulary */
+    .vocab {
+      border-bottom: 1px dashed #3b82f6;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .vocab .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      width: max-content;
+      max-width: 220px;
+      background-color: #1e293b;
+      color: #38bdf8;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 9px;
+      position: absolute;
+      z-index: 20;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      font-weight: 500;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      pointer-events: none;
+    }
+
+    .vocab:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .input-box {
+      background-color: #000000;
+      border: 1px solid #3f3f46;
+      border-radius: 6px;
+      color: #ffffff;
+      padding: 6px 10px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .input-box:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+    }
+
+    .input-box.correct {
+      border-color: #22c55e !important;
+      background-color: rgba(34, 197, 94, 0.1) !important;
+      color: #4ade80 !important;
+    }
+
+    .input-box.incorrect {
+      border-color: #ef4444 !important;
+      background-color: rgba(239, 68, 68, 0.1) !important;
+      color: #fca5a5 !important;
+    }
+
+    .verb-hint {
+      color: #a1a1aa;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+
+    .correct-ans-hint {
+      color: #22c55e;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-left: 6px;
+      display: none;
+    }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-top: 1px solid #222222;
+      padding-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: #3b82f6;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #2563eb;
+    }
+
+    .btn-secondary {
+      background-color: #27272a;
+      color: #d4d4d8;
+    }
+
+    .btn-secondary:hover {
+      background-color: #3f3f46;
+    }
+
+    .score-display {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: none;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background-color: #27272a;
+      border-radius: 3px;
+      margin-top: 15px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #22c55e;
+      transition: width 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <span class="badge">Business English Practice</span>
+    <h1>Exercise 1. Complete the sentences</h1>
+    <p class="instruction">Розкрий дужки та постав дієслово у правильну форму (Present Simple, Present Continuous, Past Simple, Present Perfect).</p>
+  </div>
+
+  <div class="sentences-container" id="sentencesContainer"></div>
+
+  <div class="progress-bar-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="actions">
+    <div>
+      <button class="btn btn-primary" onclick="checkAnswers()">Перевірити відповіді</button>
+      <button class="btn btn-secondary" onclick="resetForm()">Скинути</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const items = [
+    {
+      id: 1,
+      parts: [
+        { type: "text", val: "I " },
+        { type: "input", size: 14, ans: ["have done", "have completed", "'ve done"] },
+        { type: "text", val: " all my tasks already." }
+      ],
+      verbHint: "(do)",
+      fullSentence: "I have done all my tasks already."
+    },
+    {
+      id: 2,
+      parts: [
+        { type: "text", val: "Our team " },
+        { type: "input", size: 14, ans: ["is performing"] },
+        { type: "text", val: " a " },
+        { type: "vocab", text: "financial review", uk: "фінансовий аналіз / перевірка" },
+        { type: "text", val: " at the moment." }
+      ],
+      verbHint: "(perform)",
+      fullSentence: "Our team is performing a financial review at the moment."
+    },
+    {
+      id: 3,
+      parts: [
+        { type: "text", val: "The " },
+        { type: "vocab", text: "accountant", uk: "бухгалтер" },
+        { type: "text", val: " " },
+        { type: "input", size: 10, ans: ["solved"] },
+        { type: "text", val: " the payment problem yesterday." }
+      ],
+      verbHint: "(solve)",
+      fullSentence: "The accountant solved the payment problem yesterday."
+    },
+    {
+      id: 4,
+      parts: [
+        { type: "input", size: 8, ans: ["Have"] },
+        { type: "text", val: " you ever " },
+        { type: "input", size: 8, ans: ["tried"] },
+        { type: "text", val: " to contact this " },
+        { type: "vocab", text: "supplier", uk: "постачальник" },
+        { type: "text", val: "?" }
+      ],
+      verbHint: "(try)",
+      fullSentence: "Have you ever tried to contact this supplier?"
+    },
+    {
+      id: 5,
+      parts: [
+        { type: "text", val: "Lisa usually " },
+        { type: "input", size: 12, ans: ["answers"] },
+        { type: "text", val: " all customer emails quickly." }
+      ],
+      verbHint: "(answer)",
+      fullSentence: "Lisa usually answers all customer emails quickly."
+    },
+    {
+      id: 6,
+      parts: [
+        { type: "text", val: "Mark " },
+        { type: "input", size: 10, ans: ["brought"] },
+        { type: "text", val: " the " },
+        { type: "vocab", text: "signed contract", uk: "підписаний контракт" },
+        { type: "text", val: " back last Monday." }
+      ],
+      verbHint: "(bring)",
+      fullSentence: "Mark brought the signed contract back last Monday."
+    },
+    {
+      id: 7,
+      parts: [
+        { type: "text", val: "The courier " },
+        { type: "input", size: 10, ans: ["took"] },
+        { type: "text", val: " the original documents away yesterday." }
+      ],
+      verbHint: "(take)",
+      fullSentence: "The courier took the original documents away yesterday."
+    },
+    {
+      id: 8,
+      parts: [
+        { type: "text", val: "When I receive an " },
+        { type: "vocab", text: "invoice", uk: "рахунок-фактура / інвойс" },
+        { type: "text", val: ", I always " },
+        { type: "input", size: 16, ans: ["have a look at it"] },
+        { type: "text", val: "." }
+      ],
+      verbHint: "(have a look at it)",
+      fullSentence: "When I receive an invoice, I always have a look at it."
+    },
+    {
+      id: 9,
+      parts: [
+        { type: "text", val: "We " },
+        { type: "input", size: 14, ans: ["are arranging"] },
+        { type: "text", val: " a meeting with the customer now." }
+      ],
+      verbHint: "(arrange)",
+      fullSentence: "We are arranging a meeting with the customer now."
+    },
+    {
+      id: 10,
+      parts: [
+        { type: "input", size: 8, ans: ["Have"] },
+        { type: "text", val: " you " },
+        { type: "input", size: 10, ans: ["heard"] },
+        { type: "text", val: " from the finance team yet?" }
+      ],
+      verbHint: "(hear)",
+      fullSentence: "Have you heard from the finance team yet?"
+    },
+    {
+      id: 11,
+      parts: [
+        { type: "text", val: "The manager " },
+        { type: "input", size: 10, ans: ["said"] },
+        { type: "text", val: " that the report was ready yesterday." }
+      ],
+      verbHint: "(say)",
+      fullSentence: "The manager said that the report was ready yesterday."
+    },
+    {
+      id: 12,
+      parts: [
+        { type: "text", val: "I have just " },
+        { type: "input", size: 10, ans: ["put"] },
+        { type: "text", val: " the documents on your desk." }
+      ],
+      verbHint: "(put)",
+      fullSentence: "I have just put the documents on your desk."
+    },
+    {
+      id: 13,
+      parts: [
+        { type: "text", val: "We " },
+        { type: "input", size: 14, ans: ["are thinking"] },
+        { type: "text", val: " about a new payment system now." }
+      ],
+      verbHint: "(think)",
+      fullSentence: "We are thinking about a new payment system now."
+    },
+    {
+      id: 14,
+      parts: [
+        { type: "text", val: "We haven't " },
+        { type: "input", size: 10, ans: ["found"] },
+        { type: "text", val: " the mistake in the report yet." }
+      ],
+      verbHint: "(find)",
+      fullSentence: "We haven't found the mistake in the report yet."
+    },
+    {
+      id: 15,
+      parts: [
+        { type: "text", val: "She " },
+        { type: "input", size: 10, ans: ["brought"] },
+        { type: "text", val: " the signed agreement to the office yesterday." }
+      ],
+      verbHint: "(bring)",
+      fullSentence: "She brought the signed agreement to the office yesterday."
+    },
+    {
+      id: 16,
+      parts: [
+        { type: "input", size: 8, ans: ["Did"] },
+        { type: "text", val: " you " },
+        { type: "input", size: 8, ans: ["get"] },
+        { type: "text", val: " the payment yesterday?" }
+      ],
+      verbHint: "(get)",
+      fullSentence: "Did you get the payment yesterday?"
+    },
+    {
+      id: 17,
+      parts: [
+        { type: "text", val: "We have contacted the client " },
+        { type: "input", size: 16, ans: ["several times"] },
+        { type: "text", val: "." }
+      ],
+      verbHint: "(several times)",
+      fullSentence: "We have contacted the client several times."
+    }
+  ];
+
+  function renderExercise() {
+    const container = document.getElementById('sentencesContainer');
+    container.innerHTML = '';
+
+    items.forEach((item, idx) => {
+      const row = document.createElement('div');
+      row.className = 'q-row';
+
+      let html = `<span class="q-num">${item.id}.</span>`;
+      html += `<span class="audio-btn" onclick="speakSentence('${item.fullSentence.replace(/'/g, "\\'")}')">🔊</span>`;
+
+      let inputCount = 0;
+      item.parts.forEach(part => {
+        if (part.type === 'text') {
+          html += `<span>${part.val}</span>`;
+        } else if (part.type === 'vocab') {
+          html += `<span class="vocab">${part.text}<span class="tooltip">${part.uk}</span></span>`;
+        } else if (part.type === 'input') {
+          const inputId = `in-${item.id}-${inputCount}`;
+          html += `<input type="text" class="input-box" id="${inputId}" style="width: ${part.size * 10}px;" autocomplete="off" data-ans="${part.ans.join('|')}">`;
+          inputCount++;
+        }
+      });
+
+      html += `<span class="verb-hint">${item.verbHint}</span>`;
+      html += `<span class="correct-ans-hint" id="hint-${item.id}"></span>`;
+
+      row.innerHTML = html;
+      container.appendChild(row);
+    });
+  }
+
+  function checkAnswers() {
+    let totalInputs = 0;
+    let correctInputs = 0;
+
+    items.forEach(item => {
+      let itemAllCorrect = true;
+      let inputIdx = 0;
+      let expectedAnswers = [];
+
+      item.parts.forEach(part => {
+        if (part.type === 'input') {
+          totalInputs++;
+          const inputEl = document.getElementById(`in-${item.id}-${inputIdx}`);
+          const val = inputEl.value.trim().toLowerCase();
+          const validAnswers = part.ans.map(a => a.toLowerCase());
+
+          expectedAnswers.push(part.ans[0]);
+
+          if (validAnswers.includes(val)) {
+            inputEl.classList.remove('incorrect');
+            inputEl.classList.add('correct');
+            correctInputs++;
+          } else {
+            inputEl.classList.remove('correct');
+            inputEl.classList.add('incorrect');
+            itemAllCorrect = false;
+          }
+          inputIdx++;
+        }
+      });
+
+      const hintEl = document.getElementById(`hint-${item.id}`);
+      if (!itemAllCorrect) {
+        hintEl.textContent = `(Правильно: ${expectedAnswers.join(' ... ')})`;
+        hintEl.style.display = 'inline';
+      } else {
+        hintEl.style.display = 'none';
+      }
+    });
+
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+
+    const percentage = Math.round((correctInputs / totalInputs) * 100);
+    scoreDisplay.textContent = `Результат: ${correctInputs} / ${totalInputs} (${percentage}%)`;
+    scoreDisplay.style.display = 'block';
+
+    progressContainer.style.display = 'block';
+    progressBar.style.width = percentage + '%';
+  }
+
+  function resetForm() {
+    items.forEach(item => {
+      let inputIdx = 0;
+      item.parts.forEach(part => {
+        if (part.type === 'input') {
+          const inputEl = document.getElementById(`in-${item.id}-${inputIdx}`);
+          inputEl.value = '';
+          inputEl.classList.remove('correct', 'incorrect');
+          inputIdx++;
+        }
+      });
+      const hintEl = document.getElementById(`hint-${item.id}`);
+      hintEl.style.display = 'none';
+    });
+
+    document.getElementById('scoreDisplay').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
+    document.getElementById('progressBar').style.width = '0%';
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  function speakSentence(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
