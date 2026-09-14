@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking Practice: Personal Questions</title>
+<style>
+  :root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #1f2937;
+    --border: #c7d2fe;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--border);
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.4rem;
+    color: #312e81;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #4b5563;
+    font-style: italic;
+  }
+
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #312e81;
+    margin: 24px 0 12px 0;
+    padding-bottom: 4px;
+    border-bottom: 1.5px dashed var(--border);
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .quiz-card {
+    background: #ffffff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: all 0.2s ease;
+  }
+
+  .quiz-card:hover {
+    border-color: #a5b4fc;
+  }
+
+  .sentence-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .sentence-text {
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: #1e1b4b;
+    line-height: 1.4;
+  }
+
+  .audio-btn {
+    background: #f3f4f6;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 1.1rem;
+    line-height: 1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background-color: #e0e7ff;
+    transform: scale(1.05);
+  }
+
+  .input-wrapper {
+    margin-top: 8px;
+  }
+
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 0.95rem;
+    padding: 10px 12px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    font-weight: 500;
+    color: #1f2937;
+    background-color: #ffffff;
+    resize: vertical;
+    min-height: 48px;
+    transition: all 0.2s ease;
+  }
+
+  textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+
+  .sample-answer {
+    display: none;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #047857;
+    background: #ecfdf5;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-left: 3px solid #10b981;
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .toggle-btn {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .toggle-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2>Exercise 2. Personal Questions & Practice</h2>
+    <div class="subtitle">Ответьте на вопросы о себе. Нажмите "Show Sample Answers", чтобы увидеть примеры ответов.</div>
+  </div>
+
+  <div class="quiz-list">
+
+    <!-- Section A -->
+    <div class="section-title">Part A: Theatre</div>
+
+    <div class="quiz-card" data-sample="I have been to the theatre once this month.">
+      <div class="sentence-row">
+        <div class="sentence-text">A1. How many times have you been to the theatre this month?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I have been to the theatre once this month.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="I went last Saturday. I saw a drama performance and I liked it very much.">
+      <div class="sentence-row">
+        <div class="sentence-text">A2. When did you go? What did you see? How did you like it?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I went last Saturday. I saw a drama performance and I liked it very much.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="Yes, I had great seats in the stalls.">
+      <div class="sentence-row">
+        <div class="sentence-text">A3. Did you have good seats?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> Yes, I had great seats in the stalls.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="I went there with my friends.">
+      <div class="sentence-row">
+        <div class="sentence-text">A4. Who did you go with?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I went there with my friends.</div>
+      </div>
+    </div>
+
+    <!-- Section B -->
+    <div class="section-title">Part B: Weekend Trips</div>
+
+    <div class="quiz-card" data-sample="I go to the country almost every weekend.">
+      <div class="sentence-row">
+        <div class="sentence-text">B1. How often do you go to the country for the weekend?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I go to the country almost every weekend.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="I have been there twice this month.">
+      <div class="sentence-row">
+        <div class="sentence-text">B2. How many times have you been there this month?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I have been there twice this month.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="I stayed there for two days, and I had a wonderful time.">
+      <div class="sentence-row">
+        <div class="sentence-text">B3. How long did you stay there? Did you have a good time?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I stayed there for two days, and I had a wonderful time.</div>
+      </div>
+    </div>
+
+    <!-- Section C -->
+    <div class="section-title">Part C: Films & Cinema</div>
+
+    <div class="quiz-card" data-sample="Yes, I have seen a very interesting documentary this week.">
+      <div class="sentence-row">
+        <div class="sentence-text">C1. Have you seen any interesting films this week?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> Yes, I have seen a very interesting documentary this week.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="I last saw a good film three days ago.">
+      <div class="sentence-row">
+        <div class="sentence-text">C2. When did you last see a good film?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I last saw a good film three days ago.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="I watched it on the telly at home.">
+      <div class="sentence-row">
+        <div class="sentence-text">C3. Did you go to the cinema or did you watch it on the telly?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I watched it on the telly at home.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="The film was about space exploration and science.">
+      <div class="sentence-row">
+        <div class="sentence-text">C4. What was the film about?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> The film was about space exploration and science.</div>
+      </div>
+    </div>
+
+    <!-- Section D -->
+    <div class="section-title">Part D: Reading Books</div>
+
+    <div class="quiz-card" data-sample="I have read about five good books this year.">
+      <div class="sentence-row">
+        <div class="sentence-text">D1. How many good books have you read this year?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I have read about five good books this year.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="I remember a detective novel best of all.">
+      <div class="sentence-row">
+        <div class="sentence-text">D2. Which of them do you remember best?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I remember a detective novel best of all.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="I liked the historical novel best.">
+      <div class="sentence-row">
+        <div class="sentence-text">D3. Which of them did you like best?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I liked the historical novel best.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="Unfortunately, I don't have enough time to read as much as I want.">
+      <div class="sentence-row">
+        <div class="sentence-text">D4. Have you got enough time to read much?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> Unfortunately, I don't have enough time to read as much as I want.</div>
+      </div>
+    </div>
+
+    <!-- Section E -->
+    <div class="section-title">Part E: Newspapers & News</div>
+
+    <div class="quiz-card" data-sample="No, I haven't read a paper today, but I read news online.">
+      <div class="sentence-row">
+        <div class="sentence-text">E1. Have you read a paper today?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> No, I haven't read a paper today, but I read news online.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="I usually read online news every day.">
+      <div class="sentence-row">
+        <div class="sentence-text">E2. Do you read papers every day?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I usually read online news every day.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="Yes, there are a few important articles about global economics.">
+      <div class="sentence-row">
+        <div class="sentence-text">E3. Is there any important news in today’s paper?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> Yes, there are a few important articles about global economics.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="I usually read the news when I get home in the evening.">
+      <div class="sentence-row">
+        <div class="sentence-text">E4. Do you usually read papers before you go to work (college) or when you get home?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> I usually read the news when I get home in the evening.</div>
+      </div>
+    </div>
+
+    <!-- Section F -->
+    <div class="section-title">Part F: Lectures</div>
+
+    <div class="quiz-card" data-sample="There have been three lectures today.">
+      <div class="sentence-row">
+        <div class="sentence-text">F1. How many lectures have there been today?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> There have been three lectures today.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="They were about modern history and financial management.">
+      <div class="sentence-row">
+        <div class="sentence-text">F2. What were they about?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> They were about modern history and financial management.</div>
+      </div>
+    </div>
+
+    <div class="quiz-card" data-sample="Two of them were very interesting.">
+      <div class="sentence-row">
+        <div class="sentence-text">F3. How many of them were interesting?</div>
+        <button class="audio-btn" onclick="speakText(this)" title="Listen">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea placeholder="Write your answer here..."></textarea>
+        <div class="sample-answer"><b>Sample answer:</b> Two of them were very interesting.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="toggle-btn" onclick="toggleSamples(this)">Show Sample Answers</button>
+  </div>
+</div>
+
+<script>
+  let showSamples = false;
+
+  function speakText(btn) {
+    const card = btn.closest('.quiz-card');
+    const questionText = card.querySelector('.sentence-text').innerText;
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(questionText);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function toggleSamples(btn) {
+    showSamples = !showSamples;
+    const sampleBoxes = document.querySelectorAll('.sample-answer');
+    
+    sampleBoxes.forEach(box => {
+      box.style.display = showSamples ? 'block' : 'none';
+    });
+
+    btn.innerText = showSamples ? 'Hide Sample Answers' : 'Show Sample Answers';
+  }
+</script>
+
+</body>
+</html>
