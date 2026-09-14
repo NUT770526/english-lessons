@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business English | Translation Practice</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      min-height: 100vh;
+      margin: 0;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background-color: #0a0a0a;
+      max-width: 900px;
+      width: 100%;
+      border-radius: 16px;
+      padding: 35px 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      border: 1px solid #222222;
+    }
+
+    .header {
+      margin-bottom: 25px;
+      border-bottom: 1px solid #222222;
+      padding-bottom: 15px;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #3b82f6;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 6px 0;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    p.instruction {
+      margin: 0;
+      color: #a1a1aa;
+      font-size: 0.95rem;
+      font-style: italic;
+    }
+
+    .sentences-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .q-card {
+      background-color: #121212;
+      border: 1px solid #27272a;
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .q-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 1.05rem;
+      color: #f4f4f5;
+      font-weight: 500;
+    }
+
+    .q-num {
+      color: #3b82f6;
+      font-weight: 700;
+      min-width: 24px;
+    }
+
+    .ru-text {
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    .vocab {
+      border-bottom: 1px dashed #3b82f6;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .vocab .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      width: max-content;
+      max-width: 250px;
+      background-color: #1e293b;
+      color: #38bdf8;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 9px;
+      position: absolute;
+      z-index: 20;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      font-weight: 500;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      pointer-events: none;
+    }
+
+    .vocab:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .audio-btn {
+      font-size: 0.9rem;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s ease, transform 0.1s ease;
+    }
+
+    .audio-btn:hover {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+
+    .input-area {
+      width: 100%;
+      background-color: #000000;
+      border: 1px solid #3f3f46;
+      border-radius: 6px;
+      color: #ffffff;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input-area:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+    }
+
+    .input-area.correct {
+      border-color: #22c55e !important;
+      background-color: rgba(34, 197, 94, 0.08) !important;
+      color: #4ade80 !important;
+    }
+
+    .input-area.incorrect {
+      border-color: #ef4444 !important;
+      background-color: rgba(239, 68, 68, 0.08) !important;
+      color: #fca5a5 !important;
+    }
+
+    .correct-ans-hint {
+      color: #22c55e;
+      font-size: 0.88rem;
+      font-weight: 500;
+      line-height: 1.4;
+      display: none;
+      background-color: rgba(34, 197, 94, 0.05);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border-left: 3px solid #22c55e;
+    }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-top: 1px solid #222222;
+      padding-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: #3b82f6;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #2563eb;
+    }
+
+    .btn-secondary {
+      background-color: #27272a;
+      color: #d4d4d8;
+    }
+
+    .btn-secondary:hover {
+      background-color: #3f3f46;
+    }
+
+    .score-display {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: none;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background-color: #27272a;
+      border-radius: 3px;
+      margin-top: 15px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #22c55e;
+      transition: width 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <span class="badge">Business English Practice</span>
+    <h1>Exercise 6. Translate into English</h1>
+    <p class="instruction">Перекладіть речення англійською мовою, звертаючи увагу на вживання часів (Present Perfect / Past Simple) та розділових питань.</p>
+  </div>
+
+  <div class="sentences-container" id="sentencesContainer"></div>
+
+  <div class="progress-bar-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="actions">
+    <div>
+      <button class="btn btn-primary" onclick="checkAnswers()">Перевірити відповіді</button>
+      <button class="btn btn-secondary" onclick="resetForm()">Скинути</button>
+    </div>
+    <div class="score-display" id="scoreDisplay"></div>
+  </div>
+</div>
+
+<script>
+  const items = [
+    {
+      id: 1,
+      ruHtml: '— Вы уже получили письмо от господина Адамса? — Да, я только что его прочитал. — Вы уже ответили на него? — Нет еще.',
+      targetEn: "Have you received the letter from Mr. Adams yet? — Yes, I have just read it. — Have you answered it yet? — Not yet.",
+      keyPhrase: "Have you received the letter from Mr. Adams yet? Yes, I have just read it. Have you answered it yet? Not yet.",
+      accepted: [
+        "have you received the letter from mr. adams yet? - yes, i have just read it. - have you answered it yet? - not yet.",
+        "have you already received the letter from mr. adams? - yes, i have just read it. - have you already answered it? - not yet.",
+        "have you received a letter from mr. adams yet? yes, i've just read it. have you answered it yet? not yet."
+      ]
+    },
+    {
+      id: 2,
+      ruHtml: '— Ты принес мою книгу? — Нет, извини, я оставил ее дома.',
+      targetEn: "Have you brought my book? — No, I'm sorry, I left it at home.",
+      keyPhrase: "Have you brought my book? No, I'm sorry, I left it at home.",
+      accepted: [
+        "have you brought my book? - no, sorry, i left it at home.",
+        "did you bring my book? - no, sorry, i left it at home.",
+        "have you brought my book? - no, i'm sorry, i left it at home."
+      ]
+    },
+    {
+      id: 3,
+      ruHtml: '— Вы читали когда-нибудь книги этого писателя? — Да, читал некоторые.',
+      targetEn: "Have you ever read books by this writer? — Yes, I have read some.",
+      keyPhrase: "Have you ever read books by this writer? Yes, I have read some.",
+      accepted: [
+        "have you ever read books by this writer? - yes, i have read some.",
+        "have you ever read any books by this writer? - yes, i've read some.",
+        "have you ever read books of this writer? - yes, i have read some."
+      ]
+    },
+    {
+      id: 4,
+      ruHtml: '— Какие у вас планы на лето? — Я еще об этом не думал.',
+      targetEn: "What are your plans for the summer? — I haven't thought about it yet.",
+      keyPhrase: "What are your plans for the summer? I haven't thought about it yet.",
+      accepted: [
+        "what are your plans for the summer? - i haven't thought about it yet.",
+        "what are your plans for summer? - i haven't thought about it yet.",
+        "what plans do you have for the summer? - i have not thought about it yet."
+      ]
+    },
+    {
+      id: 5,
+      ruHtml: '— Я никогда не видел этого <span class="vocab">памятника<span class="tooltip">monument / sight</span></span>. А вы? — Я тоже.',
+      targetEn: "I have never seen this monument. And you? — Me neither / Neither have I.",
+      keyPhrase: "I have never seen this monument. And you? Neither have I.",
+      accepted: [
+        "i have never seen this monument. and you? - me neither.",
+        "i've never seen this monument. and you? - neither have i.",
+        "i have never seen this monument. and you? - nor have i."
+      ]
+    },
+    {
+      id: 6,
+      ruHtml: 'Они никогда об этом не говорили, не правда ли?',
+      targetEn: "They have never talked about it, have they?",
+      keyPhrase: "They have never talked about it, have they?",
+      accepted: [
+        "they have never talked about it, have they?",
+        "they have never spoken about it, have they?",
+        "they've never talked about it, have they?",
+        "they have never mentioned it, have they?"
+      ]
+    },
+    {
+      id: 7,
+      ruHtml: 'Я никогда не слышал этого певца. А вы?',
+      targetEn: "I have never heard this singer. And you?",
+      keyPhrase: "I have never heard this singer. And you?",
+      accepted: [
+        "i have never heard this singer. and you?",
+        "i've never heard of this singer. and you?",
+        "i have never heard of this singer. and you?"
+      ]
+    },
+    {
+      id: 8,
+      ruHtml: '— Вы ведь уже получили наше письмо, не правда ли? — Да, мы получили его на прошлой неделе, и наши <span class="vocab">специалисты<span class="tooltip">experts / specialists</span></span> очень тщательно его изучили. — У вас есть какие-либо вопросы? — Да, мы составили список вопросов. — Разрешите взглянуть. — Вот, пожалуйста.',
+      targetEn: "You have already received our letter, haven't you? — Yes, we received it last week, and our experts studied it very carefully. — Do you have any questions? — Yes, we have compiled a list of questions. — Let me have a look. — Here you are.",
+      keyPhrase: "You have already received our letter, haven't you? Yes, we received it last week, and our experts studied it very carefully. Do you have any questions? Yes, we have compiled a list of questions. Let me have a look. Here you are.",
+      accepted: [
+        "you have already received our letter, haven't you? - yes, we received it last week, and our specialists studied it very carefully. - do you have any questions? - yes, we have made a list of questions. - let me have a look. - here you are.",
+        "you've already received our letter, haven't you? - yes, we got it last week, and our experts examined it very carefully. - do you have any questions? - yes, we compiled a list of questions. - let me see. - here you go."
+      ]
+    }
+  ];
+
+  function renderExercise() {
+    const container = document.getElementById('sentencesContainer');
+    container.innerHTML = '';
+
+    items.forEach(item => {
+      const qCard = document.createElement('div');
+      qCard.className = 'q-card';
+
+      qCard.innerHTML = `
+        <div class="q-header">
+          <span class="q-num">${item.id}.</span>
+          <div class="ru-text">${item.ruHtml}</div>
+          <span class="audio-btn" title="Прослухати еталонний варіант" onclick="speakText('${item.keyPhrase.replace(/'/g, "\\'")}')">🔊</span>
+        </div>
+        <textarea class="input-area" id="input-${item.id}" rows="2" placeholder="Напишіть переклад англійською..."></textarea>
+        <div class="correct-ans-hint" id="hint-${item.id}">
+          <strong>Еталонний варіант:</strong><br>${item.targetEn}
+        </div>
+      `;
+
+      container.appendChild(qCard);
+    });
+  }
+
+  function cleanString(str) {
+    return str.toLowerCase()
+      .replace(/[\u2010-\u2015—–-]/g, '-')
+      .replace(/['’]/g, "'")
+      .replace(/\s+/g, ' ')
+      .replace(/[^\w\s\?,'"\.-]/gi, '')
+      .trim();
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+
+    items.forEach(item => {
+      const inputEl = document.getElementById(`input-${item.id}`);
+      const userText = cleanString(inputEl.value);
+      const hintEl = document.getElementById(`hint-${item.id}`);
+
+      let isCorrect = false;
+
+      if (userText.length > 0) {
+        isCorrect = item.accepted.some(acc => cleanString(acc) === userText);
+
+        if (!isCorrect) {
+          const coreWords = item.keyPhrase.toLowerCase().match(/\b\w{4,}\b/g) || [];
+          const matchedWords = coreWords.filter(w => userText.includes(w));
+          if (matchedWords.length / coreWords.length > 0.7) {
+            isCorrect = true;
+          }
+        }
+      }
+
+      if (isCorrect) {
+        inputEl.classList.remove('incorrect');
+        inputEl.classList.add('correct');
+        hintEl.style.display = 'none';
+        correctCount++;
+      } else {
+        inputEl.classList.remove('correct');
+        inputEl.classList.add('incorrect');
+        hintEl.style.display = 'block';
+      }
+    });
+
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+
+    const percentage = Math.round((correctCount / items.length) * 100);
+    scoreDisplay.textContent = `Результат: ${correctCount} / ${items.length} (${percentage}%)`;
+    scoreDisplay.style.display = 'block';
+
+    progressContainer.style.display = 'block';
+    progressBar.style.width = percentage + '%';
+  }
+
+  function resetForm() {
+    items.forEach(item => {
+      const inputEl = document.getElementById(`input-${item.id}`);
+      inputEl.value = '';
+      inputEl.classList.remove('correct', 'incorrect');
+      const hintEl = document.getElementById(`hint-${item.id}`);
+      hintEl.style.display = 'none';
+    });
+
+    document.getElementById('scoreDisplay').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'none';
+    document.getElementById('progressBar').style.width = '0%';
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
