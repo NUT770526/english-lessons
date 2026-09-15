@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 3. Make Negative Sentences</title>
+<style>
+  :root {
+    --primary: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --bg: #f5f3ff;
+    --card: #ffffff;
+    --text: #1e1b4b;
+    --border: #ddd6fe;
+    --correct: #10b981;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 4px 0;
+    font-size: 1.5rem;
+    color: #4c1d95;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #6b21a8;
+    font-style: italic;
+  }
+
+  .score-board {
+    background: #f3e8ff;
+    border: 1.5px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    color: #581c87;
+    font-size: 1.05rem;
+  }
+
+  .rule-box {
+    background-color: #faf5ff;
+    border-left: 4px solid var(--primary);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: #581c87;
+  }
+
+  .rule-box ul {
+    margin: 6px 0 0 0;
+    padding-left: 20px;
+  }
+
+  .rule-box li {
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .quiz-card {
+    background: #ffffff;
+    border: 1.5px solid #e9d5ff;
+    border-radius: 14px;
+    padding: 16px;
+    transition: all 0.2s ease;
+  }
+
+  .quiz-card:hover {
+    border-color: #c4b5fd;
+  }
+
+  .original-sentence {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #4c1d95;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 10px 14px;
+    border: 2px solid #ddd6fe;
+    border-radius: 8px;
+    outline: none;
+    font-weight: 500;
+    color: #1e1b4b;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+  }
+
+  input[type="text"].correct-input {
+    border-color: var(--correct);
+    background-color: #ecfdf5;
+    color: #065f46;
+  }
+
+  input[type="text"].wrong-input {
+    border-color: var(--wrong);
+    background-color: #fef2f2;
+    color: #991b1b;
+  }
+
+  .correct-answer-hint {
+    display: none;
+    margin-top: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #059669;
+    background: #ecfdf5;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border-left: 3px solid #10b981;
+  }
+
+  /* Tooltip styling */
+  .tooltip {
+    position: relative;
+    border-bottom: 1.5px dashed #8b5cf6;
+    cursor: help;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background-color: #4c1d95;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 4px 8px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    font-weight: normal;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .audio-btn {
+    background: #f3e8ff;
+    border: 1px solid #ddd6fe;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background-color: #e9d5ff;
+    transform: scale(1.05);
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .action-btn {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+  }
+
+  .action-btn.secondary {
+    background-color: #6b7280;
+    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #4b5563;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 3. Make negative sentences</h2>
+      <div class="subtitle">Зроби речення заперечними.</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 10</div>
+  </div>
+
+  <div class="rule-box">
+    💡 <b>Пам'ятай:</b>
+    <ul>
+      <li>is → <b>isn't</b></li>
+      <li>are → <b>aren't</b> / am → <b>am not</b></li>
+      <li>play / plays → <b>don't play</b> / <b>doesn't play</b></li>
+    </ul>
+  </div>
+
+  <div class="quiz-list" id="quiz-container"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const questions = [
+    {
+      id: 1,
+      display: "1. She is <span class='tooltip'>famous<span class='tooltiptext'>відома</span></span>.",
+      correctAnswers: ["She isn't famous.", "She is not famous."],
+      targetAudio: "She isn't famous."
+    },
+    {
+      id: 2,
+      display: "2. I am <span class='tooltip'>late<span class='tooltiptext'>запізнююся</span></span>.",
+      correctAnswers: ["I am not late.", "I'm not late."],
+      targetAudio: "I am not late."
+    },
+    {
+      id: 3,
+      display: "3. Her <span class='tooltip'>cousin<span class='tooltiptext'>двоюрідний брат / сестра</span></span> is from Ireland.",
+      correctAnswers: ["Her cousin isn't from Ireland.", "Her cousin is not from Ireland."],
+      targetAudio: "Her cousin isn't from Ireland."
+    },
+    {
+      id: 4,
+      display: "4. Emma plays the <span class='tooltip'>violin<span class='tooltiptext'>скрипка</span></span>.",
+      correctAnswers: ["Emma doesn't play the violin.", "Emma does not play the violin."],
+      targetAudio: "Emma doesn't play the violin."
+    },
+    {
+      id: 5,
+      display: "5. She plays football on Saturday.",
+      correctAnswers: ["She doesn't play football on Saturday.", "She does not play football on Saturday."],
+      targetAudio: "She doesn't play football on Saturday."
+    },
+    {
+      id: 6,
+      display: "6. I play the guitar.",
+      correctAnswers: ["I don't play the guitar.", "I do not play the guitar."],
+      targetAudio: "I don't play the guitar."
+    },
+    {
+      id: 7,
+      display: "7. Her brother plays the <span class='tooltip'>drums<span class='tooltiptext'>барабани</span></span>.",
+      correctAnswers: ["Her brother doesn't play the drums.", "Her brother does not play the drums."],
+      targetAudio: "Her brother doesn't play the drums."
+    },
+    {
+      id: 8,
+      display: "8. They are <span class='tooltip'>crazy about<span class='tooltiptext'>божеволіють від</span></span> music.",
+      correctAnswers: ["They aren't crazy about music.", "They are not crazy about music."],
+      targetAudio: "They aren't crazy about music."
+    },
+    {
+      id: 9,
+      display: "9. Kate <span class='tooltip'>waits for<span class='tooltiptext'>чекає на</span></span> her cousin.",
+      correctAnswers: ["Kate doesn't wait for her cousin.", "Kate does not wait for her cousin."],
+      targetAudio: "Kate doesn't wait for her cousin."
+    },
+    {
+      id: 10,
+      display: "10. The piano is in the room.",
+      correctAnswers: ["The piano isn't in the room.", "The piano is not in the room."],
+      targetAudio: "The piano isn't in the room."
+    }
+  ];
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    questions.forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'quiz-card';
+      card.id = `card-${q.id}`;
+
+      card.innerHTML = `
+        <div class="original-sentence">
+          <span>${q.display}</span>
+          <button class="audio-btn" onclick="speakText('${q.targetAudio}')" title="Listen target sentence">🔊</button>
+        </div>
+        <div class="input-row">
+          <input type="text" id="input-${q.id}" placeholder="Type negative sentence..." autocomplete="off">
+        </div>
+        <div class="correct-answer-hint" id="hint-${q.id}">
+          <b>Correct answer:</b> ${q.correctAnswers[0]}
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function normalizeText(text) {
+    return text
+      .trim()
+      .replace(/’/g, "'") // Normalize apostrophe
+      .replace(/\s+/g, " ")
+      .replace(/[.!?]$/, "") // Remove ending punctuation for easier matching
+      .toLowerCase();
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    questions.forEach(q => {
+      const inputEl = document.getElementById(`input-${q.id}`);
+      const hintEl = document.getElementById(`hint-${q.id}`);
+      const userVal = normalizeText(inputEl.value);
+
+      const isCorrect = q.correctAnswers.some(ans => normalizeText(ans) === userVal);
+
+      inputEl.classList.remove('correct-input', 'wrong-input');
+      hintEl.style.display = 'none';
+
+      if (isCorrect) {
+        score++;
+        inputEl.classList.add('correct-input');
+      } else {
+        inputEl.classList.add('wrong-input');
+        hintEl.style.display = 'block';
+      }
+    });
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    renderQuiz();
+  }
+
+  window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
