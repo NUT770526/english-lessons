@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 2. Choose the Correct Word</title>
+<style>
+  :root {
+    --primary: #ec4899;
+    --primary-hover: #db2777;
+    --bg: #fdf2f8;
+    --card: #ffffff;
+    --text: #1f2937;
+    --border: #fbcfe8;
+    --correct: #10b981;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px -5px rgba(236, 72, 153, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 4px 0;
+    font-size: 1.5rem;
+    color: #831843;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #9d174d;
+    font-style: italic;
+  }
+
+  .score-board {
+    background: #fce7f3;
+    border: 1.5px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    color: #831843;
+    font-size: 1.05rem;
+  }
+
+  .instructions {
+    background-color: #fff1f2;
+    border-left: 4px solid var(--primary);
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+    font-size: 0.92rem;
+    color: #831843;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .quiz-card {
+    background: #ffffff;
+    border: 1.5px solid #f3e8ff;
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .quiz-card:hover {
+    border-color: #f472b6;
+  }
+
+  .sentence-wrapper {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #374151;
+    line-height: 1.6;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .num {
+    color: #be185d;
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
+  /* Tooltip styling */
+  .tooltip {
+    position: relative;
+    border-bottom: 1.5px dashed #ec4899;
+    cursor: help;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background-color: #831843;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 4px 8px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    font-weight: normal;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .options-group {
+    display: inline-flex;
+    gap: 4px;
+    background-color: #fdf2f8;
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .opt-btn {
+    background: #ffffff;
+    border: 1px solid #fbcfe8;
+    color: #831843;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .opt-btn:hover {
+    background-color: #fce7f3;
+  }
+
+  .opt-btn.selected {
+    background-color: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+  }
+
+  .opt-btn.correct {
+    background-color: var(--correct) !important;
+    color: #ffffff !important;
+    border-color: var(--correct) !important;
+  }
+
+  .opt-btn.wrong {
+    background-color: var(--wrong) !important;
+    color: #ffffff !important;
+    border-color: var(--wrong) !important;
+  }
+
+  .audio-btn {
+    background: #fdf2f8;
+    border: 1px solid #fbcfe8;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background-color: #fce7f3;
+    transform: scale(1.05);
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .action-btn {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4);
+  }
+
+  .action-btn.secondary {
+    background-color: #6b7280;
+    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #4b5563;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 2. Choose the correct word</h2>
+      <div class="subtitle">Обери правильний варіант відруку.</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 12</div>
+  </div>
+
+  <div class="instructions">
+    ✨ <b>Як грати:</b> Натисни правильне слово в кожному реченні. Наведи мишкою на підкреслені слова, щоб побачити переклад українською! 🔊 Натисни кнопку озвучки, щоб послухати речення.
+  </div>
+
+  <div class="quiz-list" id="quiz-container"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const questions = [
+    {
+      id: 1,
+      part1: "Mia",
+      opts: ["is", "does"],
+      correct: "is",
+      part2: "<span class='tooltip'>crazy about<span class='tooltiptext'>божеволіє від / дуже любить</span></span> music.",
+      fullText: "Mia is crazy about music."
+    },
+    {
+      id: 2,
+      part1: "",
+      opts: ["Is", "Does"],
+      correct: "Does",
+      part2: "she play the <span class='tooltip'>violin<span class='tooltiptext'>скрипка</span></span>?",
+      fullText: "Does she play the violin?"
+    },
+    {
+      id: 3,
+      part1: "She",
+      opts: ["isn't", "doesn't"],
+      correct: "doesn't",
+      part2: "play the <span class='tooltip'>drums<span class='tooltiptext'>барабани</span></span>.",
+      fullText: "She doesn't play the drums."
+    },
+    {
+      id: 4,
+      part1: "Her <span class='tooltip'>cousin<span class='tooltiptext'>двоюрідний брат / сестра</span></span>",
+      opts: ["is", "does"],
+      correct: "is",
+      part2: "from Ireland.",
+      fullText: "Her cousin is from Ireland."
+    },
+    {
+      id: 5,
+      part1: "",
+      opts: ["Is", "Does"],
+      correct: "Is",
+      part2: "her cousin <span class='tooltip'>famous<span class='tooltiptext'>відомий / знаменитий</span></span>?",
+      fullText: "Is her cousin famous?"
+    },
+    {
+      id: 6,
+      part1: "He",
+      opts: ["isn't", "doesn't"],
+      correct: "doesn't",
+      part2: "play the <span class='tooltip'>keyboard<span class='tooltiptext'>синтезатор / клавішні</span></span>.",
+      fullText: "He doesn't play the keyboard."
+    },
+    {
+      id: 7,
+      part1: "",
+      opts: ["Are", "Do"],
+      correct: "Do",
+      part2: "you <span class='tooltip'>often<span class='tooltiptext'>часто</span></span> play football?",
+      fullText: "Do you often play football?"
+    },
+    {
+      id: 8,
+      part1: "I",
+      opts: ["am not", "don't"],
+      correct: "am not",
+      part2: "<span class='tooltip'>late<span class='tooltiptext'>запізнився / запізнююся</span></span> today.",
+      fullText: "I am not late today."
+    },
+    {
+      id: 9,
+      part1: "What",
+      opts: ["are", "do"],
+      correct: "do",
+      part2: "you <span class='tooltip'>mean<span class='tooltiptext'>маєш на увазі</span></span>?",
+      fullText: "What do you mean?"
+    },
+    {
+      id: 10,
+      part1: "The guitar",
+      opts: ["is", "does"],
+      correct: "is",
+      part2: "in the room.",
+      fullText: "The guitar is in the room."
+    },
+    {
+      id: 11,
+      part1: "",
+      opts: ["Is", "Does"],
+      correct: "Does",
+      part2: "Anna <span class='tooltip'>wait for<span class='tooltiptext'>чекати на</span></span> her cousin?",
+      fullText: "Does Anna wait for her cousin?"
+    },
+    {
+      id: 12,
+      part1: "She",
+      opts: ["isn't", "doesn't"],
+      correct: "isn't",
+      part2: "crazy about football.",
+      fullText: "She isn't crazy about football."
+    }
+  ];
+
+  let userAnswers = {};
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    questions.forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'quiz-card';
+      card.id = `card-${q.id}`;
+
+      const optionsHTML = q.opts.map(opt => `
+        <button class="opt-btn ${userAnswers[q.id] === opt ? 'selected' : ''}" 
+                onclick="selectOption(${q.id}, '${opt}', this)">
+          ${opt}
+        </button>
+      `).join('');
+
+      card.innerHTML = `
+        <div class="sentence-wrapper">
+          <span class="num">${q.id}.</span>
+          ${q.part1 ? `<span>${q.part1}</span>` : ''}
+          <div class="options-group">${optionsHTML}</div>
+          <span>${q.part2}</span>
+        </div>
+        <button class="audio-btn" onclick="speakText('${q.fullText}')" title="Listen">🔊</button>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function selectOption(qId, option, btn) {
+    userAnswers[qId] = option;
+    const parent = btn.parentElement;
+    parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected', 'correct', 'wrong'));
+    btn.classList.add('selected');
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    questions.forEach(q => {
+      const card = document.getElementById(`card-${q.id}`);
+      const btns = card.querySelectorAll('.opt-btn');
+      const selected = userAnswers[q.id];
+
+      btns.forEach(btn => {
+        const text = btn.innerText.trim();
+        btn.classList.remove('correct', 'wrong');
+
+        if (text === q.correct) {
+          if (selected === q.correct) {
+            btn.classList.add('correct');
+          }
+        } else if (text === selected && selected !== q.correct) {
+          btn.classList.add('wrong');
+        }
+      });
+
+      if (selected === q.correct) {
+        score++;
+      }
+    });
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    userAnswers = {};
+    document.getElementById('score').innerText = 0;
+    renderQuiz();
+  }
+
+  window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
