@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise. Where did it happen?</title>
+<style>
+  :root {
+    --primary: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --bg: #f5f3ff;
+    --card: #ffffff;
+    --text: #1e1b4b;
+    --border: #ddd6fe;
+    --correct: #10b981;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 880px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 4px 0;
+    font-size: 1.5rem;
+    color: #4c1d95;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #6b21a8;
+    font-weight: 500;
+  }
+
+  .score-board {
+    background: #f3e8ff;
+    border: 1.5px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    color: #581c87;
+    font-size: 1.05rem;
+  }
+
+  .rule-box {
+    background-color: #faf5ff;
+    border-left: 4px solid var(--primary);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: #581c87;
+  }
+
+  .options-bank {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .option-chip {
+    background: #ffffff;
+    border: 1.5px solid #c4b5fd;
+    color: #581c87;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .quiz-card {
+    background: #ffffff;
+    border: 1.5px solid #e9d5ff;
+    border-radius: 14px;
+    padding: 14px 18px;
+    transition: all 0.2s ease;
+  }
+
+  .quiz-card:hover {
+    border-color: #c4b5fd;
+  }
+
+  .sentence-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .sentence-wrapper {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e1b4b;
+    line-height: 1.8;
+    flex: 1;
+  }
+
+  .vocab-bold {
+    font-weight: 800;
+    color: #4c1d95;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #4c1d95;
+    background-color: #faf5ff;
+    border: 2px solid #c4b5fd;
+    border-radius: 8px;
+    padding: 4px 10px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0 4px;
+  }
+
+  select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+  }
+
+  select.correct-select {
+    border-color: var(--correct);
+    background-color: #ecfdf5;
+    color: #065f46;
+  }
+
+  select.wrong-select {
+    border-color: var(--wrong);
+    background-color: #fef2f2;
+    color: #991b1b;
+  }
+
+  /* Tooltip styling */
+  .tooltip {
+    position: relative;
+    border-bottom: 2px dashed #8b5cf6;
+    cursor: help;
+    display: inline-block;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: max-content;
+    max-width: 280px;
+    background-color: #3b0764;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.85rem;
+    font-weight: normal;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .phonetics {
+    color: #ddd6fe;
+    font-family: "Lucida Sans Unicode", "Arial Unicode MS", sans-serif;
+    font-size: 0.8rem;
+  }
+
+  /* Compact Audio Button inline with word */
+  .word-speaker-btn {
+    background: #f3e8ff;
+    border: 1px solid #c4b5fd;
+    color: #6b21a8;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-left: 4px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+  }
+
+  .word-speaker-btn:hover {
+    background-color: #8b5cf6;
+    color: #ffffff;
+    transform: scale(1.1);
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .action-btn {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+  }
+
+  .action-btn.secondary {
+    background-color: #6b7280;
+    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #4b5563;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise. Where did it happen?</h2>
+      <div class="subtitle">Встав правильний прийменник: <b>on</b>, <b>in</b>, <b>by</b> або <b>via</b>. Зверни увагу на виділені слова з Vocabulary.</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 18</div>
+  </div>
+
+  <div class="rule-box">
+    💡 Choose between:
+    <div class="options-bank">
+      <span class="option-chip">on</span>
+      <span class="option-chip">in</span>
+      <span class="option-chip">by</span>
+      <span class="option-chip">via</span>
+    </div>
+  </div>
+
+  <div class="quiz-list" id="quiz-container"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const prepositionOptions = ["on", "in", "by", "via"];
+
+  function createVocabWord(word, ipa, ua) {
+    return `<span class='vocab-bold tooltip'>${word}<span class='tooltiptext'>${ua} <span class='phonetics'>[${ipa}]</span></span></span><button class='word-speaker-btn' onclick="speakWord('${word}')" title="Listen to '${word}'">🔊</button>`;
+  }
+
+  const questions = [
+    {
+      id: 1,
+      part1: `1. I saw a friendly ${createVocabWord("greeting", "ˈɡriː.tɪŋ", "привітання")}`,
+      part2: "Facebook.",
+      correct: "on"
+    },
+    {
+      id: 2,
+      part1: `2. My cousin sent me a ${createVocabWord("brief message", "briːf ˈmes.ɪdʒ", "коротке повідомлення")}`,
+      part2: "Telegram.",
+      correct: "via"
+    },
+    {
+      id: 3,
+      part1: `3. I found some interesting facts about our ${createVocabWord("ancestors", "ˈæn.ses.tərz", "предки / пращури")}`,
+      part2: "the Internet.",
+      correct: "on"
+    },
+    {
+      id: 4,
+      part1: `4. We read about Ukrainian ${createVocabWord("customs", "ˈkʌs.təmz", "звичаї")}`,
+      part2: "a history website.",
+      correct: "on"
+    },
+    {
+      id: 5,
+      part1: "5. Emma posted her holiday photos",
+      part2: "Instagram.",
+      correct: "on"
+    },
+    {
+      id: 6,
+      part1: `6. I received a ${createVocabWord("reference letter", "ˈref.ər.əns ˈlet.ər", "рекомендаційний лист")}`,
+      part2: "email.",
+      correct: "by"
+    },
+    {
+      id: 7,
+      part1: `7. The teacher asked me to ${createVocabWord("edit", "ˈed.ɪt", "редагувати")}`,
+      part2: "my letter Gmail.",
+      correct: "in"
+    },
+    {
+      id: 8,
+      part1: `8. I saved the first ${createVocabWord("draft", "dræft", "чернетка")}`,
+      part2: "of my email Gmail.",
+      correct: "in"
+    },
+    {
+      id: 9,
+      part1: `9. Tom explained the ${createVocabWord("misunderstanding", "ˌmɪs.ʌn.dəˈstæn.dɪŋ", "непорозуміння")}`,
+      part2: "Telegram.",
+      correct: "via"
+    },
+    {
+      id: 10,
+      part1: `10. I watched a video about a traditional ${createVocabWord("bonfire", "ˈbɒn.faɪər", "багаття")}`,
+      part2: "YouTube.",
+      correct: "on"
+    },
+    {
+      id: 11,
+      part1: `11. The school sent the ${createVocabWord("final message", "ˈfaɪ.nəl ˈmes.ɪdʒ", "остаточне повідомлення")}`,
+      part2: "email.",
+      correct: "by"
+    },
+    {
+      id: 12,
+      part1: `12. I found information about English ${createVocabWord("literature", "ˈlɪt.rə.tʃər", "література")}`,
+      part2: "the Internet.",
+      correct: "on"
+    },
+    {
+      id: 13,
+      part1: `13. My friend wrote a funny ${createVocabWord("goodbye", "ɡʊdˈbaɪ", "прощання")}`,
+      part2: "Instagram.",
+      correct: "on"
+    },
+    {
+      id: 14,
+      part1: `14. You can ${createVocabWord("apply", "əˈplaɪ", "подати заявку")}`,
+      part2: "for the competition their official website.",
+      correct: "on"
+    },
+    {
+      id: 15,
+      part1: "15. I sent my completed letter",
+      part2: "Gmail.",
+      correct: "via"
+    },
+    {
+      id: 16,
+      part1: `16. People posted pictures of colourful ${createVocabWord("lanterns", "ˈlæn.tərnz", "ліхтарики")}`,
+      part2: "Facebook.",
+      correct: "on"
+    },
+    {
+      id: 17,
+      part1: "17. The festival was celebrated and discussed",
+      part2: "Twitter.",
+      correct: "on"
+    },
+    {
+      id: 18,
+      part1: `18. Our teacher explained ${createVocabWord("contractions", "kənˈtræk.ʃənz", "скорочення")}`,
+      part2: "the school website.",
+      correct: "on"
+    }
+  ];
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    questions.forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'quiz-card';
+      card.id = `card-${q.id}`;
+
+      const optionsHTML = ['<option value="">---</option>']
+        .concat(prepositionOptions.map(opt => `<option value="${opt}">${opt}</option>`))
+        .join('');
+
+      card.innerHTML = `
+        <div class="sentence-row">
+          <div class="sentence-wrapper">
+            ${q.part1}
+            <select id="select-${q.id}">${optionsHTML}</select>
+            ${q.part2}
+          </div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    questions.forEach(q => {
+      const selectEl = document.getElementById(`select-${q.id}`);
+      const val = selectEl.value;
+
+      selectEl.classList.remove('correct-select', 'wrong-select');
+
+      if (val === q.correct) {
+        score++;
+        selectEl.classList.add('correct-select');
+      } else {
+        selectEl.classList.add('wrong-select');
+      }
+    });
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function speakWord(word) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    renderQuiz();
+  }
+
+  window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
