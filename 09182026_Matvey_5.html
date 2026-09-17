@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking & Writing Exercise: Past Simple Answers</title>
+<style>
+  :root {
+    --primary: #ef4444;
+    --primary-hover: #dc2626;
+    --bg: #fff1f2;
+    --card: #ffffff;
+    --text: #1e1b4b;
+    --border: #fecdd3;
+    --correct: #10b981;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--border);
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: #9f1239;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #be123c;
+    font-weight: 500;
+  }
+
+  .quiz-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+  }
+
+  .quiz-row {
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .question-cell {
+    background-color: #ffe4e6;
+    padding: 16px;
+    width: 50%;
+    vertical-align: middle;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+  }
+
+  .question-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #881337;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hint-text {
+    font-size: 0.85rem;
+    color: #9f1239;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  .answer-cell {
+    padding: 12px 16px;
+    width: 50%;
+    vertical-align: middle;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border: 2px solid var(--border);
+    border-left: none;
+  }
+
+  textarea {
+    width: 100%;
+    height: 60px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #881337;
+    background-color: #fff1f2;
+    border: 2px solid #fda4af;
+    border-radius: 8px;
+    padding: 8px 12px;
+    outline: none;
+    resize: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    background-color: #ffffff;
+  }
+
+  textarea.saved {
+    border-color: var(--correct);
+    background-color: #ecfdf5;
+    color: #065f46;
+  }
+
+  .speaker-btn {
+    background: #fecdd3;
+    border: none;
+    color: #9f1239;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: scale(1.05);
+  }
+
+  .controls {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #4b5563;
+    box-shadow: 0 4px 12px rgba(75, 85, 99, 0.3);
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #374151;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #10b981;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2>✏️ Write down your answers!</h2>
+    <div class="subtitle">Дай повні відповіді на запитання у минулому часі (Past Simple).</div>
+  </div>
+
+  <div id="quiz-container"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAndSave()">Check & Save ✨</button>
+    <button class="action-btn secondary" onclick="copyAnswers()">Copy Answers 📋</button>
+    <button class="action-btn secondary" onclick="resetForm()">Reset 🔄</button>
+  </div>
+</div>
+
+<div id="toast" class="toast">Answers copied to clipboard! 📋</div>
+
+<script>
+  const questions = [
+    {
+      id: 1,
+      num: 1,
+      text: "What did you eat yesterday morning?",
+      hint: "Start with: I ate..."
+    },
+    {
+      id: 2,
+      num: 2,
+      text: "What books did you read last year?",
+      hint: "Start with: I read..."
+    },
+    {
+      id: 3,
+      num: 3,
+      text: "Where did you go last winter?",
+      hint: "Start with: I went to..."
+    },
+    {
+      id: 4,
+      num: 4,
+      text: "What did you drink yesterday morning?",
+      hint: "Start with: I drank..."
+    },
+    {
+      id: 5,
+      num: 5,
+      text: "When did you finish your homework yesterday?",
+      hint: "Start with: I finished my homework at..."
+    }
+  ];
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    let html = '<table class="quiz-table">';
+
+    questions.forEach(q => {
+      html += `
+        <tr class="quiz-row">
+          <td class="question-cell">
+            <div class="question-text">
+              <span><b>${q.num}.</b> ${q.text}</span>
+              <button class="speaker-btn" onclick="speakText('${q.text}')" title="Listen">🔊</button>
+            </div>
+            <div class="hint-text">💡 ${q.hint}</div>
+          </td>
+          <td class="answer-cell">
+            <textarea id="ans-${q.id}" placeholder="Type your answer here..."></textarea>
+          </td>
+        </tr>
+      `;
+    });
+
+    html += '</table>';
+    container.innerHTML = html;
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAndSave() {
+    questions.forEach(q => {
+      const el = document.getElementById(`ans-${q.id}`);
+      if (el.value.trim().length > 0) {
+        el.classList.add('saved');
+      } else {
+        el.classList.remove('saved');
+      }
+    });
+  }
+
+  function copyAnswers() {
+    let resultText = "My Answers:\n\n";
+    let hasAnswers = false;
+
+    questions.forEach(q => {
+      const val = document.getElementById(`ans-${q.id}`).value.trim();
+      resultText += `${q.num}. ${q.text}\nAnswer: ${val || "(No answer)"}\n\n`;
+      if (val) hasAnswers = true;
+    });
+
+    if (!hasAnswers) {
+      alert("Please write at least one answer before copying!");
+      return;
+    }
+
+    navigator.clipboard.writeText(resultText).then(() => {
+      const toast = document.getElementById('toast');
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2500);
+    });
+  }
+
+  function resetForm() {
+    questions.forEach(q => {
+      const el = document.getElementById(`ans-${q.id}`);
+      el.value = '';
+      el.classList.remove('saved');
+    });
+  }
+
+  window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
