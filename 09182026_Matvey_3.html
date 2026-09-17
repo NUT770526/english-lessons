@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar Exercise: Past Continuous</title>
+<style>
+  :root {
+    --primary: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --bg: #f5f3ff;
+    --card: #ffffff;
+    --text: #1e1b4b;
+    --border: #ddd6fe;
+    --correct: #10b981;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 780px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 4px 0;
+    font-size: 1.4rem;
+    color: #4c1d95;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #6b21a8;
+    font-weight: 500;
+  }
+
+  .score-board {
+    background: #f3e8ff;
+    border: 1.5px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    color: #581c87;
+    font-size: 1.05rem;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .quiz-card {
+    background: #ffffff;
+    border: 1.5px solid #e9d5ff;
+    border-radius: 14px;
+    padding: 16px 20px;
+    transition: all 0.2s ease;
+  }
+
+  .quiz-card:hover {
+    border-color: #c4b5fd;
+  }
+
+  .sentence-row {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e1b4b;
+    line-height: 1.8;
+  }
+
+  .base-verb-hint {
+    font-size: 0.85rem;
+    color: #6b21a8;
+    background-color: #f3e8ff;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-right: 6px;
+    font-weight: 700;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #4c1d95;
+    background-color: #faf5ff;
+    border: 2px solid #c4b5fd;
+    border-radius: 8px;
+    padding: 4px 10px;
+    width: 120px;
+    outline: none;
+    transition: all 0.2s ease;
+    margin: 0 4px;
+    text-align: center;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    background-color: #ffffff;
+  }
+
+  input[type="text"].correct-input {
+    border-color: var(--correct);
+    background-color: #ecfdf5;
+    color: #065f46;
+  }
+
+  input[type="text"].wrong-input {
+    border-color: var(--wrong);
+    background-color: #fef2f2;
+    color: #991b1b;
+  }
+
+  /* Tooltip styling */
+  .tooltip {
+    position: relative;
+    border-bottom: 2px dashed #8b5cf6;
+    cursor: help;
+    display: inline-block;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: max-content;
+    max-width: 280px;
+    background-color: #3b0764;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.85rem;
+    font-weight: normal;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .phonetics {
+    color: #ddd6fe;
+    font-family: "Lucida Sans Unicode", "Arial Unicode MS", sans-serif;
+    font-size: 0.8rem;
+  }
+
+  /* Compact Audio Button inline with word */
+  .word-speaker-btn {
+    background: #f3e8ff;
+    border: 1px solid #c4b5fd;
+    color: #6b21a8;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-left: 4px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+  }
+
+  .word-speaker-btn:hover {
+    background-color: #8b5cf6;
+    color: #ffffff;
+    transform: scale(1.1);
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .action-btn {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+  }
+
+  .action-btn.secondary {
+    background-color: #6b7280;
+    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #4b5563;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>🎬 Put verbs in the correct form to complete these sentences</h2>
+      <div class="subtitle">Установи дієслова у правильну форму минулого тривалого часу (Past Continuous).</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 5</div>
+  </div>
+
+  <div class="quiz-list" id="quiz-container"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  function createVocabWord(word, ipa, ua) {
+    return `<span class='tooltip'><b>${word}</b><span class='tooltiptext'>${ua} <span class='phonetics'>[${ipa}]</span></span></span><button class='word-speaker-btn' onclick="speakWord('${word}')" title="Listen to '${word}'">🔊</button>`;
+  }
+
+  const questions = [
+    {
+      id: 1,
+      part1: "1. I",
+      baseVerb: "(be)",
+      part2: "practicing every day, three times a day.",
+      correct: "was"
+    },
+    {
+      id: 2,
+      part1: "2. They were",
+      baseVerb: "(meet)",
+      part2: "secretly after school.",
+      correct: "meeting"
+    },
+    {
+      id: 3,
+      part1: "3. They",
+      baseVerb: "(be)",
+      part2: `always ${createVocabWord("quarrelling", "ˈkwɒr.əl.ɪŋ", "сварилися / сперечалися")}.`,
+      correct: "were"
+    },
+    {
+      id: 4,
+      part1: "4. Everyone",
+      baseVerb: "(be)",
+      part2: `${createVocabWord("shouting", "ˈʃaʊ.tɪŋ", "кричав")}.`,
+      correct: "was"
+    },
+    {
+      id: 5,
+      part1: "5. The town was",
+      baseVerb: "(change)",
+      part2: "quickly.",
+      correct: "changing"
+    }
+  ];
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    questions.forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'quiz-card';
+      card.id = `card-${q.id}`;
+
+      card.innerHTML = `
+        <div class="sentence-row">
+          ${q.part1}
+          <span class="base-verb-hint">${q.baseVerb}</span>
+          <input type="text" id="input-${q.id}" autocomplete="off" spellcheck="false" placeholder="...">
+          ${q.part2}
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    questions.forEach(q => {
+      const inputEl = document.getElementById(`input-${q.id}`);
+      const val = inputEl.value.trim().toLowerCase();
+
+      inputEl.classList.remove('correct-input', 'wrong-input');
+
+      if (val === q.correct.toLowerCase()) {
+        score++;
+        inputEl.classList.add('correct-input');
+      } else {
+        inputEl.classList.add('wrong-input');
+      }
+    });
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function speakWord(word) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    renderQuiz();
+  }
+
+  window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
