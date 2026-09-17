@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listening & Reading Exercise: Email Analysis</title>
+<style>
+  :root {
+    --primary: #ef4444;
+    --primary-hover: #dc2626;
+    --bg: #fff1f2;
+    --card: #ffffff;
+    --text: #1e1b4b;
+    --border: #fecdd3;
+    --correct: #10b981;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+
+  .audio-card {
+    background: #fff1f2;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .audio-controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .audio-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #9f1239;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .player-btns {
+    display: flex;
+    gap: 8px;
+  }
+
+  .play-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .play-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+  }
+
+  /* Accordion for Transcript */
+  .accordion-btn {
+    background: #ffe4e6;
+    color: #9f1239;
+    border: 1.5px dashed #fda4af;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+
+  .accordion-btn:hover {
+    background: #fecdd3;
+  }
+
+  .transcript-content {
+    display: none;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 8px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4c0519;
+  }
+
+  .transcript-content.show {
+    display: block;
+  }
+
+  /* Quiz Table */
+  .quiz-section-title {
+    font-size: 1.3rem;
+    color: #9f1239;
+    font-weight: 800;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .quiz-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+
+  .quiz-row {
+    background: #fff;
+  }
+
+  .label-cell {
+    background-color: #ffe4e6;
+    padding: 14px 18px;
+    width: 45%;
+    vertical-align: middle;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    font-weight: 700;
+    color: #881337;
+    border: 2px solid var(--border);
+    border-right: none;
+  }
+
+  .input-cell {
+    padding: 10px 16px;
+    width: 55%;
+    vertical-align: middle;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border: 2px solid var(--border);
+    border-left: none;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #881337;
+    background-color: #fff1f2;
+    border: 2px solid #fda4af;
+    border-radius: 8px;
+    padding: 8px 12px;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    background-color: #ffffff;
+  }
+
+  input[type="text"].correct-input {
+    border-color: var(--correct);
+    background-color: #ecfdf5;
+    color: #065f46;
+  }
+
+  input[type="text"].wrong-input {
+    border-color: var(--wrong);
+    background-color: #fef2f2;
+    color: #991b1b;
+  }
+
+  .controls {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #4b5563;
+    box-shadow: 0 4px 12px rgba(75, 85, 99, 0.3);
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #374151;
+  }
+
+  .score-board {
+    text-align: center;
+    margin-top: 12px;
+    font-weight: 700;
+    color: #9f1239;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Audio Section -->
+  <div class="audio-card">
+    <div class="audio-controls-row">
+      <div class="audio-title">🎧 Listen to the email recording</div>
+      <div class="player-btns">
+        <button class="play-btn" onclick="playAudio()">▶ Play</button>
+        <button class="play-btn" style="background:#6b7280;" onclick="pauseAudio()">⏸ Pause</button>
+        <button class="play-btn" style="background:#9ca3af;" onclick="stopAudio()">⏹ Stop</button>
+      </div>
+    </div>
+
+    <!-- Hidden Transcript Accordion -->
+    <div>
+      <button class="accordion-btn" onclick="toggleTranscript()">
+        <span>Read Transcript</span>
+        <span id="accordion-icon">➕</span>
+      </button>
+      <div class="transcript-content" id="transcript">
+        <p><strong>Dear Professor White,</strong></p>
+        <p>I am writing to you today because I would like to ask you for a reference letter.</p>
+        <p>I have applied to a few new jobs, and they have asked me for a reference letter from someone that knows me well and how well I have done at university. I believe you know me better than any other professor.</p>
+        <p>I would greatly appreciate your help because your words about my skills would help me get the job.</p>
+        <p>Sincerely,<br>yours Michelle.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Table Section -->
+  <div class="quiz-section-title">📺 And now - fill in the table!</div>
+
+  <table class="quiz-table">
+    <tr class="quiz-row">
+      <td class="label-cell">1. Sender</td>
+      <td class="input-cell"><input type="text" id="q1" placeholder="Who sent the email?"></td>
+    </tr>
+    <tr class="quiz-row">
+      <td class="label-cell">2. Recipient</td>
+      <td class="input-cell"><input type="text" id="q2" placeholder="Who received the email?"></td>
+    </tr>
+    <tr class="quiz-row">
+      <td class="label-cell">3. Purpose of this email</td>
+      <td class="input-cell"><input type="text" id="q3" placeholder="Why was it written?"></td>
+    </tr>
+    <tr class="quiz-row">
+      <td class="label-cell">4. Type of the email (formal or informal)</td>
+      <td class="input-cell"><input type="text" id="q4" placeholder="formal or informal?"></td>
+    </tr>
+  </table>
+
+  <div class="score-board" id="score-text"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetForm()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const emailText = `Dear Professor White, 
+  I am writing to you today because I would like to ask you for a reference letter. 
+  I have applied to a few new jobs, and they have asked me for a reference letter from someone that knows me well and how well I have done at university. I believe you know me better than any other professor. 
+  I would greatly appreciate your help because your words about my skills would help me get the job. 
+  Sincerely, yours Michelle.`;
+
+  let synth = window.speechSynthesis;
+  let utterance = null;
+
+  function playAudio() {
+    if (!synth) return;
+    if (synth.paused) {
+      synth.resume();
+      return;
+    }
+    synth.cancel();
+    utterance = new SpeechSynthesisUtterance(emailText);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.88;
+    synth.speak(utterance);
+  }
+
+  function pauseAudio() {
+    if (synth && synth.speaking) {
+      synth.pause();
+    }
+  }
+
+  function stopAudio() {
+    if (synth) {
+      synth.cancel();
+    }
+  }
+
+  function toggleTranscript() {
+    const content = document.getElementById('transcript');
+    const icon = document.getElementById('accordion-icon');
+    if (content.classList.contains('show')) {
+      content.classList.remove('show');
+      icon.innerText = '➕';
+    } else {
+      content.classList.add('show');
+      icon.innerText = '➖';
+    }
+  }
+
+  const answersKey = {
+    q1: ["michelle", "michelle brown"],
+    q2: ["professor white", "prof. white", "prof white", "white"],
+    q3: ["ask for a reference letter", "reference letter", "to ask for a reference letter", "request a reference letter", "getting a reference letter"],
+    q4: ["formal"]
+  };
+
+  function checkAnswers() {
+    let score = 0;
+
+    Object.keys(answersKey).forEach(id => {
+      const inputEl = document.getElementById(id);
+      const val = inputEl.value.trim().toLowerCase();
+      const validOptions = answersKey[id];
+
+      inputEl.classList.remove('correct-input', 'wrong-input');
+
+      const isCorrect = validOptions.some(opt => val.includes(opt) || opt.includes(val) && val.length > 2);
+
+      if (val && isCorrect) {
+        score++;
+        inputEl.classList.add('correct-input');
+      } else {
+        inputEl.classList.add('wrong-input');
+      }
+    });
+
+    document.getElementById('score-text').innerText = `Score: ${score} / 4`;
+  }
+
+  function resetForm() {
+    stopAudio();
+    Object.keys(answersKey).forEach(id => {
+      const inputEl = document.getElementById(id);
+      inputEl.value = '';
+      inputEl.classList.remove('correct-input', 'wrong-input');
+    });
+    document.getElementById('score-text').innerText = '';
+  }
+</script>
+
+</body>
+</html>
