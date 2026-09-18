@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Make the Sentences Negative ⛔</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: #38bdf8;
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .rule-box {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+  }
+
+  .rule-title {
+    font-size: 0.95rem;
+    color: #38bdf8;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .rule-list {
+    margin: 0;
+    padding-left: 20px;
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.85rem;
+    color: #38bdf8;
+  }
+
+  .vocab-translation {
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 1rem;
+    color: #38bdf8;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .quiz-row {
+    background: #1e293b;
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .original-sentence {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .interactive-sentence {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #38bdf8;
+    background-color: #0f172a;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  select:focus {
+    border-color: var(--accent);
+  }
+
+  select.correct-select {
+    border-color: var(--correct);
+    background-color: #064e3b;
+    color: #a7f3d0;
+  }
+
+  select.wrong-select {
+    border-color: var(--wrong);
+    background-color: #7f1d1d;
+    color: #fecaca;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #38bdf8;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 3. Make the Sentences Negative ⛔</h2>
+      <div class="subtitle">Зроби речення заперечними. Послухай вимову негативних форм (🔊)!</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 10</div>
+  </div>
+
+  <!-- Rule Grammar Box -->
+  <div class="rule-box">
+    <div class="rule-title">Підказка 💡</div>
+    <ul class="rule-list">
+      <li><b>Present Simple:</b> don't / doesn't + verb</li>
+      <li><b>Present Continuous:</b> am not / isn't / aren't + verb-ing</li>
+    </ul>
+  </div>
+
+  <!-- Vocabulary / Audio Section for Negative Words -->
+  <div class="section-title">1. Negative Words Audio (Вимова заперечень)</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Practice Questions -->
+  <div class="section-title">2. Choose the correct negative form</div>
+  <div class="quiz-list" id="quiz-container"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const negWords = [
+    { word: "don't", phonetic: "[dəʊnt]", ukr: "не (I/you/we/they)" },
+    { word: "doesn't", phonetic: "[ˈdʌz.ənt]", ukr: "не (he/she/it)" },
+    { word: "am not", phonetic: "[æm nɒt]", ukr: "не є (I)" },
+    { word: "isn't", phonetic: "[ˈɪz.ənt]", ukr: "не є (he/she/it)" },
+    { word: "aren't", phonetic: "[ɑːnt]", ukr: "не є (we/you/they)" }
+  ];
+
+  const questions = [
+    { id: 1, original: "1. I go to school at eight o'clock.", subject: "1. I", suffix: "to school at eight o'clock.", options: ["don't go", "doesn't go", "am not going"], correct: "don't go" },
+    { id: 2, original: "2. She is having breakfast right now.", subject: "2. She", suffix: "breakfast right now.", options: ["isn't having", "doesn't have", "aren't having"], correct: "isn't having" },
+    { id: 3, original: "3. We often go for a walk in the evening.", subject: "3. We often", suffix: "for a walk in the evening.", options: ["don't go", "doesn't go", "aren't going"], correct: "don't go" },
+    { id: 4, original: "4. He is doing his homework at the moment.", subject: "4. He", suffix: "his homework at the moment.", options: ["isn't doing", "doesn't do", "don't do"], correct: "isn't doing" },
+    { id: 5, original: "5. My parents like to travel.", subject: "5. My parents", suffix: "to travel.", options: ["don't like", "doesn't like", "aren't liking"], correct: "don't like" },
+    { id: 6, original: "6. She gets back home at six o'clock.", subject: "6. She", suffix: "back home at six o'clock.", options: ["doesn't get", "don't get", "isn't getting"], correct: "doesn't get" },
+    { id: 7, original: "7. They are having dinner right now.", subject: "7. They", suffix: "dinner right now.", options: ["aren't having", "don't have", "isn't having"], correct: "aren't having" },
+    { id: 8, original: "8. He takes a shower in the evening.", subject: "8. He", suffix: "a shower in the evening.", options: ["doesn't take", "don't take", "isn't taking"], correct: "doesn't take" },
+    { id: 9, original: "9. I am speaking English at the moment.", subject: "9. I", suffix: "English at the moment.", options: ["am not speaking", "don't speak", "isn't speaking"], correct: "am not speaking" },
+    { id: 10, original: "10. She goes to bed at ten o'clock.", subject: "10. She", suffix: "to bed at ten o'clock.", options: ["doesn't go", "don't go", "isn't going"], correct: "doesn't go" }
+  ];
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = negWords.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.word}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.word}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    questions.forEach(q => {
+      const row = document.createElement('div');
+      row.className = 'quiz-row';
+
+      const options = ['<option value="">-- Choose verb --</option>']
+        .concat(q.options.map(opt => `<option value="${opt}">${opt}</option>`))
+        .join('');
+
+      row.innerHTML = `
+        <div class="original-sentence"><b>Positive:</b> ${q.original}</div>
+        <div class="interactive-sentence">
+          <span><b>Negative:</b> ${q.subject}</span>
+          <select id="select-${q.id}">
+            ${options}
+          </select>
+          <span>${q.suffix}</span>
+        </div>
+      `;
+
+      container.appendChild(row);
+    });
+  }
+
+  function speakWord(word) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    questions.forEach(q => {
+      const selectEl = document.getElementById(`select-${q.id}`);
+      const val = selectEl.value;
+
+      selectEl.classList.remove('correct-select', 'wrong-select');
+
+      if (val === q.correct) {
+        score++;
+        selectEl.classList.add('correct-select');
+      } else {
+        selectEl.classList.add('wrong-select');
+      }
+    });
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    renderQuiz();
+  }
+
+  window.onload = () => {
+    renderVocab();
+    renderQuiz();
+  };
+</script>
+
+</body>
+</html>
