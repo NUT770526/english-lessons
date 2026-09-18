@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find and Correct the Mistake 🔍</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: #38bdf8;
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 1rem;
+    color: #38bdf8;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.85rem;
+    color: #38bdf8;
+  }
+
+  .vocab-translation {
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .quiz-row {
+    background: #1e293b;
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mistake-line {
+    font-size: 0.95rem;
+    color: #f87171;
+  }
+
+  .interactive-sentence {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #38bdf8;
+    background-color: #0f172a;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  select:focus {
+    border-color: var(--accent);
+  }
+
+  select.correct-select {
+    border-color: var(--correct);
+    background-color: #064e3b;
+    color: #a7f3d0;
+  }
+
+  select.wrong-select {
+    border-color: var(--wrong);
+    background-color: #7f1d1d;
+    color: #fecaca;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #38bdf8;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 4. Find and Correct the Mistake 🔍</h2>
+      <div class="subtitle">Знайди та виправ помилку. Послухай вимову слів (🔊)!</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 10</div>
+  </div>
+
+  <!-- Vocabulary Section -->
+  <div class="section-title">1. Key Words Audio (Слова та фрази)</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Exercise Questions -->
+  <div class="section-title">2. Correct the sentences</div>
+  <div class="quiz-list" id="quiz-container"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const keyWords = [
+    { word: "wake up", phonetic: "[weɪk ʌp]", ukr: "прокидатися" },
+    { word: "currently", phonetic: "[ˈkʌr.ənt.li]", ukr: "наразі / зараз" },
+    { word: "have breakfast", phonetic: "[hæv ˈbrek.fəst]", ukr: "снідати" },
+    { word: "take a shower", phonetic: "[teɪk ə ˈʃaʊ.ər]", ukr: "приймати душ" },
+    { word: "at the moment", phonetic: "[æt ðə ˈməʊ.mənt]", ukr: "в даний момент" },
+    { word: "every day", phonetic: "[ˈev.ri deɪ]", ukr: "кожного дня" }
+  ];
+
+  const questions = [
+    { id: 1, wrong: "1. I am usually going to school at eight o'clock.", prefix: "1. I ", suffix: " to school at eight o'clock.", options: ["am usually going", "usually go", "usually going"], correct: "usually go" },
+    { id: 2, wrong: "2. She have breakfast at the moment.", prefix: "2. She ", suffix: " breakfast at the moment.", options: ["have", "is having", "has having"], correct: "is having" },
+    { id: 3, wrong: "3. He often is going for a walk in the evening.", prefix: "3. He often ", suffix: " for a walk in the evening.", options: ["is going", "goes", "go"], correct: "goes" },
+    { id: 4, wrong: "4. We is doing our homework right now.", prefix: "4. We ", suffix: " our homework right now.", options: ["is doing", "are doing", "do"], correct: "are doing" },
+    { id: 5, wrong: "5. My parents are liking to travel.", prefix: "5. My parents ", suffix: " to travel.", options: ["are liking", "like", "likes"], correct: "like" },
+    { id: 6, wrong: "6. She wake up at seven o'clock every day.", prefix: "6. She ", suffix: " up at seven o'clock every day.", options: ["wake", "wakes", "is waking"], correct: "wakes" },
+    { id: 7, wrong: "7. They having lunch at the moment.", prefix: "7. They ", suffix: " lunch at the moment.", options: ["having", "are having", "have"], correct: "are having" },
+    { id: 8, wrong: "8. He always take a shower in the evening.", prefix: "8. He always ", suffix: " a shower in the evening.", options: ["take", "takes", "is taking"], correct: "takes" },
+    { id: 9, wrong: "9. I speaks English at school.", prefix: "9. I ", suffix: " English at school.", options: ["speaks", "speak", "am speaking"], correct: "speak" },
+    { id: 10, wrong: "10. She currently do her homework.", prefix: "10. She currently ", suffix: " her homework.", options: ["do", "is doing", "does"], correct: "is doing" }
+  ];
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = keyWords.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.word}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.word}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    questions.forEach(q => {
+      const row = document.createElement('div');
+      row.className = 'quiz-row';
+
+      const options = ['<option value="">-- Choose correct option --</option>']
+        .concat(q.options.map(opt => `<option value="${opt}">${opt}</option>`))
+        .join('');
+
+      row.innerHTML = `
+        <div class="mistake-line">❌ <b>Incorrect:</b> ${q.wrong}</div>
+        <div class="interactive-sentence">
+          <span>✨ <b>Correct:</b> ${q.prefix}</span>
+          <select id="select-${q.id}">
+            ${options}
+          </select>
+          <span>${q.suffix}</span>
+        </div>
+      `;
+
+      container.appendChild(row);
+    });
+  }
+
+  function speakWord(word) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    questions.forEach(q => {
+      const selectEl = document.getElementById(`select-${q.id}`);
+      const val = selectEl.value;
+
+      selectEl.classList.remove('correct-select', 'wrong-select');
+
+      if (val === q.correct) {
+        score++;
+        selectEl.classList.add('correct-select');
+      } else {
+        selectEl.classList.add('wrong-select');
+      }
+    });
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    renderQuiz();
+  }
+
+  window.onload = () => {
+    renderVocab();
+    renderQuiz();
+  };
+</script>
+
+</body>
+</html>
