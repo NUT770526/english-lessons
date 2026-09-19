@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match the Words Practice 📝</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: #38bdf8;
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 1rem;
+    color: #38bdf8;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.85rem;
+    color: #38bdf8;
+  }
+
+  .vocab-translation {
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .quiz-row {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .english-word {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #f1f5f9;
+  }
+
+  .english-word b {
+    color: #38bdf8;
+    margin-right: 8px;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #38bdf8;
+    background-color: #1e293b;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 220px;
+  }
+
+  select:focus {
+    border-color: var(--accent);
+  }
+
+  select.correct-select {
+    border-color: var(--correct);
+    background-color: #064e3b;
+    color: #a7f3d0;
+  }
+
+  select.wrong-select {
+    border-color: var(--wrong);
+    background-color: #7f1d1d;
+    color: #fecaca;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #38bdf8;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 1. Match the words 🔗</h2>
+      <div class="subtitle">З'єднайте англійські слова з українським перекладом.</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 10</div>
+  </div>
+
+  <!-- Vocabulary Section -->
+  <div class="section-title">1. Vocabulary Bank & Audio (Словник та вимова)</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Exercise Questions -->
+  <div class="section-title">2. Matching Exercise</div>
+  <div class="quiz-list" id="quiz-container"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const wordData = [
+    { id: 1, num: "1.", en: "Sunday", phonetic: "[ˈsʌn.deɪ]", correctKey: "e", ukr: "неділя" },
+    { id: 2, num: "2.", en: "a weekday", phonetic: "[ə ˈwiːk.deɪ]", correctKey: "h", ukr: "будній день" },
+    { id: 3, num: "3.", en: "busy", phonetic: "[ˈbɪz.i]", correctKey: "f", ukr: "зайнятий" },
+    { id: 4, num: "4.", en: "empty", phonetic: "[ˈemp.ti]", correctKey: "b", ukr: "порожній" },
+    { id: 5, num: "5.", en: "at work", phonetic: "[æt wɜːk]", correctKey: "i", ukr: "на роботі" },
+    { id: 6, num: "6.", en: "on time", phonetic: "[ɒn taɪm]", correctKey: "d", ukr: "вчасно" },
+    { id: 7, num: "7.", en: "an assistant", phonetic: "[ən əˈsɪs.tənt]", correctKey: "c", ukr: "асистент" },
+    { id: 8, num: "8.", en: "a report", phonetic: "[ə rɪˈpɔːt]", correctKey: "a", ukr: "звіт" },
+    { id: 9, num: "9.", en: "a meeting", phonetic: "[ə ˈmiː.tɪŋ]", correctKey: "g", ukr: "зустріч" },
+    { id: 10, num: "10.", en: "the weekend", phonetic: "[ðə ˌwiːkˈend]", correctKey: "j", ukr: "вихідні" }
+  ];
+
+  const translationOptions = [
+    { key: "a", text: "a. звіт" },
+    { key: "b", text: "b. порожній" },
+    { key: "c", text: "c. асистент" },
+    { key: "d", text: "d. вчасно" },
+    { key: "e", text: "e. неділя" },
+    { key: "f", text: "f. зайнятий" },
+    { key: "g", text: "g. зустріч" },
+    { key: "h", text: "h. будній день" },
+    { key: "i", text: "i. на роботі" },
+    { key: "j", text: "j. вихідні" }
+  ];
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = wordData.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.en}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.en}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    wordData.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'quiz-row';
+
+      const optionsHtml = ['<option value="">-- виберіть переклад --</option>']
+        .concat(translationOptions.map(opt => `<option value="${opt.key}">${opt.text}</option>`))
+        .join('');
+
+      row.innerHTML = `
+        <div class="english-word">
+          <b>${item.num}</b> ${item.en}
+        </div>
+        <select id="select-${item.id}">
+          ${optionsHtml}
+        </select>
+      `;
+
+      container.appendChild(row);
+    });
+  }
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    wordData.forEach(item => {
+      const selectEl = document.getElementById(`select-${item.id}`);
+      const userVal = selectEl.value;
+
+      selectEl.classList.remove('correct-select', 'wrong-select');
+
+      if (userVal === item.correctKey) {
+        score++;
+        selectEl.classList.add('correct-select');
+      } else {
+        selectEl.classList.add('wrong-select');
+      }
+    });
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    renderQuiz();
+  }
+
+  window.onload = () => {
+    renderVocab();
+    renderQuiz();
+  };
+</script>
+
+</body>
+</html>
