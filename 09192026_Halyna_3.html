@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business English Practice: Find & Correct the Mistake 💼</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: #38bdf8;
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 1rem;
+    color: #38bdf8;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.85rem;
+    color: #38bdf8;
+  }
+
+  .vocab-translation {
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .quiz-row {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .incorrect-sentence {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    line-height: 1.5;
+  }
+
+  .incorrect-sentence mark {
+    background-color: rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px dashed var(--wrong);
+  }
+
+  .input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 1rem;
+    color: #f8fafc;
+    background-color: #1e293b;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    outline: none;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--accent);
+  }
+
+  input[type="text"].correct-input {
+    border-color: var(--correct);
+    background-color: #064e3b;
+    color: #a7f3d0;
+  }
+
+  input[type="text"].wrong-input {
+    border-color: var(--wrong);
+    background-color: #7f1d1d;
+    color: #fecaca;
+  }
+
+  .feedback {
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: none;
+    line-height: 1.4;
+  }
+
+  .feedback.show {
+    display: block;
+  }
+
+  .feedback.correct-text {
+    color: #4ade80;
+  }
+
+  .feedback.wrong-text {
+    color: #fca5a5;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #38bdf8;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 3. Find and correct the mistake 🔍</h2>
+      <div class="subtitle">У кожному реченні є одна помилка. Перепишіть речення правильно.</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 10</div>
+  </div>
+
+  <!-- Vocabulary Section -->
+  <div class="section-title">1. Helpful Vocabulary (Слова та вимова)</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Exercise Questions -->
+  <div class="section-title">2. Correct the Sentences</div>
+  <div class="quiz-list" id="quiz-container"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const wordBank = [
+    { word: "invoice", phonetic: "[ˈɪn.vɔɪs]", ukr: "рахунок / инвойс" },
+    { word: "currently", phonetic: "[ˈkʌr.ənt.li]", ukr: "наразі / зараз" },
+    { word: "thirsty", phonetic: "[ˈθɜː.sti]", ukr: "хоче пити (прикметник)" },
+    { word: "discuss", phonetic: "[dɪˈskʌs]", ukr: "обговорювати" },
+    { word: "look at", phonetic: "[lʊk æt]", ukr: "поглянути на" }
+  ];
+
+  const questions = [
+    {
+      id: 1,
+      num: "1.",
+      originalHtml: 'I have already <mark>send</mark> the invoice.',
+      displayCorrect: 'I have already sent the invoice.',
+      ruleNote: 'Після "have" у Present Perfect потрібне III дієслово (sent).',
+      answers: [
+        'i have already sent the invoice',
+        'i\'ve already sent the invoice'
+      ]
+    },
+    {
+      id: 2,
+      num: "2.",
+      originalHtml: 'We <mark>currently prepare</mark> the monthly report.',
+      displayCorrect: 'We are currently preparing the monthly report.',
+      ruleNote: 'З маркером "currently" вживаємо Present Continuous (are preparing).',
+      answers: [
+        'we are currently preparing the monthly report',
+        'we\'re currently preparing the monthly report',
+        'currently we are preparing the monthly report',
+        'currently we\'re preparing the monthly report'
+      ]
+    },
+    {
+      id: 3,
+      num: "3.",
+      originalHtml: 'Did you <mark>answered</mark> the client’s email yesterday?',
+      displayCorrect: 'Did you answer the client’s email yesterday?',
+      ruleNote: 'Після допоміжного дієслова "Did" основного вживається у початковій формі (answer).',
+      answers: [
+        'did you answer the client\'s email yesterday',
+        'did you answer the clients email yesterday',
+        'did you answer the client’s email yesterday'
+      ]
+    },
+    {
+      id: 4,
+      num: "4.",
+      originalHtml: 'She <mark>have</mark> recently looked at the contract.',
+      displayCorrect: 'She has recently looked at the contract.',
+      ruleNote: 'З займенником "She" у Present Perfect використовуємо "has", а не "have".',
+      answers: [
+        'she has recently looked at the contract',
+        'she\'s recently looked at the contract'
+      ]
+    },
+    {
+      id: 5,
+      num: "5.",
+      originalHtml: 'I would like <mark>discuss</mark> the payment.',
+      displayCorrect: 'I would like to discuss the payment.',
+      ruleNote: 'Після виразу "would like" обов\'язково вживається частка "to".',
+      answers: [
+        'i would like to discuss the payment',
+        'i\'d like to discuss the payment'
+      ]
+    },
+    {
+      id: 6,
+      num: "6.",
+      originalHtml: 'Would you like <mark>to some</mark> coffee?',
+      displayCorrect: 'Would you like some coffee?',
+      ruleNote: 'Частка "to" потрібна перед дієсловом, але перед іменником (coffee) вона не ставиться.',
+      answers: [
+        'would you like some coffee'
+      ]
+    },
+    {
+      id: 7,
+      num: "7.",
+      originalHtml: 'I am <mark>thirst</mark> after the meeting.',
+      displayCorrect: 'I am thirsty after the meeting.',
+      ruleNote: 'Потрібен прикметник "thirsty" (спраглий), а не іменник "thirst" (спрага).',
+      answers: [
+        'i am thirsty after the meeting',
+        'i\'m thirsty after the meeting'
+      ]
+    },
+    {
+      id: 8,
+      num: "8.",
+      originalHtml: 'We didn’t <mark>had</mark> a look at the document yesterday.',
+      displayCorrect: 'We didn’t have a look at the document yesterday.',
+      ruleNote: 'Після "didn\'t" використовуємо початкову форму дієслова (have).',
+      answers: [
+        'we didn\'t have a look at the document yesterday',
+        'we didnt have a look at the document yesterday',
+        'we did not have a look at the document yesterday',
+        'we didn’t have a look at the document yesterday'
+      ]
+    },
+    {
+      id: 9,
+      num: "9.",
+      originalHtml: 'I’d love <mark>join</mark> the online meeting.',
+      displayCorrect: 'I’d love to join the online meeting.',
+      ruleNote: 'Після виразу "I\'d love" потрібна частка "to" перед дієсловом.',
+      answers: [
+        'i\'d love to join the online meeting',
+        'i would love to join the online meeting',
+        'i’d love to join the online meeting'
+      ]
+    },
+    {
+      id: 10,
+      num: "10.",
+      originalHtml: 'What would you like <mark>begin</mark> with?',
+      displayCorrect: 'What would you like to begin with?',
+      ruleNote: 'Післяконструкції "would you like" має стояти частка "to" (to begin).',
+      answers: [
+        'what would you like to begin with'
+      ]
+    }
+  ];
+
+  function cleanText(str) {
+    return str.toLowerCase()
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?'’"]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = wordBank.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.word}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.word}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    questions.forEach(q => {
+      const row = document.createElement('div');
+      row.className = 'quiz-row';
+
+      row.innerHTML = `
+        <div class="incorrect-sentence">
+          <b>${q.num}</b> ${q.originalHtml}
+        </div>
+        <div class="input-wrapper">
+          <input type="text" id="input-${q.id}" placeholder="Type the corrected sentence here..." autocomplete="off" />
+          <div class="feedback" id="feedback-${q.id}"></div>
+        </div>
+      `;
+
+      container.appendChild(row);
+    });
+  }
+
+  function speakWord(word) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    questions.forEach(q => {
+      const inputEl = document.getElementById(`input-${q.id}`);
+      const feedbackEl = document.getElementById(`feedback-${q.id}`);
+      const userVal = cleanText(inputEl.value);
+
+      inputEl.classList.remove('correct-input', 'wrong-input');
+      feedbackEl.classList.remove('show', 'correct-text', 'wrong-text');
+
+      const isCorrect = q.answers.some(ans => cleanText(ans) === userVal);
+
+      if (userVal !== "" && isCorrect) {
+        score++;
+        inputEl.classList.add('correct-input');
+        feedbackEl.innerText = `✓ Correct! ${q.ruleNote}`;
+        feedbackEl.classList.add('show', 'correct-text');
+      } else {
+        inputEl.classList.add('wrong-input');
+        feedbackEl.innerText = `💡 Correct sentence: "${q.displayCorrect}" (${q.ruleNote})`;
+        feedbackEl.classList.add('show', 'wrong-text');
+      }
+    });
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    renderQuiz();
+  }
+
+  window.onload = () => {
+    renderVocab();
+    renderQuiz();
+  };
+</script>
+
+</body>
+</html>
