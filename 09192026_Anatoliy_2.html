@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete the Sentences Practice 📝</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: #38bdf8;
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 1rem;
+    color: #38bdf8;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .word-bank-box {
+    background: #0f172a;
+    border: 1px dashed var(--accent);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    color: #f1f5f9;
+    font-weight: 600;
+    line-height: 1.6;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .word-badge {
+    background: #1e293b;
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 6px;
+    color: #38bdf8;
+    font-size: 0.95rem;
+  }
+
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.85rem;
+    color: #38bdf8;
+  }
+
+  .vocab-translation {
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .quiz-row {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #f1f5f9;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #38bdf8;
+    background-color: #1e293b;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  select:focus {
+    border-color: var(--accent);
+  }
+
+  select.correct-select {
+    border-color: var(--correct);
+    background-color: #064e3b;
+    color: #a7f3d0;
+  }
+
+  select.wrong-select {
+    border-color: var(--wrong);
+    background-color: #7f1d1d;
+    color: #fecaca;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #38bdf8;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 2. Complete the sentences ✍️</h2>
+      <div class="subtitle">Вставте слова та вирази з рамки. Кожен варіант використайте один раз.</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 10</div>
+  </div>
+
+  <!-- Word Bank Box -->
+  <div class="section-title">Word Bank (Слова з рамки)</div>
+  <div class="word-bank-box" id="word-bank-display"></div>
+
+  <!-- Vocabulary Section -->
+  <div class="section-title">1. Vocabulary & Pronunciation (Словник та вимова)</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Exercise Questions -->
+  <div class="section-title">2. Complete the Sentences</div>
+  <div class="quiz-list" id="quiz-container"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const optionsList = [
+    "on Sunday", "often", "late", "empty", "at work",
+    "at home", "on time", "a manager", "an assistant", "ready"
+  ];
+
+  const wordBankVocab = [
+    { word: "on Sunday", phonetic: "[ɒn ˈsʌn.deɪ]", ukr: "у неділю" },
+    { word: "often", phonetic: "[ˈɒf.ən]", ukr: "часто" },
+    { word: "late", phonetic: "[leɪt]", ukr: "пізно / запізнюється" },
+    { word: "empty", phonetic: "[ˈemp.ti]", ukr: "порожній" },
+    { word: "at work", phonetic: "[æt wɜːk]", ukr: "на роботі" },
+    { word: "at home", phonetic: "[æt həʊm]", ukr: "вдома" },
+    { word: "on time", phonetic: "[ɒn taɪm]", ukr: "вчасно" },
+    { word: "a manager", phonetic: "[ə ˈmæn.ɪ.dʒər]", ukr: "менеджер" },
+    { word: "an assistant", phonetic: "[ən əˈsɪs.tənt]", ukr: "асистент" },
+    { word: "ready", phonetic: "[ˈred.i]", ukr: "готовий" }
+  ];
+
+  const sentences = [
+    { id: 1, num: "1.", prefix: "The meeting is", suffix: ".", correct: "on Sunday" },
+    { id: 2, num: "2.", prefix: "She is", suffix: "busy.", correct: "often" },
+    { id: 3, num: "3.", prefix: "The manager is", suffix: "today.", correct: "at work" },
+    { id: 4, num: "4.", prefix: "The office is", suffix: ".", correct: "empty" },
+    { id: 5, num: "5.", prefix: "She is", suffix: "now.", correct: "at home" },
+    { id: 6, num: "6.", prefix: "I am", suffix: "on Sunday.", correct: "late" },
+    { id: 7, num: "7.", prefix: "The manager is always", suffix: ".", correct: "on time" },
+    { id: 8, num: "8.", prefix: "She is", suffix: ".", correct: "a manager" },
+    { id: 9, num: "9.", prefix: "Is he", suffix: "?", correct: "an assistant" },
+    { id: 10, num: "10.", prefix: "The report is", suffix: ".", correct: "ready" }
+  ];
+
+  function renderWordBank() {
+    const box = document.getElementById('word-bank-display');
+    box.innerHTML = optionsList.map(opt => `<span class="word-badge">${opt}</span>`).join('');
+  }
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = wordBankVocab.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.word}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.word}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    sentences.forEach(s => {
+      const row = document.createElement('div');
+      row.className = 'quiz-row';
+
+      const selectOptions = ['<option value="">-- select --</option>']
+        .concat(optionsList.map(opt => `<option value="${opt}">${opt}</option>`))
+        .join('');
+
+      row.innerHTML = `
+        <span><b>${s.num}</b> ${s.prefix}</span>
+        <select id="select-${s.id}">
+          ${selectOptions}
+        </select>
+        <span>${s.suffix}</span>
+      `;
+
+      container.appendChild(row);
+    });
+  }
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    sentences.forEach(s => {
+      const selectEl = document.getElementById(`select-${s.id}`);
+      const userVal = selectEl.value;
+
+      selectEl.classList.remove('correct-select', 'wrong-select');
+
+      if (userVal === s.correct) {
+        score++;
+        selectEl.classList.add('correct-select');
+      } else {
+        selectEl.classList.add('wrong-select');
+      }
+    });
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    renderQuiz();
+  }
+
+  window.onload = () => {
+    renderWordBank();
+    renderVocab();
+    renderQuiz();
+  };
+</script>
+
+</body>
+</html>
