@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Dialogue: Billy & Amalia 💬</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --billy-bg: #132a3e;
+    --billy-border: #2dd4bf;
+    --amalia-bg: #2d1b2d;
+    --amalia-border: #f472b6;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card);
+    padding: 28px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.4rem;
+    color: #38bdf8;
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    color: #38bdf8;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .word-bank-box {
+    background: #0f172a;
+    border: 1px dashed var(--accent);
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .word-badge {
+    background: #1e293b;
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 6px;
+    color: #38bdf8;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.8rem;
+    color: #38bdf8;
+  }
+
+  .vocab-translation {
+    font-size: 0.8rem;
+    color: #94a3b8;
+  }
+
+  .chat-box {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .chat-bubble {
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 0.98rem;
+    line-height: 1.6;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .chat-bubble.billy {
+    align-self: flex-start;
+    background-color: var(--billy-bg);
+    border: 1px solid var(--billy-border);
+    border-bottom-left-radius: 2px;
+  }
+
+  .chat-bubble.amalia {
+    align-self: flex-end;
+    background-color: var(--amalia-bg);
+    border: 1px solid var(--amalia-border);
+    border-bottom-right-radius: 2px;
+  }
+
+  .sender-name {
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+
+  .billy .sender-name { color: #2dd4bf; }
+  .amalia .sender-name { color: #f472b6; }
+
+  select {
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #38bdf8;
+    background-color: #0f172a;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 8px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0 4px;
+  }
+
+  select:focus {
+    border-color: var(--accent);
+  }
+
+  select.correct-select {
+    border-color: var(--correct);
+    background-color: #064e3b;
+    color: #a7f3d0;
+  }
+
+  select.wrong-select {
+    border-color: var(--wrong);
+    background-color: #7f1d1d;
+    color: #fecaca;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 3px 6px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 0.95rem;
+    font-weight: 800;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #38bdf8;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Chat Practice: Complete the Dialogue 💬</h2>
+      <div class="subtitle">Оберіть відповідні слова із рамки, щоб доповнити діалог.</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 11</div>
+  </div>
+
+  <!-- Word Bank Box -->
+  <div class="section-title">Word Bank (Слова з рамки)</div>
+  <div class="word-bank-box" id="word-bank-display"></div>
+
+  <!-- Vocabulary Section -->
+  <div class="section-title">1. Vocabulary & Pronunciation (Словник)</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Exercise Chat Dialogue -->
+  <div class="section-title">2. Complete the Conversation</div>
+  <div class="chat-box">
+    <!-- Message 1 -->
+    <div class="chat-bubble billy">
+      <div class="sender-name">Billy</div>
+      Hey, Amalia! How's it going?
+    </div>
+
+    <!-- Message 2 -->
+    <div class="chat-bubble amalia">
+      <div class="sender-name">Amalia</div>
+      I'm alright, I guess...
+    </div>
+
+    <!-- Message 3 -->
+    <div class="chat-bubble billy">
+      <div class="sender-name">Billy</div>
+      You seem a bit down and <select id="select-1"></select>. What's wrong?
+    </div>
+
+    <!-- Message 4 -->
+    <div class="chat-bubble amalia">
+      <div class="sender-name">Amalia</div>
+      I'm just so busy, my schedule is jam-packed with things to do that I feel <select id="select-2"></select>.
+    </div>
+
+    <!-- Message 5 -->
+    <div class="chat-bubble billy">
+      <div class="sender-name">Billy</div>
+      Wow! What are you doing that is making you so burnt <select id="select-3"></select>?
+    </div>
+
+    <!-- Message 6 -->
+    <div class="chat-bubble amalia">
+      <div class="sender-name">Amalia</div>
+      Well, it's not because of work or university... It's the things I <select id="select-4"></select> for myself. You know, live life to the max.
+    </div>
+
+    <!-- Message 7 -->
+    <div class="chat-bubble billy">
+      <div class="sender-name">Billy</div>
+      What do you mean?
+    </div>
+
+    <!-- Message 8 -->
+    <div class="chat-bubble amalia">
+      <div class="sender-name">Amalia</div>
+      Well, I get up early and put on my <select id="select-5"></select>. I then go to the gym and work out for an hour or so. After that, I run to the hair salon and do my hair. Next, I come home and tidy up the apartment. In the evening I always plan to hang out with friends at a café or go to the cinema. In between all that I need to study and work!
+    </div>
+
+    <!-- Message 9 -->
+    <div class="chat-bubble billy">
+      <div class="sender-name">Billy</div>
+      That does sound like you're living life to the max. Maybe you should slow down... I dunno... In the evening just chat with friends online or go on social <select id="select-6"></select> sites.
+    </div>
+
+    <!-- Message 10 -->
+    <div class="chat-bubble amalia">
+      <div class="sender-name">Amalia</div>
+      Nah, I am not the kind of person who can chat online for hours. It's so boring not to meet face to <select id="select-7"></select>.
+    </div>
+
+    <!-- Message 11 -->
+    <div class="chat-bubble billy">
+      <div class="sender-name">Billy</div>
+      But it saves time and <select id="select-8"></select>, and I think you need to save both.
+    </div>
+
+    <!-- Message 12 -->
+    <div class="chat-bubble amalia">
+      <div class="sender-name">Amalia</div>
+      I guess so. How about you? Are you happy with how you <select id="select-9"></select> your time?
+    </div>
+
+    <!-- Message 13 -->
+    <div class="chat-bubble billy">
+      <div class="sender-name">Billy</div>
+      Oh yeah! I'm studying biology, as you know. I also work in a laboratory three times a week. In the evening I play video games and... Well... Do nothing! Honestly, it's great to be <select id="select-10"></select> sometimes.
+    </div>
+
+    <!-- Message 14 -->
+    <div class="chat-bubble amalia">
+      <div class="sender-name">Amalia</div>
+      That's cool that you know how to relax and not <select id="select-11"></select> about always being busy. Do you feel bad about it sometimes?
+    </div>
+
+    <!-- Message 15 -->
+    <div class="chat-bubble billy">
+      <div class="sender-name">Billy</div>
+      I've always felt bad because I find it difficult to get up in the morning - mainly because I can never sleep before 2 a.m. If I go to <b>bed</b> earlier, then I feel great. So, I just need to practice not <b>going</b> to bed at 2 a.m.!
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const optionsList = [
+    "unhappy", "exhausted", "out", "plan", "makeup",
+    "networking", "face", "energy", "spend", "lazy", "stress"
+  ];
+
+  const vocabData = [
+    { word: "unhappy", phonetic: "[ʌnˈhæp.i]", ukr: "нещасливий / сумний" },
+    { word: "exhausted", phonetic: "[ɪɡˈzɔː.stɪd]", ukr: "виснажений" },
+    { word: "burnt out", phonetic: "[bɜːnt aʊt]", ukr: "знесилений / згорілий" },
+    { word: "plan", phonetic: "[plæn]", ukr: "планувати" },
+    { word: "makeup", phonetic: "[ˈmeɪk.ʌp]", ukr: "макіяж" },
+    { word: "networking", phonetic: "[ˈnet.wɜː.kɪŋ]", ukr: "мережування (соцмережі)" },
+    { word: "face to face", phonetic: "[feɪs tə feɪs]", ukr: "віч-на-віч" },
+    { word: "energy", phonetic: "[ˈen.ə.dʒi]", ukr: "енергія" },
+    { word: "spend time", phonetic: "[spend taɪm]", ukr: "проводити час" },
+    { word: "lazy", phonetic: "[ˈleɪ.zi]", ukr: "лінивий" },
+    { word: "stress", phonetic: "[stres]", ukr: "переживати / стресувати" }
+  ];
+
+  const correctAnswers = {
+    "select-1": "unhappy",
+    "select-2": "exhausted",
+    "select-3": "out",
+    "select-4": "plan",
+    "select-5": "makeup",
+    "select-6": "networking",
+    "select-7": "face",
+    "select-8": "energy",
+    "select-9": "spend",
+    "select-10": "lazy",
+    "select-11": "stress"
+  };
+
+  function renderWordBank() {
+    const box = document.getElementById('word-bank-display');
+    box.innerHTML = optionsList.map(opt => `<span class="word-badge">${opt}</span>`).join('');
+  }
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = vocabData.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.word}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.word}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function setupSelects() {
+    const optionsHtml = ['<option value="">-- select --</option>']
+      .concat(optionsList.map(opt => `<option value="${opt}">${opt}</option>`))
+      .join('');
+
+    for (let i = 1; i <= 11; i++) {
+      const el = document.getElementById(`select-${i}`);
+      if (el) {
+        el.innerHTML = optionsHtml;
+      }
+    }
+  }
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    for (let i = 1; i <= 11; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      const userVal = selectEl.value;
+      const key = `select-${i}`;
+
+      selectEl.classList.remove('correct-select', 'wrong-select');
+
+      if (userVal === correctAnswers[key]) {
+        score++;
+        selectEl.classList.add('correct-select');
+      } else {
+        selectEl.classList.add('wrong-select');
+      }
+    }
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    setupSelects();
+    for (let i = 1; i <= 11; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      if (selectEl) {
+        selectEl.classList.remove('correct-select', 'wrong-select');
+      }
+    }
+  }
+
+  window.onload = () => {
+    renderWordBank();
+    renderVocab();
+    setupSelects();
+  };
+</script>
+
+</body>
+</html>
