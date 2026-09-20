@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Present Perfect Practice 🦒</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.4rem;
+    color: #38bdf8;
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    color: #38bdf8;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.85rem;
+    color: #38bdf8;
+  }
+
+  .vocab-translation {
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .quiz-row {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .prompt-sentence {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #38bdf8;
+    background-color: #1e293b;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    outline: none;
+    transition: all 0.2s ease;
+    width: 140px;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--accent);
+  }
+
+  input[type="text"].correct-input {
+    border-color: var(--correct);
+    background-color: #064e3b;
+    color: #a7f3d0;
+  }
+
+  input[type="text"].wrong-input {
+    border-color: var(--wrong);
+    background-color: #7f1d1d;
+    color: #fecaca;
+  }
+
+  .feedback {
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: none;
+  }
+
+  .feedback.show {
+    display: block;
+  }
+
+  .feedback.correct-text {
+    color: #4ade80;
+  }
+
+  .feedback.wrong-text {
+    color: #fca5a5;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #38bdf8;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Put verbs in Present Perfect 🦒</h2>
+      <div class="subtitle">Утворіть необхідну форму дієслова (Past Participle / V3) для Present Perfect.</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 5</div>
+  </div>
+
+  <!-- Vocabulary Section -->
+  <div class="section-title">1. Verb Forms & Pronunciation (Форми дієслів)</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Exercise Questions -->
+  <div class="section-title">2. Complete the Questions</div>
+  <div class="quiz-list" id="quiz-container"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const verbList = [
+    { word: "read → read", phonetic: "[riːd] → [red]", ukr: "читати" },
+    { word: "be → been", phonetic: "[biː] → [biːn]", ukr: "бути" },
+    { word: "meet → met", phonetic: "[miːt] → [met]", ukr: "зустрічати" },
+    { word: "live → lived", phonetic: "[lɪv] → [lɪvd]", ukr: "жити" },
+    { word: "go → gone / been", phonetic: "[ɡəʊ] → [ɡɒn]", ukr: "іти / їхати" }
+  ];
+
+  const questions = [
+    {
+      id: 1,
+      num: "1.",
+      prefix: "Have you",
+      suffix: '"Harry Potter"?',
+      validAnswers: ["read"],
+      displayCorrect: "read"
+    },
+    {
+      id: 2,
+      num: "2.",
+      prefix: "Has she",
+      suffix: "late for the meeting?",
+      validAnswers: ["been"],
+      displayCorrect: "been"
+    },
+    {
+      id: 3,
+      num: "3.",
+      prefix: "Has he",
+      suffix: "your family yet?",
+      validAnswers: ["met"],
+      displayCorrect: "met"
+    },
+    {
+      id: 4,
+      num: "4.",
+      prefix: "Have they",
+      suffix: "here as long as we have?",
+      validAnswers: ["lived"],
+      displayCorrect: "lived"
+    },
+    {
+      id: 5,
+      num: "5.",
+      prefix: "Have you",
+      suffix: "to Australia?",
+      validAnswers: ["gone", "been"],
+      displayCorrect: "gone (або been)"
+    }
+  ];
+
+  function cleanText(str) {
+    return str.toLowerCase().trim();
+  }
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = verbList.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.word}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.word}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    questions.forEach(q => {
+      const row = document.createElement('div');
+      row.className = 'quiz-row';
+
+      row.innerHTML = `
+        <div class="prompt-sentence">
+          <span><b>${q.num}</b> ${q.prefix}</span>
+          <input type="text" id="input-${q.id}" placeholder="Type verb..." autocomplete="off" />
+          <span>${q.suffix}</span>
+        </div>
+        <div class="feedback" id="feedback-${q.id}"></div>
+      `;
+
+      container.appendChild(row);
+    });
+  }
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    questions.forEach(q => {
+      const inputEl = document.getElementById(`input-${q.id}`);
+      const feedbackEl = document.getElementById(`feedback-${q.id}`);
+      const userVal = cleanText(inputEl.value);
+
+      inputEl.classList.remove('correct-input', 'wrong-input');
+      feedbackEl.classList.remove('show', 'correct-text', 'wrong-text');
+
+      const isCorrect = q.validAnswers.includes(userVal);
+
+      if (userVal !== "" && isCorrect) {
+        score++;
+        inputEl.classList.add('correct-input');
+        feedbackEl.innerText = "✓ Правильно!";
+        feedbackEl.classList.add('show', 'correct-text');
+      } else {
+        inputEl.classList.add('wrong-input');
+        feedbackEl.innerText = `💡 Правильна форма: "${q.displayCorrect}"`;
+        feedbackEl.classList.add('show', 'wrong-text');
+      }
+    });
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    renderQuiz();
+  }
+
+  window.onload = () => {
+    renderVocab();
+    renderQuiz();
+  };
+</script>
+
+</body>
+</html>
