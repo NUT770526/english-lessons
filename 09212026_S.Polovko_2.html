@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 3. Find and correct the mistake 🔍</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Vocabulary Grid */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.8rem;
+    color: var(--accent);
+  }
+
+  .vocab-translation {
+    font-size: 0.8rem;
+    color: #94a3b8;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  /* Exercise Sentences */
+  .exercise-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .sentence-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .orig-sentence {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #e2e8f0;
+  }
+
+  .num {
+    font-weight: 800;
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0f172a;
+    background-color: #ffffff;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 12px;
+    outline: none;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+  }
+
+  input[type="text"].correct-input {
+    border-color: var(--correct);
+    background-color: #dcfce7;
+    color: #15803d;
+  }
+
+  input[type="text"].wrong-input {
+    border-color: var(--wrong);
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 3. Find and correct the mistake 🔍</h2>
+      <div class="subtitle">У кожному реченні є одна помилка. Знайдіть і виправте її.</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 12</div>
+  </div>
+
+  <!-- Vocabulary Section -->
+  <div class="section-title">1. Key Rules & Vocabulary</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Exercise Sentences -->
+  <div class="section-title">2. Correct the Mistakes</div>
+  <div class="exercise-card">
+
+    <div class="sentence-block">
+      <div class="orig-sentence"><span class="num">1.</span> Despite she is highly qualified, she cannot find a suitable position.</div>
+      <input type="text" id="input-1" placeholder="Type correct sentence or replacement here...">
+    </div>
+
+    <div class="sentence-block">
+      <div class="orig-sentence"><span class="num">2.</span> Although receiving excellent recognition, he decided to leave the company.</div>
+      <input type="text" id="input-2" placeholder="Type correct sentence or replacement here...">
+    </div>
+
+    <div class="sentence-block">
+      <div class="orig-sentence"><span class="num">3.</span> The new performance-based salary model paid out.</div>
+      <input type="text" id="input-3" placeholder="Type correct sentence or replacement here...">
+    </div>
+
+    <div class="sentence-block">
+      <div class="orig-sentence"><span class="num">4.</span> The company wants to retain staff. However it does not offer career advancement.</div>
+      <input type="text" id="input-4" placeholder="Type correct sentence or replacement here...">
+    </div>
+
+    <div class="sentence-block">
+      <div class="orig-sentence"><span class="num">5.</span> In spite of he met all his targets, he did not receive a pay rise.</div>
+      <input type="text" id="input-5" placeholder="Type correct sentence or replacement here...">
+    </div>
+
+    <div class="sentence-block">
+      <div class="orig-sentence"><span class="num">6.</span> On one hand, the corporate world offers many opportunities.</div>
+      <input type="text" id="input-6" placeholder="Type correct sentence or replacement here...">
+    </div>
+
+    <div class="sentence-block">
+      <div class="orig-sentence"><span class="num">7.</span> The new recruit has little experience. Despite, she performs well.</div>
+      <input type="text" id="input-7" placeholder="Type correct sentence or replacement here...">
+    </div>
+
+    <div class="sentence-block">
+      <div class="orig-sentence"><span class="num">8.</span> Good managers recognise to their employees' contribution.</div>
+      <input type="text" id="input-8" placeholder="Type correct sentence or replacement here...">
+    </div>
+
+    <div class="sentence-block">
+      <div class="orig-sentence"><span class="num">9.</span> She plans to apply on a promotion next year.</div>
+      <input type="text" id="input-9" placeholder="Type correct sentence or replacement here...">
+    </div>
+
+    <div class="sentence-block">
+      <div class="orig-sentence"><span class="num">10.</span> He is ready to take more responsibility.</div>
+      <input type="text" id="input-10" placeholder="Type correct sentence or replacement here...">
+    </div>
+
+    <div class="sentence-block">
+      <div class="orig-sentence"><span class="num">11.</span> Although he received a reward for loyalty, but he decided to leave the company.</div>
+      <input type="text" id="input-11" placeholder="Type correct sentence or replacement here...">
+    </div>
+
+    <div class="sentence-block">
+      <div class="orig-sentence"><span class="num">12.</span> She started as an assistant and gradually rose in the ranks[cite: 15].</div>
+      <input type="text" id="input-12" placeholder="Type correct sentence or replacement here...">
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const vocabData = [
+    { word: "pay off", phonetic: "[peɪ ɒf]", ukr: "окупитися (не paid out)" },
+    { word: "On the one hand", phonetic: "[ɒn ðə wʌn hænd]", ukr: "з одного боку (не On one hand)" },
+    { word: "apply for a promotion", phonetic: "[əˈplaɪ fə]", ukr: "подаватися на підвищення (не apply on)" },
+    { word: "take on responsibility", phonetic: "[teɪk ɒn]", ukr: "брати на себе (не take)" },
+    { word: "rise through the ranks", phonetic: "[raɪz θruː ðə ræŋks]", ukr: "просуватися сходами (не in)" },
+    { word: "recognise contribution", phonetic: "[ˈrek.əɡ.naɪz]", ukr: "визнавати внесок (без to)" }
+  ];
+
+  const correctAnswers = {
+    "input-1": [
+      "although she is highly qualified, she cannot find a suitable position.",
+      "although she is highly qualified, she cannot find a suitable position",
+      "despite being highly qualified, she cannot find a suitable position.",
+      "despite being highly qualified, she cannot find a suitable position",
+      "although",
+      "despite being"
+    ],
+    "input-2": [
+      "despite receiving excellent recognition, he decided to leave the company.",
+      "despite receiving excellent recognition, he decided to leave the company",
+      "in spite of receiving excellent recognition, he decided to leave the company.",
+      "in spite of receiving excellent recognition, he decided to leave the company",
+      "despite",
+      "in spite of"
+    ],
+    "input-3": [
+      "the new performance-based salary model paid off.",
+      "the new performance-based salary model paid off",
+      "paid off"
+    ],
+    "input-4": [
+      "the company wants to retain staff. however, it does not offer career advancement.",
+      "the company wants to retain staff. however, it does not offer career advancement",
+      "however,",
+      "however ,"
+    ],
+    "input-5": [
+      "although he met all his targets, he did not receive a pay rise.",
+      "although he met all his targets, he did not receive a pay rise",
+      "even though he met all his targets, he did not receive a pay rise.",
+      "even though he met all his targets, he did not receive a pay rise",
+      "in spite of meeting all his targets, he did not receive a pay rise.",
+      "in spite of meeting all his targets, he did not receive a pay rise",
+      "although",
+      "even though"
+    ],
+    "input-6": [
+      "on the one hand, the corporate world offers many opportunities.",
+      "on the one hand, the corporate world offers many opportunities",
+      "on the one hand",
+      "on the one hand,"
+    ],
+    "input-7": [
+      "the new recruit has little experience. however, she performs well.",
+      "the new recruit has little experience. however, she performs well",
+      "the new recruit has little experience. nevertheless, she performs well.",
+      "the new recruit has little experience. nevertheless, she performs well",
+      "however",
+      "nevertheless",
+      "however,",
+      "nevertheless,"
+    ],
+    "input-8": [
+      "good managers recognise their employees' contribution.",
+      "good managers recognise their employees' contribution",
+      "good managers recognize their employees' contribution.",
+      "good managers recognize their employees' contribution",
+      "recognise",
+      "recognize",
+      "recognise their employees' contribution"
+    ],
+    "input-9": [
+      "she plans to apply for a promotion next year.",
+      "she plans to apply for a promotion next year",
+      "apply for",
+      "apply for a promotion"
+    ],
+    "input-10": [
+      "he is ready to take on more responsibility.",
+      "he is ready to take on more responsibility",
+      "take on",
+      "take on more responsibility"
+    ],
+    "input-11": [
+      "although he received a reward for loyalty, he decided to leave the company.",
+      "although he received a reward for loyalty, he decided to leave the company",
+      "he received a reward for loyalty, but he decided to leave the company.",
+      "he received a reward for loyalty, but he decided to leave the company",
+      "remove but",
+      "without but"
+    ],
+    "input-12": [
+      "she started as an assistant and gradually rose through the ranks.",
+      "she started as an assistant and gradually rose through the ranks",
+      "rose through the ranks",
+      "through the ranks"
+    ]
+  };
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = vocabData.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.word}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.word}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    for (let i = 1; i <= 12; i++) {
+      const inputEl = document.getElementById(`input-${i}`);
+      const userVal = inputEl.value.trim().toLowerCase();
+      const key = `input-${i}`;
+
+      inputEl.classList.remove('correct-input', 'wrong-input');
+
+      if (correctAnswers[key].includes(userVal)) {
+        score++;
+        inputEl.classList.add('correct-input');
+      } else {
+        inputEl.classList.add('wrong-input');
+      }
+    }
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    for (let i = 1; i <= 12; i++) {
+      const inputEl = document.getElementById(`input-${i}`);
+      if (inputEl) {
+        inputEl.value = '';
+        inputEl.classList.remove('correct-input', 'wrong-input');
+      }
+    }
+  }
+
+  window.onload = () => {
+    renderVocab();
+  };
+</script>
+
+</body>
+</html>
