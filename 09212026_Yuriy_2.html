@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 3. Find and correct the mistake 💼</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Vocabulary Grid */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.85rem;
+    color: var(--accent);
+  }
+
+  .vocab-translation {
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  /* Exercise Sentences */
+  .exercise-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sentence-row {
+    font-size: 1.05rem;
+    line-height: 2;
+    color: #e2e8f0;
+  }
+
+  .num {
+    font-weight: 800;
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  .wrong-part {
+    text-decoration: line-through;
+    color: #f87171;
+    font-weight: 700;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    background-color: #ffffff;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 4px 10px;
+    outline: none;
+    transition: all 0.2s ease;
+    margin: 0 6px;
+    min-width: 120px;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+  }
+
+  input[type="text"].correct-input {
+    border-color: var(--correct);
+    background-color: #dcfce7;
+    color: #15803d;
+  }
+
+  input[type="text"].wrong-input {
+    border-color: var(--wrong);
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 3. Find and correct the mistake 💼</h2>
+      <div class="subtitle">Знайдіть помилку в реченні та напишіть правильний варіант у поле нижче.</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 12</div>
+  </div>
+
+  <!-- Vocabulary Section -->
+  <div class="section-title">1. Vocabulary & Pronunciation (Словник)</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Exercise Sentences -->
+  <div class="section-title">2. Correct the Mistakes</div>
+  <div class="exercise-card">
+    <div class="sentence-row">
+      <span class="num">1.</span> She <span class="wrong-part">do</span> a project every month. ➔ Correct word: <input type="text" id="input-1" placeholder="Type here...">
+    </div>
+    <div class="sentence-row">
+      <span class="num">2.</span> I <span class="wrong-part">makes</span> a plan every Monday. ➔ Correct word: <input type="text" id="input-2" placeholder="Type here...">
+    </div>
+    <div class="sentence-row">
+      <span class="num">3.</span> Does he <span class="wrong-part">makes</span> important decisions? ➔ Correct word: <input type="text" id="input-3" placeholder="Type here...">
+    </div>
+    <div class="sentence-row">
+      <span class="num">4.</span> We don't <span class="wrong-part">make</span> business with this company. ➔ Correct word: <input type="text" id="input-4" placeholder="Type here...">
+    </div>
+    <div class="sentence-row">
+      <span class="num">5.</span> My assistant <span class="wrong-part">do</span> the paperwork. ➔ Correct word: <input type="text" id="input-5" placeholder="Type here...">
+    </div>
+    <div class="sentence-row">
+      <span class="num">6.</span> He doesn't <span class="wrong-part">makes</span> phone calls in the morning. ➔ Correct word: <input type="text" id="input-6" placeholder="Type here...">
+    </div>
+    <div class="sentence-row">
+      <span class="num">7.</span> <span class="wrong-part">Do</span> your manager make appointments? ➔ Correct word: <input type="text" id="input-7" placeholder="Type here...">
+    </div>
+    <div class="sentence-row">
+      <span class="num">8.</span> They <span class="wrong-part">make research</span> for the new project. ➔ Correct phrase: <input type="text" id="input-8" placeholder="Type here...">
+    </div>
+    <div class="sentence-row">
+      <span class="num">9.</span> Does she <span class="wrong-part">does</span> the accounts? ➔ Correct word: <input type="text" id="input-9" placeholder="Type here...">
+    </div>
+    <div class="sentence-row">
+      <span class="num">10.</span> Our company <span class="wrong-part">do</span> a profit every year. ➔ Correct word: <input type="text" id="input-10" placeholder="Type here...">
+    </div>
+    <div class="sentence-row">
+      <span class="num">11.</span> I don't <span class="wrong-part">makes</span> many mistakes. ➔ Correct word: <input type="text" id="input-11" placeholder="Type here...">
+    </div>
+    <div class="sentence-row">
+      <span class="num">12.</span> He <span class="wrong-part">do a report</span> every Friday. ➔ Correct phrase: <input type="text" id="input-12" placeholder="Type here...">
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const vocabData = [
+    { word: "do research", phonetic: "[duː rɪˈsɜːtʃ]", ukr: "проводити дослідження" },
+    { word: "do the accounts", phonetic: "[duː ðə əˈkaʊnts]", ukr: "вести бухгалтерський облік" },
+    { word: "make a profit", phonetic: "[meɪk ə ˈprɒf.ɪt]", ukr: "отримувати прибуток" },
+    { word: "make appointments", phonetic: "[meɪk əˈpɔɪnt.mənts]", ukr: "призначати зустрічі" },
+    { word: "paperwork", phonetic: "[ˈpeɪ.pə.wɜːk]", ukr: "паперова робота / документи" },
+    { word: "does a report", phonetic: "[dʌz ə rɪˈpɔːt]", ukr: "готує звіт" }
+  ];
+
+  const correctAnswers = {
+    "input-1": ["does"],
+    "input-2": ["make"],
+    "input-3": ["make"],
+    "input-4": ["do"],
+    "input-5": ["does"],
+    "input-6": ["make"],
+    "input-7": ["does"],
+    "input-8": ["do research"],
+    "input-9": ["do"],
+    "input-10": ["makes"],
+    "input-11": ["make"],
+    "input-12": ["does a report"]
+  };
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = vocabData.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.word}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.word}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    for (let i = 1; i <= 12; i++) {
+      const inputEl = document.getElementById(`input-${i}`);
+      const userVal = inputEl.value.trim().toLowerCase();
+      const key = `input-${i}`;
+
+      inputEl.classList.remove('correct-input', 'wrong-input');
+
+      if (correctAnswers[key].includes(userVal)) {
+        score++;
+        inputEl.classList.add('correct-input');
+      } else {
+        inputEl.classList.add('wrong-input');
+      }
+    }
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    for (let i = 1; i <= 12; i++) {
+      const inputEl = document.getElementById(`input-${i}`);
+      if (inputEl) {
+        inputEl.value = '';
+        inputEl.classList.remove('correct-input', 'wrong-input');
+      }
+    }
+  }
+
+  window.onload = () => {
+    renderVocab();
+  };
+</script>
+
+</body>
+</html>
