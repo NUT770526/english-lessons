@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fill in the gaps exercise 💼</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Word Bank Box */
+  .word-bank {
+    background: #0f172a;
+    border: 1px dashed var(--accent);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #cbd5e1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+
+  .word-item {
+    background: #1e293b;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  /* Vocabulary Grid */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.8rem;
+    color: var(--accent);
+  }
+
+  .vocab-translation {
+    font-size: 0.8rem;
+    color: #94a3b8;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  /* Exercise Sentences */
+  .exercise-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .sentence-block {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #e2e8f0;
+  }
+
+  .num {
+    font-weight: 800;
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+    background-color: #1e293b;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+    max-width: 100%;
+  }
+
+  select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+  }
+
+  select.correct-select {
+    border-color: var(--correct);
+    background-color: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+  }
+
+  select.wrong-select {
+    border-color: var(--wrong);
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Fill in the gaps 📝</h2>
+      <div class="subtitle">Заповніть пропуски словами та виразами з рамки[cite: 14].</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 14</div>
+  </div>
+
+  <!-- Word Bank -->
+  <div class="section-title">Word Bank</div>
+  <div class="word-bank">
+    <span class="word-item">pay off</span>
+    <span class="word-item">highly qualified</span>
+    <span class="word-item">a new recruit</span>
+    <span class="word-item">reward employees</span>
+    <span class="word-item">based on performance</span>
+    <span class="word-item">employee performance</span>
+    <span class="word-item">a pay rise</span>
+    <span class="word-item">rise through the ranks</span>
+    <span class="word-item">a reward for loyalty</span>
+    <span class="word-item">a performance review</span>
+    <span class="word-item">appraise</span>
+    <span class="word-item">recognition</span>
+    <span class="word-item">career advancement</span>
+    <span class="word-item">retain staff</span>
+    <span class="word-item">take on more responsibility</span>
+    <span class="word-item">apply for a promotion</span>
+  </div>
+
+  <!-- Vocabulary Section -->
+  <div class="section-title">1. Vocabulary with Pronunciation (Словник)</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Exercise Sentences -->
+  <div class="section-title">2. Complete the Sentences</div>
+  <div class="exercise-card">
+    <div class="sentence-block">
+      <span class="num">1.</span> Although she is only
+      <select id="select-1"><option value="">-- choose --</option></select>,
+      she already works independently[cite: 14].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">2.</span> The company offers training opportunities in order to
+      <select id="select-2"><option value="">-- choose --</option></select>.[cite: 14]
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">3.</span> Even though the new strategy was expensive, it eventually
+      <select id="select-3"><option value="">-- choose --</option></select>.[cite: 14]
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">4.</span> Bonuses are
+      <select id="select-4"><option value="">-- choose --</option></select>
+      rather than on the employee's age[cite: 14].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">5.</span> On the one hand, he wants
+      <select id="select-5"><option value="">-- choose --</option></select>.
+      On the other hand, he is not ready to manage a large team[cite: 14].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">6.</span> Despite her excellent
+      <select id="select-6"><option value="">-- choose --</option></select>,
+      she did not receive a bonus[cite: 14].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">7.</span> Managers usually
+      <select id="select-7"><option value="">-- choose --</option></select>
+      employees during an annual performance review[cite: 14].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">8.</span> Although he started as an assistant, he managed to
+      <select id="select-8"><option value="">-- choose --</option></select>
+      and become a department manager[cite: 14].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">9.</span> The company gives long-serving employees
+      <select id="select-9"><option value="">-- choose --</option></select>.[cite: 14]
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">10.</span> She intends to
+      <select id="select-10"><option value="">-- choose --</option></select>
+      because she wants more responsibility[cite: 14].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">11.</span> However, many employees believe that they deserve
+      <select id="select-11"><option value="">-- choose --</option></select>
+      after a successful year[cite: 14].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">12.</span> In spite of working hard, he rarely receives
+      <select id="select-12"><option value="">-- choose --</option></select>
+      from management[cite: 14].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">13.</span> The organisation wants to
+      <select id="select-13"><option value="">-- choose --</option></select>
+      for achieving difficult targets[cite: 14].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">14.</span> A clear career path gives employees opportunities for
+      <select id="select-14"><option value="">-- choose --</option></select>.[cite: 14]
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const optionsList = [
+    "a new recruit",
+    "retain staff",
+    "paid off",
+    "based on performance",
+    "to take on more responsibility",
+    "employee performance",
+    "appraise",
+    "rise through the ranks",
+    "a reward for loyalty",
+    "apply for a promotion",
+    "a pay rise",
+    "recognition",
+    "reward employees",
+    "career advancement"
+  ];
+
+  const vocabData = [
+    { word: "pay off", phonetic: "[peɪ ɒf]", ukr: "окупитися, дати результати" },
+    { word: "highly qualified", phonetic: "[ˈhaɪ.li ˈkwɒl.ɪ.faɪd]", ukr: "висококваліфікований" },
+    { word: "a new recruit", phonetic: "[ə njuː rɪˈkruːt]", ukr: "новий співробітник" },
+    { word: "reward employees", phonetic: "[rɪˈwɔːd ɪmˈplɔɪ.iːz]", ukr: "винагороджувати працівників" },
+    { word: "based on performance", phonetic: "[beɪst ɒn pəˈfɔː.məns]", ukr: "на основі результатів" },
+    { word: "employee performance", phonetic: "[ɪmˈplɔɪ.iː pəˈfɔː.məns]", ukr: "продуктивність працівника" },
+    { word: "a pay rise", phonetic: "[ə peɪ raɪz]", ukr: "підвищення зарплати" },
+    { word: "rise through the ranks", phonetic: "[raɪz θruː ðə ræŋks]", ukr: "просуватися кар'єрними сходами" },
+    { word: "a reward for loyalty", phonetic: "[ə rɪˈwɔːd fə ˈlɔɪ.əl.ti]", ukr: "винагорода за відданість" },
+    { word: "appraise", phonetic: "[əˈpreɪz]", ukr: "оцінювати (роботу)" },
+    { word: "recognition", phonetic: "[ˌrek.əɡˈnɪʃ.ən]", ukr: "визнання" },
+    { word: "career advancement", phonetic: "[kəˈrɪər ədˈvɑːns.mənt]", ukr: "кар'єрне зростання" },
+    { word: "retain staff", phonetic: "[rɪˈteɪn stɑːf]", ukr: "утримувати персонал" },
+    { word: "take on responsibility", phonetic: "[teɪk ɒn rɪˌspɒn.səˈbɪl.ə.ti]", ukr: "брати на себе відповідальність" },
+    { word: "apply for a promotion", phonetic: "[əˈplaɪ fə ə prəˈməʊ.ʃən]", ukr: "подавати заявку на підвищення" }
+  ];
+
+  const correctAnswers = {
+    "select-1": "a new recruit",
+    "select-2": "retain staff",
+    "select-3": "paid off",
+    "select-4": "based on performance",
+    "select-5": "to take on more responsibility",
+    "select-6": "employee performance",
+    "select-7": "appraise",
+    "select-8": "rise through the ranks",
+    "select-9": "a reward for loyalty",
+    "select-10": "apply for a promotion",
+    "select-11": "a pay rise",
+    "select-12": "recognition",
+    "select-13": "reward employees",
+    "select-14": "career advancement"
+  };
+
+  function populateSelects() {
+    // Sort options alphabetically for better UX
+    const sortedOptions = [...optionsList].sort();
+
+    for (let i = 1; i <= 14; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      sortedOptions.forEach(opt => {
+        const optionEl = document.createElement('option');
+        optionEl.value = opt;
+        optionEl.textContent = opt;
+        selectEl.appendChild(optionEl);
+      });
+    }
+  }
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = vocabData.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.word}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.word}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    for (let i = 1; i <= 14; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      const userVal = selectEl.value;
+      const key = `select-${i}`;
+
+      selectEl.classList.remove('correct-select', 'wrong-select');
+
+      if (userVal === correctAnswers[key]) {
+        score++;
+        selectEl.classList.add('correct-select');
+      } else {
+        selectEl.classList.add('wrong-select');
+      }
+    }
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    for (let i = 1; i <= 14; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      if (selectEl) {
+        selectEl.value = '';
+        selectEl.classList.remove('correct-select', 'wrong-select');
+      }
+    }
+  }
+
+  window.onload = () => {
+    populateSelects();
+    renderVocab();
+  };
+</script>
+
+</body>
+</html>
