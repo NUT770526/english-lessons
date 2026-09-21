@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 1. DO or MAKE? 💼</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Vocabulary Grid */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.85rem;
+    color: var(--accent);
+  }
+
+  .vocab-translation {
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  /* Exercise List */
+  .exercise-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sentence-row {
+    font-size: 1.05rem;
+    line-height: 2;
+    color: #e2e8f0;
+  }
+
+  .num {
+    font-weight: 800;
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0369a1;
+    background-color: #ffffff;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 4px 10px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0 4px;
+  }
+
+  select:focus {
+    border-color: var(--accent);
+  }
+
+  select.correct-select {
+    border-color: var(--correct);
+    background-color: #dcfce7;
+    color: #15803d;
+  }
+
+  select.wrong-select {
+    border-color: var(--wrong);
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 1. DO or MAKE? 💼</h2>
+      <div class="subtitle">Вставте do, does, don't, doesn't, make або makes[cite: 16].</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 12</div>
+  </div>
+
+  <!-- Vocabulary Section -->
+  <div class="section-title">1. Business Vocabulary & Pronunciation (Словник)</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Exercise Sentences -->
+  <div class="section-title">2. Complete the Sentences</div>
+  <div class="exercise-card">
+    <div class="sentence-row">
+      <span class="num">1.</span> I usually <select id="select-1"></select> some work after lunch.
+    </div>
+    <div class="sentence-row">
+      <span class="num">2.</span> She <select id="select-2"></select> a plan every Monday.
+    </div>
+    <div class="sentence-row">
+      <span class="num">3.</span> We <select id="select-3"></select> business with international companies.
+    </div>
+    <div class="sentence-row">
+      <span class="num">4.</span> He <select id="select-4"></select> not do the accounts.
+    </div>
+    <div class="sentence-row">
+      <span class="num">5.</span> <select id="select-5"></select> you do paperwork every day?
+    </div>
+    <div class="sentence-row">
+      <span class="num">6.</span> <select id="select-6"></select> your manager make important decisions?
+    </div>
+    <div class="sentence-row">
+      <span class="num">7.</span> They <select id="select-7"></select> not make many phone calls.
+    </div>
+    <div class="sentence-row">
+      <span class="num">8.</span> Anna <select id="select-8"></select> research for the new project.
+    </div>
+    <div class="sentence-row">
+      <span class="num">9.</span> My assistant <select id="select-9"></select> appointments with clients.
+    </div>
+    <div class="sentence-row">
+      <span class="num">10.</span> I <select id="select-10"></select> not make presentations on Fridays.
+    </div>
+    <div class="sentence-row">
+      <span class="num">11.</span> <select id="select-11"></select> he do this project alone?
+    </div>
+    <div class="sentence-row">
+      <span class="num">12.</span> Our company <select id="select-12"></select> a profit every year.
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const optionsList = ["do", "does", "don't", "doesn't", "make", "makes"];
+
+  const vocabData = [
+    { word: "do the accounts", phonetic: "[duː ðə əˈkaʊnts]", ukr: "вести бухгалтерський облік" },
+    { word: "do paperwork", phonetic: "[duː ˈpeɪ.pə.wɜːk]", ukr: "займатися паперовою роботою" },
+    { word: "make decisions", phonetic: "[meɪk dɪˈsɪʒ.ənz]", ukr: "приймати рішення" },
+    { word: "do research", phonetic: "[duː rɪˈsɜːtʃ]", ukr: "проводити дослідження" },
+    { word: "make appointments", phonetic: "[meɪk əˈpɔɪnt.mənts]", ukr: "призначати зустрічі" },
+    { word: "make a profit", phonetic: "[meɪk ə ˈprɒf.ɪt]", ukr: "отримувати прибуток" }
+  ];
+
+  const correctAnswers = {
+    "select-1": "do",
+    "select-2": "makes",
+    "select-3": "do",
+    "select-4": "does",
+    "select-5": "Do",
+    "select-6": "Does",
+    "select-7": "do",
+    "select-8": "does",
+    "select-9": "makes",
+    "select-10": "do",
+    "select-11": "Does",
+    "select-12": "makes"
+  };
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = vocabData.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.word}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.word}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function setupSelects() {
+    // Включаем варианты с заглавной и строчной буквы для предложений
+    const allOptions = ["-- select --", "do", "does", "Do", "Does", "don't", "doesn't", "make", "makes"];
+    const optionsHtml = allOptions.map(opt => `<option value="${opt === '-- select --' ? '' : opt}">${opt}</option>`).join('');
+
+    for (let i = 1; i <= 12; i++) {
+      const el = document.getElementById(`select-${i}`);
+      if (el) {
+        el.innerHTML = optionsHtml;
+      }
+    }
+  }
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    for (let i = 1; i <= 12; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      const userVal = selectEl.value;
+      const key = `select-${i}`;
+
+      selectEl.classList.remove('correct-select', 'wrong-select');
+
+      if (userVal === correctAnswers[key]) {
+        score++;
+        selectEl.classList.add('correct-select');
+      } else {
+        selectEl.classList.add('wrong-select');
+      }
+    }
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    setupSelects();
+    for (let i = 1; i <= 12; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      if (selectEl) {
+        selectEl.classList.remove('correct-select', 'wrong-select');
+      }
+    }
+  }
+
+  window.onload = () => {
+    renderVocab();
+    setupSelects();
+  };
+</script>
+
+</body>
+</html>
