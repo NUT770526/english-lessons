@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading Exercise: Choose the correct options 🌍</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Text Box */
+  .text-box {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+    margin-bottom: 28px;
+    max-height: 250px;
+    overflow-y: auto;
+  }
+
+  .text-box p {
+    margin-top: 0;
+    margin-bottom: 12px;
+  }
+
+  .text-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Vocabulary Grid */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.85rem;
+    color: var(--accent);
+  }
+
+  .vocab-translation {
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  /* Questions Block */
+  .questions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .question-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    transition: border-color 0.2s ease;
+  }
+
+  .question-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 12px;
+  }
+
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1e293b;
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    transition: all 0.2s ease;
+  }
+
+  .option-label:hover {
+    border-color: var(--accent);
+  }
+
+  .option-label input[type="radio"] {
+    accent-color: var(--accent);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
+  /* Status Colors for Questions */
+  .question-card.correct-card {
+    border-color: var(--correct);
+    background: rgba(34, 197, 94, 0.05);
+  }
+
+  .question-card.wrong-card {
+    border-color: var(--wrong);
+    background: rgba(239, 68, 68, 0.05);
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Choose the correct options 🌍</h2>
+      <div class="subtitle">Прочитайте текст та оберіть правильний варіант відповіді.</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 6</div>
+  </div>
+
+  <!-- Text Section -->
+  <div class="section-title">Reading Text</div>
+  <div class="text-box">
+    <p>More than half of Poles often spend time outdoors at the weekends. They are music lovers and listen to music every day. Every fifth Pole watches television 4 hours a day! But they rarely play sports. Only 20% of young people go to the gym regularly. They sometimes go to museums or theatres. Although, just 10% of people do it, and only once or twice a year.</p>
+    <p>In Korea, it is popular to both play football and watch it. But after a hard week at work, they prefer to visit karaoke bars at the weekends! About 40 percent enjoy outdoor activities, including camping and mountain biking. Korean women generally like gardening. Of course, they never forget to spend time with their family at the weekends.</p>
+    <p>Americans usually have a love for sports since childhood. People of all ages, from schoolchildren to retirees, often go to gyms. Americans love music and sometimes create their own bands and give concerts in parks and local bars. They hardly ever cook at home because ordering food is faster!</p>
+    <p>People in Spain love sports. Men prefer to go swimming, running, and powerlifting. 80 percent of women love doing yoga and pilates. They often enjoy gardening and grow flowers and vegetables right in the house, on the windowsills. They hardly ever gather at home. They prefer dancing in barns, going to concerts, and spending time in the fresh air.</p>
+    <p>Watching TV takes up 45% of all British people's free time. Only 20% of young people play sports regularly. Other activities such as reading, music, museums, gardening, take up approximately 10%. They occasionally go to cafés. But both men and women in Britain spend the same amount of time looking after themselves! Even men often spend up to 2 hours in the bathroom!</p>
+    <p>In Japan, baseball, volleyball, football and other ball games are popular in leisure time. Judo and karate are also always popular. In addition to their passion for the English language, they often enjoy cooking, tea ceremonies, as well as diving, tennis, and golf. 59% of Japanese people love travelling. 47% love gardening. They are always busy and they never waste their time!</p>
+  </div>
+
+  <!-- Vocabulary Section -->
+  <div class="section-title">1. Vocabulary & Pronunciation (Словник)</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Questions Section -->
+  <div class="section-title">2. Choose the Correct Option</div>
+  <div class="questions-container" id="questions-container"></div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const vocabData = [
+    { word: "retirees", phonetic: "[rɪˌtaɪəˈriːz]", ukr: "пенсіонери" },
+    { word: "outdoor activities", phonetic: "[ˈaʊt.dɔːr ækˈtɪv.ə.tiz]", ukr: "активності на свіжому повітрі" },
+    { word: "windowsills", phonetic: "[ˈwɪn.dəʊ.sɪlz]", ukr: "підвіконня" },
+    { word: "approximately", phonetic: "[əˈprɒk.sɪ.mət.li]", ukr: "приблизно" },
+    { word: "leisure time", phonetic: "[ˈleʒ.ə taɪm]", ukr: "дозвілля / вільний час" },
+    { word: "passion", phonetic: "[ˈpæʃ.ən]", ukr: "пристрасть / захоплення" }
+  ];
+
+  const questionsData = [
+    {
+      id: 1,
+      title: "1. Only 20% of young people … regularly in Poland.",
+      options: [
+        { text: "go to the concerts", correct: false },
+        { text: "go to gym", correct: true },
+        { text: "go swimming", correct: false }
+      ]
+    },
+    {
+      id: 2,
+      title: "2. In Korea it’s popular to:",
+      options: [
+        { text: "play football and go to karaoke bars", correct: true },
+        { text: "go to the museums and mountains", correct: false },
+        { text: "go to the bars and watch tennis", correct: false }
+      ]
+    },
+    {
+      id: 3,
+      title: "3. Americans often …",
+      options: [
+        { text: "enjoy cooking at home.", correct: false },
+        { text: "have love for sports and hate the local bands.", correct: false },
+        { text: "go to the concerts of the local bands.", correct: true }
+      ]
+    },
+    {
+      id: 4,
+      title: "4. Men prefer to … and women love … in Spain.",
+      options: [
+        { text: "gardening , doing yoga", correct: false },
+        { text: "go swimming, doing pilates", correct: true },
+        { text: "go running, do judo", correct: false }
+      ]
+    },
+    {
+      id: 5,
+      title: "5. In the UK, they mostly …",
+      options: [
+        { text: "watch TV and rarely do sports.", correct: true },
+        { text: "rarely watch TV and often go to the gym.", correct: false },
+        { text: "watch football and often go to the cafes.", correct: false }
+      ]
+    },
+    {
+      id: 6,
+      title: "6. They often … in Japan.",
+      options: [
+        { text: "love travelling and watching TV", correct: false },
+        { text: "love travelling and hate doing sports", correct: false },
+        { text: "love travelling and actively go in for sport", correct: true }
+      ]
+    }
+  ];
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = vocabData.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.word}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.word}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function renderQuestions() {
+    const qContainer = document.getElementById('questions-container');
+    qContainer.innerHTML = questionsData.map(q => `
+      <div class="question-card" id="card-${q.id}">
+        <div class="question-title">${q.title}</div>
+        <div class="options-list">
+          ${q.options.map((opt, idx) => `
+            <label class="option-label">
+              <input type="radio" name="q${q.id}" value="${opt.correct}">
+              <span>${opt.text}</span>
+            </label>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    questionsData.forEach(q => {
+      const cardEl = document.getElementById(`card-${q.id}`);
+      const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+
+      cardEl.classList.remove('correct-card', 'wrong-card');
+
+      if (selected && selected.value === 'true') {
+        score++;
+        cardEl.classList.add('correct-card');
+      } else {
+        cardEl.classList.add('wrong-card');
+      }
+    });
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    renderQuestions();
+  }
+
+  window.onload = () => {
+    renderVocab();
+    renderQuestions();
+  };
+</script>
+
+</body>
+</html>
