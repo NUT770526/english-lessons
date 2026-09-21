@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 1. Choose the correct linker 🔗</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Vocabulary Grid */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .vocab-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vocab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #f1f5f9;
+  }
+
+  .vocab-phonetic {
+    font-size: 0.85rem;
+    color: var(--accent);
+  }
+
+  .vocab-translation {
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  .speaker-btn {
+    background: #334155;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  /* Exercise Sentences */
+  .exercise-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .sentence-block {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #e2e8f0;
+  }
+
+  .num {
+    font-weight: 800;
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    background-color: #1e293b;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+  }
+
+  select.correct-select {
+    border-color: var(--correct);
+    background-color: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+  }
+
+  select.wrong-select {
+    border-color: var(--wrong);
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 1. Choose the correct linker 🔗</h2>
+      <div class="subtitle">Оберіть правильний сполучник (linker) у кожному реченні[cite: 13].</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 12</div>
+  </div>
+
+  <!-- Vocabulary Section -->
+  <div class="section-title">1. Linkers & Expressions Vocabulary</div>
+  <div class="vocab-grid" id="vocab-container"></div>
+
+  <!-- Exercise Sentences -->
+  <div class="section-title">2. Select the Correct Linker</div>
+  <div class="exercise-card">
+    <div class="sentence-block">
+      <span class="num">1.</span>
+      <select id="select-1">
+        <option value="">-- choose --</option>
+        <option value="Although">Although</option>
+        <option value="Despite">Despite</option>
+      </select>
+      the company offers career advancement, it sometimes struggles to retain staff[cite: 13].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">2.</span>
+      <select id="select-2">
+        <option value="">-- choose --</option>
+        <option value="Even though">Even though</option>
+        <option value="Despite">Despite</option>
+      </select>
+      her limited experience, the new recruit performed extremely well[cite: 13].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">3.</span> The new salary model paid off.
+      <select id="select-3">
+        <option value="">-- choose --</option>
+        <option value="Although">Although</option>
+        <option value="However">However</option>
+      </select>,
+      some employees are still expecting a pay rise[cite: 13].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">4.</span>
+      <select id="select-4">
+        <option value="">-- choose --</option>
+        <option value="Even though">Even though</option>
+        <option value="In spite of">In spite of</option>
+      </select>
+      meeting all his targets, he did not receive recognition from management[cite: 13].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">5.</span>
+      <select id="select-5">
+        <option value="">-- choose --</option>
+        <option value="Despite">Despite</option>
+        <option value="Even though">Even though</option>
+      </select>
+      he was a new recruit, he was ready to take on more responsibility[cite: 13].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">6.</span> The company had a limited budget.
+      <select id="select-6">
+        <option value="">-- choose --</option>
+        <option value="Though">Though</option>
+        <option value="Nevertheless">Nevertheless</option>
+      </select>,
+      it rewarded employees for excellent performance[cite: 13].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">7.</span> The performance review was stressful. It was useful,
+      <select id="select-7">
+        <option value="">-- choose --</option>
+        <option value="though">though</option>
+        <option value="despite">despite</option>
+      </select>.[cite: 13]
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">8.</span>
+      <select id="select-8">
+        <option value="">-- choose --</option>
+        <option value="On the one hand">On the one hand</option>
+        <option value="On the other hand">On the other hand</option>
+      </select>,
+      performance-related rewards motivate employees. On the other hand, they can create unhealthy competition[cite: 13].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">9.</span>
+      <select id="select-9">
+        <option value="">-- choose --</option>
+        <option value="Despite">Despite</option>
+        <option value="Although">Although</option>
+      </select>
+      being highly qualified, she had difficulty finding a position in the corporate world[cite: 13].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">10.</span>
+      <select id="select-10">
+        <option value="">-- choose --</option>
+        <option value="Although">Although</option>
+        <option value="In spite of">In spite of</option>
+      </select>
+      his performance review was positive, he did not receive a pay rise[cite: 13].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">11.</span>
+      <select id="select-11">
+        <option value="">-- choose --</option>
+        <option value="In spite of">In spite of</option>
+        <option value="Even though">Even though</option>
+      </select>
+      the company's efforts to retain staff, two highly qualified employees resigned[cite: 13].
+    </div>
+
+    <div class="sentence-block">
+      <span class="num">12.</span> The corporate world is highly competitive.
+      <select id="select-12">
+        <option value="">-- choose --</option>
+        <option value="Nevertheless">Nevertheless</option>
+        <option value="Despite">Despite</option>
+      </select>,
+      it provides many opportunities for career advancement[cite: 13].
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const vocabData = [
+    { word: "Although / Even though", phonetic: "[ɔːlˈðəʊ / ˈiː.vən ðəʊ]", ukr: "хоча (+ іменник + дієслово)" },
+    { word: "Despite / In spite of", phonetic: "[dɪˈspaɪt / ɪn spaɪt əv]", ukr: "незважаючи на (+ іменник / -ing)" },
+    { word: "However / Nevertheless", phonetic: "[haʊˈev.ər / ˌnev.ə.ðəˈles]", ukr: "проте, зате, тим не менш" },
+    { word: "On the one hand", phonetic: "[ɒn ðə wʌn hænd]", ukr: "з одного боку" },
+    { word: "retain staff", phonetic: "[rɪˈteɪn stɑːf]", ukr: "утримувати персонал" },
+    { word: "career advancement", phonetic: "[kəˈrɪər ədˈvɑːns.mənt]", ukr: "кар'єрне зростання" }
+  ];
+
+  const correctAnswers = {
+    "select-1": "Although",
+    "select-2": "Despite",
+    "select-3": "However",
+    "select-4": "In spite of",
+    "select-5": "Even though",
+    "select-6": "Nevertheless",
+    "select-7": "though",
+    "select-8": "On the one hand",
+    "select-9": "Despite",
+    "select-10": "Although",
+    "select-11": "In spite of",
+    "select-12": "Nevertheless"
+  };
+
+  function renderVocab() {
+    const vocabEl = document.getElementById('vocab-container');
+    vocabEl.innerHTML = vocabData.map(item => `
+      <div class="vocab-card">
+        <div class="vocab-info">
+          <span class="vocab-word">${item.word}</span>
+          <span class="vocab-phonetic">${item.phonetic}</span>
+          <span class="vocab-translation">${item.ukr}</span>
+        </div>
+        <button class="speaker-btn" onclick="speakWord('${item.word.split('/')[0]}')" title="Listen">🔊</button>
+      </div>
+    `).join('');
+  }
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    for (let i = 1; i <= 12; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      const userVal = selectEl.value;
+      const key = `select-${i}`;
+
+      selectEl.classList.remove('correct-select', 'wrong-select');
+
+      if (userVal === correctAnswers[key]) {
+        score++;
+        selectEl.classList.add('correct-select');
+      } else {
+        selectEl.classList.add('wrong-select');
+      }
+    }
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    for (let i = 1; i <= 12; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      if (selectEl) {
+        selectEl.value = '';
+        selectEl.classList.remove('correct-select', 'wrong-select');
+      }
+    }
+  }
+
+  window.onload = () => {
+    renderVocab();
+  };
+</script>
+
+</body>
+</html>
