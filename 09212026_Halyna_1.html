@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 1. Choose the correct option 🎯</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* Interactive Tooltip Words */
+  .tooltip-word {
+    border-bottom: 2px dotted var(--accent);
+    color: #7dd3fc;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    font-weight: 600;
+  }
+
+  .tooltip-word .tooltip-box {
+    visibility: hidden;
+    opacity: 0;
+    width: 210px;
+    background-color: #0284c7;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 10px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: auto;
+    font-size: 0.85rem;
+    font-weight: normal;
+    line-height: 1.4;
+  }
+
+  .tooltip-word .tooltip-box::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0284c7 transparent transparent transparent;
+  }
+
+  .tooltip-word:hover .tooltip-box {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .tooltip-title {
+    font-weight: bold;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .tooltip-phonetic {
+    font-size: 0.8rem;
+    color: #e0f2fe;
+  }
+
+  .tooltip-ukr {
+    font-size: 0.8rem;
+    color: #fef08a;
+    margin-top: 2px;
+  }
+
+  .audio-btn {
+    background: #0369a1;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    margin-left: 4px;
+  }
+
+  .audio-btn:hover {
+    background: #075985;
+  }
+
+  /* Exercise Sentences */
+  .exercise-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .question-item {
+    background: #1e293b;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+  }
+
+  .question-item.correct-bg {
+    border-color: var(--correct);
+    background-color: rgba(34, 197, 94, 0.1);
+  }
+
+  .question-item.wrong-bg {
+    border-color: var(--wrong);
+    background-color: rgba(239, 68, 68, 0.1);
+  }
+
+  .q-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #f1f5f9;
+    line-height: 1.6;
+  }
+
+  .num {
+    color: var(--accent);
+    font-weight: 800;
+    margin-right: 6px;
+  }
+
+  .options-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    background: #0f172a;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+  }
+
+  .option-label:hover {
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .option-label input[type="radio"] {
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 1. Choose the correct option 🎯</h2>
+      <div class="subtitle">Оберіть правильний варіант[cite: 13]. (Наведіть на слова з підкресленням для підказки та озвучки)</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 12</div>
+  </div>
+
+  <div class="exercise-card">
+
+    <!-- Q1 -->
+    <div class="question-item" id="q-1">
+      <div class="q-text">
+        <span class="num">1.</span> We are ___ preparing the 
+        <span class="tooltip-word">monthly report<span class="tooltip-box"><span class="tooltip-title">monthly report <button class="audio-btn" onclick="speak('monthly report', event)">🔊</button></span><span class="tooltip-phonetic">[ˈmʌn.θli rɪˈpɔːt]</span><span class="tooltip-ukr">щомісячний звіт</span></span></span>.
+      </div>
+      <div class="options-group">
+        <label class="option-label"><input type="radio" name="q1" value="a"> a) <span class="tooltip-word">currently<span class="tooltip-box"><span class="tooltip-title">currently <button class="audio-btn" onclick="speak('currently', event)">🔊</button></span><span class="tooltip-phonetic">[ˈkʌr.ənt.li]</span><span class="tooltip-ukr">наразі, зараз</span></span></span></label>
+        <label class="option-label"><input type="radio" name="q1" value="b"> b) current</label>
+        <label class="option-label"><input type="radio" name="q1" value="c"> c) quite</label>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-item" id="q-2">
+      <div class="q-text">
+        <span class="num">2.</span> We usually ___ 
+        <span class="tooltip-word">invoices<span class="tooltip-box"><span class="tooltip-title">invoices <button class="audio-btn" onclick="speak('invoices', event)">🔊</button></span><span class="tooltip-phonetic">[ˈɪn.vɔɪ.sɪz]</span><span class="tooltip-ukr">рахунки-фактури</span></span></span> by email.
+      </div>
+      <div class="options-group">
+        <label class="option-label"><input type="radio" name="q2" value="a"> a) receive</label>
+        <label class="option-label"><input type="radio" name="q2" value="b"> b) decide</label>
+        <label class="option-label"><input type="radio" name="q2" value="c"> c) spend</label>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-item" id="q-3">
+      <div class="q-text">
+        <span class="num">3.</span> ___ managers are 
+        <span class="tooltip-word">attending<span class="tooltip-box"><span class="tooltip-title">attending <button class="audio-btn" onclick="speak('attending', event)">🔊</button></span><span class="tooltip-phonetic">[əˈtend.ɪŋ]</span><span class="tooltip-ukr">відвідують, присутні</span></span></span> the meeting today.
+      </div>
+      <div class="options-group">
+        <label class="option-label"><input type="radio" name="q3" value="a"> a) Both</label>
+        <label class="option-label"><input type="radio" name="q3" value="b"> b) <span class="tooltip-word">All the rest<span class="tooltip-box"><span class="tooltip-title">all the rest <button class="audio-btn" onclick="speak('all the rest', event)">🔊</button></span><span class="tooltip-phonetic">[ɔːl ðə rest]</span><span class="tooltip-ukr">усі решта</span></span></span></label>
+        <label class="option-label"><input type="radio" name="q3" value="c"> c) Only a few</label>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-item" id="q-4">
+      <div class="q-text">
+        <span class="num">4.</span> We need to ___ which 
+        <span class="tooltip-word">strategy<span class="tooltip-box"><span class="tooltip-title">strategy <button class="audio-btn" onclick="speak('strategy', event)">🔊</button></span><span class="tooltip-phonetic">[ˈstræt.ə.dʒi]</span><span class="tooltip-ukr">стратегія</span></span></span> is better.
+      </div>
+      <div class="options-group">
+        <label class="option-label"><input type="radio" name="q4" value="a"> a) show</label>
+        <label class="option-label"><input type="radio" name="q4" value="b"> b) decide</label>
+        <label class="option-label"><input type="radio" name="q4" value="c"> c) receive</label>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-item" id="q-5">
+      <div class="q-text">
+        <span class="num">5.</span> How much time do you usually ___ on reports?
+      </div>
+      <div class="options-group">
+        <label class="option-label"><input type="radio" name="q5" value="a"> a) send</label>
+        <label class="option-label"><input type="radio" name="q5" value="b"> b) spend</label>
+        <label class="option-label"><input type="radio" name="q5" value="c"> c) show</label>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question-item" id="q-6">
+      <div class="q-text">
+        <span class="num">6.</span> The client will receive the documents ___.
+      </div>
+      <div class="options-group">
+        <label class="option-label"><input type="radio" name="q6" value="a"> a) for five days</label>
+        <label class="option-label"><input type="radio" name="q6" value="b"> b) <span class="tooltip-word">in five days<span class="tooltip-box"><span class="tooltip-title">in five days <button class="audio-btn" onclick="speak('in five days', event)">🔊</button></span><span class="tooltip-phonetic">[ɪn faɪv deɪz]</span><span class="tooltip-ukr">через 5 днів</span></span></span></label>
+        <label class="option-label"><input type="radio" name="q6" value="c"> c) five days ago</label>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question-item" id="q-7">
+      <div class="q-text">
+        <span class="num">7.</span> The 
+        <span class="tooltip-word">employees<span class="tooltip-box"><span class="tooltip-title">employees <button class="audio-btn" onclick="speak('employees', event)">🔊</button></span><span class="tooltip-phonetic">[ɪmˈplɔɪ.iːz]</span><span class="tooltip-ukr">співробітники</span></span></span> worked on this project ___.
+      </div>
+      <div class="options-group">
+        <label class="option-label"><input type="radio" name="q7" value="a"> a) <span class="tooltip-word">for five days<span class="tooltip-box"><span class="tooltip-title">for five days <button class="audio-btn" onclick="speak('for five days', event)">🔊</button></span><span class="tooltip-phonetic">[fɔː faɪv deɪz]</span><span class="tooltip-ukr">протягом 5 днів</span></span></span></label>
+        <label class="option-label"><input type="radio" name="q7" value="b"> b) in five days</label>
+        <label class="option-label"><input type="radio" name="q7" value="c"> c) after five days</label>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="question-item" id="q-8">
+      <div class="q-text">
+        <span class="num">8.</span> We received ___ 
+        <span class="tooltip-word">applications<span class="tooltip-box"><span class="tooltip-title">applications <button class="audio-btn" onclick="speak('applications', event)">🔊</button></span><span class="tooltip-phonetic">[ˌæp.lɪˈkeɪ.ʃənz]</span><span class="tooltip-ukr">заявки, резюме</span></span></span>, so we have a good choice.
+      </div>
+      <div class="options-group">
+        <label class="option-label"><input type="radio" name="q8" value="a"> a) <span class="tooltip-word">quite a few<span class="tooltip-box"><span class="tooltip-title">quite a few <button class="audio-btn" onclick="speak('quite a few', event)">🔊</button></span><span class="tooltip-phonetic">[kwaɪt ə fjuː]</span><span class="tooltip-ukr">достатньо багато</span></span></span></label>
+        <label class="option-label"><input type="radio" name="q8" value="b"> b) only a few</label>
+        <label class="option-label"><input type="radio" name="q8" value="c"> c) quite a little</label>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="question-item" id="q-9">
+      <div class="q-text">
+        <span class="num">9.</span> 
+        <span class="tooltip-word">Unfortunately<span class="tooltip-box"><span class="tooltip-title">unfortunately <button class="audio-btn" onclick="speak('unfortunately', event)">🔊</button></span><span class="tooltip-phonetic">[ʌnˈfɔː.tʃən.ət.li]</span><span class="tooltip-ukr">на жаль</span></span></span>, ___ employees attended the 
+        <span class="tooltip-word">training<span class="tooltip-box"><span class="tooltip-title">training <button class="audio-btn" onclick="speak('training', event)">🔊</button></span><span class="tooltip-phonetic">[ˈtreɪ.nɪŋ]</span><span class="tooltip-ukr">тренінг, навчання</span></span></span>.
+      </div>
+      <div class="options-group">
+        <label class="option-label"><input type="radio" name="q9" value="a"> a) quite a few</label>
+        <label class="option-label"><input type="radio" name="q9" value="b"> b) <span class="tooltip-word">only a few<span class="tooltip-box"><span class="tooltip-title">only a few <button class="audio-btn" onclick="speak('only a few', event)">🔊</button></span><span class="tooltip-phonetic">[ˈəʊn.li ə fjuː]</span><span class="tooltip-ukr">лише декілька</span></span></span></label>
+        <label class="option-label"><input type="radio" name="q9" value="c"> c) both</label>
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="question-item" id="q-10">
+      <div class="q-text">
+        <span class="num">10.</span> Anna and Mark are in the office. ___ are working from home.
+      </div>
+      <div class="options-group">
+        <label class="option-label"><input type="radio" name="q10" value="a"> a) <span class="tooltip-word">All others<span class="tooltip-box"><span class="tooltip-title">all others <button class="audio-btn" onclick="speak('all others', event)">🔊</button></span><span class="tooltip-phonetic">[ɔːl ˈʌð.əz]</span><span class="tooltip-ukr">усі інші</span></span></span></label>
+        <label class="option-label"><input type="radio" name="q10" value="b"> b) All the rest</label>
+        <label class="option-label"><input type="radio" name="q10" value="c"> c) Both</label>
+      </div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="question-item" id="q-11">
+      <div class="q-text">
+        <span class="num">11.</span> This 
+        <span class="tooltip-word">business model<span class="tooltip-box"><span class="tooltip-title">business model <button class="audio-btn" onclick="speak('business model', event)">🔊</button></span><span class="tooltip-phonetic">[ˈbɪz.nɪs ˌmɒd.əl]</span><span class="tooltip-ukr">бізнес-модель</span></span></span> is more 
+        <span class="tooltip-word">effective<span class="tooltip-box"><span class="tooltip-title">effective <button class="audio-btn" onclick="speak('effective', event)">🔊</button></span><span class="tooltip-phonetic">[ɪˈfek.tɪv]</span><span class="tooltip-ukr">ефективна</span></span></span> than ___.
+      </div>
+      <div class="options-group">
+        <label class="option-label"><input type="radio" name="q11" value="a"> a) all others</label>
+        <label class="option-label"><input type="radio" name="q11" value="b"> b) <span class="tooltip-word">all the rest<span class="tooltip-box"><span class="tooltip-title">all the rest <button class="audio-btn" onclick="speak('all the rest', event)">🔊</button></span><span class="tooltip-phonetic">[ɔːl ðə rest]</span><span class="tooltip-ukr">усі решта</span></span></span></label>
+        <label class="option-label"><input type="radio" name="q11" value="c"> c) both</label>
+      </div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="question-item" id="q-12">
+      <div class="q-text">
+        <span class="num">12.</span> The manager has already ___ us the new 
+        <span class="tooltip-word">presentation<span class="tooltip-box"><span class="tooltip-title">presentation <button class="audio-btn" onclick="speak('presentation', event)">🔊</button></span><span class="tooltip-phonetic">[ˌprez.ənˈteɪ.ʃən]</span><span class="tooltip-ukr">презентація</span></span></span>.
+      </div>
+      <div class="options-group">
+        <label class="option-label"><input type="radio" name="q12" value="a"> a) show</label>
+        <label class="option-label"><input type="radio" name="q12" value="b"> b) showed</label>
+        <label class="option-label"><input type="radio" name="q12" value="c"> c) shown</label>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const correctAnswers = {
+    q1: 'a',  // currently
+    q2: 'a',  // receive
+    q3: 'c',  // Only a few
+    q4: 'b',  // decide
+    q5: 'b',  // spend
+    q6: 'b',  // in five days
+    q7: 'a',  // for five days
+    q8: 'a',  // quite a few
+    q9: 'b',  // only a few
+    q10: 'a', // All others
+    q11: 'b', // all the rest
+    q12: 'c'  // shown
+  };
+
+  function speak(text, event) {
+    if (event) {
+      event.stopPropagation(); // Prevents tooltip closing or triggering radio buttons
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    for (let i = 1; i <= 12; i++) {
+      const qKey = `q${i}`;
+      const itemEl = document.getElementById(`q-${i}`);
+      const selected = document.querySelector(`input[name="${qKey}"]:checked`);
+
+      itemEl.classList.remove('correct-bg', 'wrong-bg');
+
+      if (selected && selected.value === correctAnswers[qKey]) {
+        score++;
+        itemEl.classList.add('correct-bg');
+      } else {
+        itemEl.classList.add('wrong-bg');
+      }
+    }
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    for (let i = 1; i <= 12; i++) {
+      const itemEl = document.getElementById(`q-${i}`);
+      itemEl.classList.remove('correct-bg', 'wrong-bg');
+    }
+    const radios = document.querySelectorAll('input[type="radio"]');
+    radios.forEach(radio => radio.checked = false);
+  }
+</script>
+
+</body>
+</html>
