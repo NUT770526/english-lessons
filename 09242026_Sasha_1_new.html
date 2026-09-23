@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 1a: Match Words to Definitions 🌟</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* Interactive Hover Tooltips */
+  .tooltip-word {
+    border-bottom: 2px dotted var(--accent);
+    color: #7dd3fc;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    font-weight: 700;
+  }
+
+  .tooltip-word .tooltip-box {
+    visibility: hidden;
+    opacity: 0;
+    width: 210px;
+    background-color: #0284c7;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 10px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: auto;
+    font-size: 0.85rem;
+    font-weight: normal;
+    line-height: 1.4;
+  }
+
+  .tooltip-word .tooltip-box::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0284c7 transparent transparent transparent;
+  }
+
+  .tooltip-word:hover .tooltip-box {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .tooltip-title {
+    font-weight: bold;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .tooltip-phonetic {
+    font-size: 0.8rem;
+    color: #e0f2fe;
+  }
+
+  .tooltip-ukr {
+    font-size: 0.85rem;
+    color: #fef08a;
+    margin-top: 2px;
+    font-weight: bold;
+  }
+
+  .audio-btn {
+    background: #0369a1;
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+
+  .audio-btn:hover {
+    background: #075985;
+    transform: scale(1.05);
+  }
+
+  .audio-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Definitions Reference List */
+  .definitions-box {
+    background: #0f172a;
+    border: 1px dashed var(--accent);
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+  }
+
+  .definitions-box h3 {
+    margin: 0 0 12px 0;
+    font-size: 1rem;
+    color: #cbd5e1;
+  }
+
+  .def-item {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .def-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .def-letter {
+    font-weight: bold;
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  /* Exercise Grid */
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .match-row {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .word-side {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 180px;
+  }
+
+  .num {
+    font-weight: 800;
+    color: var(--accent);
+    font-size: 1.1rem;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #f8fafc;
+    background-color: #1e293b;
+    border: 2px solid #475569;
+    border-radius: 8px;
+    padding: 8px 12px;
+    outline: none;
+    cursor: pointer;
+    flex: 1;
+    min-width: 260px;
+    transition: all 0.2s ease;
+  }
+
+  select:focus {
+    border-color: var(--accent);
+  }
+
+  select.correct-input {
+    border-color: var(--correct);
+    background-color: #064e3b;
+    color: #6ee7b7;
+  }
+
+  select.wrong-input {
+    border-color: var(--wrong);
+    background-color: #7f1d1d;
+    color: #fca5a5;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>
+        1a. 
+        <span class="tooltip-word">
+          Match
+          <span class="tooltip-box">
+            <span class="tooltip-title">
+              Match 
+              <button class="audio-btn" type="button" onclick="speak('match', event)">🔊</button>
+            </span>
+            <span class="tooltip-phonetic">[mætʃ]</span>
+            <span class="tooltip-ukr">Співвіднесіть / З'єднайте</span>
+          </span>
+        </span> 
+        the words (1–4) to the 
+        <span class="tooltip-word">
+          definitions
+          <span class="tooltip-box">
+            <span class="tooltip-title">
+              definitions 
+              <button class="audio-btn" type="button" onclick="speak('definitions', event)">🔊</button>
+            </span>
+            <span class="tooltip-phonetic">[ˌdef.ɪˈnɪʃ.ənz]</span>
+            <span class="tooltip-ukr">Визначення / Значення</span>
+          </span>
+        </span> 
+        (a–d)
+      </h2>
+      <div class="subtitle">Select the correct definition for each word. Hover over underlined terms for translation & audio support.</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 4</div>
+  </div>
+
+  <!-- Definitions Reference Box -->
+  <div class="definitions-box">
+    <h3>
+      <span class="tooltip-word">
+        Definitions
+        <span class="tooltip-box">
+          <span class="tooltip-title">
+            definitions 
+            <button class="audio-btn" type="button" onclick="speak('definitions', event)">🔊</button>
+          </span>
+          <span class="tooltip-phonetic">[ˌdef.ɪˈnɪʃ.ənz]</span>
+          <span class="tooltip-ukr">Визначення</span>
+        </span>
+      </span>:
+    </h3>
+    <div class="def-item"><span class="def-letter">a</span> you are good at learning or understanding things</div>
+    <div class="def-item"><span class="def-letter">b</span> you are good and think about people's feelings</div>
+    <div class="def-item"><span class="def-letter">c</span> you like being with people</div>
+    <div class="def-item"><span class="def-letter">d</span> you give people your time or money</div>
+  </div>
+
+  <div class="exercise-list">
+
+    <!-- Item 1 -->
+    <div class="match-row">
+      <div class="word-side">
+        <span class="num">1.</span>
+        <span class="tooltip-word">
+          generous
+          <span class="tooltip-box">
+            <span class="tooltip-title">generous</span>
+            <span class="tooltip-phonetic">[ˈdʒen.ər.əs]</span>
+            <span class="tooltip-ukr">Щедрий</span>
+          </span>
+        </span>
+        <button class="audio-btn" type="button" onclick="speak('generous', event)">🔊</button>
+      </div>
+      <select id="select-1">
+        <option value="">-- Choose definition --</option>
+        <option value="a">a) you are good at learning or understanding things</option>
+        <option value="b">b) you are good and think about people's feelings</option>
+        <option value="c">c) you like being with people</option>
+        <option value="d">d) you give people your time or money</option>
+      </select>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="match-row">
+      <div class="word-side">
+        <span class="num">2.</span>
+        <span class="tooltip-word">
+          clever
+          <span class="tooltip-box">
+            <span class="tooltip-title">clever</span>
+            <span class="tooltip-phonetic">[ˈklev.ər]</span>
+            <span class="tooltip-ukr">Розумний, здібний</span>
+          </span>
+        </span>
+        <button class="audio-btn" type="button" onclick="speak('clever', event)">🔊</button>
+      </div>
+      <select id="select-2">
+        <option value="">-- Choose definition --</option>
+        <option value="a">a) you are good at learning or understanding things</option>
+        <option value="b">b) you are good and think about people's feelings</option>
+        <option value="c">c) you like being with people</option>
+        <option value="d">d) you give people your time or money</option>
+      </select>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="match-row">
+      <div class="word-side">
+        <span class="num">3.</span>
+        <span class="tooltip-word">
+          kind
+          <span class="tooltip-box">
+            <span class="tooltip-title">kind</span>
+            <span class="tooltip-phonetic">[kaɪnd]</span>
+            <span class="tooltip-ukr">Добрий, чуйний</span>
+          </span>
+        </span>
+        <button class="audio-btn" type="button" onclick="speak('kind', event)">🔊</button>
+      </div>
+      <select id="select-3">
+        <option value="">-- Choose definition --</option>
+        <option value="a">a) you are good at learning or understanding things</option>
+        <option value="b">b) you are good and think about people's feelings</option>
+        <option value="c">c) you like being with people</option>
+        <option value="d">d) you give people your time or money</option>
+      </select>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="match-row">
+      <div class="word-side">
+        <span class="num">4.</span>
+        <span class="tooltip-word">
+          friendly
+          <span class="tooltip-box">
+            <span class="tooltip-title">friendly</span>
+            <span class="tooltip-phonetic">[ˈfrend.li]</span>
+            <span class="tooltip-ukr">Дружелюбний, привітний</span>
+          </span>
+        </span>
+        <button class="audio-btn" type="button" onclick="speak('friendly', event)">🔊</button>
+      </div>
+      <select id="select-4">
+        <option value="">-- Choose definition --</option>
+        <option value="a">a) you are good at learning or understanding things</option>
+        <option value="b">b) you are good and think about people's feelings</option>
+        <option value="c">c) you like being with people</option>
+        <option value="d">d) you give people your time or money</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const correctAnswers = {
+    "select-1": "d",
+    "select-2": "a",
+    "select-3": "b",
+    "select-4": "c"
+  };
+
+  let englishVoice = null;
+
+  function loadVoices() {
+    if ('speechSynthesis' in window) {
+      const voices = window.speechSynthesis.getVoices();
+      englishVoice = voices.find(v => v.lang === 'en-US' || v.lang === 'en-GB' || v.lang.startsWith('en')) || null;
+    }
+  }
+
+  if ('speechSynthesis' in window) {
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }
+
+  function speak(text, event) {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    if (!('speechSynthesis' in window)) {
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+
+    if (!englishVoice) {
+      loadVoices();
+    }
+    if (englishVoice) {
+      utterance.voice = englishVoice;
+    }
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    for (let i = 1; i <= 4; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      const userVal = selectEl.value;
+      const key = `select-${i}`;
+
+      selectEl.classList.remove('correct-input', 'wrong-input');
+
+      if (userVal === correctAnswers[key]) {
+        score++;
+        selectEl.classList.add('correct-input');
+      } else {
+        selectEl.classList.add('wrong-input');
+      }
+    }
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    for (let i = 1; i <= 4; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      if (selectEl) {
+        selectEl.value = '';
+        selectEl.classList.remove('correct-input', 'wrong-input');
+      }
+    }
+  }
+</script>
+
+</body>
+</html>
