@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family & Friends Opinions 💬</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --green: #84cc16;
+    --purple: #c084fc;
+    --blue: #38bdf8;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  /* Opinion Cards */
+  .opinion-card {
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    background: #0f172a;
+    border: 1px solid var(--border);
+  }
+
+  .opinion-card.a { border-left: 6px solid var(--green); }
+  .opinion-card.b { border-left: 6px solid var(--purple); }
+  .opinion-card.c { border-left: 6px solid var(--blue); }
+
+  .quote-box {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  /* Vocabulary Section */
+  .vocab-section {
+    background: #1e293b;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+
+  .vocab-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .vocab-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .vocab-item {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .vocab-word {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .vocab-phonetic {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+  }
+
+  .vocab-trans {
+    color: #94a3b8;
+    font-style: italic;
+  }
+
+  .audio-btn {
+    background: #0369a1;
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .audio-btn:hover {
+    background: #075985;
+    transform: scale(1.05);
+  }
+
+  .audio-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Interactive Form Area */
+  .user-interactive {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #1e293b;
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .choice-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .choice-row label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  input[type="radio"] {
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #f8fafc;
+    background-color: #0f172a;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    padding: 10px 12px;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--accent);
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  .action-btn {
+    background-color: #475569;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .action-btn:hover {
+    background-color: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2>4. Read these three teenagers' ideas about family and friends.</h2>
+    <div class="subtitle">Do you agree or disagree? Why?</div>
+  </div>
+
+  <!-- IDEA A -->
+  <div class="opinion-card a">
+    <div class="quote-box">
+      <strong>a)</strong> "My family is very important to me. I love my grandparents, my parents, my brothers and sisters, and my cousins. My family are everything to me."
+    </div>
+
+    <!-- Vocab A -->
+    <div class="vocab-section">
+      <div class="vocab-title">Key Vocabulary:</div>
+      <div class="vocab-list">
+        <div class="vocab-item">
+          <span class="vocab-word">important</span>
+          <span class="vocab-phonetic">/ɪmˈpɔː.tənt/</span>
+          <span class="vocab-trans">важный</span>
+          <button class="audio-btn" type="button" onclick="speakWord('important')">🔊</button>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-word">grandparents</span>
+          <span class="vocab-phonetic">/ˈɡræn.peə.rənts/</span>
+          <span class="vocab-trans">бабушка и дедушка</span>
+          <button class="audio-btn" type="button" onclick="speakWord('grandparents')">🔊</button>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-word">cousins</span>
+          <span class="vocab-phonetic">/ˈkʌz.ənz/</span>
+          <span class="vocab-trans">двоюродные братья/сестры</span>
+          <button class="audio-btn" type="button" onclick="speakWord('cousins')">🔊</button>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-word">everything</span>
+          <span class="vocab-phonetic">/ˈev.ri.θɪŋ/</span>
+          <span class="vocab-trans">всё</span>
+          <button class="audio-btn" type="button" onclick="speakWord('everything')">🔊</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="user-interactive">
+      <div class="choice-row">
+        <label><input type="radio" name="agree-a" value="agree"> I agree</label>
+        <label><input type="radio" name="agree-a" value="disagree"> I disagree</label>
+      </div>
+      <div>
+        <input type="text" id="reason-a" placeholder="Why? Write your reason here...">
+      </div>
+    </div>
+  </div>
+
+  <!-- IDEA B -->
+  <div class="opinion-card b">
+    <div class="quote-box">
+      <strong>b)</strong> "I talk to my friends about my problems, not to my family. My friends help me. They know me and understand me very well."
+    </div>
+
+    <!-- Vocab B -->
+    <div class="vocab-section">
+      <div class="vocab-title">Key Vocabulary:</div>
+      <div class="vocab-list">
+        <div class="vocab-item">
+          <span class="vocab-word">problems</span>
+          <span class="vocab-phonetic">/ˈprɒb.ləmz/</span>
+          <span class="vocab-trans">проблемы</span>
+          <button class="audio-btn" type="button" onclick="speakWord('problems')">🔊</button>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-word">understand</span>
+          <span class="vocab-phonetic">/ˌʌn.dəˈstænd/</span>
+          <span class="vocab-trans">понимать</span>
+          <button class="audio-btn" type="button" onclick="speakWord('understand')">🔊</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="user-interactive">
+      <div class="choice-row">
+        <label><input type="radio" name="agree-b" value="agree"> I agree</label>
+        <label><input type="radio" name="agree-b" value="disagree"> I disagree</label>
+      </div>
+      <div>
+        <input type="text" id="reason-b" placeholder="Why? Write your reason here...">
+      </div>
+    </div>
+  </div>
+
+  <!-- IDEA C -->
+  <div class="opinion-card c">
+    <div class="quote-box">
+      <strong>c)</strong> "I think it's important to talk to your family and to have good friends. My family always help me and my friends are always fun. I like to be with my family and with my friends."
+    </div>
+
+    <!-- Vocab C -->
+    <div class="vocab-section">
+      <div class="vocab-title">Key Vocabulary:</div>
+      <div class="vocab-list">
+        <div class="vocab-item">
+          <span class="vocab-word">always</span>
+          <span class="vocab-phonetic">/ˈɔːl.weɪz/</span>
+          <span class="vocab-trans">всегда</span>
+          <button class="audio-btn" type="button" onclick="speakWord('always')">🔊</button>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-word">fun</span>
+          <span class="vocab-phonetic">/fʌn/</span>
+          <span class="vocab-trans">веселые / весело</span>
+          <button class="audio-btn" type="button" onclick="speakWord('fun')">🔊</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="user-interactive">
+      <div class="choice-row">
+        <label><input type="radio" name="agree-c" value="agree"> I agree</label>
+        <label><input type="radio" name="agree-c" value="disagree"> I disagree</label>
+      </div>
+      <div>
+        <input type="text" id="reason-c" placeholder="Why? Write your reason here...">
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="action-btn" type="button" onclick="resetAll()">Reset All 🔄</button>
+  </div>
+</div>
+
+<script>
+  let voices = [];
+
+  function initVoices() {
+    if ('speechSynthesis' in window) {
+      voices = window.speechSynthesis.getVoices();
+    }
+  }
+
+  // Загружаем голоса сразу и по событию
+  initVoices();
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = initVoices;
+  }
+
+  function speakWord(word) {
+    if (!('speechSynthesis' in window)) {
+      alert('Ваш браузер не поддерживает озвучивание текста.');
+      return;
+    }
+
+    // Сброс застрявших воспроизведений
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.8; // Замедленная речь для четкости
+
+    // Подбор подходящего английского голоса
+    if (voices.length === 0) {
+      voices = window.speechSynthesis.getVoices();
+    }
+
+    const englishVoice = voices.find(v => v.lang === 'en-US' || v.lang === 'en-GB' || v.lang.startsWith('en'));
+    if (englishVoice) {
+      utterance.voice = englishVoice;
+    }
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function resetAll() {
+    document.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  }
+</script>
+
+</body>
+</html>
