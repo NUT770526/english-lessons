@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Family and Friends Story 📖</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.6rem;
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  /* Section Styling */
+  .step-section {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .step-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-top: 0;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Table styling */
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+  }
+
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+  }
+
+  td label {
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+
+  input[type="text"], textarea, select {
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #f8fafc;
+    background-color: #1e293b;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    padding: 8px 10px;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+
+  input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--accent);
+  }
+
+  .audio-btn {
+    background: #0369a1;
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background: #075985;
+  }
+
+  /* Step 2 Questions List */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .q-item {
+    background: #1e293b;
+    padding: 14px 16px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .q-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+
+  .q-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* Step 3 Story Output */
+  .story-card {
+    background: #022c22;
+    border: 1px solid #059669;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 16px;
+    line-height: 1.7;
+    font-size: 1.05rem;
+  }
+
+  .example-box {
+    background: #1e293b;
+    border-left: 4px solid var(--accent);
+    padding: 12px 16px;
+    border-radius: 4px 8px 8px 4px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+  }
+
+  .custom-input-group {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .custom-input-group label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #94a3b8;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2>1c. Family & Friends Story 📖</h2>
+    <div class="subtitle">Последовательное интерактивное упражнение (без прошедшего времени)</div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step-section">
+    <div class="step-title">Шаг 1. Complete the table</div>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Member / Friend</th>
+            <th>Nationality</th>
+            <th>City</th>
+            <th>Job</th>
+            <th>Character</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><label>Mother</label></td>
+            <td><input type="text" id="m-nat" value="Ukrainian"></td>
+            <td><input type="text" id="m-city" placeholder="e.g. Odesa"></td>
+            <td><input type="text" id="m-job" placeholder="e.g. accountant"></td>
+            <td><select id="m-char" class="adj-select"></select></td>
+          </tr>
+          <tr>
+            <td><label>Father</label></td>
+            <td><input type="text" id="f-nat" value="Ukrainian"></td>
+            <td><input type="text" id="f-city" placeholder="e.g. Kyiv"></td>
+            <td><input type="text" id="f-job" placeholder="e.g. manager"></td>
+            <td><select id="f-char" class="adj-select"></select></td>
+          </tr>
+          <tr>
+            <td><label>Grandmother</label></td>
+            <td><input type="text" id="gm-nat" value="Ukrainian"></td>
+            <td><input type="text" id="gm-city" placeholder="e.g. Izmail"></td>
+            <td><input type="text" id="gm-job" placeholder="e.g. teacher"></td>
+            <td><select id="gm-char" class="adj-select"></select></td>
+          </tr>
+          <tr>
+            <td><label>Grandfather</label></td>
+            <td><input type="text" id="gf-nat" value="Ukrainian"></td>
+            <td><input type="text" id="gf-city" placeholder="e.g. Odesa"></td>
+            <td><input type="text" id="gf-job" placeholder="e.g. engineer"></td>
+            <td><select id="gf-char" class="adj-select"></select></td>
+          </tr>
+          <tr>
+            <td><input type="text" id="fr-label" value="Friend" placeholder="Relation"></td>
+            <td><input type="text" id="fr-nat" value="Ukrainian"></td>
+            <td><input type="text" id="fr-city" placeholder="e.g. Lviv"></td>
+            <td><input type="text" id="fr-job" placeholder="e.g. student"></td>
+            <td><select id="fr-char" class="adj-select"></select></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-section">
+    <div class="step-title">Шаг 2. Answer the questions (Written & Oral Practice)</div>
+    <div class="questions-list">
+      <div class="q-item">
+        <div class="q-header">
+          <span>1. Where is your family from?</span>
+          <button class="audio-btn" type="button" onclick="speak('Where is your family from?')">🔊</button>
+        </div>
+        <div class="q-input-row">
+          <input type="text" class="q-answer" id="ans-1">
+          <button class="audio-btn" type="button" onclick="speakInput('ans-1')">🔊</button>
+        </div>
+      </div>
+
+      <div class="q-item">
+        <div class="q-header">
+          <span>2. What nationality are your parents?</span>
+          <button class="audio-btn" type="button" onclick="speak('What nationality are your parents?')">🔊</button>
+        </div>
+        <div class="q-input-row">
+          <input type="text" class="q-answer" id="ans-2">
+          <button class="audio-btn" type="button" onclick="speakInput('ans-2')">🔊</button>
+        </div>
+      </div>
+
+      <div class="q-item">
+        <div class="q-header">
+          <span>3. Where are your grandparents from?</span>
+          <button class="audio-btn" type="button" onclick="speak('Where are your grandparents from?')">🔊</button>
+        </div>
+        <div class="q-input-row">
+          <input type="text" class="q-answer" id="ans-3">
+          <button class="audio-btn" type="button" onclick="speakInput('ans-3')">🔊</button>
+        </div>
+      </div>
+
+      <div class="q-item">
+        <div class="q-header">
+          <span>4. What are your parents' jobs?</span>
+          <button class="audio-btn" type="button" onclick="speak('What are your parents jobs?')">🔊</button>
+        </div>
+        <div class="q-input-row">
+          <input type="text" class="q-answer" id="ans-4">
+          <button class="audio-btn" type="button" onclick="speakInput('ans-4')">🔊</button>
+        </div>
+      </div>
+
+      <div class="q-item">
+        <div class="q-header">
+          <span>5. What are your grandparents' jobs?</span>
+          <button class="audio-btn" type="button" onclick="speak('What are your grandparents jobs?')">🔊</button>
+        </div>
+        <div class="q-input-row">
+          <input type="text" class="q-answer" id="ans-5">
+          <button class="audio-btn" type="button" onclick="speakInput('ans-5')">🔊</button>
+        </div>
+      </div>
+
+      <div class="q-item">
+        <div class="q-header">
+          <span>6. What are the members of your family like?</span>
+          <button class="audio-btn" type="button" onclick="speak('What are the members of your family like?')">🔊</button>
+        </div>
+        <div class="q-input-row">
+          <input type="text" class="q-answer" id="ans-6">
+          <button class="audio-btn" type="button" onclick="speakInput('ans-6')">🔊</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-section">
+    <div class="step-title">Шаг 3. Tell about your family & Add your own sentences</div>
+    
+    <div class="example-box">
+      <strong>Пример рассказа (Present Simple):</strong><br>
+      <i>My family is from Ukraine. My mother is an accountant. She is kind and friendly. My father is a manager. He is clever and generous. My grandmother is a teacher from Izmail, and my grandfather is an engineer from Odesa. I love my family very much.</i>
+    </div>
+
+    <!-- Free Text Area -->
+    <div class="custom-input-group">
+      <label for="custom-sentences">✏️ Write your own extra sentences (optional):</label>
+      <textarea id="custom-sentences" placeholder="Write any extra sentences here..."></textarea>
+    </div>
+
+    <button class="action-btn" style="margin-top: 16px;" onclick="generateStory()">Generate My Story ✨</button>
+
+    <div id="story-container" style="display: none;">
+      <div class="story-card">
+        <p id="story-text" style="margin: 0 0 12px 0;"></p>
+        <button class="action-btn secondary" style="font-size: 0.85rem; padding: 6px 14px;" onclick="readFullStory()">Listen to Full Story 🔊</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="action-btn secondary" onclick="resetAll()">Reset All 🔄</button>
+  </div>
+</div>
+
+<script>
+  const adjectives = [
+    'kind', 'clever', 'friendly', 'generous',
+    'unkind', 'unfriendly', 'stupid', 'lazy', 'greedy'
+  ];
+
+  function populateSelects() {
+    const selects = document.querySelectorAll('.adj-select');
+    selects.forEach(select => {
+      select.innerHTML = '<option value="">-- character --</option>';
+      adjectives.forEach(adj => {
+        const option = document.createElement('option');
+        option.value = adj;
+        option.textContent = adj;
+        select.appendChild(option);
+      });
+    });
+  }
+
+  populateSelects();
+
+  let englishVoice = null;
+
+  function loadVoices() {
+    if ('speechSynthesis' in window) {
+      const voices = window.speechSynthesis.getVoices();
+      englishVoice = voices.find(v => v.lang === 'en-US' || v.lang === 'en-GB' || v.lang.startsWith('en')) || null;
+    }
+  }
+
+  if ('speechSynthesis' in window) {
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }
+
+  function speak(text) {
+    if (!('speechSynthesis' in window) || !text.trim()) return;
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+
+    if (!englishVoice) loadVoices();
+    if (englishVoice) utterance.voice = englishVoice;
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function speakInput(inputId) {
+    const val = document.getElementById(inputId).value;
+    if (val.trim()) {
+      speak(val);
+    }
+  }
+
+  function formatArticle(job) {
+    if (!job) return '';
+    const j = job.trim().toLowerCase();
+    if (j.startsWith('a') || j.startsWith('e') || j.startsWith('i') || j.startsWith('o') || j.startsWith('u')) {
+      return `an ${job.trim()}`;
+    }
+    return `a ${job.trim()}`;
+  }
+
+  function generateStory() {
+    const sentences = [];
+
+    // Table data sentences
+    const mNat = document.getElementById('m-nat').value.trim();
+    if (mNat) {
+      sentences.push(`My family is from ${mNat === 'Ukrainian' ? 'Ukraine' : mNat}.`);
+    }
+
+    const mCity = document.getElementById('m-city').value.trim();
+    const mJob = document.getElementById('m-job').value.trim();
+    const mChar = document.getElementById('m-char').value;
+
+    if (mJob || mChar || mCity) {
+      let part = `My mother`;
+      if (mJob) part += ` is ${formatArticle(mJob)}`;
+      if (mCity) part += ` from ${mCity}`;
+      part += `.`;
+      if (mChar) part += ` She is ${mChar}.`;
+      sentences.push(part);
+    }
+
+    const fCity = document.getElementById('f-city').value.trim();
+    const fJob = document.getElementById('f-job').value.trim();
+    const fChar = document.getElementById('f-char').value;
+
+    if (fJob || fChar || fCity) {
+      let part = `My father`;
+      if (fJob) part += ` is ${formatArticle(fJob)}`;
+      if (fCity) part += ` from ${fCity}`;
+      part += `.`;
+      if (fChar) part += ` He is ${fChar}.`;
+      sentences.push(part);
+    }
+
+    const gmCity = document.getElementById('gm-city').value.trim();
+    const gmJob = document.getElementById('gm-job').value.trim();
+    const gmChar = document.getElementById('gm-char').value;
+
+    if (gmJob || gmChar || gmCity) {
+      let part = `My grandmother`;
+      if (gmJob) part += ` is ${formatArticle(gmJob)}`;
+      if (gmCity) part += ` from ${gmCity}`;
+      part += `.`;
+      if (gmChar) part += ` She is ${gmChar}.`;
+      sentences.push(part);
+    }
+
+    const gfCity = document.getElementById('gf-city').value.trim();
+    const gfJob = document.getElementById('gf-job').value.trim();
+    const gfChar = document.getElementById('gf-char').value;
+
+    if (gfJob || gfChar || gfCity) {
+      let part = `My grandfather`;
+      if (gfJob) part += ` is ${formatArticle(gfJob)}`;
+      if (gfCity) part += ` from ${gfCity}`;
+      part += `.`;
+      if (gfChar) part += ` He is ${gfChar}.`;
+      sentences.push(part);
+    }
+
+    const frLabel = document.getElementById('fr-label').value.trim() || 'My friend';
+    const frCity = document.getElementById('fr-city').value.trim();
+    const frJob = document.getElementById('fr-job').value.trim();
+    const frChar = document.getElementById('fr-char').value;
+
+    if (frJob || frChar || frCity) {
+      let part = `${frLabel}`;
+      if (frJob) part += ` is ${formatArticle(frJob)}`;
+      if (frCity) part += ` from ${frCity}`;
+      part += `.`;
+      if (frChar) part += ` Person is ${frChar}.`;
+      sentences.push(part);
+    }
+
+    // Add Step 2 Answer sentences if filled
+    for (let i = 1; i <= 6; i++) {
+      const qAns = document.getElementById(`ans-${i}`).value.trim();
+      if (qAns) {
+        sentences.push(qAns);
+      }
+    }
+
+    // Add User Custom Sentences from Step 3
+    const customText = document.getElementById('custom-sentences').value.trim();
+    if (customText) {
+      sentences.push(customText);
+    }
+
+    const storyText = sentences.join(' ');
+    const storyContainer = document.getElementById('story-container');
+    
+    if (storyText) {
+      document.getElementById('story-text').innerText = storyText;
+      storyContainer.style.display = 'block';
+    } else {
+      alert('Пожалуйста, заполните таблицу, ответьте на вопросы или напишите свое предложение!');
+      storyContainer.style.display = 'none';
+    }
+  }
+
+  function readFullStory() {
+    const text = document.getElementById('story-text').innerText;
+    if (text) speak(text);
+  }
+
+  function resetAll() {
+    document.querySelectorAll('input[type="text"]').forEach(i => {
+      if (i.id.includes('-nat')) i.value = 'Ukrainian';
+      else if (i.id === 'fr-label') i.value = 'Friend';
+      else i.value = '';
+    });
+    document.querySelectorAll('select').forEach(s => s.value = '');
+    document.getElementById('custom-sentences').value = '';
+    document.getElementById('story-container').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
