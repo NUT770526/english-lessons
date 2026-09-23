@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Business English A1 — A/AN &amp; TO BE</title>
+  <style>
+    :root{--navy:#102a43;--blue:#176b87;--teal:#0f8b8d;--gold:#f4b942;--paper:#f7fafc;--ink:#172b4d;--muted:#5c6b7a;--good:#16865c;--bad:#c2413b;--line:#dbe7ef}
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(135deg,#eef6fa,#f9fbfd 50%,#fff8e8);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif;min-height:100vh}
+    header{background:linear-gradient(120deg,var(--navy),#164e68 64%,var(--teal));color:white;padding:42px 22px 34px;position:relative;overflow:hidden}
+    header:after{content:"";position:absolute;width:270px;height:270px;border:42px solid rgba(244,185,66,.15);border-radius:50%;right:-65px;top:-105px}
+    .wrap{width:min(980px,calc(100% - 28px));margin:auto}
+    .eyebrow{font-size:.83rem;letter-spacing:.14em;text-transform:uppercase;color:#ffda7a;font-weight:800}
+    h1{font-size:clamp(2rem,6vw,4.1rem);margin:8px 0 10px;line-height:1}
+    header p{margin:0;font-size:clamp(1rem,2.4vw,1.25rem);opacity:.92}
+    .nav{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 0}
+    .nav a{color:white;text-decoration:none;border:1px solid rgba(255,255,255,.4);padding:9px 14px;border-radius:999px;font-weight:700;background:rgba(255,255,255,.08)}
+    main{padding:28px 0 50px}
+    section{background:white;border:1px solid var(--line);border-radius:24px;padding:clamp(20px,4vw,34px);margin:20px 0;box-shadow:0 16px 35px rgba(16,42,67,.09)}
+    .section-top{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;margin-bottom:22px}
+    .num{display:inline-grid;place-items:center;min-width:42px;height:42px;border-radius:13px;background:var(--gold);color:var(--navy);font-weight:900;font-size:1.15rem}
+    h2{margin:0 0 5px;font-size:clamp(1.35rem,3vw,2rem)}
+    .instruction{margin:0;color:var(--muted);line-height:1.5}
+    .progress{height:10px;background:#e9f0f4;border-radius:99px;overflow:hidden;margin:16px 0 22px}
+    .bar{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--teal));transition:width .3s}
+    .card{border:2px solid var(--line);border-radius:20px;padding:24px;text-align:center;background:var(--paper);min-height:235px;display:flex;flex-direction:column;justify-content:center}
+    .prompt{font-size:clamp(1.65rem,4vw,2.65rem);font-weight:850;margin:4px 0 20px;color:var(--navy)}
+    .mini{color:var(--muted);font-weight:700;margin-bottom:8px}
+    .choices{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    button{font:inherit}
+    .choice,.tile{border:2px solid #b9cbd8;background:white;color:var(--navy);border-radius:14px;padding:12px 22px;font-size:1.15rem;font-weight:800;cursor:pointer;transition:.15s transform,.15s background,.15s border-color}
+    .choice:hover,.tile:hover{transform:translateY(-2px);border-color:var(--teal)}
+    .choice:focus-visible,.tile:focus-visible,.audio:focus-visible,.reset:focus-visible{outline:4px solid rgba(244,185,66,.45);outline-offset:2px}
+    .choice.correct{background:#e5f7ef;border-color:var(--good);color:var(--good)}
+    .choice.wrong{background:#fff0ef;border-color:var(--bad);color:var(--bad)}
+    .feedback{min-height:30px;margin-top:17px;font-weight:850;font-size:1.05rem}
+    .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+    .audio{border:0;background:#e9f5f6;color:var(--teal);width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:1.1rem}
+    .badge{display:inline-block;border-radius:999px;padding:6px 11px;background:#eaf2f7;color:var(--blue);font-size:.84rem;font-weight:850;margin-bottom:10px}
+    .builder-answer{min-height:74px;border:2px dashed #9cb5c4;border-radius:16px;padding:12px;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;background:white;margin-bottom:17px}
+    .builder-answer.empty:before{content:"Натискайте на слова по черзі";color:#80919f;font-weight:700}
+    .tiles{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+    .tile{font-size:1rem;padding:10px 15px}
+    .tile.used{opacity:.25;pointer-events:none;transform:none}
+    .answer-token{background:#e8f4f8;color:var(--navy);border:1px solid #b9d4df;border-radius:11px;padding:8px 11px;font-weight:800;cursor:pointer}
+    .shake{animation:shake .35s}
+    @keyframes shake{25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-5px)}}
+    .score{font-weight:900;color:var(--navy);white-space:nowrap}
+    .done{padding:30px 12px;text-align:center}
+    .done .big{font-size:3.2rem}
+    .done h3{font-size:1.8rem;margin:8px 0}
+    .reset{border:0;background:var(--navy);color:white;border-radius:14px;padding:12px 20px;font-weight:850;cursor:pointer;margin-top:12px}
+    footer{text-align:center;color:var(--muted);font-size:.9rem;padding:0 20px 30px}
+    @media(max-width:600px){header{padding-top:30px}.section-top{flex-wrap:wrap}.card{padding:18px}.choice{min-width:92px}.prompt{line-height:1.2}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow">Business English · A1</div>
+      <h1>A / AN &amp; TO BE</h1>
+      <p>Інтерактивне тренування: I, he, she, it</p>
+      <nav class="nav" aria-label="Вправи">
+        <a href="#articles">1. A / AN</a><a href="#tobe">2. TO BE</a><a href="#builder">3. Речення</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="articles">
+      <div class="section-top">
+        <div style="display:flex;gap:14px"><span class="num">1</span><div><h2>Choose A or AN</h2><p class="instruction">Обери правильний артикль. Відповідь перевіряється одразу.</p></div></div>
+        <div class="score" id="score1">0 / 0</div>
+      </div>
+      <div class="progress"><div class="bar" id="bar1"></div></div>
+      <div class="card" id="card1"></div>
+    </section>
+
+    <section id="tobe">
+      <div class="section-top">
+        <div style="display:flex;gap:14px"><span class="num">2</span><div><h2>Choose the correct form</h2><p class="instruction">Обери am, is, am not або is not. Є твердження, заперечення та питання.</p></div></div>
+        <div class="score" id="score2">0 / 0</div>
+      </div>
+      <div class="progress"><div class="bar" id="bar2"></div></div>
+      <div class="card" id="card2"></div>
+    </section>
+
+    <section id="builder">
+      <div class="section-top">
+        <div style="display:flex;gap:14px"><span class="num">3</span><div><h2>Make a sentence</h2><p class="instruction">Натискай на слова в правильному порядку. Після останнього слова відповідь перевіриться автоматично.</p></div></div>
+        <div class="score" id="score3">0 / 0</div>
+      </div>
+      <div class="progress"><div class="bar" id="bar3"></div></div>
+      <div class="card" id="card3"></div>
+    </section>
+  </main>
+  <footer>Тільки Present Simple з дієсловом <strong>to be</strong>: I, he, she, it.</footer>
+
+  <script>
+    const articleItems = [
+      ['lab assistant','a'],['shop assistant','a'],['heavy boat','a'],['silly film','a'],
+      ['important meeting','an'],['manager','a'],['accountant','an'],['office worker','an'],
+      ['colleague','a'],['client','a'],['company','a'],['office','an'],['email','an'],['report','a'],['task','a']
+    ];
+    const beItems = [
+      {tag:'Твердження',q:'I ___ an office worker.',a:'am',opts:['am','is','am not','is not']},
+      {tag:'Твердження',q:'She ___ an accountant.',a:'is',opts:['am','is','am not','is not']},
+      {tag:'Заперечення',q:'He ___ a manager.',a:'is not',opts:['am','is','am not','is not']},
+      {tag:'Твердження',q:'It ___ an important meeting.',a:'is',opts:['am','is','am not','is not']},
+      {tag:'Заперечення',q:'I ___ a shop assistant.',a:'am not',opts:['am','is','am not','is not']},
+      {tag:'Питання',q:'___ she a client?',a:'Is',opts:['Am','Is','Am not','Is not']},
+      {tag:'Питання',q:'___ I a lab assistant?',a:'Am',opts:['Am','Is','Am not','Is not']},
+      {tag:'Твердження',q:'He ___ my colleague.',a:'is',opts:['am','is','am not','is not']},
+      {tag:'Заперечення',q:'It ___ a silly film.',a:'is not',opts:['am','is','am not','is not']},
+      {tag:'Питання',q:'___ it a heavy boat?',a:'Is',opts:['Am','Is','Am not','Is not']}
+    ];
+    const buildItems = [
+      ['She','is','a','lab assistant','.'],
+      ['Is','she','a','shop assistant','?'],
+      ['It','is','a','heavy boat','.'],
+      ['It','is not','a','silly film','.'],
+      ['Is','it','an','important meeting','?'],
+      ['He','is','a','manager','.'],
+      ['She','is','an','accountant','.'],
+      ['I','am','an','office worker','.'],
+      ['He','is','my','colleague','.'],
+      ['Is','she','a','client','?']
+    ];
+    const translations = {
+      'lab assistant':'лаборант / лаборантка','shop assistant':'продавець-консультант','heavy boat':'важкий човен',
+      'silly film':'безглуздий фільм','important meeting':'важлива зустріч','manager':'менеджер / керівник',
+      'accountant':'бухгалтер / бухгалтерка','office worker':'офісний працівник','colleague':'колега','client':'клієнт / клієнтка',
+      'company':'компанія','office':'офіс','email':'електронний лист','report':'звіт','task':'завдання'
+    };
+    const shuffle = arr => [...arr].sort(()=>Math.random()-.5);
+    const speak = text => { if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='en-GB'; u.rate=.82; speechSynthesis.speak(u); };
+    const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+    let aItems=shuffle(articleItems), ai=0, as=0;
+    function renderArticle(){
+      const root=document.getElementById('card1');
+      document.getElementById('score1').textContent=`${as} / ${ai}`;
+      document.getElementById('bar1').style.width=`${ai/aItems.length*100}%`;
+      if(ai>=aItems.length){root.innerHTML=doneHTML(as,aItems.length,'again1');document.getElementById('again1').onclick=()=>{aItems=shuffle(articleItems);ai=as=0;renderArticle()};return;}
+      const [word,answer]=aItems[ai];
+      root.innerHTML=`<div class="mini">${ai+1} / ${aItems.length} · ${translations[word]}</div><div class="prompt">___ ${word}</div><div class="choices"><button class="choice">a</button><button class="choice">an</button><button class="audio" aria-label="Прослухати">🔊</button></div><div class="feedback"></div>`;
+      root.querySelector('.audio').onclick=()=>speak(`${answer} ${word}`);
+      root.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{
+        root.querySelectorAll('.choice').forEach(x=>x.disabled=true);
+        const ok=b.textContent===answer;b.classList.add(ok?'correct':'wrong');
+        if(!ok) [...root.querySelectorAll('.choice')].find(x=>x.textContent===answer).classList.add('correct');
+        root.querySelector('.feedback').className=`feedback ${ok?'good':'bad'}`;
+        root.querySelector('.feedback').textContent=ok?'Правильно!':'Правильна відповідь: '+answer;
+        if(ok)as++; ai++; setTimeout(renderArticle,900);
+      });
+    }
+
+    let bItems=shuffle(beItems),bi=0,bs=0;
+    function renderBe(){
+      const root=document.getElementById('card2');
+      document.getElementById('score2').textContent=`${bs} / ${bi}`;
+      document.getElementById('bar2').style.width=`${bi/bItems.length*100}%`;
+      if(bi>=bItems.length){root.innerHTML=doneHTML(bs,bItems.length,'again2');document.getElementById('again2').onclick=()=>{bItems=shuffle(beItems);bi=bs=0;renderBe()};return;}
+      const item=bItems[bi];
+      root.innerHTML=`<div><span class="badge">${item.tag}</span></div><div class="prompt">${item.q}</div><div class="choices">${shuffle(item.opts).map(x=>`<button class="choice">${x}</button>`).join('')}<button class="audio" aria-label="Прослухати">🔊</button></div><div class="feedback"></div>`;
+      root.querySelector('.audio').onclick=()=>speak(item.q.replace('___',item.a));
+      root.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{
+        root.querySelectorAll('.choice').forEach(x=>x.disabled=true);
+        const ok=b.textContent===item.a;b.classList.add(ok?'correct':'wrong');
+        if(!ok)[...root.querySelectorAll('.choice')].find(x=>x.textContent===item.a).classList.add('correct');
+        root.querySelector('.feedback').className=`feedback ${ok?'good':'bad'}`;
+        root.querySelector('.feedback').textContent=ok?'Правильно!':'Правильна відповідь: '+item.a;
+        if(ok)bs++;bi++;setTimeout(renderBe,1000);
+      });
+    }
+
+    let cItems=shuffle(buildItems),ci=0,cs=0,selected=[];
+    function sentence(tokens){return tokens.join(' ').replace(/\s([.?])/g,'$1')}
+    function renderBuilder(){
+      const root=document.getElementById('card3');selected=[];
+      document.getElementById('score3').textContent=`${cs} / ${ci}`;
+      document.getElementById('bar3').style.width=`${ci/cItems.length*100}%`;
+      if(ci>=cItems.length){root.innerHTML=doneHTML(cs,cItems.length,'again3');document.getElementById('again3').onclick=()=>{cItems=shuffle(buildItems);ci=cs=0;renderBuilder()};return;}
+      const answer=cItems[ci],mixed=shuffle(answer.map((text,id)=>({text,id})));
+      root.innerHTML=`<div class="mini">${ci+1} / ${cItems.length}</div><div class="builder-answer empty"></div><div class="tiles">${mixed.map(x=>`<button class="tile" data-id="${x.id}">${esc(x.text)}</button>`).join('')}</div><div class="feedback"></div>`;
+      const zone=root.querySelector('.builder-answer');
+      root.querySelectorAll('.tile').forEach(btn=>btn.onclick=()=>{
+        btn.classList.add('used');selected.push({id:+btn.dataset.id,text:btn.textContent});drawSelected();
+        if(selected.length===answer.length){
+          const ok=selected.map(x=>x.text).every((x,i)=>x===answer[i]);
+          root.querySelector('.feedback').className=`feedback ${ok?'good':'bad'}`;
+          root.querySelector('.feedback').textContent=ok?'Чудово! '+sentence(answer):'Спробуй ще раз.';
+          if(ok){cs++;ci++;speak(sentence(answer));setTimeout(renderBuilder,1200)}
+          else{zone.classList.add('shake');setTimeout(()=>{selected=[];root.querySelectorAll('.tile').forEach(x=>x.classList.remove('used'));drawSelected();root.querySelector('.feedback').textContent=''},900)}
+        }
+      });
+      function drawSelected(){
+        zone.classList.toggle('empty',selected.length===0);
+        zone.innerHTML=selected.map((x,i)=>`<button class="answer-token" data-pos="${i}">${esc(x.text)}</button>`).join('');
+        zone.querySelectorAll('.answer-token').forEach(b=>b.onclick=()=>{const [back]=selected.splice(+b.dataset.pos,1);root.querySelector(`.tile[data-id="${back.id}"]`).classList.remove('used');drawSelected()});
+      }
+    }
+    function doneHTML(score,total,id){return `<div class="done"><div class="big">🎉</div><h3>Вправу завершено!</h3><p>Результат: <strong>${score} / ${total}</strong></p><button class="reset" id="${id}">Пройти ще раз</button></div>`}
+    renderArticle();renderBe();renderBuilder();
+  </script>
+</body>
+</html>
