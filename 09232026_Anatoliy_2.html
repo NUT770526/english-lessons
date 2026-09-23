@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 1. Fill in ON, AT or IN 🕒</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --accent: #38bdf8;
+    --border: #334155;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 32px 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  h2 {
+    margin: 0 0 6px 0;
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  .score-board {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* Grammar Rule Card */
+  .rule-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+  }
+
+  .rule-card ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+
+  .rule-card strong {
+    color: var(--accent);
+  }
+
+  /* Interactive Tooltip Words */
+  .tooltip-word {
+    border-bottom: 2px dotted var(--accent);
+    color: #7dd3fc;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    font-weight: 600;
+  }
+
+  .tooltip-word .tooltip-box {
+    visibility: hidden;
+    opacity: 0;
+    width: 210px;
+    background-color: #0284c7;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 10px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: auto;
+    font-size: 0.85rem;
+    font-weight: normal;
+    line-height: 1.4;
+  }
+
+  .tooltip-word .tooltip-box::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0284c7 transparent transparent transparent;
+  }
+
+  .tooltip-word:hover .tooltip-box {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .tooltip-title {
+    font-weight: bold;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .tooltip-phonetic {
+    font-size: 0.8rem;
+    color: #e0f2fe;
+  }
+
+  .tooltip-ukr {
+    font-size: 0.8rem;
+    color: #fef08a;
+    margin-top: 2px;
+  }
+
+  .audio-btn {
+    background: #0369a1;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    margin-left: 4px;
+  }
+
+  .audio-btn:hover {
+    background: #075985;
+  }
+
+  /* Exercise Sentences */
+  .exercise-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sentence-item {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #1e293b;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .num {
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #f8fafc;
+    background-color: #0f172a;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  select:focus {
+    border-color: var(--accent);
+  }
+
+  select.correct-input {
+    border-color: var(--correct);
+    background-color: #14532d;
+    color: #4ade80;
+  }
+
+  select.wrong-input {
+    border-color: var(--wrong);
+    background-color: #7f1d1d;
+    color: #fca5a5;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .action-btn {
+    background-color: var(--accent);
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .action-btn:hover {
+    background-color: #7dd3fc;
+    transform: translateY(-2px);
+  }
+
+  .action-btn.secondary {
+    background-color: #475569;
+    color: #ffffff;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h2>Exercise 1. Fill in ON, AT or IN 🕒</h2>
+      <div class="subtitle">Вставте правильний прийменник часу. (Наведіть на підкреслені слова для підказки та прослуховування)</div>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / 10</div>
+  </div>
+
+  <!-- Rules summary -->
+  <div class="rule-card">
+    <div style="font-weight:700; color:var(--accent);">ПРАВИЛО ПРИЙМЕННИКІВ ЧАСУ:</div>
+    <ul>
+      <li><strong>ON</strong> — з днями тижня (напр., <em>on Monday, on Friday</em>)</li>
+      <li><strong>AT</strong> — з точним часом (напр., <em>at 9 o'clock, at 3:30</em>)</li>
+      <li><strong>IN</strong> — з місяцями (напр., <em>in September, in December</em>)</li>
+    </ul>
+  </div>
+
+  <div class="exercise-card">
+
+    <!-- 1 -->
+    <div class="sentence-item">
+      <span class="num">1.</span> The 
+      <span class="tooltip-word">meeting<span class="tooltip-box"><span class="tooltip-title">meeting <button class="audio-btn" onclick="speak('meeting', event)">🔊</button></span><span class="tooltip-phonetic">[ˈmiː.tɪŋ]</span><span class="tooltip-ukr">зустріч, нарада</span></span></span> 
+      is 
+      <select id="select-1">
+        <option value="">---</option>
+        <option value="on">on</option>
+        <option value="at">at</option>
+        <option value="in">in</option>
+      </select> 
+      Monday.
+    </div>
+
+    <!-- 2 -->
+    <div class="sentence-item">
+      <span class="num">2.</span> The 
+      <span class="tooltip-word">call<span class="tooltip-box"><span class="tooltip-title">call <button class="audio-btn" onclick="speak('call', event)">🔊</button></span><span class="tooltip-phonetic">[kɔːl]</span><span class="tooltip-ukr">дзвінок, созвон</span></span></span> 
+      is 
+      <select id="select-2">
+        <option value="">---</option>
+        <option value="on">on</option>
+        <option value="at">at</option>
+        <option value="in">in</option>
+      </select> 
+      9 o'clock.
+    </div>
+
+    <!-- 3 -->
+    <div class="sentence-item">
+      <span class="num">3.</span> The 
+      <span class="tooltip-word">project<span class="tooltip-box"><span class="tooltip-title">project <button class="audio-btn" onclick="speak('project', event)">🔊</button></span><span class="tooltip-phonetic">[ˈprɒdʒ.ekt]</span><span class="tooltip-ukr">проєкт</span></span></span> 
+      is 
+      <select id="select-3">
+        <option value="">---</option>
+        <option value="on">on</option>
+        <option value="at">at</option>
+        <option value="in">in</option>
+      </select> 
+      September.
+    </div>
+
+    <!-- 4 -->
+    <div class="sentence-item">
+      <span class="num">4.</span> The 
+      <span class="tooltip-word">interview<span class="tooltip-box"><span class="tooltip-title">interview <button class="audio-btn" onclick="speak('interview', event)">🔊</button></span><span class="tooltip-phonetic">[ˈɪn.tə.vjuː]</span><span class="tooltip-ukr">співбесіда, інтерв'ю</span></span></span> 
+      is 
+      <select id="select-4">
+        <option value="">---</option>
+        <option value="on">on</option>
+        <option value="at">at</option>
+        <option value="in">in</option>
+      </select> 
+      Friday.
+    </div>
+
+    <!-- 5 -->
+    <div class="sentence-item">
+      <span class="num">5.</span> The 
+      <span class="tooltip-word">presentation<span class="tooltip-box"><span class="tooltip-title">presentation <button class="audio-btn" onclick="speak('presentation', event)">🔊</button></span><span class="tooltip-phonetic">[ˌprez.ənˈteɪ.ʃən]</span><span class="tooltip-ukr">презентація</span></span></span> 
+      is 
+      <select id="select-5">
+        <option value="">---</option>
+        <option value="on">on</option>
+        <option value="at">at</option>
+        <option value="in">in</option>
+      </select> 
+      3:30.
+    </div>
+
+    <!-- 6 -->
+    <div class="sentence-item">
+      <span class="num">6.</span> The 
+      <span class="tooltip-word">course<span class="tooltip-box"><span class="tooltip-title">course <button class="audio-btn" onclick="speak('course', event)">🔊</button></span><span class="tooltip-phonetic">[kɔːs]</span><span class="tooltip-ukr">курс</span></span></span> 
+      is 
+      <select id="select-6">
+        <option value="">---</option>
+        <option value="on">on</option>
+        <option value="at">at</option>
+        <option value="in">in</option>
+      </select> 
+      November.
+    </div>
+
+    <!-- 7 -->
+    <div class="sentence-item">
+      <span class="num">7.</span> The meeting is 
+      <select id="select-7">
+        <option value="">---</option>
+        <option value="on">on</option>
+        <option value="at">at</option>
+        <option value="in">in</option>
+      </select> 
+      Tuesday.
+    </div>
+
+    <!-- 8 -->
+    <div class="sentence-item">
+      <span class="num">8.</span> It is 
+      <select id="select-8">
+        <option value="">---</option>
+        <option value="on">on</option>
+        <option value="at">at</option>
+        <option value="in">in</option>
+      </select> 
+      10 o'clock.
+    </div>
+
+    <!-- 9 -->
+    <div class="sentence-item">
+      <span class="num">9.</span> The project is 
+      <select id="select-9">
+        <option value="">---</option>
+        <option value="on">on</option>
+        <option value="at">at</option>
+        <option value="in">in</option>
+      </select> 
+      December.
+    </div>
+
+    <!-- 10 -->
+    <div class="sentence-item">
+      <span class="num">10.</span> The 
+      <span class="tooltip-word">lesson<span class="tooltip-box"><span class="tooltip-title">lesson <button class="audio-btn" onclick="speak('lesson', event)">🔊</button></span><span class="tooltip-phonetic">[ˈles.ən]</span><span class="tooltip-ukr">урок, заняття</span></span></span> 
+      is 
+      <select id="select-10">
+        <option value="">---</option>
+        <option value="on">on</option>
+        <option value="at">at</option>
+        <option value="in">in</option>
+      </select> 
+      Saturday.
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="action-btn" onclick="checkAnswers()">Check Answers ✨</button>
+    <button class="action-btn secondary" onclick="resetGame()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  const answers = {
+    "select-1": "on",
+    "select-2": "at",
+    "select-3": "in",
+    "select-4": "on",
+    "select-5": "at",
+    "select-6": "in",
+    "select-7": "on",
+    "select-8": "at",
+    "select-9": "in",
+    "select-10": "on"
+  };
+
+  function speak(text, event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+
+    for (let i = 1; i <= 10; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      const val = selectEl.value;
+      const key = `select-${i}`;
+
+      selectEl.classList.remove('correct-input', 'wrong-input');
+
+      if (val === answers[key]) {
+        score++;
+        selectEl.classList.add('correct-input');
+      } else {
+        selectEl.classList.add('wrong-input');
+      }
+    }
+
+    document.getElementById('score').innerText = score;
+  }
+
+  function resetGame() {
+    document.getElementById('score').innerText = 0;
+    for (let i = 1; i <= 10; i++) {
+      const selectEl = document.getElementById(`select-${i}`);
+      if (selectEl) {
+        selectEl.value = '';
+        selectEl.classList.remove('correct-input', 'wrong-input');
+      }
+    }
+  }
+</script>
+
+</body>
+</html>
