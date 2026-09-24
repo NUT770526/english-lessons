@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match the definition with the word</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .exercise-container {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .word-bank {
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .word-item {
+            background-color: #333;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            color: #4fc3f7;
+            position: relative;
+            cursor: help;
+            border: 1px solid #444;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .word-item:hover {
+            background-color: #3d3d3d;
+            transform: translateY(-2px);
+        }
+
+        /* Tooltip style */
+        .word-item::after {
+            content: attr(data-translation);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #616161;
+            color: #fff;
+            padding: 5px 9px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: normal;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .word-item:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #282828;
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            gap: 15px;
+        }
+
+        .definition {
+            flex-grow: 1;
+            font-size: 1.05em;
+        }
+
+        select {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 1em;
+            outline: none;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        select option {
+            background-color: #222;
+            color: #fff;
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-check {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .btn-check:hover { background-color: #1976d2; }
+
+        .btn-reset {
+            background-color: #424242;
+            color: white;
+        }
+
+        .btn-reset:hover { background-color: #616161; }
+
+        #result-msg {
+            margin-top: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .correct {
+            border-color: #4caf50 !important;
+            background-color: #1b381e !important;
+        }
+
+        .incorrect {
+            border-color: #f44336 !important;
+            background-color: #3b1c1a !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="exercise-container">
+        <h1>1. Match the definition with the word</h1>
+        
+        <!-- Word Bank with translations on hover -->
+        <p style="color: #aaa; margin-top: 0;">Наведіть курсор на слово, щоб побачити його переклад:</p>
+        <div class="word-bank">
+            <span class="word-item" data-translation="веселий, життєрадісний">cheerful</span>
+            <span class="word-item" data-translation="лисий">bald</span>
+            <span class="word-item" data-translation="темний">dark</span>
+            <span class="word-item" data-translation="підліток / підлітковий">teenage</span>
+            <span class="word-item" data-translation="світлий">fair</span>
+            <span class="word-item" data-translation="грубий, невихований">rude</span>
+            <span class="word-item" data-translation="сором'язливий">shy</span>
+            <span class="word-item" data-translation="нещасний, пригнічений">miserable</span>
+        </div>
+
+        <!-- Exercise Items -->
+        <div id="quiz">
+            <div class="item-row">
+                <span class="definition">1. ... with little or no hair on the head</span>
+                <select data-correct="bald">
+                    <option value="">-- Оберіть слово --</option>
+                </select>
+            </div>
+            <div class="item-row">
+                <span class="definition">2. ... aged between 13 and 19 years old</span>
+                <select data-correct="teenage">
+                    <option value="">-- Оберіть слово --</option>
+                </select>
+            </div>
+            <div class="item-row">
+                <span class="definition">3. ... sad</span>
+                <select data-correct="miserable">
+                    <option value="">-- Оберіть слово --</option>
+                </select>
+            </div>
+            <div class="item-row">
+                <span class="definition">4. ... not confident, often about meeting or talking to new people</span>
+                <select data-correct="shy">
+                    <option value="">-- Оберіть слово --</option>
+                </select>
+            </div>
+            <div class="item-row">
+                <span class="definition">5. ... behaving in a way which is not polite and upsets other people</span>
+                <select data-correct="rude">
+                    <option value="">-- Оберіть слово --</option>
+                </select>
+            </div>
+            <div class="item-row">
+                <span class="definition">6. ... nearer to black than white in colour</span>
+                <select data-correct="dark">
+                    <option value="">-- Оберіть слово --</option>
+                </select>
+            </div>
+            <div class="item-row">
+                <span class="definition">7. ... happy and positive</span>
+                <select data-correct="cheerful">
+                    <option value="">-- Оберіть слово --</option>
+                </select>
+            </div>
+            <div class="item-row">
+                <span class="definition">8. ... having pale skin or a light colour of hair</span>
+                <select data-correct="fair">
+                    <option value="">-- Оберіть слово --</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-check" onclick="checkAnswers()">Перевірити</button>
+            <button class="btn-reset" onclick="resetQuiz()">Скинути</button>
+        </div>
+
+        <div id="result-msg"></div>
+    </div>
+
+    <script>
+        const words = ["cheerful", "bald", "dark", "teenage", "fair", "rude", "shy", "miserable"];
+
+        function populateSelects() {
+            const selects = document.querySelectorAll('select');
+            
+            // Сортуємо слова за алфавітом для випадаючого списку
+            const sortedWords = [...words].sort();
+
+            selects.forEach(select => {
+                // Очищуємо і залишаємо лише дефолтний варіант
+                select.innerHTML = '<option value="">-- Оберіть слово --</option>';
+                
+                sortedWords.forEach(word => {
+                    const option = document.createElement('option');
+                    option.value = word;
+                    option.textContent = word;
+                    select.appendChild(option);
+                });
+
+                select.addEventListener('change', () => {
+                    select.classList.remove('correct', 'incorrect');
+                    document.getElementById('result-msg').innerText = '';
+                });
+            });
+        }
+
+        function checkAnswers() {
+            const selects = document.querySelectorAll('select');
+            let correctCount = 0;
+            let answeredCount = 0;
+
+            selects.forEach(select => {
+                const selectedValue = select.value;
+                const correctValue = select.dataset.correct;
+
+                select.classList.remove('correct', 'incorrect');
+
+                if (selectedValue !== "") {
+                    answeredCount++;
+                    if (selectedValue === correctValue) {
+                        select.classList.add('correct');
+                        correctCount++;
+                    } else {
+                        select.classList.add('incorrect');
+                    }
+                }
+            });
+
+            const resultMsg = document.getElementById('result-msg');
+
+            if (answeredCount === 0) {
+                resultMsg.style.color = '#ffb74d';
+                resultMsg.innerText = 'Будь ласка, оберіть хоча б одну відповідь!';
+            } else if (correctCount === selects.length) {
+                resultMsg.style.color = '#81c784';
+                resultMsg.innerText = `Відмінно! Усі ${correctCount} з ${selects.length} відповідей правильні!`;
+            } else {
+                resultMsg.style.color = '#e57373';
+                resultMsg.innerText = `Правильно: ${correctCount} з ${selects.length}. Виправте позначені червоним поля.`;
+            }
+        }
+
+        function resetQuiz() {
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                select.value = "";
+                select.classList.remove('correct', 'incorrect');
+            });
+            document.getElementById('result-msg').innerText = '';
+        }
+
+        populateSelects();
+    </script>
+</body>
+</html>
