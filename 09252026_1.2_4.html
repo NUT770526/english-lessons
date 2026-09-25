@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose "can" or "can't" to complete the sentences</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .check-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #1a2b4c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a2b4c;
+            font-size: 20px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .title {
+            color: #1a2b4c;
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .instruction {
+            color: #666;
+            font-size: 15px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            padding-left: 48px;
+        }
+
+        .sentences-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sentence-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 17px;
+            line-height: 2;
+            color: #2d3748;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .sentence-card:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .dash {
+            color: #a0aec0;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        select {
+            padding: 6px 14px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1.5px solid #cbd5e0;
+            outline: none;
+            background-color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            color: #2d3748;
+            min-width: 100px;
+            margin: 0 4px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        select:focus {
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+        }
+
+        select.correct {
+            border-color: #38a169;
+            background-color: #f0fff4;
+            color: #22543d;
+        }
+
+        select.incorrect {
+            border-color: #e53e3e;
+            background-color: #fff5f5;
+            color: #742a2a;
+        }
+
+        .vocab-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #ebf8ff;
+            border-radius: 12px;
+            border: 1px solid #bee3f8;
+        }
+
+        .vocab-section h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 16px;
+            color: #2b6cb0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .vocab-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .vocab-chip {
+            background: #ffffff;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid #cbd5e0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #2d3748;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .audio-btn {
+            background: #edf2f7;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: transform 0.1s, background 0.2s;
+        }
+
+        .audio-btn:hover {
+            background: #e2e8f0;
+            transform: scale(1.1);
+        }
+
+        .audio-btn:active {
+            transform: scale(0.95);
+        }
+
+        .score-display {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2b6cb0;
+            min-height: 27px;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-check {
+            background-color: #3182ce;
+            color: white;
+            box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+        }
+
+        .btn-check:hover {
+            background-color: #2b6cb0;
+        }
+
+        .btn-reset {
+            background-color: #718096;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background-color: #4a5568;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="check-icon">✓</div>
+        <h1 class="title">Choose “can” or “can’t” to complete the sentences</h1>
+    </div>
+    <p class="instruction">Оберіть "can" або "can't" у кожному випадаючому списку, щоб доповнити речення.</p>
+
+    <div class="sentences-list">
+        <!-- Sentence 1 -->
+        <div class="sentence-card">
+            <span class="dash">—</span> My dog 
+            <select id="q1" data-answer="can">
+                <option value="">--</option>
+                <option value="can">can</option>
+                <option value="can't">can't</option>
+            </select>
+            bark like a rockstar, but he 
+            <select id="q2" data-answer="can't">
+                <option value="">--</option>
+                <option value="can">can</option>
+                <option value="can't">can't</option>
+            </select>
+            rap like Snoop Dogg!
+        </div>
+
+        <!-- Sentence 2 -->
+        <div class="sentence-card">
+            <span class="dash">—</span> My cat 
+            <select id="q3" data-answer="can">
+                <option value="">--</option>
+                <option value="can">can</option>
+                <option value="can't">can't</option>
+            </select>
+            purr loudly, but she 
+            <select id="q4" data-answer="can't">
+                <option value="">--</option>
+                <option value="can">can</option>
+                <option value="can't">can't</option>
+            </select>
+            meow with a British accent!
+        </div>
+
+        <!-- Sentence 3 -->
+        <div class="sentence-card">
+            <span class="dash">—</span> My fish 
+            <select id="q5" data-answer="can">
+                <option value="">--</option>
+                <option value="can">can</option>
+                <option value="can't">can't</option>
+            </select>
+            swim very fast, but he 
+            <select id="q6" data-answer="can't">
+                <option value="">--</option>
+                <option value="can">can</option>
+                <option value="can't">can't</option>
+            </select>
+            juggle fish food like a circus clown!
+        </div>
+
+        <!-- Sentence 4 -->
+        <div class="sentence-card">
+            <span class="dash">—</span> My parrot 
+            <select id="q7" data-answer="can't">
+                <option value="">--</option>
+                <option value="can">can</option>
+                <option value="can't">can't</option>
+            </select>
+            dance the salsa, but he 
+            <select id="q8" data-answer="can">
+                <option value="">--</option>
+                <option value="can">can</option>
+                <option value="can't">can't</option>
+            </select>
+            sing "Jingle bells"!
+        </div>
+
+        <!-- Sentence 5 -->
+        <div class="sentence-card">
+            <span class="dash">—</span> My turtle 
+            <select id="q9" data-answer="can">
+                <option value="">--</option>
+                <option value="can">can</option>
+                <option value="can't">can't</option>
+            </select>
+            hide in his shell, but he 
+            <select id="q10" data-answer="can't">
+                <option value="">--</option>
+                <option value="can">can</option>
+                <option value="can't">can't</option>
+            </select>
+            do karate like a ninja turtle!
+        </div>
+
+        <!-- Sentence 6 -->
+        <div class="sentence-card">
+            <span class="dash">—</span> My rabbit 
+            <select id="q11" data-answer="can't">
+                <option value="">--</option>
+                <option value="can">can</option>
+                <option value="can't">can't</option>
+            </select>
+            do magic tricks, but she 
+            <select id="q12" data-answer="can">
+                <option value="">--</option>
+                <option value="can">can</option>
+                <option value="can't">can't</option>
+            </select>
+            hop like crazy!
+        </div>
+    </div>
+
+    <div class="vocab-section">
+        <h3>📖 Словничок слів з вправи (з вимовою та перекладом):</h3>
+        <div class="vocab-grid">
+            <div class="vocab-chip">
+                <strong>bark</strong> [bɑːk] — гавкати
+                <button class="audio-btn" onclick="speakWord('bark')" title="Listen">🔊</button>
+            </div>
+            <div class="vocab-chip">
+                <strong>purr</strong> [pɜːr] — муркотіти
+                <button class="audio-btn" onclick="speakWord('purr')" title="Listen">🔊</button>
+            </div>
+            <div class="vocab-chip">
+                <strong>juggle</strong> [ˈdʒʌɡ.əl] — жонглювати
+                <button class="audio-btn" onclick="speakWord('juggle')" title="Listen">🔊</button>
+            </div>
+            <div class="vocab-chip">
+                <strong>hide</strong> [haɪd] — ховатися
+                <button class="audio-btn" onclick="speakWord('hide')" title="Listen">🔊</button>
+            </div>
+            <div class="vocab-chip">
+                <strong>hop</strong> [hɒp] — стрибати
+                <button class="audio-btn" onclick="speakWord('hop')" title="Listen">🔊</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="score-display" id="scoreDisplay"></div>
+
+    <div class="controls">
+        <button class="btn btn-check" onclick="checkAnswers()">Check / Перевірити</button>
+        <button class="btn btn-reset" onclick="resetExercise()">Reset / Скинути</button>
+    </div>
+</div>
+
+<script>
+    function checkAnswers() {
+        const selects = document.querySelectorAll('select');
+        let correctCount = 0;
+
+        selects.forEach(select => {
+            const correctAnswer = select.getAttribute('data-answer');
+            select.classList.remove('correct', 'incorrect');
+
+            if (select.value === correctAnswer) {
+                select.classList.add('correct');
+                correctCount++;
+            } else {
+                select.classList.add('incorrect');
+            }
+        });
+
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.textContent = `Результат: ${correctCount} з ${selects.length} правильних!`;
+    }
+
+    function resetExercise() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach(select => {
+            select.value = '';
+            select.classList.remove('correct', 'incorrect');
+        });
+        document.getElementById('scoreDisplay').textContent = '';
+    }
+
+    function speakWord(word) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // Stop any ongoing audio
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+</script>
+
+</body>
+</html>
