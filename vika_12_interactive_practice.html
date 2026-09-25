@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vika 12 — Interactive Practice</title>
+<style>
+  :root{
+    --ink:#18233f;
+    --pink:#ff6fae;
+    --lav:#bca7ff;
+    --blue:#8fd9ff;
+    --mint:#a8ecd7;
+    --yellow:#ffe79a;
+    --paper:#fffdfb;
+    --soft:#f7f4ff;
+    --good:#168a62;
+    --bad:#c64667;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 10% 10%, #ffe5f1 0 14%, transparent 15%),
+      radial-gradient(circle at 90% 4%, #e7ddff 0 13%, transparent 14%),
+      linear-gradient(135deg,#fffdfb,#f7f4ff 55%,#f1fbff);
+    min-height:100vh;
+  }
+  .wrap{max-width:980px;margin:auto;padding:22px 16px 70px}
+  header{
+    background:rgba(255,255,255,.86);
+    border:2px solid #fff;
+    box-shadow:0 16px 42px rgba(49,44,92,.11);
+    border-radius:28px;
+    padding:28px 22px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header:before,header:after{
+    content:"";
+    position:absolute;border-radius:999px;opacity:.55
+  }
+  header:before{width:160px;height:160px;background:var(--pink);left:-90px;top:-90px}
+  header:after{width:180px;height:180px;background:var(--lav);right:-110px;bottom:-120px}
+  h1{font-size:clamp(34px,7vw,64px);margin:0;line-height:1}
+  .sub{font-size:18px;margin:12px 0 0}
+  .tiny{font-size:14px;opacity:.72}
+  .tabs{
+    display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin:18px 0 26px
+  }
+  .tabs a{
+    text-decoration:none;color:var(--ink);font-weight:700;
+    background:white;border:1px solid #e7e2f4;padding:10px 14px;border-radius:999px;
+  }
+  section{
+    margin:24px 0;background:rgba(255,255,255,.92);border-radius:26px;
+    padding:22px;box-shadow:0 14px 34px rgba(49,44,92,.09);
+  }
+  h2{font-size:28px;margin:0 0 8px}
+  .lead{margin:0 0 17px;line-height:1.5}
+  .score{font-weight:800;margin:10px 0 0}
+  .q{
+    border:1px solid #ece7f6;background:linear-gradient(180deg,#fff,#fcfbff);
+    border-radius:20px;padding:16px;margin:14px 0;
+  }
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .num{
+    min-width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+    background:var(--lav);font-weight:900
+  }
+  button{
+    border:0;cursor:pointer;font:inherit
+  }
+  .audio{
+    width:42px;height:42px;border-radius:50%;background:#edf8ff;
+    font-size:20px;box-shadow:0 4px 12px rgba(30,89,120,.08)
+  }
+  .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .opt{
+    padding:12px 14px;border-radius:14px;background:#f6f4fb;
+    border:2px solid transparent;text-align:left;font-weight:700;
+    transition:.16s transform,.16s background,.16s border-color;
+  }
+  .opt:hover{transform:translateY(-1px)}
+  .opt.correct{background:#e8f8f1;border-color:#7fd2b2;color:#0e6a4a}
+  .opt.wrong{background:#fff0f3;border-color:#f3a7b9;color:#a72c4b}
+  .opt:disabled{cursor:default}
+  .feedback{min-height:22px;margin-top:8px;font-weight:800}
+  .good{color:var(--good)} .bad{color:var(--bad)}
+  .sentence{
+    font-size:20px;line-height:1.65;background:#fbf9ff;border-radius:16px;padding:12px 14px
+  }
+  .blank{
+    display:inline-block;min-width:120px;padding:4px 9px;border-radius:10px;
+    background:#f0ecff;border-bottom:2px dashed #9b87e9;font-weight:800;text-align:center
+  }
+  select,input[type="text"]{
+    font:inherit;border:2px solid #ded6f3;border-radius:12px;padding:9px 10px;background:white;color:var(--ink)
+  }
+  input[type="text"]{width:min(100%,330px)}
+  .minirow{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+  .pill{
+    padding:9px 12px;border-radius:999px;background:#f5f1ff;font-weight:800;
+    border:2px solid #e6ddff
+  }
+  .pill.used{opacity:.35;cursor:default}
+  .buildbox{
+    min-height:54px;border:2px dashed #d9cff6;border-radius:14px;padding:9px;
+    display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:10px 0;background:#fff
+  }
+  .chip{
+    padding:8px 11px;border-radius:10px;background:#eef8ff;border:1px solid #cfeeff;font-weight:800
+  }
+  .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+  .smallbtn{
+    padding:9px 13px;border-radius:12px;background:#1d2b50;color:white;font-weight:800
+  }
+  .reset{background:#f0edf7;color:var(--ink)}
+  details{
+    background:#fff;border:1px solid #ebe6f5;border-radius:20px;padding:14px 16px;margin-top:22px
+  }
+  summary{cursor:pointer;font-weight:900;font-size:18px}
+  .vocab{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px
+  }
+  .card{
+    padding:12px;border-radius:14px;background:#faf8ff;border:1px solid #eee9f7;
+    display:flex;justify-content:space-between;gap:10px;align-items:center
+  }
+  .card b{display:block}
+  .ua{font-size:13px;opacity:.72;margin-top:3px}
+  .footer{
+    text-align:center;margin-top:20px;font-size:13px;opacity:.7
+  }
+  @media(max-width:650px){
+    .opts,.vocab{grid-template-columns:1fr}
+    section{padding:17px}
+    h2{font-size:24px}
+    .sentence{font-size:18px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>I can… ✨</h1>
+  <p class="sub"><b>Vika 12 — Vocabulary + Grammar Practice</b></p>
+  <p class="tiny">Can / can’t • He has got / She has got • Present Simple • Pronunciation</p>
+</header>
+
+<div class="tabs">
+  <a href="#listen">🎧 Listen</a>
+  <a href="#hasgot">👩 Has got</a>
+  <a href="#build">🧩 Build</a>
+  <a href="#present">✍️ Present Simple</a>
+</div>
+
+<section id="listen">
+  <h2>1. 🎧 Listen & Choose</h2>
+  <p class="lead">Нажми 🔊, послушай слово или фразу и выбери правильный вариант. Можно прослушивать несколько раз.</p>
+  <div id="listenQs"></div>
+  <div class="score" id="listenScore">Score: 0 / 8</div>
+</section>
+
+<section id="hasgot">
+  <h2>2. 👩 He has got / She has got</h2>
+  <p class="lead">Выбери правильный вариант. Здесь тренируем <b>has got</b> и лексику про внешность.</p>
+  <div id="hasQs"></div>
+  <div class="score" id="hasScore">Score: 0 / 8</div>
+</section>
+
+<section id="build">
+  <h2>3. 🧩 Build the Sentence</h2>
+  <p class="lead">Нажимай на слова в правильном порядке. После последнего слова ответ проверится автоматически.</p>
+  <div id="buildQs"></div>
+  <div class="score" id="buildScore">Score: 0 / 6</div>
+</section>
+
+<section id="present">
+  <h2>4. ✍️ Present Simple + Classroom English</h2>
+  <p class="lead">Выбери правильную форму. Здесь есть <b>complete, repeat, fill in, about, gap, be ready</b> и фразы с картинками.</p>
+  <div id="presentQs"></div>
+  <div class="score" id="presentScore">Score: 0 / 8</div>
+</section>
+
+<details>
+  <summary>📚 Vocabulary Bank — нажми, чтобы открыть</summary>
+  <div class="vocab" id="vocabBank"></div>
+</details>
+
+<div class="footer">Tip: нажимай 🔊 и повторяй вслух 2–3 раза — так слова запоминаются быстрее.</div>
+</div>
+
+<script>
+const vocab = [
+ ["cook","готувати"],["draw","малювати"],["play football","грати у футбол"],
+ ["play the guitar","грати на гітарі"],["ride a bike","їздити на велосипеді"],
+ ["run","бігати"],["sing","співати"],["skateboard","кататися на скейтборді"],
+ ["speak English","говорити англійською"],["swim","плавати"],
+ ["quest","квест; завдання"],["Let's get started","Давайте почнемо"],
+ ["appearance","зовнішність"],["complete","виконувати; завершувати"],
+ ["repeat","повторювати"],["about","про; приблизно"],["to be ready","бути готовим"],
+ ["slim","стрункий / струнка"],["hair","волосся"],["fair","світлий (про волосся/шкіру)"],
+ ["fill in","заповнювати"],["gap","пропуск"],["in the first picture","на першій картинці"],
+ ["in the second picture","на другій картинці"]
+];
+
+function speak(text){
+  if(!("speechSynthesis" in window)){
+    alert("Audio is not supported in this browser.");
+    return;
+  }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-GB";
+  u.rate = 0.82;
+  u.pitch = 1;
+  speechSynthesis.speak(u);
+}
+function shuffle(a){ return [...a].sort(()=>Math.random()-.5) }
+
+const listenPool = [
+  ["cook",["cook","run","sing","swim"]],
+  ["play the guitar",["play the guitar","play football","ride a bike","draw"]],
+  ["speak English",["speak English","skateboard","swim","sing"]],
+  ["appearance",["appearance","complete","repeat","quest"]],
+  ["fill in",["fill in","gap","about","fair"]],
+  ["in the first picture",["in the first picture","in the second picture","Let's get started","to be ready"]],
+  ["slim",["slim","fair","hair","gap"]],
+  ["Let's get started",["Let's get started","complete","about","repeat"]]
+];
+
+let listenScore=0;
+const listenWrap=document.getElementById("listenQs");
+listenPool.forEach((item,i)=>{
+  const [answer, options] = item;
+  const q=document.createElement("div"); q.className="q";
+  q.innerHTML=`<div class="qhead"><div class="num">${i+1}</div><button class="audio" aria-label="Play audio">🔊</button><b>Listen and choose</b></div><div class="opts"></div><div class="feedback"></div>`;
+  q.querySelector(".audio").onclick=()=>speak(answer);
+  const box=q.querySelector(".opts");
+  shuffle(options).forEach(opt=>{
+    const b=document.createElement("button"); b.className="opt"; b.textContent=opt;
+    b.onclick=()=>{
+      if(q.dataset.done) return;
+      q.dataset.done="1";
+      box.querySelectorAll("button").forEach(x=>x.disabled=true);
+      if(opt===answer){ b.classList.add("correct"); q.querySelector(".feedback").innerHTML='<span class="good">✓ Great!</span>'; listenScore++; }
+      else{
+        b.classList.add("wrong");
+        [...box.children].find(x=>x.textContent===answer).classList.add("correct");
+        q.querySelector(".feedback").innerHTML='<span class="bad">Almost — listen again.</span>';
+      }
+      document.getElementById("listenScore").textContent=`Score: ${listenScore} / ${listenPool.length}`;
+    };
+    box.appendChild(b);
+  });
+  listenWrap.appendChild(q);
+});
+
+const hasQuestions = [
+  {s:"Jake ___ got short dark hair.", a:"has", o:["has","have","is"]},
+  {s:"She has got ___ hair.", a:"fair", o:["fair","slim","gap"]},
+  {s:"Blake ___ got long hair.", a:"has", o:["has","have","does"]},
+  {s:"He has got short ___ .", a:"hair", o:["hair","appearance","quest"]},
+  {s:"She is tall and ___ .", a:"slim", o:["slim","hair","about"]},
+  {s:"___ she got fair hair?", a:"Has", o:["Has","Does","Is"]},
+  {s:"He ___ not got long hair.", a:"has", o:["has","does","is"]},
+  {s:"Her ___ is different in the second picture.", a:"appearance", o:["appearance","gap","quest"]}
+];
+
+let hasScore=0;
+const hasWrap=document.getElementById("hasQs");
+hasQuestions.forEach((it,i)=>{
+ const q=document.createElement("div"); q.className="q";
+ q.innerHTML=`<div class="qhead"><div class="num">${i+1}</div><button class="audio">🔊</button><b>Choose</b></div>
+ <div class="sentence">${it.s.replace("___",'<span class="blank">?</span>')}</div><div class="opts"></div><div class="feedback"></div>`;
+ q.querySelector(".audio").onclick=()=>speak(it.s.replace("___",it.a));
+ const box=q.querySelector(".opts");
+ shuffle(it.o).forEach(opt=>{
+   const b=document.createElement("button"); b.className="opt"; b.textContent=opt;
+   b.onclick=()=>{
+     if(q.dataset.done) return; q.dataset.done="1";
+     box.querySelectorAll("button").forEach(x=>x.disabled=true);
+     q.querySelector(".blank").textContent=opt;
+     if(opt===it.a){b.classList.add("correct");hasScore++;q.querySelector(".feedback").innerHTML='<span class="good">✓ Correct!</span>'}
+     else{b.classList.add("wrong");[...box.children].find(x=>x.textContent===it.a).classList.add("correct");q.querySelector(".feedback").innerHTML=`<span class="bad">Correct answer: ${it.a}</span>`}
+     document.getElementById("hasScore").textContent=`Score: ${hasScore} / ${hasQuestions.length}`;
+   };
+   box.appendChild(b);
+ });
+ hasWrap.appendChild(q);
+});
+
+const buildData = [
+ ["She","has","got","fair","hair","."],
+ ["He","has","got","short","hair","."],
+ ["Can","you","speak","English","?"],
+ ["I","can","ride","a","bike","."],
+ ["Let's","get","started","."],
+ ["What","can","you","see","in","the","first","picture","?"]
+];
+let buildScore=0;
+const buildWrap=document.getElementById("buildQs");
+buildData.forEach((words,i)=>{
+ const q=document.createElement("div"); q.className="q";
+ q.innerHTML=`<div class="qhead"><div class="num">${i+1}</div><button class="audio">🔊</button><b>Build the sentence</b></div>
+ <div class="buildbox"></div><div class="minirow"></div><div class="feedback"></div>
+ <div class="actions"><button class="smallbtn reset">↺ Start again</button></div>`;
+ const target=words.join(" ").replace(" .",".").replace(" ?","?");
+ q.querySelector(".audio").onclick=()=>speak(target);
+ const pool=q.querySelector(".minirow"), out=q.querySelector(".buildbox");
+ let chosen=[];
+ const render=()=>{
+   pool.innerHTML=""; out.innerHTML="";
+   chosen.forEach(w=>{const c=document.createElement("span");c.className="chip";c.textContent=w;out.appendChild(c)});
+   const remaining=words.map((w,idx)=>({w,idx})).filter((x,idx)=>{
+      let countChosen=chosen.filter(y=>y===x.w).length;
+      let before=words.slice(0,idx+1).filter(y=>y===x.w).length;
+      return before>countChosen;
+   });
+   shuffle(remaining).forEach(obj=>{
+      const b=document.createElement("button");b.className="pill";b.textContent=obj.w;
+      b.onclick=()=>{
+        if(q.dataset.done)return;
+        chosen.push(obj.w); render();
+        if(chosen.length===words.length){
+          q.dataset.done="1";
+          const ok=chosen.join("|")===words.join("|");
+          if(ok){buildScore++;q.querySelector(".feedback").innerHTML='<span class="good">✓ Perfect!</span>'}
+          else{q.querySelector(".feedback").innerHTML=`<span class="bad">Try again — correct sentence: ${target}</span>`}
+          document.getElementById("buildScore").textContent=`Score: ${buildScore} / ${buildData.length}`;
+        }
+      }; pool.appendChild(b);
+   });
+ };
+ q.querySelector(".reset").onclick=()=>{q.dataset.done="";chosen=[];q.querySelector(".feedback").textContent="";render()};
+ render(); buildWrap.appendChild(q);
+});
+
+const presentQuestions = [
+ {s:"I ___ my homework after school.", a:"complete", o:["complete","completes","am complete"]},
+ {s:"She ___ the new words every day.", a:"repeats", o:["repeat","repeats","is repeat"]},
+ {s:"Can you ___ the gaps?", a:"fill in", o:["fill in","fills in","filled in"]},
+ {s:"We talk ___ our hobbies.", a:"about", o:["about","gap","fair"]},
+ {s:"He ___ ready for the lesson.", a:"is", o:["is","are","has"]},
+ {s:"What can you see ___?", a:"in the first picture", o:["in the first picture","on the first picture","at the first picture"]},
+ {s:"She can ___ very well.", a:"sing", o:["sing","sings","singing"]},
+ {s:"He ___ football on Saturdays.", a:"plays", o:["play","plays","is play"]}
+];
+let presentScore=0;
+const presentWrap=document.getElementById("presentQs");
+presentQuestions.forEach((it,i)=>{
+ const q=document.createElement("div");q.className="q";
+ q.innerHTML=`<div class="qhead"><div class="num">${i+1}</div><button class="audio">🔊</button><b>Choose the correct form</b></div>
+ <div class="sentence">${it.s.replace("___",'<span class="blank">?</span>')}</div><div class="opts"></div><div class="feedback"></div>`;
+ q.querySelector(".audio").onclick=()=>speak(it.s.replace("___",it.a));
+ const box=q.querySelector(".opts");
+ shuffle(it.o).forEach(opt=>{
+   const b=document.createElement("button");b.className="opt";b.textContent=opt;
+   b.onclick=()=>{
+     if(q.dataset.done)return;q.dataset.done="1";
+     box.querySelectorAll("button").forEach(x=>x.disabled=true);
+     q.querySelector(".blank").textContent=opt;
+     if(opt===it.a){presentScore++;b.classList.add("correct");q.querySelector(".feedback").innerHTML='<span class="good">✓ Correct!</span>'}
+     else{b.classList.add("wrong");[...box.children].find(x=>x.textContent===it.a).classList.add("correct");q.querySelector(".feedback").innerHTML=`<span class="bad">Correct answer: ${it.a}</span>`}
+     document.getElementById("presentScore").textContent=`Score: ${presentScore} / ${presentQuestions.length}`;
+   };box.appendChild(b);
+ });
+ presentWrap.appendChild(q);
+});
+
+const bank=document.getElementById("vocabBank");
+vocab.forEach(([en,ua])=>{
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML=`<div><b>${en}</b><div class="ua">${ua}</div></div><button class="audio">🔊</button>`;
+ c.querySelector("button").onclick=()=>speak(en.replace("to be ready","be ready"));
+ bank.appendChild(c);
+});
+</script>
+</body>
+</html>
