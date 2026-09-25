@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 1. Choose the right word 🧠</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --correct-color: #22c55e;
+    --correct-bg: rgba(34, 197, 94, 0.12);
+    --wrong-color: #ef4444;
+    --wrong-bg: rgba(239, 68, 68, 0.12);
+    --tooltip-bg: #1e293b;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 28px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  /* Top Bank Panel */
+  .bank-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 24px;
+    position: sticky;
+    top: 16px;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .bank-header {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .bank-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 48px;
+    align-items: center;
+  }
+
+  /* Word Chip with Tooltip */
+  .word-chip {
+    position: relative;
+    background: #0284c7;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: grab;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+  }
+
+  .word-chip:hover {
+    background: #0369a1;
+    transform: translateY(-2px);
+  }
+
+  .word-chip.selected {
+    outline: 2px solid var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  /* Tooltip logic */
+  .word-chip .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--tooltip-bg);
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    font-size: 0.8rem;
+    font-weight: 400;
+    white-space: nowrap;
+    text-align: center;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    z-index: 200;
+  }
+
+  .word-chip .tooltip .transcription {
+    color: var(--accent);
+    font-family: monospace;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .word-chip .tooltip .ukr-translation {
+    color: #e2e8f0;
+  }
+
+  .word-chip .tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--accent) transparent transparent transparent;
+  }
+
+  .word-chip:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .audio-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  /* Sentence List */
+  .sentences-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sentence-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    transition: all 0.2s ease;
+  }
+
+  .drop-target {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    min-height: 40px;
+    background: var(--panel-bg);
+    border: 2px dashed #475569;
+    border-radius: 10px;
+    padding: 2px 8px;
+    margin: 0 4px;
+    transition: all 0.2s ease;
+  }
+
+  .drop-target.drag-over {
+    border-color: var(--accent);
+    background: #334155;
+  }
+
+  /* States */
+  .sentence-card.correct {
+    border-color: var(--correct-color);
+    background: var(--correct-bg);
+  }
+
+  .sentence-card.correct .drop-target {
+    border-color: var(--correct-color);
+    border-style: solid;
+  }
+
+  .sentence-card.wrong {
+    border-color: var(--wrong-color);
+    background: var(--wrong-bg);
+  }
+
+  .sentence-card.wrong .drop-target {
+    border-color: var(--wrong-color);
+    border-style: solid;
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .btn-check:hover {
+    background: #7dd3fc;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Exercise 1. Choose the right word 🧠</h1>
+    <p>Наведите на слово для транскрипции и перевода. Кликните или перетащите слово в нужное предложение.</p>
+  </div>
+
+  <!-- Top Word Bank -->
+  <div class="bank-panel">
+    <div class="bank-header">
+      <span>Банк слов (10 слов)</span>
+      <span style="font-size: 0.75rem; color: var(--text-secondary);">💡 Наведите курсор на слово</span>
+    </div>
+    <div class="bank-slots drop-target" id="bank">
+      
+      <div class="word-chip" draggable="true" data-id="beard" data-text="beard">
+        beard <button class="audio-btn" type="button" onclick="speak('beard', event)">🔊</button>
+        <div class="tooltip"><span class="transcription">[bɪəd]</span><span class="ukr-translation">борода</span></div>
+      </div>
+
+      <div class="word-chip" draggable="true" data-id="occupation" data-text="occupation">
+        occupation <button class="audio-btn" type="button" onclick="speak('occupation', event)">🔊</button>
+        <div class="tooltip"><span class="transcription">[ˌɒkjuˈpeɪʃn]</span><span class="ukr-translation">професія, заняття</span></div>
+      </div>
+
+      <div class="word-chip" draggable="true" data-id="suppose" data-text="suppose">
+        suppose <button class="audio-btn" type="button" onclick="speak('suppose', event)">🔊</button>
+        <div class="tooltip"><span class="transcription">[səˈpəʊz]</span><span class="ukr-translation">припускати</span></div>
+      </div>
+
+      <div class="word-chip" draggable="true" data-id="contains" data-text="contains">
+        contains <button class="audio-btn" type="button" onclick="speak('contains', event)">🔊</button>
+        <div class="tooltip"><span class="transcription">[kənˈteɪnz]</span><span class="ukr-translation">містить у собі (contain)</span></div>
+      </div>
+
+      <div class="word-chip" draggable="true" data-id="seem" data-text="seem">
+        seem <button class="audio-btn" type="button" onclick="speak('seem', event)">🔊</button>
+        <div class="tooltip"><span class="transcription">[siːm]</span><span class="ukr-translation">здаватися</span></div>
+      </div>
+
+      <div class="word-chip" draggable="true" data-id="expect" data-text="expect">
+        expect <button class="audio-btn" type="button" onclick="speak('expect', event)">🔊</button>
+        <div class="tooltip"><span class="transcription">[ɪkˈspekt]</span><span class="ukr-translation">очікувати, сподіватися</span></div>
+      </div>
+
+      <div class="word-chip" draggable="true" data-id="manage time" data-text="manage time">
+        manage time <button class="audio-btn" type="button" onclick="speak('manage time', event)">🔊</button>
+        <div class="tooltip"><span class="transcription">[ˈmænɪdʒ taɪm]</span><span class="ukr-translation">управляти часом</span></div>
+      </div>
+
+      <div class="word-chip" draggable="true" data-id="underdog" data-text="underdog">
+        underdog <button class="audio-btn" type="button" onclick="speak('underdog', event)">🔊</button>
+        <div class="tooltip"><span class="transcription">[ˈʌndədɒɡ]</span><span class="ukr-translation">аутсайдер, слабша сторона</span></div>
+      </div>
+
+      <div class="word-chip" draggable="true" data-id="camaraderie" data-text="camaraderie">
+        camaraderie <button class="audio-btn" type="button" onclick="speak('camaraderie', event)">🔊</button>
+        <div class="tooltip"><span class="transcription">[ˌkæməˈrɑːdəri]</span><span class="ukr-translation">товариськість, дух товариства</span></div>
+      </div>
+
+      <div class="word-chip" draggable="true" data-id="reliance" data-text="reliance">
+        reliance <button class="audio-btn" type="button" onclick="speak('reliance', event)">🔊</button>
+        <div class="tooltip"><span class="transcription">[rɪˈlaɪəns]</span><span class="ukr-translation">залежність, опора</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Sentences List -->
+  <div class="sentences-list">
+    <div class="sentence-card" data-correct="beard">
+      1. My uncle has grown a <div class="drop-target"></div>. He looks completely different now.
+    </div>
+    <div class="sentence-card" data-correct="occupation">
+      2. What is your dream <div class="drop-target"></div>?
+    </div>
+    <div class="sentence-card" data-correct="suppose">
+      3. I <div class="drop-target"></div> our teacher will give us homework today, but I'm not sure.
+    </div>
+    <div class="sentence-card" data-correct="contains">
+      4. This website <div class="drop-target"></div> a lot of useful information.
+    </div>
+    <div class="sentence-card" data-correct="seem">
+      5. You <div class="drop-target"></div> tired today. Are you OK?
+    </div>
+    <div class="sentence-card" data-correct="expect">
+      6. I <div class="drop-target"></div> to finish this project by Friday.
+    </div>
+    <div class="sentence-card" data-correct="manage time">
+      7. If you <div class="drop-target"></div> well, you have more free time.
+    </div>
+    <div class="sentence-card" data-correct="underdog">
+      8. Our team was the <div class="drop-target"></div>, but we surprised everyone and won.
+    </div>
+    <div class="sentence-card" data-correct="camaraderie">
+      9. Playing together has created great <div class="drop-target"></div> between the team members.
+    </div>
+    <div class="sentence-card" data-correct="reliance">
+      10. Our <div class="drop-target"></div> on smartphones has increased a lot.
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-check" type="button" onclick="checkAnswers()">Check Answers ✔</button>
+    <button class="btn btn-reset" type="button" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  let draggedChip = null;
+  let selectedChip = null;
+
+  // Speech Synthesis
+  function speak(text, e) {
+    if (e) e.stopPropagation();
+    if (!('speechSynthesis' in window)) return;
+
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoice = voices.find(v => v.lang.startsWith('en'));
+      if (englishVoice) utterance.voice = englishVoice;
+
+      window.speechSynthesis.speak(utterance);
+    }, 50);
+  }
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
+
+  // Drag & Drop / Click logic
+  document.querySelectorAll('.word-chip').forEach(chip => {
+    chip.addEventListener('dragstart', (e) => {
+      draggedChip = chip;
+      e.dataTransfer.setData('text/plain', chip.dataset.id);
+    });
+
+    chip.addEventListener('click', (e) => {
+      if (e.target.tagName === 'BUTTON') return;
+      if (selectedChip) selectedChip.classList.remove('selected');
+      if (selectedChip === chip) {
+        selectedChip = null;
+      } else {
+        selectedChip = chip;
+        chip.classList.add('selected');
+      }
+    });
+  });
+
+  document.querySelectorAll('.drop-target').forEach(target => {
+    target.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      target.classList.add('drag-over');
+    });
+
+    target.addEventListener('dragleave', () => {
+      target.classList.remove('drag-over');
+    });
+
+    target.addEventListener('drop', (e) => {
+      e.preventDefault();
+      target.classList.remove('drag-over');
+      if (draggedChip) {
+        moveChipToSlot(draggedChip, target);
+      }
+    });
+
+    target.addEventListener('click', () => {
+      if (selectedChip) {
+        moveChipToSlot(selectedChip, target);
+        selectedChip.classList.remove('selected');
+        selectedChip = null;
+      }
+    });
+  });
+
+  function moveChipToSlot(chip, slot) {
+    const card = slot.closest('.sentence-card');
+    if (card) card.classList.remove('correct', 'wrong');
+
+    if (slot.children.length > 0 && !slot.classList.contains('bank-slots')) {
+      document.getElementById('bank').appendChild(slot.children[0]);
+    }
+
+    slot.appendChild(chip);
+  }
+
+  function shuffleBank() {
+    const bank = document.getElementById('bank');
+    const chips = Array.from(bank.querySelectorAll('.word-chip'));
+    chips.sort(() => Math.random() - 0.5);
+    chips.forEach(chip => bank.appendChild(chip));
+  }
+
+  function checkAnswers() {
+    document.querySelectorAll('.sentence-card').forEach(card => {
+      const correctId = card.dataset.correct;
+      const slot = card.querySelector('.drop-target');
+      const placedChip = slot.querySelector('.word-chip');
+
+      card.classList.remove('correct', 'wrong');
+
+      if (placedChip && placedChip.dataset.id === correctId) {
+        card.classList.add('correct');
+      } else {
+        card.classList.add('wrong');
+      }
+    });
+  }
+
+  function resetExercise() {
+    const bank = document.getElementById('bank');
+    document.querySelectorAll('.sentence-card').forEach(card => card.classList.remove('correct', 'wrong'));
+    document.querySelectorAll('.word-chip').forEach(chip => {
+      chip.classList.remove('selected');
+      bank.appendChild(chip);
+    });
+    selectedChip = null;
+    shuffleBank();
+  }
+
+  shuffleBank();
+</script>
+
+</body>
+</html>
