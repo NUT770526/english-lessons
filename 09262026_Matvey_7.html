@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 1. Present Simple or Present Continuous? 🧠</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --focus-border: #38bdf8;
+    --correct-color: #22c55e;
+    --correct-bg: rgba(34, 197, 94, 0.12);
+    --wrong-color: #ef4444;
+    --wrong-bg: rgba(239, 68, 68, 0.12);
+    --tooltip-bg: #020617;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header h1 {
+    font-size: 1.6rem;
+    color: var(--accent);
+    font-weight: 800;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+  }
+
+  /* Word Tooltips */
+  .word-target {
+    position: relative;
+    cursor: pointer;
+    border-bottom: 1.5px dashed var(--accent);
+    color: #38bdf8;
+    display: inline-block;
+  }
+
+  .word-target .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--tooltip-bg);
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    font-size: 0.85rem;
+    font-weight: 400;
+    white-space: nowrap;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    z-index: 20;
+    text-align: center;
+  }
+
+  .word-target .tooltip .transcription {
+    color: var(--accent);
+    font-family: monospace;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .word-target .tooltip .ukr-translation {
+    color: #e2e8f0;
+  }
+
+  .word-target:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* Questions List */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .question-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .sentence-content {
+    font-size: 1.05rem;
+    color: #f1f5f9;
+    line-height: 1.8;
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .item-num {
+    font-weight: 700;
+    color: var(--accent);
+    margin-right: 4px;
+  }
+
+  .verb-hint {
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+
+  .answer-input {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    min-width: 120px;
+  }
+
+  .answer-input.short {
+    min-width: 75px;
+    width: 85px;
+  }
+
+  .answer-input:focus {
+    border-color: var(--focus-border);
+  }
+
+  .audio-btn {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: var(--accent);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  /* Validation States */
+  .question-card.correct {
+    border-color: var(--correct-color);
+    background: var(--correct-bg);
+  }
+
+  .question-card.correct .answer-input {
+    border-color: var(--correct-color);
+    color: var(--correct-color);
+  }
+
+  .question-card.wrong {
+    border-color: var(--wrong-color);
+    background: var(--wrong-bg);
+  }
+
+  .question-card.wrong .answer-input {
+    border-color: var(--wrong-color);
+    color: var(--wrong-color);
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .btn {
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .btn-check:hover {
+    background: #7dd3fc;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  @media (max-width: 640px) {
+    .container {
+      padding: 20px 16px;
+    }
+
+    .question-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .audio-btn {
+      align-self: flex-end;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Exercise 1. Present Simple or Present Continuous? 🧠</h1>
+    <p>Put the verb in the correct form.</p>
+  </div>
+
+  <div class="questions-list">
+
+    <!-- 1 -->
+    <div class="question-card">
+      <div class="sentence-content">
+        <span class="item-num">1.</span>
+        I 
+        <input type="text" class="answer-input" data-answer='["know"]' placeholder="Type answer..." />
+        <span class="verb-hint">(know)</span> the answer.
+      </div>
+      <button class="audio-btn" type="button" title="Listen sentence" onclick="speakCardSentence(this)">🔊</button>
+    </div>
+
+    <!-- 2 -->
+    <div class="question-card">
+      <div class="sentence-content">
+        <span class="item-num">2.</span>
+        Look! Jake 
+        <input type="text" class="answer-input" data-answer='["is playing"]' placeholder="Type answer..." />
+        <span class="verb-hint">(play)</span> 
+        <span class="word-target">lacrosse<div class="tooltip"><span class="transcription">[ləˈkrɒs]</span><span class="ukr-translation">лякрос</span></div></span> 
+        now.
+      </div>
+      <button class="audio-btn" type="button" title="Listen sentence" onclick="speakCardSentence(this)">🔊</button>
+    </div>
+
+    <!-- 3 -->
+    <div class="question-card">
+      <div class="sentence-content">
+        <span class="item-num">3.</span>
+        This book 
+        <input type="text" class="answer-input" data-answer='["contains"]' placeholder="Type answer..." />
+        <span class="verb-hint">(<span class="word-target">contain<div class="tooltip"><span class="transcription">[kənˈteɪn]</span><span class="ukr-translation">містити</span></div></span>)</span> 
+        a lot of useful information.
+      </div>
+      <button class="audio-btn" type="button" title="Listen sentence" onclick="speakCardSentence(this)">🔊</button>
+    </div>
+
+    <!-- 4 -->
+    <div class="question-card">
+      <div class="sentence-content">
+        <span class="item-num">4.</span>
+        I 
+        <input type="text" class="answer-input" data-answer='["suppose"]' placeholder="Type answer..." />
+        <span class="verb-hint">(<span class="word-target">suppose<div class="tooltip"><span class="transcription">[səˈpəʊz]</span><span class="ukr-translation">припускати, вважати</span></div></span>)</span> 
+        our team can win.
+      </div>
+      <button class="audio-btn" type="button" title="Listen sentence" onclick="speakCardSentence(this)">🔊</button>
+    </div>
+
+    <!-- 5 -->
+    <div class="question-card">
+      <div class="sentence-content">
+        <span class="item-num">5.</span>
+        She 
+        <input type="text" class="answer-input" data-answer='["is managing"]' placeholder="Type answer..." />
+        <span class="verb-hint">(<span class="word-target">manage<div class="tooltip"><span class="transcription">[ˈmænɪdʒ]</span><span class="ukr-translation">управляти, справлятися</span></div></span>)</span> 
+        her time very well this week.
+      </div>
+      <button class="audio-btn" type="button" title="Listen sentence" onclick="speakCardSentence(this)">🔊</button>
+    </div>
+
+    <!-- 6 -->
+    <div class="question-card">
+      <div class="sentence-content">
+        <span class="item-num">6.</span>
+        He 
+        <input type="text" class="answer-input" data-answer='["needs"]' placeholder="Type answer..." />
+        <span class="verb-hint">(need)</span> 
+        another 
+        <span class="word-target">teammate<div class="tooltip"><span class="transcription">[ˈtiːmmeɪt]</span><span class="ukr-translation">партнер по команді</span></div></span>.
+      </div>
+      <button class="audio-btn" type="button" title="Listen sentence" onclick="speakCardSentence(this)">🔊</button>
+    </div>
+
+    <!-- 7 -->
+    <div class="question-card">
+      <div class="sentence-content">
+        <span class="item-num">7.</span>
+        You 
+        <input type="text" class="answer-input" data-answer='["seem"]' placeholder="Type answer..." />
+        <span class="verb-hint">(seem)</span> 
+        tired today.
+      </div>
+      <button class="audio-btn" type="button" title="Listen sentence" onclick="speakCardSentence(this)">🔊</button>
+    </div>
+
+    <!-- 8 -->
+    <div class="question-card">
+      <div class="sentence-content">
+        <span class="item-num">8.</span>
+        We 
+        <input type="text" class="answer-input" data-answer='["are preparing"]' placeholder="Type answer..." />
+        <span class="verb-hint">(prepare)</span> 
+        for an important game at the moment.
+      </div>
+      <button class="audio-btn" type="button" title="Listen sentence" onclick="speakCardSentence(this)">🔊</button>
+    </div>
+
+    <!-- 9 -->
+    <div class="question-card">
+      <div class="sentence-content">
+        <span class="item-num">9.</span>
+        I 
+        <input type="text" class="answer-input" data-answer='["expect"]' placeholder="Type answer..." />
+        <span class="verb-hint">(expect)</span> 
+        good results from our team.
+      </div>
+      <button class="audio-btn" type="button" title="Listen sentence" onclick="speakCardSentence(this)">🔊</button>
+    </div>
+
+    <!-- 10 -->
+    <div class="question-card">
+      <div class="sentence-content">
+        <span class="item-num">10.</span>
+        Why 
+        <input type="text" class="answer-input short" data-answer='["are", "do"]' placeholder="type..." />
+        you 
+        <input type="text" class="answer-input" data-answer='["turning down", "turn down"]' placeholder="type..." />
+        <span class="verb-hint">(<span class="word-target">turn down<div class="tooltip"><span class="transcription">[tɜːn daʊn]</span><span class="ukr-translation">відхиляти, відмовлятися</span></div></span>)</span> 
+        the offer?
+      </div>
+      <button class="audio-btn" type="button" title="Listen sentence" onclick="speakCardSentence(this)">🔊</button>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-check" type="button" onclick="checkAnswers()">Check Answers ✔</button>
+    <button class="btn btn-reset" type="button" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  function speak(text) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.88;
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoice = voices.find(v => v.lang.startsWith('en'));
+      if (englishVoice) utterance.voice = englishVoice;
+      window.speechSynthesis.speak(utterance);
+    }, 50);
+  }
+
+  function speakCardSentence(btn) {
+    const card = btn.closest('.question-card');
+    if (!card) return;
+
+    // Build sentence using prompt text + what the user typed (without spoiling answers)
+    const clone = card.querySelector('.sentence-content').cloneNode(true);
+    
+    // Clean tooltips or item numbers out
+    clone.querySelectorAll('.tooltip, .item-num, .verb-hint').forEach(el => el.remove());
+    
+    // Replace inputs with user's typed text or a blank pause
+    clone.querySelectorAll('.answer-input').forEach(input => {
+      const userText = input.value.trim();
+      const textNode = document.createTextNode(userText ? ` ${userText} ` : ' ... ');
+      input.parentNode.replaceChild(textNode, input);
+    });
+
+    const sentenceToRead = clone.textContent.replace(/\s+/g, ' ').trim();
+    speak(sentenceToRead);
+  }
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
+
+  function normalize(str) {
+    return str.toLowerCase().trim().replace(/\s+/g, ' ').replace(/[.,!?]$/, '');
+  }
+
+  function checkAnswers() {
+    document.querySelectorAll('.question-card').forEach(card => {
+      const inputs = card.querySelectorAll('.answer-input');
+      let cardIsCorrect = true;
+
+      inputs.forEach(input => {
+        const userVal = normalize(input.value);
+        const correctOptions = JSON.parse(input.dataset.answer).map(a => normalize(a));
+
+        if (!userVal || !correctOptions.includes(userVal)) {
+          cardIsCorrect = false;
+        }
+      });
+
+      card.classList.remove('correct', 'wrong');
+      if (cardIsCorrect) {
+        card.classList.add('correct');
+      } else {
+        card.classList.add('wrong');
+      }
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll('.question-card').forEach(card => {
+      card.classList.remove('correct', 'wrong');
+      card.querySelectorAll('.answer-input').forEach(input => {
+        input.value = '';
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
