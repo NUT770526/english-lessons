@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Additional task! Tick all verbs that can't be used in Present Continuous form 🦒</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --correct-color: #22c55e;
+    --correct-bg: rgba(34, 197, 94, 0.12);
+    --wrong-color: #ef4444;
+    --wrong-bg: rgba(239, 68, 68, 0.12);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 650px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px 24px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .header {
+    text-align: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header h1 {
+    font-size: 1.4rem;
+    color: var(--accent);
+    font-weight: 800;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .verbs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .verb-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .verb-item:hover {
+    border-color: var(--accent);
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    flex: 1;
+    cursor: pointer;
+  }
+
+  /* Custom Checkbox Design */
+  .custom-checkbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--panel-bg);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .verb-item input[type="checkbox"] {
+    display: none;
+  }
+
+  .verb-item input[type="checkbox"]:checked + .checkbox-label .custom-checkbox {
+    background-color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .verb-item input[type="checkbox"]:checked + .checkbox-label .custom-checkbox::after {
+    content: "✓";
+    color: #0f172a;
+    font-weight: 900;
+    font-size: 14px;
+  }
+
+  /* Validation Feedback Styles */
+  .verb-item.state-correct {
+    border-color: var(--correct-color);
+    background-color: var(--correct-bg);
+  }
+
+  .verb-item.state-wrong {
+    border-color: var(--wrong-color);
+    background-color: var(--wrong-bg);
+  }
+
+  /* Audio Button */
+  .audio-btn {
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    color: var(--accent);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .feedback-banner {
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: none;
+    text-align: center;
+  }
+
+  .feedback-banner.success {
+    display: block;
+    background: var(--correct-bg);
+    color: var(--correct-color);
+    border: 1px solid var(--correct-color);
+  }
+
+  .feedback-banner.error {
+    display: block;
+    background: var(--wrong-bg);
+    color: var(--wrong-color);
+    border: 1px solid var(--wrong-color);
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .btn-check:hover {
+    background: #7dd3fc;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Additional task! Tick all verbs that can't be used in Present Continuous form 🦒</h1>
+    <p>Select all stative verbs that are normally NOT used in continuous tenses.</p>
+  </div>
+
+  <div class="verbs-list">
+
+    <!-- 1. like (Stative) -->
+    <div class="verb-item" data-stative="true">
+      <input type="checkbox" id="v1" />
+      <label for="v1" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">like</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'like')">🔊</button>
+    </div>
+
+    <!-- 2. work (Dynamic) -->
+    <div class="verb-item" data-stative="false">
+      <input type="checkbox" id="v2" />
+      <label for="v2" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">work</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'work')">🔊</button>
+    </div>
+
+    <!-- 3. prefer (Stative) -->
+    <div class="verb-item" data-stative="true">
+      <input type="checkbox" id="v3" />
+      <label for="v3" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">prefer</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'prefer')">🔊</button>
+    </div>
+
+    <!-- 4. need (Stative) -->
+    <div class="verb-item" data-stative="true">
+      <input type="checkbox" id="v4" />
+      <label for="v4" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">need</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'need')">🔊</button>
+    </div>
+
+    <!-- 5. want (Stative) -->
+    <div class="verb-item" data-stative="true">
+      <input type="checkbox" id="v5" />
+      <label for="v5" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">want</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'want')">🔊</button>
+    </div>
+
+    <!-- 6. eat (Dynamic) -->
+    <div class="verb-item" data-stative="false">
+      <input type="checkbox" id="v6" />
+      <label for="v6" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">eat</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'eat')">🔊</button>
+    </div>
+
+    <!-- 7. drink (Dynamic) -->
+    <div class="verb-item" data-stative="false">
+      <input type="checkbox" id="v7" />
+      <label for="v7" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">drink</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'drink')">🔊</button>
+    </div>
+
+    <!-- 8. suppose (Stative) -->
+    <div class="verb-item" data-stative="true">
+      <input type="checkbox" id="v8" />
+      <label for="v8" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">suppose</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'suppose')">🔊</button>
+    </div>
+
+    <!-- 9. understand (Stative) -->
+    <div class="verb-item" data-stative="true">
+      <input type="checkbox" id="v9" />
+      <label for="v9" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">understand</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'understand')">🔊</button>
+    </div>
+
+    <!-- 10. believe (Stative) -->
+    <div class="verb-item" data-stative="true">
+      <input type="checkbox" id="v10" />
+      <label for="v10" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">believe</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'believe')">🔊</button>
+    </div>
+
+    <!-- 11. cut (Dynamic) -->
+    <div class="verb-item" data-stative="false">
+      <input type="checkbox" id="v11" />
+      <label for="v11" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">cut</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'cut')">🔊</button>
+    </div>
+
+    <!-- 12. read (Dynamic) -->
+    <div class="verb-item" data-stative="false">
+      <input type="checkbox" id="v12" />
+      <label for="v12" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">read</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'read')">🔊</button>
+    </div>
+
+    <!-- 13. run (Dynamic) -->
+    <div class="verb-item" data-stative="false">
+      <input type="checkbox" id="v13" />
+      <label for="v13" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">run</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'run')">🔊</button>
+    </div>
+
+    <!-- 14. remember (Stative) -->
+    <div class="verb-item" data-stative="true">
+      <input type="checkbox" id="v14" />
+      <label for="v14" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">remember</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'remember')">🔊</button>
+    </div>
+
+    <!-- 15. contain (Stative) -->
+    <div class="verb-item" data-stative="true">
+      <input type="checkbox" id="v15" />
+      <label for="v15" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">contain</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'contain')">🔊</button>
+    </div>
+
+    <!-- 16. seem (Stative) -->
+    <div class="verb-item" data-stative="true">
+      <input type="checkbox" id="v16" />
+      <label for="v16" class="checkbox-label">
+        <span class="custom-checkbox"></span>
+        <span class="verb-text">seem</span>
+      </label>
+      <button type="button" class="audio-btn" onclick="speakVerb(event, 'seem')">🔊</button>
+    </div>
+
+  </div>
+
+  <div id="feedbackBanner" class="feedback-banner"></div>
+
+  <div class="controls">
+    <button class="btn btn-check" type="button" onclick="checkAnswers()">Check Answers ✔</button>
+    <button class="btn btn-reset" type="button" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  function speakVerb(event, verb) {
+    // Prevent triggering the parent checkbox toggle when clicking the audio button
+    event.stopPropagation();
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setTimeout(() => {
+        const utterance = new SpeechSynthesisUtterance(verb);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        const voices = window.speechSynthesis.getVoices();
+        const englishVoice = voices.find(v => v.lang.startsWith('en'));
+        if (englishVoice) utterance.voice = englishVoice;
+        window.speechSynthesis.speak(utterance);
+      }, 50);
+    }
+  }
+
+  function checkAnswers() {
+    const items = document.querySelectorAll('.verb-item');
+    let correctCount = 0;
+    const totalCount = items.length;
+
+    items.forEach(item => {
+      const isStative = item.dataset.stative === 'true';
+      const checkbox = item.querySelector('input[type="checkbox"]');
+      const isChecked = checkbox.checked;
+
+      item.classList.remove('state-correct', 'state-wrong');
+
+      // Correct if:
+      // 1) It's stative and the student checked it
+      // 2) It's dynamic and the student left it unchecked
+      if ((isStative && isChecked) || (!isStative && !isChecked)) {
+        item.classList.add('state-correct');
+        correctCount++;
+      } else {
+        item.classList.add('state-wrong');
+      }
+    });
+
+    const banner = document.getElementById('feedbackBanner');
+    if (correctCount === totalCount) {
+      banner.textContent = `🎉 Perfect! You correctly identified all stative verbs (${correctCount}/${totalCount})!`;
+      banner.className = 'feedback-banner success';
+    } else {
+      banner.textContent = `You got ${correctCount} out of ${totalCount} correct. Review the highlighted items and try again!`;
+      banner.className = 'feedback-banner error';
+    }
+  }
+
+  function resetExercise() {
+    const items = document.querySelectorAll('.verb-item');
+    items.forEach(item => {
+      item.classList.remove('state-correct', 'state-wrong');
+      const checkbox = item.querySelector('input[type="checkbox"]');
+      if (checkbox) checkbox.checked = false;
+    });
+
+    const banner = document.getElementById('feedbackBanner');
+    banner.style.display = 'none';
+  }
+</script>
+</body>
+</html>
