@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 3. Catch the mistake! 🔎</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --focus-border: #38bdf8;
+    --correct-color: #22c55e;
+    --correct-bg: rgba(34, 197, 94, 0.12);
+    --wrong-color: #ef4444;
+    --wrong-bg: rgba(239, 68, 68, 0.12);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  /* Questions List */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .question-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .sentence-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .sentence-text {
+    font-size: 1rem;
+    color: #f1f5f9;
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .item-num {
+    font-weight: 700;
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  .action-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Toggle Buttons */
+  .status-toggle {
+    display: inline-flex;
+    background: #0f172a;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 3px;
+    gap: 4px;
+  }
+
+  .toggle-btn {
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    opacity: 0.5;
+    transition: all 0.2s ease;
+  }
+
+  .toggle-btn:hover {
+    opacity: 0.8;
+  }
+
+  .toggle-btn.active-wrong {
+    background: rgba(239, 68, 68, 0.25);
+    border: 1px solid var(--wrong-color);
+    opacity: 1;
+  }
+
+  .toggle-btn.active-correct {
+    background: rgba(34, 197, 94, 0.25);
+    border: 1px solid var(--correct-color);
+    opacity: 1;
+  }
+
+  .correction-box {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-color);
+  }
+
+  .correction-box.visible {
+    display: flex;
+  }
+
+  .correction-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .answer-input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .answer-input:focus {
+    border-color: var(--focus-border);
+  }
+
+  .audio-btn {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: var(--accent);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  /* Validation States */
+  .question-card.correct-eval {
+    border-color: var(--correct-color);
+    background: var(--correct-bg);
+  }
+
+  .question-card.wrong-eval {
+    border-color: var(--wrong-color);
+    background: var(--wrong-bg);
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .btn-check:hover {
+    background: #7dd3fc;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Exercise 3. Catch the mistake! 🔎</h1>
+    <p>Some sentences are correct and some have a mistake. Correct the wrong ones.</p>
+  </div>
+
+  <div class="questions-list">
+
+    <!-- Item 1 -->
+    <div class="question-card" data-is-correct="false" data-answers='["I know a lot about lacrosse.", "I know a lot about lacrosse"]' data-original="I am knowing a lot about lacrosse.">
+      <div class="sentence-row">
+        <div class="sentence-text">
+          <span class="item-num">1.</span> I am knowing a lot about lacrosse.
+        </div>
+        <div class="action-group">
+          <div class="status-toggle">
+            <button type="button" class="toggle-btn toggle-wrong" onclick="selectStatus(this, 'wrong')">❌</button>
+            <button type="button" class="toggle-btn toggle-correct" onclick="selectStatus(this, 'correct')">✅</button>
+          </div>
+          <button type="button" class="audio-btn" onclick="speakText(this)">🔊</button>
+        </div>
+      </div>
+      <div class="correction-box">
+        <span class="correction-label">Type the corrected sentence:</span>
+        <input type="text" class="answer-input" placeholder="Type correct sentence..." />
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="question-card" data-is-correct="true" data-original="Our team is playing really well today.">
+      <div class="sentence-row">
+        <div class="sentence-text">
+          <span class="item-num">2.</span> Our team is playing really well today.
+        </div>
+        <div class="action-group">
+          <div class="status-toggle">
+            <button type="button" class="toggle-btn toggle-wrong" onclick="selectStatus(this, 'wrong')">❌</button>
+            <button type="button" class="toggle-btn toggle-correct" onclick="selectStatus(this, 'correct')">✅</button>
+          </div>
+          <button type="button" class="audio-btn" onclick="speakText(this)">🔊</button>
+        </div>
+      </div>
+      <div class="correction-box">
+        <span class="correction-label">Type the corrected sentence:</span>
+        <input type="text" class="answer-input" placeholder="Type correct sentence..." />
+      </div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="question-card" data-is-correct="false" data-answers='["This website contains useful information.", "This website contains useful information"]' data-original="This website is containing useful information.">
+      <div class="sentence-row">
+        <div class="sentence-text">
+          <span class="item-num">3.</span> This website is containing useful information.
+        </div>
+        <div class="action-group">
+          <div class="status-toggle">
+            <button type="button" class="toggle-btn toggle-wrong" onclick="selectStatus(this, 'wrong')">❌</button>
+            <button type="button" class="toggle-btn toggle-correct" onclick="selectStatus(this, 'correct')">✅</button>
+          </div>
+          <button type="button" class="audio-btn" onclick="speakText(this)">🔊</button>
+        </div>
+      </div>
+      <div class="correction-box">
+        <span class="correction-label">Type the corrected sentence:</span>
+        <input type="text" class="answer-input" placeholder="Type correct sentence..." />
+      </div>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="question-card" data-is-correct="true" data-original="I suppose he is an accountable teammate.">
+      <div class="sentence-row">
+        <div class="sentence-text">
+          <span class="item-num">4.</span> I suppose he is an accountable teammate.
+        </div>
+        <div class="action-group">
+          <div class="status-toggle">
+            <button type="button" class="toggle-btn toggle-wrong" onclick="selectStatus(this, 'wrong')">❌</button>
+            <button type="button" class="toggle-btn toggle-correct" onclick="selectStatus(this, 'correct')">✅</button>
+          </div>
+          <button type="button" class="audio-btn" onclick="speakText(this)">🔊</button>
+        </div>
+      </div>
+      <div class="correction-box">
+        <span class="correction-label">Type the corrected sentence:</span>
+        <input type="text" class="answer-input" placeholder="Type correct sentence..." />
+      </div>
+    </div>
+
+    <!-- Item 5 -->
+    <div class="question-card" data-is-correct="true" data-original="She is preparing for the match at the moment.">
+      <div class="sentence-row">
+        <div class="sentence-text">
+          <span class="item-num">5.</span> She is preparing for the match at the moment.
+        </div>
+        <div class="action-group">
+          <div class="status-toggle">
+            <button type="button" class="toggle-btn toggle-wrong" onclick="selectStatus(this, 'wrong')">❌</button>
+            <button type="button" class="toggle-btn toggle-correct" onclick="selectStatus(this, 'correct')">✅</button>
+          </div>
+          <button type="button" class="audio-btn" onclick="speakText(this)">🔊</button>
+        </div>
+      </div>
+      <div class="correction-box">
+        <span class="correction-label">Type the corrected sentence:</span>
+        <input type="text" class="answer-input" placeholder="Type correct sentence..." />
+      </div>
+    </div>
+
+    <!-- Item 6 -->
+    <div class="question-card" data-is-correct="false" data-answers='["He needs another ten minutes.", "He needs another ten minutes"]' data-original="He is needing another ten minutes.">
+      <div class="sentence-row">
+        <div class="sentence-text">
+          <span class="item-num">6.</span> He is needing another ten minutes.
+        </div>
+        <div class="action-group">
+          <div class="status-toggle">
+            <button type="button" class="toggle-btn toggle-wrong" onclick="selectStatus(this, 'wrong')">❌</button>
+            <button type="button" class="toggle-btn toggle-correct" onclick="selectStatus(this, 'correct')">✅</button>
+          </div>
+          <button type="button" class="audio-btn" onclick="speakText(this)">🔊</button>
+        </div>
+      </div>
+      <div class="correction-box">
+        <span class="correction-label">Type the corrected sentence:</span>
+        <input type="text" class="answer-input" placeholder="Type correct sentence..." />
+      </div>
+    </div>
+
+    <!-- Item 7 -->
+    <div class="question-card" data-is-correct="true" data-original="You seem very confident today.">
+      <div class="sentence-row">
+        <div class="sentence-text">
+          <span class="item-num">7.</span> You seem very confident today.
+        </div>
+        <div class="action-group">
+          <div class="status-toggle">
+            <button type="button" class="toggle-btn toggle-wrong" onclick="selectStatus(this, 'wrong')">❌</button>
+            <button type="button" class="toggle-btn toggle-correct" onclick="selectStatus(this, 'correct')">✅</button>
+          </div>
+          <button type="button" class="audio-btn" onclick="speakText(this)">🔊</button>
+        </div>
+      </div>
+      <div class="correction-box">
+        <span class="correction-label">Type the corrected sentence:</span>
+        <input type="text" class="answer-input" placeholder="Type correct sentence..." />
+      </div>
+    </div>
+
+    <!-- Item 8 -->
+    <div class="question-card" data-is-correct="true" data-original="I'm managing my time better these days.">
+      <div class="sentence-row">
+        <div class="sentence-text">
+          <span class="item-num">8.</span> I'm managing my time better these days.
+        </div>
+        <div class="action-group">
+          <div class="status-toggle">
+            <button type="button" class="toggle-btn toggle-wrong" onclick="selectStatus(this, 'wrong')">❌</button>
+            <button type="button" class="toggle-btn toggle-correct" onclick="selectStatus(this, 'correct')">✅</button>
+          </div>
+          <button type="button" class="audio-btn" onclick="speakText(this)">🔊</button>
+        </div>
+      </div>
+      <div class="correction-box">
+        <span class="correction-label">Type the corrected sentence:</span>
+        <input type="text" class="answer-input" placeholder="Type correct sentence..." />
+      </div>
+    </div>
+
+    <!-- Item 9 -->
+    <div class="question-card" data-is-correct="false" data-answers='["I expect him to come at 5.", "I expect him to come at 5"]' data-original="I am expecting him to come at 5.">
+      <div class="sentence-row">
+        <div class="sentence-text">
+          <span class="item-num">9.</span> I am expecting him to come at 5.
+        </div>
+        <div class="action-group">
+          <div class="status-toggle">
+            <button type="button" class="toggle-btn toggle-wrong" onclick="selectStatus(this, 'wrong')">❌</button>
+            <button type="button" class="toggle-btn toggle-correct" onclick="selectStatus(this, 'correct')">✅</button>
+          </div>
+          <button type="button" class="audio-btn" onclick="speakText(this)">🔊</button>
+        </div>
+      </div>
+      <div class="correction-box">
+        <span class="correction-label">Type the corrected sentence:</span>
+        <input type="text" class="answer-input" placeholder="Type correct sentence..." />
+      </div>
+    </div>
+
+    <!-- Item 10 -->
+    <div class="question-card" data-is-correct="true" data-original="They are turning down the offer.">
+      <div class="sentence-row">
+        <div class="sentence-text">
+          <span class="item-num">10.</span> They are turning down the offer.
+        </div>
+        <div class="action-group">
+          <div class="status-toggle">
+            <button type="button" class="toggle-btn toggle-wrong" onclick="selectStatus(this, 'wrong')">❌</button>
+            <button type="button" class="toggle-btn toggle-correct" onclick="selectStatus(this, 'correct')">✅</button>
+          </div>
+          <button type="button" class="audio-btn" onclick="speakText(this)">🔊</button>
+        </div>
+      </div>
+      <div class="correction-box">
+        <span class="correction-label">Type the corrected sentence:</span>
+        <input type="text" class="answer-input" placeholder="Type correct sentence..." />
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-check" type="button" onclick="checkAnswers()">Check Answers ✔</button>
+    <button class="btn btn-reset" type="button" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  function selectStatus(btn, choice) {
+    const card = btn.closest('.question-card');
+    const wrongBtn = card.querySelector('.toggle-wrong');
+    const correctBtn = card.querySelector('.toggle-correct');
+    const correctionBox = card.querySelector('.correction-box');
+
+    wrongBtn.classList.remove('active-wrong');
+    correctBtn.classList.remove('active-correct');
+
+    if (choice === 'wrong') {
+      wrongBtn.classList.add('active-wrong');
+      card.dataset.userSelection = 'wrong';
+      correctionBox.classList.add('visible');
+    } else {
+      correctBtn.classList.add('active-correct');
+      card.dataset.userSelection = 'correct';
+      correctionBox.classList.remove('visible');
+    }
+  }
+
+  function speakText(btn) {
+    const card = btn.closest('.question-card');
+    const input = card.querySelector('.answer-input');
+    let textToSpeak = card.dataset.original;
+
+    if (card.dataset.userSelection === 'wrong' && input.value.trim() !== '') {
+      textToSpeak = input.value.trim();
+    }
+
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoice = voices.find(v => v.lang.startsWith('en'));
+      if (englishVoice) utterance.voice = englishVoice;
+      window.speechSynthesis.speak(utterance);
+    }, 50);
+  }
+
+  function normalize(str) {
+    return str.toLowerCase().trim().replace(/\s+/g, ' ').replace(/[.,!?]$/, '');
+  }
+
+  function checkAnswers() {
+    document.querySelectorAll('.question-card').forEach(card => {
+      const isCorrectSentence = card.dataset.isCorrect === 'true';
+      const userSelection = card.dataset.userSelection;
+      const input = card.querySelector('.answer-input');
+      
+      card.classList.remove('correct-eval', 'wrong-eval');
+
+      if (!userSelection) {
+        card.classList.add('wrong-eval');
+        return;
+      }
+
+      if (isCorrectSentence) {
+        if (userSelection === 'correct') {
+          card.classList.add('correct-eval');
+        } else {
+          card.classList.add('wrong-eval');
+        }
+      } else {
+        if (userSelection === 'wrong') {
+          const userVal = normalize(input.value);
+          const validAnswers = JSON.parse(card.dataset.answers || '[]').map(a => normalize(a));
+          if (validAnswers.includes(userVal)) {
+            card.classList.add('correct-eval');
+          } else {
+            card.classList.add('wrong-eval');
+          }
+        } else {
+          card.classList.add('wrong-eval');
+        }
+      }
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll('.question-card').forEach(card => {
+      card.classList.remove('correct-eval', 'wrong-eval');
+      delete card.dataset.userSelection;
+      
+      const wrongBtn = card.querySelector('.toggle-wrong');
+      const correctBtn = card.querySelector('.toggle-correct');
+      if (wrongBtn) wrongBtn.classList.remove('active-wrong');
+      if (correctBtn) correctBtn.classList.remove('active-correct');
+
+      const correctionBox = card.querySelector('.correction-box');
+      if (correctionBox) correctionBox.classList.remove('visible');
+
+      const input = card.querySelector('.answer-input');
+      if (input) input.value = '';
+    });
+  }
+</script>
+
+</body>
+</html>
