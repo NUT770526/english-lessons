@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 2. 🚦 GREEN or RED?</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --focus-border: #38bdf8;
+    
+    --green-accent: #22c55e;
+    --green-bg: rgba(34, 197, 94, 0.12);
+    --green-border: rgba(34, 197, 94, 0.4);
+    
+    --red-accent: #ef4444;
+    --red-bg: rgba(239, 68, 68, 0.12);
+    --red-border: rgba(239, 68, 68, 0.4);
+
+    --tooltip-bg: #020617;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header h1 {
+    font-size: 1.7rem;
+    color: var(--accent);
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .rules-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .rule-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.98rem;
+  }
+
+  .rule-tag {
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+
+  .rule-tag.green {
+    background: var(--green-bg);
+    color: var(--green-accent);
+    border: 1px solid var(--green-border);
+  }
+
+  .rule-tag.red {
+    background: var(--red-bg);
+    color: var(--red-accent);
+    border: 1px solid var(--red-border);
+  }
+
+  /* Tooltip styling */
+  .word-target {
+    position: relative;
+    cursor: grab;
+    display: inline-block;
+    user-select: none;
+  }
+
+  .word-target .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--tooltip-bg);
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    font-size: 0.85rem;
+    font-weight: 400;
+    white-space: nowrap;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    z-index: 50;
+    text-align: center;
+  }
+
+  .word-target .tooltip .transcription {
+    color: var(--accent);
+    font-family: monospace;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .word-target .tooltip .ukr-translation {
+    color: #e2e8f0;
+  }
+
+  .word-target:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* Section Title */
+  .section-title {
+    font-size: 1.2rem;
+    color: #f1f5f9;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Verb Bank */
+  .verb-bank-container {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  .verb-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 50px;
+    align-items: center;
+  }
+
+  .verb-chip {
+    background: #1e293b;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .verb-chip:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .verb-chip.dragging {
+    opacity: 0.5;
+  }
+
+  .verb-chip.correct-placed {
+    border-color: var(--green-accent);
+    background: var(--green-bg);
+  }
+
+  .verb-chip.wrong-placed {
+    border-color: var(--red-accent);
+    background: var(--red-bg);
+    animation: shake 0.3s ease;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  /* Sorting Drop Zones */
+  .sorting-zones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .zone-card {
+    background: var(--card-bg);
+    border: 2px dashed var(--border-color);
+    border-radius: 16px;
+    padding: 16px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .zone-card.green-zone {
+    border-color: var(--green-border);
+  }
+
+  .zone-card.red-zone {
+    border-color: var(--red-border);
+  }
+
+  .zone-card.drag-over {
+    background: rgba(56, 189, 248, 0.08);
+    border-style: solid;
+  }
+
+  .zone-header {
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .zone-header.green { color: var(--green-accent); }
+  .zone-header.red { color: var(--red-accent); }
+
+  .zone-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex: 1;
+    align-content: flex-start;
+  }
+
+  /* Feedback box */
+  .feedback-banner {
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: none;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .feedback-banner.success {
+    display: block;
+    background: var(--green-bg);
+    color: var(--green-accent);
+    border: 1px solid var(--green-border);
+  }
+
+  .feedback-banner.error {
+    display: block;
+    background: var(--red-bg);
+    color: var(--red-accent);
+    border: 1px solid var(--red-border);
+  }
+
+  /* Part 2: Sentence Creation */
+  .part-2-container {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sentence-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .sentence-slot {
+    background: #1e293b;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    transition: all 0.2s ease;
+  }
+
+  .sentence-slot.correct {
+    border-color: var(--green-accent);
+    background: var(--green-bg);
+  }
+
+  .sentence-slot.wrong {
+    border-color: var(--red-accent);
+    background: var(--red-bg);
+  }
+
+  .slot-num {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 24px;
+  }
+
+  .verb-select {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .verb-select:focus {
+    border-color: var(--focus-border);
+  }
+
+  .arrow-indicator {
+    color: var(--text-secondary);
+    font-weight: bold;
+  }
+
+  .sentence-input {
+    flex: 1;
+    min-width: 200px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+  }
+
+  .sentence-input:focus {
+    border-color: var(--focus-border);
+  }
+
+  .audio-btn {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: var(--accent);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  /* Control buttons */
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .btn {
+    font-size: 0.98rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .btn-check:hover {
+    background: #7dd3fc;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  @media (max-width: 640px) {
+    .container {
+      padding: 18px 12px;
+    }
+
+    .sorting-zones {
+      grid-template-columns: 1fr;
+    }
+
+    .sentence-slot {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .audio-btn {
+      align-self: flex-end;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Exercise 2. 🚦 GREEN or RED?</h1>
+    <p>Imagine a traffic light for English verbs!</p>
+  </div>
+
+  <div class="rules-card">
+    <div class="rule-item">
+      <span class="rule-tag green">🟢 GREEN</span>
+      <span>The verb can be used in <b>Present Continuous</b> (Action verbs).</span>
+    </div>
+    <div class="rule-item">
+      <span class="rule-tag red">🔴 RED</span>
+      <span>Stative verb → normally <b>NO Present Continuous</b> (use Present Simple).</span>
+    </div>
+  </div>
+
+  <!-- PART 1 -->
+  <div>
+    <div class="section-title">
+      <span>Part 1. Sort the verbs:</span>
+    </div>
+
+    <div class="verb-bank-container">
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 12px;">
+        💡 Click or drag a verb into the GREEN or RED box below. Hover/tap a verb for IPA & translation.
+      </p>
+      <div class="verb-bank" id="verbBank"></div>
+    </div>
+
+    <div class="sorting-zones">
+      <div class="zone-card green-zone" id="greenZone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'GREEN')">
+        <div class="zone-header green">
+          🟢 GREEN Zone (Continuous OK)
+        </div>
+        <div class="zone-content" id="greenContent"></div>
+      </div>
+
+      <div class="zone-card red-zone" id="redZone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'RED')">
+        <div class="zone-header red">
+          🔴 RED Zone (Stative / No Continuous)
+        </div>
+        <div class="zone-content" id="redContent"></div>
+      </div>
+    </div>
+
+    <div id="sortingFeedback" class="feedback-banner"></div>
+  </div>
+
+  <!-- PART 2 -->
+  <div class="part-2-container">
+    <div class="section-title">
+      <span>Part 2. Make Present Simple sentences</span>
+    </div>
+    <p style="font-size: 0.9rem; color: var(--text-secondary);">
+      Choose four 🔴 RED verbs and write a original sentence in Present Simple for each (e.g. <i>know → I know this word.</i>).
+    </p>
+
+    <div class="sentence-grid">
+      <!-- Slot 1 -->
+      <div class="sentence-slot" id="slot1">
+        <span class="slot-num">1.</span>
+        <select class="verb-select" id="select1">
+          <option value="">Choose verb...</option>
+        </select>
+        <span class="arrow-indicator">→</span>
+        <input type="text" class="sentence-input" id="input1" placeholder="Write sentence here (e.g., I know this word.)" />
+        <button class="audio-btn" type="button" onclick="speakSentence(1)">🔊</button>
+      </div>
+
+      <!-- Slot 2 -->
+      <div class="sentence-slot" id="slot2">
+        <span class="slot-num">2.</span>
+        <select class="verb-select" id="select2">
+          <option value="">Choose verb...</option>
+        </select>
+        <span class="arrow-indicator">→</span>
+        <input type="text" class="sentence-input" id="input2" placeholder="Write sentence here..." />
+        <button class="audio-btn" type="button" onclick="speakSentence(2)">🔊</button>
+      </div>
+
+      <!-- Slot 3 -->
+      <div class="sentence-slot" id="slot3">
+        <span class="slot-num">3.</span>
+        <select class="verb-select" id="select3">
+          <option value="">Choose verb...</option>
+        </select>
+        <span class="arrow-indicator">→</span>
+        <input type="text" class="sentence-input" id="input3" placeholder="Write sentence here..." />
+        <button class="audio-btn" type="button" onclick="speakSentence(3)">🔊</button>
+      </div>
+
+      <!-- Slot 4 -->
+      <div class="sentence-slot" id="slot4">
+        <span class="slot-num">4.</span>
+        <select class="verb-select" id="select4">
+          <option value="">Choose verb...</option>
+        </select>
+        <span class="arrow-indicator">→</span>
+        <input type="text" class="sentence-input" id="input4" placeholder="Write sentence here..." />
+        <button class="audio-btn" type="button" onclick="speakSentence(4)">🔊</button>
+      </div>
+    </div>
+
+    <div id="sentenceFeedback" class="feedback-banner"></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-check" type="button" onclick="checkSorting()">Check Sorting ✔</button>
+    <button class="btn btn-check" style="background: #a855f7; color: #ffffff;" type="button" onclick="checkSentences()">Check Sentences ✍️</button>
+    <button class="btn btn-reset" type="button" onclick="resetAll()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  // Vocabulary Database
+  const verbData = [
+    { word: 'know', ipa: '[nəʊ]', ukr: 'знати', type: 'RED' },
+    { word: 'play', ipa: '[pleɪ]', ukr: 'грати', type: 'GREEN' },
+    { word: 'need', ipa: '[niːd]', ukr: 'потребувати', type: 'RED' },
+    { word: 'contain', ipa: '[kənˈteɪn]', ukr: 'містити (в собі)', type: 'RED' },
+    { word: 'study', ipa: '[ˈstʌdi]', ukr: 'навчатися', type: 'GREEN' },
+    { word: 'suppose', ipa: '[səˈpəʊz]', ukr: 'припускати, вважати', type: 'RED' },
+    { word: 'seem', ipa: '[siːm]', ukr: 'здаватися', type: 'RED' },
+    { word: 'run', ipa: '[rʌn]', ukr: 'бігти, керувати', type: 'GREEN' },
+    { word: 'expect', ipa: '[ɪkˈspekt]', ukr: 'очікувати', type: 'RED' },
+    { word: 'prepare', ipa: '[prɪˈpeə]', ukr: 'готувати(ся)', type: 'GREEN' },
+    { word: 'want', ipa: '[wɒnt]', ukr: 'хотіти', type: 'RED' },
+    { word: 'manage', ipa: '[ˈmænɪdʒ]', ukr: 'керувати, справлятися', type: 'GREEN' },
+    { word: 'believe', ipa: '[bɪˈliːv]', ukr: 'вірити', type: 'RED' },
+    { word: 'turn down', ipa: '[tɜːn daʊn]', ukr: 'відхиляти, зменшувати', type: 'GREEN' },
+    { word: 'understand', ipa: '[ˌʌndəˈstænd]', ukr: 'розуміти', type: 'RED' },
+    { word: 'listen', ipa: '[ˈlɪsn]', ukr: 'слухати', type: 'GREEN' }
+  ];
+
+  let draggedWord = null;
+
+  // Initialize App
+  window.onload = function() {
+    initVerbBank();
+    populateSelects();
+  };
+
+  function initVerbBank() {
+    const verbBank = document.getElementById('verbBank');
+    verbBank.innerHTML = '';
+    
+    // Shuffle verbs
+    const shuffled = [...verbData].sort(() => Math.random() - 0.5);
+
+    shuffled.forEach(item => {
+      const chip = createVerbChip(item);
+      verbBank.appendChild(chip);
+    });
+  }
+
+  function createVerbChip(item) {
+    const container = document.createElement('div');
+    container.className = 'word-target verb-chip';
+    container.draggable = true;
+    container.dataset.word = item.word;
+    container.dataset.type = item.type;
+
+    container.innerHTML = `
+      ${item.word}
+      <div class="tooltip">
+        <span class="transcription">${item.ipa}</span>
+        <span class="ukr-translation">${item.ukr}</span>
+      </div>
+    `;
+
+    // Click to cycle placement
+    container.onclick = function() {
+      cyclePlacement(container);
+    };
+
+    // Drag events
+    container.ondragstart = function(e) {
+      draggedWord = container;
+      container.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', item.word);
+    };
+
+    container.ondragend = function() {
+      container.classList.remove('dragging');
+      draggedWord = null;
+    };
+
+    return container;
+  }
+
+  function cyclePlacement(chip) {
+    const parent = chip.parentElement;
+    const greenContent = document.getElementById('greenContent');
+    const redContent = document.getElementById('redContent');
+    const verbBank = document.getElementById('verbBank');
+
+    // Remove feedback classes
+    chip.classList.remove('correct-placed', 'wrong-placed');
+
+    if (parent === verbBank) {
+      greenContent.appendChild(chip);
+    } else if (parent === greenContent) {
+      redContent.appendChild(chip);
+    } else {
+      verbBank.appendChild(chip);
+    }
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.currentTarget.classList.add('drag-over');
+  }
+
+  function handleDragLeave(e) {
+    e.currentTarget.classList.remove('drag-over');
+  }
+
+  function handleDrop(e, zone) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    if (!draggedWord) return;
+
+    draggedWord.classList.remove('correct-placed', 'wrong-placed');
+    if (zone === 'GREEN') {
+      document.getElementById('greenContent').appendChild(draggedWord);
+    } else if (zone === 'RED') {
+      document.getElementById('redContent').appendChild(draggedWord);
+    }
+  }
+
+  function checkSorting() {
+    const greenChips = document.querySelectorAll('#greenContent .verb-chip');
+    const redChips = document.querySelectorAll('#redContent .verb-chip');
+    const bankChips = document.querySelectorAll('#verbBank .verb-chip');
+
+    let correctCount = 0;
+    let totalCount = verbData.length;
+
+    if (bankChips.length > 0) {
+      showFeedback('sortingFeedback', `Please sort all ${bankChips.length} remaining verbs first!`, false);
+      return;
+    }
+
+    greenChips.forEach(chip => {
+      if (chip.dataset.type === 'GREEN') {
+        chip.classList.add('correct-placed');
+        chip.classList.remove('wrong-placed');
+        correctCount++;
+      } else {
+        chip.classList.add('wrong-placed');
+        chip.classList.remove('correct-placed');
+      }
+    });
+
+    redChips.forEach(chip => {
+      if (chip.dataset.type === 'RED') {
+        chip.classList.add('correct-placed');
+        chip.classList.remove('wrong-placed');
+        correctCount++;
+      } else {
+        chip.classList.add('wrong-placed');
+        chip.classList.remove('correct-placed');
+      }
+    });
+
+    if (correctCount === totalCount) {
+      showFeedback('sortingFeedback', `🎉 Perfect! All ${totalCount} verbs are correctly sorted!`, true);
+    } else {
+      showFeedback('sortingFeedback', `You got ${correctCount} of ${totalCount} correct. Check the highlighted red verbs!`, false);
+    }
+  }
+
+  // Part 2: Selects & Sentences
+  function populateSelects() {
+    const redVerbs = verbData.filter(v => v.type === 'RED').map(v => v.word);
+    
+    for (let i = 1; i <= 4; i++) {
+      const select = document.getElementById(`select${i}`);
+      select.innerHTML = '<option value="">Choose verb...</option>';
+      redVerbs.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        select.appendChild(opt);
+      });
+    }
+  }
+
+  function checkSentences() {
+    let validSlots = 0;
+    const selectedVerbs = new Set();
+
+    for (let i = 1; i <= 4; i++) {
+      const slot = document.getElementById(`slot${i}`);
+      const select = document.getElementById(`select${i}`);
+      const input = document.getElementById(`input${i}`);
+
+      const verb = select.value;
+      const sentence = input.value.trim();
+
+      slot.classList.remove('correct', 'wrong');
+
+      if (!verb || !sentence) {
+        slot.classList.add('wrong');
+        continue;
+      }
+
+      // Basic sentence rules:
+      // 1. Starts with uppercase letter
+      // 2. Ends with punctuation (. ! ?)
+      // 3. Contains chosen verb
+      // 4. Does not use continuous ending "ing" on stative verb
+      const startsCapital = /^[A-Z]/.test(sentence);
+      const endsPunctuation = /[.!?]$/.test(sentence);
+      const containsVerb = sentence.toLowerCase().includes(verb.toLowerCase());
+      const noIngForm = !sentence.toLowerCase().includes(verb.toLowerCase() + 'ing');
+
+      if (startsCapital && endsPunctuation && containsVerb && noIngForm) {
+        slot.classList.add('correct');
+        selectedVerbs.add(verb);
+        validSlots++;
+      } else {
+        slot.classList.add('wrong');
+      }
+    }
+
+    if (validSlots === 4) {
+      showFeedback('sentenceFeedback', '🌟 Great job! All 4 sentences are valid Present Simple sentences.', true);
+    } else {
+      showFeedback('sentenceFeedback', `Validated ${validSlots}/4 sentences. Make sure sentences start with a capital letter, end with punctuation (.), and use the selected RED verb in Present Simple!`, false);
+    }
+  }
+
+  function speakSentence(slotNum) {
+    const input = document.getElementById(`input${slotNum}`);
+    const select = document.getElementById(`select${slotNum}`);
+    
+    const textToRead = input.value.trim() || select.value || 'Please select a verb or write a sentence';
+    
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setTimeout(() => {
+        const utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.88;
+        window.speechSynthesis.speak(utterance);
+      }, 50);
+    }
+  }
+
+  function showFeedback(elementId, message, isSuccess) {
+    const el = document.getElementById(elementId);
+    el.textContent = message;
+    el.className = `feedback-banner ${isSuccess ? 'success' : 'error'}`;
+  }
+
+  function resetAll() {
+    initVerbBank();
+    document.getElementById('greenContent').innerHTML = '';
+    document.getElementById('redContent').innerHTML = '';
+
+    document.getElementById('sortingFeedback').style.display = 'none';
+    document.getElementById('sentenceFeedback').style.display = 'none';
+
+    for (let i = 1; i <= 4; i++) {
+      const slot = document.getElementById(`slot${i}`);
+      slot.classList.remove('correct', 'wrong');
+      document.getElementById(`select${i}`).value = '';
+      document.getElementById(`input${i}`).value = '';
+    }
+  }
+</script>
+</body>
+</html>
