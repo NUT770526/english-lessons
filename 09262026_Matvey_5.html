@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 2. Finish the idea 💭</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --focus-border: #38bdf8;
+    --correct-color: #22c55e;
+    --correct-bg: rgba(34, 197, 94, 0.12);
+    --wrong-color: #ef4444;
+    --wrong-bg: rgba(239, 68, 68, 0.12);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header h1 {
+    font-size: 1.6rem;
+    color: var(--accent);
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .question-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .sentence-wrapper {
+    font-size: 1rem;
+    color: #f1f5f9;
+    line-height: 1.6;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .item-num {
+    font-weight: 700;
+    color: var(--accent);
+    margin-right: 2px;
+  }
+
+  /* Custom Select Menu */
+  .word-select {
+    background: var(--panel-bg);
+    color: var(--accent);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .word-select:focus {
+    border-color: var(--accent);
+  }
+
+  /* Tooltip logic */
+  .target-word {
+    font-weight: 600;
+    position: relative;
+    cursor: pointer;
+    border-bottom: 1px dashed var(--accent);
+  }
+
+  .target-word .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #1e293b;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    font-size: 0.8rem;
+    font-weight: 400;
+    white-space: nowrap;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .target-word .tooltip .transcription {
+    color: var(--accent);
+    font-family: monospace;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .target-word .tooltip .ukr-translation {
+    color: #e2e8f0;
+  }
+
+  .target-word:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .audio-btn {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: var(--accent);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+    margin-left: 2px;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .answer-input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .answer-input:focus {
+    border-color: var(--focus-border);
+  }
+
+  /* Validation States */
+  .question-card.correct {
+    border-color: var(--correct-color);
+    background: var(--correct-bg);
+  }
+
+  .question-card.correct .word-select {
+    border-color: var(--correct-color);
+    color: var(--correct-color);
+  }
+
+  .question-card.wrong {
+    border-color: var(--wrong-color);
+    background: var(--wrong-bg);
+  }
+
+  .question-card.wrong .word-select {
+    border-color: var(--wrong-color);
+    color: var(--wrong-color);
+  }
+
+  /* Rule Box */
+  .rule-box {
+    margin-top: 28px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  .rule-title {
+    font-weight: 800;
+    font-size: 1rem;
+    color: #ffffff;
+    margin-bottom: 12px;
+  }
+
+  .rule-item {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+    margin-bottom: 8px;
+  }
+
+  .rule-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .dot-orange {
+    color: #f97316;
+    font-size: 1.1rem;
+  }
+
+  .dot-blue {
+    color: #3b82f6;
+    font-size: 1.1rem;
+  }
+
+  .rule-highlight {
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .rule-example {
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .btn-check:hover {
+    background: #7dd3fc;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Exercise 2. Finish the idea 💭</h1>
+    <p>Complete each sentence with <b>other</b> or <b>another</b>, then finish it with your own idea.</p>
+  </div>
+
+  <div class="questions-list">
+
+    <!-- 1 -->
+    <div class="question-card" data-correct="another">
+      <div class="sentence-wrapper">
+        <span class="item-num">1.</span>
+        I'd like to learn
+        <select class="word-select">
+          <option value="">other / another</option>
+          <option value="other">other</option>
+          <option value="another">another</option>
+        </select>
+        sport because...
+      </div>
+      <input type="text" class="answer-input" placeholder="Finish your idea..." />
+    </div>
+
+    <!-- 2 -->
+    <div class="question-card" data-correct="other">
+      <div class="sentence-wrapper">
+        <span class="item-num">2.</span>
+        I have
+        <select class="word-select">
+          <option value="">other / another</option>
+          <option value="other">other</option>
+          <option value="another">another</option>
+        </select>
+        hobbies, such as...
+      </div>
+      <input type="text" class="answer-input" placeholder="Finish your idea..." />
+    </div>
+
+    <!-- 3 -->
+    <div class="question-card" data-correct="another">
+      <div class="sentence-wrapper">
+        <span class="item-num">3.</span>
+        If I had
+        <select class="word-select">
+          <option value="">other / another</option>
+          <option value="other">other</option>
+          <option value="another">another</option>
+        </select>
+        hour today, I would...
+      </div>
+      <input type="text" class="answer-input" placeholder="Finish your idea..." />
+    </div>
+
+    <!-- 4 -->
+    <div class="question-card" data-correct="other">
+      <div class="sentence-wrapper">
+        <span class="item-num">4.</span>
+        An 
+        <span class="target-word">accountable<div class="tooltip"><span class="transcription">[əˈkaʊntəbl]</span><span class="ukr-translation">відповідальний</span></div></span>
+        teammate
+        <button class="audio-btn" type="button" onclick="speak('accountable teammate', event)">🔊</button>
+        should help
+        <select class="word-select">
+          <option value="">other / another</option>
+          <option value="other">other</option>
+          <option value="another">another</option>
+        </select>
+        team members when...
+      </div>
+      <input type="text" class="answer-input" placeholder="Finish your idea..." />
+    </div>
+
+    <!-- 5 -->
+    <div class="question-card" data-correct="another">
+      <div class="sentence-wrapper">
+        <span class="item-num">5.</span>
+        I wouldn't 
+        <span class="target-word">turn down<div class="tooltip"><span class="transcription">[tɜːn daʊn]</span><span class="ukr-translation">відхилити, відмовитися</span></div></span>
+        <button class="audio-btn" type="button" onclick="speak('turn down', event)">🔊</button>
+        <select class="word-select">
+          <option value="">other / another</option>
+          <option value="other">other</option>
+          <option value="another">another</option>
+        </select>
+        chance to...
+      </div>
+      <input type="text" class="answer-input" placeholder="Finish your idea..." />
+    </div>
+
+    <!-- 6 -->
+    <div class="question-card" data-correct="other">
+      <div class="sentence-wrapper">
+        <span class="item-num">6.</span>
+        There are
+        <select class="word-select">
+          <option value="">other / another</option>
+          <option value="other">other</option>
+          <option value="another">another</option>
+        </select>
+        ways to 
+        <span class="target-word">manage your time<div class="tooltip"><span class="transcription">[ˈmænɪdʒ jɔː taɪm]</span><span class="ukr-translation">управляти своїм часом</span></div></span>.
+        <button class="audio-btn" type="button" onclick="speak('manage your time', event)">🔊</button>
+        For example,...
+      </div>
+      <input type="text" class="answer-input" placeholder="Finish your idea..." />
+    </div>
+
+  </div>
+
+  <!-- Easy rule box -->
+  <div class="rule-box">
+    <div class="rule-title">Easy rule to remember:</div>
+    <div class="rule-item">
+      <span class="dot-orange">🟠</span> <span class="rule-highlight">ANOTHER</span> = one more / one different &rarr; <span class="rule-example">another game, another friend, another idea</span>
+    </div>
+    <div class="rule-item">
+      <span class="dot-blue">🔵</span> <span class="rule-highlight">OTHER + plural noun</span> = different/more ones &rarr; <span class="rule-example">other games, other friends, other ideas</span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-check" type="button" onclick="checkAnswers()">Check Answers ✔</button>
+    <button class="btn btn-reset" type="button" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  function speak(text, e) {
+    if (e) e.stopPropagation();
+    if (!('speechSynthesis' in window)) return;
+
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoice = voices.find(v => v.lang.startsWith('en'));
+      if (englishVoice) utterance.voice = englishVoice;
+
+      window.speechSynthesis.speak(utterance);
+    }, 50);
+  }
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
+
+  function checkAnswers() {
+    document.querySelectorAll('.question-card').forEach(card => {
+      const correctVal = card.dataset.correct;
+      const select = card.querySelector('.word-select');
+      const selectedVal = select.value;
+
+      card.classList.remove('correct', 'wrong');
+
+      if (selectedVal === correctVal) {
+        card.classList.add('correct');
+      } else {
+        card.classList.add('wrong');
+      }
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll('.question-card').forEach(card => {
+      card.classList.remove('correct', 'wrong');
+      card.querySelector('.word-select').value = '';
+      card.querySelector('.answer-input').value = '';
+    });
+  }
+</script>
+
+</body>
+</html>
