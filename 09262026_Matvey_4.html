@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 1. OTHER or ANOTHER? 🎯</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --correct-color: #22c55e;
+    --correct-bg: rgba(34, 197, 94, 0.12);
+    --wrong-color: #ef4444;
+    --wrong-bg: rgba(239, 68, 68, 0.12);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header h1 {
+    font-size: 1.6rem;
+    color: var(--accent);
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .sentences-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .sentence-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    line-height: 1.6;
+    font-size: 1rem;
+    color: #e2e8f0;
+    transition: all 0.2s ease;
+  }
+
+  .item-num {
+    font-weight: 700;
+    color: var(--accent);
+    margin-right: 4px;
+  }
+
+  /* Custom Select Menu */
+  .word-select {
+    background: var(--panel-bg);
+    color: var(--accent);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .word-select:focus {
+    border-color: var(--accent);
+  }
+
+  /* Tooltip logic */
+  .target-word {
+    font-weight: 600;
+    position: relative;
+    cursor: pointer;
+    border-bottom: 1px dashed var(--accent);
+  }
+
+  .target-word .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #1e293b;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    font-size: 0.8rem;
+    font-weight: 400;
+    white-space: nowrap;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .target-word .tooltip .transcription {
+    color: var(--accent);
+    font-family: monospace;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .target-word .tooltip .ukr-translation {
+    color: #e2e8f0;
+  }
+
+  .target-word:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .audio-btn {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: var(--accent);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+    margin-left: 2px;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  /* Validation States */
+  .sentence-card.correct {
+    border-color: var(--correct-color);
+    background: var(--correct-bg);
+  }
+
+  .sentence-card.correct .word-select {
+    border-color: var(--correct-color);
+    color: var(--correct-color);
+  }
+
+  .sentence-card.wrong {
+    border-color: var(--wrong-color);
+    background: var(--wrong-bg);
+  }
+
+  .sentence-card.wrong .word-select {
+    border-color: var(--wrong-color);
+    color: var(--wrong-color);
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .btn-check:hover {
+    background: #7dd3fc;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Exercise 1. OTHER or ANOTHER? 🎯</h1>
+    <p>Choose the correct word: <b>other</b> or <b>another</b>.</p>
+  </div>
+
+  <div class="sentences-list">
+
+    <!-- 1 -->
+    <div class="sentence-card" data-correct="another">
+      <span class="item-num">1.</span>
+      I don't like this 
+      <span class="target-word">occupation<div class="tooltip"><span class="transcription">[ˌɒkjuˈpeɪʃn]</span><span class="ukr-translation">професія, заняття</span></div></span>.
+      I'd like to choose
+      <select class="word-select">
+        <option value="">other / another</option>
+        <option value="other">other</option>
+        <option value="another">another</option>
+      </select>
+      one.
+      <button class="audio-btn" type="button" onclick="speak('I do not like this occupation. I would like to choose another one.', event)">🔊</button>
+    </div>
+
+    <!-- 2 -->
+    <div class="sentence-card" data-correct="other">
+      <span class="item-num">2.</span>
+      Lacrosse is popular, but there are
+      <select class="word-select">
+        <option value="">other / another</option>
+        <option value="other">other</option>
+        <option value="another">another</option>
+      </select>
+      team sports too.
+      <button class="audio-btn" type="button" onclick="speak('Lacrosse is popular, but there are other team sports too.', event)">🔊</button>
+    </div>
+
+    <!-- 3 -->
+    <div class="sentence-card" data-correct="another">
+      <span class="item-num">3.</span>
+      Can you give me
+      <select class="word-select">
+        <option value="">other / another</option>
+        <option value="other">other</option>
+        <option value="another">another</option>
+      </select>
+      example, please?
+      <button class="audio-btn" type="button" onclick="speak('Can you give me another example, please?', event)">🔊</button>
+    </div>
+
+    <!-- 4 -->
+    <div class="sentence-card" data-correct="other">
+      <span class="item-num">4.</span>
+      We need
+      <select class="word-select">
+        <option value="">other / another</option>
+        <option value="other">other</option>
+        <option value="another">another</option>
+      </select>
+      <span class="target-word">accountable<div class="tooltip"><span class="transcription">[əˈkaʊntəbl]</span><span class="ukr-translation">відповідальний</span></div></span>
+      teammates in our team.
+      <button class="audio-btn" type="button" onclick="speak('We need other accountable teammates in our team.', event)">🔊</button>
+    </div>
+
+    <!-- 5 -->
+    <div class="sentence-card" data-correct="another">
+      <span class="item-num">5.</span>
+      This plan doesn't seem good. Let's try
+      <select class="word-select">
+        <option value="">other / another</option>
+        <option value="other">other</option>
+        <option value="another">another</option>
+      </select>
+      one.
+      <button class="audio-btn" type="button" onclick="speak('This plan does not seem good. Lets try another one.', event)">🔊</button>
+    </div>
+
+    <!-- 6 -->
+    <div class="sentence-card" data-correct="other">
+      <span class="item-num">6.</span>
+      He has a
+      <span class="target-word">beard<div class="tooltip"><span class="transcription">[bɪəd]</span><span class="ukr-translation">борода</span></div></span>,
+      but the
+      <select class="word-select">
+        <option value="">other / another</option>
+        <option value="other">other</option>
+        <option value="another">another</option>
+      </select>
+      boys in his class don't.
+      <button class="audio-btn" type="button" onclick="speak('He has a beard, but the other boys in his class do not.', event)">🔊</button>
+    </div>
+
+    <!-- 7 -->
+    <div class="sentence-card" data-correct="another">
+      <span class="item-num">7.</span>
+      I have finished this task. Can I do
+      <select class="word-select">
+        <option value="">other / another</option>
+        <option value="other">other</option>
+        <option value="another">another</option>
+      </select>
+      one?
+      <button class="audio-btn" type="button" onclick="speak('I have finished this task. Can I do another one?', event)">🔊</button>
+    </div>
+
+    <!-- 8 -->
+    <div class="sentence-card" data-correct="other">
+      <span class="item-num">8.</span>
+      Good
+      <span class="target-word">camaraderie<div class="tooltip"><span class="transcription">[ˌkæməˈrɑːdəri]</span><span class="ukr-translation">товариськість</span></div></span>
+      is important, but there are
+      <select class="word-select">
+        <option value="">other / another</option>
+        <option value="other">other</option>
+        <option value="another">another</option>
+      </select>
+      things that make a team successful.
+      <button class="audio-btn" type="button" onclick="speak('Good camaraderie is important, but there are other things that make a team successful.', event)">🔊</button>
+    </div>
+
+    <!-- 9 -->
+    <div class="sentence-card" data-correct="another">
+      <span class="item-num">9.</span>
+      She
+      <span class="target-word">turned down<div class="tooltip"><span class="transcription">[tɜːnd daʊn]</span><span class="ukr-translation">відхилила</span></div></span>
+      the offer because she was expecting
+      <select class="word-select">
+        <option value="">other / another</option>
+        <option value="other">other</option>
+        <option value="another">another</option>
+      </select>
+      one.
+      <button class="audio-btn" type="button" onclick="speak('She turned down the offer because she was expecting another one.', event)">🔊</button>
+    </div>
+
+    <!-- 10 -->
+    <div class="sentence-card" data-correct="other">
+      <span class="item-num">10.</span>
+      We have discussed this idea. Let's look at
+      <select class="word-select">
+        <option value="">other / another</option>
+        <option value="other">other</option>
+        <option value="another">another</option>
+      </select>
+      options.
+      <button class="audio-btn" type="button" onclick="speak('We have discussed this idea. Lets look at other options.', event)">🔊</button>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-check" type="button" onclick="checkAnswers()">Check Answers ✔</button>
+    <button class="btn btn-reset" type="button" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  function speak(text, e) {
+    if (e) e.stopPropagation();
+    if (!('speechSynthesis' in window)) return;
+
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoice = voices.find(v => v.lang.startsWith('en'));
+      if (englishVoice) utterance.voice = englishVoice;
+
+      window.speechSynthesis.speak(utterance);
+    }, 50);
+  }
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
+
+  function checkAnswers() {
+    document.querySelectorAll('.sentence-card').forEach(card => {
+      const correctVal = card.dataset.correct;
+      const select = card.querySelector('.word-select');
+      const selectedVal = select.value;
+
+      card.classList.remove('correct', 'wrong');
+
+      if (selectedVal === correctVal) {
+        card.classList.add('correct');
+      } else {
+        card.classList.add('wrong');
+      }
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll('.sentence-card').forEach(card => {
+      card.classList.remove('correct', 'wrong');
+      card.querySelector('.word-select').value = '';
+    });
+  }
+</script>
+
+</body>
+</html>
