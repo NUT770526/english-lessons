@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listening & Discussion Practice 🎧</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.15);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --focus-border: #38bdf8;
+    --correct-color: #22c55e;
+    --correct-bg: rgba(34, 197, 94, 0.15);
+    --wrong-color: #ef4444;
+    --wrong-bg: rgba(239, 68, 68, 0.15);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  /* Audio Control Panel */
+  .audio-player-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .player-title {
+    font-weight: 700;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+  }
+
+  .player-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ctrl-btn {
+    background: var(--accent-glow);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: var(--accent);
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+
+  .ctrl-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .speed-select {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 6px 10px;
+    border-radius: 8px;
+    outline: none;
+    font-size: 0.85rem;
+  }
+
+  /* Collapsible Transcript */
+  .transcript-section {
+    margin-bottom: 28px;
+  }
+
+  .transcript-toggle-btn {
+    width: 100%;
+    background: rgba(147, 51, 234, 0.15);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    color: #c084fc;
+    padding: 12px 18px;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+  }
+
+  .transcript-toggle-btn:hover {
+    background: rgba(147, 51, 234, 0.25);
+  }
+
+  .transcript-body {
+    display: none;
+    background: var(--card-bg);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-top: none;
+    border-radius: 0 0 14px 14px;
+    padding: 18px 20px;
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    line-height: 1.7;
+  }
+
+  .transcript-body.visible {
+    display: block;
+  }
+
+  /* Exercise Section */
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .question-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.2s;
+  }
+
+  .q-text {
+    font-size: 1rem;
+    color: #f1f5f9;
+  }
+
+  .answer-input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .answer-input:focus {
+    border-color: var(--focus-border);
+  }
+
+  /* Discussion Cards Grid */
+  .discussion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .disc-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .disc-card:hover {
+    border-color: var(--accent);
+  }
+
+  .disc-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    text-align: center;
+  }
+
+  .disc-textarea {
+    width: 100%;
+    height: 80px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+  }
+
+  .disc-textarea:focus {
+    border-color: var(--focus-border);
+  }
+
+  /* Validation States */
+  .question-item.correct-eval {
+    border-color: var(--correct-color);
+    background: var(--correct-bg);
+  }
+
+  .question-item.wrong-eval {
+    border-color: var(--wrong-color);
+    background: var(--wrong-bg);
+  }
+
+  .disc-card.completed {
+    border-color: var(--correct-color);
+    background: var(--correct-bg);
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .btn-check:hover {
+    background: #7dd3fc;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Listening & Discussion Practice 🎧</h1>
+    <p>Listen to the audio, answer the comprehension questions, and share your thoughts.</p>
+  </div>
+
+  <!-- Audio Control Panel -->
+  <div class="audio-player-panel">
+    <div class="player-title">
+      <span>🔊</span> Audio Player
+    </div>
+    <div class="player-controls">
+      <button type="button" class="ctrl-btn" onclick="playAudio()">▶ Play</button>
+      <button type="button" class="ctrl-btn" onclick="pauseAudio()">⏸ Pause</button>
+      <button type="button" class="ctrl-btn" onclick="stopAudio()">⏹ Stop</button>
+      <select id="speechRate" class="speed-select">
+        <option value="0.75">0.75x</option>
+        <option value="0.85" selected>0.85x</option>
+        <option value="1.0">1.0x</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Collapsible Transcript -->
+  <div class="transcript-section">
+    <button type="button" class="transcript-toggle-btn" onclick="toggleTranscript()">
+      <span>Transcript</span>
+      <span id="eyeIcon">👁️ Show</span>
+    </button>
+    <div class="transcript-body" id="transcriptBody">
+      Like any other student-athlete, it's just all about finding the balance with lacrosse, school, social life and family. As well, just having accountable teammates helps you really divide that time up and allow you to manage your time to be the best you in every aspect of life. I have a lot of early classes, so I usually wake up, take some breakfast, and go to class. Then I usually try to find some time in between. Usually I have very little time to get ready for practice, knock on wood. I have, yet he had a ticket in fact, all right smart you guys up to grab lunch, yeah. Let's get it. I was really bothered that often, yeah. I might be feeling an outside used in, have you ever know it's beautiful. I think the speed, intensity and reliance on my teamwork and camaraderie really attracted me until lacrosse and now here I am. I am at the college level, and it's just tenfold better. Wesleyan had always approved itself to be a prestigious program, not only the school but the program. Coach Rave has been here for 20-plus years, and he reached out to me and offered me this opportunity, and I just could not turn it down. Wesleyan lacrosse has been an underdog for the past few years, and this year especially, if you have all the right pieces, players, intensity, and focus to really make some noise and show the nation what we are all about.
+    </div>
+  </div>
+
+  <!-- Answer Questions Section -->
+  <div class="section-title">
+    <span>🚙</span> Answer the questions
+  </div>
+
+  <div class="questions-list">
+    <!-- Question 1 -->
+    <div class="question-item" data-keywords='["balance", "finding balance", "time", "finding the balance"]'>
+      <div class="q-text">1. What is the main challenge for the student-athlete?</div>
+      <input type="text" class="answer-input" placeholder="Type your answer here..." />
+    </div>
+
+    <!-- Question 2 -->
+    <div class="question-item" data-keywords='["teammates", "accountable teammates", "team"]'>
+      <div class="q-text">2. What helps the student-athlete manage their time?</div>
+      <input type="text" class="answer-input" placeholder="Type your answer here..." />
+    </div>
+
+    <!-- Question 3 -->
+    <div class="question-item" data-keywords='["wake up", "breakfast", "class", "classes", "eats breakfast"]'>
+      <div class="q-text">3. What does the student-athlete usually do in the morning?</div>
+      <input type="text" class="answer-input" placeholder="Type your answer here..." />
+    </div>
+
+    <!-- Question 4 -->
+    <div class="question-item" data-keywords='["tenfold better", "better", "speed", "intensity", "prestigious"]'>
+      <div class="q-text">4. How does the student-athlete describe lacrosse at the college level?</div>
+      <input type="text" class="answer-input" placeholder="Type your answer here..." />
+    </div>
+  </div>
+
+  <!-- Additional Discussion Questions Section -->
+  <div class="section-title">
+    <span>🥳</span> Answer the additional questions!
+  </div>
+
+  <div class="discussion-grid">
+    <!-- Card 1 -->
+    <div class="disc-card">
+      <div class="disc-title">Have you ever thought about your future profession? 📕</div>
+      <textarea class="disc-textarea" placeholder="Write your answer..."></textarea>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="disc-card">
+      <div class="disc-title">What is an ideal profession for you? 🟩</div>
+      <textarea class="disc-textarea" placeholder="Write your answer..."></textarea>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="disc-card">
+      <div class="disc-title">Would you like to study abroad? 📘</div>
+      <textarea class="disc-textarea" placeholder="Write your answer..."></textarea>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="disc-card">
+      <div class="disc-title">What is your favourite foreign language? 📙</div>
+      <textarea class="disc-textarea" placeholder="Write your answer..."></textarea>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="disc-card">
+      <div class="disc-title">Would you like to study in an American school? 📒</div>
+      <textarea class="disc-textarea" placeholder="Write your answer..."></textarea>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-check" type="button" onclick="checkAnswers()">Check Answers ✔</button>
+    <button class="btn btn-reset" type="button" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  let speechUtterance = null;
+
+  function toggleTranscript() {
+    const body = document.getElementById('transcriptBody');
+    const eye = document.getElementById('eyeIcon');
+    if (body.classList.contains('visible')) {
+      body.classList.remove('visible');
+      eye.textContent = '👁️ Show';
+    } else {
+      body.classList.add('visible');
+      eye.textContent = '🙈 Hide';
+    }
+  }
+
+  function playAudio() {
+    if (!('speechSynthesis' in window)) return;
+    
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const text = document.getElementById('transcriptBody').innerText;
+    speechUtterance = new SpeechSynthesisUtterance(text);
+    speechUtterance.lang = 'en-US';
+    
+    const rate = parseFloat(document.getElementById('speechRate').value) || 0.85;
+    speechUtterance.rate = rate;
+
+    const voices = window.speechSynthesis.getVoices();
+    const englishVoice = voices.find(v => v.lang.startsWith('en'));
+    if (englishVoice) speechUtterance.voice = englishVoice;
+
+    window.speechSynthesis.speak(speechUtterance);
+  }
+
+  function pauseAudio() {
+    if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+      window.speechSynthesis.pause();
+    }
+  }
+
+  function stopAudio() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  function normalize(str) {
+    return str.toLowerCase().trim().replace(/[.,!?]/g, '');
+  }
+
+  function checkAnswers() {
+    // Check listening questions
+    document.querySelectorAll('.question-item').forEach(item => {
+      const input = item.querySelector('.answer-input');
+      const val = normalize(input.value);
+      const keywords = JSON.parse(item.dataset.keywords || '[]');
+
+      item.classList.remove('correct-eval', 'wrong-eval');
+
+      if (val === '') {
+        item.classList.add('wrong-eval');
+        return;
+      }
+
+      const isCorrect = keywords.some(kw => val.includes(normalize(kw)));
+      if (isCorrect) {
+        item.classList.add('correct-eval');
+      } else {
+        item.classList.add('wrong-eval');
+      }
+    });
+
+    // Check discussion cards
+    document.querySelectorAll('.disc-card').forEach(card => {
+      const textarea = card.querySelector('.disc-textarea');
+      card.classList.remove('completed');
+      if (textarea.value.trim().length > 3) {
+        card.classList.add('completed');
+      }
+    });
+  }
+
+  function resetExercise() {
+    stopAudio();
+    document.querySelectorAll('.question-item').forEach(item => {
+      item.classList.remove('correct-eval', 'wrong-eval');
+      item.querySelector('.answer-input').value = '';
+    });
+    document.querySelectorAll('.disc-card').forEach(card => {
+      card.classList.remove('completed');
+      card.querySelector('.disc-textarea').value = '';
+    });
+  }
+</script>
+
+</body>
+</html>
