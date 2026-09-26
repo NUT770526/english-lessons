@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amalia's Typical Working Day (Past Simple)</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.15);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --focus-border: #38bdf8;
+    --correct-color: #22c55e;
+    --correct-bg: rgba(34, 197, 94, 0.15);
+    --wrong-color: #ef4444;
+    --wrong-bg: rgba(239, 68, 68, 0.15);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  /* Reading Section */
+  .reading-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+
+  .reading-card h2 {
+    font-size: 1.05rem;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .reading-text {
+    font-size: 1rem;
+    color: #e2e8f0;
+    line-height: 1.7;
+  }
+
+  /* Exercise Section */
+  .exercise-header {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .question-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .sentence-content {
+    font-size: 1rem;
+    color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .q-num {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 24px;
+  }
+
+  .blank-input {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: #38bdf8;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    min-width: 120px;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+
+  .blank-input:focus {
+    border-color: var(--focus-border);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+  }
+
+  .audio-btn {
+    background: var(--accent-glow);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: var(--accent);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  /* Validation Styles */
+  .question-item.correct-eval {
+    border-color: var(--correct-color);
+    background: var(--correct-bg);
+  }
+
+  .question-item.wrong-eval {
+    border-color: var(--wrong-color);
+    background: var(--wrong-bg);
+  }
+
+  .blank-input.correct-input {
+    border-color: var(--correct-color);
+    color: #4ade80;
+  }
+
+  .blank-input.wrong-input {
+    border-color: var(--wrong-color);
+    color: #f87171;
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: var(--accent);
+    color: #0f172a;
+  }
+
+  .btn-check:hover {
+    background: #7dd3fc;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Amalia's Working Day 📖</h1>
+    <p>Read about Amalia's routine, then describe what she did yesterday.</p>
+  </div>
+
+  <!-- Reading Section -->
+  <div class="reading-card">
+    <h2>📖 Read what Amalia says about a typical working day:</h2>
+    <div class="reading-text">
+      "I usually get up at 7 o'clock and have a big breakfast. I walk to school, which takes me about half an hour. I start my classes at 8.45. I never have lunch. I finish my classes at 5 o'clock. I'm always tired when I get home. I usually cook a meal in the evening. I don't usually go out. I go to bed at about 11 o'clock, and I always sleep well."
+    </div>
+  </div>
+
+  <!-- Exercise Section -->
+  <div class="exercise-header">
+    <span>🦒</span> Yesterday was a typical working day for Amalia. Write what she did or didn't do yesterday:
+  </div>
+
+  <div class="questions-list">
+
+    <!-- 1 -->
+    <div class="question-item" data-answers='["got up"]' data-prompt-before="She" data-prompt-after="at 7 o'clock.">
+      <div class="sentence-content">
+        <span class="q-num">1.</span>
+        <span>She</span>
+        <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+        <span>at 7 o'clock.</span>
+      </div>
+      <button type="button" class="audio-btn" onclick="speakPrompt(this)">🔊</button>
+    </div>
+
+    <!-- 2 -->
+    <div class="question-item" data-answers='["had"]' data-prompt-before="She" data-prompt-after="a big breakfast.">
+      <div class="sentence-content">
+        <span class="q-num">2.</span>
+        <span>She</span>
+        <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+        <span>a big breakfast.</span>
+      </div>
+      <button type="button" class="audio-btn" onclick="speakPrompt(this)">🔊</button>
+    </div>
+
+    <!-- 3 -->
+    <div class="question-item" data-answers='["walked"]' data-prompt-before="She" data-prompt-after="to school.">
+      <div class="sentence-content">
+        <span class="q-num">3.</span>
+        <span>She</span>
+        <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+        <span>to school.</span>
+      </div>
+      <button type="button" class="audio-btn" onclick="speakPrompt(this)">🔊</button>
+    </div>
+
+    <!-- 4 -->
+    <div class="question-item" data-answers='["took"]' data-prompt-before="It" data-prompt-after="her about half an hour.">
+      <div class="sentence-content">
+        <span class="q-num">4.</span>
+        <span>It</span>
+        <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+        <span>her about half an hour.</span>
+      </div>
+      <button type="button" class="audio-btn" onclick="speakPrompt(this)">🔊</button>
+    </div>
+
+    <!-- 5 -->
+    <div class="question-item" data-answers='["started"]' data-prompt-before="She" data-prompt-after="her classes at 8.45.">
+      <div class="sentence-content">
+        <span class="q-num">5.</span>
+        <span>She</span>
+        <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+        <span>her classes at 8.45.</span>
+      </div>
+      <button type="button" class="audio-btn" onclick="speakPrompt(this)">🔊</button>
+    </div>
+
+    <!-- 6 -->
+    <div class="question-item" data-answers='["didn't have", "did not have"]' data-prompt-before="She" data-prompt-after="lunch.">
+      <div class="sentence-content">
+        <span class="q-num">6.</span>
+        <span>She</span>
+        <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+        <span>lunch.</span>
+      </div>
+      <button type="button" class="audio-btn" onclick="speakPrompt(this)">🔊</button>
+    </div>
+
+    <!-- 7 -->
+    <div class="question-item" data-answers='["finished"]' data-prompt-before="She" data-prompt-after="her classes at 5 o'clock.">
+      <div class="sentence-content">
+        <span class="q-num">7.</span>
+        <span>She</span>
+        <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+        <span>her classes at 5 o'clock.</span>
+      </div>
+      <button type="button" class="audio-btn" onclick="speakPrompt(this)">🔊</button>
+    </div>
+
+    <!-- 8 (Double Input) -->
+    <div class="question-item" data-is-double="true" data-answers1='["was"]' data-answers2='["got"]' data-prompt-before="She" data-prompt-middle="tired when she" data-prompt-after="home.">
+      <div class="sentence-content">
+        <span class="q-num">8.</span>
+        <span>She</span>
+        <input type="text" class="blank-input blank-1" placeholder="..." autocomplete="off">
+        <span>tired when she</span>
+        <input type="text" class="blank-input blank-2" placeholder="..." autocomplete="off">
+        <span>home.</span>
+      </div>
+      <button type="button" class="audio-btn" onclick="speakPrompt(this)">🔊</button>
+    </div>
+
+    <!-- 9 -->
+    <div class="question-item" data-answers='["cooked"]' data-prompt-before="She" data-prompt-after="a meal yesterday evening.">
+      <div class="sentence-content">
+        <span class="q-num">9.</span>
+        <span>She</span>
+        <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+        <span>a meal yesterday evening.</span>
+      </div>
+      <button type="button" class="audio-btn" onclick="speakPrompt(this)">🔊</button>
+    </div>
+
+    <!-- 10 -->
+    <div class="question-item" data-answers='["didn't go", "did not go"]' data-prompt-before="She" data-prompt-after="out yesterday evening.">
+      <div class="sentence-content">
+        <span class="q-num">10.</span>
+        <span>She</span>
+        <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+        <span>out yesterday evening.</span>
+      </div>
+      <button type="button" class="audio-btn" onclick="speakPrompt(this)">🔊</button>
+    </div>
+
+    <!-- 11 -->
+    <div class="question-item" data-answers='["went"]' data-prompt-before="She" data-prompt-after="to bed at 11 o'clock.">
+      <div class="sentence-content">
+        <span class="q-num">11.</span>
+        <span>She</span>
+        <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+        <span>to bed at 11 o'clock.</span>
+      </div>
+      <button type="button" class="audio-btn" onclick="speakPrompt(this)">🔊</button>
+    </div>
+
+    <!-- 12 -->
+    <div class="question-item" data-answers='["slept"]' data-prompt-before="She" data-prompt-after="well last night.">
+      <div class="sentence-content">
+        <span class="q-num">12.</span>
+        <span>She</span>
+        <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+        <span>well last night.</span>
+      </div>
+      <button type="button" class="audio-btn" onclick="speakPrompt(this)">🔊</button>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-check" type="button" onclick="checkAnswers()">Check Answers ✔</button>
+    <button class="btn btn-reset" type="button" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+</div>
+
+<script>
+  function speakPrompt(btn) {
+    const item = btn.closest('.question-item');
+    let textToSpeak = '';
+
+    if (item.dataset.isDouble === 'true') {
+      const val1 = item.querySelector('.blank-1').value.trim();
+      const val2 = item.querySelector('.blank-2').value.trim();
+      textToSpeak = `${item.dataset.promptBefore} ${val1 || '...'} ${item.dataset.promptMiddle} ${val2 || '...'} ${item.dataset.promptAfter}`;
+    } else {
+      const val = item.querySelector('.blank-input').value.trim();
+      textToSpeak = `${item.dataset.promptBefore} ${val || '...'} ${item.dataset.promptAfter}`;
+    }
+
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoice = voices.find(v => v.lang.startsWith('en'));
+      if (englishVoice) utterance.voice = englishVoice;
+      window.speechSynthesis.speak(utterance);
+    }, 50);
+  }
+
+  function cleanVal(str) {
+    return str.toLowerCase().trim().replace(/’/g, "'");
+  }
+
+  function checkAnswers() {
+    document.querySelectorAll('.question-item').forEach(item => {
+      item.classList.remove('correct-eval', 'wrong-eval');
+
+      if (item.dataset.isDouble === 'true') {
+        const input1 = item.querySelector('.blank-1');
+        const input2 = item.querySelector('.blank-2');
+        const val1 = cleanVal(input1.value);
+        const val2 = cleanVal(input2.value);
+        const valid1 = JSON.parse(item.dataset.answers1).map(cleanVal);
+        const valid2 = JSON.parse(item.dataset.answers2).map(cleanVal);
+
+        const is1Correct = valid1.includes(val1);
+        const is2Correct = valid2.includes(val2);
+
+        input1.className = `blank-input blank-1 ${is1Correct ? 'correct-input' : 'wrong-input'}`;
+        input2.className = `blank-input blank-2 ${is2Correct ? 'correct-input' : 'wrong-input'}`;
+
+        if (is1Correct && is2Correct) {
+          item.classList.add('correct-eval');
+        } else {
+          item.classList.add('wrong-eval');
+        }
+
+      } else {
+        const input = item.querySelector('.blank-input');
+        const val = cleanVal(input.value);
+        const valid = JSON.parse(item.dataset.answers).map(cleanVal);
+
+        if (valid.includes(val)) {
+          input.className = 'blank-input correct-input';
+          item.classList.add('correct-eval');
+        } else {
+          input.className = 'blank-input wrong-input';
+          item.classList.add('wrong-eval');
+        }
+      }
+    });
+  }
+
+  function resetExercise() {
+    document.querySelectorAll('.question-item').forEach(item => {
+      item.classList.remove('correct-eval', 'wrong-eval');
+      item.querySelectorAll('.blank-input').forEach(input => {
+        input.value = '';
+        input.className = input.classList.contains('blank-1') ? 'blank-input blank-1' :
+                          input.classList.contains('blank-2') ? 'blank-input blank-2' : 'blank-input';
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
