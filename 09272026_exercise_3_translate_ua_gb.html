@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 3. Translate UA → GB</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.15);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --correct-bg: rgba(34, 197, 94, 0.15);
+    --correct-border: #22c55e;
+    --correct-text: #4ade80;
+    --incorrect-bg: rgba(239, 68, 68, 0.15);
+    --incorrect-border: #ef4444;
+    --incorrect-text: #f87171;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 24px;
+  }
+
+  /* Questions */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .question-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.2s ease;
+  }
+
+  .prompt-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 1.05rem;
+    color: #f1f5f9;
+    font-weight: 500;
+  }
+
+  .q-num {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 28px;
+  }
+
+  .input-row {
+    width: 100%;
+  }
+
+  .answer-input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 16px;
+    color: #38bdf8;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .answer-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+  }
+
+  .answer-input.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .answer-input.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  /* Bottom Tip Box */
+  .tip-box {
+    margin-top: 28px;
+    background: var(--card-bg);
+    border: 1px dashed var(--accent);
+    border-radius: 14px;
+    padding: 16px 20px;
+  }
+
+  .tip-title {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .tip-content {
+    color: #f1f5f9;
+    font-size: 0.95rem;
+  }
+
+  .tip-content span {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .result-score {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">
+    Exercise 3. Translate <sup>UA → GB</sup>
+  </div>
+  <div class="subtitle">
+    Здесь студент уже сам должен решить, где <b>GOOD</b>, а где <b>WELL</b>.
+  </div>
+
+  <div class="questions-list">
+
+    <!-- 1 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">1.</span>
+        <span>Він хороший дослідник.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="He is a good explorer.|He's a good explorer.">
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">2.</span>
+        <span>Він добре знає пустелю.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="He knows the desert well.">
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">3.</span>
+        <span>Це хороше есе.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="This is a good essay.|It is a good essay.|It's a good essay.">
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">4.</span>
+        <span>Вона добре пише есе.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="She writes essays well.|She writes an essay well.|She writes the essay well.">
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">5.</span>
+        <span>Він хороший товариш по команді. На нього можна покластися.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="He is a good teammate. You can rely on him.|He's a good teammate. You can rely on him.">
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">6.</span>
+        <span>Вона дуже добре говорить англійською.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="She speaks English very well.|She speaks English well.">
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">7.</span>
+        <span>Це була хороша подорож.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="It was a good journey.|That was a good journey.|This was a good journey.|It was a good trip.">
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">8.</span>
+        <span>Він добре керує своїм часом.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="He manages his time well.|He can manage his time well.|He handles his time well.">
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">9.</span>
+        <span>Це хороша книга про тропічні ліси.</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="This is a good book about rainforests.|This is a good book about the rainforest.|It's a good book about rainforests.|This is a good book about tropical forests.">
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">10.</span>
+        <span>Ти дуже добре виконав це складне завдання!</span>
+      </div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="You did this difficult task very well!|You have done this difficult task very well!|You did this hard task very well!|You did this difficult job very well!|You have completed this difficult task very well!">
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Tip Box -->
+  <div class="tip-box">
+    <div class="tip-title">Мини-лайфхак для него:</div>
+    <div class="tip-content">
+      Если после пропуска идёт <b>существительное</b> → <span>GOOD</span>: <i>a good explorer, a good essay, a good book</i>.<br>
+      Если говорим, <b>как человек что-то делает</b> → <span>WELL</span>: <i>speaks well, writes well, works well</i>.
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-check" type="button" onclick="checkAnswers()">Check Answers / Перевірити ✅</button>
+      <button class="btn-reset" type="button" onclick="clearFields()">Reset / Скинути 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+</div>
+
+<script>
+  function normalizeText(text) {
+    return text
+      .trim()
+      .toLowerCase()
+      .replace(/[.?!]$/, '')
+      .replace(/’/g, "'")
+      .replace(/\s+/g, ' ');
+  }
+
+  function checkAnswers() {
+    const inputs = document.querySelectorAll('.answer-input');
+    let correctCount = 0;
+
+    inputs.forEach(input => {
+      const userAnswer = normalizeText(input.value);
+      const validAnswers = input.getAttribute('data-answer').split('|').map(normalizeText);
+
+      input.classList.remove('correct', 'incorrect');
+
+      if (userAnswer !== '' && validAnswers.includes(userAnswer)) {
+        input.classList.add('correct');
+        correctCount++;
+      } else {
+        input.classList.add('incorrect');
+      }
+    });
+
+    const scoreDiv = document.getElementById('score');
+    scoreDiv.textContent = `Score: ${correctCount} / ${inputs.length}`;
+  }
+
+  function clearFields() {
+    const inputs = document.querySelectorAll('.answer-input');
+    inputs.forEach(input => {
+      input.value = '';
+      input.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
