@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 1. Choose: ALREADY, JUST, RECENTLY or YET</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.15);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --correct-bg: rgba(34, 197, 94, 0.2);
+    --correct-border: #22c55e;
+    --correct-text: #4ade80;
+    --incorrect-bg: rgba(239, 68, 68, 0.2);
+    --incorrect-border: #ef4444;
+    --incorrect-text: #f87171;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1.4;
+  }
+
+  /* Options Box */
+  .options-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .options-label {
+    font-weight: 700;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .option-tag {
+    background: #1e293b;
+    border: 1px solid var(--border-color);
+    color: var(--accent);
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+
+  /* Questions */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .question-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.05rem;
+    color: #f1f5f9;
+    flex-wrap: wrap;
+    transition: all 0.2s ease;
+  }
+
+  .q-num {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 28px;
+  }
+
+  .blank-select {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #38bdf8;
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .blank-select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+  }
+
+  .blank-select.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .blank-select.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  .highlight {
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .controls {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .result-score {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">
+    <span>▶</span> Exercise 1. Choose: ALREADY, JUST, RECENTLY or YET
+  </div>
+
+  <div class="options-box">
+    <span class="options-label">Options:</span>
+    <span class="option-tag">ALREADY</span>
+    <span class="option-tag">JUST</span>
+    <span class="option-tag">RECENTLY</span>
+    <span class="option-tag">YET</span>
+  </div>
+
+  <div class="questions-list">
+
+    <!-- 1 -->
+    <div class="question-item">
+      <span class="q-num">1.</span>
+      <span>I have</span>
+      <select class="blank-select" data-answer="just">
+        <option value="">-- choose --</option>
+        <option value="already">already</option>
+        <option value="just">just</option>
+        <option value="recently">recently</option>
+        <option value="yet">yet</option>
+      </select>
+      <span>finished my <span class="highlight">essay</span>. I can relax now!</span>
+    </div>
+
+    <!-- 2 -->
+    <div class="question-item">
+      <span class="q-num">2.</span>
+      <span>Have you finished your homework</span>
+      <select class="blank-select" data-answer="yet">
+        <option value="">-- choose --</option>
+        <option value="already">already</option>
+        <option value="just">just</option>
+        <option value="recently">recently</option>
+        <option value="yet">yet</option>
+      </select>
+      <span>?</span>
+    </div>
+
+    <!-- 3 -->
+    <div class="question-item">
+      <span class="q-num">3.</span>
+      <span>The <span class="highlight">explorer</span> has</span>
+      <select class="blank-select" data-answer="just">
+        <option value="">-- choose --</option>
+        <option value="already">already</option>
+        <option value="just">just</option>
+        <option value="recently">recently</option>
+        <option value="yet">yet</option>
+      </select>
+      <span>arrived on the <span class="highlight">deserted island</span>. He arrived five minutes ago.</span>
+    </div>
+
+    <!-- 4 -->
+    <div class="question-item">
+      <span class="q-num">4.</span>
+      <span>We have</span>
+      <select class="blank-select" data-answer="recently">
+        <option value="">-- choose --</option>
+        <option value="already">already</option>
+        <option value="just">just</option>
+        <option value="recently">recently</option>
+        <option value="yet">yet</option>
+      </select>
+      <span>learned about Amelia Earhart at school.</span>
+    </div>
+
+    <!-- 5 -->
+    <div class="question-item">
+      <span class="q-num">5.</span>
+      <span>He has</span>
+      <select class="blank-select" data-answer="recently">
+        <option value="">-- choose --</option>
+        <option value="already">already</option>
+        <option value="just">just</option>
+        <option value="recently">recently</option>
+        <option value="yet">yet</option>
+      </select>
+      <span>visited a <span class="highlight">rainforest</span>. He went there last month.</span>
+    </div>
+
+    <!-- 6 -->
+    <div class="question-item">
+      <span class="q-num">6.</span>
+      <span>I haven't read this story about the famous explorer</span>
+      <select class="blank-select" data-answer="yet">
+        <option value="">-- choose --</option>
+        <option value="already">already</option>
+        <option value="just">just</option>
+        <option value="recently">recently</option>
+        <option value="yet">yet</option>
+      </select>
+      <span>.</span>
+    </div>
+
+    <!-- 7 -->
+    <div class="question-item">
+      <span class="q-num">7.</span>
+      <span>They have</span>
+      <select class="blank-select" data-answer="already">
+        <option value="">-- choose --</option>
+        <option value="already">already</option>
+        <option value="just">just</option>
+        <option value="recently">recently</option>
+        <option value="yet">yet</option>
+      </select>
+      <span>climbed the <span class="highlight">volcano</span>. Now they are at the top!</span>
+    </div>
+
+    <!-- 8 -->
+    <div class="question-item">
+      <span class="q-num">8.</span>
+      <span>Have scientists travelled to <span class="highlight">another planet</span></span>
+      <select class="blank-select" data-answer="yet">
+        <option value="">-- choose --</option>
+        <option value="already">already</option>
+        <option value="just">just</option>
+        <option value="recently">recently</option>
+        <option value="yet">yet</option>
+      </select>
+      <span>?</span>
+    </div>
+
+    <!-- 9 -->
+    <div class="question-item">
+      <span class="q-num">9.</span>
+      <span>She has</span>
+      <select class="blank-select" data-answer="already">
+        <option value="">-- choose --</option>
+        <option value="already">already</option>
+        <option value="just">just</option>
+        <option value="recently">recently</option>
+        <option value="yet">yet</option>
+      </select>
+      <span>written an essay about <span class="highlight">brave explorers</span>, so she doesn't need to write it now.</span>
+    </div>
+
+    <!-- 10 -->
+    <div class="question-item">
+      <span class="q-num">10.</span>
+      <span>I have</span>
+      <select class="blank-select" data-answer="recently">
+        <option value="">-- choose --</option>
+        <option value="already">already</option>
+        <option value="just">just</option>
+        <option value="recently">recently</option>
+        <option value="yet">yet</option>
+      </select>
+      <span>watched a film about the <span class="highlight">desert</span>. It was very interesting.</span>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-check" type="button" onclick="checkAnswers()">Check Answers / Проверить ✅</button>
+      <button class="btn-reset" type="button" onclick="clearFields()">Reset / Сбросить 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+</div>
+
+<script>
+  function checkAnswers() {
+    const selects = document.querySelectorAll('.blank-select');
+    let correctCount = 0;
+
+    selects.forEach(select => {
+      const userAnswer = select.value.toLowerCase().trim();
+      const correctAnswer = select.getAttribute('data-answer').toLowerCase().trim();
+
+      select.classList.remove('correct', 'incorrect');
+
+      if (userAnswer === correctAnswer) {
+        select.classList.add('correct');
+        correctCount++;
+      } else {
+        select.classList.add('incorrect');
+      }
+    });
+
+    const scoreDiv = document.getElementById('score');
+    scoreDiv.textContent = `Score: ${correctCount} / ${selects.length}`;
+  }
+
+  function clearFields() {
+    const selects = document.querySelectorAll('.blank-select');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
