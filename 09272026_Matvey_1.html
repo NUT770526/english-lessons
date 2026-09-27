@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete the Sentences (Present Simple)</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.15);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --wordbox-header: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Wordbox */
+  .wordbox-container {
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 28px;
+    display: flex;
+    background: var(--card-bg);
+  }
+
+  .wordbox-header {
+    background-color: var(--wordbox-header);
+    color: #ffffff;
+    font-weight: 800;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    min-width: 140px;
+  }
+
+  .wordbox-words {
+    padding: 16px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    flex: 1;
+  }
+
+  .word-chip {
+    background: #1e293b;
+    border: 1px solid var(--border-color);
+    color: #38bdf8;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .word-chip span {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+  }
+
+  /* Exercise Sentences */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .question-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.05rem;
+    color: #f1f5f9;
+    flex-wrap: wrap;
+  }
+
+  .q-num {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 24px;
+  }
+
+  .blank-input {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 14px;
+    color: #38bdf8;
+    font-size: 1.05rem;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    min-width: 140px;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+
+  .blank-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+  }
+
+  /* Sentence 1 (Example Style) */
+  .example-item {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+
+  .example-badge {
+    color: #22c55e;
+    font-weight: bold;
+    margin-right: 4px;
+  }
+
+  /* Clear Button */
+  .controls {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">
+    <span>▶</span> Complete the sentences using the following verbs
+  </div>
+
+  <!-- Wordbox -->
+  <div class="wordbox-container">
+    <div class="wordbox-header">
+      Wordbox
+    </div>
+    <div class="wordbox-words">
+      <div class="word-chip">cause(s) <span>↵</span></div>
+      <div class="word-chip">connect(s) <span>↵</span></div>
+      <div class="word-chip">drink(s) <span>↵</span></div>
+      <div class="word-chip">live(s) <span>↵</span></div>
+      <div class="word-chip">open(s) <span>↵</span></div>
+      <div class="word-chip">speak(s) <span>↵</span></div>
+      <div class="word-chip">take(s) <span>↵</span></div>
+    </div>
+  </div>
+
+  <!-- Questions -->
+  <div class="questions-list">
+
+    <!-- 1 Example -->
+    <div class="question-item example-item">
+      <span class="example-badge">✓</span>
+      <span class="q-num">1.</span>
+      <span>Tanya</span>
+      <input type="text" class="blank-input" value="speaks" readonly style="color: #4ade80; border-color: #22c55e;">
+      <span>German very well.</span>
+    </div>
+
+    <!-- 2 -->
+    <div class="question-item">
+      <span class="q-num">2.</span>
+      <span>I often</span>
+      <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+      <span>coffee in the morning.</span>
+    </div>
+
+    <!-- 3 -->
+    <div class="question-item">
+      <span class="q-num">3.</span>
+      <span>The swimming pool</span>
+      <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+      <span>at 7.30 every morning.</span>
+    </div>
+
+    <!-- 4 -->
+    <div class="question-item">
+      <span class="q-num">4.</span>
+      <span>Bad driving</span>
+      <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+      <span>many accidents.</span>
+    </div>
+
+    <!-- 5 -->
+    <div class="question-item">
+      <span class="q-num">5.</span>
+      <span>My parents</span>
+      <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+      <span>in a very small flat.</span>
+    </div>
+
+    <!-- 6 -->
+    <div class="question-item">
+      <span class="q-num">6.</span>
+      <span>The Olympic Games</span>
+      <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+      <span>place every four years.</span>
+    </div>
+
+    <!-- 7 -->
+    <div class="question-item">
+      <span class="q-num">7.</span>
+      <span>The Panama Canal</span>
+      <input type="text" class="blank-input" placeholder="..." autocomplete="off">
+      <span>the Atlantic and Pacific Oceans.</span>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn-reset" type="button" onclick="clearFields()">Clear All / Очистить 🔄</button>
+  </div>
+</div>
+
+<script>
+  function clearFields() {
+    document.querySelectorAll('.question-item:not(.example-item) .blank-input').forEach(input => {
+      input.value = '';
+    });
+  }
+</script>
+
+</body>
+</html>
