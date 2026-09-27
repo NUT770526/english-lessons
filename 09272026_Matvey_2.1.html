@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Famous Explorers - Listening & Matching Exercise</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0f172a;
+    color: #f8fafc;
+  }
+
+  /* Interactive Tooltip Vocab Styling */
+  .vocab-word {
+    color: #38bdf8;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    transition: color 0.2s;
+  }
+
+  .vocab-word:hover {
+    color: #7dd3fc;
+    background-color: rgba(56, 189, 248, 0.1);
+    border-radius: 4px;
+  }
+
+  /* Tooltip Popover */
+  .vocab-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    width: 220px;
+    background-color: #1e293b;
+    color: #f8fafc;
+    text-align: center;
+    border-radius: 12px;
+    padding: 10px 14px;
+    position: absolute;
+    z-index: 50;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    border: 1px solid #38bdf8;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(56, 189, 248, 0.2);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    pointer-events: none;
+  }
+
+  .vocab-word:hover .vocab-tooltip,
+  .vocab-word:focus .vocab-tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .vocab-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #38bdf8 transparent transparent transparent;
+  }
+
+  /* Match Option Select Styles */
+  .match-select {
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    color: #f8fafc;
+    transition: all 0.2s ease;
+  }
+
+  .match-select:focus {
+    outline: none;
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  }
+
+  .match-card.is-correct {
+    border-color: #22c55e !important;
+    background-color: rgba(34, 197, 94, 0.1) !important;
+  }
+
+  .match-card.is-wrong {
+    border-color: #ef4444 !important;
+    background-color: rgba(239, 68, 68, 0.1) !important;
+  }
+
+  .speaker-stan {
+    color: #34d399;
+  }
+
+  .speaker-michelle {
+    color: #fbbf24;
+  }
+
+  .line-stan {
+    border-left: 3px solid #34d399;
+  }
+
+  .line-michelle {
+    border-left: 3px solid #fbbf24;
+  }
+</style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex justify-center items-start">
+
+<div class="max-w-4xl w-full bg-[#1e293b] rounded-3xl p-6 md:p-10 border border-slate-700/60 shadow-2xl space-y-8">
+
+  <!-- Header -->
+  <header class="text-center border-b border-slate-700/60 pb-6">
+    <div class="inline-flex items-center gap-2 text-3xl mb-2">
+      <span>🎧</span>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-sky-400">Listen to the recording</h1>
+    </div>
+    <p class="text-slate-400 text-sm md:text-base">Hover over <span class="text-sky-400 underline decoration-dotted font-semibold">highlighted words</span> to hear pronunciation, see IPA transcription & Ukrainian translation!</p>
+  </header>
+
+  <!-- Audio Player Controls Panel -->
+  <section class="bg-[#0f172a] border border-slate-700/80 rounded-2xl p-5 shadow-inner space-y-4">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <button type="button" id="playBtn" onclick="playDialogue()" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl shadow transition active:scale-95 flex items-center gap-2">
+          <span id="playIcon">▶</span> <span id="playText">Play</span>
+        </button>
+        <button type="button" onclick="pauseDialogue()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl border border-slate-700 transition active:scale-95">
+          ⏸ Pause
+        </button>
+        <button type="button" onclick="stopDialogue()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl border border-slate-700 transition active:scale-95">
+          ⏹ Stop
+        </button>
+      </div>
+
+      <div class="flex items-center gap-3 flex-wrap">
+        <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
+          <span class="text-xs text-slate-400 font-medium">Speed:</span>
+          <select id="speechRate" onchange="updateSpeed()" class="bg-transparent text-sky-400 font-bold text-sm focus:outline-none cursor-pointer">
+            <option value="0.75" class="bg-slate-900 text-slate-200">0.75x</option>
+            <option value="0.85" selected class="bg-slate-900 text-slate-200">0.85x</option>
+            <option value="1.0" class="bg-slate-900 text-slate-200">1.0x</option>
+          </select>
+        </div>
+
+        <!-- Speaker Filter Tags -->
+        <div class="flex items-center gap-2">
+          <button type="button" id="filterStan" onclick="toggleSpeakerFilter('stan')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30 transition">
+            Stan 🟢
+          </button>
+          <button type="button" id="filterMichelle" onclick="toggleSpeakerFilter('michelle')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:bg-amber-500/30 transition">
+            Michelle 🟡
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Collapsible Transcript Panel -->
+  <section class="space-y-3">
+    <div class="flex items-center justify-between">
+      <button type="button" onclick="toggleTranscript()" class="flex items-center gap-2 text-sky-400 font-bold text-lg hover:text-sky-300 transition">
+        <span>Transcript</span>
+        <span id="transcriptEye">👁️</span>
+      </button>
+      <div class="flex items-center gap-2 text-xs">
+        <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-400 font-semibold border border-emerald-500/30">Stan</span>
+        <span class="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-400 font-semibold border border-amber-500/30">Michelle</span>
+      </div>
+    </div>
+
+    <div id="transcriptContainer" class="bg-[#0f172a] border border-slate-700/80 rounded-2xl p-5 md:p-6 space-y-3.5 text-slate-300 text-sm md:text-base leading-relaxed transition-all">
+      
+      <!-- Dialogue Lines with Interactive Vocab Tooltips -->
+      <p class="dialogue-line line-stan pl-3 py-0.5" data-speaker="stan">
+        <strong class="speaker-stan">Stan:</strong> Hey, Michelle! How’s your history class going?
+      </p>
+
+      <p class="dialogue-line line-michelle pl-3 py-0.5" data-speaker="michelle">
+        <strong class="speaker-michelle">Michelle:</strong> It’s super, really! I have an 
+        <span class="vocab-word" onmouseenter="speakWord('essay')" onclick="speakWord('essay')" tabindex="0">
+          essay
+          <span class="vocab-tooltip">
+            <span class="block font-bold text-sky-300">essay</span>
+            <span class="block text-xs text-slate-400">/ˈɛseɪ/</span>
+            <span class="block text-sm text-amber-300 font-medium mt-1">есе, твір</span>
+          </span>
+        </span> 
+        to hand in next week. It’s tough but interesting.
+      </p>
+
+      <p class="dialogue-line line-stan pl-3 py-0.5" data-speaker="stan">
+        <strong class="speaker-stan">Stan:</strong> Really? Essays can be a drag sometimes. What’s it about?
+      </p>
+
+      <p class="dialogue-line line-michelle pl-3 py-0.5" data-speaker="michelle">
+        <strong class="speaker-michelle">Michelle:</strong> I’m writing about famous 
+        <span class="vocab-word" onmouseenter="speakWord('explorers')" onclick="speakWord('explorers')" tabindex="0">
+          explorers
+          <span class="vocab-tooltip">
+            <span class="block font-bold text-sky-300">explorers</span>
+            <span class="block text-xs text-slate-400">/ɪkˈsplɔːrəz/</span>
+            <span class="block text-sm text-amber-300 font-medium mt-1">дослідники</span>
+          </span>
+        </span>.
+      </p>
+
+      <p class="dialogue-line line-stan pl-3 py-0.5" data-speaker="stan">
+        <strong class="speaker-stan">Stan:</strong> You mean, those 
+        <span class="vocab-word" onmouseenter="speakWord('ambitious')" onclick="speakWord('ambitious')" tabindex="0">
+          ambitious
+          <span class="vocab-tooltip">
+            <span class="block font-bold text-sky-300">ambitious</span>
+            <span class="block text-xs text-slate-400">/æmˈbɪʃəs/</span>
+            <span class="block text-sm text-amber-300 font-medium mt-1">амбітний</span>
+          </span>
+        </span> 
+        people who go to volcanos right before they explode, 
+        <span class="vocab-word" onmouseenter="speakWord('rainforests')" onclick="speakWord('rainforests')" tabindex="0">
+          rainforests
+          <span class="vocab-tooltip">
+            <span class="block font-bold text-sky-300">rainforests</span>
+            <span class="block text-xs text-slate-400">/ˈreɪnˌfɒrɪsts/</span>
+            <span class="block text-sm text-amber-300 font-medium mt-1">тропічні ліси</span>
+          </span>
+        </span> 
+        with wild tropical birds, 
+        <span class="vocab-word" onmouseenter="speakWord('deserted')" onclick="speakWord('deserted')" tabindex="0">
+          deserted
+          <span class="vocab-tooltip">
+            <span class="block font-bold text-sky-300">deserted</span>
+            <span class="block text-xs text-slate-400">/dɪˈzɜːtɪd/</span>
+            <span class="block text-sm text-amber-300 font-medium mt-1">безлюдний</span>
+          </span>
+        </span> 
+        islands with no civilization, and deserts with no water?
+      </p>
+
+      <p class="dialogue-line line-michelle pl-3 py-0.5" data-speaker="michelle">
+        <strong class="speaker-michelle">Michelle:</strong> Ha! I guess you could say it like that. I’m writing more about famous people. They travelled around the world and did great things.
+      </p>
+
+      <p class="dialogue-line line-stan pl-3 py-0.5" data-speaker="stan">
+        <strong class="speaker-stan">Stan:</strong> Alright, so give me some examples?
+      </p>
+
+      <p class="dialogue-line line-michelle pl-3 py-0.5" data-speaker="michelle">
+        <strong class="speaker-michelle">Michelle:</strong> Well, there is Amelia Earhart. In 1932 her flight was a success. She flew across the Atlantic Ocean all by herself. She was such a brave woman, really!
+      </p>
+
+      <p class="dialogue-line line-stan pl-3 py-0.5" data-speaker="stan">
+        <strong class="speaker-stan">Stan:</strong> All by herself? I’m even afraid to fly when I’m with all my family.
+      </p>
+
+      <p class="dialogue-line line-michelle pl-3 py-0.5" data-speaker="michelle">
+        <strong class="speaker-michelle">Michelle:</strong> There are other 
+        <span class="vocab-word" onmouseenter="speakWord('fascinating')" onclick="speakWord('fascinating')" tabindex="0">
+          fascinating
+          <span class="vocab-tooltip">
+            <span class="block font-bold text-sky-300">fascinating</span>
+            <span class="block text-xs text-slate-400">/ˈfæsɪneɪtɪŋ/</span>
+            <span class="block text-sm text-amber-300 font-medium mt-1">захоплюючий</span>
+          </span>
+        </span> 
+        explorers too. Marco Polo travelled to China.
+      </p>
+
+      <p class="dialogue-line line-stan pl-3 py-0.5" data-speaker="stan">
+        <strong class="speaker-stan">Stan:</strong> That’s not 
+        <span class="vocab-word" onmouseenter="speakWord('impressive')" onclick="speakWord('impressive')" tabindex="0">
+          impressive
+          <span class="vocab-tooltip">
+            <span class="block font-bold text-sky-300">impressive</span>
+            <span class="block text-xs text-slate-400">/ɪmˈprɛsɪv/</span>
+            <span class="block text-sm text-amber-300 font-medium mt-1">вражаючий</span>
+          </span>
+        </span>. My brother has travelled to China too.
+      </p>
+
+      <p class="dialogue-line line-michelle pl-3 py-0.5" data-speaker="michelle">
+        <strong class="speaker-michelle">Michelle:</strong> Yeah, but Marco Polo travelled in the 1200s! His journey took over three years!
+      </p>
+
+      <p class="dialogue-line line-stan pl-3 py-0.5" data-speaker="stan">
+        <strong class="speaker-stan">Stan:</strong> That’s pretty crazy! I can’t imagine travelling to one place for three years. I’m 
+        <span class="vocab-word" onmouseenter="speakWord('exhausted')" onclick="speakWord('exhausted')" tabindex="0">
+          exhausted
+          <span class="vocab-tooltip">
+            <span class="block font-bold text-sky-300">exhausted</span>
+            <span class="block text-xs text-slate-400">/ɪɡˈzɔːstɪd/</span>
+            <span class="block text-sm text-amber-300 font-medium mt-1">виснажений</span>
+          </span>
+        </span> 
+        after just a twenty-minute bus ride!
+      </p>
+
+      <p class="dialogue-line line-michelle pl-3 py-0.5" data-speaker="michelle">
+        <strong class="speaker-michelle">Michelle:</strong> It’s a good thing you were not born then, hu?
+      </p>
+
+      <p class="dialogue-line line-stan pl-3 py-0.5" data-speaker="stan">
+        <strong class="speaker-stan">Stan:</strong> I guess so... Life would be too difficult. Are there any explorers who work with wild animals? I’ve always loved wild animals.
+      </p>
+
+      <p class="dialogue-line line-michelle pl-3 py-0.5" data-speaker="michelle">
+        <strong class="speaker-michelle">Michelle:</strong> Well, there is Jane Goodall. She is an American 
+        <span class="vocab-word" onmouseenter="speakWord('anthropologist')" onclick="speakWord('anthropologist')" tabindex="0">
+          anthropologist
+          <span class="vocab-tooltip">
+            <span class="block font-bold text-sky-300">anthropologist</span>
+            <span class="block text-xs text-slate-400">/ˌænθrəˈpɒlədʒɪst/</span>
+            <span class="block text-sm text-amber-300 font-medium mt-1">антрополог</span>
+          </span>
+        </span> 
+        who studies 
+        <span class="vocab-word" onmouseenter="speakWord('chimpanzees')" onclick="speakWord('chimpanzees')" tabindex="0">
+          chimpanzees
+          <span class="vocab-tooltip">
+            <span class="block font-bold text-sky-300">chimpanzees</span>
+            <span class="block text-xs text-slate-400">/ˌtʃɪmpænˈziːz/</span>
+            <span class="block text-sm text-amber-300 font-medium mt-1">шимпанзе</span>
+          </span>
+        </span>.
+      </p>
+
+      <p class="dialogue-line line-stan pl-3 py-0.5" data-speaker="stan">
+        <strong class="speaker-stan">Stan:</strong> So, she works in a zoo? That’s not really an explorer.
+      </p>
+
+      <p class="dialogue-line line-michelle pl-3 py-0.5" data-speaker="michelle">
+        <strong class="speaker-michelle">Michelle:</strong> No, no! She works in the jungles of Asia and Africa. She first went to Africa when she was 26. She studied how chimpanzees make tools, hunt for meat, and have similar social 
+        <span class="vocab-word" onmouseenter="speakWord('behaviour')" onclick="speakWord('behaviour')" tabindex="0">
+          behaviour
+          <span class="vocab-tooltip">
+            <span class="block font-bold text-sky-300">behaviour</span>
+            <span class="block text-xs text-slate-400">/bɪˈheɪvjə/</span>
+            <span class="block text-sm text-amber-300 font-medium mt-1">поведінка</span>
+          </span>
+        </span> 
+        to humans.
+      </p>
+
+      <p class="dialogue-line line-stan pl-3 py-0.5" data-speaker="stan">
+        <strong class="speaker-stan">Stan:</strong> Amelia Earhart, Marco Polo, Jane Goodall... Those are some really impressive people. Maybe one day you’ll be like them.
+      </p>
+
+      <p class="dialogue-line line-michelle pl-3 py-0.5" data-speaker="michelle">
+        <strong class="speaker-michelle">Michelle:</strong> One day, maybe. But now my biggest 
+        <span class="vocab-word" onmouseenter="speakWord('adventure')" onclick="speakWord('adventure')" tabindex="0">
+          adventure
+          <span class="vocab-tooltip">
+            <span class="block font-bold text-sky-300">adventure</span>
+            <span class="block text-xs text-slate-400">/ədˈvɛntʃə/</span>
+            <span class="block text-sm text-amber-300 font-medium mt-1">пригода</span>
+          </span>
+        </span> 
+        is going to the café for lunch. Wanna join?
+      </p>
+
+      <p class="dialogue-line line-stan pl-3 py-0.5" data-speaker="stan">
+        <strong class="speaker-stan">Stan:</strong> Lead the way!
+      </p>
+
+    </div>
+  </section>
+
+  <!-- Match Exercise Section -->
+  <section class="space-y-6 pt-4 border-t border-slate-700/60">
+    <div class="flex items-center gap-2">
+      <span class="text-2xl">🧩</span>
+      <h2 class="text-xl md:text-2xl font-extrabold text-slate-100">Match the names with their occupations</h2>
+    </div>
+
+    <div class="space-y-4">
+      
+      <!-- Match Item 1 -->
+      <div class="match-card bg-[#0f172a] border border-slate-700/80 rounded-2xl p-4 md:p-5 flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
+        <div class="flex items-center gap-3 w-full md:w-1/3">
+          <span class="w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 font-bold flex items-center justify-center text-sm border border-sky-500/30">1</span>
+          <span class="font-bold text-slate-100 text-lg">Jane Goodall</span>
+        </div>
+        <div class="w-full md:w-2/3">
+          <select id="match1" class="match-select w-full px-4 py-3 rounded-xl text-sm md:text-base cursor-pointer">
+            <option value="" disabled selected>-- Select occupation / achievement --</option>
+            <option value="flew">flew across the Atlantic Ocean all by herself</option>
+            <option value="china">travelled to China</option>
+            <option value="chimpanzees">studies chimpanzees</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Match Item 2 -->
+      <div class="match-card bg-[#0f172a] border border-slate-700/80 rounded-2xl p-4 md:p-5 flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
+        <div class="flex items-center gap-3 w-full md:w-1/3">
+          <span class="w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 font-bold flex items-center justify-center text-sm border border-sky-500/30">2</span>
+          <span class="font-bold text-slate-100 text-lg">Marco Polo</span>
+        </div>
+        <div class="w-full md:w-2/3">
+          <select id="match2" class="match-select w-full px-4 py-3 rounded-xl text-sm md:text-base cursor-pointer">
+            <option value="" disabled selected>-- Select occupation / achievement --</option>
+            <option value="flew">flew across the Atlantic Ocean all by herself</option>
+            <option value="china">travelled to China</option>
+            <option value="chimpanzees">studies chimpanzees</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Match Item 3 -->
+      <div class="match-card bg-[#0f172a] border border-slate-700/80 rounded-2xl p-4 md:p-5 flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
+        <div class="flex items-center gap-3 w-full md:w-1/3">
+          <span class="w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 font-bold flex items-center justify-center text-sm border border-sky-500/30">3</span>
+          <span class="font-bold text-slate-100 text-lg">Amelia Earhart</span>
+        </div>
+        <div class="w-full md:w-2/3">
+          <select id="match3" class="match-select w-full px-4 py-3 rounded-xl text-sm md:text-base cursor-pointer">
+            <option value="" disabled selected>-- Select occupation / achievement --</option>
+            <option value="flew">flew across the Atlantic Ocean all by herself</option>
+            <option value="china">travelled to China</option>
+            <option value="chimpanzees">studies chimpanzees</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Feedback Banner -->
+  <div id="feedbackBanner" class="hidden p-4 rounded-2xl text-center font-bold text-base border transition-all"></div>
+
+  <!-- Action Controls -->
+  <div class="flex flex-wrap justify-center items-center gap-4 pt-4 border-t border-slate-700/60">
+    <button type="button" onclick="checkMatching()" class="px-8 py-3.5 bg-sky-400 hover:bg-sky-300 text-slate-950 font-extrabold rounded-xl shadow-lg transition-transform active:scale-95 flex items-center gap-2">
+      <span>Check Answers</span>
+      <span>✔</span>
+    </button>
+    <button type="button" onclick="resetMatching()" class="px-6 py-3.5 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold rounded-xl transition-transform active:scale-95 flex items-center gap-2">
+      <span>Reset</span>
+      <span>🔄</span>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  // Correct answers key
+  const correctMatches = {
+    match1: 'chimpanzees', // Jane Goodall
+    match2: 'china',       // Marco Polo
+    match3: 'flew'         // Amelia Earhart
+  };
+
+  let activeSpeakerFilter = null;
+  let isPlayingDialogue = false;
+
+  // Web Speech Synthesis initialization
+  function getEnglishVoice() {
+    if (!('speechSynthesis' in window)) return null;
+    const voices = window.speechSynthesis.getVoices();
+    return voices.find(v => v.lang.startsWith('en')) || null;
+  }
+
+  // Speak individual vocabulary word on hover or click
+  function speakWord(word) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    
+    setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      const voice = getEnglishVoice();
+      if (voice) utterance.voice = voice;
+      window.speechSynthesis.speak(utterance);
+    }, 50);
+  }
+
+  // Read full dialogue or filtered lines
+  function playDialogue() {
+    if (!('speechSynthesis' in window)) return;
+
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+      updatePlayButtonUI(true);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const lines = document.querySelectorAll('.dialogue-line');
+    let fullText = "";
+
+    lines.forEach(line => {
+      const speaker = line.dataset.speaker;
+      if (!activeSpeakerFilter || activeSpeakerFilter === speaker) {
+        fullText += line.innerText + ". ";
+      }
+    });
+
+    if (!fullText.trim()) return;
+
+    const rate = parseFloat(document.getElementById('speechRate').value) || 0.85;
+    const utterance = new SpeechSynthesisUtterance(fullText);
+    utterance.lang = 'en-US';
+    utterance.rate = rate;
+
+    const voice = getEnglishVoice();
+    if (voice) utterance.voice = voice;
+
+    utterance.onend = () => updatePlayButtonUI(false);
+    utterance.onerror = () => updatePlayButtonUI(false);
+
+    window.speechSynthesis.speak(utterance);
+    updatePlayButtonUI(true);
+  }
+
+  function pauseDialogue() {
+    if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+      window.speechSynthesis.pause();
+      updatePlayButtonUI(false);
+    }
+  }
+
+  function stopDialogue() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      updatePlayButtonUI(false);
+    }
+  }
+
+  function updateSpeed() {
+    if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+      playDialogue();
+    }
+  }
+
+  function updatePlayButtonUI(playing) {
+    isPlayingDialogue = playing;
+    document.getElementById('playIcon').textContent = playing ? '⏸' : '▶';
+    document.getElementById('playText').textContent = playing ? 'Playing' : 'Play';
+  }
+
+  // Toggle speaker filter
+  function toggleSpeakerFilter(speaker) {
+    const stanBtn = document.getElementById('filterStan');
+    const michelleBtn = document.getElementById('filterMichelle');
+    const lines = document.querySelectorAll('.dialogue-line');
+
+    if (activeSpeakerFilter === speaker) {
+      activeSpeakerFilter = null;
+      stanBtn.classList.remove('ring-2', 'ring-emerald-400');
+      michelleBtn.classList.remove('ring-2', 'ring-amber-400');
+      lines.forEach(l => l.style.opacity = '1');
+    } else {
+      activeSpeakerFilter = speaker;
+      if (speaker === 'stan') {
+        stanBtn.classList.add('ring-2', 'ring-emerald-400');
+        michelleBtn.classList.remove('ring-2', 'ring-amber-400');
+      } else {
+        michelleBtn.classList.add('ring-2', 'ring-amber-400');
+        stanBtn.classList.remove('ring-2', 'ring-emerald-400');
+      }
+
+      lines.forEach(l => {
+        if (l.dataset.speaker === speaker) {
+          l.style.opacity = '1';
+        } else {
+          l.style.opacity = '0.35';
+        }
+      });
+    }
+
+    if (isPlayingDialogue) {
+      playDialogue();
+    }
+  }
+
+  // Toggle Transcript section
+  function toggleTranscript() {
+    const container = document.getElementById('transcriptContainer');
+    const eye = document.getElementById('transcriptEye');
+
+    if (container.classList.contains('hidden')) {
+      container.classList.remove('hidden');
+      eye.textContent = '👁️';
+    } else {
+      container.classList.add('hidden');
+      eye.textContent = '🙈';
+    }
+  }
+
+  // Check matching answers
+  function checkMatching() {
+    let score = 0;
+    const total = 3;
+
+    Object.keys(correctMatches).forEach(id => {
+      const select = document.getElementById(id);
+      const card = select.closest('.match-card');
+      const val = select.value;
+
+      card.classList.remove('is-correct', 'is-wrong');
+
+      if (val === correctMatches[id]) {
+        card.classList.add('is-correct');
+        score++;
+      } else {
+        card.classList.add('is-wrong');
+      }
+    });
+
+    const banner = document.getElementById('feedbackBanner');
+    banner.classList.remove('hidden', 'bg-emerald-500/10', 'border-emerald-500', 'text-emerald-400', 'bg-rose-500/10', 'border-rose-500', 'text-rose-400');
+
+    if (score === total) {
+      banner.classList.add('bg-emerald-500/10', 'border-emerald-500', 'text-emerald-400');
+      banner.innerHTML = `🎉 Perfect! You matched all ${score} explorers correctly!`;
+    } else {
+      banner.classList.add('bg-rose-500/10', 'border-rose-500', 'text-rose-400');
+      banner.innerHTML = `You got ${score} out of ${total} correct. Review the highlighted items and try again!`;
+    }
+  }
+
+  // Reset matching exercise
+  function resetMatching() {
+    Object.keys(correctMatches).forEach(id => {
+      const select = document.getElementById(id);
+      const card = select.closest('.match-card');
+      select.selectedIndex = 0;
+      card.classList.remove('is-correct', 'is-wrong');
+    });
+
+    const banner = document.getElementById('feedbackBanner');
+    banner.classList.add('hidden');
+    banner.innerHTML = '';
+  }
+
+  // Ensure voices are loaded for Speech Synthesis
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => {
+      getEnglishVoice();
+    };
+  }
+</script>
+
+</body>
+</html>
