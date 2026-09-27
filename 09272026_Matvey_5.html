@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Put these verbs in the correct form</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.15);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1.4;
+  }
+
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .question-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.05rem;
+    color: #f1f5f9;
+    flex-wrap: wrap;
+  }
+
+  .q-num {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 24px;
+  }
+
+  .blank-input {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 14px;
+    color: #38bdf8;
+    font-size: 1.05rem;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    min-width: 140px;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+
+  .blank-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+  }
+
+  .controls {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">
+    <span>▶</span> Put these verbs in the correct form
+  </div>
+
+  <div class="questions-list">
+
+    <!-- 1 -->
+    <div class="question-item">
+      <span class="q-num">1.</span>
+      <span>I usually get up at 7 o'clock and</span>
+      <input type="text" class="blank-input" placeholder="to have" autocomplete="off">
+      <span>a big breakfast.</span>
+    </div>
+
+    <!-- 2 -->
+    <div class="question-item">
+      <span class="q-num">2.</span>
+      <span>I walk to work, which</span>
+      <input type="text" class="blank-input" placeholder="to take" autocomplete="off">
+      <span>me about half an hour, I start work at 8.45.</span>
+    </div>
+
+    <!-- 3 -->
+    <div class="question-item">
+      <span class="q-num">3.</span>
+      <span>I never</span>
+      <input type="text" class="blank-input" placeholder="to have" autocomplete="off">
+      <span>lunch.</span>
+    </div>
+
+    <!-- 4 -->
+    <div class="question-item">
+      <span class="q-num">4.</span>
+      <span>I</span>
+      <input type="text" class="blank-input" placeholder="to finish" autocomplete="off">
+      <span>work at 5 o'clock.</span>
+    </div>
+
+    <!-- 5 -->
+    <div class="question-item">
+      <span class="q-num">5.</span>
+      <span>I</span>
+      <input type="text" class="blank-input" placeholder="to be" autocomplete="off">
+      <span>always tired when I get home.</span>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn-reset" type="button" onclick="clearFields()">Clear All / Очистить 🔄</button>
+  </div>
+</div>
+
+<script>
+  function clearFields() {
+    document.querySelectorAll('.blank-input').forEach(input => {
+      input.value = '';
+    });
+  }
+</script>
+
+</body>
+</html>
