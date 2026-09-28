@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1. Choose the correct option</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.15);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --correct-bg: rgba(34, 197, 94, 0.2);
+    --correct-border: #22c55e;
+    --correct-text: #4ade80;
+    --incorrect-bg: rgba(239, 68, 68, 0.2);
+    --incorrect-border: #ef4444;
+    --incorrect-text: #f87171;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+  }
+
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .question-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.05rem;
+    color: #f1f5f9;
+    flex-wrap: wrap;
+  }
+
+  .q-num {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 28px;
+  }
+
+  .blank-select {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: #38bdf8;
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .blank-select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+  }
+
+  .blank-select.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .blank-select.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  .controls {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .result-score {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">1. Выбери правильный вариант</div>
+
+  <div class="questions-list">
+
+    <!-- 1 -->
+    <div class="question-item">
+      <span class="q-num">1.</span>
+      <span>What</span>
+      <select class="blank-select" data-answer="is">
+        <option value="">-- choose --</option>
+        <option value="is">is</option>
+        <option value="does">does</option>
+      </select>
+      <span>your new client like? — She is polite and very organised.</span>
+    </div>
+
+    <!-- 2 -->
+    <div class="question-item">
+      <span class="q-num">2.</span>
+      <span>What does the speaker</span>
+      <select class="blank-select" data-answer="look like">
+        <option value="">-- choose --</option>
+        <option value="like">like</option>
+        <option value="look like">look like</option>
+      </select>
+      <span>? I need to find her at the conference.</span>
+    </div>
+
+    <!-- 3 -->
+    <div class="question-item">
+      <span class="q-num">3.</span>
+      <span>I</span>
+      <select class="blank-select" data-answer="like">
+        <option value="">-- choose --</option>
+        <option value="like">like</option>
+        <option value="am like">am like</option>
+      </select>
+      <span>attending conferences and meeting new people.</span>
+    </div>
+
+    <!-- 4 -->
+    <div class="question-item">
+      <span class="q-num">4.</span>
+      <span>Our manager speaks</span>
+      <select class="blank-select" data-answer="like">
+        <option value="">-- choose --</option>
+        <option value="like">like</option>
+        <option value="looks like">looks like</option>
+      </select>
+      <span>a lawyer when she reviews a contract.</span>
+    </div>
+
+    <!-- 5 -->
+    <div class="question-item">
+      <span class="q-num">5.</span>
+      <span>What</span>
+      <select class="blank-select" data-answer="does">
+        <option value="">-- choose --</option>
+        <option value="is">is</option>
+        <option value="does">does</option>
+      </select>
+      <span>the new invoice look like? — It has our updated company logo.</span>
+    </div>
+
+    <!-- 6 -->
+    <div class="question-item">
+      <span class="q-num">6.</span>
+      <span>What does your manager</span>
+      <select class="blank-select" data-answer="look like">
+        <option value="">-- choose --</option>
+        <option value="like">like</option>
+        <option value="look like">look like</option>
+      </select>
+      <span>? — He's tall and wears glasses.</span>
+    </div>
+
+    <!-- 7 -->
+    <div class="question-item">
+      <span class="q-num">7.</span>
+      <span>What</span>
+      <select class="blank-select" data-answer="is">
+        <option value="">-- choose --</option>
+        <option value="is">is</option>
+        <option value="does">does</option>
+      </select>
+      <span>your manager like? — He's calm, even when we have to meet a deadline.</span>
+    </div>
+
+    <!-- 8 -->
+    <div class="question-item">
+      <span class="q-num">8.</span>
+      <span>This report</span>
+      <select class="blank-select" data-answer="looks like">
+        <option value="">-- choose --</option>
+        <option value="looks like">looks like</option>
+        <option value="likes">likes</option>
+      </select>
+      <span>the one we prepared last month.</span>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-check" type="button" onclick="checkAnswers()">Check Answers / Проверить ✅</button>
+      <button class="btn-reset" type="button" onclick="clearFields()">Reset / Сбросить 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+</div>
+
+<script>
+  function checkAnswers() {
+    const selects = document.querySelectorAll('.blank-select');
+    let correctCount = 0;
+
+    selects.forEach(select => {
+      const userAnswer = select.value.toLowerCase().trim();
+      const correctAnswer = select.getAttribute('data-answer').toLowerCase().trim();
+
+      select.classList.remove('correct', 'incorrect');
+
+      if (userAnswer === correctAnswer) {
+        select.classList.add('correct');
+        correctCount++;
+      } else {
+        select.classList.add('incorrect');
+      }
+    });
+
+    const scoreDiv = document.getElementById('score');
+    scoreDiv.textContent = `Score: ${correctCount} / ${selects.length}`;
+  }
+
+  function clearFields() {
+    const selects = document.querySelectorAll('.blank-select');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
