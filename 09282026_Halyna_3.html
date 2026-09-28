@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3. Translate into English (with hints)</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.15);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --correct-bg: rgba(34, 197, 94, 0.15);
+    --correct-border: #22c55e;
+    --correct-text: #4ade80;
+    --incorrect-bg: rgba(239, 68, 68, 0.15);
+    --incorrect-border: #ef4444;
+    --incorrect-text: #f87171;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+  }
+
+  /* Reference Box */
+  .ref-box {
+    background: var(--card-bg);
+    border: 1px dashed var(--accent);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .ref-title {
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ref-item {
+    margin-top: 4px;
+    color: var(--text-secondary);
+  }
+
+  .ref-item b {
+    color: var(--text-primary);
+  }
+
+  /* Questions */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .question-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .prompt-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 1.05rem;
+    color: #f1f5f9;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .q-num {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 24px;
+  }
+
+  /* Tooltip word styling */
+  .tooltip-word {
+    border-bottom: 2px dotted var(--accent);
+    color: #7dd3fc;
+    cursor: help;
+    position: relative;
+    display: inline-block;
+    font-weight: 600;
+  }
+
+  .tooltip-word .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 240px;
+    background-color: #0284c7;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 10px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    pointer-events: none;
+  }
+
+  .tooltip-word .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0284c7 transparent transparent transparent;
+  }
+
+  .tooltip-word:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+  }
+
+  /* Structure Hint Toggle */
+  .hint-btn {
+    background: transparent;
+    border: none;
+    color: #f59e0b;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    margin-top: -4px;
+    transition: color 0.2s;
+  }
+
+  .hint-btn:hover {
+    color: #fbbf24;
+  }
+
+  .structure-hint {
+    display: none;
+    font-size: 0.88rem;
+    color: #fcd34d;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+
+  .structure-hint.active {
+    display: block;
+  }
+
+  .input-row {
+    width: 100%;
+  }
+
+  .answer-input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 16px;
+    color: #38bdf8;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .answer-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+  }
+
+  .answer-input.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .answer-input.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  .controls {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .result-score {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">3. Переведи на английский</div>
+  <div class="subtitle">💡 Наведи на подчёркнутое слово, чтобы увидеть перевод ключевого фразового глагола или термина.</div>
+
+  <!-- Reference Box -->
+  <div class="ref-box">
+    <div class="ref-title">📌 Краткая памятка:</div>
+    <div class="ref-item">• <b>What is ... like?</b> — Какой по характеру / свойствам? (описание)</div>
+    <div class="ref-item">• <b>What does ... look like?</b> — Как выглядит внешне?</div>
+  </div>
+
+  <div class="questions-list">
+
+    <!-- 1 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">1.</span>
+        <span>Какой у вас новый клиент? Мне нужно <span class="tooltip-word">связаться с ним повторно<span class="tooltip-text">follow up with him</span></span>.</span>
+      </div>
+      <button type="button" class="hint-btn" onclick="toggleHint(1)">💡 Показать подсказку по структуре</button>
+      <div id="hint-1" class="structure-hint">Структура: What is [person] like? + I need to follow up with...</div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="What is your new client like? I need to follow up with him.|What is your new client like? I need to follow up with her.|What is your new client like? I need to follow up with them.|What is your new client like? I have to follow up with him.|What is your new client like? I have to follow up with her.">
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">2.</span>
+        <span><span class="tooltip-word">Как выглядит<span class="tooltip-text">What does ... look like?</span></span> менеджер, который <span class="tooltip-word">будет выступать<span class="tooltip-text">will speak / is going to speak</span></span> на конференции?</span>
+      </div>
+      <button type="button" class="hint-btn" onclick="toggleHint(2)">💡 Показать подсказку по структуре</button>
+      <div id="hint-2" class="structure-hint">Структура: What does the manager who will speak at the conference look like?</div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="What does the manager who will speak at the conference look like?|What does the manager who is going to speak at the conference look like?|What does the manager who will perform at the conference look like?">
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">3.</span>
+        <span>Мне нравится готовить отчёты, но я не люблю работать <span class="tooltip-word">в спешке<span class="tooltip-text">in a hurry / in a rush</span></span>.</span>
+      </div>
+      <button type="button" class="hint-btn" onclick="toggleHint(3)">💡 Показать подсказку по структуре</button>
+      <div id="hint-3" class="structure-hint">Глаголы: like preparing reports / don't like working in a hurry.</div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="I like preparing reports, but I don't like working in a hurry.|I like to prepare reports, but I don't like to work in a hurry.|I like preparing reports, but I dislike working in a hurry.|I like preparing reports, but I don't like working in a rush.|I like to prepare reports, but I don't like to work in a rush.">
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">4.</span>
+        <span>Этот <span class="tooltip-word">счёт<span class="tooltip-text">invoice</span></span> <span class="tooltip-word">выглядит как<span class="tooltip-text">looks like</span></span> тот, который мы отправили в прошлом месяце.</span>
+      </div>
+      <button type="button" class="hint-btn" onclick="toggleHint(4)">💡 Показать подсказку по структуре</button>
+      <div id="hint-4" class="structure-hint">Структура: This invoice looks like the one we sent last month.</div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="This invoice looks like the one we sent last month.|This bill looks like the one we sent last month.|This invoice looks like the one that we sent last month.">
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">5.</span>
+        <span>Она <span class="tooltip-word">говорит как<span class="tooltip-text">speaks like</span></span> <span class="tooltip-word">опытный юрист<span class="tooltip-text">an experienced lawyer</span></span>, когда <span class="tooltip-word">проверяет<span class="tooltip-text">reviews / checks</span></span> <span class="tooltip-word">договор<span class="tooltip-text">a contract</span></span>.</span>
+      </div>
+      <button type="button" class="hint-btn" onclick="toggleHint(5)">💡 Показать подсказку по структуре</button>
+      <div id="hint-5" class="structure-hint">Структура: She speaks like an experienced lawyer when she reviews a contract.</div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="She speaks like an experienced lawyer when she reviews a contract.|She speaks like an experienced lawyer when she reviews the contract.|She speaks like an experienced lawyer when she checks the contract.|She speaks like an experienced lawyer when she checks a contract.">
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="question-item">
+      <div class="prompt-row">
+        <span class="q-num">6.</span>
+        <span>Какой ваш руководитель, когда вам нужно <span class="tooltip-word">уложиться в срок<span class="tooltip-text">meet a deadline</span></span>?</span>
+      </div>
+      <button type="button" class="hint-btn" onclick="toggleHint(6)">💡 Показать подсказку по структуре</button>
+      <div id="hint-6" class="structure-hint">Структура: What is your manager like when you have to meet a deadline?</div>
+      <div class="input-row">
+        <input type="text" class="answer-input" placeholder="Type translation here..." autocomplete="off" data-answer="What is your manager like when you have to meet a deadline?|What is your manager like when you need to meet a deadline?|What is your boss like when you have to meet a deadline?|What is your boss like when you need to meet a deadline?">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-check" type="button" onclick="checkAnswers()">Check Answers / Проверить ✅</button>
+      <button class="btn-reset" type="button" onclick="clearFields()">Reset / Сбросить 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+</div>
+
+<script>
+  function toggleHint(num) {
+    const hintEl = document.getElementById(`hint-${num}`);
+    hintEl.classList.toggle('active');
+  }
+
+  function normalizeText(text) {
+    return text
+      .trim()
+      .toLowerCase()
+      .replace(/[.?!]$/, '')
+      .replace(/’/g, "'")
+      .replace(/\s+/g, ' ');
+  }
+
+  function checkAnswers() {
+    const inputs = document.querySelectorAll('.answer-input');
+    let correctCount = 0;
+
+    inputs.forEach(input => {
+      const userAnswer = normalizeText(input.value);
+      const validAnswers = input.getAttribute('data-answer').split('|').map(normalizeText);
+
+      input.classList.remove('correct', 'incorrect');
+
+      if (userAnswer !== '' && validAnswers.includes(userAnswer)) {
+        input.classList.add('correct');
+        correctCount++;
+      } else {
+        input.classList.add('incorrect');
+      }
+    });
+
+    const scoreDiv = document.getElementById('score');
+    scoreDiv.textContent = `Score: ${correctCount} / ${inputs.length}`;
+  }
+
+  function clearFields() {
+    const inputs = document.querySelectorAll('.answer-input');
+    inputs.forEach(input => {
+      input.value = '';
+      input.classList.remove('correct', 'incorrect');
+    });
+
+    const hints = document.querySelectorAll('.structure-hint');
+    hints.forEach(hint => hint.classList.remove('active'));
+
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
