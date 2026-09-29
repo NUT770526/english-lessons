@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discuss the topics</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-hover: #0284c7;
+    --purple-accent: #a855f7;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .chat-icon {
+    background: var(--purple-accent);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+
+  /* Discussion Questions */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .question-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 1.1rem;
+    color: #f1f5f9;
+  }
+
+  .purple-bullet {
+    color: var(--purple-accent);
+    font-size: 1.2rem;
+    line-height: 1.4;
+    flex-shrink: 0;
+  }
+
+  /* Interactive Hover Word Tooltip */
+  .word-hover {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px dashed var(--accent);
+    padding: 2px 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #e0f2fe;
+    transition: background-color 0.2s;
+  }
+
+  .word-hover:hover {
+    background: rgba(56, 189, 248, 0.2);
+  }
+
+  .word-hover .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 260px;
+    background-color: #0284c7;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    pointer-events: none;
+    line-height: 1.4;
+  }
+
+  .word-hover .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0284c7 transparent transparent transparent;
+  }
+
+  .word-hover:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-left: 2px;
+    opacity: 0.85;
+    transition: transform 0.1s;
+  }
+
+  .audio-btn:hover {
+    transform: scale(1.15);
+  }
+
+  /* Student Notes Section */
+  .notes-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+
+  .notes-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .notes-textarea {
+    width: 100%;
+    min-height: 100px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    color: var(--text-primary);
+    padding: 12px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    outline: none;
+  }
+
+  .notes-textarea:focus {
+    border-color: var(--accent);
+  }
+
+  /* Model Answer Section */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-toggle-answers {
+    background: #6b21a8;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-toggle-answers:hover {
+    background: #7e22ce;
+  }
+
+  .answers-box {
+    display: none;
+    background: var(--card-bg);
+    border: 1px solid var(--purple-accent);
+    border-radius: 14px;
+    padding: 20px;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .answer-item {
+    margin-bottom: 14px;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+  }
+
+  .answer-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .answer-item strong {
+    color: var(--purple-accent);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="title-group">
+    <span class="chat-icon">💬</span>
+    <h2 class="title">Discuss the topics</h2>
+  </div>
+
+  <div class="subtitle">💡 Наведи на выделенное слово, чтобы увидеть транскрипцию и перевод. Нажимай 🔊, чтобы прослушать произношение.</div>
+
+  <!-- Discussion Questions -->
+  <div class="questions-list">
+
+    <div class="question-item">
+      <span class="purple-bullet">▶</span>
+      <div>
+        Did you 
+        <span class="word-hover">bring a lot of problems<span class="tooltip-text">[brɪŋ ə lɒt əv ˈprɒbləmz]<br>доставляли много проблем</span><button class="audio-btn" onclick="speak('bring a lot of problems', event)">🔊</button></span> 
+        to your parents as a 
+        <span class="word-hover">teen<span class="tooltip-text">[tiːn]<br>подросток</span><button class="audio-btn" onclick="speak('teen', event)">🔊</button></span>?
+      </div>
+    </div>
+
+    <div class="question-item">
+      <span class="purple-bullet">▶</span>
+      <div>
+        Do you think your teenage 
+        <span class="word-hover">traits<span class="tooltip-text">[treɪts]<br>черты характера</span><button class="audio-btn" onclick="speak('traits', event)">🔊</button></span> 
+        have changed as you've 
+        <span class="word-hover">grown older<span class="tooltip-text">[ɡrəʊn ˈəʊldə(r)]<br>повзрослели / стали старше</span><button class="audio-btn" onclick="speak('grown older', event)">🔊</button></span>? How?
+      </div>
+    </div>
+
+    <div class="question-item">
+      <span class="purple-bullet">▶</span>
+      <div>
+        Do you think modern teenagers 
+        <span class="word-hover">differ<span class="tooltip-text">[ˈdɪfə(r)]<br>отличаются</span><button class="audio-btn" onclick="speak('differ', event)">🔊</button></span> 
+        a lot from you at this age? Why?
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Student Notes Area -->
+  <div class="notes-card">
+    <div class="notes-title">📝 My Notes & Ideas for Discussion</div>
+    <textarea class="notes-textarea" placeholder="Write down key points, ideas, or vocabulary you plan to use..."></textarea>
+  </div>
+
+  <!-- Model Answer Controls -->
+  <div class="controls">
+    <button class="btn-toggle-answers" onclick="toggleAnswers()">Show Model Answers / Примеры ответов 💡</button>
+    
+    <div id="answersBox" class="answers-box">
+      <div class="answer-item">
+        <strong>1.</strong> Not really. I was quite an organized and calm teenager, so I didn't bring many problems to my parents.
+      </div>
+      <div class="answer-item">
+        <strong>2.</strong> Yes, I have become much more mature and practical in my decision-making compared to my teenage years.
+      </div>
+      <div class="answer-item">
+        <strong>3.</strong> Modern teenagers have more digital tools and options, but their core goals and desires remain very similar to ours.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function speak(text, event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+
+  function toggleAnswers() {
+    const box = document.getElementById('answersBox');
+    const btn = document.querySelector('.btn-toggle-answers');
+    if (box.style.display === 'block') {
+      box.style.display = 'none';
+      btn.textContent = 'Show Model Answers / Примеры ответов 💡';
+    } else {
+      box.style.display = 'block';
+      btn.textContent = 'Hide Model Answers / Скрыть ответы 🙈';
+    }
+  }
+</script>
+
+</body>
+</html>
