@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3. Выбери правильное слово или форму</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-hover: #0284c7;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --correct-bg: rgba(34, 197, 94, 0.2);
+    --correct-border: #22c55e;
+    --correct-text: #4ade80;
+    --incorrect-bg: rgba(239, 68, 68, 0.2);
+    --incorrect-border: #ef4444;
+    --incorrect-text: #f87171;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+
+  /* Questions List */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .question-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.05rem;
+    color: #f1f5f9;
+    flex-wrap: wrap;
+    line-height: 1.8;
+  }
+
+  .q-num {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 24px;
+  }
+
+  /* Dropdown Select Option */
+  .select-box {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .select-box.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .select-box.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  /* Interactive Hover Word Tooltip */
+  .word-hover {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px dashed var(--accent);
+    padding: 2px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #e0f2fe;
+    transition: background-color 0.2s;
+  }
+
+  .word-hover:hover {
+    background: rgba(56, 189, 248, 0.2);
+  }
+
+  .word-hover .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 260px;
+    background-color: #0284c7;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    pointer-events: none;
+    line-height: 1.4;
+  }
+
+  .word-hover .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0284c7 transparent transparent transparent;
+  }
+
+  .word-hover:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-left: 2px;
+    opacity: 0.8;
+    transition: transform 0.1s, opacity 0.2s;
+  }
+
+  .audio-btn:hover {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .result-score {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">3. Выбери правильное слово или форму</div>
+  <div class="subtitle">💡 Наведи на выделенное слово, чтобы увидеть транскрипцию и перевод. Нажимай 🔊, чтобы прослушать.</div>
+
+  <!-- Questions List -->
+  <div class="questions-list">
+
+    <!-- 1 -->
+    <div class="question-item">
+      <span class="q-num">1.</span>
+      <span>Our manager</span>
+      <select class="select-box" data-answer="deals with">
+        <option value="">-- choose --</option>
+        <option value="deals with">deals with</option>
+        <option value="grows">grows</option>
+      </select>
+      <span>difficult clients every day.</span>
+      <span style="font-size:0.85rem; color:#94a3b8; margin-left: auto;">
+        ( 
+        <span class="word-hover">deals with <span class="tooltip-text">[diːlz wɪð]<br>имеет дело с / решает вопросы</span><button class="audio-btn" onclick="speak('deals with', event)">🔊</button></span> / 
+        <span class="word-hover">grows <span class="tooltip-text">[ɡrəʊz]<br>растит / выращивает</span><button class="audio-btn" onclick="speak('grows', event)">🔊</button></span>
+        )
+      </span>
+    </div>
+
+    <!-- 2 -->
+    <div class="question-item">
+      <span class="q-num">2.</span>
+      <span>I</span>
+      <select class="select-box" data-answer="trust">
+        <option value="">-- choose --</option>
+        <option value="trust">trust</option>
+        <option value="bring">bring</option>
+      </select>
+      <span>my colleague. She is honest.</span>
+      <span style="font-size:0.85rem; color:#94a3b8; margin-left: auto;">
+        ( 
+        <span class="word-hover">trust <span class="tooltip-text">[trʌst]<br>доверяю</span><button class="audio-btn" onclick="speak('trust', event)">🔊</button></span> / 
+        <span class="word-hover">bring <span class="tooltip-text">[brɪŋ]<br>приношу</span><button class="audio-btn" onclick="speak('bring', event)">🔊</button></span>
+        )
+      </span>
+    </div>
+
+    <!-- 3 -->
+    <div class="question-item">
+      <span class="q-num">3.</span>
+      <span>What is the main</span>
+      <select class="select-box" data-answer="point">
+        <option value="">-- choose --</option>
+        <option value="point">point</option>
+        <option value="goal">goal</option>
+      </select>
+      <span>of your question?</span>
+      <span style="font-size:0.85rem; color:#94a3b8; margin-left: auto;">
+        ( 
+        <span class="word-hover">point <span class="tooltip-text">[pɔɪnt]<br>суть / смысл</span><button class="audio-btn" onclick="speak('point', event)">🔊</button></span> / 
+        <span class="word-hover">goal <span class="tooltip-text">[ɡəʊl]<br>цель</span><button class="audio-btn" onclick="speak('goal', event)">🔊</button></span>
+        )
+      </span>
+    </div>
+
+    <!-- 4 -->
+    <div class="question-item">
+      <span class="q-num">4.</span>
+      <span>Our</span>
+      <select class="select-box" data-answer="goal">
+        <option value="">-- choose --</option>
+        <option value="goal">goal</option>
+        <option value="desire">desire</option>
+      </select>
+      <span>is better communication with clients.</span>
+      <span style="font-size:0.85rem; color:#94a3b8; margin-left: auto;">
+        ( 
+        <span class="word-hover">goal <span class="tooltip-text">[ɡəʊl]<br>цель</span><button class="audio-btn" onclick="speak('goal', event)">🔊</button></span> / 
+        <span class="word-hover">desire <span class="tooltip-text">[dɪˈzaɪə(r)]<br>желание</span><button class="audio-btn" onclick="speak('desire', event)">🔊</button></span>
+        )
+      </span>
+    </div>
+
+    <!-- 5 -->
+    <div class="question-item">
+      <span class="q-num">5.</span>
+      <span>We</span>
+      <select class="select-box" data-answer="make decisions">
+        <option value="">-- choose --</option>
+        <option value="make decisions">make decisions</option>
+        <option value="bring decisions">bring decisions</option>
+      </select>
+      <span>together.</span>
+      <span style="font-size:0.85rem; color:#94a3b8; margin-left: auto;">
+        ( 
+        <span class="word-hover">make decisions <span class="tooltip-text">[meɪk dɪˈsɪʒnz]<br>принимаем решения</span><button class="audio-btn" onclick="speak('make decisions', event)">🔊</button></span> / 
+        <span class="word-hover">bring decisions <span class="tooltip-text">[brɪŋ dɪˈsɪʒnz]<br>приносим решения</span><button class="audio-btn" onclick="speak('bring decisions', event)">🔊</button></span>
+        )
+      </span>
+    </div>
+
+    <!-- 6 -->
+    <div class="question-item">
+      <span class="q-num">6.</span>
+      <span>Yesterday she</span>
+      <select class="select-box" data-answer="brought">
+        <option value="">-- choose --</option>
+        <option value="brought">brought</option>
+        <option value="bring">bring</option>
+      </select>
+      <span>the report to the meeting.</span>
+      <span style="font-size:0.85rem; color:#94a3b8; margin-left: auto;">
+        ( 
+        <span class="word-hover">brought <span class="tooltip-text">[brɔːt]<br>принесла (прош. вр.)</span><button class="audio-btn" onclick="speak('brought', event)">🔊</button></span> / 
+        <span class="word-hover">bring <span class="tooltip-text">[brɪŋ]<br>приносить (наст. вр.)</span><button class="audio-btn" onclick="speak('bring', event)">🔊</button></span>
+        )
+      </span>
+    </div>
+
+    <!-- 7 -->
+    <div class="question-item">
+      <span class="q-num">7.</span>
+      <span>Our team</span>
+      <select class="select-box" data-answer="grew">
+        <option value="">-- choose --</option>
+        <option value="grew">grew</option>
+        <option value="grown">grown</option>
+      </select>
+      <span>last year.</span>
+      <span style="font-size:0.85rem; color:#94a3b8; margin-left: auto;">
+        ( 
+        <span class="word-hover">grew <span class="tooltip-text">[ɡruː]<br>выросла (Past Simple)</span><button class="audio-btn" onclick="speak('grew', event)">🔊</button></span> / 
+        <span class="word-hover">grown <span class="tooltip-text">[ɡrəʊn]<br>выросшая (3-я форма)</span><button class="audio-btn" onclick="speak('grown', event)">🔊</button></span>
+        )
+      </span>
+    </div>
+
+    <!-- 8 -->
+    <div class="question-item">
+      <span class="q-num">8.</span>
+      <span>He</span>
+      <select class="select-box" data-answer="decided">
+        <option value="">-- choose --</option>
+        <option value="decided">decided</option>
+        <option value="decision">decision</option>
+      </select>
+      <span>to call the client yesterday.</span>
+      <span style="font-size:0.85rem; color:#94a3b8; margin-left: auto;">
+        ( 
+        <span class="word-hover">decided <span class="tooltip-text">[dɪˈsaɪdɪd]<br>решил (глагол)</span><button class="audio-btn" onclick="speak('decided', event)">🔊</button></span> / 
+        <span class="word-hover">decision <span class="tooltip-text">[dɪˈsɪʒn]<br>решение (сущ.)</span><button class="audio-btn" onclick="speak('decision', event)">🔊</button></span>
+        )
+      </span>
+    </div>
+
+    <!-- 9 -->
+    <div class="question-item">
+      <span class="q-num">9.</span>
+      <span>It was a difficult</span>
+      <select class="select-box" data-answer="decision">
+        <option value="">-- choose --</option>
+        <option value="decide">decide</option>
+        <option value="decision">decision</option>
+      </select>.
+      <span style="font-size:0.85rem; color:#94a3b8; margin-left: auto;">
+        ( 
+        <span class="word-hover">decide <span class="tooltip-text">[dɪˈsaɪd]<br>решать (глагол)</span><button class="audio-btn" onclick="speak('decide', event)">🔊</button></span> / 
+        <span class="word-hover">decision <span class="tooltip-text">[dɪˈsɪʒn]<br>решение (сущ.)</span><button class="audio-btn" onclick="speak('decision', event)">🔊</button></span>
+        )
+      </span>
+    </div>
+
+    <!-- 10 -->
+    <div class="question-item">
+      <span class="q-num">10.</span>
+      <span>She has a strong</span>
+      <select class="select-box" data-answer="desire">
+        <option value="">-- choose --</option>
+        <option value="desire">desire</option>
+        <option value="point">point</option>
+      </select>
+      <span>to learn English.</span>
+      <span style="font-size:0.85rem; color:#94a3b8; margin-left: auto;">
+        ( 
+        <span class="word-hover">desire <span class="tooltip-text">[dɪˈzaɪə(r)]<br>желание</span><button class="audio-btn" onclick="speak('desire', event)">🔊</button></span> / 
+        <span class="word-hover">point <span class="tooltip-text">[pɔɪnt]<br>суть / цель</span><button class="audio-btn" onclick="speak('point', event)">🔊</button></span>
+        )
+      </span>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-check" type="button" onclick="checkAnswers()">Check Answers / Проверить ✅</button>
+      <button class="btn-reset" type="button" onclick="clearFields()">Reset / Сбросить 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+</div>
+
+<script>
+  function speak(word, event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+
+  function checkAnswers() {
+    const selects = document.querySelectorAll('.select-box');
+    let correctCount = 0;
+
+    selects.forEach(select => {
+      const userAnswer = select.value;
+      const correctAnswer = select.getAttribute('data-answer');
+
+      select.classList.remove('correct', 'incorrect');
+
+      if (userAnswer === correctAnswer) {
+        select.classList.add('correct');
+        correctCount++;
+      } else {
+        select.classList.add('incorrect');
+      }
+    });
+
+    const scoreDiv = document.getElementById('score');
+    scoreDiv.textContent = `Score: ${correctCount} / ${selects.length}`;
+  }
+
+  function clearFields() {
+    const selects = document.querySelectorAll('.select-box');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
