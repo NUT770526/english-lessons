@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4. Переведи на английский</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-hover: #0284c7;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --correct-bg: rgba(34, 197, 94, 0.15);
+    --correct-border: #22c55e;
+    --correct-text: #4ade80;
+    --incorrect-bg: rgba(239, 68, 68, 0.15);
+    --incorrect-border: #ef4444;
+    --incorrect-text: #f87171;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+
+  /* Word Bank */
+  .word-bank-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 28px;
+  }
+
+  .word-bank-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .words-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 12px;
+  }
+
+  .word-item {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+
+  .word-item:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .word-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .word-text {
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: #ffffff;
+  }
+
+  .phonetic {
+    font-size: 0.78rem;
+    color: #93c5fd;
+    font-family: monospace;
+  }
+
+  /* Tooltips */
+  .word-item .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 220px;
+    background-color: #0284c7;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    pointer-events: none;
+  }
+
+  .word-item .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0284c7 transparent transparent transparent;
+  }
+
+  .word-item:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+  }
+
+  .audio-btn {
+    background: #0369a1;
+    border: none;
+    color: #ffffff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    transition: transform 0.1s, background-color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background: #0284c7;
+    transform: scale(1.1);
+  }
+
+  /* Questions */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .question-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #f1f5f9;
+  }
+
+  .q-num {
+    font-weight: 800;
+    color: var(--accent);
+    min-width: 20px;
+  }
+
+  .q-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .q-input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: #ffffff;
+    font-size: 1rem;
+    padding: 10px 14px;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .q-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  }
+
+  .q-input.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .q-input.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  .answer-hint {
+    font-size: 0.9rem;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.1);
+    padding: 6px 12px;
+    border-radius: 8px;
+    display: none;
+  }
+
+  .answer-hint.visible {
+    display: block;
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reveal {
+    background: #0e7490;
+    color: #ffffff;
+  }
+
+  .btn-reveal:hover {
+    background: #155e75;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .result-score {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">4. Переведи на английский</div>
+  <div class="subtitle">Используй слова из карточек. Наведи на карточку, чтобы увидеть транскрипцию и перевод. Нажми 🔊, чтобы прослушать.</div>
+
+  <!-- Vocabulary Bank -->
+  <div class="word-bank-card">
+    <div class="word-bank-title">Банк слов / Vocabulary Cards</div>
+    <div class="words-grid">
+
+      <div class="word-item">
+        <span class="tooltip-text">терпеливый</span>
+        <div class="word-details">
+          <span class="word-text">patient</span>
+          <span class="phonetic">[ˈpeɪʃnt]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('patient', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">вежливый</span>
+        <div class="word-details">
+          <span class="word-text">polite</span>
+          <span class="phonetic">[pəˈlaɪt]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('polite', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">грубый</span>
+        <div class="word-details">
+          <span class="word-text">rude</span>
+          <span class="phonetic">[ruːd]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('rude', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">доверять</span>
+        <div class="word-details">
+          <span class="word-text">trust</span>
+          <span class="phonetic">[trʌst]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('trust', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">принимать решение</span>
+        <div class="word-details">
+          <span class="word-text">make a decision</span>
+          <span class="phonetic">[meɪk ə dɪˈsɪʒn]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('make a decision', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">приносить (прош. brought)</span>
+        <div class="word-details">
+          <span class="word-text">bring / brought</span>
+          <span class="phonetic">[brɪŋ / brɔːt]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('brought', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">расти / вырасти (прош. grew)</span>
+        <div class="word-details">
+          <span class="word-text">grow / grew</span>
+          <span class="phonetic">[ɡrəʊ / ɡruː]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('grew', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">надёжный</span>
+        <div class="word-details">
+          <span class="word-text">reliable</span>
+          <span class="phonetic">[rɪˈlaɪəbl]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('reliable', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">организованный</span>
+        <div class="word-details">
+          <span class="word-text">organised</span>
+          <span class="phonetic">[ˈɔːɡənaɪzd]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('organised', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">подростки</span>
+        <div class="word-details">
+          <span class="word-text">teenagers</span>
+          <span class="phonetic">[ˈtiːneɪdʒəz]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('teenagers', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">шумный</span>
+        <div class="word-details">
+          <span class="word-text">noisy</span>
+          <span class="phonetic">[ˈnɔɪzi]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('noisy', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">энергичный</span>
+        <div class="word-details">
+          <span class="word-text">energetic</span>
+          <span class="phonetic">[ˌenəˈdʒetɪk]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('energetic', event)" title="Listen">🔊</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Questions List -->
+  <div class="questions-list">
+
+    <div class="question-item">
+      <div class="q-header">
+        <span class="q-num">1.</span>
+        <span>Наш менеджер терпеливый и вежливый.</span>
+      </div>
+      <div class="q-input-group">
+        <input type="text" class="q-input" data-answers='["Our manager is patient and polite.", "Our manager is polite and patient."]' placeholder="Type translation in English...">
+        <div class="answer-hint">💡 Answer: Our manager is patient and polite.</div>
+      </div>
+    </div>
+
+    <div class="question-item">
+      <div class="q-header">
+        <span class="q-num">2.</span>
+        <span>Вчера клиент был грубым.</span>
+      </div>
+      <div class="q-input-group">
+        <input type="text" class="q-input" data-answers='["Yesterday the client was rude.", "The client was rude yesterday."]' placeholder="Type translation in English...">
+        <div class="answer-hint">💡 Answer: Yesterday the client was rude. / The client was rude yesterday.</div>
+      </div>
+    </div>
+
+    <div class="question-item">
+      <div class="q-header">
+        <span class="q-num">3.</span>
+        <span>Я доверяю своей команде.</span>
+      </div>
+      <div class="q-input-group">
+        <input type="text" class="q-input" data-answers='["I trust my team."]' placeholder="Type translation in English...">
+        <div class="answer-hint">💡 Answer: I trust my team.</div>
+      </div>
+    </div>
+
+    <div class="question-item">
+      <div class="q-header">
+        <span class="q-num">4.</span>
+        <span>Она приняла решение вчера.</span>
+      </div>
+      <div class="q-input-group">
+        <input type="text" class="q-input" data-answers='["She made a decision yesterday.", "Yesterday she made a decision."]' placeholder="Type translation in English...">
+        <div class="answer-hint">💡 Answer: She made a decision yesterday.</div>
+      </div>
+    </div>
+
+    <div class="question-item">
+      <div class="q-header">
+        <span class="q-num">5.</span>
+        <span>Вчера он принёс контракт.</span>
+      </div>
+      <div class="q-input-group">
+        <input type="text" class="q-input" data-answers='["Yesterday he brought the contract.", "He brought the contract yesterday.", "Yesterday he brought a contract.", "He brought a contract yesterday."]' placeholder="Type translation in English...">
+        <div class="answer-hint">💡 Answer: Yesterday he brought the contract.</div>
+      </div>
+    </div>
+
+    <div class="question-item">
+      <div class="q-header">
+        <span class="q-num">6.</span>
+        <span>Наша компания выросла в прошлом году.</span>
+      </div>
+      <div class="q-input-group">
+        <input type="text" class="q-input" data-answers='["Our company grew last year."]' placeholder="Type translation in English...">
+        <div class="answer-hint">💡 Answer: Our company grew last year.</div>
+      </div>
+    </div>
+
+    <div class="question-item">
+      <div class="q-header">
+        <span class="q-num">7.</span>
+        <span>Этот сотрудник надёжный и организованный.</span>
+      </div>
+      <div class="q-input-group">
+        <input type="text" class="q-input" data-answers='["This employee is reliable and organised.", "This employee is reliable and organized.", "This employee is organised and reliable.", "This employee is organized and reliable."]' placeholder="Type translation in English...">
+        <div class="answer-hint">💡 Answer: This employee is reliable and organised.</div>
+      </div>
+    </div>
+
+    <div class="question-item">
+      <div class="q-header">
+        <span class="q-num">8.</span>
+        <span>Эти подростки шумные и энергичные.</span>
+      </div>
+      <div class="q-input-group">
+        <input type="text" class="q-input" data-answers='["These teenagers are noisy and energetic.", "These teenagers are energetic and noisy."]' placeholder="Type translation in English...">
+        <div class="answer-hint">💡 Answer: These teenagers are noisy and energetic.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Action Controls -->
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn btn-check" type="button" onclick="checkAnswers()">Check Answers / Проверить ✅</button>
+      <button class="btn btn-reveal" type="button" onclick="toggleAnswers()">Show Answers / Показать ответы 👁️</button>
+      <button class="btn btn-reset" type="button" onclick="clearFields()">Reset / Сбросить 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+</div>
+
+<!-- JavaScript Engine -->
+<script>
+  function speak(text, event) {
+    if (event) event.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function normalizeText(text) {
+    return text
+      .trim()
+      .toLowerCase()
+      .replace(/[.,?!]/g, '')
+      .replace(/\s+/g, ' ');
+  }
+
+  function checkAnswers() {
+    const inputs = document.querySelectorAll('.q-input');
+    let correctCount = 0;
+
+    inputs.forEach(input => {
+      const userVal = normalizeText(input.value);
+      const validAnswers = JSON.parse(input.getAttribute('data-answers')).map(a => normalizeText(a));
+
+      input.classList.remove('correct', 'incorrect');
+
+      if (userVal !== '' && validAnswers.includes(userVal)) {
+        input.classList.add('correct');
+        correctCount++;
+      } else {
+        input.classList.add('incorrect');
+      }
+    });
+
+    const scoreDiv = document.getElementById('score');
+    scoreDiv.textContent = `Score: ${correctCount} / ${inputs.length}`;
+  }
+
+  function toggleAnswers() {
+    const hints = document.querySelectorAll('.answer-hint');
+    hints.forEach(hint => hint.classList.toggle('visible'));
+  }
+
+  function clearFields() {
+    const inputs = document.querySelectorAll('.q-input');
+    inputs.forEach(input => {
+      input.value = '';
+      input.classList.remove('correct', 'incorrect');
+    });
+
+    const hints = document.querySelectorAll('.answer-hint');
+    hints.forEach(hint => hint.classList.remove('visible'));
+
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
