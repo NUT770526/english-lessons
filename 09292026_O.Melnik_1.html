@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1. Match Word and Translation</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-hover: #0284c7;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --correct-bg: rgba(34, 197, 94, 0.15);
+    --correct-border: #22c55e;
+    --correct-text: #4ade80;
+    --incorrect-bg: rgba(239, 68, 68, 0.15);
+    --incorrect-border: #ef4444;
+    --incorrect-text: #f87171;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Words List */
+  .words-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .word-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: border-color 0.2s;
+  }
+
+  .word-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .q-num {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 20px;
+  }
+
+  .word-text {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #ffffff;
+  }
+
+  .phonetic {
+    font-size: 0.88rem;
+    color: #93c5fd;
+    font-family: monospace;
+  }
+
+  .audio-btn {
+    background: #0369a1;
+    border: none;
+    color: #ffffff;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: transform 0.1s, background-color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background: #0284c7;
+    transform: scale(1.08);
+  }
+
+  .audio-btn:active {
+    transform: scale(0.95);
+  }
+
+  .select-box {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .select-box.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .select-box.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  /* Translations List */
+  .translations-list {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .trans-title {
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  .trans-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.98rem;
+    color: #e2e8f0;
+  }
+
+  .trans-letter {
+    font-weight: 800;
+    color: var(--accent);
+    min-width: 20px;
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .result-score {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">1. Соедини слово и перевод</div>
+  <div class="subtitle">🔊 Нажми на иконку динамика, чтобы прослушать правильное произношение.</div>
+
+  <div class="content-grid">
+    <!-- Left Column: Words -->
+    <div class="words-list">
+
+      <div class="word-card">
+        <div class="word-info">
+          <span class="q-num">1.</span>
+          <button class="audio-btn" type="button" onclick="speak('reliable')" title="Listen">🔊</button>
+          <div>
+            <div class="word-text">reliable</div>
+            <div class="phonetic">[rɪˈlaɪəbl]</div>
+          </div>
+        </div>
+        <select class="select-box" data-answer="C">
+          <option value="">--</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+        </select>
+      </div>
+
+      <div class="word-card">
+        <div class="word-info">
+          <span class="q-num">2.</span>
+          <button class="audio-btn" type="button" onclick="speak('ambitious')" title="Listen">🔊</button>
+          <div>
+            <div class="word-text">ambitious</div>
+            <div class="phonetic">[æmˈbɪʃəs]</div>
+          </div>
+        </div>
+        <select class="select-box" data-answer="D">
+          <option value="">--</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+        </select>
+      </div>
+
+      <div class="word-card">
+        <div class="word-info">
+          <span class="q-num">3.</span>
+          <button class="audio-btn" type="button" onclick="speak('patient')" title="Listen">🔊</button>
+          <div>
+            <div class="word-text">patient</div>
+            <div class="phonetic">[ˈpeɪʃnt]</div>
+          </div>
+        </div>
+        <select class="select-box" data-answer="A">
+          <option value="">--</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+        </select>
+      </div>
+
+      <div class="word-card">
+        <div class="word-info">
+          <span class="q-num">4.</span>
+          <button class="audio-btn" type="button" onclick="speak('rude')" title="Listen">🔊</button>
+          <div>
+            <div class="word-text">rude</div>
+            <div class="phonetic">[ruːd]</div>
+          </div>
+        </div>
+        <select class="select-box" data-answer="B">
+          <option value="">--</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+        </select>
+      </div>
+
+      <div class="word-card">
+        <div class="word-info">
+          <span class="q-num">5.</span>
+          <button class="audio-btn" type="button" onclick="speak('considerate')" title="Listen">🔊</button>
+          <div>
+            <div class="word-text">considerate</div>
+            <div class="phonetic">[kənˈsɪdərət]</div>
+          </div>
+        </div>
+        <select class="select-box" data-answer="F">
+          <option value="">--</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+        </select>
+      </div>
+
+      <div class="word-card">
+        <div class="word-info">
+          <span class="q-num">6.</span>
+          <button class="audio-btn" type="button" onclick="speak('honest')" title="Listen">🔊</button>
+          <div>
+            <div class="word-text">honest</div>
+            <div class="phonetic">[ˈɒnɪst]</div>
+          </div>
+        </div>
+        <select class="select-box" data-answer="E">
+          <option value="">--</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+        </select>
+      </div>
+
+      <div class="word-card">
+        <div class="word-info">
+          <span class="q-num">7.</span>
+          <button class="audio-btn" type="button" onclick="speak('moody')" title="Listen">🔊</button>
+          <div>
+            <div class="word-text">moody</div>
+            <div class="phonetic">[ˈmuːdi]</div>
+          </div>
+        </div>
+        <select class="select-box" data-answer="H">
+          <option value="">--</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+        </select>
+      </div>
+
+      <div class="word-card">
+        <div class="word-info">
+          <span class="q-num">8.</span>
+          <button class="audio-btn" type="button" onclick="speak('sensible')" title="Listen">🔊</button>
+          <div>
+            <div class="word-text">sensible</div>
+            <div class="phonetic">[ˈsensəbl]</div>
+          </div>
+        </div>
+        <select class="select-box" data-answer="G">
+          <option value="">--</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+        </select>
+      </div>
+
+      <div class="word-card">
+        <div class="word-info">
+          <span class="q-num">9.</span>
+          <button class="audio-btn" type="button" onclick="speak('boisterous')" title="Listen">🔊</button>
+          <div>
+            <div class="word-text">boisterous</div>
+            <div class="phonetic">[ˈbɔɪstərəs]</div>
+          </div>
+        </div>
+        <select class="select-box" data-answer="J">
+          <option value="">--</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+        </select>
+      </div>
+
+      <div class="word-card">
+        <div class="word-info">
+          <span class="q-num">10.</span>
+          <button class="audio-btn" type="button" onclick="speak('easy-going')" title="Listen">🔊</button>
+          <div>
+            <div class="word-text">easy-going</div>
+            <div class="phonetic">[ˌiːzi ˈɡəʊɪŋ]</div>
+          </div>
+        </div>
+        <select class="select-box" data-answer="I">
+          <option value="">--</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Translations -->
+    <div class="translations-list">
+      <div class="trans-title">Перевод</div>
+      <div class="trans-item"><span class="trans-letter">A</span> терпеливый</div>
+      <div class="trans-item"><span class="trans-letter">B</span> грубый</div>
+      <div class="trans-item"><span class="trans-letter">C</span> надёжный</div>
+      <div class="trans-item"><span class="trans-letter">D</span> амбициозный</div>
+      <div class="trans-item"><span class="trans-letter">E</span> честный</div>
+      <div class="trans-item"><span class="trans-letter">F</span> внимательный к другим</div>
+      <div class="trans-item"><span class="trans-letter">G</span> рассудительный</div>
+      <div class="trans-item"><span class="trans-letter">H</span> с переменчивым настроением</div>
+      <div class="trans-item"><span class="trans-letter">I</span> лёгкий в общении</div>
+      <div class="trans-item"><span class="trans-letter">J</span> шумный и энергичный</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-check" type="button" onclick="checkAnswers()">Check Answers / Проверить ✅</button>
+      <button class="btn-reset" type="button" onclick="clearFields()">Reset / Сбросить 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+</div>
+
+<script>
+  function speak(word) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel(); // Stop any previous speech
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9; // Slightly slower for clear pronunciation
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+
+  function checkAnswers() {
+    const selects = document.querySelectorAll('.select-box');
+    let correctCount = 0;
+
+    selects.forEach(select => {
+      const userAnswer = select.value;
+      const correctAnswer = select.getAttribute('data-answer');
+
+      select.classList.remove('correct', 'incorrect');
+
+      if (userAnswer === correctAnswer) {
+        select.classList.add('correct');
+        correctCount++;
+      } else {
+        select.classList.add('incorrect');
+      }
+    });
+
+    const scoreDiv = document.getElementById('score');
+    scoreDiv.textContent = `Score: ${correctCount} / ${selects.length}`;
+  }
+
+  function clearFields() {
+    const selects = document.querySelectorAll('.select-box');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
