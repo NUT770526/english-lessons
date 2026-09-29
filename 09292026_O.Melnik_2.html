@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2. Вставь подходящее слово</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-hover: #0284c7;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --input-bg: #0f172a;
+    --correct-bg: rgba(34, 197, 94, 0.15);
+    --correct-border: #22c55e;
+    --correct-text: #4ade80;
+    --incorrect-bg: rgba(239, 68, 68, 0.15);
+    --incorrect-border: #ef4444;
+    --incorrect-text: #f87171;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+  }
+
+  /* Word Bank */
+  .word-bank-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 28px;
+  }
+
+  .word-bank-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+
+  .words-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
+
+  /* Interactive Word Box with Tooltip */
+  .word-item {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+
+  .word-item:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .word-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .word-text {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #ffffff;
+  }
+
+  .phonetic {
+    font-size: 0.8rem;
+    color: #93c5fd;
+    font-family: monospace;
+  }
+
+  /* Tooltip logic */
+  .word-item .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 220px;
+    background-color: #0284c7;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    pointer-events: none;
+  }
+
+  .word-item .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0284c7 transparent transparent transparent;
+  }
+
+  .word-item:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+  }
+
+  .audio-btn {
+    background: #0369a1;
+    border: none;
+    color: #ffffff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: transform 0.1s, background-color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background: #0284c7;
+    transform: scale(1.08);
+  }
+
+  /* Questions List */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .question-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.05rem;
+    color: #f1f5f9;
+    flex-wrap: wrap;
+  }
+
+  .q-num {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 24px;
+  }
+
+  .select-box {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .select-box.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .select-box.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .result-score {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">2. Вставь подходящее слово</div>
+  <div class="subtitle">💡 Наведи на слово, чтобы увидеть перевод на русский. Нажми 🔊, чтобы прослушать произношение.</div>
+
+  <!-- Word Bank -->
+  <div class="word-bank-card">
+    <div class="word-bank-title">Банк слов / Vocabulary Bank</div>
+    <div class="words-grid">
+
+      <div class="word-item">
+        <span class="tooltip-text">уверенный в себе</span>
+        <div class="word-details">
+          <span class="word-text">confident</span>
+          <span class="phonetic">[ˈkɒnfɪdənt]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('confident', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">готовый помочь</span>
+        <div class="word-details">
+          <span class="word-text">helpful</span>
+          <span class="phonetic">[ˈhelpfl]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('helpful', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">организованный</span>
+        <div class="word-details">
+          <span class="word-text">organised</span>
+          <span class="phonetic">[ˈɔːɡənaɪzd]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('organised', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">талантливый</span>
+        <div class="word-details">
+          <span class="word-text">talented</span>
+          <span class="phonetic">[ˈtæləntɪd]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('talented', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">аккуратный / опрятный</span>
+        <div class="word-details">
+          <span class="word-text">tidy</span>
+          <span class="phonetic">[ˈtaɪdi]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('tidy', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">вежливый</span>
+        <div class="word-details">
+          <span class="word-text">polite</span>
+          <span class="phonetic">[pəˈlaɪt]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('polite', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">взрослый / зрелый</span>
+        <div class="word-details">
+          <span class="word-text">mature</span>
+          <span class="phonetic">[məˈtjʊə(r)]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('mature', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">эгоистичный</span>
+        <div class="word-details">
+          <span class="word-text">selfish</span>
+          <span class="phonetic">[ˈselfɪʃ]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('selfish', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">агрессивный</span>
+        <div class="word-details">
+          <span class="word-text">aggressive</span>
+          <span class="phonetic">[əˈɡresɪv]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('aggressive', event)" title="Listen">🔊</button>
+      </div>
+
+      <div class="word-item">
+        <span class="tooltip-text">способность / умение</span>
+        <div class="word-details">
+          <span class="word-text">ability</span>
+          <span class="phonetic">[əˈbɪləti]</span>
+        </div>
+        <button class="audio-btn" onclick="speak('ability', event)" title="Listen">🔊</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Questions -->
+  <div class="questions-list">
+
+    <div class="question-item">
+      <span class="q-num">1.</span>
+      <span>Anna always plans her work. She is very</span>
+      <select class="select-box" data-answer="organised">
+        <option value="">-- choose --</option>
+        <option value="confident">confident</option>
+        <option value="helpful">helpful</option>
+        <option value="organised">organised</option>
+        <option value="talented">talented</option>
+        <option value="tidy">tidy</option>
+        <option value="polite">polite</option>
+        <option value="mature">mature</option>
+        <option value="selfish">selfish</option>
+        <option value="aggressive">aggressive</option>
+        <option value="ability">ability</option>
+      </select>.
+    </div>
+
+    <div class="question-item">
+      <span class="q-num">2.</span>
+      <span>Our new designer has great ideas. She is</span>
+      <select class="select-box" data-answer="talented">
+        <option value="">-- choose --</option>
+        <option value="confident">confident</option>
+        <option value="helpful">helpful</option>
+        <option value="organised">organised</option>
+        <option value="talented">talented</option>
+        <option value="tidy">tidy</option>
+        <option value="polite">polite</option>
+        <option value="mature">mature</option>
+        <option value="selfish">selfish</option>
+        <option value="aggressive">aggressive</option>
+        <option value="ability">ability</option>
+      </select>.
+    </div>
+
+    <div class="question-item">
+      <span class="q-num">3.</span>
+      <span>He helped me with the report. He was very</span>
+      <select class="select-box" data-answer="helpful">
+        <option value="">-- choose --</option>
+        <option value="confident">confident</option>
+        <option value="helpful">helpful</option>
+        <option value="organised">organised</option>
+        <option value="talented">talented</option>
+        <option value="tidy">tidy</option>
+        <option value="polite">polite</option>
+        <option value="mature">mature</option>
+        <option value="selfish">selfish</option>
+        <option value="aggressive">aggressive</option>
+        <option value="ability">ability</option>
+      </select>.
+    </div>
+
+    <div class="question-item">
+      <span class="q-num">4.</span>
+      <span>The client said “please” and “thank you”. He was</span>
+      <select class="select-box" data-answer="polite">
+        <option value="">-- choose --</option>
+        <option value="confident">confident</option>
+        <option value="helpful">helpful</option>
+        <option value="organised">organised</option>
+        <option value="talented">talented</option>
+        <option value="tidy">tidy</option>
+        <option value="polite">polite</option>
+        <option value="mature">mature</option>
+        <option value="selfish">selfish</option>
+        <option value="aggressive">aggressive</option>
+        <option value="ability">ability</option>
+      </select>.
+    </div>
+
+    <div class="question-item">
+      <span class="q-num">5.</span>
+      <span>She spoke clearly at the meeting. She was</span>
+      <select class="select-box" data-answer="confident">
+        <option value="">-- choose --</option>
+        <option value="confident">confident</option>
+        <option value="helpful">helpful</option>
+        <option value="organised">organised</option>
+        <option value="talented">talented</option>
+        <option value="tidy">tidy</option>
+        <option value="polite">polite</option>
+        <option value="mature">mature</option>
+        <option value="selfish">selfish</option>
+        <option value="aggressive">aggressive</option>
+        <option value="ability">ability</option>
+      </select>.
+    </div>
+
+    <div class="question-item">
+      <span class="q-num">6.</span>
+      <span>His desk is always clean. He is</span>
+      <select class="select-box" data-answer="tidy">
+        <option value="">-- choose --</option>
+        <option value="confident">confident</option>
+        <option value="helpful">helpful</option>
+        <option value="organised">organised</option>
+        <option value="talented">talented</option>
+        <option value="tidy">tidy</option>
+        <option value="polite">polite</option>
+        <option value="mature">mature</option>
+        <option value="selfish">selfish</option>
+        <option value="aggressive">aggressive</option>
+        <option value="ability">ability</option>
+      </select>.
+    </div>
+
+    <div class="question-item">
+      <span class="q-num">7.</span>
+      <span>She made a calm, thoughtful decision. It was a</span>
+      <select class="select-box" data-answer="mature">
+        <option value="">-- choose --</option>
+        <option value="confident">confident</option>
+        <option value="helpful">helpful</option>
+        <option value="organised">organised</option>
+        <option value="talented">talented</option>
+        <option value="tidy">tidy</option>
+        <option value="polite">polite</option>
+        <option value="mature">mature</option>
+        <option value="selfish">selfish</option>
+        <option value="aggressive">aggressive</option>
+        <option value="ability">ability</option>
+      </select>
+      <span>decision.</span>
+    </div>
+
+    <div class="question-item">
+      <span class="q-num">8.</span>
+      <span>He only thought about himself. His decision was</span>
+      <select class="select-box" data-answer="selfish">
+        <option value="">-- choose --</option>
+        <option value="confident">confident</option>
+        <option value="helpful">helpful</option>
+        <option value="organised">organised</option>
+        <option value="talented">talented</option>
+        <option value="tidy">tidy</option>
+        <option value="polite">polite</option>
+        <option value="mature">mature</option>
+        <option value="selfish">selfish</option>
+        <option value="aggressive">aggressive</option>
+        <option value="ability">ability</option>
+      </select>.
+    </div>
+
+    <div class="question-item">
+      <span class="q-num">9.</span>
+      <span>The client shouted at us. He was</span>
+      <select class="select-box" data-answer="aggressive">
+        <option value="">-- choose --</option>
+        <option value="confident">confident</option>
+        <option value="helpful">helpful</option>
+        <option value="organised">organised</option>
+        <option value="talented">talented</option>
+        <option value="tidy">tidy</option>
+        <option value="polite">polite</option>
+        <option value="mature">mature</option>
+        <option value="selfish">selfish</option>
+        <option value="aggressive">aggressive</option>
+        <option value="ability">ability</option>
+      </select>.
+    </div>
+
+    <div class="question-item">
+      <span class="q-num">10.</span>
+      <span>She solves problems quickly. She has this</span>
+      <select class="select-box" data-answer="ability">
+        <option value="">-- choose --</option>
+        <option value="confident">confident</option>
+        <option value="helpful">helpful</option>
+        <option value="organised">organised</option>
+        <option value="talented">talented</option>
+        <option value="tidy">tidy</option>
+        <option value="polite">polite</option>
+        <option value="mature">mature</option>
+        <option value="selfish">selfish</option>
+        <option value="aggressive">aggressive</option>
+        <option value="ability">ability</option>
+      </select>.
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-check" type="button" onclick="checkAnswers()">Check Answers / Проверить ✅</button>
+      <button class="btn-reset" type="button" onclick="clearFields()">Reset / Сбросить 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+</div>
+
+<script>
+  function speak(word, event) {
+    if (event) {
+      event.stopPropagation(); // Предотвращает конфликт с кликом по карточке
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает озвучку.');
+    }
+  }
+
+  function checkAnswers() {
+    const selects = document.querySelectorAll('.select-box');
+    let correctCount = 0;
+
+    selects.forEach(select => {
+      const userAnswer = select.value;
+      const correctAnswer = select.getAttribute('data-answer');
+
+      select.classList.remove('correct', 'incorrect');
+
+      if (userAnswer === correctAnswer) {
+        select.classList.add('correct');
+        correctCount++;
+      } else {
+        select.classList.add('incorrect');
+      }
+    });
+
+    const scoreDiv = document.getElementById('score');
+    scoreDiv.textContent = `Score: ${correctCount} / ${selects.length}`;
+  }
+
+  function clearFields() {
+    const selects = document.querySelectorAll('.select-box');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+</script>
+
+</body>
+</html>
