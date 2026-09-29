@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Quiz - Match Definitions</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --accent-hover: #0284c7;
+    --purple-accent: #a855f7;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --correct-bg: rgba(34, 197, 94, 0.2);
+    --correct-border: #22c55e;
+    --incorrect-bg: rgba(239, 68, 68, 0.2);
+    --incorrect-border: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .icon {
+    font-size: 1.6rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 28px;
+  }
+
+  /* Questions List */
+  .quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .quiz-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  .question-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+  }
+
+  .options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--panel-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    position: relative;
+  }
+
+  .option-label:hover {
+    border-color: var(--accent);
+  }
+
+  .option-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .option-label input[type="radio"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--text-secondary);
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .option-label input[type="radio"]:checked {
+    border-color: var(--accent);
+    background-color: var(--accent);
+    box-shadow: inset 0 0 0 3px var(--panel-bg);
+  }
+
+  .word-text {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-primary);
+    position: relative;
+  }
+
+  /* Tooltip logic */
+  .word-hover {
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-hover .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 220px;
+    background-color: #0284c7;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    pointer-events: none;
+    line-height: 1.3;
+  }
+
+  .word-hover .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0284c7 transparent transparent transparent;
+  }
+
+  .option-label:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    transition: transform 0.1s, opacity 0.2s;
+  }
+
+  .audio-btn:hover {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+
+  /* States for answers */
+  .option-label.correct {
+    border-color: var(--correct-border) !important;
+    background: var(--correct-bg) !important;
+  }
+
+  .option-label.incorrect {
+    border-color: var(--incorrect-border) !important;
+    background: var(--incorrect-bg) !important;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .result-score {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="title-group">
+    <span class="icon">📝</span>
+    <h2 class="title">Choose the correct word</h2>
+  </div>
+  <div class="subtitle">💡 Выберите верный вариант ответа. Наведите на слово, чтобы посмотреть перевод и транскрипцию. Нажмите 🔊 для озвучки.</div>
+
+  <div class="quiz-list">
+
+    <!-- Q1 -->
+    <div class="quiz-card" data-correct="Ambitious">
+      <div class="question-text">1. Having a strong desire for success.</div>
+      <div class="options-group">
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q1" value="Lazy">
+            <div class="word-hover">
+              <span class="word-text">Lazy</span>
+              <span class="tooltip-text">[ˈleɪzi]<br>ленивый</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Lazy', event)">🔊</button>
+        </label>
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q1" value="Ambitious">
+            <div class="word-hover">
+              <span class="word-text">Ambitious</span>
+              <span class="tooltip-text">[æmˈbɪʃəs]<br>амбициозный</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Ambitious', event)">🔊</button>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-card" data-correct="Boisterous">
+      <div class="question-text">2. Very noisy and active in a lively way.</div>
+      <div class="options-group">
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q2" value="Boisterous">
+            <div class="word-hover">
+              <span class="word-text">Boisterous</span>
+              <span class="tooltip-text">[ˈbɔɪstərəs]<br>шумный / неистовый</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Boisterous', event)">🔊</button>
+        </label>
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q2" value="Quiet">
+            <div class="word-hover">
+              <span class="word-text">Quiet</span>
+              <span class="tooltip-text">[ˈkwaɪət]<br>тихий</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Quiet', event)">🔊</button>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-card" data-correct="Confident">
+      <div class="question-text">3. Feeling sure about your abilities.</div>
+      <div class="options-group">
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q3" value="Insecure">
+            <div class="word-hover">
+              <span class="word-text">Insecure</span>
+              <span class="tooltip-text">[ˌɪnsɪˈkjʊə(r)]<br>неуверенный в себе</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Insecure', event)">🔊</button>
+        </label>
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q3" value="Confident">
+            <div class="word-hover">
+              <span class="word-text">Confident</span>
+              <span class="tooltip-text">[ˈkɒnfɪdənt]<br>уверенный</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Confident', event)">🔊</button>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-card" data-correct="Honest">
+      <div class="question-text">4. Always telling the truth.</div>
+      <div class="options-group">
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q4" value="Honest">
+            <div class="word-hover">
+              <span class="word-text">Honest</span>
+              <span class="tooltip-text">[ˈɒnɪst]<br>честный</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Honest', event)">🔊</button>
+        </label>
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q4" value="Dishonest">
+            <div class="word-hover">
+              <span class="word-text">Dishonest</span>
+              <span class="tooltip-text">[dɪsˈɒnɪst]<br>нечестный</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Dishonest', event)">🔊</button>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-card" data-correct="Mature">
+      <div class="question-text">5. Acting like an adult, not a child.</div>
+      <div class="options-group">
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q5" value="Mature">
+            <div class="word-hover">
+              <span class="word-text">Mature</span>
+              <span class="tooltip-text">[məˈtʃʊə(r)]<br>взрослый / зрелый</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Mature', event)">🔊</button>
+        </label>
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q5" value="Immature">
+            <div class="word-hover">
+              <span class="word-text">Immature</span>
+              <span class="tooltip-text">[ˌɪməˈtjʊə(r)]<br>незрелый / несамостоятельный</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Immature', event)">🔊</button>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="quiz-card" data-correct="Sensible">
+      <div class="question-text">6. Logical and practical.</div>
+      <div class="options-group">
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q6" value="Foolish">
+            <div class="word-hover">
+              <span class="word-text">Foolish</span>
+              <span class="tooltip-text">[ˈfuːlɪʃ]<br>глупый / безрассудный</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Foolish', event)">🔊</button>
+        </label>
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q6" value="Sensible">
+            <div class="word-hover">
+              <span class="word-text">Sensible</span>
+              <span class="tooltip-text">[ˈsensəbl]<br>разумный / благоразумный</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Sensible', event)">🔊</button>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="quiz-card" data-correct="Talented">
+      <div class="question-text">7. Having a natural ability to do something well.</div>
+      <div class="options-group">
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q7" value="Untalented">
+            <div class="word-hover">
+              <span class="word-text">Untalented</span>
+              <span class="tooltip-text">[ʌnˈtæləntɪd]<br>бездарный</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Untalented', event)">🔊</button>
+        </label>
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q7" value="Talented">
+            <div class="word-hover">
+              <span class="word-text">Talented</span>
+              <span class="tooltip-text">[ˈtæləntɪd]<br>талантливый</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Talented', event)">🔊</button>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="quiz-card" data-correct="Tidy">
+      <div class="question-text">8. Neat and in good order.</div>
+      <div class="options-group">
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q8" value="Messy">
+            <div class="word-hover">
+              <span class="word-text">Messy</span>
+              <span class="tooltip-text">[ˈmesi]<br>неряшливый / беспорядочный</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Messy', event)">🔊</button>
+        </label>
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q8" value="Tidy">
+            <div class="word-hover">
+              <span class="word-text">Tidy</span>
+              <span class="tooltip-text">[ˈtaɪdi]<br>аккуратный / опрятный</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Tidy', event)">🔊</button>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="quiz-card" data-correct="Reliable">
+      <div class="question-text">9. Dependable or trustworthy.</div>
+      <div class="options-group">
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q9" value="Reliable">
+            <div class="word-hover">
+              <span class="word-text">Reliable</span>
+              <span class="tooltip-text">[rɪˈlaɪəbl]<br>надёжный</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Reliable', event)">🔊</button>
+        </label>
+        <label class="option-label">
+          <div class="option-left">
+            <input type="radio" name="q9" value="Unreliable">
+            <div class="word-hover">
+              <span class="word-text">Unreliable</span>
+              <span class="tooltip-text">[ˌʌnrɪˈlaɪəbl]<br>ненадёжный</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('Unreliable', event)">🔊</button>
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-check" onclick="checkQuiz()">Check Answers / Проверить ✅</button>
+      <button class="btn-reset" onclick="resetQuiz()">Reset / Сбросить 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+
+</div>
+
+<script>
+  function checkQuiz() {
+    let score = 0;
+    const cards = document.querySelectorAll('.quiz-card');
+    const total = cards.length;
+
+    cards.forEach(card => {
+      const correctVal = card.getAttribute('data-correct');
+      const options = card.querySelectorAll('.option-label');
+      
+      options.forEach(opt => {
+        opt.classList.remove('correct', 'incorrect');
+        const input = opt.querySelector('input[type="radio"]');
+        
+        if (input.checked) {
+          if (input.value === correctVal) {
+            opt.classList.add('correct');
+            score++;
+          } else {
+            opt.classList.add('incorrect');
+          }
+        } else if (input.value === correctVal) {
+          // Подсвечиваем правильный ответ, если выбрано не то
+          opt.classList.add('correct');
+        }
+      });
+    });
+
+    const scoreDiv = document.getElementById('score');
+    scoreDiv.textContent = `Score: ${score} / ${total}`;
+  }
+
+  function resetQuiz() {
+    document.querySelectorAll('.quiz-card').forEach(card => {
+      const options = card.querySelectorAll('.option-label');
+      options.forEach(opt => {
+        opt.classList.remove('correct', 'incorrect');
+        const input = opt.querySelector('input[type="radio"]');
+        input.checked = false;
+      });
+    });
+    document.getElementById('score').textContent = '';
+  }
+
+  function speak(text, event) {
+    if (event) event.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+</script>
+
+</body>
+</html>
