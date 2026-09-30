@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Хто це може? Marta, John чи Spike?</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --purple-accent: #a855f7;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --correct-bg: rgba(34, 197, 94, 0.2);
+    --correct-border: #22c55e;
+    --incorrect-bg: rgba(239, 68, 68, 0.2);
+    --incorrect-border: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .puzzle-icon {
+    font-size: 1.6rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+  }
+
+  .instruction {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+  }
+
+  /* Collapsible Dialogue Accordion */
+  .dialogue-accordion {
+    margin-bottom: 28px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--card-bg);
+  }
+
+  .dialogue-toggle {
+    width: 100%;
+    background: #1e293b;
+    color: var(--accent);
+    padding: 14px 20px;
+    border: none;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s ease;
+  }
+
+  .dialogue-toggle:hover {
+    background: #334155;
+  }
+
+  .dialogue-toggle .arrow {
+    transition: transform 0.3s ease;
+    font-size: 0.9rem;
+  }
+
+  .dialogue-toggle.active .arrow {
+    transform: rotate(180deg);
+  }
+
+  .dialogue-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease-out, padding 0.35s ease-out;
+    padding: 0 20px;
+    background: var(--card-bg);
+  }
+
+  .dialogue-content.open {
+    padding: 20px;
+    max-height: 600px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .dialogue-line {
+    margin-bottom: 12px;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .dialogue-line:last-child {
+    margin-bottom: 0;
+  }
+
+  .speaker-marta {
+    color: #f472b6;
+    font-weight: 700;
+  }
+
+  .speaker-john {
+    color: #38bdf8;
+    font-weight: 700;
+  }
+
+  /* Names Bank Box */
+  .names-bank {
+    display: flex;
+    gap: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 14px 20px;
+    margin-bottom: 28px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .names-bank span {
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+
+  .name-badge {
+    background: var(--panel-bg);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1rem;
+  }
+
+  /* Tooltip Universal Styling */
+  .has-tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1px dashed var(--accent);
+    color: #e2e8f0;
+    cursor: help;
+  }
+
+  .has-tooltip .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 240px;
+    background-color: #0284c7;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 100;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    pointer-events: none;
+    line-height: 1.3;
+  }
+
+  .has-tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0284c7 transparent transparent transparent;
+  }
+
+  .has-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+  }
+
+  /* Sentences List */
+  .sentences-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .sentence-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+  }
+
+  .num-bullet {
+    color: var(--purple-accent);
+    font-weight: 800;
+    font-size: 1.1rem;
+    min-width: 24px;
+  }
+
+  .sentence-text {
+    flex-grow: 1;
+  }
+
+  select.name-select {
+    background: var(--panel-bg);
+    color: var(--accent);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 8px;
+  }
+
+  select.name-select:focus {
+    border-color: var(--accent);
+  }
+
+  select.name-select.correct {
+    border-color: var(--correct-border) !important;
+    background: var(--correct-bg) !important;
+    color: #4ade80 !important;
+  }
+
+  select.name-select.incorrect {
+    border-color: var(--incorrect-border) !important;
+    background: var(--incorrect-bg) !important;
+    color: #f87171 !important;
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    opacity: 0.85;
+    transition: transform 0.1s, opacity 0.2s;
+  }
+
+  .audio-btn:hover {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .result-score {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="title-group">
+    <span class="puzzle-icon">❓</span>
+    <h2 class="title">1. Хто це може? Marta, John чи Spike?</h2>
+  </div>
+  <p class="instruction">Прочитай діалог і впиши ім'я. 💡 Наведи на підкреслені слова для підказки та озвучки.</p>
+
+  <!-- Collapsible Dialogue -->
+  <div class="dialogue-accordion">
+    <button class="dialogue-toggle" onclick="toggleDialogue()">
+      <span>📖 Прочитай діалог (натисни, щоб відкрити / сховати)</span>
+      <span class="arrow" id="dialogue-arrow">▼</span>
+    </button>
+    <div class="dialogue-content" id="dialogue-box">
+      <div class="dialogue-line"><span class="speaker-marta">Marta:</span> Hi, John! Do you want to do something fun together?</div>
+      <div class="dialogue-line"><span class="speaker-john">John:</span> Sure, Marta, what’s the plan?</div>
+      <div class="dialogue-line"><span class="speaker-marta">Marta:</span> Let’s 
+        <span class="has-tooltip">make cookies
+          <span class="tooltip-text">[meɪk ˈkʊk.iz]<br>пекти печиво / печь печенье</span>
+          <button class="audio-btn" onclick="speak('make cookies', event)">🔊</button>
+        </span>! I can show you how.</div>
+      <div class="dialogue-line"><span class="speaker-john">John:</span> Oh, I can’t 
+        <span class="has-tooltip">cook
+          <span class="tooltip-text">[kʊk]<br>готувати / готовить</span>
+          <button class="audio-btn" onclick="speak('cook', event)">🔊</button>
+        </span>, but I can 
+        <span class="has-tooltip">draw
+          <span class="tooltip-text">[drɔː]<br>малювати / рисовать</span>
+          <button class="audio-btn" onclick="speak('draw', event)">🔊</button>
+        </span> some cookies!</div>
+      <div class="dialogue-line"><span class="speaker-marta">Marta:</span> That’s cool! Do you want to 
+        <span class="has-tooltip">play football
+          <span class="tooltip-text">[pleɪ ˈfʊt.bɔːl]<br>грати в футбол / играть в футбол</span>
+          <button class="audio-btn" onclick="speak('play football', event)">🔊</button>
+        </span> in the park?</div>
+      <div class="dialogue-line"><span class="speaker-john">John:</span> Sounds fun, but I can’t play football. How about 
+        <span class="has-tooltip">riding bikes
+          <span class="tooltip-text">[ˈraɪ.dɪŋ baɪks]<br>кататися на велосипедах</span>
+          <button class="audio-btn" onclick="speak('riding bikes', event)">🔊</button>
+        </span> in the yard? You can take your dog Spike. I think he can 
+        <span class="has-tooltip">run as fast as
+          <span class="tooltip-text">[rʌn æz fɑːst æz]<br>бігати так само швидко як</span>
+          <button class="audio-btn" onclick="speak('run as fast as', event)">🔊</button>
+        </span> we ride bikes.</div>
+      <div class="dialogue-line"><span class="speaker-marta">Marta:</span> Great idea! Yeah, Spike can 
+        <span class="has-tooltip">run really fast
+          <span class="tooltip-text">[rʌn ˈrɪə.li fɑːst]<br>бігати дуже швидко / бегать очень быстро</span>
+          <button class="audio-btn" onclick="speak('run really fast', event)">🔊</button>
+        </span>. Let’s go!</div>
+    </div>
+  </div>
+
+  <!-- Names Bank -->
+  <div class="names-bank">
+    <span>Варіанти відповідей:</span>
+    <div class="name-badge">Marta</div>
+    <div class="name-badge">John</div>
+    <div class="name-badge">Spike</div>
+  </div>
+
+  <!-- Sentences List -->
+  <div class="sentences-list">
+
+    <!-- 1 -->
+    <div class="sentence-item">
+      <span class="num-bullet">1.</span>
+      <div class="sentence-text">
+        <select class="name-select" data-correct="Marta">
+          <option value="">-- Оберіть ім'я --</option>
+          <option value="Marta">Marta</option>
+          <option value="John">John</option>
+          <option value="Spike">Spike</option>
+        </select>
+        can 
+        <span class="has-tooltip">make cookies
+          <span class="tooltip-text">[meɪk ˈkʊk.iz]<br>пекти печиво / печь печенье</span>
+          <button class="audio-btn" onclick="speak('make cookies', event)">🔊</button>
+        </span>.
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="sentence-item">
+      <span class="num-bullet">2.</span>
+      <div class="sentence-text">
+        <select class="name-select" data-correct="John">
+          <option value="">-- Оберіть ім'я --</option>
+          <option value="Marta">Marta</option>
+          <option value="John">John</option>
+          <option value="Spike">Spike</option>
+        </select>
+        can 
+        <span class="has-tooltip">draw
+          <span class="tooltip-text">[drɔː]<br>малювати / рисовать</span>
+          <button class="audio-btn" onclick="speak('draw', event)">🔊</button>
+        </span> 
+        cookies.
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="sentence-item">
+      <span class="num-bullet">3.</span>
+      <div class="sentence-text">
+        <select class="name-select" data-correct="John">
+          <option value="">-- Оберіть ім'я --</option>
+          <option value="Marta">Marta</option>
+          <option value="John">John</option>
+          <option value="Spike">Spike</option>
+        </select>
+        can't 
+        <span class="has-tooltip">cook
+          <span class="tooltip-text">[kʊk]<br>готувати / готовить</span>
+          <button class="audio-btn" onclick="speak('cook', event)">🔊</button>
+        </span>.
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="sentence-item">
+      <span class="num-bullet">4.</span>
+      <div class="sentence-text">
+        <select class="name-select" data-correct="John">
+          <option value="">-- Оберіть ім'я --</option>
+          <option value="Marta">Marta</option>
+          <option value="John">John</option>
+          <option value="Spike">Spike</option>
+        </select>
+        can't 
+        <span class="has-tooltip">play football
+          <span class="tooltip-text">[pleɪ ˈfʊt.bɔːl]<br>грати в футбол / играть в футбол</span>
+          <button class="audio-btn" onclick="speak('play football', event)">🔊</button>
+        </span>.
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="sentence-item">
+      <span class="num-bullet">5.</span>
+      <div class="sentence-text">
+        <select class="name-select" data-correct="Spike">
+          <option value="">-- Оберіть ім'я --</option>
+          <option value="Marta">Marta</option>
+          <option value="John">John</option>
+          <option value="Spike">Spike</option>
+        </select>
+        can 
+        <span class="has-tooltip">run really fast
+          <span class="tooltip-text">[rʌn ˈrɪə.li fɑːst]<br>бігати дуже швидко / бегать очень быстро</span>
+          <button class="audio-btn" onclick="speak('run really fast', event)">🔊</button>
+        </span>.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-check" onclick="checkAnswers()">Перевірити ✅</button>
+      <button class="btn-reset" onclick="resetAnswers()">Скинути 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+
+</div>
+
+<script>
+  function toggleDialogue() {
+    const box = document.getElementById('dialogue-box');
+    const toggleBtn = document.querySelector('.dialogue-toggle');
+    box.classList.toggle('open');
+    toggleBtn.classList.toggle('active');
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    const selects = document.querySelectorAll('.name-select');
+    const total = selects.length;
+
+    selects.forEach(select => {
+      const correctVal = select.getAttribute('data-correct');
+      const userVal = select.value;
+
+      select.classList.remove('correct', 'incorrect');
+
+      if (userVal === correctVal) {
+        select.classList.add('correct');
+        score++;
+      } else {
+        select.classList.add('incorrect');
+      }
+    });
+
+    const scoreDiv = document.getElementById('score');
+    scoreDiv.textContent = `Результат: ${score} / ${total}`;
+  }
+
+  function resetAnswers() {
+    const selects = document.querySelectorAll('.name-select');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+
+  function speak(text, event) {
+    if (event) event.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+</script>
+
+</body>
+</html>
