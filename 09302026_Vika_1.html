@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Put the words in order</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --purple-accent: #a855f7;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --correct-bg: rgba(34, 197, 94, 0.15);
+    --correct-border: #22c55e;
+    --incorrect-bg: rgba(239, 68, 68, 0.15);
+    --incorrect-border: #ef4444;
+    --slot-bg: #1e293b;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .header-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+
+  /* Example Box */
+  .example-card {
+    background: var(--card-bg);
+    border: 1px dashed var(--accent);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 1rem;
+    color: #e2e8f0;
+  }
+
+  .example-title {
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 4px;
+    display: inline-block;
+  }
+
+  /* Tooltips */
+  .has-tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1px dashed var(--accent);
+    cursor: help;
+  }
+
+  .has-tooltip .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 240px;
+    background-color: #0284c7;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 100;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    pointer-events: none;
+    line-height: 1.3;
+  }
+
+  .has-tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0284c7 transparent transparent transparent;
+  }
+
+  .has-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    opacity: 0.85;
+    transition: transform 0.1s, opacity 0.2s;
+    vertical-align: middle;
+  }
+
+  .audio-btn:hover {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  /* Exercise Tasks */
+  .tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .task-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    transition: border-color 0.2s ease;
+  }
+
+  .task-item.correct {
+    border-color: var(--correct-border);
+    background: var(--correct-bg);
+  }
+
+  .task-item.incorrect {
+    border-color: var(--incorrect-border);
+    background: var(--incorrect-bg);
+  }
+
+  .task-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    font-weight: 700;
+    color: var(--purple-accent);
+  }
+
+  /* Bank Chips */
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+    min-height: 42px;
+    padding: 8px;
+    background: var(--panel-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+  }
+
+  .word-chip {
+    background: #334155;
+    color: #f8fafc;
+    border: 1px solid #475569;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .word-chip:hover {
+    background: #475569;
+    border-color: var(--accent);
+  }
+
+  .word-chip.used {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* Drop Slots Container */
+  .drop-zone {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    min-height: 52px;
+    padding: 10px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+  }
+
+  .placed-chip {
+    background: #0284c7;
+    color: #ffffff;
+    border: 1px solid #38bdf8;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    animation: fadeIn 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .placed-chip:hover {
+    background: #0369a1;
+  }
+
+  .punct {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-left: 2px;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .result-score {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <span class="header-icon">🧩</span>
+    <h2 class="title">Read the example and put the words in order</h2>
+  </div>
+  <div class="subtitle">
+    💡 Кликайте по словам по порядку, чтобы составить предложение. Наведите на подчёркнутые сложные слова для просмотра транскрипции и перевода.
+  </div>
+
+  <!-- Example Box -->
+  <div class="example-card">
+    <span class="example-title">Example:</span><br>
+    ➔ I / for my family / 
+    <span class="has-tooltip">a delicious meal
+      <span class="tooltip-text">[ə dɪˈlɪʃəs miːl]<br>вкусное блюдо</span>
+      <button class="audio-btn" onclick="speak('a delicious meal', event)">🔊</button>
+    </span> / can / cook 
+    <br>
+    <strong>➔ I can cook a delicious meal for my family.</strong>
+  </div>
+
+  <!-- Tasks List -->
+  <div class="tasks-list">
+
+    <!-- Task 1 -->
+    <div class="task-item" id="task-1">
+      <div class="task-header">1.</div>
+      <div class="word-bank" id="bank-1">
+        <span class="word-chip" onclick="selectWord(1, 'can’t', this)">can’t</span>
+        <span class="word-chip" onclick="selectWord(1, 'Sarah', this)">Sarah</span>
+        <span class="word-chip" onclick="selectWord(1, 'a picture of a flower', this)">
+          <span class="has-tooltip">a picture of a flower
+            <span class="tooltip-text">[ə ˈpɪktʃər əv ə ˈflaʊər]<br>рисунок цветка</span>
+            <button class="audio-btn" onclick="speak('a picture of a flower', event)">🔊</button>
+          </span>
+        </span>
+        <span class="word-chip" onclick="selectWord(1, 'draw', this)">draw</span>
+      </div>
+      <div class="drop-zone" id="zone-1"></div>
+    </div>
+
+    <!-- Task 2 -->
+    <div class="task-item" id="task-2">
+      <div class="task-header">2.</div>
+      <div class="word-bank" id="bank-2">
+        <span class="word-chip" onclick="selectWord(2, 'friends', this)">friends</span>
+        <span class="word-chip" onclick="selectWord(2, 'football', this)">football</span>
+        <span class="word-chip" onclick="selectWord(2, 'at the park', this)">at the park</span>
+        <span class="word-chip" onclick="selectWord(2, 'John', this)">John</span>
+        <span class="word-chip" onclick="selectWord(2, 'can play', this)">can play</span>
+        <span class="word-chip" onclick="selectWord(2, 'with his', this)">with his</span>
+      </div>
+      <div class="drop-zone" id="zone-2"></div>
+    </div>
+
+    <!-- Task 3 -->
+    <div class="task-item" id="task-3">
+      <div class="task-header">3.</div>
+      <div class="word-bank" id="bank-3">
+        <span class="word-chip" onclick="selectWord(3, 'cannot', this)">cannot</span>
+        <span class="word-chip" onclick="selectWord(3, 'training wheels', this)">
+          <span class="has-tooltip">training wheels
+            <span class="tooltip-text">[ˈtreɪnɪŋ wiːlz]<br>учебно-приставные колесики</span>
+            <button class="audio-btn" onclick="speak('training wheels', event)">🔊</button>
+          </span>
+        </span>
+        <span class="word-chip" onclick="selectWord(3, 'bike', this)">bike</span>
+        <span class="word-chip" onclick="selectWord(3, 'Jack', this)">Jack</span>
+        <span class="word-chip" onclick="selectWord(3, 'ride a', this)">ride a</span>
+        <span class="word-chip" onclick="selectWord(3, 'without', this)">
+          <span class="has-tooltip">without
+            <span class="tooltip-text">[wɪˈðaʊt]<br>без</span>
+            <button class="audio-btn" onclick="speak('without', event)">🔊</button>
+          </span>
+        </span>
+      </div>
+      <div class="drop-zone" id="zone-3"></div>
+    </div>
+
+    <!-- Task 4 -->
+    <div class="task-item" id="task-4">
+      <div class="task-header">4.</div>
+      <div class="word-bank" id="bank-4">
+        <span class="word-chip" onclick="selectWord(4, 'in the', this)">in the</span>
+        <span class="word-chip" onclick="selectWord(4, 'Tom', this)">Tom</span>
+        <span class="word-chip" onclick="selectWord(4, 'can', this)">can</span>
+        <span class="word-chip" onclick="selectWord(4, 'very fast', this)">very fast</span>
+        <span class="word-chip" onclick="selectWord(4, 'school race', this)">
+          <span class="has-tooltip">school race
+            <span class="tooltip-text">[skuːl reɪs]<br>школьный забег / гонка</span>
+            <button class="audio-btn" onclick="speak('school race', event)">🔊</button>
+          </span>
+        </span>
+        <span class="word-chip" onclick="selectWord(4, 'run', this)">run</span>
+      </div>
+      <div class="drop-zone" id="zone-4"></div>
+    </div>
+
+    <!-- Task 5 -->
+    <div class="task-item" id="task-5">
+      <div class="task-header">5.</div>
+      <div class="word-bank" id="bank-5">
+        <span class="word-chip" onclick="selectWord(5, 'skateboard', this)">skateboard</span>
+        <span class="word-chip" onclick="selectWord(5, 'skatepark', this)">
+          <span class="has-tooltip">skatepark
+            <span class="tooltip-text">[ˈskeɪtpɑːk]<br>скейт-парк</span>
+            <button class="audio-btn" onclick="speak('skatepark', event)">🔊</button>
+          </span>
+        </span>
+        <span class="word-chip" onclick="selectWord(5, 'at the', this)">at the</span>
+        <span class="word-chip" onclick="selectWord(5, 'Can', this)">Can</span>
+        <span class="word-chip" onclick="selectWord(5, 'Alex', this)">Alex</span>
+      </div>
+      <div class="drop-zone" id="zone-5" data-punct="?"></div>
+    </div>
+
+    <!-- Task 6 -->
+    <div class="task-item" id="task-6">
+      <div class="task-header">6.</div>
+      <div class="word-bank" id="bank-6">
+        <span class="word-chip" onclick="selectWord(6, 'Maria', this)">Maria</span>
+        <span class="word-chip" onclick="selectWord(6, 'English', this)">English</span>
+        <span class="word-chip" onclick="selectWord(6, 'very well', this)">very well</span>
+        <span class="word-chip" onclick="selectWord(6, 'cannot', this)">cannot</span>
+        <span class="word-chip" onclick="selectWord(6, 'speak', this)">speak</span>
+      </div>
+      <div class="drop-zone" id="zone-6"></div>
+    </div>
+
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-check" onclick="checkAnswers()">Check Answers / Проверить ✅</button>
+      <button class="btn-reset" onclick="resetAnswers()">Reset / Сбросить 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+
+</div>
+
+<script>
+  // Correct answers definition
+  const correctAnswers = {
+    1: ["Sarah", "can’t", "draw", "a picture of a flower"],
+    2: ["John", "can play", "football", "at the park", "with his", "friends"],
+    3: ["Jack", "cannot", "ride a", "bike", "without", "training wheels"],
+    4: ["Tom", "can", "run", "very fast", "in the", "school race"],
+    5: ["Can", "Alex", "skateboard", "at the", "skatepark"],
+    6: ["Maria", "cannot", "speak", "English", "very well"]
+  };
+
+  const userSelections = {
+    1: [], 2: [], 3: [], 4: [], 5: [], 6: []
+  };
+
+  function selectWord(taskId, val, element) {
+    if (element.classList.contains('used')) return;
+
+    element.classList.add('used');
+    userSelections[taskId].push({ val: val, elem: element });
+
+    renderZone(taskId);
+  }
+
+  function removeWord(taskId, index) {
+    const item = userSelections[taskId][index];
+    if (item) {
+      item.elem.classList.remove('used');
+      userSelections[taskId].splice(index, 1);
+      renderZone(taskId);
+    }
+  }
+
+  function renderZone(taskId) {
+    const zone = document.getElementById(`zone-${taskId}`);
+    zone.innerHTML = '';
+
+    userSelections[taskId].forEach((item, idx) => {
+      const chip = document.createElement('div');
+      chip.className = 'placed-chip';
+      
+      // Clone internal HTML (so tooltips/audio inside stay intact)
+      chip.innerHTML = item.elem.innerHTML;
+      chip.onclick = () => removeWord(taskId, idx);
+
+      zone.appendChild(chip);
+    });
+
+    // Add punctuation mark if defined
+    const punct = zone.getAttribute('data-punct') || '.';
+    const punctSpan = document.createElement('span');
+    punctSpan.className = 'punct';
+    punctSpan.textContent = punct;
+    zone.appendChild(punctSpan);
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    const total = Object.keys(correctAnswers).length;
+
+    for (let id = 1; id <= total; id++) {
+      const taskCard = document.getElementById(`task-${id}`);
+      const userArr = userSelections[id].map(item => item.val.trim());
+      const targetArr = correctAnswers[id];
+
+      taskCard.classList.remove('correct', 'incorrect');
+
+      if (JSON.stringify(userArr) === JSON.stringify(targetArr)) {
+        taskCard.classList.add('correct');
+        score++;
+      } else {
+        taskCard.classList.add('incorrect');
+      }
+    }
+
+    const scoreDiv = document.getElementById('score');
+    scoreDiv.textContent = `Score: ${score} / ${total}`;
+  }
+
+  function resetAnswers() {
+    for (let id = 1; id <= 6; id++) {
+      userSelections[id] = [];
+      const bank = document.getElementById(`bank-${id}`);
+      const chips = bank.querySelectorAll('.word-chip');
+      chips.forEach(c => c.classList.remove('used'));
+      renderZone(id);
+
+      const taskCard = document.getElementById(`task-${id}`);
+      taskCard.classList.remove('correct', 'incorrect');
+    }
+    document.getElementById('score').textContent = '';
+  }
+
+  function speak(text, event) {
+    if (event) event.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85; // Спокойная скорость для студента
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+
+  // Initialize dropzones on load
+  window.onload = () => {
+    for (let id = 1; id <= 6; id++) {
+      renderZone(id);
+    }
+  };
+</script>
+
+</body>
+</html>
