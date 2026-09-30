@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Put the words in order</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --card-bg: #0f172a;
+    --accent: #38bdf8;
+    --purple-accent: #a855f7;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --correct-bg: rgba(34, 197, 94, 0.2);
+    --correct-border: #22c55e;
+    --incorrect-bg: rgba(239, 68, 68, 0.2);
+    --incorrect-border: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .puzzle-icon {
+    font-size: 1.6rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+  }
+
+  .instruction {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+
+  /* Universal Tooltip Styling */
+  .has-tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1px dashed var(--accent);
+    color: #e2e8f0;
+    cursor: help;
+  }
+
+  .has-tooltip .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 240px;
+    background-color: #0284c7;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    pointer-events: none;
+    line-height: 1.3;
+  }
+
+  .has-tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0284c7 transparent transparent transparent;
+  }
+
+  .has-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    opacity: 0.85;
+    transition: transform 0.1s, opacity 0.2s;
+  }
+
+  .audio-btn:hover {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  /* Sentences List */
+  .sentences-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .sentence-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sentence-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .num-bullet {
+    color: var(--purple-accent);
+    font-weight: 800;
+    font-size: 1.1rem;
+    min-width: 24px;
+  }
+
+  .words-scramble {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--accent);
+  }
+
+  .drop-zone {
+    min-height: 52px;
+    background: var(--panel-bg);
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+
+  .drop-zone.correct {
+    border-color: var(--correct-border) !important;
+    background: var(--correct-bg) !important;
+  }
+
+  .drop-zone.incorrect {
+    border-color: var(--incorrect-border) !important;
+    background: var(--incorrect-bg) !important;
+  }
+
+  .words-pool {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .word-chip {
+    background: #334155;
+    color: var(--text-primary);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid #475569;
+    transition: all 0.15s ease;
+  }
+
+  .word-chip:hover {
+    background: #475569;
+    transform: translateY(-2px);
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .result-score {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="title-group">
+    <span class="puzzle-icon">🧩</span>
+    <h2 class="title">Постав слова у правильному порядку</h2>
+  </div>
+  <p class="instruction">Починай речення з великої літери. Натискай на слова, щоб зібрати речення. 💡 Наведи на підкреслені слова для транскрипції, перекладу та озвучки 🔊.</p>
+
+  <div class="sentences-list">
+
+    <!-- 1 -->
+    <div class="sentence-card" data-correct="I can show you how">
+      <div class="sentence-header">
+        <span class="num-bullet">1.</span>
+        <div class="words-scramble">
+          can / I / you / 
+          <span class="has-tooltip">show
+            <span class="tooltip-text">[ʃəʊ]<br>показувати / показывать</span>
+            <button class="audio-btn" onclick="speak('show', event)">🔊</button>
+          </span> / 
+          <span class="has-tooltip">how
+            <span class="tooltip-text">[haʊ]<br>як / как</span>
+            <button class="audio-btn" onclick="speak('how', event)">🔊</button>
+          </span>
+        </div>
+      </div>
+      <div class="drop-zone" onclick="returnPoolWords(1)"></div>
+      <div class="words-pool" id="pool-1">
+        <div class="word-chip" onclick="moveWord(this, 1)">can</div>
+        <div class="word-chip" onclick="moveWord(this, 1)">I</div>
+        <div class="word-chip" onclick="moveWord(this, 1)">you</div>
+        <div class="word-chip" onclick="moveWord(this, 1)">show</div>
+        <div class="word-chip" onclick="moveWord(this, 1)">how</div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="sentence-card" data-correct="I can't cook">
+      <div class="sentence-header">
+        <span class="num-bullet">2.</span>
+        <div class="words-scramble">
+          <span class="has-tooltip">cook
+            <span class="tooltip-text">[kʊk]<br>готувати / готовить</span>
+            <button class="audio-btn" onclick="speak('cook', event)">🔊</button>
+          </span> / 
+          can't / I
+        </div>
+      </div>
+      <div class="drop-zone" onclick="returnPoolWords(2)"></div>
+      <div class="words-pool" id="pool-2">
+        <div class="word-chip" onclick="moveWord(this, 2)">cook</div>
+        <div class="word-chip" onclick="moveWord(this, 2)">can't</div>
+        <div class="word-chip" onclick="moveWord(this, 2)">I</div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="sentence-card" data-correct="I can draw some cookies">
+      <div class="sentence-header">
+        <span class="num-bullet">3.</span>
+        <div class="words-scramble">
+          <span class="has-tooltip">some cookies
+            <span class="tooltip-text">[sʌm ˈkʊk.iz]<br>трохи печива / немного печенья</span>
+            <button class="audio-btn" onclick="speak('some cookies', event)">🔊</button>
+          </span> / 
+          <span class="has-tooltip">draw
+            <span class="tooltip-text">[drɔː]<br>малювати / рисовать</span>
+            <button class="audio-btn" onclick="speak('draw', event)">🔊</button>
+          </span> / 
+          I / can
+        </div>
+      </div>
+      <div class="drop-zone" onclick="returnPoolWords(3)"></div>
+      <div class="words-pool" id="pool-3">
+        <div class="word-chip" onclick="moveWord(this, 3)">some cookies</div>
+        <div class="word-chip" onclick="moveWord(this, 3)">draw</div>
+        <div class="word-chip" onclick="moveWord(this, 3)">I</div>
+        <div class="word-chip" onclick="moveWord(this, 3)">can</div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="sentence-card" data-correct="I can't play football">
+      <div class="sentence-header">
+        <span class="num-bullet">4.</span>
+        <div class="words-scramble">
+          <span class="has-tooltip">football
+            <span class="tooltip-text">[ˈfʊt.bɔːl]<br>футбол</span>
+            <button class="audio-btn" onclick="speak('football', event)">🔊</button>
+          </span> / 
+          can't / I / play
+        </div>
+      </div>
+      <div class="drop-zone" onclick="returnPoolWords(4)"></div>
+      <div class="words-pool" id="pool-4">
+        <div class="word-chip" onclick="moveWord(this, 4)">football</div>
+        <div class="word-chip" onclick="moveWord(this, 4)">can't</div>
+        <div class="word-chip" onclick="moveWord(this, 4)">I</div>
+        <div class="word-chip" onclick="moveWord(this, 4)">play</div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="sentence-card" data-correct="Spike can run really fast">
+      <div class="sentence-header">
+        <span class="num-bullet">5.</span>
+        <div class="words-scramble">
+          <span class="has-tooltip">really fast
+            <span class="tooltip-text">[ˈrɪə.li fɑːst]<br>дуже швидко / очень быстро</span>
+            <button class="audio-btn" onclick="speak('really fast', event)">🔊</button>
+          </span> / 
+          Spike / run / can
+        </div>
+      </div>
+      <div class="drop-zone" onclick="returnPoolWords(5)"></div>
+      <div class="words-pool" id="pool-5">
+        <div class="word-chip" onclick="moveWord(this, 5)">really fast</div>
+        <div class="word-chip" onclick="moveWord(this, 5)">Spike</div>
+        <div class="word-chip" onclick="moveWord(this, 5)">run</div>
+        <div class="word-chip" onclick="moveWord(this, 5)">can</div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="sentence-card" data-correct="You can take your dog Spike">
+      <div class="sentence-header">
+        <span class="num-bullet">6.</span>
+        <div class="words-scramble">
+          <span class="has-tooltip">your dog Spike
+            <span class="tooltip-text">[jɔː dɒɡ spaɪk]<br>твого собаку Спайка / твою собаку Спайка</span>
+            <button class="audio-btn" onclick="speak('your dog Spike', event)">🔊</button>
+          </span> / 
+          you / 
+          <span class="has-tooltip">take
+            <span class="tooltip-text">[teɪk]<br>взяти / взять</span>
+            <button class="audio-btn" onclick="speak('take', event)">🔊</button>
+          </span> / 
+          can
+        </div>
+      </div>
+      <div class="drop-zone" onclick="returnPoolWords(6)"></div>
+      <div class="words-pool" id="pool-6">
+        <div class="word-chip" onclick="moveWord(this, 6)">your dog Spike</div>
+        <div class="word-chip" onclick="moveWord(this, 6)">you</div>
+        <div class="word-chip" onclick="moveWord(this, 6)">take</div>
+        <div class="word-chip" onclick="moveWord(this, 6)">can</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-check" onclick="checkAnswers()">Перевірити ✅</button>
+      <button class="btn-reset" onclick="resetAnswers()">Скинути 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+
+</div>
+
+<script>
+  function moveWord(chip, cardIndex) {
+    const card = document.querySelectorAll('.sentence-card')[cardIndex - 1];
+    const dropZone = card.querySelector('.drop-zone');
+    const pool = card.querySelector('.words-pool');
+
+    if (chip.parentElement === pool) {
+      dropZone.appendChild(chip);
+    } else {
+      pool.appendChild(chip);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    const cards = document.querySelectorAll('.sentence-card');
+
+    cards.forEach(card => {
+      const correctSentence = card.getAttribute('data-correct');
+      const dropZone = card.querySelector('.drop-zone');
+      const selectedChips = Array.from(dropZone.querySelectorAll('.word-chip'));
+      
+      let userSentence = selectedChips.map(chip => chip.textContent.trim()).join(' ');
+
+      // Capitalize first letter of sentence for comparison flexibility
+      if (userSentence.length > 0) {
+        userSentence = userSentence.charAt(0).toUpperCase() + userSentence.slice(1);
+      }
+
+      dropZone.classList.remove('correct', 'incorrect');
+
+      if (userSentence === correctSentence) {
+        dropZone.classList.add('correct');
+        score++;
+      } else {
+        dropZone.classList.add('incorrect');
+      }
+    });
+
+    const scoreDiv = document.getElementById('score');
+    scoreDiv.textContent = `Результат: ${score} / ${cards.length}`;
+  }
+
+  function resetAnswers() {
+    const cards = document.querySelectorAll('.sentence-card');
+    cards.forEach((card, index) => {
+      const dropZone = card.querySelector('.drop-zone');
+      const pool = card.querySelector('.words-pool');
+      const chips = Array.from(dropZone.querySelectorAll('.word-chip'));
+
+      chips.forEach(chip => pool.appendChild(chip));
+      dropZone.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('score').textContent = '';
+  }
+
+  function speak(text, event) {
+    if (event) event.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+</script>
+
+</body>
+</html>
