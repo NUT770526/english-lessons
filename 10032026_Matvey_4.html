@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select the correct form and complete these sentences</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --accent-color: #7c3aed;
+    --border-color: #cbd5e1;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  }
+
+  .header {
+    margin-bottom: 28px;
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .title-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--accent-color);
+  }
+
+  .instruction {
+    font-size: 0.95rem;
+    color: #64748b;
+  }
+
+  /* List of Sentences */
+  .sentence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .sentence-item {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 16px 20px;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .sentence-number {
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-right: 4px;
+  }
+
+  /* Dropdown Styles */
+  .custom-select {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 6px 36px 6px 14px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%3C64748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: all 0.2s ease;
+    min-width: 150px;
+  }
+
+  .custom-select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="title-group">
+      <span class="title-icon">✏️</span>
+      <h2 class="title">Select the correct form and complete these sentences</h2>
+    </div>
+    <p class="instruction">Choose the correct option from each dropdown list.</p>
+  </div>
+
+  <div class="sentence-list" id="exercise-container"></div>
+
+  <div class="controls">
+    <button class="btn btn-reset" onclick="resetExercise()">Reset</button>
+  </div>
+
+</div>
+
+<script>
+  const sentencesData = [
+    {
+      num: 1,
+      before: "These days, most people",
+      after: "email instead of writing letters.",
+      options: ["-- select --", "use", "have used", "are using"]
+    },
+    {
+      num: 2,
+      before: "Billy is at university. He",
+      after: "history.",
+      options: ["-- select --", "study", "is studying", "has studied"]
+    },
+    {
+      num: 3,
+      before: "When I get home, the children",
+      after: "their homework.",
+      options: ["-- select --", "do", "have done", "are doing"]
+    },
+    {
+      num: 4,
+      before: "I",
+      after: "tennis but I don't like football.",
+      options: ["-- select --", "like", "am liking", "have liked"]
+    },
+    {
+      num: 5,
+      before: "They",
+      after: "at the weekend.",
+      options: ["-- select --", "aren't working", "haven't worked", "don't work"]
+    },
+    {
+      num: 6,
+      before: "The human body",
+      after: "206 bones.",
+      options: ["-- select --", "contains", "is containing", "has contained"]
+    },
+    {
+      num: 7,
+      before: "I sometimes",
+      after: "to the cinema.",
+      options: ["-- select --", "go", "am going", "have gone"]
+    },
+    {
+      num: 8,
+      before: "I",
+      after: "that film before.",
+      options: ["-- select --", "see", "am seeing", "have seen"]
+    },
+    {
+      num: 9,
+      before: "She",
+      after: "in Liverpool all her life.",
+      options: ["-- select --", "has lived", "lives", "is living"]
+    },
+    {
+      num: 10,
+      before: "Have you ever",
+      after: "Stan?",
+      options: ["-- select --", "meet", "met", "meets"]
+    }
+  ];
+
+  function renderExercise() {
+    const container = document.getElementById('exercise-container');
+    container.innerHTML = '';
+
+    sentencesData.forEach((item, index) => {
+      const row = document.createElement('div');
+      row.className = 'sentence-item';
+
+      let optionsHTML = item.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+
+      row.innerHTML = `
+        <span class="sentence-number">${item.num}.</span>
+        <span>${item.before}</span>
+        <select class="custom-select" id="select-${index}">
+          ${optionsHTML}
+        </select>
+        <span>${item.after}</span>
+      `;
+
+      container.appendChild(row);
+    });
+  }
+
+  function resetExercise() {
+    sentencesData.forEach((item, index) => {
+      const select = document.getElementById(`select-${index}`);
+      if (select) {
+        select.value = item.options[0];
+      }
+    });
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
