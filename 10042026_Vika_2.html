@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2. Обери правильне слово</title>
+<style>
+  :root {
+    --bg-color: #f0f9ff;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --accent-color: #0284c7;
+    --accent-hover: #0369a1;
+    --border-color: #bae6fd;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 3px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.15);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0369a1;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: #0284c7;
+    background: #e0f2fe;
+    padding: 10px 18px;
+    border-radius: 12px;
+    display: inline-block;
+  }
+
+  /* List of Sentences */
+  .sentence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .sentence-card {
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 18px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    transition: all 0.2s ease;
+  }
+
+  .sentence-num {
+    color: var(--accent-color);
+    font-weight: 800;
+    font-size: 1.2rem;
+    min-width: 28px;
+  }
+
+  /* Dropdown Select */
+  .custom-select {
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0369a1;
+    background-color: #e0f2fe;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 6px 36px 6px 14px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%3C0284c7' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    transition: all 0.2s ease;
+  }
+
+  .custom-select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+  }
+
+  /* Audio Speak Button */
+  .speaker-btn {
+    background: #e0f2fe;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background-color: var(--accent-color);
+    color: #ffffff;
+    transform: scale(1.1);
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .btn-reset {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 10px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: #64748b;
+    color: #ffffff;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2 class="title">2. Обери правильне слово</h2>
+    <p class="subtitle">🗣️ Прочитай обране слово вголос, а потім — усе речення!</p>
+  </div>
+
+  <div class="sentence-list" id="exercise-container"></div>
+
+  <div class="controls">
+    <button class="btn-reset" onclick="resetExercise()">Скинути 🔄</button>
+  </div>
+</div>
+
+<script>
+  const sentencesData = [
+    { num: 1, before: "My friend lives in", options: ["Germany", "German"], after: "." },
+    { num: 2, before: "I learn", options: ["Germany", "German"], after: "at school." },
+    { num: 3, before: "I", options: ["carry", "describe"], after: "my bag to school." },
+    { num: 4, before: "The", options: ["title", "furniture"], after: "of this book is My Room." },
+    { num: 5, before: "There is a", options: ["shower", "war"], after: "in our bathroom." },
+    { num: 6, before: "Our chairs are", options: ["different", "German"], after: "colours." },
+    { num: 7, before: "A bed and a desk are", options: ["furniture", "riddles"], after: "." },
+    { num: 8, before: "We want peace, not", options: ["war", "shower"], after: "." }
+  ];
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      utterance.pitch = 1.05;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function renderExercise() {
+    const container = document.getElementById('exercise-container');
+    container.innerHTML = '';
+
+    sentencesData.forEach((item, index) => {
+      const card = document.createElement('div');
+      card.className = 'sentence-card';
+
+      const optionsHTML = ['-- обрати --', ...item.options]
+        .map(opt => `<option value="${opt}">${opt}</option>`)
+        .join('');
+
+      card.innerHTML = `
+        <span class="sentence-num">${item.num}.</span>
+        <span>${item.before}</span>
+        <select class="custom-select" id="select-${index}" onchange="onSelectChange(${index})">
+          ${optionsHTML}
+        </select>
+        <span>${item.after}</span>
+        <button class="speaker-btn" title="Прослухати речення" onclick="speakFullSentence(${index})">🔊</button>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function onSelectChange(index) {
+    const select = document.getElementById(`select-${index}`);
+    if (select.value !== '-- обрати --') {
+      speakText(select.value);
+    }
+  }
+
+  function speakFullSentence(index) {
+    const item = sentencesData[index];
+    const select = document.getElementById(`select-${index}`);
+    const selectedValue = select.value !== '-- обрати --' ? select.value : item.options[0];
+    const fullText = `${item.before} ${selectedValue} ${item.after}`;
+    speakText(fullText);
+  }
+
+  function resetExercise() {
+    sentencesData.forEach((_, index) => {
+      const select = document.getElementById(`select-${index}`);
+      if (select) {
+        select.value = '-- обрати --';
+      }
+    });
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
