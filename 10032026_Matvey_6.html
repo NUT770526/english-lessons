@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Irregular Verbs Exercise</title>
+<style>
+  :root {
+    --bg-color: #f0f4f8;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --accent-color: #0284c7;
+    --border-color: #cbd5e1;
+    --correct-bg: #dcfce7;
+    --correct-border: #22c55e;
+    --correct-text: #15803d;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #ef4444;
+    --incorrect-text: #b91c1c;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .header-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    margin-bottom: 24px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+  }
+
+  th {
+    background-color: #0284c7;
+    color: #ffffff;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  th:first-child {
+    border-top-left-radius: 10px;
+    width: 60px;
+    text-align: center;
+  }
+
+  th:last-child {
+    border-top-right-radius: 10px;
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+
+  .num-col {
+    text-align: center;
+    font-weight: 700;
+    color: #0284c7;
+  }
+
+  .infinitive {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #334155;
+  }
+
+  .input-field {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    width: 100%;
+    max-width: 140px;
+    transition: all 0.2s ease;
+  }
+
+  .input-field:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  .custom-select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 8px 30px 8px 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    background-color: #ffffff;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%3C64748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    width: 100%;
+    max-width: 180px;
+    transition: all 0.2s ease;
+  }
+
+  .custom-select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  /* Validation styles */
+  .correct {
+    background-color: var(--correct-bg) !important;
+    border-color: var(--correct-border) !important;
+    color: var(--correct-text) !important;
+  }
+
+  .incorrect {
+    background-color: var(--incorrect-bg) !important;
+    border-color: var(--incorrect-border) !important;
+    color: var(--incorrect-text) !important;
+  }
+
+  .hint {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--incorrect-text);
+    display: block;
+    margin-top: 4px;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit {
+    background: var(--accent-color);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+  }
+
+  .btn-submit:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .score {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">✏️</span>
+    <h2 class="title">Put in the correct forms of irregular verbs & translation</h2>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>V1 (Infinitive)</th>
+          <th>V2 (Past Simple)</th>
+          <th>V3 (Past Participle)</th>
+          <th>Переклад (UA)</th>
+        </tr>
+      </thead>
+      <tbody id="verbs-body"></tbody>
+    </table>
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn btn-submit" onclick="checkAnswers()">Check Answers</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Reset</button>
+    </div>
+    <div id="score" class="score"></div>
+  </div>
+</div>
+
+<script>
+  const verbsData = [
+    { num: 1, v1: "be", v2: ["was", "were"], v3: "been", ua: "бути" },
+    { num: 2, v1: "go", v2: ["went"], v3: "gone", ua: "іти, їхати" },
+    { num: 3, v1: "do", v2: ["did"], v3: "done", ua: "робити" },
+    { num: 4, v1: "make", v2: ["made"], v3: "made", ua: "створювати, робити" },
+    { num: 5, v1: "read", v2: ["read"], v3: "read", ua: "читати" },
+    { num: 6, v1: "cut", v2: ["cut"], v3: "cut", ua: "різати" },
+    { num: 7, v1: "bring", v2: ["brought"], v3: "brought", ua: "приносити" },
+    { num: 8, v1: "put", v2: ["put"], v3: "put", ua: "класти, ставити" },
+    { num: 9, v1: "mean", v2: ["meant"], v3: "meant", ua: "означати, мати на увазі" },
+    { num: 10, v1: "teach", v2: ["taught"], v3: "taught", ua: "вчити, викладати" }
+  ];
+
+  // Стрічка всіх перекладів для випадаючого списку
+  const allTranslations = [
+    "-- виберіть --",
+    "бути",
+    "іти, їхати",
+    "робити",
+    "створювати, робити",
+    "читати",
+    "різати",
+    "приносити",
+    "класти, ставити",
+    "означати, мати на увазі",
+    "вчити, викладати"
+  ];
+
+  function renderTable() {
+    const tbody = document.getElementById('verbs-body');
+    tbody.innerHTML = '';
+
+    verbsData.forEach((item, index) => {
+      const tr = document.createElement('tr');
+
+      // Формування варіантів для перекладу
+      const optionsUA = allTranslations.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+
+      tr.innerHTML = `
+        <td class="num-col">${item.num}</td>
+        <td class="infinitive">${item.v1}</td>
+        <td>
+          <input type="text" class="input-field" id="v2-${index}" autocomplete="off" placeholder="V2">
+          <span class="hint" id="hint-v2-${index}"></span>
+        </td>
+        <td>
+          <input type="text" class="input-field" id="v3-${index}" autocomplete="off" placeholder="V3">
+          <span class="hint" id="hint-v3-${index}"></span>
+        </td>
+        <td>
+          <select class="custom-select" id="ua-${index}">
+            ${optionsUA}
+          </select>
+          <span class="hint" id="hint-ua-${index}"></span>
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+    const totalChecks = verbsData.length * 3; // 3 перевірки на один глагол
+
+    verbsData.forEach((item, index) => {
+      const inputV2 = document.getElementById(`v2-${index}`);
+      const inputV3 = document.getElementById(`v3-${index}`);
+      const selectUA = document.getElementById(`ua-${index}`);
+
+      const hintV2 = document.getElementById(`hint-v2-${index}`);
+      const hintV3 = document.getElementById(`hint-v3-${index}`);
+      const hintUA = document.getElementById(`hint-ua-${index}`);
+
+      // Скидання попередніх стилів
+      [inputV2, inputV3, selectUA].forEach(el => el.classList.remove('correct', 'incorrect'));
+      [hintV2, hintV3, hintUA].forEach(el => el.textContent = '');
+
+      // 1. Перевірка V2
+      const valV2 = inputV2.value.trim().toLowerCase();
+      if (item.v2.includes(valV2)) {
+        inputV2.classList.add('correct');
+        correctCount++;
+      } else {
+        inputV2.classList.add('incorrect');
+        hintV2.textContent = `✓ ${item.v2.join(' / ')}`;
+      }
+
+      // 2. Перевірка V3
+      const valV3 = inputV3.value.trim().toLowerCase();
+      if (valV3 === item.v3.toLowerCase()) {
+        inputV3.classList.add('correct');
+        correctCount++;
+      } else {
+        inputV3.classList.add('incorrect');
+        hintV3.textContent = `✓ ${item.v3}`;
+      }
+
+      // 3. Перевірка Перекладу
+      const valUA = selectUA.value;
+      if (valUA === item.ua) {
+        selectUA.classList.add('correct');
+        correctCount++;
+      } else {
+        selectUA.classList.add('incorrect');
+        hintUA.textContent = `✓ ${item.ua}`;
+      }
+    });
+
+    const scoreElem = document.getElementById('score');
+    scoreElem.textContent = `Результат: ${correctCount} / ${totalChecks} 🎉`;
+  }
+
+  function resetExercise() {
+    verbsData.forEach((_, index) => {
+      const inputV2 = document.getElementById(`v2-${index}`);
+      const inputV3 = document.getElementById(`v3-${index}`);
+      const selectUA = document.getElementById(`ua-${index}`);
+
+      const hintV2 = document.getElementById(`hint-v2-${index}`);
+      const hintV3 = document.getElementById(`hint-v3-${index}`);
+      const hintUA = document.getElementById(`hint-ua-${index}`);
+
+      inputV2.value = '';
+      inputV3.value = '';
+      selectUA.value = allTranslations[0];
+
+      [inputV2, inputV3, selectUA].forEach(el => el.className = el.tagName === 'SELECT' ? 'custom-select' : 'input-field');
+      [hintV2, hintV3, hintUA].forEach(el => el.textContent = '');
+    });
+
+    document.getElementById('score').textContent = '';
+  }
+
+  renderTable();
+</script>
+
+</body>
+</html>
