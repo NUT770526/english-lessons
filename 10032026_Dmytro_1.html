@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choose the correct word</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-color: #f8fafc;
+    --accent-color: #38bdf8;
+    --border-color: #334155;
+    --correct-bg: rgba(34, 197, 94, 0.2);
+    --correct-border: #22c55e;
+    --incorrect-bg: rgba(239, 68, 68, 0.2);
+    --incorrect-border: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .header {
+    margin-bottom: 28px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 1.05rem;
+    color: #94a3b8;
+  }
+
+  .sentence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .sentence-item {
+    background-color: #0f172a;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    transition: all 0.2s ease;
+  }
+
+  .sentence-num {
+    font-weight: 800;
+    color: var(--accent-color);
+    min-width: 24px;
+  }
+
+  /* Dropdown Style */
+  .custom-select {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: #1e293b;
+    border: 1.5px solid #475569;
+    border-radius: 8px;
+    padding: 6px 32px 6px 12px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%3C38bdf8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: all 0.2s ease;
+  }
+
+  .custom-select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+  }
+
+  /* Audio Speak Button */
+  .audio-icon {
+    cursor: pointer;
+    font-size: 1.1rem;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .audio-icon:hover {
+    opacity: 1;
+  }
+
+  /* Validation styles */
+  .correct {
+    background-color: var(--correct-bg) !important;
+    border-color: var(--correct-border) !important;
+    color: #4ade80 !important;
+  }
+
+  .incorrect {
+    background-color: var(--incorrect-bg) !important;
+    border-color: var(--incorrect-border) !important;
+    color: #f87171 !important;
+  }
+
+  .hint {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #f87171;
+    margin-left: 8px;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit {
+    background: var(--accent-color);
+    color: #0f172a;
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+  }
+
+  .btn-submit:hover {
+    background: #0284c7;
+    color: #ffffff;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  .score {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2 class="title">2. Choose the correct word</h2>
+    <p class="subtitle">Обери правильне слово. Подумай: тут потрібна країна чи національність?[cite: 18]</p>
+  </div>
+
+  <div class="sentence-list" id="exercise-container"></div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn btn-submit" onclick="checkAnswers()">Check Answers</button>
+      <button class="btn btn-reset" onclick="resetExercise()">Reset</button>
+    </div>
+    <div id="score" class="score"></div>
+  </div>
+</div>
+
+<script>
+  const sentencesData = [
+    { num: 1, before: "I’m from", options: ["Italy", "Italian"], correct: "Italy", after: "." },
+    { num: 2, before: "She is", options: ["Germany", "German"], correct: "German", after: "." },
+    { num: 3, before: "Are you from", options: ["China", "Chinese"], correct: "China", after: "?" },
+    { num: 4, before: "We are", options: ["Spain", "Spanish"], correct: "Spanish", after: "." },
+    { num: 5, before: "He is from", options: ["Turkey", "Turkish"], correct: "Turkey", after: "." },
+    { num: 6, before: "Are they", options: ["France", "French"], correct: "French", after: "?" },
+    { num: 7, before: "My friend is", options: ["Poland", "Polish"], correct: "Polish", after: "." },
+    { num: 8, before: "They are from", options: ["the USA", "American"], correct: "the USA", after: "." },
+    { num: 9, before: "Is she", options: ["Argentina", "Argentinian"], correct: "Argentinian", after: "?" },
+    { num: 10, before: "We are from", options: ["the UK", "British"], correct: "the UK", after: "." }
+  ];
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function renderExercise() {
+    const container = document.getElementById('exercise-container');
+    container.innerHTML = '';
+
+    sentencesData.forEach((item, index) => {
+      const row = document.createElement('div');
+      row.className = 'sentence-item';
+
+      const optionsHTML = ['-- select --', ...item.options]
+        .map(opt => `<option value="${opt}">${opt}</option>`)
+        .join('');
+
+      row.innerHTML = `
+        <span class="sentence-num">${item.num}.</span>
+        <span>${item.before}</span>
+        <select class="custom-select" id="select-${index}" onchange="speakText(this.value)">
+          ${optionsHTML}
+        </select>
+        <span>${item.after}</span>
+        <span class="audio-icon" title="Listen full sentence" onclick="speakFullSentence(${index})">🔊</span>
+        <span class="hint" id="hint-${index}"></span>
+      `;
+
+      container.appendChild(row);
+    });
+  }
+
+  function speakFullSentence(index) {
+    const item = sentencesData[index];
+    const select = document.getElementById(`select-${index}`);
+    const selectedValue = select.value !== '-- select --' ? select.value : '...';
+    const fullText = `${item.before} ${selectedValue} ${item.after}`;
+    speakText(fullText);
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+
+    sentencesData.forEach((item, index) => {
+      const select = document.getElementById(`select-${index}`);
+      const hint = document.getElementById(`hint-${index}`);
+      const val = select.value;
+
+      select.classList.remove('correct', 'incorrect');
+      hint.textContent = '';
+
+      if (val === item.correct) {
+        select.classList.add('correct');
+        correctCount++;
+      } else {
+        select.classList.add('incorrect');
+        hint.textContent = `✓ ${item.correct}`;
+      }
+    });
+
+    const scoreElem = document.getElementById('score');
+    scoreElem.textContent = `Результат: ${correctCount} / ${sentencesData.length} 🎉`;
+  }
+
+  function resetExercise() {
+    sentencesData.forEach((_, index) => {
+      const select = document.getElementById(`select-${index}`);
+      const hint = document.getElementById(`hint-${index}`);
+      if (select) {
+        select.value = '-- select --';
+        select.classList.remove('correct', 'incorrect');
+      }
+      if (hint) hint.textContent = '';
+    });
+    document.getElementById('score').textContent = '';
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
