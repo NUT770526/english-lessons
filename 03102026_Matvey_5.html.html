@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Use these words to make questions</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: linear-gradient(135deg, #f3e8ff 0%, #e0e7ff 50%, #f0f9ff 100%);
+    min-height: 100vh;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+
+  .question-card {
+    transition: all 0.25deg ease;
+  }
+
+  .question-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.08);
+  }
+
+  .custom-input {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .custom-input:focus {
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.25);
+    border-color: #8b5cf6;
+  }
+
+  .custom-input::placeholder {
+    color: #a1a1aa;
+    font-style: italic;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body class="flex items-center justify-center p-4 sm:p-8">
+
+<div class="max-w-2xl w-full glass-card rounded-3xl p-6 sm:p-10 shadow-xl border border-white/80 my-auto">
+
+  <!-- Header -->
+  <div class="flex items-center gap-4 mb-8 pb-6 border-b border-purple-100">
+    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-400 flex items-center justify-center text-white text-2xl shadow-lg shadow-purple-300/50 flex-shrink-0">
+      ✨
+    </div>
+    <div>
+      <span class="text-xs font-extrabold uppercase tracking-widest text-purple-600 bg-purple-100/80 px-3 py-1 rounded-full">Grammar Practice</span>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-1">Use these words to make questions</h1>
+    </div>
+  </div>
+
+  <!-- Exercise Items Container -->
+  <div class="space-y-4" id="exercise-list"></div>
+
+  <!-- Reset Footer -->
+  <div class="mt-8 pt-6 border-t border-purple-100 flex justify-end">
+    <button onclick="resetInputs()" class="group flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm transition-all duration-200 active:scale-95 cursor-pointer">
+      <svg class="w-4 h-4 text-slate-500 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+      </svg>
+      Clear All
+    </button>
+  </div>
+
+</div>
+
+<script>
+  const questions = [
+    { num: 1, before: "", prompt: "she play tennis", after: "when she was younger?" },
+    { num: 2, before: "", prompt: "you live", after: "abroad?" },
+    { num: 3, before: "When", prompt: "you meet", after: "your wife?" },
+    { num: 4, before: "Where", prompt: "you go", after: "for your holidays?" },
+    { num: 5, before: "Who", prompt: "discover", after: "penicillin?" },
+    { num: 6, before: "Who", prompt: "write", after: "Don Quixote?" }
+  ];
+
+  function renderQuestions() {
+    const container = document.getElementById('exercise-list');
+    container.innerHTML = '';
+
+    questions.forEach((q, index) => {
+      const card = document.createElement('div');
+      card.className = "question-card bg-white/90 rounded-2xl p-4 sm:p-5 border border-purple-50/80 shadow-sm flex flex-wrap items-center gap-2.5 sm:gap-3 text-slate-700 text-base sm:text-lg font-semibold";
+
+      const beforePart = q.before ? `<span class="text-slate-800 font-bold">${q.before}</span>` : '';
+      
+      card.innerHTML = `
+        <span class="w-7 h-7 rounded-xl bg-purple-100 text-purple-700 text-xs font-extrabold flex items-center justify-center flex-shrink-0">${q.num}</span>
+        ${beforePart}
+        <div class="relative inline-flex items-center flex-grow sm:flex-grow-0 my-1">
+          <input 
+            type="text" 
+            id="input-${index}" 
+            placeholder="${q.prompt}" 
+            autocomplete="off"
+            class="custom-input w-full sm:w-64 bg-slate-50/80 border-2 border-slate-200/80 text-slate-800 font-bold text-base rounded-xl py-2 px-3.5 pr-8 outline-none"
+          />
+          <span class="absolute right-3 text-slate-400 text-xs font-bold pointer-events-none select-none">↵</span>
+        </div>
+        <span class="text-slate-700 font-semibold">${q.after}</span>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function resetInputs() {
+    questions.forEach((_, index) => {
+      const input = document.getElementById(`input-${index}`);
+      if (input) {
+        input.value = '';
+      }
+    });
+  }
+
+  // Render on page load
+  renderQuestions();
+</script>
+</body>
+</html>
