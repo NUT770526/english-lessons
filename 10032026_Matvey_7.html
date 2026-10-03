@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Write down your answers using Present Simple</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --accent-color: #7e22ce;
+    --purple-light: #f3e8ff;
+    --purple-header: #9333ea;
+    --border-color: #cbd5e1;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .header-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    margin-bottom: 24px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+    border: 1px solid #e9d5ff;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #e9d5ff;
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .num-col {
+    background-color: var(--purple-header);
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 1.1rem;
+    text-align: center;
+    width: 50px;
+  }
+
+  .question-col {
+    background-color: var(--purple-light);
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #3b0764;
+    width: 45%;
+  }
+
+  .answer-col {
+    background-color: #ffffff;
+  }
+
+  .input-field {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    outline: none;
+    width: 100%;
+    transition: all 0.2s ease;
+  }
+
+  .input-field:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.15);
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">✏️</span>
+    <h2 class="title">Write down your answers using Present Simple</h2>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <tbody id="questions-body"></tbody>
+    </table>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-reset" onclick="resetExercise()">Reset</button>
+  </div>
+</div>
+
+<script>
+  const questionsData = [
+    { num: 1, question: "Where do you live?" },
+    { num: 2, question: "What work do you do?" },
+    { num: 3, question: "Where do you come from?" },
+    { num: 4, question: "What do you like to do in your free time?" },
+    { num: 5, question: "When do you usually have your dinner?" }
+  ];
+
+  function renderTable() {
+    const tbody = document.getElementById('questions-body');
+    tbody.innerHTML = '';
+
+    questionsData.forEach((item, index) => {
+      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
+        <td class="num-col">${item.num}</td>
+        <td class="question-col">${item.question}</td>
+        <td class="answer-col">
+          <input type="text" class="input-field" id="input-${index}" autocomplete="off" placeholder="Type your answer here...">
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function resetExercise() {
+    questionsData.forEach((_, index) => {
+      const input = document.getElementById(`input-${index}`);
+      if (input) {
+        input.value = '';
+      }
+    });
+  }
+
+  renderTable();
+</script>
+
+</body>
+</html>
