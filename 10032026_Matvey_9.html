@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan your next trip!</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --accent-color: #0284c7;
+    --header-bg: #0284c7;
+    --label-bg: #bae6fd;
+    --border-color: #cbd5e1;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .header-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  /* Table Styles */
+  .table-container {
+    overflow-x: auto;
+    margin-bottom: 28px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #0284c7;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  td {
+    padding: 12px 16px;
+    border: 1px solid #0284c7;
+    vertical-align: middle;
+  }
+
+  .num-col {
+    background-color: var(--header-bg);
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 1.1rem;
+    text-align: center;
+    width: 50px;
+  }
+
+  .label-col {
+    background-color: var(--label-bg);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #0369a1;
+    width: 35%;
+    text-align: center;
+  }
+
+  .input-col {
+    background-color: #ffffff;
+  }
+
+  .input-field {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    outline: none;
+    width: 100%;
+    transition: all 0.2s ease;
+  }
+
+  .input-field:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  /* Gallery Grid */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .gallery-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  @media (max-width: 640px) {
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">🎬</span>
+    <h2 class="title">Plan your next trip! Fill in the table (use these pictures for inspiration!)</h2>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <tbody id="trip-body"></tbody>
+    </table>
+  </div>
+
+  <div class="gallery">
+    <img class="gallery-img" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop" alt="Beach sunset">
+    <img class="gallery-img" src="https://images.unsplash.com/photo-1544568100-847a948585b9?q=80&w=600&auto=format&fit=crop" alt="Dogs in nature">
+    <img class="gallery-img" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600&auto=format&fit=crop" alt="Green mountains">
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-reset" onclick="resetExercise()">Reset</button>
+  </div>
+</div>
+
+<script>
+  const tripData = [
+    { num: 1, label: "Country" },
+    { num: 2, label: "Town" },
+    { num: 3, label: "Attractions" },
+    { num: 4, label: "Luggage" },
+    { num: 5, label: "Transport" }
+  ];
+
+  function renderTable() {
+    const tbody = document.getElementById('trip-body');
+    tbody.innerHTML = '';
+
+    tripData.forEach((item, index) => {
+      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
+        <td class="num-col">${item.num}</td>
+        <td class="label-col">${item.label}</td>
+        <td class="input-col">
+          <input type="text" class="input-field" id="input-${index}" autocomplete="off" placeholder="Type here...">
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function resetExercise() {
+    tripData.forEach((_, index) => {
+      const input = document.getElementById(`input-${index}`);
+      if (input) {
+        input.value = '';
+      }
+    });
+  }
+
+  renderTable();
+</script>
+
+</body>
+</html>
