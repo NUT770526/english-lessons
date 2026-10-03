@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3. Раскройте скобки: Present Simple или Past Simple</title>
+<style>
+  :root {
+    --bg-color: #f1f5f9;
+    --panel-bg: #ffffff;
+    --card-bg: #f8fafc;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --accent: #2563eb;
+    --purple-accent: #7c3aed;
+    --border-color: #cbd5e1;
+    --correct-bg: #dcfce7;
+    --correct-border: #22c55e;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 880px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .title-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+  }
+
+  .instruction {
+    font-size: 0.98rem;
+    color: var(--text-secondary);
+  }
+
+  /* Sentences List */
+  .sentence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .sentence-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.02rem;
+  }
+
+  .sentence-num {
+    font-weight: 700;
+    color: var(--purple-accent);
+    min-width: 24px;
+  }
+
+  /* Text input fields */
+  .gap-input {
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 12px;
+    outline: none;
+    transition: all 0.2s ease;
+    min-width: 140px;
+  }
+
+  .gap-input.short-input {
+    min-width: 75px;
+    width: 85px;
+  }
+
+  .gap-input:focus {
+    border-color: var(--accent);
+  }
+
+  .gap-input.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: #15803d;
+  }
+
+  .gap-input.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: #b91c1c;
+  }
+
+  .hint-text {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #15803d;
+    margin-left: 6px;
+  }
+
+  /* Tooltip & Audio Features */
+  .word-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-hover {
+    font-weight: 700;
+    color: var(--purple-accent);
+    cursor: help;
+    border-bottom: 1px dashed var(--purple-accent);
+  }
+
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    bottom: 135%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 12px;
+    z-index: 100;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    pointer-events: none;
+    line-height: 1.4;
+  }
+
+  .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .word-wrapper:hover .tooltip-text {
+    display: block;
+  }
+
+  .audio-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 2px 4px;
+    transition: transform 0.1s;
+  }
+
+  .audio-btn:hover {
+    transform: scale(1.2);
+  }
+
+  /* Controls & Action Buttons */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-submit {
+    background: var(--purple-accent);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background: #6d28d9;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .result-score {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="title-group">
+      <span class="title-icon">✍️</span>
+      <h2 class="title">3. Раскройте скобки: Present Simple или Past Simple</h2>
+    </div>
+    <p class="instruction">
+      Напечатайте верную форму глагола с клавиатуры. Обращайте внимание на маркеры времени: <i>every day, usually, yesterday, last year</i>.<br>
+      💡 Наведите мышь на подчёркнутое слово в скобках, чтобы увидеть транскрипцию и перевод, или нажмите 🔊 для прослушивания.
+    </p>
+  </div>
+
+  <div class="sentence-list" id="task3-container"></div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-submit" onclick="checkAnswers()">Проверить ответы</button>
+      <button class="btn-reset" onclick="resetExercise()">Сбросить</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+
+</div>
+
+<script>
+  const dict = {
+    "make": { phonetic: "[meɪk]", translation: "делать / принимать" },
+    "bring": { phonetic: "[brɪŋ]", translation: "приносить" },
+    "grow": { phonetic: "[ɡrəʊ]", translation: "расти / развиваться" },
+    "hear": { phonetic: "[hɪər]", translation: "слышать" },
+    "get": { phonetic: "[ɡet]", translation: "становиться / получать" },
+    "happen": { phonetic: "[ˈhæp.ən]", translation: "происходить" },
+    "not / interrupt": { phonetic: "[ˌɪn.təˈrʌpt]", translation: "не перебивать / не прерывать" },
+    "not / consider": { phonetic: "[kənˈsɪd.ər]", translation: "не рассматривать / не обдумывать" },
+    "trust": { phonetic: "[trʌst]", translation: "доверять" },
+    "decide": { phonetic: "[dɪˈsaɪd]", translation: "решать" },
+    "deal": { phonetic: "[diːl]", translation: "иметь дело / справляться" },
+    "pose": { phonetic: "[pəʊz]", translation: "создавать / представлять" }
+  };
+
+  const exerciseData = [
+    { id: 1, textBefore: "Our manager usually", verb: "make", textAfter: "decisions calmly.", answer: ["makes"] },
+    { id: 2, textBefore: "Yesterday, she", verb: "bring", textAfter: "the report to the office.", answer: ["brought"] },
+    { id: 3, textBefore: "Our company", verb: "grow", textAfter: "last year.", answer: ["grew"] },
+    { id: 4, textBefore: "I", verb: "hear", textAfter: "your question yesterday.", answer: ["heard"] },
+    { id: 5, textBefore: "He often", verb: "get", textAfter: "upset about small mistakes.", answer: ["gets"] },
+    { id: 6, textBefore: "What", verb: "happen", textAfter: "at the meeting yesterday?", answer: ["happened"] },
+    { id: 7, textBefore: "She", verb: "not / interrupt", textAfter: "clients at work.", answer: ["doesn't interrupt", "does not interrupt"] },
+    { id: 8, textBefore: "We", verb: "not / consider", textAfter: "his idea yesterday.", answer: ["didn't consider", "did not consider"] },
+    { 
+      id: 9, 
+      isQuestion: true, 
+      text1: "you", 
+      verb: "trust", 
+      textAfter: "your colleagues?", 
+      answer1: ["do"], 
+      answer2: ["trust"] 
+    },
+    { 
+      id: 10, 
+      isQuestion: true, 
+      text1: "the manager", 
+      verb: "decide", 
+      textAfter: "to call the client yesterday?", 
+      answer1: ["did"], 
+      answer2: ["decide"] 
+    },
+    { id: 11, textBefore: "She usually", verb: "deal", textAfter: "with difficult clients.", answer: ["deals"] },
+    { id: 12, textBefore: "This change", verb: "pose", textAfter: "a problem for our team.", answer: ["poses"] }
+  ];
+
+  function renderExercise() {
+    const container = document.getElementById('task3-container');
+    container.innerHTML = '';
+
+    exerciseData.forEach((item) => {
+      const card = document.createElement('div');
+      card.className = 'sentence-card';
+
+      const info = dict[item.verb] || { phonetic: "", translation: "" };
+
+      const verbTooltipHTML = `
+        <div class="word-wrapper">
+          <span class="word-hover">(${item.verb})</span>
+          <div class="tooltip-text">
+            <span style="color: #38bdf8; font-weight:600;">${info.phonetic}</span><br>
+            <span>${info.translation}</span>
+          </div>
+        </div>
+        <button class="audio-btn" onclick="speak('${item.verb}', event)" title="Прослушать глагол">🔊</button>
+      `;
+
+      if (item.isQuestion) {
+        card.innerHTML = `
+          <span class="sentence-num">${item.id}.</span>
+          <input type="text" class="gap-input short-input" id="input1-${item.id}" placeholder="Впишите...">
+          <span>${item.text1}</span>
+          <input type="text" class="gap-input" id="input2-${item.id}" placeholder="Впишите...">
+          ${verbTooltipHTML}
+          <span>${item.textAfter}</span>
+          <span id="hint-${item.id}"></span>
+        `;
+      } else {
+        card.innerHTML = `
+          <span class="sentence-num">${item.id}.</span>
+          <span>${item.textBefore}</span>
+          <input type="text" class="gap-input" id="input-${item.id}" placeholder="Впишите...">
+          ${verbTooltipHTML}
+          <span>${item.textAfter}</span>
+          <span id="hint-${item.id}"></span>
+        `;
+      }
+
+      container.appendChild(card);
+    });
+  }
+
+  function cleanString(str) {
+    return str.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[’`]/g, "'");
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    let total = 0;
+
+    exerciseData.forEach((item) => {
+      const hint = document.getElementById(`hint-${item.id}`);
+      hint.innerHTML = '';
+
+      if (item.isQuestion) {
+        total += 2;
+        const inp1 = document.getElementById(`input1-${item.id}`);
+        const inp2 = document.getElementById(`input2-${item.id}`);
+
+        const val1 = cleanString(inp1.value);
+        const val2 = cleanString(inp2.value);
+
+        inp1.classList.remove('correct', 'incorrect');
+        inp2.classList.remove('correct', 'incorrect');
+
+        if (item.answer1.includes(val1)) {
+          inp1.classList.add('correct');
+          score++;
+        } else {
+          inp1.classList.add('incorrect');
+        }
+
+        if (item.answer2.includes(val2)) {
+          inp2.classList.add('correct');
+          score++;
+        } else {
+          inp2.classList.add('incorrect');
+        }
+
+        if (!item.answer1.includes(val1) || !item.answer2.includes(val2)) {
+          hint.className = 'hint-text';
+          const display1 = item.answer1[0].charAt(0).toUpperCase() + item.answer1[0].slice(1);
+          hint.textContent = `(✓ ${display1} ... ${item.answer2[0]})`;
+        }
+
+      } else {
+        total += 1;
+        const inp = document.getElementById(`input-${item.id}`);
+        const val = cleanString(inp.value);
+
+        inp.classList.remove('correct', 'incorrect');
+
+        if (item.answer.includes(val)) {
+          inp.classList.add('correct');
+          score++;
+        } else {
+          inp.classList.add('incorrect');
+          hint.className = 'hint-text';
+          hint.textContent = `(✓ ${item.answer[0]})`;
+        }
+      }
+    });
+
+    const scoreElem = document.getElementById('score');
+    scoreElem.textContent = `Результат: ${score} из ${total}! 🎉`;
+  }
+
+  function resetExercise() {
+    exerciseData.forEach((item) => {
+      const hint = document.getElementById(`hint-${item.id}`);
+      if (hint) hint.innerHTML = '';
+
+      if (item.isQuestion) {
+        const inp1 = document.getElementById(`input1-${item.id}`);
+        const inp2 = document.getElementById(`input2-${item.id}`);
+        if (inp1) { inp1.value = ''; inp1.className = 'gap-input short-input'; }
+        if (inp2) { inp2.value = ''; inp2.className = 'gap-input'; }
+      } else {
+        const inp = document.getElementById(`input-${item.id}`);
+        if (inp) { inp.value = ''; inp.className = 'gap-input'; }
+      }
+    });
+
+    document.getElementById('score').textContent = '';
+  }
+
+  function speak(text, event) {
+    if (event) event.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
