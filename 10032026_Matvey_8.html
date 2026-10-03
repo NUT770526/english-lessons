@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find the second part for these sentences</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --accent-color: #ea580c;
+    --border-color: #cbd5e1;
+    --pill-bg: #f1f5f9;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  }
+
+  .header {
+    margin-bottom: 24px;
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .title-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  /* Word Bank Pills */
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 32px;
+    padding: 16px;
+    background-color: #fff7ed;
+    border: 1px solid #ffedd5;
+    border-radius: 14px;
+  }
+
+  .word-pill {
+    background-color: #ffffff;
+    border: 1px solid #fed7aa;
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    color: #c2410c;
+    font-size: 0.95rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+
+  /* List of Sentences */
+  .sentence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+
+  .sentence-item {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .sentence-number {
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-right: 4px;
+  }
+
+  /* Select Box Styles */
+  .custom-select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color);
+    background-color: #ffffff;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    padding: 8px 32px 8px 14px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%3C64748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: all 0.2s ease;
+    min-width: 170px;
+  }
+
+  .custom-select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15);
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="title-group">
+      <span class="title-icon">🧩</span>
+      <h2 class="title">Find the second part for these sentences</h2>
+    </div>
+  </div>
+
+  <!-- Word Bank Options -->
+  <div class="word-bank" id="word-bank"></div>
+
+  <!-- Sentences list -->
+  <div class="sentence-list" id="exercise-container"></div>
+
+  <div class="controls">
+    <button class="btn btn-reset" onclick="resetExercise()">Reset</button>
+  </div>
+
+</div>
+
+<script>
+  const optionsList = [
+    "at the moment",
+    "make living",
+    "they been",
+    "want to visit",
+    "of research on"
+  ];
+
+  const sentencesData = [
+    { num: 1, before: "Where have", after: "?" },
+    { num: 2, before: "What are they doing", after: "?" },
+    { num: 3, before: "How do they", after: "?" },
+    { num: 4, before: "I've already done a lot", after: "..." },
+    { num: 5, before: "What place do you", after: "?" }
+  ];
+
+  function renderWordBank() {
+    const bank = document.getElementById('word-bank');
+    bank.innerHTML = optionsList.map(opt => `<span class="word-pill">${opt}</span>`).join('');
+  }
+
+  function renderExercise() {
+    const container = document.getElementById('exercise-container');
+    container.innerHTML = '';
+
+    const selectOptions = ["-- select --", ...optionsList].map(opt => `<option value="${opt}">${opt}</option>`).join('');
+
+    sentencesData.forEach((item, index) => {
+      const row = document.createElement('div');
+      row.className = 'sentence-item';
+
+      row.innerHTML = `
+        <span class="sentence-number">${item.num}.</span>
+        <span>${item.before}</span>
+        <select class="custom-select" id="select-${index}">
+          ${selectOptions}
+        </select>
+        <span>${item.after}</span>
+      `;
+
+      container.appendChild(row);
+    });
+  }
+
+  function resetExercise() {
+    sentencesData.forEach((_, index) => {
+      const select = document.getElementById(`select-${index}`);
+      if (select) {
+        select.value = "-- select --";
+      }
+    });
+  }
+
+  renderWordBank();
+  renderExercise();
+</script>
+
+</body>
+</html>
