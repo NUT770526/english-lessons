@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1. Склади речення зі слів</title>
+<style>
+  :root {
+    --bg-color: #f0f9ff;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --accent-color: #0284c7;
+    --accent-hover: #0369a1;
+    --border-color: #bae6fd;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 3px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.15);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0369a1;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: #0284c7;
+    background: #e0f2fe;
+    padding: 10px 18px;
+    border-radius: 12px;
+    display: inline-block;
+  }
+
+  /* Grammar Rule Box */
+  .rule-box {
+    background-color: #e0f2fe;
+    border: 2px dashed var(--border-color);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0369a1;
+  }
+
+  .rule-example {
+    margin-bottom: 6px;
+  }
+
+  .rule-tip {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: #0284c7;
+  }
+
+  /* List of Sentences */
+  .task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+
+  .task-card {
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 18px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .words-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #0369a1;
+  }
+
+  .sentence-num {
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    min-width: 24px;
+  }
+
+  .words-given {
+    background-color: #f8fafc;
+    border: 1.5px solid var(--border-color);
+    padding: 6px 14px;
+    border-radius: 10px;
+    color: #334155;
+    font-size: 1rem;
+    flex: 1;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 34px;
+  }
+
+  .sentence-input {
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e293b;
+    background-color: #e0f2fe;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 8px 14px;
+    outline: none;
+    width: 100%;
+    transition: all 0.2s ease;
+  }
+
+  .sentence-input:focus {
+    border-color: var(--accent-color);
+    background-color: #ffffff;
+  }
+
+  /* Speaker Button */
+  .speaker-btn {
+    background: #e0f2fe;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background-color: var(--accent-color);
+    color: #ffffff;
+    transform: scale(1.1);
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .btn-reset {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 10px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: #64748b;
+    color: #ffffff;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2 class="title">1. Склади речення зі слів</h2>
+    <p class="subtitle">Розстав слова у правильному порядку та запиши речення!</p>
+  </div>
+
+  <div class="rule-box">
+    <div class="rule-example">📌 <strong>The book + is + on + the table.</strong> — Книжка на столі.</div>
+    <div class="rule-example">📌 <strong>Two books + are + on + the table.</strong> — Дві книжки на столі.</div>
+    <div class="rule-tip">💡 <em>Починай із того, хто або що знаходиться в певному місці.</em><br><strong>Зразок:</strong> in / two cats / the box / are → <strong>Two cats are in the box.</strong></div>
+  </div>
+
+  <div class="task-list" id="task-container"></div>
+
+  <div class="controls">
+    <button class="btn-reset" onclick="resetExercise()">Скинути 🔄</button>
+  </div>
+</div>
+
+<script>
+  const taskData = [
+    { num: 1, words: "on / the title / is / the cover" },
+    { num: 2, words: "the furniture / in / is / the room" },
+    { num: 3, words: "next to / two chairs / are / the shower" },
+    { num: 4, words: "three elephants / the table / under / are" },
+    { num: 5, words: "in / two German books / are / the bag" },
+    { num: 6, words: "the box / two different bags / next to / are" }
+  ];
+
+  function speakText(text) {
+    if (!text) return;
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      utterance.pitch = 1.05;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function renderExercise() {
+    const container = document.getElementById('task-container');
+    container.innerHTML = '';
+
+    taskData.forEach((item, index) => {
+      const card = document.createElement('div');
+      card.className = 'task-card';
+
+      card.innerHTML = `
+        <div class="words-row">
+          <span class="sentence-num">${item.num}.</span>
+          <div class="words-given">${item.words}</div>
+        </div>
+        <div class="input-row">
+          <input type="text" class="sentence-input" id="input-${index}" placeholder="Напиши речення...">
+          <button class="speaker-btn" title="Озвучити написане речення" onclick="speakInputSentence(${index})">🔊</button>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function speakInputSentence(index) {
+    const userVal = document.getElementById(`input-${index}`).value.trim();
+    if (userVal) {
+      speakText(userVal);
+    }
+  }
+
+  function resetExercise() {
+    taskData.forEach((_, index) => {
+      const input = document.getElementById(`input-${index}`);
+      if (input) input.value = '';
+    });
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
