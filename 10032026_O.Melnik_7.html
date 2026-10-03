@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4. Сделайте отрицание и вопрос</title>
+<style>
+  :root {
+    --bg-color: #f1f5f9;
+    --panel-bg: #ffffff;
+    --card-bg: #f8fafc;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --accent: #2563eb;
+    --purple-accent: #7c3aed;
+    --border-color: #cbd5e1;
+    --correct-bg: #dcfce7;
+    --correct-border: #22c55e;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 880px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .title-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+  }
+
+  .instruction {
+    font-size: 0.98rem;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+  }
+
+  .example-box {
+    background: #f3e8ff;
+    border-left: 4px solid var(--purple-accent);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .example-box p {
+    margin-bottom: 4px;
+  }
+
+  /* Sentences List */
+  .sentence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .sentence-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .orig-sentence {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .input-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .input-label-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .symbol {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--purple-accent);
+    width: 24px;
+    text-align: center;
+  }
+
+  /* Full sentence text input */
+  .sentence-input {
+    flex: 1;
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 14px;
+    outline: none;
+    transition: all 0.2s ease;
+    width: 100%;
+  }
+
+  .sentence-input:focus {
+    border-color: var(--accent);
+  }
+
+  .sentence-input.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: #15803d;
+  }
+
+  .sentence-input.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: #b91c1c;
+  }
+
+  .hint-text {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #15803d;
+    margin-left: 34px;
+  }
+
+  /* Controls & Action Buttons */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-submit {
+    background: var(--purple-accent);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background: #6d28d9;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .result-score {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="title-group">
+      <span class="title-icon">✍️</span>
+      <h2 class="title">4. Сделайте отрицание и вопрос</h2>
+    </div>
+    <p class="instruction">Для каждого предложения напишите полностью:</p>
+    
+    <div class="example-box">
+      <p><b>Пример:</b> <i>She handles problems calmly.</i></p>
+      <p><b>(-)</b> She doesn't handle problems calmly.</p>
+      <p><b>(?)</b> Does she handle problems calmly?</p>
+    </div>
+  </div>
+
+  <div class="sentence-list" id="task4-container"></div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-submit" onclick="checkAnswers()">Проверить ответы</button>
+      <button class="btn-reset" onclick="resetExercise()">Сбросить</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+
+</div>
+
+<script>
+  const exerciseData = [
+    {
+      id: 1,
+      original: "Our manager is patient.",
+      neg: ["our manager is not patient", "our manager isn't patient"],
+      quest: ["is our manager patient"]
+    },
+    {
+      id: 2,
+      original: "The client was angry at us yesterday.",
+      neg: ["the client was not angry at us yesterday", "the client wasn't angry at us yesterday"],
+      quest: ["was the client angry at us yesterday"]
+    },
+    {
+      id: 3,
+      original: "You agree with me.",
+      neg: ["you do not agree with me", "you don't agree with me"],
+      quest: ["do you agree with me"]
+    },
+    {
+      id: 4,
+      original: "It seems important.",
+      neg: ["it does not seem important", "it doesn't seem important"],
+      quest: ["does it seem important"]
+    },
+    {
+      id: 5,
+      original: "She understood your point yesterday.",
+      neg: ["she did not understand your point yesterday", "she didn't understand your point yesterday"],
+      quest: ["did she understand your point yesterday"]
+    },
+    {
+      id: 6,
+      original: "The team achieved its goal last month.",
+      neg: ["the team did not achieve its goal last month", "the team didn't achieve its goal last month"],
+      quest: ["did the team achieve its goal last month"]
+    },
+    {
+      id: 7,
+      original: "He tidies his desk every day.",
+      neg: ["he does not tidy his desk every day", "he doesn't tidy his desk every day"],
+      quest: ["does he tidy his desk every day"]
+    },
+    {
+      id: 8,
+      original: "She made a sensible decision yesterday.",
+      neg: ["she did not make a sensible decision yesterday", "she didn't make a sensible decision yesterday"],
+      quest: ["did she make a sensible decision yesterday"]
+    }
+  ];
+
+  function renderExercise() {
+    const container = document.getElementById('task4-container');
+    container.innerHTML = '';
+
+    exerciseData.forEach((item) => {
+      const card = document.createElement('div');
+      card.className = 'sentence-card';
+
+      card.innerHTML = `
+        <div class="orig-sentence">${item.id}.${item.original}</div>
+        
+        <div class="input-row">
+          <div class="input-label-group">
+            <span class="symbol">(–)</span>
+            <input type="text" class="sentence-input" id="neg-${item.id}" placeholder="Напечатайте отрицательное предложение...">
+          </div>
+          <div id="hint-neg-${item.id}"></div>
+        </div>
+
+        <div class="input-row">
+          <div class="input-label-group">
+            <span class="symbol">(?)</span>
+            <input type="text" class="sentence-input" id="quest-${item.id}" placeholder="Напечатайте вопросительное предложение...">
+          </div>
+          <div id="hint-quest-${item.id}"></div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function cleanString(str) {
+    return str
+      .trim()
+      .toLowerCase()
+      .replace(/[.\?]$/, '') // удаляем точку или знак вопроса в конце
+      .replace(/[’`]/g, "'") // заменяем апострофы на стандартный
+      .replace(/\s+/g, ' '); // убираем двойные пробелы
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    let total = exerciseData.length * 2;
+
+    exerciseData.forEach((item) => {
+      // Отрицание
+      const negInput = document.getElementById(`neg-${item.id}`);
+      const negHint = document.getElementById(`hint-neg-${item.id}`);
+      const negVal = cleanString(negInput.value);
+
+      negInput.classList.remove('correct', 'incorrect');
+      negHint.innerHTML = '';
+
+      if (item.neg.includes(negVal)) {
+        negInput.classList.add('correct');
+        score++;
+      } else {
+        negInput.classList.add('incorrect');
+        negHint.className = 'hint-text';
+        // Капитализируем первую букву правильного ответа для подсказки
+        const correctFormatted = item.neg[1] || item.neg[0];
+        const displayAnswer = correctFormatted.charAt(0).toUpperCase() + correctFormatted.slice(1) + '.';
+        negHint.textContent = `(✓ ${displayAnswer})`;
+      }
+
+      // Вопрос
+      const questInput = document.getElementById(`quest-${item.id}`);
+      const questHint = document.getElementById(`hint-quest-${item.id}`);
+      const questVal = cleanString(questInput.value);
+
+      questInput.classList.remove('correct', 'incorrect');
+      questHint.innerHTML = '';
+
+      if (item.quest.includes(questVal)) {
+        questInput.classList.add('correct');
+        score++;
+      } else {
+        questInput.classList.add('incorrect');
+        questHint.className = 'hint-text';
+        const displayAnswer = item.quest[0].charAt(0).toUpperCase() + item.quest[0].slice(1) + '?';
+        questHint.textContent = `(✓ ${displayAnswer})`;
+      }
+    });
+
+    const scoreElem = document.getElementById('score');
+    scoreElem.textContent = `Результат: ${score} из ${total}! 🎉`;
+  }
+
+  function resetExercise() {
+    exerciseData.forEach((item) => {
+      const negInput = document.getElementById(`neg-${item.id}`);
+      const questInput = document.getElementById(`quest-${item.id}`);
+      const negHint = document.getElementById(`hint-neg-${item.id}`);
+      const questHint = document.getElementById(`hint-quest-${item.id}`);
+
+      if (negInput) { negInput.value = ''; negInput.className = 'sentence-input'; }
+      if (questInput) { questInput.value = ''; questInput.className = 'sentence-input'; }
+      if (negHint) negHint.innerHTML = '';
+      if (questHint) questHint.innerHTML = '';
+    });
+
+    document.getElementById('score').textContent = '';
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
