@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2. Выберите подходящее слово</title>
+<style>
+  :root {
+    --bg-color: #f1f5f9;
+    --panel-bg: #ffffff;
+    --card-bg: #f8fafc;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --accent: #2563eb;
+    --purple-accent: #7c3aed;
+    --border-color: #cbd5e1;
+    --correct-bg: #dcfce7;
+    --correct-border: #22c55e;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .title-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+  }
+
+  .instruction {
+    font-size: 0.98rem;
+    color: var(--text-secondary);
+  }
+
+  /* Sentences List */
+  .sentence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .sentence-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.05rem;
+  }
+
+  .sentence-num {
+    font-weight: 700;
+    color: var(--purple-accent);
+    min-width: 24px;
+  }
+
+  .gap-select {
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .gap-select:focus {
+    border-color: var(--accent);
+  }
+
+  .gap-select.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: #15803d;
+  }
+
+  .gap-select.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: #b91c1c;
+  }
+
+  .hint-text {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #15803d;
+    margin-left: 4px;
+  }
+
+  /* Audio & Hover Tooltips Block */
+  .options-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 2px 10px;
+    margin-left: 4px;
+  }
+
+  .word-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: help;
+    border-bottom: 1px dashed var(--text-secondary);
+  }
+
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    bottom: 135%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 12px;
+    z-index: 100;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    pointer-events: none;
+    line-height: 1.4;
+  }
+
+  .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .word-wrapper:hover .tooltip-text {
+    display: block;
+  }
+
+  .audio-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 2px;
+    transition: transform 0.1s;
+  }
+
+  .audio-btn:hover {
+    transform: scale(1.2);
+  }
+
+  /* Controls & Action Buttons */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-submit {
+    background: var(--purple-accent);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background: #6d28d9;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .result-score {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="header">
+    <div class="title-group">
+      <span class="title-icon">✏️</span>
+      <h2 class="title">2. Выберите подходящее слово</h2>
+    </div>
+    <p class="instruction">
+      Прочитайте предложения и выберите правильный вариант. 💡 Наведите мышь на подчёркнутые слова сбоку, чтобы увидеть транскрипцию и перевод, или нажмите 🔊 для прослушивания произношения.
+    </p>
+  </div>
+
+  <div class="sentence-list" id="sentences-container">
+    <!-- Sentences generated dynamically -->
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-submit" onclick="checkAnswers()">Проверить ответы</button>
+      <button class="btn-reset" onclick="resetExercise()">Сбросить</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+
+</div>
+
+<script>
+  const dict = {
+    "ambitious": { phonetic: "[æmˈbɪʃ.əs]", translation: "амбициозная / целеустремленная" },
+    "selfish": { phonetic: "[ˈsel.fɪʃ]", translation: "эгоистичный" },
+    "reliable": { phonetic: "[rɪˈlaɪ.ə.bəl]", translation: "надежный" },
+    "rude": { phonetic: "[ruːd]", translation: "грубый" },
+    "aggressive": { phonetic: "[əˈɡres.ɪv]", translation: "агрессивный" },
+    "considerate": { phonetic: "[kənˈsɪd.ər.ət]", translation: "внимательный к другим" },
+    "polite": { phonetic: "[pəˈlaɪt]", translation: "вежливый" },
+    "moody": { phonetic: "[ˈmuː.di]", translation: "капризный" },
+    "patient": { phonetic: "[ˈpeɪ.ʃənt]", translation: "терпеливый" },
+    "boisterous": { phonetic: "[ˈbɔɪ.stər.əs]", translation: "шумные / неистовые" },
+    "calm": { phonetic: "[kɑːm]", translation: "спокойный" },
+    "neat": { phonetic: "[niːt]", translation: "аккуратный / опрятный" },
+    "tidy": { phonetic: "[ˈtaɪ.di]", translation: "чистый / в порядке" },
+    "talented": { phonetic: "[ˈtæl.ən.tɪd]", translation: "талантливый" },
+    "calmly": { phonetic: "[ˈkɑːm.li]", translation: "спокойно" },
+    "honest": { phonetic: "[ˈɒn.ɪst]", translation: "честный" }
+  };
+
+  const exerciseData = [
+    { id: 1, textBefore: "Anna wants to be a manager. She is", textAfter: ".", opt1: "ambitious", opt2: "selfish", correct: "ambitious" },
+    { id: 2, textBefore: "Tom always helps the team. He is", textAfter: ".", opt1: "reliable", opt2: "rude", correct: "reliable" },
+    { id: 3, textBefore: "The client shouted at us. He was", textAfter: ".", opt1: "aggressive", opt2: "considerate", correct: "aggressive" },
+    { id: 4, textBefore: "She said “please” and “thank you”. She was", textAfter: ".", opt1: "polite", opt2: "moody", correct: "polite" },
+    { id: 5, textBefore: "He only thinks about himself. He is", textAfter: ".", opt1: "selfish", opt2: "patient", correct: "selfish" },
+    { id: 6, textBefore: "The teenagers were noisy and full of energy. They were", textAfter: ".", opt1: "boisterous", opt2: "calm", correct: "boisterous" },
+    { id: 7, textBefore: "Her handwriting is clear and careful. It is", textAfter: ".", opt1: "neat", opt2: "ambitious", correct: "neat" },
+    { id: 8, textBefore: "Everything on his desk is in its place. His desk is", textAfter: ".", opt1: "tidy", opt2: "talented", correct: "tidy" },
+    { id: 9, textBefore: "The manager listened and did not get angry. He was", textAfter: ".", opt1: "calm", opt2: "rude", correct: "calm" },
+    { id: 10, textBefore: "She explained the problem", textAfter: ".", opt1: "calm", opt2: "calmly", correct: "calmly" },
+    { id: 11, textBefore: "The client said, “Your idea is stupid!” He was", textAfter: ".", opt1: "rude", opt2: "polite", correct: "rude" },
+    { id: 12, textBefore: "He told us the truth. He was", textAfter: ".", opt1: "honest", opt2: "selfish", correct: "honest" }
+  ];
+
+  function renderExercise() {
+    const container = document.getElementById('sentences-container');
+    container.innerHTML = '';
+
+    exerciseData.forEach((item) => {
+      const card = document.createElement('div');
+      card.className = 'sentence-card';
+
+      const info1 = dict[item.opt1] || { phonetic: "", translation: "" };
+      const info2 = dict[item.opt2] || { phonetic: "", translation: "" };
+
+      card.innerHTML = `
+        <span class="sentence-num">${item.id}.</span>
+        <span>${item.textBefore}</span>
+        <select class="gap-select" id="select-${item.id}">
+          <option value="">choose...</option>
+          <option value="${item.opt1}">${item.opt1}</option>
+          <option value="${item.opt2}">${item.opt2}</option>
+        </select>
+        <span>${item.textAfter}</span>
+        <span id="hint-${item.id}"></span>
+
+        <div class="options-info">
+          <div class="word-wrapper">
+            <span class="word-text">${item.opt1}</span>
+            <div class="tooltip-text">
+              <span style="color: #38bdf8; font-weight:600;">${info1.phonetic}</span><br>
+              <span>${info1.translation}</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('${item.opt1}', event)" title="Прослушать">🔊</button>
+          <span>/</span>
+          <div class="word-wrapper">
+            <span class="word-text">${item.opt2}</span>
+            <div class="tooltip-text">
+              <span style="color: #38bdf8; font-weight:600;">${info2.phonetic}</span><br>
+              <span>${info2.translation}</span>
+            </div>
+          </div>
+          <button class="audio-btn" onclick="speak('${item.opt2}', event)" title="Прослушать">🔊</button>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    let total = exerciseData.length;
+
+    exerciseData.forEach((item) => {
+      const select = document.getElementById(`select-${item.id}`);
+      const hint = document.getElementById(`hint-${item.id}`);
+      const val = select.value;
+
+      select.classList.remove('correct', 'incorrect');
+      hint.innerHTML = '';
+
+      if (val === item.correct) {
+        select.classList.add('correct');
+        score++;
+      } else {
+        select.classList.add('incorrect');
+        hint.className = 'hint-text';
+        hint.textContent = `(✓ ${item.correct})`;
+      }
+    });
+
+    const scoreElem = document.getElementById('score');
+    scoreElem.textContent = `Вы правильно ответили на ${score} из ${total}! 🎉`;
+  }
+
+  function resetExercise() {
+    exerciseData.forEach((item) => {
+      const select = document.getElementById(`select-${item.id}`);
+      const hint = document.getElementById(`hint-${item.id}`);
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+      hint.innerHTML = '';
+    });
+    document.getElementById('score').textContent = '';
+  }
+
+  function speak(text, event) {
+    if (event) event.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
