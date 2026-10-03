@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Country or nationality? — Drag and Drop</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-color: #f8fafc;
+    --accent-color: #38bdf8;
+    --border-color: #334155;
+    --pill-bg: #334155;
+    --pill-hover: #0284c7;
+    --drop-bg: #0f172a;
+    --drop-border: #475569;
+    --drop-active: rgba(56, 189, 248, 0.15);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 950px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .header {
+    margin-bottom: 24px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 1.05rem;
+    color: #94a3b8;
+  }
+
+  /* Word Bank Drop / Pool Area */
+  .word-bank-zone {
+    min-height: 120px;
+    background-color: var(--drop-bg);
+    border: 2px dashed var(--drop-border);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-content: flex-start;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .word-bank-zone.drag-over {
+    background-color: var(--drop-active);
+    border-color: var(--accent-color);
+  }
+
+  /* Draggable Word Card */
+  .word-card {
+    background-color: var(--pill-bg);
+    border: 1px solid #475569;
+    padding: 8px 14px;
+    border-radius: 12px;
+    cursor: grab;
+    transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+    touch-action: none;
+  }
+
+  .word-card:hover {
+    background-color: var(--pill-hover);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+  }
+
+  .word-card.dragging {
+    opacity: 0.4;
+    cursor: grabbing;
+  }
+
+  .word-card.selected {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 2px #f59e0b;
+    background-color: #1e3a8a;
+  }
+
+  .word-text {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #ffffff;
+    pointer-events: none;
+  }
+
+  .word-ipa {
+    font-size: 0.82rem;
+    color: #38bdf8;
+    font-weight: 500;
+    pointer-events: none;
+  }
+
+  /* Drop Zones Columns */
+  .columns-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+
+  .column-box {
+    background-color: var(--drop-bg);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .column-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border-color);
+    text-align: center;
+  }
+
+  .drop-zone {
+    min-height: 260px;
+    border: 2px dashed var(--drop-border);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-content: flex-start;
+    flex-grow: 1;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .drop-zone.drag-over {
+    background-color: var(--drop-active);
+    border-color: var(--accent-color);
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset {
+    background: #475569;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #64748b;
+  }
+
+  @media (max-width: 640px) {
+    .columns-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2 class="title">1. Country or nationality?</h2>
+    <p class="subtitle">Розподіли слова у дві групи: країни та національності. (Перетягуй карточки або натискай на них, щоб озвучити та вибрати)</p>
+  </div>
+
+  <!-- Main Word Pool / Bank -->
+  <div class="word-bank-zone drop-zone-target" id="bank-zone" data-zone="bank"></div>
+
+  <!-- Drop Zones Grid -->
+  <div class="columns-grid">
+    <div class="column-box">
+      <h3 class="column-title">Countries — країни</h3>
+      <div class="drop-zone drop-zone-target" id="countries-zone" data-zone="countries"></div>
+    </div>
+
+    <div class="column-box">
+      <h3 class="column-title">Nationalities — національності</h3>
+      <div class="drop-zone drop-zone-target" id="nationalities-zone" data-zone="nationalities"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-reset" onclick="resetExercise()">Reset</button>
+  </div>
+</div>
+
+<script>
+  const wordsData = [
+    { id: "w1", word: "French", ipa: "/frentʃ/" },
+    { id: "w2", word: "Germany", ipa: "/ˈdʒɜː.mə.ni/" },
+    { id: "w3", word: "Chinese", ipa: "/ˌtʃaɪˈniːz/" },
+    { id: "w4", word: "Argentina", ipa: "/ˌɑː.dʒənˈtiː.nə/" },
+    { id: "w5", word: "British", ipa: "/ˈbrɪt.ɪʃ/" },
+    { id: "w6", word: "Spain", ipa: "/speɪn/" },
+    { id: "w7", word: "Turkish", ipa: "/ˈtɜː.kɪʃ/" },
+    { id: "w8", word: "Italy", ipa: "/ˈɪt.əl.i/" },
+    { id: "w9", word: "American", ipa: "/əˈmer.ɪ.kən/" },
+    { id: "w10", word: "Poland", ipa: "/ˈpəʊ.lənd/" },
+    { id: "w11", word: "Argentinian", ipa: "/ˌɑː.dʒənˈtɪn.i.ən/" },
+    { id: "w12", word: "China", ipa: "/ˈtʃaɪ.nə/" },
+    { id: "w13", word: "German", ipa: "/ˈdʒɜː.mən/" },
+    { id: "w14", word: "the USA", ipa: "/ðə ˌjuː.esˈeɪ/" },
+    { id: "w15", word: "Italian", ipa: "/ɪˈtæl.jən/" },
+    { id: "w16", word: "France", ipa: "/frɑːns/" },
+    { id: "w17", word: "Polish", ipa: "/ˈpəʊ.lɪʃ/" },
+    { id: "w18", word: "Turkey", ipa: "/ˈtɜː.ki/" },
+    { id: "w19", word: "Spanish", ipa: "/ˈspæn.ɪʃ/" },
+    { id: "w20", word: "the UK", ipa: "/ðə ˌjuːˈkeɪ/" }
+  ];
+
+  let draggedElement = null;
+  let selectedElement = null;
+
+  // Speech function using Web Speech API
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function initApp() {
+    const bankZone = document.getElementById('bank-zone');
+    bankZone.innerHTML = '';
+
+    wordsData.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'word-card';
+      card.id = item.id;
+      card.setAttribute('draggable', 'true');
+      card.setAttribute('data-word', item.word);
+
+      card.innerHTML = `
+        <span class="word-text">${item.word}</span>
+        <span class="word-ipa">${item.ipa}</span>
+      `;
+
+      // Speech on hover
+      card.addEventListener('mouseenter', () => speakWord(item.word));
+
+      // HTML5 Drag Events
+      card.addEventListener('dragstart', handleDragStart);
+      card.addEventListener('dragend', handleDragEnd);
+
+      // Click / Touch selection alternative
+      card.addEventListener('click', (e) => handleCardClick(e, card));
+
+      bankZone.appendChild(card);
+    });
+
+    setupDropZones();
+  }
+
+  function handleDragStart(e) {
+    draggedElement = this;
+    this.classList.add('dragging');
+    e.dataTransfer.setData('text/plain', this.id);
+    speakWord(this.getAttribute('data-word'));
+  }
+
+  function handleDragEnd() {
+    this.classList.remove('dragging');
+    draggedElement = null;
+    document.querySelectorAll('.drop-zone-target').forEach(zone => {
+      zone.classList.remove('drag-over');
+    });
+  }
+
+  function handleCardClick(e, card) {
+    e.stopPropagation();
+    speakWord(card.getAttribute('data-word'));
+
+    if (selectedElement === card) {
+      card.classList.remove('selected');
+      selectedElement = null;
+    } else {
+      if (selectedElement) {
+        selectedElement.classList.remove('selected');
+      }
+      selectedElement = card;
+      card.classList.add('selected');
+    }
+  }
+
+  function setupDropZones() {
+    const dropZones = document.querySelectorAll('.drop-zone-target');
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('drag-over');
+      });
+
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('drag-over');
+      });
+
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        if (draggedElement) {
+          zone.appendChild(draggedElement);
+        }
+      });
+
+      // Click on zone moves currently selected card
+      zone.addEventListener('click', () => {
+        if (selectedElement) {
+          zone.appendChild(selectedElement);
+          selectedElement.classList.remove('selected');
+          selectedElement = null;
+        }
+      });
+    });
+  }
+
+  function resetExercise() {
+    const bankZone = document.getElementById('bank-zone');
+    document.querySelectorAll('.word-card').forEach(card => {
+      card.classList.remove('selected');
+      bankZone.appendChild(card);
+    });
+    selectedElement = null;
+  }
+
+  window.onload = initApp;
+</script>
+
+</body>
+</html>
