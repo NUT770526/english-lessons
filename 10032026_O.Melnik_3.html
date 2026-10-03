@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fill in the gaps — Business English</title>
+<style>
+  :root {
+    --bg-color: #f1f5f9;
+    --panel-bg: #ffffff;
+    --card-bg: #f8fafc;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --purple-accent: #7c3aed;
+    --border-color: #cbd5e1;
+    --correct-bg: #dcfce7;
+    --correct-border: #22c55e;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .title-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+  }
+
+  .instruction {
+    font-size: 0.98rem;
+    color: var(--text-secondary);
+  }
+
+  /* Wordlist Section */
+  .wordlist-container {
+    background: #faf5ff;
+    border: 1px solid #e9d5ff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+  }
+
+  .wordlist-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--purple-accent);
+    margin-bottom: 12px;
+  }
+
+  .word-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .word-chip {
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+  }
+
+  .word-chip:hover {
+    border-color: var(--purple-accent);
+    transform: translateY(-1px);
+  }
+
+  /* Tooltip on Hover */
+  .word-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-text {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    bottom: 135%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 12px;
+    z-index: 100;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    pointer-events: none;
+    line-height: 1.4;
+  }
+
+  .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .word-wrapper:hover .tooltip-text {
+    display: block;
+  }
+
+  .audio-btn {
+    background: #f1f5f9;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s, background-color 0.2s;
+  }
+
+  .audio-btn:hover {
+    background: #e2e8f0;
+    transform: scale(1.15);
+  }
+
+  /* Exercise Sentences */
+  .sentence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .sentence-item {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    line-height: 1.8;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .sentence-number {
+    font-weight: 700;
+    color: var(--text-secondary);
+  }
+
+  .gap-select {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 150px;
+  }
+
+  .gap-select:focus {
+    border-color: var(--accent);
+    background-color: #ffffff;
+  }
+
+  .gap-select.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: #15803d;
+  }
+
+  .gap-select.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: #b91c1c;
+  }
+
+  .correct-answer-hint {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #15803d;
+    margin-left: 4px;
+  }
+
+  /* Controls & Action Buttons */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-submit {
+    background: var(--purple-accent);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background: #6d28d9;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .result-score {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="header">
+    <div class="title-group">
+      <span class="title-icon">🧩</span>
+      <h2 class="title">Fill in the gaps</h2>
+    </div>
+    <p class="instruction">
+      Заполните пропуски в предложениях подходящими по смыслу словами. 💡 Наведите мышь на слово в банке слов ниже, чтобы увидеть транскрипцию и перевод, или нажмите 🔊 для озвучки.
+    </p>
+  </div>
+
+  <!-- Wordlist Bank -->
+  <div class="wordlist-container">
+    <div class="wordlist-title">Wordlist:</div>
+    <div class="word-chips" id="wordlist">
+      <!-- Words dynamically injected -->
+    </div>
+  </div>
+
+  <!-- Exercise Sentences -->
+  <div class="sentence-list" id="sentences">
+    <!-- Sentences dynamically injected -->
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-submit" onclick="checkAnswers()">Проверить ответы</button>
+      <button class="btn-reset" onclick="resetExercise()">Сбросить</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+
+</div>
+
+<script>
+  const wordsData = [
+    { word: "boisterous", phonetic: "[ˈbɔɪ.stər.əs]", translation: "шумный / гиперактивный" },
+    { word: "ambitious", phonetic: "[æmˈbɪʃ.əs]", translation: "амбициозный / целеустремленный" },
+    { word: "moody", phonetic: "[ˈmuː.di]", translation: "капризный / подверженный смене настроения" },
+    { word: "confident", phonetic: "[ˈkɒn.fɪ.dənt]", translation: "уверенный в себе" },
+    { word: "aggressive", phonetic: "[əˈɡres.ɪv]", translation: "агрессивный / напористый" },
+    { word: "organised", phonetic: "[ˈɔː.ɡən.aɪzd]", translation: "организованный / собранный" },
+    { word: "considerate", phonetic: "[kənˈsɪd.ər.ət]", translation: "внимательный к другим / чуткий" },
+    { word: "patient", phonetic: "[ˈpeɪ.ʃənt]", translation: "терпеливый" },
+    { word: "easy-going", phonetic: "[ˌiː.ziˈɡəʊ.ɪŋ]", translation: "легкий в общении / сговорчивый" }
+  ];
+
+  const sentencesData = [
+    { id: 1, textBefore: "Robert can be", textAfter: "when he gets angry.", answer: "aggressive" },
+    { id: 2, textBefore: "Maria is", textAfter: "and always wants to achieve her goals.", answer: "ambitious" },
+    { id: 3, textBefore: "Tom is", textAfter: "and loves to make everyone laugh.", answer: "boisterous" },
+    { id: 4, textBefore: "Sarah is", textAfter: "when she speaks in front of a crowd.", answer: "confident" },
+    { id: 5, textBefore: "John is", textAfter: "and always helps his friends in need.", answer: "considerate" },
+    { id: 6, textBefore: "Lisa is", textAfter: "and doesn't get upset easily.", answer: "easy-going" },
+    { id: 7, textBefore: "Emily can be", textAfter: ", so you never know how she'll be feeling.", answer: "moody" },
+    { id: 8, textBefore: "Michael is", textAfter: "and keeps his workplace neat at all times.", answer: "organised" },
+    { id: 9, textBefore: "Michelle is", textAfter: "and waits calmly for her turn in the line.", answer: "patient" }
+  ];
+
+  function initWordlist() {
+    const container = document.getElementById('wordlist');
+    container.innerHTML = '';
+
+    wordsData.forEach((item) => {
+      const chip = document.createElement('div');
+      chip.className = 'word-chip';
+      chip.innerHTML = `
+        <div class="word-wrapper">
+          <span class="word-text">${item.word}</span>
+          <div class="tooltip-text">
+            <span style="color: #38bdf8; font-weight:600;">${item.phonetic}</span><br>
+            <span>${item.translation}</span>
+          </div>
+        </div>
+        <button class="audio-btn" onclick="speak('${item.word}', event)" title="Прослушать">🔊</button>
+      `;
+      container.appendChild(chip);
+    });
+  }
+
+  function initSentences() {
+    const container = document.getElementById('sentences');
+    container.innerHTML = '';
+
+    const wordOptions = wordsData.map(w => w.word).sort();
+
+    sentencesData.forEach((s) => {
+      const item = document.createElement('div');
+      item.className = 'sentence-item';
+
+      let optionsHTML = `<option value="">choose...</option>`;
+      wordOptions.forEach((w) => {
+        optionsHTML += `<option value="${w}">${w}</option>`;
+      });
+
+      item.innerHTML = `
+        <span class="sentence-number">${s.id}.</span>
+        <span>${s.textBefore}</span>
+        <select class="gap-select" id="gap-${s.id}">
+          ${optionsHTML}
+        </select>
+        <span>${s.textAfter}</span>
+        <span id="hint-${s.id}"></span>
+      `;
+
+      container.appendChild(item);
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    let total = sentencesData.length;
+
+    sentencesData.forEach((s) => {
+      const select = document.getElementById(`gap-${s.id}`);
+      const hint = document.getElementById(`hint-${s.id}`);
+      const val = select.value;
+
+      select.classList.remove('correct', 'incorrect');
+      hint.innerHTML = '';
+
+      if (val === s.answer) {
+        select.classList.add('correct');
+        score++;
+      } else {
+        select.classList.add('incorrect');
+        hint.className = 'correct-answer-hint';
+        hint.textContent = `(✓ ${s.answer})`;
+      }
+    });
+
+    const scoreElem = document.getElementById('score');
+    scoreElem.textContent = `Вы правильно ответили на ${score} из ${total}! 🎉`;
+  }
+
+  function resetExercise() {
+    sentencesData.forEach((s) => {
+      const select = document.getElementById(`gap-${s.id}`);
+      const hint = document.getElementById(`hint-${s.id}`);
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+      hint.innerHTML = '';
+    });
+    document.getElementById('score').textContent = '';
+  }
+
+  function speak(text, event) {
+    if (event) event.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+
+  // Initialize
+  initWordlist();
+  initSentences();
+</script>
+
+</body>
+</html>
