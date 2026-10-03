@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>З'єднай слово з перекладом</title>
+<style>
+  :root {
+    --bg-color: #f0f9ff;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --accent-color: #0284c7;
+    --border-color: #bae6fd;
+    --selected-bg: #e0f2fe;
+    --selected-border: #0284c7;
+    --correct-bg: #dcfce7;
+    --correct-border: #22c55e;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 850px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 32px;
+    border: 3px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.15);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0369a1;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: #0284c7;
+    background: #e0f2fe;
+    padding: 8px 16px;
+    border-radius: 12px;
+    display: inline-block;
+  }
+
+  /* Matching Grid Layout */
+  .match-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .column-title {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #0369a1;
+    margin-bottom: 4px;
+  }
+
+  .match-card {
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 14px 16px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #0f172a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    min-height: 64px;
+    text-align: center;
+    position: relative;
+  }
+
+  .match-card:hover:not(.disabled) {
+    border-color: var(--accent-color);
+    background-color: #f0f9ff;
+    transform: translateY(-2px);
+  }
+
+  .match-card.selected {
+    background-color: var(--selected-bg);
+    border-color: var(--selected-border);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+  }
+
+  .match-card.matched {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: #15803d;
+    cursor: default;
+  }
+
+  .match-card.wrong {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    animation: shake 0.3s ease;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .ipa-tag {
+    font-size: 0.85rem;
+    color: #0284c7;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .speaker-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    opacity: 0.5;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 10px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: #0284c7;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .btn:hover {
+    background: #0369a1;
+  }
+
+  .score {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #15803d;
+    min-height: 28px;
+  }
+
+  @media (max-width: 600px) {
+    .match-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2 class="title">🎯 З'єднай слово з перекладом</h2>
+    <p class="subtitle">1. Обирай слово зліва (слухай вимову) → 2. Натискай відповідний переклад справа!</p>
+  </div>
+
+  <div class="match-grid">
+    <div class="column">
+      <div class="column-title">English</div>
+      <div id="english-list" class="column"></div>
+    </div>
+    <div class="column">
+      <div class="column-title">Переклад</div>
+      <div id="ukrainian-list" class="column"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" onclick="initGame()">🔀 Перемішати / Нова гра</button>
+    <div id="score" class="score"></div>
+  </div>
+</div>
+
+<script>
+  const wordsData = [
+    { id: 1, word: "carry", ipa: "/ˈkæri/", translation: "нести" },
+    { id: 2, word: "title", ipa: "/ˈtaɪtl/", translation: "назва, заголовок" },
+    { id: 3, word: "Germany", ipa: "/ˈdʒɜːməni/", translation: "Німеччина" },
+    { id: 4, word: "German", ipa: "/ˈdʒɜːmən/", translation: "німецький" },
+    { id: 5, word: "try", ipa: "/traɪ/", translation: "намагатися, пробувати" },
+    { id: 6, word: "revise", ipa: "/rɪˈvaɪz/", translation: "повторювати вивчене" },
+    { id: 7, word: "describe", ipa: "/dɪˈskraɪb/", translation: "описувати" },
+    { id: 8, word: "furniture", ipa: "/ˈfɜːnɪtʃə/", translation: "меблі" }
+  ];
+
+  let selectedEnglish = null;
+  let selectedUkrainian = null;
+  let matchedCount = 0;
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      utterance.pitch = 1.05;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function shuffle(array) {
+    return [...array].sort(() => Math.random() - 0.5);
+  }
+
+  function initGame() {
+    selectedEnglish = null;
+    selectedUkrainian = null;
+    matchedCount = 0;
+    document.getElementById('score').textContent = '';
+
+    const engContainer = document.getElementById('english-list');
+    const ukrContainer = document.getElementById('ukrainian-list');
+
+    engContainer.innerHTML = '';
+    ukrContainer.innerHTML = '';
+
+    // Shuffle both lists independently for random display
+    const shuffledEng = shuffle(wordsData);
+    const shuffledUkr = shuffle(wordsData);
+
+    shuffledEng.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'match-card';
+      card.dataset.id = item.id;
+      
+      // Speak on hover and click
+      card.onmouseenter = () => {
+        if (!card.classList.contains('matched')) speakWord(item.word);
+      };
+
+      card.innerHTML = `
+        <span class="speaker-icon">🔊</span>
+        <span>${item.word}</span>
+        <span class="ipa-tag">${item.ipa}</span>
+      `;
+
+      card.onclick = () => selectEnglish(card, item);
+      engContainer.appendChild(card);
+    });
+
+    shuffledUkr.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'match-card';
+      card.dataset.id = item.id;
+      card.innerHTML = `<span>${item.translation}</span>`;
+
+      card.onclick = () => selectUkrainian(card, item);
+      ukrContainer.appendChild(card);
+    });
+  }
+
+  function selectEnglish(card, item) {
+    if (card.classList.contains('matched')) return;
+
+    speakWord(item.word);
+
+    // Remove selection from other English cards
+    document.querySelectorAll('#english-list .match-card').forEach(c => {
+      if (!c.classList.contains('matched')) c.classList.remove('selected');
+    });
+
+    card.classList.add('selected');
+    selectedEnglish = { card, id: item.id };
+
+    checkMatch();
+  }
+
+  function selectUkrainian(card, item) {
+    if (card.classList.contains('matched')) return;
+
+    // Remove selection from other Ukrainian cards
+    document.querySelectorAll('#ukrainian-list .match-card').forEach(c => {
+      if (!c.classList.contains('matched')) c.classList.remove('selected');
+    });
+
+    card.classList.add('selected');
+    selectedUkrainian = { card, id: item.id };
+
+    checkMatch();
+  }
+
+  function checkMatch() {
+    if (selectedEnglish && selectedUkrainian) {
+      const isCorrect = selectedEnglish.id === selectedUkrainian.id;
+
+      if (isCorrect) {
+        selectedEnglish.card.classList.remove('selected');
+        selectedUkrainian.card.classList.remove('selected');
+
+        selectedEnglish.card.classList.add('matched', 'disabled');
+        selectedUkrainian.card.classList.add('matched', 'disabled');
+
+        matchedCount++;
+        selectedEnglish = null;
+        selectedUkrainian = null;
+
+        if (matchedCount === wordsData.length) {
+          document.getElementById('score').textContent = '🎉 Всі слова знайдено! Чудова робота!';
+        }
+      } else {
+        const engCard = selectedEnglish.card;
+        const ukrCard = selectedUkrainian.card;
+
+        engCard.classList.add('wrong');
+        ukrCard.classList.add('wrong');
+
+        setTimeout(() => {
+          engCard.classList.remove('selected', 'wrong');
+          ukrCard.classList.remove('selected', 'wrong');
+        }, 500);
+
+        selectedEnglish = null;
+        selectedUkrainian = null;
+      }
+    }
+  }
+
+  initGame();
+</script>
+
+</body>
+</html>
