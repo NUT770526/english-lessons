@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match the Opposites — Business English</title>
+<style>
+  :root {
+    --bg-color: #f1f5f9;
+    --panel-bg: #ffffff;
+    --card-bg: #f8fafc;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --purple-accent: #7c3aed;
+    --border-color: #cbd5e1;
+    --selected-bg: #e0f2fe;
+    --selected-border: #0284c7;
+    --matched-bg: #f0fdf4;
+    --matched-border: #22c55e;
+    --incorrect-bg: #fef2f2;
+    --incorrect-border: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .puzzle-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+  }
+
+  .instruction {
+    font-size: 0.98rem;
+    color: var(--text-secondary);
+  }
+
+  /* Grid Layout */
+  .game-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 600px) {
+    .game-board {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .word-card {
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    position: relative;
+  }
+
+  .word-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .word-card.selected {
+    background: var(--selected-bg);
+    border-color: var(--selected-border);
+    transform: scale(1.02);
+  }
+
+  .word-card.matched {
+    background: var(--matched-bg);
+    border-color: var(--matched-border);
+    cursor: default;
+    opacity: 0.85;
+    transform: none;
+  }
+
+  .word-card.incorrect {
+    background: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    animation: shake 0.4s ease;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+
+  .word-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  /* Tooltip - Strict Hover Display */
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    bottom: 130%;
+    left: 0;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 12px;
+    z-index: 100;
+    white-space: nowrap;
+    font-size: 0.88rem;
+    font-weight: 500;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    pointer-events: none;
+    line-height: 1.4;
+  }
+
+  .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  /* Show Tooltip ONLY on Hover over the word wrapper */
+  .word-wrapper:hover .tooltip-text {
+    display: block;
+  }
+
+  .audio-btn {
+    background: #e2e8f0;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s, background-color 0.2s;
+  }
+
+  .audio-btn:hover {
+    background: #cbd5e1;
+    transform: scale(1.15);
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-reset {
+    background: var(--accent);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: var(--accent-hover);
+  }
+
+  .result-score {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="header">
+    <div class="title-group">
+      <span class="puzzle-icon">🧩</span>
+      <h2 class="title">Match the Opposites — Деловой английский</h2>
+    </div>
+    <p class="instruction">
+      Найдите противоположные по смыслу качества сотрудников и бизнес-партнёров (антонимы). Нажмите на первое слово, затем на противоположное ему. 💡 Наведите мышь на слово, чтобы увидеть транскрипцию и русский перевод, или нажмите 🔊 для озвучки.
+    </p>
+  </div>
+
+  <div class="game-board" id="board">
+    <!-- Cards will be dynamically inserted here -->
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-reset" onclick="initGame()">Начать заново 🔄</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+
+</div>
+
+<script>
+  const wordPairs = [
+    {
+      word: "Easy-going",
+      pairId: 1,
+      phonetic: "[ˌiː.ziˈɡəʊ.ɪŋ]",
+      translation: "легкий в общении / сговорчивый"
+    },
+    {
+      word: "Moody",
+      pairId: 1,
+      phonetic: "[ˈmuː.di]",
+      translation: "капризный / подверженный смене настроения"
+    },
+    {
+      word: "Selfish",
+      pairId: 2,
+      phonetic: "[ˈsel.fɪʃ]",
+      translation: "эгоистичный / думающий о своей выгоде"
+    },
+    {
+      word: "Considerate",
+      pairId: 2,
+      phonetic: "[kənˈsɪd.ər.ət]",
+      translation: "внимательный к коллегам / чуткий"
+    },
+    {
+      word: "Polite",
+      pairId: 3,
+      phonetic: "[pəˈlaɪt]",
+      translation: "вежливый / тактичный"
+    },
+    {
+      word: "Rude",
+      pairId: 3,
+      phonetic: "[ruːd]",
+      translation: "грубый / бестактный"
+    },
+    {
+      word: "Aggressive",
+      pairId: 4,
+      phonetic: "[əˈɡres.ɪv]",
+      translation: "агрессивный / напористый"
+    },
+    {
+      word: "Helpful",
+      pairId: 4,
+      phonetic: "[ˈhelp.fəl]",
+      translation: "готовый помочь / отзывчивый"
+    },
+    {
+      word: "Flexible",
+      pairId: 5,
+      phonetic: "[ˈflek.sə.bəl]",
+      translation: "гибкий / способный адаптироваться"
+    },
+    {
+      word: "Rigid",
+      pairId: 5,
+      phonetic: "[ˈrɪdʒ.ɪd]",
+      translation: "негибкий / несклонный к компромиссам"
+    },
+    {
+      word: "Reliable",
+      pairId: 6,
+      phonetic: "[rɪˈlaɪ.ə.bəl]",
+      translation: "надежный / ответственный"
+    },
+    {
+      word: "Careless",
+      pairId: 6,
+      phonetic: "[ˈkeə.ləs]",
+      translation: "безалаберный / небрежный"
+    }
+  ];
+
+  let selectedCard = null;
+  let matchedPairsCount = 0;
+  const totalPairs = wordPairs.length / 2;
+
+  function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
+
+  function initGame() {
+    const board = document.getElementById('board');
+    board.innerHTML = '';
+    selectedCard = null;
+    matchedPairsCount = 0;
+    document.getElementById('score').textContent = '';
+
+    const shuffledWords = shuffle([...wordPairs]);
+
+    shuffledWords.forEach((item) => {
+      const card = document.createElement('div');
+      card.className = 'word-card';
+      card.dataset.pairId = item.pairId;
+
+      card.innerHTML = `
+        <div class="word-wrapper">
+          <span class="word-text">${item.word}</span>
+          <div class="tooltip-text">
+            <span style="color: #38bdf8; font-weight:600;">${item.phonetic}</span><br>
+            <span>${item.translation}</span>
+          </div>
+        </div>
+        <button class="audio-btn" onclick="speak('${item.word}', event)" title="Прослушать">🔊</button>
+      `;
+
+      card.addEventListener('click', (e) => handleCardClick(card, e));
+      board.appendChild(card);
+    });
+  }
+
+  function handleCardClick(card, event) {
+    if (event.target.classList.contains('audio-btn')) return;
+    if (card.classList.contains('matched') || card === selectedCard) return;
+
+    if (!selectedCard) {
+      selectedCard = card;
+      card.classList.add('selected');
+    } else {
+      const firstPairId = selectedCard.dataset.pairId;
+      const secondPairId = card.dataset.pairId;
+
+      if (firstPairId === secondPairId) {
+        selectedCard.classList.remove('selected');
+        selectedCard.classList.add('matched');
+        card.classList.add('matched');
+        selectedCard = null;
+        matchedPairsCount++;
+
+        if (matchedPairsCount === totalPairs) {
+          document.getElementById('score').textContent = "Отлично! Все пары найдены! 🎉";
+        }
+      } else {
+        card.classList.add('incorrect');
+        selectedCard.classList.add('incorrect');
+
+        setTimeout(() => {
+          card.classList.remove('incorrect', 'selected');
+          selectedCard.classList.remove('incorrect', 'selected');
+          selectedCard = null;
+        }, 600);
+      }
+    }
+  }
+
+  function speak(text, event) {
+    if (event) event.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+
+  initGame();
+</script>
+
+</body>
+</html>
