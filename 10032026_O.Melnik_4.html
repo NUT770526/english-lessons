@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Соедините слова с переводом</title>
+<style>
+  :root {
+    --bg-color: #f1f5f9;
+    --panel-bg: #ffffff;
+    --card-bg: #f8fafc;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --accent: #2563eb;
+    --purple-accent: #7c3aed;
+    --border-color: #cbd5e1;
+    --correct-bg: #dcfce7;
+    --correct-border: #22c55e;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 24px;
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .title-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+  }
+
+  .instruction {
+    font-size: 0.98rem;
+    color: var(--text-secondary);
+  }
+
+  /* Matching Table */
+  .matching-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin-bottom: 28px;
+  }
+
+  .matching-table th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  .matching-row {
+    background: var(--card-bg);
+    transition: all 0.2s ease;
+  }
+
+  .matching-row td {
+    padding: 10px 16px;
+    vertical-align: middle;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .matching-row td:first-child {
+    border-left: 1px solid var(--border-color);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    width: 40px;
+  }
+
+  .matching-row td:last-child {
+    border-right: 1px solid var(--border-color);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  /* Word Wrapper & Tooltip */
+  .word-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .word-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    bottom: 130%;
+    left: 0;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 12px;
+    z-index: 100;
+    white-space: nowrap;
+    font-size: 0.88rem;
+    font-weight: 500;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    pointer-events: none;
+    line-height: 1.4;
+  }
+
+  .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .word-wrapper:hover .tooltip-text {
+    display: block;
+  }
+
+  .audio-btn {
+    background: #e2e8f0;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s, background-color 0.2s;
+  }
+
+  .audio-btn:hover {
+    background: #cbd5e1;
+    transform: scale(1.15);
+  }
+
+  /* Select dropdown */
+  .match-select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 10px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 110px;
+  }
+
+  .match-select:focus {
+    border-color: var(--accent);
+  }
+
+  .match-select.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: #15803d;
+  }
+
+  .match-select.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: #b91c1c;
+  }
+
+  .hint-text {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #15803d;
+    margin-left: 6px;
+  }
+
+  /* Controls & Action Buttons */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-submit {
+    background: var(--purple-accent);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background: #6d28d9;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .result-score {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="header">
+    <div class="title-group">
+      <span class="title-icon">🔗</span>
+      <h2 class="title">1. Соедините слова с переводом</h2>
+    </div>
+    <p class="instruction">
+      Выберите соответствующую букву перевода для каждого английского слова. 💡 Наведите мышь на слово, чтобы увидеть транскрипцию и перевод, или нажмите 🔊 для прослушивания произношения.
+    </p>
+  </div>
+
+  <table class="matching-table">
+    <thead>
+      <tr>
+        <th>№</th>
+        <th>Слово</th>
+        <th>Выбор</th>
+        <th>Буква и Перевод</th>
+      </tr>
+    </thead>
+    <tbody id="matching-body">
+      <!-- Rows dynamically generated -->
+    </tbody>
+  </table>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-submit" onclick="checkAnswers()">Проверить ответы</button>
+      <button class="btn-reset" onclick="resetExercise()">Сбросить</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+
+</div>
+
+<script>
+  const matchingData = [
+    { id: 1, word: "confident", phonetic: "[ˈkɒn.fɪ.dənt]", translation: "уверенный в себе", correctLetter: "D" },
+    { id: 2, word: "considerate", phonetic: "[kənˈsɪd.ər.ət]", translation: "внимательный к другим, тактичный", correctLetter: "F" },
+    { id: 3, word: "easy-going", phonetic: "[ˌiː.ziˈɡəʊ.ɪŋ]", translation: "лёгкий в общении", correctLetter: "H" },
+    { id: 4, word: "moody", phonetic: "[ˈmuː.di]", translation: "с переменчивым настроением", correctLetter: "I" },
+    { id: 5, word: "organised", phonetic: "[ˈɔː.ɡən.aɪzd]", translation: "организованный", correctLetter: "J" },
+    { id: 6, word: "patient", phonetic: "[ˈpeɪ.ʃənt]", translation: "терпеливый", correctLetter: "A" },
+    { id: 7, word: "honest", phonetic: "[ˈɒn.ɪst]", translation: "честный", correctLetter: "B" },
+    { id: 8, word: "mature", phonetic: "[məˈtʃʊər]", translation: "зрелый", correctLetter: "E" },
+    { id: 9, word: "sensible", phonetic: "[ˈsen.sə.bəl]", translation: "рассудительный", correctLetter: "G" },
+    { id: 10, word: "talented", phonetic: "[ˈtæl.ən.tɪd]", translation: "талантливый", correctLetter: "C" },
+    { id: 11, word: "desire", phonetic: "[dɪˈzaɪər]", translation: "желание", correctLetter: "L" },
+    { id: 12, word: "ability", phonetic: "[əˈbɪl.ə.ti]", translation: "способность", correctLetter: "K" },
+    { id: 13, word: "I would", phonetic: "[aɪ wʊd]", translation: "я бы", correctLetter: "M" }
+  ];
+
+  const translationList = [
+    { letter: "A", text: "терпеливый" },
+    { letter: "B", text: "честный" },
+    { letter: "C", text: "талантливый" },
+    { letter: "D", text: "уверенный в себе" },
+    { letter: "E", text: "зрелый" },
+    { letter: "F", text: "внимательный к другим, тактичный" },
+    { letter: "G", text: "рассудительный" },
+    { letter: "H", text: "лёгкий в общении" },
+    { letter: "I", text: "с переменчивым настроением" },
+    { letter: "J", text: "организованный" },
+    { letter: "K", text: "способность" },
+    { letter: "L", text: "желание" },
+    { letter: "M", text: "я бы" }
+  ];
+
+  function renderTable() {
+    const tbody = document.getElementById('matching-body');
+    tbody.innerHTML = '';
+
+    matchingData.forEach((item, index) => {
+      const row = document.createElement('tr');
+      row.className = 'matching-row';
+
+      const trans = translationList[index];
+
+      let optionsHTML = `<option value="">choose...</option>`;
+      translationList.forEach((t) => {
+        optionsHTML += `<option value="${t.letter}">${t.letter}</option>`;
+      });
+
+      row.innerHTML = `
+        <td>${item.id}</td>
+        <td>
+          <div class="word-cell">
+            <div class="word-wrapper">
+              <span class="word-text">${item.word}</span>
+              <div class="tooltip-text">
+                <span style="color: #38bdf8; font-weight:600;">${item.phonetic}</span><br>
+                <span>${item.translation}</span>
+              </div>
+            </div>
+            <button class="audio-btn" onclick="speak('${item.word}', event)" title="Прослушать">🔊</button>
+          </div>
+        </td>
+        <td>
+          <select class="match-select" id="select-${item.id}">
+            ${optionsHTML}
+          </select>
+          <span id="hint-${item.id}"></span>
+        </td>
+        <td><strong>${trans.letter}</strong> &nbsp; ${trans.text}</td>
+      `;
+
+      tbody.appendChild(row);
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    let total = matchingData.length;
+
+    matchingData.forEach((item) => {
+      const select = document.getElementById(`select-${item.id}`);
+      const hint = document.getElementById(`hint-${item.id}`);
+      const val = select.value;
+
+      select.classList.remove('correct', 'incorrect');
+      hint.innerHTML = '';
+
+      if (val === item.correctLetter) {
+        select.classList.add('correct');
+        score++;
+      } else {
+        select.classList.add('incorrect');
+        hint.className = 'hint-text';
+        hint.textContent = `(✓ ${item.correctLetter})`;
+      }
+    });
+
+    const scoreElem = document.getElementById('score');
+    scoreElem.textContent = `Вы правильно сопоставили ${score} из ${total}! 🎉`;
+  }
+
+  function resetExercise() {
+    matchingData.forEach((item) => {
+      const select = document.getElementById(`select-${item.id}`);
+      const hint = document.getElementById(`hint-${item.id}`);
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+      hint.innerHTML = '';
+    });
+    document.getElementById('score').textContent = '';
+  }
+
+  function speak(text, event) {
+    if (event) event.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+
+  renderTable();
+</script>
+
+</body>
+</html>
