@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choose the words that best fit</title>
+<style>
+  :root {
+    --bg-color: #f1f5f9;
+    --panel-bg: #ffffff;
+    --card-bg: #f8fafc;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --purple-accent: #7c3aed;
+    --border-color: #cbd5e1;
+    --selected-bg: #e0f2fe;
+    --selected-border: #0284c7;
+    --correct-bg: #f0fdf4;
+    --correct-border: #22c55e;
+    --incorrect-bg: #fef2f2;
+    --incorrect-border: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--panel-bg);
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  }
+
+  .header {
+    margin-bottom: 28px;
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .title-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+  }
+
+  .instruction {
+    font-size: 0.98rem;
+    color: var(--text-secondary);
+  }
+
+  /* Questions list */
+  .question-block {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed var(--border-color);
+  }
+
+  .question-block:last-child {
+    border-bottom: none;
+  }
+
+  .question-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-card {
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .option-card:hover {
+    border-color: var(--accent);
+    background: #ffffff;
+  }
+
+  .option-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .custom-radio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .option-card.selected .custom-radio {
+    border-color: var(--selected-border);
+    background: var(--selected-border);
+  }
+
+  .option-card.selected .custom-radio::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: #ffffff;
+    border-radius: 50%;
+  }
+
+  .option-card.selected {
+    background: var(--selected-bg);
+    border-color: var(--selected-border);
+  }
+
+  /* Feedback States */
+  .option-card.correct {
+    background: var(--correct-bg) !important;
+    border-color: var(--correct-border) !important;
+  }
+
+  .option-card.incorrect {
+    background: var(--incorrect-bg) !important;
+    border-color: var(--incorrect-border) !important;
+  }
+
+  /* Word Wrapper & Tooltip */
+  .word-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    bottom: 130%;
+    left: 0;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 12px;
+    z-index: 100;
+    white-space: nowrap;
+    font-size: 0.88rem;
+    font-weight: 500;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    pointer-events: none;
+    line-height: 1.4;
+  }
+
+  .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .word-wrapper:hover .tooltip-text {
+    display: block;
+  }
+
+  .audio-btn {
+    background: #e2e8f0;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s, background-color 0.2s;
+  }
+
+  .audio-btn:hover {
+    background: #cbd5e1;
+    transform: scale(1.15);
+  }
+
+  /* Controls & Action Buttons */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 28px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-submit {
+    background: var(--purple-accent);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background: #6d28d9;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .result-score {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--purple-accent);
+    min-height: 28px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="header">
+    <div class="title-group">
+      <span class="title-icon">☑️</span>
+      <h2 class="title">Choose the words that best fit</h2>
+    </div>
+    <p class="instruction">
+      Выберите наиболее подходящее слово для каждого определения. 💡 Наведите мышь на слово, чтобы увидеть транскрипцию и русский перевод, или нажмите 🔊, чтобы прослушать произношение.
+    </p>
+  </div>
+
+  <div id="quiz-container">
+    <!-- Questions generated dynamically -->
+  </div>
+
+  <div class="controls">
+    <div class="btn-group">
+      <button class="btn-submit" onclick="checkAnswers()">Проверить ответы</button>
+      <button class="btn-reset" onclick="resetQuiz()">Сбросить</button>
+    </div>
+    <div id="score" class="result-score"></div>
+  </div>
+
+</div>
+
+<script>
+  const quizData = [
+    {
+      id: 1,
+      definition: "1. Having a strong desire for success.",
+      options: [
+        { word: "Lazy", phonetic: "[ˈleɪ.zi]", translation: "ленивый", correct: false },
+        { word: "Ambitious", phonetic: "[æmˈbɪʃ.əs]", translation: "амбициозный / целеустремленный", correct: true }
+      ]
+    },
+    {
+      id: 2,
+      definition: "2. Very noisy and active in a lively way.",
+      options: [
+        { word: "Boisterous", phonetic: "[ˈbɔɪ.stər.əs]", translation: "шумный / гиперактивный / неистовый", correct: true },
+        { word: "Quiet", phonetic: "[ˈkwaɪ.ət]", translation: "тихий / спокойный", correct: false }
+      ]
+    },
+    {
+      id: 3,
+      definition: "3. Feeling sure about your abilities.",
+      options: [
+        { word: "Insecure", phonetic: "[ˌɪn.sɪˈkjʊər]", translation: "неуверенный в себе", correct: false },
+        { word: "Confident", phonetic: "[ˈkɒn.fɪ.dənt]", translation: "уверенный в своих силах", correct: true }
+      ]
+    },
+    {
+      id: 4,
+      definition: "4. Always telling the truth.",
+      options: [
+        { word: "Honest", phonetic: "[ˈɒn.ɪst]", translation: "честный / правдивый", correct: true },
+        { word: "Dishonest", phonetic: "[dɪsˈɒn.ɪst]", translation: "нечестный / лживый", correct: false }
+      ]
+    },
+    {
+      id: 5,
+      definition: "5. Acting like an adult, not a child.",
+      options: [
+        { word: "Mature", phonetic: "[məˈtʃʊər]", translation: "зрелый / взрослый", correct: true },
+        { word: "Immature", phonetic: "[ˌɪm.əˈtjʊər]", translation: "незрелый / ребяческий", correct: false }
+      ]
+    },
+    {
+      id: 6,
+      definition: "6. Logical and practical.",
+      options: [
+        { word: "Foolish", phonetic: "[ˈfuː.lɪʃ]", translation: "глупый / безрассудный", correct: false },
+        { word: "Sensible", phonetic: "[ˈsen.sə.bəl]", translation: "благоразумный / практичный", correct: true }
+      ]
+    },
+    {
+      id: 7,
+      definition: "7. Having a natural ability to do something well.",
+      options: [
+        { word: "Untalented", phonetic: "[ʌnˈtæl.ən.tɪd]", translation: "бесталанный / неспособный", correct: false },
+        { word: "Talented", phonetic: "[ˈtæl.ən.tɪd]", translation: "талантливый / одаренный", correct: true }
+      ]
+    },
+    {
+      id: 8,
+      definition: "8. Neat and in good order.",
+      options: [
+        { word: "Messy", phonetic: "[ˈmes.i]", translation: "неряшливый / беспорядочный", correct: false },
+        { word: "Tidy", phonetic: "[ˈtaɪ.di]", translation: "аккуратный / опрятный", correct: true }
+      ]
+    },
+    {
+      id: 9,
+      definition: "9. Dependable or trustworthy.",
+      options: [
+        { word: "Reliable", phonetic: "[rɪˈlaɪ.ə.bəl]", translation: "надежный / верный", correct: true },
+        { word: "Unreliable", phonetic: "[ˌʌn.rɪˈlaɪ.ə.bəl]", translation: "ненадежный", correct: false }
+      ]
+    }
+  ];
+
+  let selectedAnswers = {};
+
+  function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    quizData.forEach((q) => {
+      const qBlock = document.createElement('div');
+      qBlock.className = 'question-block';
+
+      let optionsHTML = '';
+      q.options.forEach((opt, idx) => {
+        const isSelected = selectedAnswers[q.id] === idx;
+        optionsHTML += `
+          <div class="option-card ${isSelected ? 'selected' : ''}" data-qid="${q.id}" data-idx="${idx}" onclick="selectOption(${q.id}, ${idx})">
+            <div class="option-left">
+              <div class="custom-radio"></div>
+              <div class="word-wrapper">
+                <span class="word-text">${opt.word}</span>
+                <div class="tooltip-text">
+                  <span style="color: #38bdf8; font-weight:600;">${opt.phonetic}</span><br>
+                  <span>${opt.translation}</span>
+                </div>
+              </div>
+            </div>
+            <button class="audio-btn" onclick="speak('${opt.word}', event)" title="Прослушать">🔊</button>
+          </div>
+        `;
+      });
+
+      qBlock.innerHTML = `
+        <div class="question-text">${q.definition}</div>
+        <div class="options-grid">${optionsHTML}</div>
+      `;
+
+      container.appendChild(qBlock);
+    });
+  }
+
+  function selectOption(qId, optionIdx) {
+    selectedAnswers[qId] = optionIdx;
+    
+    // Clear check state if user changes answer
+    document.getElementById('score').textContent = '';
+    
+    const cards = document.querySelectorAll(`[data-qid="${qId}"]`);
+    cards.forEach((card) => {
+      card.classList.remove('selected', 'correct', 'incorrect');
+      if (parseInt(card.dataset.idx) === optionIdx) {
+        card.classList.add('selected');
+      }
+    });
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    let total = quizData.length;
+
+    quizData.forEach((q) => {
+      const selectedIdx = selectedAnswers[q.id];
+      const cards = document.querySelectorAll(`[data-qid="${q.id}"]`);
+
+      cards.forEach((card) => {
+        const idx = parseInt(card.dataset.idx);
+        card.classList.remove('correct', 'incorrect');
+
+        if (q.options[idx].correct) {
+          if (selectedIdx === idx) {
+            card.classList.add('correct');
+            score++;
+          }
+        } else {
+          if (selectedIdx === idx) {
+            card.classList.add('incorrect');
+          }
+        }
+      });
+    });
+
+    const scoreElem = document.getElementById('score');
+    if (Object.keys(selectedAnswers).length < total) {
+      scoreElem.textContent = `Результат: ${score} из ${total}. (Вы ответили не на все вопросы)`;
+    } else {
+      scoreElem.textContent = `Вы ответили правильно на ${score} из ${total} вопросов! 🎉`;
+    }
+  }
+
+  function resetQuiz() {
+    selectedAnswers = {};
+    document.getElementById('score').textContent = '';
+    renderQuiz();
+  }
+
+  function speak(text, event) {
+    if (event) event.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Ваш браузер не поддерживает синтез речи.');
+    }
+  }
+
+  // Initial Render
+  renderQuiz();
+</script>
+
+</body>
+</html>
