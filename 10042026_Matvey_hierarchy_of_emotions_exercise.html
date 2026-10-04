@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hierarchy of Emotions Exercise</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --table-header-bg: #0284c7;
+    --example-bg: #fef2f2;
+    --example-border: #fecdd3;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+
+  .word-chip {
+    background: #ffffff;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0f172a;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .word-chip:hover {
+    border-color: #0284c7;
+    color: #0284c7;
+    transform: translateY(-2px);
+  }
+
+  .word-chip.used {
+    opacity: 0.35;
+    pointer-events: none;
+    border-color: #e2e8f0;
+    background: #e2e8f0;
+  }
+
+  .gap-input {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #f8fafc;
+    color: #0f172a;
+    width: 100%;
+    max-width: 180px;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .gap-input:focus {
+    border-color: #0284c7;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  .gap-input.correct {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d;
+  }
+
+  .gap-input.incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c;
+  }
+
+  .vocab {
+    position: relative;
+    display: inline-block;
+    color: #0369a1;
+    font-weight: 600;
+    border-bottom: 2px dashed #38bdf8;
+    cursor: pointer;
+    padding: 0 2px;
+    transition: background-color 0.2s ease;
+  }
+
+  .vocab:hover {
+    background-color: #e0f2fe;
+    border-radius: 4px;
+  }
+
+  .vocab .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    width: max-content;
+    max-width: 250px;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 12px;
+    position: absolute;
+    z-index: 30;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.3);
+    font-weight: normal;
+    pointer-events: none;
+  }
+
+  .vocab .tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .vocab:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .tooltip-phonetic {
+    display: block;
+    font-size: 0.8rem;
+    color: #38bdf8;
+    margin-bottom: 2px;
+    font-family: Arial, sans-serif;
+  }
+
+  .tooltip-trans {
+    display: block;
+    font-size: 0.85rem;
+    color: #f1f5f9;
+  }
+</style>
+</head>
+<body class="p-4 sm:p-8 flex justify-center">
+
+<div class="max-w-5xl w-full bg-white rounded-2xl p-6 sm:p-10 border border-slate-200 shadow-xl">
+  <div class="flex items-center gap-3 mb-6">
+    <span class="text-3xl">❤️ vs 💔</span>
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">Hierarchy of Emotions</h1>
+      <p class="text-sm text-slate-500 font-medium">Complete the table with preferences (Likes vs Dislikes)</p>
+    </div>
+  </div>
+
+  <!-- Word Bank -->
+  <div class="mb-8 bg-slate-50 p-5 rounded-xl border border-slate-200">
+    <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center justify-between">
+      <span>Word Bank</span>
+      <span class="text-slate-400 font-normal">Click a phrase to place it into the first empty box</span>
+    </div>
+    <div class="flex flex-wrap gap-3" id="word-bank"></div>
+  </div>
+
+  <!-- Interactive Table -->
+  <div class="overflow-x-auto mb-8 rounded-xl border border-sky-300 shadow-sm">
+    <table class="w-full text-left text-sm sm:text-base border-collapse">
+      <thead>
+        <tr class="bg-sky-600 text-white font-bold text-center">
+          <th class="p-4 border-r border-sky-500 w-1/5">Hierarchy of emotions</th>
+          <th class="p-4 border-r border-sky-500 w-1/4">Likes</th>
+          <th class="p-4 border-r border-sky-500 w-1/4">Dislikes</th>
+          <th class="p-4 w-1/3">Examples</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-sky-200">
+        
+        <!-- Row 1: 100% -->
+        <tr class="hover:bg-slate-50/50">
+          <td class="p-4 text-center font-bold text-rose-600 border-r border-sky-200 text-lg">100%</td>
+          <td class="p-4 text-center border-r border-sky-200 font-medium text-slate-700">
+            (would) love
+          </td>
+          <td class="p-4 text-center border-r border-sky-200">
+            <input type="text" class="gap-input" id="gap-1" placeholder="..." autocomplete="off">
+          </td>
+          <td class="p-4 bg-rose-50/60 leading-relaxed text-slate-800">
+            <div class="italic">"I <span class="vocab" data-phrase="love" onmouseenter="speakWord('love')">love<span class="tooltip"><span class="tooltip-phonetic">/lʌv/</span><span class="tooltip-trans">обожать / любить</span></span></span> <span class="vocab" data-phrase="chess" onmouseenter="speakWord('chess')">chess<span class="tooltip"><span class="tooltip-phonetic">/tʃes/</span><span class="tooltip-trans">шахматы</span></span></span>."</div>
+            <div class="italic mt-1">"I <span class="vocab" data-phrase="hate" onmouseenter="speakWord('hate')">hate<span class="tooltip"><span class="tooltip-phonetic">/heɪt/</span><span class="tooltip-trans">ненавидеть</span></span></span> chess."</div>
+          </td>
+        </tr>
+
+        <!-- Row 2: 80% -->
+        <tr class="hover:bg-slate-50/50">
+          <td class="p-4 text-center font-bold text-rose-500 border-r border-sky-200 text-lg">80%</td>
+          <td class="p-4 text-center border-r border-sky-200">
+            <input type="text" class="gap-input" id="gap-2" placeholder="..." autocomplete="off">
+          </td>
+          <td class="p-4 text-center border-r border-sky-200 font-medium text-slate-700">
+            would not like
+          </td>
+          <td class="p-4 bg-rose-50/60 leading-relaxed text-slate-800">
+            <div class="italic">"I <span class="vocab" data-phrase="would like" onmouseenter="speakWord('would like')">would like<span class="tooltip"><span class="tooltip-phonetic">/wʊd laɪk/</span><span class="tooltip-trans">хотел(а) бы</span></span></span> to drink coffee."</div>
+            <div class="italic mt-1">"I <span class="vocab" data-phrase="would not like" onmouseenter="speakWord('would not like')">would not like<span class="tooltip"><span class="tooltip-phonetic">/wʊd nɒt laɪk/</span><span class="tooltip-trans">не хотел(а) бы</span></span></span> to drink coffee."</div>
+          </td>
+        </tr>
+
+        <!-- Row 3: 60% -->
+        <tr class="hover:bg-slate-50/50">
+          <td class="p-4 text-center font-bold text-rose-400 border-r border-sky-200 text-lg">60%</td>
+          <td class="p-4 text-center border-r border-sky-200 font-medium text-slate-700">
+            (would) prefer
+          </td>
+          <td class="p-4 text-center border-r border-sky-200">
+            <input type="text" class="gap-input" id="gap-3" placeholder="..." autocomplete="off">
+          </td>
+          <td class="p-4 bg-rose-50/60 leading-relaxed text-slate-800">
+            <div class="italic">"I <span class="vocab" data-phrase="prefer" onmouseenter="speakWord('prefer')">prefer<span class="tooltip"><span class="tooltip-phonetic">/prɪˈfɜːr/</span><span class="tooltip-trans">предпочитать</span></span></span> walking in the park."</div>
+            <div class="italic mt-1">"I <span class="vocab" data-phrase="would not prefer" onmouseenter="speakWord('would not prefer')">would not prefer<span class="tooltip"><span class="tooltip-phonetic">/wʊd nɒt prɪˈfɜːr/</span><span class="tooltip-trans">не предпочитал(а) бы</span></span></span> walking in the park."</div>
+          </td>
+        </tr>
+
+        <!-- Row 4: 40% -->
+        <tr class="hover:bg-slate-50/50">
+          <td class="p-4 text-center font-bold text-pink-400 border-r border-sky-200 text-lg">40%</td>
+          <td class="p-4 text-center border-r border-sky-200">
+            <input type="text" class="gap-input" id="gap-4" placeholder="..." autocomplete="off">
+          </td>
+          <td class="p-4 text-center border-r border-sky-200 font-medium text-slate-700">
+            <span class="vocab" data-phrase="can't stand" onmouseenter="speakWord('can\'t stand')">can't stand<span class="tooltip"><span class="tooltip-phonetic">/kɑːnt stænd/</span><span class="tooltip-trans">терпеть не могу</span></span></span>
+          </td>
+          <td class="p-4 bg-rose-50/60 leading-relaxed text-slate-800">
+            <div class="italic">"I <span class="vocab" data-phrase="quite like" onmouseenter="speakWord('quite like')">quite like<span class="tooltip"><span class="tooltip-phonetic">/kwaɪt laɪk/</span><span class="tooltip-trans">вполнее нравится</span></span></span> playing PC games."</div>
+            <div class="italic mt-1">"I <span class="vocab" data-phrase="can't stand" onmouseenter="speakWord('can\'t stand')">can't stand<span class="tooltip"><span class="tooltip-phonetic">/kɑːnt stænd/</span><span class="tooltip-trans">терпеть не могу</span></span></span> PC games."</div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Controls -->
+  <div class="flex flex-wrap justify-center gap-4">
+    <button class="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl transition shadow-md flex items-center gap-2" onclick="checkAnswers()">
+      <span>Check</span> 🎯
+    </button>
+    <button class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition shadow-md flex items-center gap-2" onclick="readAllExamples()">
+      <span>Listen Examples</span> 🔊
+    </button>
+    <button class="px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-bold rounded-xl transition shadow-md flex items-center gap-2" onclick="resetExercise()">
+      <span>Reset</span> 🔄
+    </button>
+  </div>
+
+  <div class="text-center font-bold text-lg mt-6 min-h-[28px]" id="feedback"></div>
+</div>
+
+<script>
+  const wordsList = [
+    "would not prefer",
+    "(would) like",
+    "(would) quite like",
+    "hate"
+  ];
+
+  const correctAnswers = {
+    'gap-1': ['hate'],
+    'gap-2': ['(would) like', 'would like'],
+    'gap-3': ['would not prefer'],
+    'gap-4': ['(would) quite like', 'quite like', 'would quite like']
+  };
+
+  function initWordBank() {
+    const bankEl = document.getElementById('word-bank');
+    bankEl.innerHTML = '';
+    wordsList.forEach((word) => {
+      const chip = document.createElement('button');
+      chip.className = 'word-chip';
+      chip.textContent = word;
+      chip.onclick = () => fillNextEmptyGap(word, chip);
+      bankEl.appendChild(chip);
+    });
+  }
+
+  function fillNextEmptyGap(word, chipEl) {
+    const inputs = document.querySelectorAll('.gap-input');
+    for (let input of inputs) {
+      if (!input.value.trim()) {
+        input.value = word;
+        chipEl.classList.add('used');
+        updateWordBankState();
+        break;
+      }
+    }
+  }
+
+  function updateWordBankState() {
+    const inputs = document.querySelectorAll('.gap-input');
+    const usedWords = Array.from(inputs).map(i => i.value.trim().toLowerCase());
+    const chips = document.querySelectorAll('.word-chip');
+    
+    chips.forEach(chip => {
+      if (usedWords.includes(chip.textContent.toLowerCase())) {
+        chip.classList.add('used');
+      } else {
+        chip.classList.remove('used');
+      }
+    });
+  }
+
+  document.addEventListener('input', (e) => {
+    if (e.target.classList.contains('gap-input')) {
+      updateWordBankState();
+    }
+  });
+
+  function normalizeText(text) {
+    return text.trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+
+  function checkAnswers() {
+    let allCorrect = true;
+    let hasIncomplete = false;
+
+    Object.keys(correctAnswers).forEach(id => {
+      const inputEl = document.getElementById(id);
+      const val = inputEl.value;
+
+      inputEl.classList.remove('correct', 'incorrect');
+
+      if (!val.trim()) {
+        hasIncomplete = true;
+        allCorrect = false;
+        return;
+      }
+
+      const normalizedUser = normalizeText(val);
+      const isRight = correctAnswers[id].some(ans => normalizeText(ans) === normalizedUser);
+
+      if (isRight) {
+        inputEl.classList.add('correct');
+      } else {
+        inputEl.classList.add('incorrect');
+        allCorrect = false;
+      }
+    });
+
+    const feedback = document.getElementById('feedback');
+    if (hasIncomplete) {
+      feedback.className = 'text-center font-bold text-lg mt-6 min-h-[28px] text-amber-600';
+      feedback.textContent = 'Please fill in all gaps before checking! ✏️';
+    } else if (allCorrect) {
+      feedback.className = 'text-center font-bold text-lg mt-6 min-h-[28px] text-emerald-600';
+      feedback.textContent = 'Great job! All answers are correct! 🎉';
+    } else {
+      feedback.className = 'text-center font-bold text-lg mt-6 min-h-[28px] text-rose-600';
+      feedback.textContent = 'Some answers are incorrect. Check the red boxes! ❌';
+    }
+  }
+
+  function resetExercise() {
+    Object.keys(correctAnswers).forEach(id => {
+      const inputEl = document.getElementById(id);
+      if (inputEl) {
+        inputEl.value = '';
+        inputEl.classList.remove('correct', 'incorrect');
+      }
+    });
+    updateWordBankState();
+    const feedback = document.getElementById('feedback');
+    feedback.textContent = '';
+  }
+
+  function speakWord(phrase) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(phrase);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function readAllExamples() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const text = [
+        "I love chess. I hate chess.",
+        "I would like to drink coffee. I would not like to drink coffee.",
+        "I prefer walking in the park. I would not prefer walking in the park.",
+        "I quite like playing PC games. I can't stand PC games."
+      ].join(" ");
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  window.onload = initWordBank;
+</script>
+
+</body>
+</html>
