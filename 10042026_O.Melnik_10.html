@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Read and fill in the gaps</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --accent-color: #7c3aed;
+    --border-color: #e2e8f0;
+    --chip-bg: #ffffff;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 880px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .header-icon {
+    font-size: 2rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #6b21a8;
+  }
+
+  /* Word Bank */
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 28px;
+    background-color: #f1f5f9;
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .word-chip {
+    background: var(--chip-bg);
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 6px 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+  }
+
+  .word-chip:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    transform: translateY(-1px);
+  }
+
+  .word-chip.used {
+    opacity: 0.3;
+    pointer-events: none;
+    border-color: #e2e8f0;
+    background: #e2e8f0;
+  }
+
+  /* Text Body */
+  .text-content {
+    font-size: 1.05rem;
+    line-height: 2.3;
+    color: #1e293b;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 28px;
+  }
+
+  /* Interactive Vocabulary Tooltips */
+  .vocab {
+    position: relative;
+    display: inline-block;
+    color: #6d28d9;
+    font-weight: 600;
+    border-bottom: 2px dashed #a855f7;
+    cursor: pointer;
+    padding: 0 2px;
+    transition: background-color 0.2s ease;
+  }
+
+  .vocab:hover {
+    background-color: #f3e8ff;
+    border-radius: 4px;
+  }
+
+  .vocab .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    width: max-content;
+    max-width: 240px;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    font-weight: normal;
+    pointer-events: none;
+  }
+
+  .vocab .tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .vocab:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .tooltip-phonetic {
+    display: block;
+    font-size: 0.8rem;
+    color: #c084fc;
+    margin-bottom: 2px;
+    font-family: Arial, sans-serif;
+  }
+
+  .tooltip-trans {
+    display: block;
+    font-size: 0.85rem;
+    color: #f1f5f9;
+  }
+
+  .gap-input {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #f8fafc;
+    color: #0f172a;
+    min-width: 140px;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .gap-input:focus {
+    border-color: var(--accent-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  }
+
+  .gap-input.correct {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d;
+  }
+
+  .gap-input.incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: #7c3aed;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background: #6d28d9;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .btn-speaker {
+    background: #0284c7;
+    color: #ffffff;
+  }
+
+  .btn-speaker:hover {
+    background: #0369a1;
+  }
+
+  .feedback-msg {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-top: 16px;
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">💡</span>
+    <h2 class="title">Read and fill in the gaps</h2>
+  </div>
+
+  <!-- Word Bank -->
+  <div class="word-bank" id="word-bank"></div>
+
+  <!-- Text Content -->
+  <div class="text-content">
+    Hey, I'm Cindy. I think I am pretty 
+    <input type="text" class="gap-input" id="gap-1" placeholder="..." autocomplete="off">. 
+    I like to party, have fun, you know. My mother says I can be 
+    <input type="text" class="gap-input" id="gap-2" placeholder="..." autocomplete="off"> 
+    and not think of her 'cause she needs more help... but hey, if I let her, she will make me work all day long!
+    <br><br>
+    So, like, you wanna know about my classmates?
+    <br>
+    First up, we got Sarah. She's super 
+    <input type="text" class="gap-input" id="gap-3" placeholder="..." autocomplete="off"> 
+    and <span class="vocab" data-word="confident" onmouseenter="speakWord('confident')">confident<span class="tooltip"><span class="tooltip-phonetic">/ˈkɒnfɪdənt/</span><span class="tooltip-trans">уверенная</span></span></span>. 
+    You know, she's always <span class="vocab" data-word="chasing after her goals" onmouseenter="speakWord('chasing after her goals')">chasing after her goals<span class="tooltip"><span class="tooltip-phonetic">/ˈtʃeɪsɪŋ ˈɑːftə hɜː ɡəʊlz/</span><span class="tooltip-trans">гонится за своими целями</span></span></span>. 
+    But guys, be careful 'cause she can get a bit 
+    <input type="text" class="gap-input" id="gap-4" placeholder="..." autocomplete="off"> 
+    and angry when things don't go her way.
+    <br><br>
+    Then there's Jake. Super 
+    <input type="text" class="gap-input" id="gap-5" placeholder="..." autocomplete="off">! 
+    He always <span class="vocab" data-word="cracks jokes" onmouseenter="speakWord('cracks jokes')">cracks jokes<span class="tooltip"><span class="tooltip-phonetic">/kræks dʒəʊks/</span><span class="tooltip-trans">шутит</span></span></span> to <span class="vocab" data-word="lighten the mood" onmouseenter="speakWord('lighten the mood')">lighten the mood<span class="tooltip"><span class="tooltip-phonetic">/ˈlaɪtn ðə muːd/</span><span class="tooltip-trans">разрядить обстановку</span></span></span>, 
+    but he is so loud that I have a <span class="vocab" data-word="headache" onmouseenter="speakWord('headache')">headache<span class="tooltip"><span class="tooltip-phonetic">/ˈhedeɪk/</span><span class="tooltip-trans">головная боль</span></span></span> after 2 minutes of talking to him!
+    <br><br>
+    Now, Emily? Yeah, she's like the mom of the group. So <span class="vocab" data-word="considerate" onmouseenter="speakWord('considerate')">considerate<span class="tooltip"><span class="tooltip-phonetic">/kənˈsɪdərət/</span><span class="tooltip-trans">внимательная, заботливая</span></span></span> and always 
+    <input type="text" class="gap-input" id="gap-6" placeholder="..." autocomplete="off">... 
+    But don't even talk to her when you see she's 
+    <input type="text" class="gap-input" id="gap-7" placeholder="..." autocomplete="off">!
+    <br><br>
+    Oh, and let's not forget about Alex. That <span class="vocab" data-word="dude" onmouseenter="speakWord('dude')">dude<span class="tooltip"><span class="tooltip-phonetic">/djuːd/</span><span class="tooltip-trans">парень, чувак</span></span></span> is 
+    <input type="text" class="gap-input" id="gap-8" placeholder="..." autocomplete="off"> 
+    <span class="vocab" data-word="to the max" onmouseenter="speakWord('to the max')">to the max<span class="tooltip"><span class="tooltip-phonetic">/tuː ðə mæks/</span><span class="tooltip-trans">на полную катушку</span></span></span>. 
+    Always cleaning, writing plans... Like, he's also 
+    <input type="text" class="gap-input" id="gap-9" placeholder="..." autocomplete="off"> 
+    and can sit and <span class="vocab" data-word="sort his stuff" onmouseenter="speakWord('sort his stuff')">sort his stuff<span class="tooltip"><span class="tooltip-phonetic">/sɔːt hɪz stʌf/</span><span class="tooltip-trans">сортировать вещи</span></span></span> for hours...
+    <br><br>
+    David? Well, he is so <span class="vocab" data-word="mature" onmouseenter="speakWord('mature')">mature<span class="tooltip"><span class="tooltip-phonetic">/məˈtʃʊə/</span><span class="tooltip-trans">взрослый, зрелый</span></span></span> and 
+    <input type="text" class="gap-input" id="gap-10" placeholder="..." autocomplete="off">. 
+    When you talk to him, you think he knows everything! Plus, he's crazy talented and draws amazing pictures.
+    <br><br>
+    Oh, and don't even get me started on Jenna. Girl is <span class="vocab" data-word="neat" onmouseenter="speakWord('neat')">neat<span class="tooltip"><span class="tooltip-phonetic">/niːt/</span><span class="tooltip-trans">опрятная, аккуратная</span></span></span> and 
+    <input type="text" class="gap-input" id="gap-11" placeholder="..." autocomplete="off">, 
+    super <span class="vocab" data-word="honest" onmouseenter="speakWord('honest')">honest<span class="tooltip"><span class="tooltip-phonetic">/ˈɒnɪst/</span><span class="tooltip-trans">честная</span></span></span>, <span class="vocab" data-word="polite" onmouseenter="speakWord('polite')">polite<span class="tooltip"><span class="tooltip-phonetic">/pəˈlaɪt/</span><span class="tooltip-trans">вежливая</span></span></span> <span class="vocab" data-word="to the absolute" onmouseenter="speakWord('to the absolute')">to the absolute<span class="tooltip"><span class="tooltip-phonetic">/tuː ðɪ ˈæbsəluːt/</span><span class="tooltip-trans">абсолютно во всём</span></span></span>... Oh my God, everyone thinks she's perfect!
+    <br><br>
+    And finally, there's Mark. Dude is extremely <span class="vocab" data-word="reliable" onmouseenter="speakWord('reliable')">reliable<span class="tooltip"><span class="tooltip-phonetic">/rɪˈlaɪəbl/</span><span class="tooltip-trans">надёжный</span></span></span>. But man, if you only touch his snacks, he can get pretty <span class="vocab" data-word="rude" onmouseenter="speakWord('rude')">rude<span class="tooltip"><span class="tooltip-phonetic">/ruːd/</span><span class="tooltip-trans">грубый</span></span></span>.
+    <br>
+    So, yeah, <span class="vocab" data-word="a whole bunch of personalities" onmouseenter="speakWord('a whole bunch of personalities')">a whole bunch of personalities<span class="tooltip"><span class="tooltip-phonetic">/ə həʊl bʌntʃ əv pɜːsəˈnælətiz/</span><span class="tooltip-trans">целая куча разных личностей</span></span></span> rolled into one crazy, awesome group!
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-check" onclick="checkAnswers()">Check 🎯</button>
+    <button class="btn btn-speaker" onclick="speakStory()">🔊 Listen Text</button>
+    <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+
+  <div class="feedback-msg" id="feedback"></div>
+</div>
+
+<script>
+  const wordsList = [
+    "boisterous", "aggressive", "helpful", "patient", 
+    "easy-going", "selfish", "organised", "sensible", 
+    "ambitious", "moody", "tidy"
+  ];
+
+  const correctAnswers = {
+    'gap-1': ['easy-going', 'easy going'],
+    'gap-2': ['selfish'],
+    'gap-3': ['ambitious'],
+    'gap-4': ['aggressive'],
+    'gap-5': ['boisterous'],
+    'gap-6': ['helpful'],
+    'gap-7': ['moody'],
+    'gap-8': ['organised', 'organized'],
+    'gap-9': ['patient'],
+    'gap-10': ['sensible'],
+    'gap-11': ['tidy']
+  };
+
+  function initWordBank() {
+    const bankEl = document.getElementById('word-bank');
+    bankEl.innerHTML = '';
+    wordsList.forEach((word) => {
+      const chip = document.createElement('button');
+      chip.className = 'word-chip';
+      chip.textContent = word;
+      chip.onclick = () => fillNextEmptyGap(word, chip);
+      bankEl.appendChild(chip);
+    });
+  }
+
+  function fillNextEmptyGap(word, chipEl) {
+    const inputs = document.querySelectorAll('.gap-input');
+    for (let input of inputs) {
+      if (!input.value.trim()) {
+        input.value = word;
+        chipEl.classList.add('used');
+        updateWordBankState();
+        break;
+      }
+    }
+  }
+
+  function updateWordBankState() {
+    const inputs = document.querySelectorAll('.gap-input');
+    const usedWords = Array.from(inputs).map(i => i.value.trim().toLowerCase());
+    const chips = document.querySelectorAll('.word-chip');
+    
+    chips.forEach(chip => {
+      if (usedWords.includes(chip.textContent.toLowerCase())) {
+        chip.classList.add('used');
+      } else {
+        chip.classList.remove('used');
+      }
+    });
+  }
+
+  document.addEventListener('input', (e) => {
+    if (e.target.classList.contains('gap-input')) {
+      updateWordBankState();
+    }
+  });
+
+  function normalizeText(text) {
+    return text.trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+
+  function checkAnswers() {
+    let allCorrect = true;
+    let hasIncomplete = false;
+
+    Object.keys(correctAnswers).forEach(id => {
+      const inputEl = document.getElementById(id);
+      const val = inputEl.value;
+
+      inputEl.classList.remove('correct', 'incorrect');
+
+      if (!val.trim()) {
+        hasIncomplete = true;
+        allCorrect = false;
+        return;
+      }
+
+      const normalizedUser = normalizeText(val);
+      const isRight = correctAnswers[id].some(ans => normalizeText(ans) === normalizedUser);
+
+      if (isRight) {
+        inputEl.classList.add('correct');
+      } else {
+        inputEl.classList.add('incorrect');
+        allCorrect = false;
+      }
+    });
+
+    const feedback = document.getElementById('feedback');
+    if (hasIncomplete) {
+      feedback.style.color = '#f59e0b';
+      feedback.textContent = 'Please fill in all gaps before checking! ✏️';
+    } else if (allCorrect) {
+      feedback.style.color = '#22c55e';
+      feedback.textContent = 'Great job! All answers are correct! 🎉';
+    } else {
+      feedback.style.color = '#ef4444';
+      feedback.textContent = 'Some answers are incorrect. Check the red boxes! ❌';
+    }
+  }
+
+  function resetExercise() {
+    Object.keys(correctAnswers).forEach(id => {
+      const inputEl = document.getElementById(id);
+      if (inputEl) {
+        inputEl.value = '';
+        inputEl.classList.remove('correct', 'incorrect');
+      }
+    });
+    updateWordBankState();
+    document.getElementById('feedback').textContent = '';
+  }
+
+  // Speak individual word on hover
+  let lastSpokenWord = '';
+  function speakWord(phrase) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel(); // Stop current speech
+      const utterance = new SpeechSynthesisUtterance(phrase);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  // Speak full story
+  function speakStory() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      
+      const fullStory = `
+        Hey, I'm Cindy. I think I am pretty easy-going. I like to party, have fun, you know. My mother says I can be selfish and not think of her 'cause she needs more help... but hey, if I let her, she will make me work all day long!
+        So, like, you wanna know about my classmates?
+        First up, we got Sarah. She's super ambitious and confident. You know, she's always chasing after her goals. But guys, be careful 'cause she can get a bit aggressive and angry when things don't go her way.
+        Then there's Jake. Super boisterous! He always cracks jokes to lighten the mood, but he is so loud that I have a headache after 2 minutes of talking to him!
+        Now, Emily? Yeah, she's like the mom of the group. So considerate and always helpful... But don't even talk to her when you see she's moody!
+        Oh, and let's not forget about Alex. That dude is organised to the max. Always cleaning, writing plans... Like, he's also patient and can sit and sort his stuff for hours...
+        David? Well, he is so mature and sensible. When you talk to him, you think he knows everything! Plus, he's crazy talented and draws amazing pictures.
+        Oh, and don't even get me started on Jenna. Girl is neat and tidy, super honest, polite to the absolute... Oh my God, everyone thinks she's perfect!
+        And finally, there's Mark. Dude is extremely reliable. But man, if you only touch his snacks, he can get pretty rude.
+        So, yeah, a whole bunch of personalities rolled into one crazy, awesome group!
+      `;
+
+      const utterance = new SpeechSynthesisUtterance(fullStory);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  window.onload = initWordBank;
+</script>
+
+</body>
+</html>
