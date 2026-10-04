@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5. STOP: перестав чи зупинився, щоб...?</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --accent-color: #7c3aed;
+    --border-color: #e2e8f0;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 880px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .header-icon {
+    font-size: 2rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #6b21a8;
+  }
+
+  .rule-box {
+    background: #f1f5f9;
+    border-left: 4px solid var(--accent-color);
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+    color: #334155;
+  }
+
+  .rule-box b {
+    color: #6b21a8;
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+
+  .item-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  }
+
+  .situation {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 14px;
+    font-size: 1.05rem;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155;
+    background: #f8fafc;
+  }
+
+  .option-btn:hover {
+    border-color: var(--accent-color);
+    background-color: #f3e8ff;
+  }
+
+  .option-btn.selected {
+    border-color: var(--accent-color);
+    background-color: #ede9fe;
+    color: #6b21a8;
+  }
+
+  .option-btn.correct {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d !important;
+  }
+
+  .option-btn.incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c !important;
+  }
+
+  /* Tooltips */
+  .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 10px;
+    position: absolute;
+    z-index: 10;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    font-weight: normal;
+    font-size: 0.85rem;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .option-btn:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .tooltip-phonetic {
+    color: #c084fc;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: #7c3aed;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background: #6d28d9;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .feedback-msg {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-top: 16px;
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">🛑</span>
+    <h2 class="title">5. STOP: перестав чи зупинився, щоб...?</h2>
+  </div>
+
+  <div class="rule-box">
+    💡 <b>Пам’ятка:</b><br>
+    • <b>stop + V-ing</b> = припинити дію (перестав щось робити).<br>
+    • <b>stop + to V</b> = зупинитися з метою зробити щось інше.
+  </div>
+
+  <div class="exercise-list" id="exercise-list"></div>
+
+  <div class="controls">
+    <button class="btn btn-check" onclick="checkAnswers()">Check 🎯</button>
+    <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+
+  <div class="feedback-msg" id="feedback"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+      id: 1,
+      situation: "1. Макс грав у комп'ютерну гру. Мама покликала його вечеряти, і він вимкнув гру.",
+      options: [
+        { text: "A. Max stopped playing.", correct: true, ipa: "/mæks stɒpt ˈpleɪ.ɪŋ/" },
+        { text: "B. Max stopped to play.", correct: false, ipa: "/mæks stɒpt tuː pleɪ/" }
+      ]
+    },
+    {
+      id: 2,
+      situation: "2. Оля їхала на велосипеді. Їй захотілося води, тому вона зупинилася та попила.",
+      options: [
+        { text: "A. Olia stopped drinking water.", correct: false, ipa: "/ˈɒl.i.ə stɒpt ˈdrɪŋ.kɪŋ ˈwɔː.tər/" },
+        { text: "B. Olia stopped to drink water.", correct: true, ipa: "/ˈɒl.i.ə stɒpt tuː drɪŋk ˈwɔː.tər/" }
+      ]
+    },
+    {
+      id: 3,
+      situation: "3. Діти плавали. Вони втомилися та вийшли з басейну.",
+      options: [
+        { text: "A. They stopped swimming.", correct: true, ipa: "/ðeɪ stɒpt ˈswɪm.ɪŋ/" },
+        { text: "B. They stopped to swim.", correct: false, ipa: "/ðeɪ stɒpt tuː swɪm/" }
+      ]
+    },
+    {
+      id: 4,
+      situation: "4. Ми йшли додому. Побачили друзів на футбольному полі та зупинилися, щоб пограти з ними.",
+      options: [
+        { text: "A. We stopped playing football.", correct: false, ipa: "/wiː stɒpt ˈpleɪ.ɪŋ ˈfʊt.bɔːl/" },
+        { text: "B. We stopped to play football.", correct: true, ipa: "/wiː stɒpt tuː pleɪ ˈfʊt.bɔːl/" }
+      ]
+    },
+    {
+      id: 5,
+      situation: "5. Денис біг у парку, але потім втомився і перейшов на крок.",
+      options: [
+        { text: "A. Denis stopped running.", correct: true, ipa: "/ˈden.ɪs stɒpt ˈrʌn.ɪŋ/" },
+        { text: "B. Denis stopped to run.", correct: false, ipa: "/ˈden.ɪs stɒpt tuː rʌn/" }
+      ]
+    },
+    {
+      id: 6,
+      situation: "6. Анна читала книжку, але зупинилася, щоб відповісти на дзвінок.",
+      options: [
+        { text: "A. Anna stopped answering the phone.", correct: false, ipa: "/ˈæn.ə stɒpt ˈɑːn.sər.ɪŋ ðə fəʊn/" },
+        { text: "B. Anna stopped to answer the phone.", correct: true, ipa: "/ˈæn.ə stɒpt tuː ˈɑːn.sər ðə fəʊn/" }
+      ]
+    },
+    {
+      id: 7,
+      situation: "7. Учень розмовляв під час уроку, але вчитель сказав йому замовкнути, і він припинив розмову.",
+      options: [
+        { text: "A. He stopped talking.", correct: true, ipa: "/hiː stɒpt ˈtɔː.kɪŋ/" },
+        { text: "B. He stopped to talk.", correct: false, ipa: "/hiː stɒpt tuː tɔːk/" }
+      ]
+    },
+    {
+      id: 8,
+      situation: "8. Тато кермував авто, але робив паузу в дорозі, щоб випити кави.",
+      options: [
+        { text: "A. Dad stopped drinking coffee.", correct: false, ipa: "/dæd stɒpt ˈdrɪŋ.kɪŋ ˈkɒf.i/" },
+        { text: "B. Dad stopped to drink coffee.", correct: true, ipa: "/dæd stɒpt tuː drɪŋk ˈkɒf.i/" }
+      ]
+    },
+    {
+      id: 9,
+      situation: "9. Вона дивилася телевізор, але вимкнула його та пішла спати.",
+      options: [
+        { text: "A. She stopped watching TV.", correct: true, ipa: "/ʃiː stɒpt ˈwɒtʃ.ɪŋ ˌtiːˈviː/" },
+        { text: "B. She stopped to watch TV.", correct: false, ipa: "/ʃiː stɒpt tuː wɒtʃ ˌtiːˈviː/" }
+      ]
+    },
+    {
+      id: 10,
+      situation: "10. Туристи йшли лісом і зробили зупинку, щоб зробити декілька фотографій.",
+      options: [
+        { text: "A. They stopped taking photos.", correct: false, ipa: "/ðeɪ stɒpt ˈteɪ.kɪŋ ˈfəʊ.təʊz/" },
+        { text: "B. They stopped to take photos.", correct: true, ipa: "/ðeɪ stɒpt tuː teɪk ˈfəʊ.təʊz/" }
+      ]
+    }
+  ];
+
+  let selectedAnswers = {};
+
+  function initExercise() {
+    const listEl = document.getElementById('exercise-list');
+    listEl.innerHTML = '';
+
+    questions.forEach((q) => {
+      const card = document.createElement('div');
+      card.className = 'item-card';
+
+      let optionsHtml = '';
+      q.options.forEach((opt, optIndex) => {
+        optionsHtml += `
+          <div class="option-btn" data-qid="${q.id}" data-optindex="${optIndex}" onclick="selectOption(${q.id}, ${optIndex})" onmouseenter="speakText('${opt.text.substring(3)}')">
+            ${opt.text}
+            <span class="tooltip"><span class="tooltip-phonetic">${opt.ipa}</span></span>
+          </div>
+        `;
+      });
+
+      card.innerHTML = `
+        <div class="situation">${q.situation}</div>
+        <div class="options">${optionsHtml}</div>
+      `;
+
+      listEl.appendChild(card);
+    });
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function selectOption(qId, optIndex) {
+    selectedAnswers[qId] = optIndex;
+    const buttons = document.querySelectorAll(`.option-btn[data-qid="${qId}"]`);
+    buttons.forEach((btn, idx) => {
+      btn.classList.remove('selected', 'correct', 'incorrect');
+      if (idx === optIndex) {
+        btn.classList.add('selected');
+      }
+    });
+  }
+
+  function checkAnswers() {
+    if (Object.keys(selectedAnswers).length < questions.length) {
+      const feedback = document.getElementById('feedback');
+      feedback.style.color = '#f59e0b';
+      feedback.textContent = 'Будь ласка, дайте відповідь на всі 10 питань! ✏️';
+      return;
+    }
+
+    let correctCount = 0;
+
+    questions.forEach((q) => {
+      const chosenIndex = selectedAnswers[q.id];
+      const buttons = document.querySelectorAll(`.option-btn[data-qid="${q.id}"]`);
+
+      buttons.forEach((btn, idx) => {
+        btn.classList.remove('correct', 'incorrect');
+        const isOptionCorrect = q.options[idx].correct;
+
+        if (idx === chosenIndex) {
+          if (isOptionCorrect) {
+            btn.classList.add('correct');
+            correctCount++;
+          } else {
+            btn.classList.add('incorrect');
+          }
+        }
+      });
+    });
+
+    const feedback = document.getElementById('feedback');
+    if (correctCount === questions.length) {
+      feedback.style.color = '#22c55e';
+      feedback.textContent = 'Чудово! Усі відповіді правильні! 🎉';
+    } else {
+      feedback.style.color = '#ef4444';
+      feedback.textContent = `Правильно: ${correctCount} з ${questions.length}. Перевірте виділені червоним пункти! ❌`;
+    }
+  }
+
+  function resetExercise() {
+    selectedAnswers = {};
+    const buttons = document.querySelectorAll('.option-btn');
+    buttons.forEach((btn) => {
+      btn.classList.remove('selected', 'correct', 'incorrect');
+    });
+    document.getElementById('feedback').textContent = '';
+  }
+
+  window.onload = initExercise;
+</script>
+
+</body>
+</html>
