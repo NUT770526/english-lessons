@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find the opposite</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --accent-color: #2563eb;
+    --border-color: #e2e8f0;
+    --tooltip-bg: #0f172a;
+    --chip-bg: #ffffff;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 760px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  /* Header Section */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .header-icon {
+    font-size: 1.8rem;
+    background: #eff6ff;
+    border-radius: 10px;
+    padding: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin-bottom: 20px;
+  }
+
+  /* Word Bank Section */
+  .word-bank-card {
+    background: #f1f5f9;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 32px;
+  }
+
+  .word-bank-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    margin-bottom: 12px;
+  }
+
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .word-chip {
+    background: var(--chip-bg);
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  }
+
+  .word-chip:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.12);
+  }
+
+  .word-chip.used {
+    opacity: 0.35;
+    pointer-events: none;
+    border-color: #e2e8f0;
+    background: #e2e8f0;
+    box-shadow: none;
+  }
+
+  /* Exercise List Section */
+  .task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .task-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background: #ffffff;
+    padding: 16px 20px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  }
+
+  .num-badge {
+    color: #64748b;
+    font-weight: 700;
+    font-size: 1rem;
+    min-width: 20px;
+  }
+
+  /* Tooltip Word */
+  .tooltip-word {
+    position: relative;
+    color: #1e293b;
+    border-bottom: 2px dashed #94a3b8;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+    min-width: 120px;
+  }
+
+  .tooltip-word:hover {
+    background-color: #eff6ff;
+    border-bottom-color: var(--accent-color);
+  }
+
+  .tooltip-word .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 260px;
+    background-color: var(--tooltip-bg);
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+    line-height: 1.4;
+  }
+
+  .tooltip-word .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--tooltip-bg) transparent transparent transparent;
+  }
+
+  .tooltip-word:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* Interactive Slot */
+  .slot {
+    min-width: 200px;
+    height: 46px;
+    background-color: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    cursor: pointer;
+    padding: 0 16px;
+    transition: all 0.2s ease;
+  }
+
+  .slot.filled {
+    border-style: solid;
+    border-color: #94a3b8;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  .slot.correct {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d !important;
+  }
+
+  .slot.incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c !important;
+  }
+
+  /* Audio Speaker Button */
+  .speaker-btn {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background-color: #e2e8f0;
+    transform: scale(1.05);
+  }
+
+  /* Controls & Feedback Message */
+  .controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: var(--accent-color);
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+    transform: translateY(-1px);
+  }
+
+  .feedback-msg {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-top: 20px;
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">📺</span>
+    <h1 class="title">Find the opposite</h1>
+  </div>
+  
+  <p class="subtitle">Кликните по слову в банке слов, чтобы поместить его в свободную ячейку. Нажмите на выбранное слово в ячейке, чтобы вернуть его назад.</p>
+
+  <!-- Word Bank Tags -->
+  <div class="word-bank-card">
+    <div class="word-bank-title">Банк слов (Word Bank)</div>
+    <div class="word-bank" id="word-bank"></div>
+  </div>
+
+  <!-- Task Questions -->
+  <div class="task-list" id="task-list"></div>
+
+  <!-- Actions & Feedback -->
+  <div class="controls">
+    <button class="btn btn-check" onclick="checkAnswers()">Проверить 🎯</button>
+    <button class="btn btn-reset" onclick="resetExercise()">Сбросить 🔄</button>
+  </div>
+
+  <div class="feedback-msg" id="feedback"></div>
+</div>
+
+<script>
+  const bankWords = [
+    "the smallest",
+    "the darkest",
+    "the best",
+    "the most difficult",
+    "the saddest",
+    "the most expensive"
+  ];
+
+  const questionsData = [
+    {
+      id: 1,
+      prompt: "the biggest",
+      ipa: "[ðə ˈbɪɡ.ɪst]",
+      translation: "самый большой",
+      correct: "the smallest",
+      fullText: "the biggest — the smallest"
+    },
+    {
+      id: 2,
+      prompt: "the happiest",
+      ipa: "[ðə ˈhæp.i.əst]",
+      translation: "самый счастливый",
+      correct: "the saddest",
+      fullText: "the happiest — the saddest"
+    },
+    {
+      id: 3,
+      prompt: "the worst",
+      ipa: "[ðə wɜːst]",
+      translation: "самый худший",
+      correct: "the best",
+      fullText: "the worst — the best"
+    },
+    {
+      id: 4,
+      prompt: "the easiest",
+      ipa: "[ðə ˈiː.zi.əst]",
+      translation: "самый легкий",
+      correct: "the most difficult",
+      fullText: "the easiest — the most difficult"
+    },
+    {
+      id: 5,
+      prompt: "the cheapest",
+      ipa: "[ðə ˈtʃiː.pɪst]",
+      translation: "самый дешевый",
+      correct: "the most expensive",
+      fullText: "the cheapest — the most expensive"
+    },
+    {
+      id: 6,
+      prompt: "the lightest",
+      ipa: "[ðə ˈlaɪ.tɪst]",
+      translation: "самый светлый / легкий",
+      correct: "the darkest",
+      fullText: "the lightest — the darkest"
+    }
+  ];
+
+  // State to hold user choices for each task slot
+  const userSelections = new Array(questionsData.length).fill(null);
+
+  // Initialize Word Bank rendering
+  function renderWordBank() {
+    const bankEl = document.getElementById("word-bank");
+    bankEl.innerHTML = "";
+    
+    bankWords.forEach((word, index) => {
+      const chip = document.createElement("button");
+      chip.className = "word-chip";
+      chip.textContent = word;
+      chip.id = `chip-${index}`;
+
+      // Mark chip as used if already assigned to a slot
+      const isUsed = userSelections.some(sel => sel && sel.index === index);
+      if (isUsed) {
+        chip.classList.add("used");
+      }
+
+      chip.onclick = () => selectWord(word, index);
+      bankEl.appendChild(chip);
+    });
+  }
+
+  // Initialize Exercise Tasks rendering
+  function renderTasks() {
+    const listEl = document.getElementById("task-list");
+    listEl.innerHTML = "";
+
+    questionsData.forEach((q, taskIdx) => {
+      const row = document.createElement("div");
+      row.className = "task-row";
+
+      // Number badge
+      const num = document.createElement("span");
+      num.className = "num-badge";
+      num.textContent = `${q.id}.`;
+
+      // Interactive prompt with tooltip and audio
+      const prompt = document.createElement("span");
+      prompt.className = "tooltip-word";
+      prompt.onclick = () => speakText(q.prompt);
+      prompt.innerHTML = `
+        ${q.prompt}
+        <span class="tooltip-text">${q.ipa} — ${q.translation}</span>
+      `;
+
+      // Dashed Slot for the answer
+      const slot = document.createElement("div");
+      slot.className = "slot";
+      slot.id = `slot-${taskIdx}`;
+
+      const selected = userSelections[taskIdx];
+      if (selected) {
+        slot.textContent = selected.word;
+        slot.classList.add("filled");
+        slot.onclick = () => returnWordToBank(taskIdx);
+      } else {
+        slot.textContent = "";
+        slot.onclick = null;
+      }
+
+      // Speaker Button
+      const speakerBtn = document.createElement("button");
+      speakerBtn.className = "speaker-btn";
+      speakerBtn.title = "Озвучить";
+      speakerBtn.innerHTML = "🔊";
+      speakerBtn.onclick = () => speakTaskRow(taskIdx);
+
+      row.appendChild(num);
+      row.appendChild(prompt);
+      row.appendChild(slot);
+      row.appendChild(speakerBtn);
+
+      listEl.appendChild(row);
+    });
+  }
+
+  // Place clicked word into the first empty slot
+  function selectWord(word, index) {
+    const emptySlotIdx = userSelections.indexOf(null);
+    if (emptySlotIdx !== -1) {
+      userSelections[emptySlotIdx] = { word, index };
+      renderWordBank();
+      renderTasks();
+      clearFeedback();
+    }
+  }
+
+  // Return word from a slot back to the word bank
+  function returnWordToBank(taskIdx) {
+    userSelections[taskIdx] = null;
+    renderWordBank();
+    renderTasks();
+    clearFeedback();
+  }
+
+  // Text-To-Speech function using SpeechSynthesis
+  function speakText(text) {
+    if (!text) return;
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  // Speak prompt and answer for the row
+  function speakTaskRow(taskIdx) {
+    const q = questionsData[taskIdx];
+    const selected = userSelections[taskIdx];
+    if (selected) {
+      speakText(`${q.prompt}, ${selected.word}`);
+    } else {
+      speakText(q.prompt);
+    }
+  }
+
+  // Check answers
+  function checkAnswers() {
+    let allCorrect = true;
+    let hasEmpty = false;
+
+    questionsData.forEach((q, idx) => {
+      const slotEl = document.getElementById(`slot-${idx}`);
+      slotEl.classList.remove("correct", "incorrect");
+
+      const selected = userSelections[idx];
+
+      if (!selected) {
+        hasEmpty = true;
+        allCorrect = false;
+      } else if (selected.word === q.correct) {
+        slotEl.classList.add("correct");
+      } else {
+        slotEl.classList.add("incorrect");
+        allCorrect = false;
+      }
+    });
+
+    const feedback = document.getElementById("feedback");
+    if (hasEmpty) {
+      feedback.style.color = "#f59e0b";
+      feedback.textContent = "Заполните все ячейки перед проверкой! ✏️";
+    } else if (allCorrect) {
+      feedback.style.color = "#22c55e";
+      feedback.textContent = "Отлично! Все антонимы найдены абсолютно верно! 🎉";
+    } else {
+      feedback.style.color = "#ef4444";
+      feedback.textContent = "Есть ошибки. Проверьте варианты, выделенные красным цветом! ❌";
+    }
+  }
+
+  // Clear feedback messages
+  function clearFeedback() {
+    document.getElementById("feedback").textContent = "";
+  }
+
+  // Reset exercise to initial state
+  function resetExercise() {
+    for (let i = 0; i < userSelections.length; i++) {
+      userSelections[i] = null;
+    }
+    renderWordBank();
+    renderTasks();
+    clearFeedback();
+  }
+
+  // Initial load
+  window.onload = () => {
+    renderWordBank();
+    renderTasks();
+  };
+</script>
+
+</body>
+</html>
