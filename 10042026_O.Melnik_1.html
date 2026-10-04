@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Write the comparative form of an adjective</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --accent-color: #0284c7;
+    --border-color: #bae6fd;
+    --tooltip-bg: #0f172a;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 700px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 36px;
+    border: 2px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.1);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .header-icon {
+    font-size: 2rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .hint-banner {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 28px;
+  }
+
+  /* Task List */
+  .task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .task-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  /* Colored Number Badges */
+  .num-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .badge-1 { background-color: #ff5d55; }
+  .badge-2 { background-color: #f59e0b; }
+  .badge-3 { background-color: #10b981; }
+  .badge-4 { background-color: #3b82f6; }
+  .badge-5 { background-color: #06b6d4; }
+  .badge-6 { background-color: #8b5cf6; }
+  .badge-7 { background-color: #ec4899; }
+
+  /* Tooltip Word */
+  .tooltip-word {
+    position: relative;
+    color: #1e293b;
+    border-bottom: 2px dashed #0284c7;
+    cursor: pointer;
+    padding-bottom: 2px;
+    min-width: 110px;
+  }
+
+  .tooltip-word .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    background-color: var(--tooltip-bg);
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 130%;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    pointer-events: none;
+  }
+
+  .tooltip-word .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--tooltip-bg) transparent transparent transparent;
+  }
+
+  .tooltip-word:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .dash {
+    color: #94a3b8;
+    margin: 0 4px;
+  }
+
+  /* Input Field */
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .answer-input {
+    font-family: inherit;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    background-color: #f8fafc;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 8px 16px;
+    outline: none;
+    width: 200px;
+    transition: all 0.2s ease;
+  }
+
+  .answer-input:focus {
+    border-color: var(--accent-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  .answer-input.correct {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d;
+  }
+
+  .answer-input.incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c;
+  }
+
+  /* Speaker Button */
+  .speaker-btn {
+    background: #e0f2fe;
+    border: 2px solid #bae6fd;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .speaker-btn:hover {
+    background-color: var(--accent-color);
+    color: #ffffff;
+    transform: scale(1.1);
+  }
+
+  /* Controls & Feedback */
+  .controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 12px 28px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .feedback-msg {
+    text-align: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-top: 16px;
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">✏️</span>
+    <h2 class="title">Write the comparative form of an adjective</h2>
+  </div>
+
+  <div class="hint-banner">
+    💡 Наводи на слово, чтобы увидеть транскрипцию и перевод, или нажми 🔊 для озвучки!
+  </div>
+
+  <div class="task-list" id="task-list"></div>
+
+  <div class="controls">
+    <button class="btn btn-check" onclick="checkAnswers()">Проверить 🎯</button>
+    <button class="btn btn-reset" onclick="resetExercise()">Сбросить 🔄</button>
+  </div>
+
+  <div class="feedback-msg" id="feedback"></div>
+</div>
+
+<script>
+  const wordData = [
+    { num: 1, word: "small", trans: "[smɔːl]", rus: "маленький", correct: "smaller" },
+    { num: 2, word: "big", trans: "[bɪɡ]", rus: "большой", correct: "bigger" },
+    { num: 3, word: "beautiful", trans: "[ˈbjuː.tɪ.fəl]", rus: "красивый", correct: "more beautiful" },
+    { num: 4, word: "dry", trans: "[draɪ]", rus: "сухой", correct: "drier" },
+    { num: 5, word: "comfortable", trans: "[ˈkʌm.fə.tə.bəl]", rus: "удобный", correct: "more comfortable" },
+    { num: 6, word: "sad", trans: "[sæd]", rus: "грустный", correct: "sadder" },
+    { num: 7, word: "happy", trans: "[ˈhæp.i]", rus: "счастливый", correct: "happier" }
+  ];
+
+  function speakText(text) {
+    if (!text) return;
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      utterance.pitch = 1.05;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function renderExercise() {
+    const listContainer = document.getElementById('task-list');
+    listContainer.innerHTML = '';
+
+    wordData.forEach((item, index) => {
+      const row = document.createElement('div');
+      row.className = 'task-row';
+
+      row.innerHTML = `
+        <div class="num-badge badge-${item.num}">${item.num}.</div>
+        <div class="tooltip-word" onmouseenter="speakText('${item.word}')" onclick="speakText('${item.word}')">
+          ${item.word}
+          <span class="tooltip-text">${item.trans} — ${item.rus}</span>
+        </div>
+        <span class="dash">—</span>
+        <div class="input-wrapper">
+          <input type="text" class="answer-input" id="input-${index}" autocomplete="off" spellcheck="false" placeholder="...">
+        </div>
+        <button class="speaker-btn" title="Озвучить ответ" onclick="speakInput(${index})">🔊</button>
+      `;
+
+      listContainer.appendChild(row);
+    });
+  }
+
+  function speakInput(index) {
+    const userVal = document.getElementById(`input-${index}`).value.trim();
+    if (userVal) {
+      speakText(userVal);
+    } else {
+      speakText(wordData[index].word);
+    }
+  }
+
+  function checkAnswers() {
+    let allCorrect = true;
+    let hasEmpty = false;
+
+    wordData.forEach((item, index) => {
+      const input = document.getElementById(`input-${index}`);
+      const val = input.value.trim().toLowerCase();
+
+      input.classList.remove('correct', 'incorrect');
+
+      if (val === '') {
+        hasEmpty = true;
+        allCorrect = false;
+      } else if (val === item.correct.toLowerCase()) {
+        input.classList.add('correct');
+      } else {
+        input.classList.add('incorrect');
+        allCorrect = false;
+      }
+    });
+
+    const feedback = document.getElementById('feedback');
+    if (hasEmpty) {
+      feedback.style.color = '#f59e0b';
+      feedback.textContent = 'Заполни все поля перед проверкой! ✏️️';
+    } else if (allCorrect) {
+      feedback.style.color = '#22c55e';
+      feedback.textContent = 'Отлично! Все степени сравнения образованы правильно! 🎉';
+    } else {
+      feedback.style.color = '#ef4444';
+      feedback.textContent = 'Есть ошибки. Проверь выделенные красным поля! ❌';
+    }
+  }
+
+  function resetExercise() {
+    wordData.forEach((_, index) => {
+      const input = document.getElementById(`input-${index}`);
+      if (input) {
+        input.value = '';
+        input.classList.remove('correct', 'incorrect');
+      }
+    });
+    document.getElementById('feedback').textContent = '';
+  }
+
+  renderExercise();
+</script>
+
+</body>
+</html>
