@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6. Розкажи про себе — правда чи вигадка?</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+
+  .tooltip-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip-content {
+    visibility: hidden;
+    opacity: 0;
+    width: max-content;
+    max-width: 260px;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    z-index: 50;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+  }
+
+  .tooltip-content::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .tooltip-container:hover .tooltip-content {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body class="min-h-screen py-8 px-4 flex justify-center items-center">
+
+<div class="max-w-4xl w-full bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200">
+  
+  <!-- Header -->
+  <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 rounded-2xl bg-violet-100 text-violet-600 flex items-center justify-center text-3xl font-extrabold shadow-sm">
+        🎭
+      </div>
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">
+          6. Розкажи про себе — правда чи вигадка?
+        </h1>
+        <p class="text-slate-500 font-semibold text-sm sm:text-base mt-0.5">
+          Склади <span class="text-emerald-600 font-bold">5 правдивих речень</span> і <span class="text-rose-600 font-bold">1 вигадане</span>!
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instruction & Grammar Rule Table -->
+  <div class="bg-violet-50/80 border-l-4 border-violet-500 p-5 rounded-2xl mb-8 shadow-xs">
+    <div class="flex items-start gap-3 mb-3">
+      <span class="text-2xl leading-none">💡</span>
+      <div>
+        <p class="text-violet-950 font-bold text-sm sm:text-base">
+          Доповни речення англійською. Використовуй спорт, ігри, музику чи інші захоплення.
+        </p>
+        <p class="text-violet-700 text-xs sm:text-sm mt-0.5">
+          Обери 1 речення як <b>"Вигадка (Lie)"</b>. Вчитель або товариш має вгадати, де саме брехня!
+        </p>
+      </div>
+    </div>
+
+    <!-- Rule Hint Table -->
+    <div class="mt-4 bg-white rounded-xl p-3 sm:p-4 border border-violet-200 text-xs sm:text-sm overflow-x-auto">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="border-b border-violet-100 text-violet-900 font-bold">
+            <th class="pb-2">Після цих фраз</th>
+            <th class="pb-2">Яку форму дієслова використати?</th>
+            <th class="pb-2">Приклади</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-violet-50 text-slate-700">
+          <tr>
+            <td class="py-2 font-semibold text-violet-800">enjoy / quite like / can't stand</td>
+            <td class="py-2"><span class="bg-violet-100 text-violet-800 px-2 py-0.5 rounded font-mono font-bold">-ing</span></td>
+            <td class="py-2 italic text-slate-500">playing, swimming, reading</td>
+          </tr>
+          <tr>
+            <td class="py-2 font-semibold text-violet-800">I'd love to / I'd prefer not to</td>
+            <td class="py-2"><span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono font-bold">Звичайне дієслово</span></td>
+            <td class="py-2 italic text-slate-500">try, go, play, visit</td>
+          </tr>
+          <tr>
+            <td class="py-2 font-semibold text-violet-800">let me</td>
+            <td class="py-2"><span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-mono font-bold">Дієслово без to</span></td>
+            <td class="py-2 italic text-slate-500">play, watch, stay up</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Sentences Input Form -->
+  <div id="exercise-list" class="space-y-6 mb-8">
+  </div>
+
+  <!-- Global Action Controls -->
+  <div class="flex flex-wrap gap-3 justify-center items-center pt-4 border-t border-slate-100">
+    <button onclick="checkGrammar()" class="px-7 py-3.5 bg-violet-600 hover:bg-violet-700 active:scale-95 text-white font-bold rounded-2xl shadow-lg shadow-violet-200 transition-all flex items-center gap-2">
+      <span>Перевірити граматику</span>
+      <span class="text-lg">🎯</span>
+    </button>
+    <button onclick="toggleTeacherMode()" class="px-6 py-3.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-bold rounded-2xl shadow-md transition-all flex items-center gap-2">
+      <span id="teacher-mode-btn-text">Режим Вчителя (Вгадати)</span>
+      <span class="text-lg">🔍</span>
+    </button>
+    <button onclick="resetExercise()" class="px-6 py-3.5 bg-slate-600 hover:bg-slate-700 active:scale-95 text-white font-bold rounded-2xl shadow-md transition-all flex items-center gap-2">
+      <span>Скинути</span>
+      <span class="text-lg">🔄</span>
+    </button>
+  </div>
+
+  <!-- Global Feedback Banner -->
+  <div id="feedback-banner" class="hidden mt-6 p-4 rounded-2xl text-center font-bold text-base sm:text-lg transition-all duration-300">
+  </div>
+
+</div>
+
+<script>
+  const sentencesConfig = [
+    {
+      id: 1,
+      prefix: "I enjoy",
+      placeholder: "playing basketball / listening to music",
+      pattern: "gerund", // requires -ing
+      ruleText: "Після 'enjoy' використовуй дієслово з закінченням -ing",
+      ipa: "/aɪ ɪnˈdʒɔɪ/",
+      translation: "Мені подобається / я отримую задоволення від..."
+    },
+    {
+      id: 2,
+      prefix: "I quite like",
+      placeholder: "swimming in the lake / reading books",
+      pattern: "gerund", // requires -ing
+      ruleText: "Після 'quite like' використовуй дієслово з закінченням -ing",
+      ipa: "/aɪ kwaɪt laɪk/",
+      translation: "Мені досить подобається..."
+    },
+    {
+      id: 3,
+      prefix: "I can't stand",
+      placeholder: "waiting in line / doing homework on Sundays",
+      pattern: "gerund", // requires -ing
+      ruleText: "Після 'can't stand' використовуй дієслово з закінченням -ing",
+      ipa: "/aɪ kɑːnt stænd/",
+      translation: "Я терпіти не можу..."
+    },
+    {
+      id: 4,
+      prefix: "I'd love to",
+      placeholder: "try snowboarding / visit London",
+      pattern: "infinitive", // base verb after 'to'
+      ruleText: "Після 'I'd love to' використовуй початкову форму дієслова (напр. try, go)",
+      ipa: "/aɪd lʌv tuː/",
+      translation: "Я з радістю / дуже хотів би..."
+    },
+    {
+      id: 5,
+      prefix: "I'd prefer not to",
+      placeholder: "go skysurfing / eat spicy food",
+      pattern: "infinitive", // base verb after 'not to'
+      ruleText: "Після 'I'd prefer not to' використовуй початкову форму дієслова (напр. go, eat)",
+      ipa: "/aɪd prɪˈfɜː nɒt tuː/",
+      translation: "Я віддав би перевагу не..."
+    },
+    {
+      id: 6,
+      prefix: "My parents let me",
+      placeholder: "stay up late / play video games on weekends",
+      pattern: "bare_infinitive", // verb WITHOUT to
+      ruleText: "Після 'let me' використовуй дієслово БЕЗ 'to' (напр. play, watch)",
+      ipa: "/maɪ ˈpeə.rənts let miː/",
+      translation: "Батьки дозволяють мені..."
+    }
+  ];
+
+  let lieIndex = 3; // Default lie line (sentence 4)
+  let isTeacherMode = false;
+
+  function renderExercise() {
+    const container = document.getElementById("exercise-list");
+    container.innerHTML = "";
+
+    sentencesConfig.forEach((item, index) => {
+      const isLie = (index === lieIndex);
+
+      const card = document.createElement("div");
+      card.className = "p-5 sm:p-6 bg-slate-50 border-2 border-slate-200 rounded-2xl transition-all duration-300 relative";
+      card.id = `card-${item.id}`;
+
+      card.innerHTML = `
+        <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+          <div class="flex items-center gap-2">
+            <span class="bg-violet-200 text-violet-800 font-extrabold text-xs sm:text-sm px-2.5 py-1 rounded-lg">
+              ${index + 1}
+            </span>
+            <div class="tooltip-container">
+              <button onclick="speakText('${escapeQuotes(item.prefix)}')" class="text-slate-400 hover:text-violet-600 transition-colors p-1" title="Послухати">
+                🔊
+              </button>
+              <div class="tooltip-content">
+                <span class="text-violet-300 font-mono text-xs">${item.ipa}</span><br>
+                <span class="text-xs font-medium">${item.translation}</span>
+              </div>
+            </div>
+            <span class="font-extrabold text-slate-800 text-base sm:text-lg">${item.prefix}</span>
+          </div>
+
+          <!-- Truth / Lie Badge / Toggle Button -->
+          <button 
+            type="button"
+            onclick="setLie(${index})"
+            id="badge-${item.id}"
+            class="px-3 py-1 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center gap-1 ${
+              isLie 
+                ? 'bg-rose-100 text-rose-700 border border-rose-300 shadow-xs' 
+                : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+            }">
+            <span>${isLie ? '🤥 Вигадка (Lie)' : '✅ Правда (Truth)'}</span>
+          </button>
+        </div>
+
+        <!-- Input Field -->
+        <div class="relative">
+          <input 
+            type="text"
+            id="input-${item.id}"
+            placeholder="e.g. ${item.placeholder}..."
+            class="w-full px-4 py-3 bg-white border-2 border-slate-300 rounded-xl text-slate-800 font-semibold text-sm sm:text-base focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-100 transition-all pr-10"
+            autocomplete="off"
+          />
+          <span id="status-icon-${item.id}" class="absolute right-3 top-1/2 -translate-y-1/2 text-lg pointer-events-none hidden"></span>
+        </div>
+
+        <p id="hint-${item.id}" class="hidden text-xs font-bold text-rose-600 mt-2">
+          ⚠️ ${item.ruleText}
+        </p>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function setLie(index) {
+    if (isTeacherMode) return;
+    lieIndex = index;
+    renderExercise();
+  }
+
+  function escapeQuotes(str) {
+    return str.replace(/'/g, "\\'").replace(/’/g, "\\’");
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkGrammar() {
+    let validCount = 0;
+    const total = sentencesConfig.length;
+
+    sentencesConfig.forEach(item => {
+      const input = document.getElementById(`input-${item.id}`);
+      const val = input.value.trim().toLowerCase();
+      const card = document.getElementById(`card-${item.id}`);
+      const statusIcon = document.getElementById(`status-icon-${item.id}`);
+      const hint = document.getElementById(`hint-${item.id}`);
+
+      card.classList.remove('border-emerald-300', 'border-rose-300', 'bg-emerald-50/30', 'bg-rose-50/30');
+      statusIcon.classList.remove('hidden');
+      hint.classList.add('hidden');
+
+      if (!val) {
+        card.classList.add('border-rose-300', 'bg-rose-50/30');
+        statusIcon.textContent = "❌";
+        hint.textContent = "⚠️️ Будь ласка, заповни це поле.";
+        hint.classList.remove('hidden');
+        return;
+      }
+
+      let isValid = true;
+      const firstWord = val.split(" ")[0];
+
+      if (item.pattern === "gerund") {
+        if (!firstWord.endsWith("ing") && !val.includes("ing")) {
+          isValid = false;
+        }
+      } else if (item.pattern === "bare_infinitive") {
+        if (firstWord === "to" || firstWord.endsWith("ing")) {
+          isValid = false;
+        }
+      } else if (item.pattern === "infinitive") {
+        if (firstWord === "to" || firstWord.endsWith("ing")) {
+          isValid = false;
+        }
+      }
+
+      if (isValid) {
+        validCount++;
+        card.classList.add('border-emerald-300', 'bg-emerald-50/30');
+        statusIcon.textContent = "✅";
+      } else {
+        card.classList.add('border-rose-300', 'bg-rose-50/30');
+        statusIcon.textContent = "⚠️";
+        hint.classList.remove('hidden');
+      }
+    });
+
+    const banner = document.getElementById('feedback-banner');
+    banner.classList.remove('hidden');
+
+    if (validCount === total) {
+      banner.className = "mt-6 p-4 rounded-2xl text-center font-bold text-base sm:text-lg bg-emerald-100 text-emerald-900 border-2 border-emerald-300";
+      banner.textContent = `Чудово! Граматично всі 6 речень складені правильно! 🌟 Тепер передай чергу вчителю або другу, щоб вони вгадали вигадку!`;
+    } else {
+      banner.className = "mt-6 p-4 rounded-2xl text-center font-bold text-base sm:text-lg bg-amber-100 text-amber-900 border-2 border-amber-300";
+      banner.textContent = `Перевірено ${validCount} з ${total} речень. Зверни увагу на підказки під виділеними полями! 💡`;
+    }
+  }
+
+  function toggleTeacherMode() {
+    isTeacherMode = !isTeacherMode;
+    const btnText = document.getElementById('teacher-mode-btn-text');
+
+    sentencesConfig.forEach((item, index) => {
+      const badge = document.getElementById(`badge-${item.id}`);
+      if (isTeacherMode) {
+        badge.innerHTML = `<span>❓ Справжнє чи вигадка?</span>`;
+        badge.className = "px-3 py-1 rounded-full font-bold text-xs sm:text-sm bg-slate-200 text-slate-700 border border-slate-300 hover:bg-violet-100 hover:text-violet-700 transition-all cursor-pointer";
+        badge.onclick = () => revealAnswer(index);
+      } else {
+        badge.onclick = () => setLie(index);
+        renderExercise();
+      }
+    });
+
+    btnText.textContent = isTeacherMode ? "Вийти з режиму вгадування" : "Режим Вчителя (Вгадати)";
+  }
+
+  function revealAnswer(index) {
+    const badge = document.getElementById(`badge-${sentencesConfig[index].id}`);
+    if (index === lieIndex) {
+      badge.innerHTML = `<span>🎉 Бінго! Це Вигадка (Lie)!</span>`;
+      badge.className = "px-3 py-1 rounded-full font-bold text-xs sm:text-sm bg-rose-500 text-white shadow-md animate-bounce";
+    } else {
+      badge.innerHTML = `<span>❌ Це Правда (Truth)!</span>`;
+      badge.className = "px-3 py-1 rounded-full font-bold text-xs sm:text-sm bg-emerald-600 text-white";
+    }
+  }
+
+  function resetExercise() {
+    isTeacherMode = false;
+    document.getElementById('teacher-mode-btn-text').textContent = "Режим Вчителя (Вгадати)";
+    document.getElementById('feedback-banner').classList.add('hidden');
+    renderExercise();
+  }
+
+  window.onload = renderExercise;
+</script>
+
+</body>
+</html>
+```
