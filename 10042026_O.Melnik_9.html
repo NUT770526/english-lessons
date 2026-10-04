@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rewrite the sentences using the words in brackets</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --accent-color: #7c3aed;
+    --border-color: #e2e8f0;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 880px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .header-icon {
+    font-size: 2rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #6b21a8;
+  }
+
+  .example-box {
+    background-color: #f8fafc;
+    border-left: 4px solid var(--accent-color);
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+    color: #334155;
+  }
+
+  .example-title {
+    font-weight: 700;
+    font-style: italic;
+    margin-bottom: 4px;
+    color: #475569;
+  }
+
+  .task-item {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  }
+
+  .sentence-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    font-size: 1.05rem;
+    color: #1e293b;
+  }
+
+  .num-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .input-wrapper {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .gap-input {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 8px 14px;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #f8fafc;
+    color: #0f172a;
+    min-width: 250px;
+  }
+
+  .gap-input:focus {
+    border-color: var(--accent-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  }
+
+  .gap-input.correct {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d;
+  }
+
+  .gap-input.incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c;
+  }
+
+  .speaker-btn {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  .controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 32px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: #7c3aed;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background: #6d28d9;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .feedback-msg {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-top: 16px;
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">📝</span>
+    <h2 class="title">Rewrite the sentences using the words in brackets</h2>
+  </div>
+
+  <div class="example-box">
+    <div class="example-title">Example:</div>
+    <div><b>▶ The new phone is more expensive than the old one. (much)</b> – The new phone costs <i>much more than</i> the old one.</div>
+  </div>
+
+  <div id="exercise-list"></div>
+
+  <div class="controls">
+    <button class="btn btn-check" onclick="checkAnswers()">Check 🎯</button>
+    <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+
+  <div class="feedback-msg" id="feedback"></div>
+</div>
+
+<script>
+  const tasksData = [
+    {
+      id: 1,
+      original: "Andy is better at speaking English than her friends. (much)",
+      prefix: "Andy speaks English",
+      suffix: "her friends.",
+      placeholder: "good → ...",
+      correct: ["much better than"],
+      fullSentence: "Andy speaks English much better than her friends."
+    },
+    {
+      id: 2,
+      original: "This car is faster than the one we had before. (a bit)",
+      prefix: "This car was",
+      suffix: "the one we had before.",
+      placeholder: "fast → ...",
+      correct: ["a bit faster than"],
+      fullSentence: "This car was a bit faster than the one we had before."
+    },
+    {
+      id: 3,
+      original: "You are more patient than I am. (as...as)",
+      prefix: "I am not",
+      suffix: "you are.",
+      placeholder: "patient → ...",
+      correct: ["as patient as"],
+      fullSentence: "I am not as patient as you are."
+    },
+    {
+      id: 4,
+      original: "The traffic in the morning is busier than in the evening. (not as... as)",
+      prefix: "The traffic in the evening is",
+      suffix: "in the morning.",
+      placeholder: "busy → ...",
+      correct: ["not as busy as"],
+      fullSentence: "The traffic in the evening is not as busy as in the morning."
+    },
+    {
+      id: 5,
+      original: "Tom isn't as ambitious as his groupmates. (a lot)",
+      prefix: "Tom's group mates are",
+      suffix: "than him.",
+      placeholder: "ambitious → ...",
+      correct: ["a lot more ambitious"],
+      fullSentence: "Tom's group mates are a lot more ambitious than him."
+    }
+  ];
+
+  function initExercise() {
+    const container = document.getElementById('exercise-list');
+    container.innerHTML = '';
+
+    tasksData.forEach(task => {
+      const item = document.createElement('div');
+      item.className = 'task-item';
+
+      item.innerHTML = `
+        <div style="font-size: 0.95rem; color: #475569; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+          <div><span class="num-badge">${task.id}</span> <strong>${task.original}</strong></div>
+          <button class="speaker-btn" onclick="speakText('${task.fullSentence.replace(/'/g, "\\'")}')">🔊 Listen</button>
+        </div>
+        <div class="sentence-line">
+          <span>– ${task.prefix}</span>
+          <div class="input-wrapper">
+            <input type="text" class="gap-input" id="input-${task.id}" placeholder="${task.placeholder}" autocomplete="off">
+          </div>
+          <span>${task.suffix}</span>
+        </div>
+      `;
+
+      container.appendChild(item);
+    });
+  }
+
+  function normalizeText(text) {
+    return text.trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+
+  function checkAnswers() {
+    let allCorrect = true;
+    let hasIncomplete = false;
+
+    tasksData.forEach(task => {
+      const inputEl = document.getElementById(`input-${task.id}`);
+      const val = inputEl.value;
+
+      inputEl.classList.remove('correct', 'incorrect');
+
+      if (!val.trim()) {
+        hasIncomplete = true;
+        allCorrect = false;
+        return;
+      }
+
+      const normalizedUser = normalizeText(val);
+      const isRight = task.correct.some(ans => normalizeText(ans) === normalizedUser);
+
+      if (isRight) {
+        inputEl.classList.add('correct');
+      } else {
+        inputEl.classList.add('incorrect');
+        allCorrect = false;
+      }
+    });
+
+    const feedback = document.getElementById('feedback');
+    if (hasIncomplete) {
+      feedback.style.color = '#f59e0b';
+      feedback.textContent = 'Please fill in all gaps before checking! ✏️';
+    } else if (allCorrect) {
+      feedback.style.color = '#22c55e';
+      feedback.textContent = 'Great job! All answers are correct! 🎉';
+    } else {
+      feedback.style.color = '#ef4444';
+      feedback.textContent = 'Some answers are incorrect. Check the red boxes! ❌';
+    }
+  }
+
+  function resetExercise() {
+    tasksData.forEach(task => {
+      const inputEl = document.getElementById(`input-${task.id}`);
+      inputEl.value = '';
+      inputEl.classList.remove('correct', 'incorrect');
+    });
+    document.getElementById('feedback').textContent = '';
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  window.onload = initExercise;
+</script>
+
+</body>
+</html>
