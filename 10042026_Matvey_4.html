@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4. Знайди та виправ одну помилку</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+
+  /* Tooltip logic */
+  .tooltip-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip-content {
+    visibility: hidden;
+    opacity: 0;
+    width: max-content;
+    max-width: 260px;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    z-index: 50;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+  }
+
+  .tooltip-content::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .tooltip-container:hover .tooltip-content {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body class="min-h-screen py-8 px-4 flex justify-center items-center">
+
+<div class="max-w-4xl w-full bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200">
+  
+  <!-- Header -->
+  <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 rounded-2xl bg-violet-100 text-violet-600 flex items-center justify-center text-3xl font-extrabold shadow-sm">
+        🔍
+      </div>
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">
+          4. Знайди та виправ одну помилку
+        </h1>
+        <p class="text-slate-500 font-semibold text-sm sm:text-base mt-0.5">
+          Тема: <span class="text-violet-600">Verb Patterns (Gerunds, Infinitives & Bare Infinitives)</span>
+        </p>
+      </div>
+    </div>
+    
+    <!-- Score Badge -->
+    <div class="bg-violet-50 border border-violet-200 px-4 py-2 rounded-2xl flex items-center gap-2">
+      <span class="text-slate-500 font-bold text-xs uppercase tracking-wider">Результат:</span>
+      <span id="score-counter" class="text-violet-700 font-extrabold text-lg">0 / 10</span>
+    </div>
+  </div>
+
+  <!-- Instruction Banner -->
+  <div class="bg-violet-50/80 border-l-4 border-violet-500 p-4 rounded-xl mb-8 flex items-start gap-3 shadow-xs">
+    <span class="text-2xl leading-none">💡</span>
+    <div>
+      <p class="text-violet-950 font-bold text-sm sm:text-base">
+        У кожному реченні є одна граматична помилка. Напиши правильне речення повністю.
+      </p>
+      <p class="text-violet-700 text-xs sm:text-sm mt-0.5">
+        Наводь на динамік 🔊 біля речення, щоб переглянути транскрипцію та переклад або послухати правильну вимову.
+      </p>
+    </div>
+  </div>
+
+  <!-- Sentences List Container -->
+  <div id="exercise-list" class="space-y-6 mb-8">
+  </div>
+
+  <!-- Global Action Controls -->
+  <div class="flex flex-wrap gap-3 justify-center items-center pt-4 border-t border-slate-100">
+    <button onclick="checkAnswers()" class="px-7 py-3.5 bg-violet-600 hover:bg-violet-700 active:scale-95 text-white font-bold rounded-2xl shadow-lg shadow-violet-200 transition-all flex items-center gap-2">
+      <span>Check</span>
+      <span class="text-lg">🎯</span>
+    </button>
+    <button onclick="resetExercise()" class="px-6 py-3.5 bg-slate-600 hover:bg-slate-700 active:scale-95 text-white font-bold rounded-2xl shadow-md transition-all flex items-center gap-2">
+      <span>Reset</span>
+      <span class="text-lg">🔄</span>
+    </button>
+    <button onclick="toggleAnswers()" class="px-6 py-3.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-bold rounded-2xl shadow-md transition-all flex items-center gap-2">
+      <span id="answers-toggle-text">Show Answers</span>
+      <span class="text-lg">💡</span>
+    </button>
+  </div>
+
+  <!-- Global Feedback Banner -->
+  <div id="feedback-banner" class="hidden mt-6 p-4 rounded-2xl text-center font-bold text-base sm:text-lg transition-all duration-300">
+  </div>
+
+</div>
+
+<script>
+  // 10 Sentences dataset with incorrect vs correct pairs, phonetics, and translations
+  const sentencesData = [
+    {
+      id: 1,
+      incorrect: "I’d like trying rock climbing.",
+      correct: "I’d like to try rock climbing.",
+      altCorrect: ["I'd like to try rock climbing.", "I would like to try rock climbing."],
+      ipa: "/aɪd laɪk tuː traɪ rɒk ˈklaɪ.mɪŋ/",
+      translation: "Я хотів би спробувати скелелазіння."
+    },
+    {
+      id: 2,
+      incorrect: "She enjoys to play basketball.",
+      correct: "She enjoys playing basketball.",
+      altCorrect: ["She enjoys playing basketball."],
+      ipa: "/ʃiː ɪnˈdʒɔɪz ˈpleɪ.ɪŋ ˈbɑː.skɪt.bɔːl/",
+      translation: "Вона отримує задоволення від гри в баскетбол."
+    },
+    {
+      id: 3,
+      incorrect: "We are thinking about try ice-canoeing.",
+      correct: "We are thinking about trying ice-canoeing.",
+      altCorrect: ["We are thinking about trying ice-canoeing.", "We're thinking about trying ice-canoeing.", "We are thinking about trying ice canoeing.", "We're thinking about trying ice canoeing."],
+      ipa: "/wiː ɑː ˈθɪŋk.ɪŋ əˈbaʊt ˈtraɪ.ɪŋ aɪs kəˈnuː.ɪŋ/",
+      translation: "Ми розмірковуємо про те, щоб спробувати каное на льоду."
+    },
+    {
+      id: 4,
+      incorrect: "Dad let me to ride my bike.",
+      correct: "Dad let me ride my bike.",
+      altCorrect: ["Dad let me ride my bike.", "Dad lets me ride my bike."],
+      ipa: "/dæd let miː raɪd maɪ baɪk/",
+      translation: "Тато дозволив мені покататися на велосипеді."
+    },
+    {
+      id: 5,
+      incorrect: "I can’t stand wait.",
+      correct: "I can’t stand waiting.",
+      altCorrect: ["I can’t stand waiting.", "I cant stand waiting.", "I can't stand waiting."],
+      ipa: "/aɪ kɑːnt stænd ˈweɪ.tɪŋ/",
+      translation: "Я терпіти не можу чекати."
+    },
+    {
+      id: 6,
+      incorrect: "I’d prefer not go skysurfing.",
+      correct: "I’d prefer not to go skysurfing.",
+      altCorrect: ["I’d prefer not to go skysurfing.", "I'd prefer not to go skysurfing.", "I would prefer not to go skysurfing."],
+      ipa: "/aɪd prɪˈfɜː nɒt tuː ɡəʊ ˈskaɪˌsɜː.fɪŋ/",
+      translation: "Я волів би не займатися скайсерфінгом."
+    },
+    {
+      id: 7,
+      incorrect: "Ben is considering to join a sports club.",
+      correct: "Ben is considering joining a sports club.",
+      altCorrect: ["Ben is considering joining a sports club.", "Ben's is considering joining a sports club."],
+      ipa: "/ben ɪz kənˈsɪd.ər.ɪŋ ˈdʒɔɪ.nɪŋ ə spɔːts klʌb/",
+      translation: "Бен розмірковує про вступ до спортивного клубу."
+    },
+    {
+      id: 8,
+      incorrect: "They decided going home early.",
+      correct: "They decided to go home early.",
+      altCorrect: ["They decided to go home early."],
+      ipa: "/ðeɪ dɪˈsaɪ.dɪd tuː ɡəʊ həʊm ˈɜː.li/",
+      translation: "Вони вирішили піти додому раніше."
+    },
+    {
+      id: 9,
+      incorrect: "I don’t mind to help you with homework.",
+      correct: "I don’t mind helping you with homework.",
+      altCorrect: ["I don’t mind helping you with homework.", "I don't mind helping you with homework.", "I dont mind helping you with homework."],
+      ipa: "/aɪ dəʊnt maɪnd ˈhel.pɪŋ juː wɪð ˈhəʊm.wɜːk/",
+      translation: "Я не проти допомогти тобі з домашнім завданням."
+    },
+    {
+      id: 10,
+      incorrect: "She would love going to the concert.",
+      correct: "She would love to go to the concert.",
+      altCorrect: ["She would love to go to the concert.", "She'd love to go to the concert."],
+      ipa: "/ʃiː wʊd lʌv tuː ɡəʊ tuː ðə ˈkɒn.sət/",
+      translation: "Вона дуже хотіла б піти на концерт."
+    }
+  ];
+
+  let showingAnswers = false;
+
+  // Render Exercise UI
+  function renderExercise() {
+    const container = document.getElementById("exercise-list");
+    container.innerHTML = "";
+
+    sentencesData.forEach((item, index) => {
+      const card = document.createElement("div");
+      card.className = "p-5 sm:p-6 bg-slate-50 border-2 border-slate-200 rounded-2xl transition-all duration-300";
+      card.id = `card-${item.id}`;
+
+      card.innerHTML = `
+        <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+          <div class="flex items-center gap-2">
+            <span class="bg-violet-200 text-violet-800 font-extrabold text-xs sm:text-sm px-2.5 py-1 rounded-lg">
+              ${index + 1}
+            </span>
+            <div class="tooltip-container">
+              <button onclick="speakText('${escapeQuotes(item.correct)}')" class="text-slate-400 hover:text-violet-600 transition-colors p-1" title="Прослухати вимову">
+                🔊
+              </button>
+              <div class="tooltip-content">
+                <span class="text-violet-300 font-mono text-xs">${item.ipa}</span><br>
+                <span class="text-xs font-medium">${item.translation}</span>
+              </div>
+            </div>
+          </div>
+          <span class="text-xs font-semibold text-red-500 bg-red-50 border border-red-100 px-2.5 py-1 rounded-full">
+            ❌ Помилка в реченні
+          </span>
+        </div>
+
+        <!-- Incorrect Sentence Display -->
+        <p class="text-slate-800 font-bold text-base sm:text-lg mb-3 line-through decoration-red-400 decoration-2">
+          ${item.incorrect}
+        </p>
+
+        <!-- User Correction Input -->
+        <div class="relative">
+          <input 
+            type="text"
+            id="input-${item.id}"
+            placeholder="Напиши правильне речення..."
+            class="w-full px-4 py-3 bg-white border-2 border-slate-300 rounded-xl text-slate-800 font-semibold text-sm sm:text-base focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-100 transition-all pr-10"
+            autocomplete="off"
+          />
+          <span id="status-icon-${item.id}" class="absolute right-3 top-1/2 -translate-y-1/2 text-lg pointer-events-none hidden"></span>
+        </div>
+
+        <!-- Correct Answer Key Display -->
+        <div id="answer-key-${item.id}" class="hidden mt-3 pt-2 text-sm font-semibold text-emerald-700 flex items-center gap-2">
+          <span>💡 Правильна відповідь:</span>
+          <span class="font-bold text-slate-900">${item.correct}</span>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  // Utility to safely pass strings to onclick functions
+  function escapeQuotes(str) {
+    return str.replace(/'/g, "\\'").replace(/’/g, "\\’");
+  }
+
+  // Normalization helper for checking strings (ignores punctuation differences, smart quotes, multiple spaces)
+  function normalizeText(text) {
+    return text
+      .toLowerCase()
+      .replace(/[’']/g, "'")
+      .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  // Text-to-speech audio player
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  // Validation function
+  function checkAnswers() {
+    let correctCount = 0;
+    const total = sentencesData.length;
+
+    sentencesData.forEach(item => {
+      const input = document.getElementById(`input-${item.id}`);
+      const userText = normalizeText(input.value);
+      const card = document.getElementById(`card-${item.id}`);
+      const statusIcon = document.getElementById(`status-icon-${item.id}`);
+
+      card.classList.remove('border-slate-200', 'border-emerald-300', 'border-red-300', 'bg-emerald-50/30', 'bg-red-50/30');
+      statusIcon.classList.remove('hidden');
+
+      const isCorrect = item.altCorrect.some(alt => normalizeText(alt) === userText);
+
+      if (isCorrect && userText !== "") {
+        correctCount++;
+        card.classList.add('border-emerald-300', 'bg-emerald-50/30');
+        input.classList.remove('border-slate-300', 'border-red-300');
+        input.classList.add('border-emerald-500');
+        statusIcon.textContent = "✅";
+      } else {
+        card.classList.add('border-red-300', 'bg-red-50/30');
+        input.classList.remove('border-slate-300', 'border-emerald-500');
+        input.classList.add('border-red-400');
+        statusIcon.textContent = "❌";
+      }
+    });
+
+    document.getElementById('score-counter').textContent = `${correctCount} / ${total}`;
+
+    const banner = document.getElementById('feedback-banner');
+    banner.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-900', 'border-emerald-300', 'bg-red-100', 'text-red-900', 'border-red-300');
+
+    if (correctCount === total) {
+      banner.className = "mt-6 p-4 rounded-2xl text-center font-bold text-base sm:text-lg bg-emerald-100 text-emerald-900 border-2 border-emerald-300";
+      banner.textContent = `Чудово! 🎉 Усі ${correctCount}/${total} помилок виправлено абсолютно правильно!`;
+    } else {
+      banner.className = "mt-6 p-4 rounded-2xl text-center font-bold text-base sm:text-lg bg-red-100 text-red-900 border-2 border-red-300";
+      banner.textContent = `Твій результат: ${correctCount} з ${total} правильних відповідь(-ей). Перевірте виділені червоним пункти! ❌`;
+    }
+  }
+
+  // Reset exercise state
+  function resetExercise() {
+    sentencesData.forEach(item => {
+      const input = document.getElementById(`input-${item.id}`);
+      const card = document.getElementById(`card-${item.id}`);
+      const statusIcon = document.getElementById(`status-icon-${item.id}`);
+      const answerKey = document.getElementById(`answer-key-${item.id}`);
+
+      if (input) input.value = "";
+      if (card) card.className = "p-5 sm:p-6 bg-slate-50 border-2 border-slate-200 rounded-2xl transition-all duration-300";
+      if (input) input.className = "w-full px-4 py-3 bg-white border-2 border-slate-300 rounded-xl text-slate-800 font-semibold text-sm sm:text-base focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-100 transition-all pr-10";
+      if (statusIcon) statusIcon.classList.add('hidden');
+      if (answerKey) answerKey.classList.add('hidden');
+    });
+
+    showingAnswers = false;
+    document.getElementById('answers-toggle-text').textContent = 'Show Answers';
+    document.getElementById('score-counter').textContent = `0 / 10`;
+    document.getElementById('feedback-banner').classList.add('hidden');
+  }
+
+  // Toggle correct answer key visibility
+  function toggleAnswers() {
+    showingAnswers = !showingAnswers;
+    document.getElementById('answers-toggle-text').textContent = showingAnswers ? 'Hide Answers' : 'Show Answers';
+
+    sentencesData.forEach(item => {
+      const answerKey = document.getElementById(`answer-key-${item.id}`);
+      if (answerKey) {
+        if (showingAnswers) {
+          answerKey.classList.remove('hidden');
+        } else {
+          answerKey.classList.add('hidden');
+        }
+      }
+    });
+  }
+
+  window.onload = renderExercise;
+</script>
+
+</body>
+</html>
