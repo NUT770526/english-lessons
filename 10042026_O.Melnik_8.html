@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business English: Put the words in the correct order</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --accent-color: #7c3aed;
+    --border-color: #e2e8f0;
+    --chip-bg: #ffffff;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 880px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .header-icon {
+    font-size: 2rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-color);
+  }
+
+  .subtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+  }
+
+  .task-item {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  }
+
+  .prompt-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .num-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #7c3aed;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+
+  .translation-hint {
+    font-size: 0.95rem;
+    color: #475569;
+    font-style: italic;
+  }
+
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    background-color: #f1f5f9;
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .word-chip {
+    background: var(--chip-bg);
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 6px 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+  }
+
+  .word-chip:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    transform: translateY(-1px);
+  }
+
+  .word-chip.used {
+    opacity: 0.25;
+    pointer-events: none;
+    border-color: #e2e8f0;
+    background: #e2e8f0;
+  }
+
+  .slots-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .slot {
+    min-width: 80px;
+    height: 46px;
+    padding: 0 12px;
+    background-color: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .slot.filled {
+    border-style: solid;
+    border-color: #94a3b8;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+
+  .slot.correct {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d;
+  }
+
+  .slot.incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c;
+  }
+
+  .speaker-btn {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  .controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 28px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: #7c3aed;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background: #6d28d9;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .feedback-msg {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-top: 16px;
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">🧩</span>
+    <h2 class="title">Put the words in the correct order</h2>
+  </div>
+  <p class="subtitle">Бизнес-английский: квалификаторы сравнительной степени (a lot, much, a bit, a little, as ... as)</p>
+
+  <div id="exercise-list"></div>
+
+  <div class="controls">
+    <button class="btn btn-check" onclick="checkAnswers()">Проверить 🎯</button>
+    <button class="btn btn-reset" onclick="resetExercise()">Сбросить 🔄</button>
+  </div>
+
+  <div class="feedback-msg" id="feedback"></div>
+</div>
+
+<script>
+  const tasksData = [
+    {
+      id: 1,
+      translation: "Наш новый офис намного больше, чем старый.",
+      words: ["the old one.", "office", "much", "than", "is", "Our", "bigger", "new"],
+      correct: ["Our", "new", "office", "is", "much", "bigger", "than", "the old one."],
+      fullSentence: "Our new office is much bigger than the old one."
+    },
+    {
+      id: 2,
+      translation: "Новая работа немного интереснее, чем прошлый проект.",
+      words: ["last project.", "more", "The", "interesting", "than", "new job", "a bit", "is", "the"],
+      correct: ["The", "new job", "is", "a bit", "more", "interesting", "than", "the", "last project."],
+      fullSentence: "The new job is a bit more interesting than the last project."
+    },
+    {
+      id: 3,
+      translation: "Эта встреча намного длиннее, чем мы ожидали.",
+      words: ["expected.", "This", "is", "longer", "a lot", "than", "meeting", "we"],
+      correct: ["This", "meeting", "is", "a lot", "longer", "than", "we", "expected."],
+      fullSentence: "This meeting is a lot longer than we expected."
+    },
+    {
+      id: 4,
+      translation: "Мой новый компьютер немного быстрее, чем старый.",
+      words: ["old laptop.", "faster", "computer", "than", "My", "is", "a little", "my", "new"],
+      correct: ["My", "new", "computer", "is", "a little", "faster", "than", "my", "old laptop."],
+      fullSentence: "My new computer is a little faster than my old laptop."
+    },
+    {
+      id: 5,
+      translation: "Её зарплата такая же высокая, как у её менеджера.",
+      words: ["manager's.", "Her", "is", "salary", "high", "as", "as", "her"],
+      correct: ["Her", "salary", "is", "as", "high", "as", "her", "manager's."],
+      fullSentence: "Her salary is as high as her manager's."
+    },
+    {
+      id: 6,
+      translation: "Новая программа намного проще в использовании, чем старая.",
+      words: ["program", "much", "the old one.", "than", "easier", "is", "The", "new"],
+      correct: ["The", "new", "program", "is", "much", "easier", "than", "the old one."],
+      fullSentence: "The new program is much easier than the old one."
+    },
+    {
+      id: 7,
+      translation: "Этот проект немного сложнее, чем прошлый.",
+      words: ["than", "is", "difficult", "more", "This", "project", "last year.", "a bit"],
+      correct: ["This", "project", "is", "a bit", "more", "difficult", "than", "last year."],
+      fullSentence: "This project is a bit more difficult than last year."
+    },
+    {
+      id: 8,
+      translation: "Наш менеджер немного моложе, чем директор.",
+      words: ["the director.", "younger", "is", "manager", "than", "a little", "Our"],
+      correct: ["Our", "manager", "is", "a little", "younger", "than", "the director."],
+      fullSentence: "Our manager is a little younger than the director."
+    },
+    {
+      id: 9,
+      translation: "Работать из дома намного удобнее, чем в офисе.",
+      words: ["in the office.", "Working", "more", "from home", "is", "a lot", "comfortable", "than"],
+      correct: ["Working", "from home", "is", "a lot", "more", "comfortable", "than", "in the office."],
+      fullSentence: "Working from home is a lot more comfortable than in the office."
+    },
+    {
+      id: 10,
+      translation: "Этот отчет не такой длинный, как предыдущий.",
+      words: ["previous one.", "report", "is", "the", "not", "as", "long", "This", "as"],
+      correct: ["This", "report", "is", "not", "as", "long", "as", "the", "previous one."],
+      fullSentence: "This report is not as long as the previous one."
+    }
+  ];
+
+  const userSelections = {};
+
+  function initExercise() {
+    const container = document.getElementById('exercise-list');
+    container.innerHTML = '';
+
+    tasksData.forEach(task => {
+      userSelections[task.id] = new Array(task.words.length).fill(null);
+
+      const item = document.createElement('div');
+      item.className = 'task-item';
+      item.id = `task-${task.id}`;
+
+      item.innerHTML = `
+        <div class="prompt-row">
+          <span class="num-badge">${task.id}</span>
+          <span class="translation-hint">${task.translation}</span>
+          <button class="speaker-btn" onclick="speakRow(${task.id})">🔊 Озвучить</button>
+        </div>
+        <div class="word-bank" id="bank-${task.id}"></div>
+        <div class="slots-grid" id="slots-${task.id}"></div>
+      `;
+
+      container.appendChild(item);
+      renderWordBank(task);
+      renderSlots(task);
+    });
+  }
+
+  function renderWordBank(task) {
+    const bankEl = document.getElementById(`bank-${task.id}`);
+    bankEl.innerHTML = '';
+    task.words.forEach((word, index) => {
+      const chip = document.createElement('button');
+      chip.className = 'word-chip';
+      chip.textContent = word;
+      chip.id = `chip-${task.id}-${index}`;
+      chip.onclick = () => selectWord(task.id, word, index);
+      bankEl.appendChild(chip);
+    });
+  }
+
+  function renderSlots(task) {
+    const slotsEl = document.getElementById(`slots-${task.id}`);
+    slotsEl.innerHTML = '';
+    for (let i = 0; i < task.words.length; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'slot';
+      slot.id = `slot-${task.id}-${i}`;
+      const selectedObj = userSelections[task.id][i];
+      if (selectedObj) {
+        slot.textContent = selectedObj.word;
+        slot.classList.add('filled');
+        slot.onclick = () => deselectSlot(task.id, i);
+      }
+      slotsEl.appendChild(slot);
+    }
+  }
+
+  function selectWord(taskId, word, chipIndex) {
+    const task = tasksData.find(t => t.id === taskId);
+    const emptyIndex = userSelections[taskId].indexOf(null);
+    if (emptyIndex !== -1) {
+      userSelections[taskId][emptyIndex] = { word, chipIndex };
+      document.getElementById(`chip-${taskId}-${chipIndex}`).classList.add('used');
+      renderSlots(task);
+    }
+  }
+
+  function deselectSlot(taskId, slotIndex) {
+    const selectedObj = userSelections[taskId][slotIndex];
+    if (selectedObj) {
+      document.getElementById(`chip-${taskId}-${selectedObj.chipIndex}`).classList.remove('used');
+      userSelections[taskId][slotIndex] = null;
+      const task = tasksData.find(t => t.id === taskId);
+      renderSlots(task);
+    }
+  }
+
+  function speakText(text) {
+    if (!text) return;
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function speakRow(taskId) {
+    const task = tasksData.find(t => t.id === taskId);
+    speakText(task.fullSentence);
+  }
+
+  function checkAnswers() {
+    let allCorrect = true;
+    let hasIncomplete = false;
+
+    tasksData.forEach(task => {
+      const selections = userSelections[task.id];
+      const isComplete = !selections.includes(null);
+
+      if (!isComplete) {
+        hasIncomplete = true;
+        allCorrect = false;
+      }
+
+      for (let i = 0; i < task.words.length; i++) {
+        const slotEl = document.getElementById(`slot-${task.id}-${i}`);
+        if (!slotEl) continue;
+        slotEl.classList.remove('correct', 'incorrect');
+
+        const userWord = selections[i] ? selections[i].word : null;
+        if (userWord) {
+          if (userWord === task.correct[i]) {
+            slotEl.classList.add('correct');
+          } else {
+            slotEl.classList.add('incorrect');
+            allCorrect = false;
+          }
+        }
+      }
+    });
+
+    const feedback = document.getElementById('feedback');
+    if (hasIncomplete) {
+      feedback.style.color = '#f59e0b';
+      feedback.textContent = 'Заполните все ячейки во всех предложениях перед проверкой! ✏️';
+    } else if (allCorrect) {
+      feedback.style.color = '#22c55e';
+      feedback.textContent = 'Превосходно! Все 10 предложений составлены идеально! 🎉';
+    } else {
+      feedback.style.color = '#ef4444';
+      feedback.textContent = 'Есть ошибки. Проверьте ячейки, выделенные красным цветом! ❌';
+    }
+  }
+
+  function resetExercise() {
+    tasksData.forEach(task => {
+      userSelections[task.id] = new Array(task.words.length).fill(null);
+      renderWordBank(task);
+      renderSlots(task);
+    });
+    document.getElementById('feedback').textContent = '';
+  }
+
+  window.onload = initExercise;
+</script>
+
+</body>
+</html>
