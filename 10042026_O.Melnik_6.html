@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Write the superlative form of an adjective</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --accent-color: #0284c7;
+    --border-color: #e2e8f0;
+    --tooltip-bg: #0f172a;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 700px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .header-icon {
+    font-size: 1.8rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-color);
+  }
+
+  .hint-banner {
+    background-color: #f0f9ff;
+    border: 1px solid #bae6fd;
+    color: #0369a1;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 28px;
+  }
+
+  /* Task List */
+  .task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .task-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 2.2;
+    background: #ffffff;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+  }
+
+  .num-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  /* Different badge colors matching the design */
+  .badge-1, .badge-4, .badge-7 { background-color: #ec4899; }
+  .badge-2, .badge-5 { background-color: #8b5cf6; }
+  .badge-3, .badge-6 { background-color: #3b82f6; }
+
+  /* Tooltip Word */
+  .tooltip-word {
+    position: relative;
+    color: #0284c7;
+    border-bottom: 2px dashed #0284c7;
+    cursor: pointer;
+    padding: 0 4px;
+    font-weight: 700;
+    min-width: 110px;
+  }
+
+  .tooltip-word .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 260px;
+    background-color: var(--tooltip-bg);
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    pointer-events: none;
+    line-height: 1.4;
+  }
+
+  .tooltip-word .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--tooltip-bg) transparent transparent transparent;
+  }
+
+  .tooltip-word:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* Input Fields */
+  .answer-input {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    background-color: #f8fafc;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 12px;
+    outline: none;
+    min-width: 200px;
+    transition: all 0.2s ease;
+  }
+
+  .answer-input:focus {
+    border-color: var(--accent-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  .answer-input.correct {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d;
+  }
+
+  .answer-input.incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c;
+  }
+
+  /* Speaker Button */
+  .speaker-btn {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 0.2s ease;
+  }
+
+  .speaker-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  /* Controls & Feedback */
+  .controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: #0284c7;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background: #0369a1;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .feedback-msg {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-top: 16px;
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">✏️</span>
+    <h2 class="title">Write the superlative form of an adjective</h2>
+  </div>
+
+  <div class="hint-banner">
+    💡 Наводите на слова для подсказки. Напишите превосходную степень (можно использовать с артиклем <i>the</i> или без него).
+  </div>
+
+  <div class="task-list">
+    <!-- Question 1 -->
+    <div class="task-row">
+      <span class="num-badge badge-1">1</span>
+      <span class="tooltip-word" onclick="speakText('small')">small
+        <span class="tooltip-text">[smɔːl] — маленький</span>
+      </span>
+      <span>—</span>
+      <input type="text" class="answer-input" id="input-1" placeholder="напишите ответ..." autocomplete="off">
+      <button class="speaker-btn" title="Озвучить" onclick="speakRow(1)">🔊</button>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="task-row">
+      <span class="num-badge badge-2">2</span>
+      <span class="tooltip-word" onclick="speakText('big')">big
+        <span class="tooltip-text">[bɪɡ] — большой</span>
+      </span>
+      <span>—</span>
+      <input type="text" class="answer-input" id="input-2" placeholder="напишите ответ..." autocomplete="off">
+      <button class="speaker-btn" title="Озвучить" onclick="speakRow(2)">🔊</button>
+    </div>
+
+    <!-- Question 3 -->
+    <div class="task-row">
+      <span class="num-badge badge-3">3</span>
+      <span class="tooltip-word" onclick="speakText('beautiful')">beautiful
+        <span class="tooltip-text">[ˈbjuː.tɪ.fəl] — красивый</span>
+      </span>
+      <span>—</span>
+      <input type="text" class="answer-input" id="input-3" placeholder="напишите ответ..." autocomplete="off">
+      <button class="speaker-btn" title="Озвучить" onclick="speakRow(3)">🔊</button>
+    </div>
+
+    <!-- Question 4 -->
+    <div class="task-row">
+      <span class="num-badge badge-4">4</span>
+      <span class="tooltip-word" onclick="speakText('dry')">dry
+        <span class="tooltip-text">[draɪ] — сухой</span>
+      </span>
+      <span>—</span>
+      <input type="text" class="answer-input" id="input-4" placeholder="напишите ответ..." autocomplete="off">
+      <button class="speaker-btn" title="Озвучить" onclick="speakRow(4)">🔊</button>
+    </div>
+
+    <!-- Question 5 -->
+    <div class="task-row">
+      <span class="num-badge badge-5">5</span>
+      <span class="tooltip-word" onclick="speakText('comfortable')">comfortable
+        <span class="tooltip-text">[ˈkʌm.fə.tə.bəl] — удобный</span>
+      </span>
+      <span>—</span>
+      <input type="text" class="answer-input" id="input-5" placeholder="напишите ответ..." autocomplete="off">
+      <button class="speaker-btn" title="Озвучить" onclick="speakRow(5)">🔊</button>
+    </div>
+
+    <!-- Question 6 -->
+    <div class="task-row">
+      <span class="num-badge badge-6">6</span>
+      <span class="tooltip-word" onclick="speakText('sad')">sad
+        <span class="tooltip-text">[sæd] — грустный</span>
+      </span>
+      <span>—</span>
+      <input type="text" class="answer-input" id="input-6" placeholder="напишите ответ..." autocomplete="off">
+      <button class="speaker-btn" title="Озвучить" onclick="speakRow(6)">🔊</button>
+    </div>
+
+    <!-- Question 7 -->
+    <div class="task-row">
+      <span class="num-badge badge-7">7</span>
+      <span class="tooltip-word" onclick="speakText('happy')">happy
+        <span class="tooltip-text">[ˈhæp.i] — счастливый</span>
+      </span>
+      <span>—</span>
+      <input type="text" class="answer-input" id="input-7" placeholder="напишите ответ..." autocomplete="off">
+      <button class="speaker-btn" title="Озвучить" onclick="speakRow(7)">🔊</button>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-check" onclick="checkAnswers()">Проверить 🎯</button>
+    <button class="btn btn-reset" onclick="resetExercise()">Сбросить 🔄</button>
+  </div>
+
+  <div class="feedback-msg" id="feedback"></div>
+</div>
+
+<script>
+  const correctAnswers = {
+    'input-1': ['smallest', 'the smallest'],
+    'input-2': ['biggest', 'the biggest'],
+    'input-3': ['most beautiful', 'the most beautiful'],
+    'input-4': ['driest', 'the driest'],
+    'input-5': ['most comfortable', 'the most comfortable'],
+    'input-6': ['saddest', 'the saddest'],
+    'input-7': ['happiest', 'the happiest']
+  };
+
+  const spokenForms = {
+    1: "the smallest",
+    2: "the biggest",
+    3: "the most beautiful",
+    4: "the driest",
+    5: "the most comfortable",
+    6: "the saddest",
+    7: "the happiest"
+  };
+
+  function speakText(text) {
+    if (!text) return;
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function speakRow(rowNum) {
+    speakText(spokenForms[rowNum]);
+  }
+
+  function checkAnswers() {
+    let allCorrect = true;
+    let hasEmpty = false;
+
+    Object.keys(correctAnswers).forEach(id => {
+      const input = document.getElementById(id);
+      const userVal = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
+
+      input.classList.remove('correct', 'incorrect');
+
+      if (userVal === '') {
+        hasEmpty = true;
+        allCorrect = false;
+      } else if (correctAnswers[id].includes(userVal)) {
+        input.classList.add('correct');
+      } else {
+        input.classList.add('incorrect');
+        allCorrect = false;
+      }
+    });
+
+    const feedback = document.getElementById('feedback');
+    if (hasEmpty) {
+      feedback.style.color = '#f59e0b';
+      feedback.textContent = 'Заполните все поля перед проверкой! ✏️';
+    } else if (allCorrect) {
+      feedback.style.color = '#22c55e';
+      feedback.textContent = 'Отлично! Все превосходные формы образованы верно! 🎉';
+    } else {
+      feedback.style.color = '#ef4444';
+      feedback.textContent = 'Есть ошибки. Проверьте поля, выделенные красным цветом! ❌';
+    }
+  }
+
+  function resetExercise() {
+    Object.keys(correctAnswers).forEach(id => {
+      const input = document.getElementById(id);
+      if (input) {
+        input.value = '';
+        input.classList.remove('correct', 'incorrect');
+      }
+    });
+    document.getElementById('feedback').textContent = '';
+  }
+</script>
+
+</body>
+</html>
