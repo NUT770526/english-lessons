@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2. Обери правильну форму</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f1f5f9;
+    color: #0f172a;
+  }
+
+  /* Interactive Tooltip Styles */
+  .tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+    border-bottom: 2px dashed #8b5cf6;
+    cursor: pointer;
+    color: #6d28d9;
+    font-weight: 600;
+    padding: 0 2px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .tooltip-wrapper:hover {
+    background-color: #f3e8ff;
+    color: #5b21b6;
+  }
+
+  .tooltip-box {
+    visibility: hidden;
+    opacity: 0;
+    width: max-content;
+    max-width: 260px;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 12px;
+    padding: 8px 14px;
+    position: absolute;
+    z-index: 50;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+  }
+
+  .tooltip-box::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .tooltip-wrapper:hover .tooltip-box {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Custom Option Button Animation */
+  .option-btn {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .option-btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .option-btn.selected {
+    background-color: #7c3aed;
+    color: #ffffff;
+    border-color: #7c3aed;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+  }
+
+  .option-btn.correct {
+    background-color: #10b981 !important;
+    color: #ffffff !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25) !important;
+  }
+
+  .option-btn.incorrect {
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+    border-color: #ef4444 !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25) !important;
+  }
+</style>
+</head>
+<body class="min-h-screen py-8 px-4 flex justify-center items-center">
+
+<div class="max-w-4xl w-full bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200">
+  
+  <!-- Header Section -->
+  <div class="flex items-center gap-4 mb-6">
+    <div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-3xl font-extrabold shadow-sm">
+      🎯
+    </div>
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">
+        2. Обери правильну форму
+      </h1>
+      <p class="text-slate-500 font-medium text-sm sm:text-base mt-1">
+        Тема: <span class="text-purple-600 font-semibold">Verb Patterns (Infinitive / Gerund)</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Instruction Banner -->
+  <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-xl mb-8 flex items-start gap-3 shadow-xs">
+    <span class="text-2xl leading-none">💡</span>
+    <div>
+      <p class="text-amber-900 font-bold text-sm sm:text-base">
+        Звертай увагу на слово перед пропуском!
+      </p>
+      <p class="text-amber-700 text-xs sm:text-sm mt-0.5">
+        Наводь на підкреслені слова, щоб побачити транскрипцію, переклад та почути вимову.
+      </p>
+    </div>
+  </div>
+
+  <!-- Sentences List Container -->
+  <div id="sentences-list" class="space-y-4 mb-8">
+    <!-- Sentences will be dynamically injected here -->
+  </div>
+
+  <!-- Action Controls -->
+  <div class="flex flex-wrap gap-3 justify-center items-center pt-4 border-t border-slate-100">
+    <button onclick="checkAnswers()" class="px-7 py-3.5 bg-purple-600 hover:bg-purple-700 active:scale-95 text-white font-bold rounded-2xl shadow-lg shadow-purple-200 transition-all flex items-center gap-2">
+      <span>Check</span>
+      <span class="text-lg">🎯</span>
+    </button>
+    <button onclick="resetExercise()" class="px-6 py-3.5 bg-slate-600 hover:bg-slate-700 active:scale-95 text-white font-bold rounded-2xl shadow-md transition-all flex items-center gap-2">
+      <span>Reset</span>
+      <span class="text-lg">🔄</span>
+    </button>
+    <button onclick="listenAllSentences()" class="px-6 py-3.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold rounded-2xl shadow-md transition-all flex items-center gap-2">
+      <span>Listen All</span>
+      <span class="text-lg">🔊</span>
+    </button>
+  </div>
+
+  <!-- Score & Feedback Banner -->
+  <div id="feedback-card" class="hidden mt-6 p-4 rounded-2xl text-center font-bold text-base sm:text-lg transition-all duration-300">
+  </div>
+
+</div>
+
+<script>
+  // Vocabulary items for tooltips and audio synthesis
+  const vocabulary = {
+    "rock climbing": { ipa: "/rɒk ˈklaɪ.mɪŋ/", uk: "скелелазіння" },
+    "swimming": { ipa: "/ˈswɪm.ɪŋ/", uk: "плавання" },
+    "match": { ipa: "/mætʃ/", uk: "матч / гра" },
+    "snowboarding": { ipa: "/ˈsnəʊ.bɔː.dɪŋ/", uk: "сноубординг" },
+    "lets": { ipa: "/lets/", uk: "дозволяє" },
+    "losing": { ipa: "/ˈluː.zɪŋ/", uk: "програвати" },
+    "can’t stand": { ipa: "/kɑːnt stænd/", uk: "не терпіти" },
+    "prefer": { ipa: "/prɪˈfɜːr/", uk: "воліти / надавати перевагу" },
+    "considering": { ipa: "/kənˈsɪd.ər.ɪŋ/", uk: "розглядати / обдумувати" },
+    "board games": { ipa: "/ˈbɔːd ˌɡeɪmz/", uk: "настільні ігри" },
+    "stadium": { ipa: "/ˈsteɪ.di.əm/", uk: "стадіон" }
+  };
+
+  // 10 Sentences Data
+  const sentencesData = [
+    {
+      id: 1,
+      prefix: "I’d like",
+      options: ["to try", "trying"],
+      correct: "to try",
+      suffix: "<span class='tooltip-wrapper' onmouseenter='speakWord(\"rock climbing\")'>rock climbing<span class='tooltip-box'><span class='text-purple-300 font-mono'>/rɒk ˈklaɪ.mɪŋ/</span><br>скелелазіння</span></span>."
+    },
+    {
+      id: 2,
+      prefix: "Mia enjoys",
+      options: ["to swim", "swimming"],
+      correct: "swimming",
+      suffix: "in the morning."
+    },
+    {
+      id: 3,
+      prefix: "We decided",
+      options: ["to watch", "watching"],
+      correct: "to watch",
+      suffix: "the football <span class='tooltip-wrapper' onmouseenter='speakWord(\"match\")'>match<span class='tooltip-box'><span class='text-purple-300 font-mono'>/mætʃ/</span><br>матч</span></span> together."
+    },
+    {
+      id: 4,
+      prefix: "He is thinking about",
+      options: ["to try", "trying"],
+      correct: "trying",
+      suffix: "<span class='tooltip-wrapper' onmouseenter='speakWord(\"snowboarding\")'>snowboarding<span class='tooltip-box'><span class='text-purple-300 font-mono'>/ˈsnəʊ.bɔː.dɪŋ/</span><br>сноубординг</span></span> this winter."
+    },
+    {
+      id: 5,
+      prefix: "Mum <span class='tooltip-wrapper' onmouseenter='speakWord(\"lets\")'>lets<span class='tooltip-box'><span class='text-purple-300 font-mono'>/lets/</span><br>дозволяє</span></span> me",
+      options: ["play", "to play"],
+      correct: "play",
+      suffix: "football after school."
+    },
+    {
+      id: 6,
+      prefix: "I <span class='tooltip-wrapper' onmouseenter='speakWord(\"can’t stand\")'>can’t stand<span class='tooltip-box'><span class='text-purple-300 font-mono'>/kɑːnt stænd/</span><br>не терплю</span></span>",
+      options: ["lose", "losing"],
+      correct: "losing",
+      suffix: "when I play chess."
+    },
+    {
+      id: 7,
+      prefix: "I’d <span class='tooltip-wrapper' onmouseenter='speakWord(\"prefer\")'>prefer<span class='tooltip-box'><span class='text-purple-300 font-mono'>/prɪˈfɜːr/</span><br>надавати перевагу</span></span>",
+      options: ["not to go", "to not going"],
+      correct: "not to go",
+      suffix: "skiing today."
+    },
+    {
+      id: 8,
+      prefix: "Ben is <span class='tooltip-wrapper' onmouseenter='speakWord(\"considering\")'>considering<span class='tooltip-box'><span class='text-purple-300 font-mono'>/kənˈsɪd.ər.ɪŋ/</span><br>обдумує</span></span>",
+      options: ["to join", "joining"],
+      correct: "joining",
+      suffix: "a local sports club."
+    },
+    {
+      id: 9,
+      prefix: "I quite like",
+      options: ["to play", "playing"],
+      correct: "playing",
+      suffix: "<span class='tooltip-wrapper' onmouseenter='speakWord(\"board games\")'>board games<span class='tooltip-box'><span class='text-purple-300 font-mono'>/ˈbɔːd ˌɡeɪmz/</span><br>настільні ігри</span></span> with my friends."
+    },
+    {
+      id: 10,
+      prefix: "Would you love",
+      options: ["to visit", "visiting"],
+      correct: "to visit",
+      suffix: "the new <span class='tooltip-wrapper' onmouseenter='speakWord(\"stadium\")'>stadium<span class='tooltip-box'><span class='text-purple-300 font-mono'>/ˈsteɪ.di.əm/</span><br>стадіон</span></span> next week?"
+    }
+  ];
+
+  let userSelections = {};
+
+  function renderSentences() {
+    const listContainer = document.getElementById("sentences-list");
+    listContainer.innerHTML = "";
+
+    sentencesData.forEach((item, idx) => {
+      const sentenceCard = document.createElement("div");
+      sentenceCard.className = "p-4 sm:p-5 bg-slate-50 border-2 border-slate-200 rounded-2xl flex flex-wrap items-center gap-2 text-slate-800 text-base sm:text-lg font-medium leading-relaxed transition-all";
+      sentenceCard.id = `sentence-card-${item.id}`;
+
+      // Index tag
+      const indexTag = `<span class="bg-purple-100 text-purple-700 font-extrabold text-sm px-2.5 py-1 rounded-lg mr-1">${idx + 1}</span>`;
+
+      // Options UI generator
+      const optionsHTML = `
+        <span class="inline-flex items-center gap-1.5 mx-1 my-1 p-1 bg-white border border-slate-300 rounded-xl shadow-xs">
+          ${item.options.map(option => `
+            <button 
+              type="button" 
+              onclick="selectOption(${item.id}, '${option}')" 
+              id="opt-${item.id}-${option.replace(/\s+/g, '-')}"
+              class="option-btn px-3 py-1.5 rounded-lg text-sm font-bold border border-transparent hover:border-purple-300 text-slate-700 hover:text-purple-600 focus:outline-none"
+            >
+              ${option}
+            </button>
+          `).join('<span class="text-slate-300 font-light">/</span>')}
+        </span>
+      `;
+
+      sentenceCard.innerHTML = `${indexTag} <span>${item.prefix}</span> ${optionsHTML} <span>${item.suffix}</span>`;
+      listContainer.appendChild(sentenceCard);
+    });
+  }
+
+  function selectOption(sentenceId, selectedValue) {
+    userSelections[sentenceId] = selectedValue;
+
+    // Reset styles for options in this sentence
+    const item = sentencesData.find(s => s.id === sentenceId);
+    item.options.forEach(opt => {
+      const btn = document.getElementById(`opt-${sentenceId}-${opt.replace(/\s+/g, '-')}`);
+      if (btn) btn.classList.remove('selected');
+    });
+
+    // Highlight selected button
+    const selectedBtn = document.getElementById(`opt-${sentenceId}-${selectedValue.replace(/\s+/g, '-')}`);
+    if (selectedBtn) {
+      selectedBtn.classList.add('selected');
+    }
+  }
+
+  // Text-to-speech audio player for hover items
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    const total = sentencesData.length;
+
+    if (Object.keys(userSelections).length < total) {
+      showFeedback(`Будь ласка, обери відповіді для всіх 10 речень! ✏️`, "bg-amber-100 text-amber-800 border-2 border-amber-300");
+      return;
+    }
+
+    sentencesData.forEach(item => {
+      const userChoice = userSelections[item.id];
+      const card = document.getElementById(`sentence-card-${item.id}`);
+
+      item.options.forEach(opt => {
+        const btn = document.getElementById(`opt-${item.id}-${opt.replace(/\s+/g, '-')}`);
+        if (btn) btn.classList.remove('correct', 'incorrect');
+      });
+
+      const selectedBtn = document.getElementById(`opt-${item.id}-${userChoice.replace(/\s+/g, '-')}`);
+
+      if (userChoice === item.correct) {
+        score++;
+        if (selectedBtn) selectedBtn.classList.add('correct');
+        card.classList.remove('border-slate-200', 'border-red-300');
+        card.classList.add('border-emerald-300', 'bg-emerald-50/40');
+      } else {
+        if (selectedBtn) selectedBtn.classList.add('incorrect');
+        // Highlight correct answer in outline
+        const correctBtn = document.getElementById(`opt-${item.id}-${item.correct.replace(/\s+/g, '-')}`);
+        if (correctBtn) correctBtn.classList.add('border-2', 'border-emerald-500', 'text-emerald-700');
+
+        card.classList.remove('border-slate-200', 'border-emerald-300');
+        card.classList.add('border-red-300', 'bg-red-50/40');
+      }
+    });
+
+    if (score === total) {
+      showFeedback(`Чудово! 🎉 Всі ${score}/${total} відповідей правильні! Ти прекрасно знаєш Verb Patterns!`, "bg-emerald-100 text-emerald-900 border-2 border-emerald-300");
+    } else {
+      showFeedback(`Твій результат: ${score} з ${total}. Перевірте виділені червоним відповіді! ❌`, "bg-red-100 text-red-900 border-2 border-red-300");
+    }
+  }
+
+  function showFeedback(message, colorClasses) {
+    const card = document.getElementById('feedback-card');
+    card.className = `mt-6 p-4 rounded-2xl text-center font-bold text-base sm:text-lg transition-all duration-300 ${colorClasses}`;
+    card.textContent = message;
+    card.classList.remove('hidden');
+  }
+
+  function resetExercise() {
+    userSelections = {};
+    document.getElementById('feedback-card').classList.add('hidden');
+    renderSentences();
+  }
+
+  function listenAllSentences() {
+    if (!('speechSynthesis' in window)) return;
+
+    window.speechSynthesis.cancel();
+
+    // Prepare full clean text sentences for reading
+    const cleanSentences = [
+      "I’d like to try rock climbing.",
+      "Mia enjoys swimming in the morning.",
+      "We decided to watch the football match together.",
+      "He is thinking about trying snowboarding this winter.",
+      "Mum lets me play football after school.",
+      "I can’t stand losing when I play chess.",
+      "I’d prefer not to go skiing today.",
+      "Ben is considering joining a local sports club.",
+      "I quite like playing board games with my friends.",
+      "Would you love to visit the new stadium next week?"
+    ];
+
+    cleanSentences.forEach((text, index) => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      
+      // Highlight card while reading
+      utterance.onstart = () => {
+        document.querySelectorAll('[id^="sentence-card-"]').forEach(c => c.classList.remove('ring-4', 'ring-purple-400'));
+        const activeCard = document.getElementById(`sentence-card-${index + 1}`);
+        if (activeCard) activeCard.classList.add('ring-4', 'ring-purple-400');
+      };
+
+      utterance.onend = () => {
+        const activeCard = document.getElementById(`sentence-card-${index + 1}`);
+        if (activeCard) activeCard.classList.remove('ring-4', 'ring-purple-400');
+      };
+
+      window.speechSynthesis.speak(utterance);
+    });
+  }
+
+  // Initialize on load
+  window.onload = renderSentences;
+</script>
+
+</body>
+</html>
