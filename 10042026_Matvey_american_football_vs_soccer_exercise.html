@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>American Football vs Soccer Gap Fill Exercise</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --accent-color: #1e40af;
+    --border-color: #e2e8f0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+
+  .word-chip {
+    background: #ffffff;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e293b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .word-chip:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+    transform: translateY(-1px);
+  }
+
+  .word-chip.used {
+    opacity: 0.35;
+    pointer-events: none;
+    border-color: #e2e8f0;
+    background: #e2e8f0;
+  }
+
+  .gap-input {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #f8fafc;
+    color: #0f172a;
+    min-width: 110px;
+    max-width: 150px;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .gap-input:focus {
+    border-color: #2563eb;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  .gap-input.correct {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d;
+  }
+
+  .gap-input.incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c;
+  }
+
+  .vocab {
+    position: relative;
+    display: inline-block;
+    color: #1d4ed8;
+    font-weight: 600;
+    border-bottom: 2px dashed #60a5fa;
+    cursor: pointer;
+    padding: 0 2px;
+    transition: background-color 0.2s ease;
+  }
+
+  .vocab:hover {
+    background-color: #dbeafe;
+    border-radius: 4px;
+  }
+
+  .vocab .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    width: max-content;
+    max-width: 240px;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px 12px;
+    position: absolute;
+    z-index: 20;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    font-weight: normal;
+    pointer-events: none;
+  }
+
+  .vocab .tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .vocab:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .tooltip-phonetic {
+    display: block;
+    font-size: 0.8rem;
+    color: #93c5fd;
+    margin-bottom: 2px;
+    font-family: Arial, sans-serif;
+  }
+
+  .tooltip-trans {
+    display: block;
+    font-size: 0.85rem;
+    color: #f1f5f9;
+  }
+</style>
+</head>
+<body class="p-4 sm:p-8 flex justify-center">
+
+<div class="max-w-5xl w-full bg-white rounded-2xl p-6 sm:p-10 border border-slate-200 shadow-xl">
+  <div class="flex items-center gap-3 mb-6">
+    <span class="text-3xl">🏈 vs ⚽</span>
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">American Football vs Soccer</h1>
+      <p class="text-sm text-slate-500 font-medium">Fill in the gaps using the word bank below</p>
+    </div>
+  </div>
+
+  <!-- Word Bank -->
+  <div class="mb-8 bg-slate-100 p-4 rounded-xl border border-slate-200">
+    <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Word Bank</div>
+    <div class="flex flex-wrap gap-2.5" id="word-bank"></div>
+  </div>
+
+  <div class="overflow-x-auto mb-8 rounded-xl border border-amber-200 shadow-sm">
+    <table class="w-full text-left text-sm sm:text-base border-collapse">
+      <thead>
+        <tr class="bg-amber-600 text-white font-bold text-center">
+          <th class="p-3 border-r border-amber-500 w-12">No</th>
+          <th class="p-3 border-r border-amber-500 w-1/2">American Football</th>
+          <th class="p-3 w-1/2">Soccer</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-amber-200 bg-amber-50/40">
+        
+        <!-- Row 1 -->
+        <tr>
+          <td class="p-3 text-center font-bold text-amber-800 border-r border-amber-200">1</td>
+          <td class="p-4 border-r border-amber-200 leading-relaxed">
+            Games last for four 15 minute <input type="text" class="gap-input" id="gap-1" placeholder="..." autocomplete="off">.
+          </td>
+          <td class="p-4 leading-relaxed">
+            A match consists of two 45 <input type="text" class="gap-input" id="gap-2" placeholder="..." autocomplete="off"> halves with a 15-minute rest period in between.
+          </td>
+        </tr>
+
+        <!-- Row 2 -->
+        <tr>
+          <td class="p-3 text-center font-bold text-amber-800 border-r border-amber-200">2</td>
+          <td class="p-4 border-r border-amber-200 leading-relaxed">
+            Each <input type="text" class="gap-input" id="gap-3" placeholder="..." autocomplete="off"> has 4 <span class="vocab" data-word="downs" onmouseenter="speakWord('downs')">downs<span class="tooltip"><span class="tooltip-phonetic">/daʊnz/</span><span class="tooltip-trans">попытки продвинуть мяч</span></span></span> to gain 10 or more yards.
+          </td>
+          <td class="p-4 leading-relaxed">
+            Each team can have a maximum of 11 players, and a minimum of 7 <input type="text" class="gap-input" id="gap-4" placeholder="..." autocomplete="off"> are needed to <span class="vocab" data-word="constitute" onmouseenter="speakWord('constitute')">constitute<span class="tooltip"><span class="tooltip-phonetic">/ˈkɒnstɪtjuːt/</span><span class="tooltip-trans">составлять / являться</span></span></span> a match.
+          </td>
+        </tr>
+
+        <!-- Row 3 -->
+        <tr>
+          <td class="p-3 text-center font-bold text-amber-800 border-r border-amber-200">3</td>
+          <td class="p-4 border-r border-amber-200 leading-relaxed">
+            There are <input type="text" class="gap-input" id="gap-5" placeholder="..." autocomplete="off"> of different plays that players can run on any down.
+          </td>
+          <td class="p-4 leading-relaxed">
+            The <input type="text" class="gap-input" id="gap-6" placeholder="..." autocomplete="off"> must be made of either artificial or natural grass.
+          </td>
+        </tr>
+
+        <!-- Row 4 -->
+        <tr>
+          <td class="p-3 text-center font-bold text-amber-800 border-r border-amber-200">4</td>
+          <td class="p-4 border-r border-amber-200 leading-relaxed">
+            At the <input type="text" class="gap-input" id="gap-7" placeholder="..." autocomplete="off"> of every game is the <span class="vocab" data-word="coin toss" onmouseenter="speakWord('coin toss')">coin toss<span class="tooltip"><span class="tooltip-phonetic">/ˈkɔɪn tɒs/</span><span class="tooltip-trans">жеребьевка монетой</span></span></span> to decide which team receives the ball first and which side of the pitch they want to start from.
+          </td>
+          <td class="p-4 leading-relaxed">
+            The <input type="text" class="gap-input" id="gap-8" placeholder="..." autocomplete="off"> must have a <span class="vocab" data-word="circumference" onmouseenter="speakWord('circumference')">circumference<span class="tooltip"><span class="tooltip-phonetic">/səˈkʌmfərəns/</span><span class="tooltip-trans">окружность, длина окружности</span></span></span> of 58-61 cm and be of a circular shape.
+          </td>
+        </tr>
+
+        <!-- Row 5 -->
+        <tr>
+          <td class="p-3 text-center font-bold text-amber-800 border-r border-amber-200">5</td>
+          <td class="p-4 border-r border-amber-200 leading-relaxed">
+            The <input type="text" class="gap-input" id="gap-9" placeholder="..." autocomplete="off"> begins with a kick-off where one team <span class="vocab" data-word="punts" onmouseenter="speakWord('punts')">punts<span class="tooltip"><span class="tooltip-phonetic">/pʌnts/</span><span class="tooltip-trans">выбивает мяч с ноги</span></span></span> the ball down field for the other team to then run back with the ball as far as possible.
+          </td>
+          <td class="p-4 leading-relaxed">
+            Each game must include one referee and two assistant <input type="text" class="gap-input" id="gap-10" placeholder="..." autocomplete="off"> (<span class="vocab" data-word="linesmen" onmouseenter="speakWord('linesmen')">linesmen<span class="tooltip"><span class="tooltip-phonetic">/ˈlaɪnzmən/</span><span class="tooltip-trans">боковые арбитры</span></span></span>).
+          </td>
+        </tr>
+
+        <!-- Row 6 -->
+        <tr>
+          <td class="p-3 text-center font-bold text-amber-800 border-r border-amber-200">6</td>
+          <td class="p-4 border-r border-amber-200 leading-relaxed">
+            On fourth down, the <span class="vocab" data-word="offense" onmouseenter="speakWord('offense')">offense<span class="tooltip"><span class="tooltip-phonetic">/əˈfens/</span><span class="tooltip-trans">нападение</span></span></span> has the option to either try to make up the yards they are short or to <input type="text" class="gap-input" id="gap-11" placeholder="..." autocomplete="off"> the ball.
+          </td>
+          <td class="p-4 leading-relaxed">
+            If the game needs to head to <input type="text" class="gap-input" id="gap-12" placeholder="..." autocomplete="off"> as a result of both teams being level in a match, then 30 minutes will be added in the form of two 15 minute halves after the <span class="vocab" data-word="allotted" onmouseenter="speakWord('allotted')">allotted<span class="tooltip"><span class="tooltip-phonetic">/əˈlɒtɪd/</span><span class="tooltip-trans">отведенный / выделенный</span></span></span> 90 minutes.
+          </td>
+        </tr>
+
+        <!-- Row 7 -->
+        <tr>
+          <td class="p-3 text-center font-bold text-amber-800 border-r border-amber-200">7</td>
+          <td class="p-4 border-r border-amber-200 leading-relaxed">
+            If they decide to kick they have two options; to punt or to try for a field <input type="text" class="gap-input" id="gap-13" placeholder="..." autocomplete="off">.
+          </td>
+          <td class="p-4 leading-relaxed">
+            The whole ball must <input type="text" class="gap-input" id="gap-14" placeholder="..." autocomplete="off"> the goal line for it to constitute as a goal.
+          </td>
+        </tr>
+
+        <!-- Row 8 -->
+        <tr>
+          <td class="p-3 text-center font-bold text-amber-800 border-r border-amber-200">8</td>
+          <td class="p-4 border-r border-amber-200 leading-relaxed">
+            Depending on their <input type="text" class="gap-input" id="gap-15" placeholder="..." autocomplete="off"> on the pitch players will usually be <span class="vocab" data-word="assigned" onmouseenter="speakWord('assigned')">assigned<span class="tooltip"><span class="tooltip-phonetic">/əˈsaɪnd/</span><span class="tooltip-trans">назначены / распределены</span></span></span> specific plays.
+          </td>
+          <td class="p-4 leading-relaxed">
+            If a ball goes out of play off an <input type="text" class="gap-input" id="gap-16" placeholder="..." autocomplete="off"> in either of the side lines, then it is given as a throw in.
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex flex-wrap justify-center gap-4">
+    <button class="px-6 py-3 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl transition shadow-md" onclick="checkAnswers()">Check 🎯</button>
+    <button class="px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-bold rounded-xl transition shadow-md" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+
+  <div class="text-center font-bold text-lg mt-6 min-h-[28px]" id="feedback"></div>
+</div>
+
+<script>
+  const wordsList = [
+    "position", "hundreds", "start", "cross", "referees", "ball", "team", "field", "players",
+    "minutes", "kick", "extra time", "goal", "opponent", "game", "quarters"
+  ];
+
+  const correctAnswers = {
+    'gap-1': ['quarters'],
+    'gap-2': ['minutes'],
+    'gap-3': ['team'],
+    'gap-4': ['players'],
+    'gap-5': ['hundreds'],
+    'gap-6': ['field'],
+    'gap-7': ['start'],
+    'gap-8': ['ball'],
+    'gap-9': ['game'],
+    'gap-10': ['referees'],
+    'gap-11': ['kick'],
+    'gap-12': ['extra time', 'extra-time'],
+    'gap-13': ['goal'],
+    'gap-14': ['cross'],
+    'gap-15': ['position'],
+    'gap-16': ['opponent']
+  };
+
+  function initWordBank() {
+    const bankEl = document.getElementById('word-bank');
+    bankEl.innerHTML = '';
+    wordsList.forEach((word) => {
+      const chip = document.createElement('button');
+      chip.className = 'word-chip';
+      chip.textContent = word;
+      chip.onclick = () => fillNextEmptyGap(word, chip);
+      bankEl.appendChild(chip);
+    });
+  }
+
+  function fillNextEmptyGap(word, chipEl) {
+    const inputs = document.querySelectorAll('.gap-input');
+    for (let input of inputs) {
+      if (!input.value.trim()) {
+        input.value = word;
+        chipEl.classList.add('used');
+        updateWordBankState();
+        break;
+      }
+    }
+  }
+
+  function updateWordBankState() {
+    const inputs = document.querySelectorAll('.gap-input');
+    const usedWords = Array.from(inputs).map(i => i.value.trim().toLowerCase());
+    const chips = document.querySelectorAll('.word-chip');
+    
+    chips.forEach(chip => {
+      if (usedWords.includes(chip.textContent.toLowerCase())) {
+        chip.classList.add('used');
+      } else {
+        chip.classList.remove('used');
+      }
+    });
+  }
+
+  document.addEventListener('input', (e) => {
+    if (e.target.classList.contains('gap-input')) {
+      updateWordBankState();
+    }
+  });
+
+  function normalizeText(text) {
+    return text.trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+
+  function checkAnswers() {
+    let allCorrect = true;
+    let hasIncomplete = false;
+
+    Object.keys(correctAnswers).forEach(id => {
+      const inputEl = document.getElementById(id);
+      const val = inputEl.value;
+
+      inputEl.classList.remove('correct', 'incorrect');
+
+      if (!val.trim()) {
+        hasIncomplete = true;
+        allCorrect = false;
+        return;
+      }
+
+      const normalizedUser = normalizeText(val);
+      const isRight = correctAnswers[id].some(ans => normalizeText(ans) === normalizedUser);
+
+      if (isRight) {
+        inputEl.classList.add('correct');
+      } else {
+        inputEl.classList.add('incorrect');
+        allCorrect = false;
+      }
+    });
+
+    const feedback = document.getElementById('feedback');
+    if (hasIncomplete) {
+      feedback.className = 'text-center font-bold text-lg mt-6 min-h-[28px] text-amber-600';
+      feedback.textContent = 'Please fill in all gaps before checking! ✏️';
+    } else if (allCorrect) {
+      feedback.className = 'text-center font-bold text-lg mt-6 min-h-[28px] text-emerald-600';
+      feedback.textContent = 'Great job! All answers are correct! 🎉';
+    } else {
+      feedback.className = 'text-center font-bold text-lg mt-6 min-h-[28px] text-rose-600';
+      feedback.textContent = 'Some answers are incorrect. Check the red boxes! ❌';
+    }
+  }
+
+  function resetExercise() {
+    Object.keys(correctAnswers).forEach(id => {
+      const inputEl = document.getElementById(id);
+      if (inputEl) {
+        inputEl.value = '';
+        inputEl.classList.remove('correct', 'incorrect');
+      }
+    });
+    updateWordBankState();
+    const feedback = document.getElementById('feedback');
+    feedback.textContent = '';
+  }
+
+  function speakWord(phrase) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(phrase);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  window.onload = initWordBank;
+</script>
+
+</body>
+</html>
