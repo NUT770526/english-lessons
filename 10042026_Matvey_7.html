@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find the pairs! Complete these sentences</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --accent-color: #ea580c;
+    --border-color: #e2e8f0;
+    --selected-bg: #ffedd5;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .header-icon {
+    font-size: 2rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #c2410c;
+  }
+
+  .matching-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .match-card {
+    position: relative;
+    padding: 14px 18px;
+    background: #f8fafc;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155;
+    transition: all 0.2s ease;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+  }
+
+  .match-card:hover {
+    border-color: var(--accent-color);
+    background-color: #fff7ed;
+  }
+
+  .match-card.selected {
+    border-color: var(--accent-color);
+    background-color: var(--selected-bg);
+    color: #c2410c;
+  }
+
+  .match-card.paired {
+    border-color: #94a3b8;
+    background-color: #f1f5f9;
+  }
+
+  .match-card.correct {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d !important;
+  }
+
+  .match-card.incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c !important;
+  }
+
+  .pair-badge {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: #cbd5e1;
+    color: #0f172a;
+    font-weight: bold;
+  }
+
+  /* Tooltips */
+  .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 10px;
+    position: absolute;
+    z-index: 10;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    font-weight: normal;
+    font-size: 0.85rem;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .match-card:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .tooltip-phonetic {
+    color: #fb923c;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: #ea580c;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background: #c2410c;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .feedback-msg {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-top: 16px;
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">🧩</span>
+    <h2 class="title">Find the pairs! Complete these sentences</h2>
+  </div>
+
+  <div class="matching-grid">
+    <div class="column" id="left-col"></div>
+    <div class="column" id="right-col"></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-check" onclick="checkPairs()">Check 🎯</button>
+    <button class="btn btn-reset" onclick="resetPairs()">Reset 🔄</button>
+  </div>
+
+  <div class="feedback-msg" id="feedback"></div>
+</div>
+
+<script>
+  const pairData = [
+    { id: 1, left: "1. He specialises in", right: "emergency ward", leftIpa: "/hiː ˈspeʃ.ə.laɪ.zɪz ɪn/", rightIpa: "/ɪˈmɜː.dʒən.si wɔːd/" },
+    { id: 2, left: "2. I like to", right: "swim every day", leftIpa: "/aɪ laɪk tuː/", rightIpa: "/swɪm ˈev.ri deɪ/" },
+    { id: 3, left: "3. Tim hopes to", right: "leave the stockroom soon", leftIpa: "/tɪm həʊps tuː/", rightIpa: "/liːv ðə ˈstɒk.ruːm suːn/" },
+    { id: 4, left: "4. I enjoy working on the", right: "helping children", leftIpa: "/aɪ ɪnˈdʒɔɪ ˈwɜː.kɪŋ ɒn ðə/", rightIpa: "/ˈhel.pɪŋ ˈtʃɪl.drən/" },
+    { id: 5, left: "5. She made me", right: "say sorry", leftIpa: "/ʃiː meɪd miː/", rightIpa: "/seɪ ˈsɒr.i/" },
+    { id: 6, left: "6. Mark is thinking of", right: "applying for a new job", leftIpa: "/mɑːk ɪz ˈθɪŋ.kɪŋ ɒv/", rightIpa: "/əˈplaɪ.ɪŋ fɔːr ə njuː dʒɒb/" },
+    { id: 7, left: "7. My parents let me", right: "stay out until 10 pm", leftIpa: "/maɪ ˈpeə.rənts let miː/", rightIpa: "/steɪ aʊt ənˈtɪl ten piː.em/" },
+    { id: 8, left: "8. I can't stand", right: "waiting in long queues", leftIpa: "/aɪ kɑːnt stænd/", rightIpa: "/ˈweɪ.tɪŋ ɪn lɒŋ kjuːz/" },
+    { id: 9, left: "9. We decided to", right: "book the tickets online", leftIpa: "/wiː dɪˈsaɪ.dɪd tuː/", rightIpa: "/bʊk ðə ˈtɪk.ɪts ˌɒnˈlaɪn/" },
+    { id: 10, left: "10. She would prefer", right: "not to go skiing today", leftIpa: "/ʃiː wʊd prɪˈfɜːr/", rightIpa: "/nɒt tuː ɡəʊ ˈskiː.ɪŋ təˈdeɪ/" }
+  ];
+
+  let selectedLeft = null;
+  let activePairs = {}; // leftId -> rightId
+  let colorCounter = 1;
+
+  function shuffle(array) {
+    return array.slice().sort(() => Math.random() - 0.5);
+  }
+
+  function initExercise() {
+    activePairs = {};
+    selectedLeft = null;
+    document.getElementById('feedback').textContent = '';
+
+    const leftCol = document.getElementById('left-col');
+    const rightCol = document.getElementById('right-col');
+    leftCol.innerHTML = '';
+    rightCol.innerHTML = '';
+
+    const shuffledLeft = pairData;
+    const shuffledRight = shuffle(pairData);
+
+    shuffledLeft.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'match-card';
+      card.dataset.id = item.id;
+      card.dataset.side = 'left';
+      card.onclick = () => selectLeft(item.id);
+      card.onmouseenter = () => speakText(item.left);
+      card.innerHTML = `
+        <span>${item.left}</span>
+        <span class="pair-badge" id="badge-left-${item.id}" style="display:none;"></span>
+        <span class="tooltip"><span class="tooltip-phonetic">${item.leftIpa}</span></span>
+      `;
+      leftCol.appendChild(card);
+    });
+
+    shuffledRight.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'match-card';
+      card.dataset.id = item.id;
+      card.dataset.side = 'right';
+      card.onclick = () => selectRight(item.id);
+      card.onmouseenter = () => speakText(item.right);
+      card.innerHTML = `
+        <span>${item.right}</span>
+        <span class="pair-badge" id="badge-right-${item.id}" style="display:none;"></span>
+        <span class="tooltip"><span class="tooltip-phonetic">${item.rightIpa}</span></span>
+      `;
+      rightCol.appendChild(card);
+    });
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const cleanText = text.replace(/^\d+\.\s*/, '');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function selectLeft(id) {
+    selectedLeft = id;
+    document.querySelectorAll('.match-card[data-side="left"]').forEach(card => {
+      card.classList.remove('selected');
+      if (parseInt(card.dataset.id) === id) {
+        card.classList.add('selected');
+      }
+    });
+  }
+
+  function selectRight(rightId) {
+    if (selectedLeft === null) return;
+
+    // Remove any existing pairing with selectedLeft or rightId
+    Object.keys(activePairs).forEach(lId => {
+      if (parseInt(lId) === selectedLeft || activePairs[lId] === rightId) {
+        delete activePairs[lId];
+      }
+    });
+
+    activePairs[selectedLeft] = rightId;
+    selectedLeft = null;
+
+    updateUI();
+  }
+
+  function updateUI() {
+    document.querySelectorAll('.match-card').forEach(card => {
+      card.classList.remove('selected', 'paired', 'correct', 'incorrect');
+      const side = card.dataset.side;
+      const id = parseInt(card.dataset.id);
+
+      const badge = side === 'left' ? document.getElementById(`badge-left-${id}`) : document.getElementById(`badge-right-${id}`);
+      badge.style.display = 'none';
+
+      if (side === 'left' && activePairs[id]) {
+        card.classList.add('paired');
+        badge.textContent = `✓`;
+        badge.style.display = 'inline-block';
+      }
+
+      if (side === 'right') {
+        const pairedLeftId = Object.keys(activePairs).find(lId => activePairs[lId] === id);
+        if (pairedLeftId) {
+          card.classList.add('paired');
+          badge.textContent = `✓`;
+          badge.style.display = 'inline-block';
+        }
+      }
+    });
+  }
+
+  function checkPairs() {
+    const pairedKeys = Object.keys(activePairs);
+    if (pairedKeys.length < pairData.length) {
+      const feedback = document.getElementById('feedback');
+      feedback.style.color = '#f59e0b';
+      feedback.textContent = 'Please match all 10 pairs before checking! ✏️';
+      return;
+    }
+
+    let correctCount = 0;
+
+    pairedKeys.forEach(lId => {
+      const rId = activePairs[lId];
+      const leftCard = document.querySelector(`.match-card[data-side="left"][data-id="${lId}"]`);
+      const rightCard = document.querySelector(`.match-card[data-side="right"][data-id="${rId}"]`);
+
+      if (parseInt(lId) === rId) {
+        leftCard.classList.add('correct');
+        rightCard.classList.add('correct');
+        correctCount++;
+      } else {
+        leftCard.classList.add('incorrect');
+        rightCard.classList.add('incorrect');
+      }
+    });
+
+    const feedback = document.getElementById('feedback');
+    if (correctCount === pairData.length) {
+      feedback.style.color = '#22c55e';
+      feedback.textContent = 'Awesome! All pairs are correct! 🎉';
+    } else {
+      feedback.style.color = '#ef4444';
+      feedback.textContent = `Score: ${correctCount} / ${pairData.length}. Check the red pairs! ❌`;
+    }
+  }
+
+  function resetPairs() {
+    initExercise();
+  }
+
+  window.onload = initExercise;
+</script>
+
+</body>
+</html>
