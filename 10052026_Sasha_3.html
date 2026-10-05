@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3. Правда или выдумка? 🎲</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --accent-color: #7c3aed;
+    --accent-light: #f3e8ff;
+    --border-color: #e2e8f0;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 860px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .header-icon {
+    font-size: 2rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #5b21b6;
+  }
+
+  .instruction-card {
+    background: #f1f5f9;
+    border-left: 4px solid var(--accent-color);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    font-size: 0.98rem;
+    color: #334155;
+  }
+
+  .dialogue-box {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #cbd5e1;
+    font-style: italic;
+    color: #475569;
+  }
+
+  .round-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+  }
+
+  .round-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #6d28d9;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+    align-items: center;
+  }
+
+  .word-bank-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-right: 4px;
+  }
+
+  .vocab-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background-color: var(--accent-light);
+    color: #5b21b6;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  .vocab-tag:hover {
+    background-color: #ddd6fe;
+    transform: translateY(-1px);
+  }
+
+  /* Tooltip */
+  .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 20;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    white-space: nowrap;
+    font-weight: normal;
+    font-size: 0.85rem;
+    pointer-events: none;
+  }
+
+  .tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .vocab-tag:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .tooltip-ipa {
+    color: #c084fc;
+    font-family: Arial, sans-serif;
+  }
+
+  .tooltip-ua {
+    color: #38bdf8;
+    font-weight: 500;
+  }
+
+  .example {
+    font-style: italic;
+    color: #64748b;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+  }
+
+  .sentence-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .input-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8fafc;
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .input-num {
+    font-weight: 700;
+    color: var(--accent-color);
+  }
+
+  .text-input {
+    flex: 1;
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .text-input:focus {
+    border-color: var(--accent-color);
+  }
+
+  .lie-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: #dc2626;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 28px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: #64748b;
+    color: #ffffff;
+    transition: all 0.2s ease;
+  }
+
+  .btn:hover {
+    background: #475569;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">🎲</span>
+    <h2 class="title">3. Правда или выдумка?</h2>
+  </div>
+
+  <div class="instruction-card">
+    Составь три предложения о себе в каждом раунде: <strong>два правдивых и одно выдуманное</strong>. Отметь радиокнопкой выдуманное предложение, а учитель должен отгадать его!
+    <div class="dialogue-box">
+      💬 Учитель спрашивает: <strong>“Is it true?”</strong> — «Это правда?»<br>
+      🗣️ Ты отвечаешь: <strong>“Yes, it is!”</strong> или <strong>“No, it isn’t!”</strong>
+    </div>
+  </div>
+
+  <!-- Round 1 -->
+  <div class="round-card">
+    <div class="round-title">Раунд 1 — My routine ⏰</div>
+    <div class="word-bank">
+      <span class="word-bank-label">Используй:</span>
+      <span class="vocab-tag" onclick="speakText('always')">
+        always 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/ˈɔːl.weɪz/</span> • <span class="tooltip-ua">завжди</span></span>
+      </span>
+      <span class="vocab-tag" onclick="speakText('usually')">
+        usually 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/ˈjuː.ʒu.ə.li/</span> • <span class="tooltip-ua">зазвичай</span></span>
+      </span>
+      <span class="vocab-tag" onclick="speakText('often')">
+        often 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/ˈɒf.ən/</span> • <span class="tooltip-ua">часто</span></span>
+      </span>
+      <span class="vocab-tag" onclick="speakText('have breakfast')">
+        have breakfast 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/hæv ˈbrek.fəst/</span> • <span class="tooltip-ua">снідати</span></span>
+      </span>
+    </div>
+    <div class="example">Пример: I usually have breakfast at eight.</div>
+
+    <div class="sentence-inputs">
+      <div class="input-group">
+        <span class="input-num">1.</span>
+        <input type="text" class="text-input" placeholder="Напиши предложение...">
+        <label class="lie-label"><input type="radio" name="r1_lie"> Выдумка 🤥</label>
+      </div>
+      <div class="input-group">
+        <span class="input-num">2.</span>
+        <input type="text" class="text-input" placeholder="Напиши предложение...">
+        <label class="lie-label"><input type="radio" name="r1_lie"> Выдумка 🤥</label>
+      </div>
+      <div class="input-group">
+        <span class="input-num">3.</span>
+        <input type="text" class="text-input" placeholder="Напиши предложение...">
+        <label class="lie-label"><input type="radio" name="r1_lie"> Выдумка 🤥</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Round 2 -->
+  <div class="round-card">
+    <div class="round-title">Раунд 2 — My free time 🎨</div>
+    <div class="word-bank">
+      <span class="word-bank-label">Используй:</span>
+      <span class="vocab-tag" onclick="speakText('hang out')">
+        hang out 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/ˌhæŋ ˈaʊt/</span> • <span class="tooltip-ua">проводити час</span></span>
+      </span>
+      <span class="vocab-tag" onclick="speakText('spend time')">
+        spend time 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/spend taɪm/</span> • <span class="tooltip-ua">проводити час</span></span>
+      </span>
+      <span class="vocab-tag" onclick="speakText('cafe')">
+        cafe 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/ˈkæf.eɪ/</span> • <span class="tooltip-ua">кафе</span></span>
+      </span>
+      <span class="vocab-tag" onclick="speakText('explore')">
+        explore 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/ɪkˈsplɔːr/</span> • <span class="tooltip-ua">досліджувати</span></span>
+      </span>
+    </div>
+    <div class="example">Пример: I often hang out with my friends in a cafe.</div>
+
+    <div class="sentence-inputs">
+      <div class="input-group">
+        <span class="input-num">1.</span>
+        <input type="text" class="text-input" placeholder="Напиши предложение...">
+        <label class="lie-label"><input type="radio" name="r2_lie"> Выдумка 🤥</label>
+      </div>
+      <div class="input-group">
+        <span class="input-num">2.</span>
+        <input type="text" class="text-input" placeholder="Напиши предложение...">
+        <label class="lie-label"><input type="radio" name="r2_lie"> Выдумка 🤥</label>
+      </div>
+      <div class="input-group">
+        <span class="input-num">3.</span>
+        <input type="text" class="text-input" placeholder="Напиши предложение...">
+        <label class="lie-label"><input type="radio" name="r2_lie"> Выдумка 🤥</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Round 3 -->
+  <div class="round-card">
+    <div class="round-title">Раунд 3 — My trips ✈️</div>
+    <div class="word-bank">
+      <span class="word-bank-label">Используй:</span>
+      <span class="vocab-tag" onclick="speakText('take a bus')">
+        take a bus 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/teɪk ə bʌs/</span> • <span class="tooltip-ua">їхати автобусом</span></span>
+      </span>
+      <span class="vocab-tag" onclick="speakText('take a taxi')">
+        take a taxi 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/teɪk ə ˈtæk.si/</span> • <span class="tooltip-ua">брати таксі</span></span>
+      </span>
+      <span class="vocab-tag" onclick="speakText('take a plane')">
+        take a plane 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/teɪk ə pleɪn/</span> • <span class="tooltip-ua">летіти літаком</span></span>
+      </span>
+      <span class="vocab-tag" onclick="speakText('take a ship')">
+        take a ship 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/teɪk ə ʃɪp/</span> • <span class="tooltip-ua">пливти кораблем</span></span>
+      </span>
+      <span class="vocab-tag" onclick="speakText('boat')">
+        boat 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/bəʊt/</span> • <span class="tooltip-ua">човен, катер</span></span>
+      </span>
+    </div>
+    <div class="example">Пример: I take a ship to school.</div>
+
+    <div class="sentence-inputs">
+      <div class="input-group">
+        <span class="input-num">1.</span>
+        <input type="text" class="text-input" placeholder="Напиши предложение...">
+        <label class="lie-label"><input type="radio" name="r3_lie"> Выдумка 🤥</label>
+      </div>
+      <div class="input-group">
+        <span class="input-num">2.</span>
+        <input type="text" class="text-input" placeholder="Напиши предложение...">
+        <label class="lie-label"><input type="radio" name="r3_lie"> Выдумка 🤥</label>
+      </div>
+      <div class="input-group">
+        <span class="input-num">3.</span>
+        <input type="text" class="text-input" placeholder="Напиши предложение...">
+        <label class="lie-label"><input type="radio" name="r3_lie"> Выдумка 🤥</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" onclick="resetExercise()">Сбросить всё 🔄</button>
+  </div>
+</div>
+
+<script>
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function resetExercise() {
+    document.querySelectorAll('.text-input').forEach(input => input.value = '');
+    document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+  }
+</script>
+
+</body>
+</html>
