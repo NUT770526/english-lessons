@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Replace the words with their synonyms</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --accent-color: #2563eb;
+    --border-color: #e2e8f0;
+    --hint-color: #64748b;
+    --correct-bg: #dcfce7;
+    --correct-border: #16a34a;
+    --correct-text: #15803d;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #dc2626;
+    --incorrect-text: #b91c1c;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 760px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
+  }
+
+  /* Header Section */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #f1f5f9;
+  }
+
+  .header-icon {
+    width: 44px;
+    height: 44px;
+    background: #eff6ff;
+    border: 2px solid #bfdbfe;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1d4ed8;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1d4ed8;
+  }
+
+  /* Sentences List */
+  .sentences-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .sentence-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.05rem;
+    background: #ffffff;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    flex-wrap: wrap;
+  }
+
+  .sentence-item:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  }
+
+  .bullet-point {
+    width: 10px;
+    height: 10px;
+    background-color: #93c5fd;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .sentence-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex-grow: 1;
+  }
+
+  .hint-text {
+    color: var(--hint-color);
+    font-style: italic;
+    font-size: 0.98rem;
+  }
+
+  /* Select Box Styling */
+  .select-wrapper {
+    display: inline-block;
+    position: relative;
+  }
+
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 32px 6px 14px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+    min-width: 140px;
+  }
+
+  select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+
+  .select-wrapper::after {
+    content: '▾';
+    font-size: 0.9rem;
+    color: #64748b;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  /* Feedback Colors for Validation */
+  select.correct {
+    background-color: var(--correct-bg) !important;
+    border-color: var(--correct-border) !important;
+    color: var(--correct-text) !important;
+  }
+
+  select.incorrect {
+    background-color: var(--incorrect-bg) !important;
+    border-color: var(--incorrect-border) !important;
+    color: var(--incorrect-text) !important;
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    opacity: 0.5;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+    padding: 4px;
+  }
+
+  .audio-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  /* Action Buttons */
+  .controls {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: #2563eb;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background: #1d4ed8;
+  }
+
+  .btn-reset {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+  }
+
+  .btn-reset:hover {
+    background: #e2e8f0;
+  }
+
+  .feedback-msg {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-top: 24px;
+    min-height: 28px;
+  }
+
+  @media (max-width: 520px) {
+    .container {
+      padding: 24px 16px;
+    }
+    .sentence-item {
+      font-size: 0.95rem;
+    }
+    select {
+      font-size: 0.9rem;
+      min-width: 120px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+      </svg>
+    </div>
+    <h1 class="title">Replace the words with their synonyms</h1>
+  </div>
+
+  <div class="sentences-list" id="sentences-container"></div>
+
+  <div class="controls">
+    <button class="btn btn-check" onclick="checkAnswers()">Check Answers 🎯</button>
+    <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+
+  <div class="feedback-msg" id="feedback"></div>
+</div>
+
+<script>
+  const sentencesData = [
+    {
+      id: 1,
+      prefix: "Mary",
+      suffix: "goes to bed early.",
+      hint: "(all the time)",
+      options: ["always", "seldom", "often"],
+      answer: "always"
+    },
+    {
+      id: 2,
+      prefix: "Tim",
+      suffix: "goes to the theatre.",
+      hint: "(not at all)",
+      options: ["always", "never", "seldom"],
+      answer: "never"
+    },
+    {
+      id: 3,
+      prefix: "I",
+      suffix: "eat pizza.",
+      hint: "(sometimes, now and then)",
+      options: ["always", "never", "occasionally"],
+      answer: "occasionally"
+    },
+    {
+      id: 4,
+      prefix: "My mom",
+      suffix: "watches TV in the evening.",
+      hint: "(typically, most of the time)",
+      options: ["rarely", "usually", "sometimes"],
+      answer: "usually"
+    },
+    {
+      id: 5,
+      prefix: "My friends and I",
+      suffix: "play football on Friday.",
+      hint: "(from time to time)",
+      options: ["sometimes", "always", "never"],
+      answer: "sometimes"
+    },
+    {
+      id: 6,
+      prefix: "She",
+      suffix: "drinks coffee in the restaurant.",
+      hint: "(a lot, many times)",
+      options: ["often", "rarely", "never"],
+      answer: "often"
+    }
+  ];
+
+  function speakSentence(id) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const item = sentencesData.find(s => s.id === id);
+      const selectElem = document.getElementById(`select-${id}`);
+      const word = selectElem.value ? selectElem.value : "...";
+      const sentence = `${item.prefix} ${word} ${item.suffix}`;
+      
+      const utterance = new SpeechSynthesisUtterance(sentence);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function renderSentences() {
+    const container = document.getElementById('sentences-container');
+    container.innerHTML = '';
+
+    sentencesData.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'sentence-item';
+
+      const optionsHtml = item.options
+        .map(opt => `<option value="${opt}">${opt}</option>`)
+        .join('');
+
+      row.innerHTML = `
+        <div class="bullet-point"></div>
+        <div class="sentence-text">
+          <span>${item.prefix}</span>
+          <div class="select-wrapper">
+            <select id="select-${item.id}">
+              <option value="" disabled selected hidden></option>
+              ${optionsHtml}
+            </select>
+          </div>
+          <span>${item.suffix}</span>
+          <span class="hint-text">${item.hint}</span>
+        </div>
+        <button class="audio-btn" title="Listen" onclick="speakSentence(${item.id})">🔊</button>
+      `;
+
+      container.appendChild(row);
+    });
+  }
+
+  function checkAnswers() {
+    let allSelected = true;
+    let correctCount = 0;
+
+    sentencesData.forEach(item => {
+      const select = document.getElementById(`select-${item.id}`);
+      select.classList.remove('correct', 'incorrect');
+
+      if (!select.value) {
+        allSelected = false;
+      } else if (select.value === item.answer) {
+        select.classList.add('correct');
+        correctCount++;
+      } else {
+        select.classList.add('incorrect');
+      }
+    });
+
+    const feedback = document.getElementById('feedback');
+    if (!allSelected) {
+      feedback.style.color = '#d97706';
+      feedback.textContent = 'Please choose an option for every gap! ✏️';
+      return;
+    }
+
+    if (correctCount === sentencesData.length) {
+      feedback.style.color = '#16a34a';
+      feedback.textContent = `Great job! All ${correctCount}/${sentencesData.length} answers are correct! 🎉`;
+    } else {
+      feedback.style.color = '#dc2626';
+      feedback.textContent = `Score: ${correctCount}/${sentencesData.length}. Check the highlighted answers and try again! 💡`;
+    }
+  }
+
+  function resetExercise() {
+    sentencesData.forEach(item => {
+      const select = document.getElementById(`select-${item.id}`);
+      select.value = '';
+      select.classList.remove('correct', 'incorrect');
+    });
+    const feedback = document.getElementById('feedback');
+    feedback.textContent = '';
+  }
+
+  window.onload = renderSentences;
+</script>
+
+</body>
+</html>
