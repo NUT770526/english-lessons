@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Read and match the words with their synonyms</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --accent-color: #4f46e5;
+    --accent-light: #e0e7ff;
+    --border-color: #cbd5e1;
+    --selected-bg: #dbeafe;
+    --selected-border: #2563eb;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 860px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .header-icon {
+    font-size: 2rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #4338ca;
+  }
+
+  /* Examples Section */
+  .examples-card {
+    background: #f1f5f9;
+    border-left: 5px solid var(--accent-color);
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin-bottom: 28px;
+  }
+
+  .examples-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 1.05rem;
+  }
+
+  .examples-list li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .highlight-word {
+    background-color: #93c5fd;
+    color: #1e3a8a;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .highlight-word:hover {
+    background-color: #60a5fa;
+  }
+
+  /* Matching Grid */
+  .matching-grid {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .match-card {
+    padding: 14px 18px;
+    background: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155;
+    transition: all 0.2s ease;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 56px;
+  }
+
+  .match-card:hover {
+    border-color: var(--accent-color);
+    background-color: #f5f3ff;
+  }
+
+  .match-card.selected {
+    border-color: var(--selected-border);
+    background-color: var(--selected-bg);
+    color: #1e40af;
+  }
+
+  .match-card.paired {
+    border-color: #94a3b8;
+    background-color: #f1f5f9;
+  }
+
+  .match-card.correct {
+    border-color: #22c55e !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d !important;
+  }
+
+  .match-card.incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c !important;
+  }
+
+  .word-card {
+    background-color: #e0e7ff;
+    border-color: #c7d2fe;
+    color: #3730a3;
+  }
+
+  .pair-badge {
+    font-size: 0.85rem;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: #475569;
+    color: #ffffff;
+    font-weight: bold;
+  }
+
+  /* Controls and Feedback */
+  .controls {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background: #4f46e5;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background: #4338ca;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+
+  .feedback-msg {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 20px;
+    min-height: 32px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">📖</span>
+    <h1 class="title">Read and match the words with their synonyms</h1>
+  </div>
+
+  <!-- Examples Section -->
+  <div class="examples-card">
+    <ul class="examples-list">
+      <li>I <span class="highlight-word" onclick="speakText('always')">always</span> go to school by bus.</li>
+      <li>She <span class="highlight-word" onclick="speakText('usually')">usually</span> eats cereal for breakfast.</li>
+      <li>We <span class="highlight-word" onclick="speakText('often')">often</span> drink tea in the morning.</li>
+      <li>I <span class="highlight-word" onclick="speakText('rarely')">rarely</span> watch TV.</li>
+      <li>She <span class="highlight-word" onclick="speakText('never')">never</span> goes to the cinema.</li>
+    </ul>
+  </div>
+
+  <!-- Matching Area -->
+  <div class="matching-grid">
+    <div class="column" id="words-col"></div>
+    <div class="column" id="synonyms-col"></div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="btn btn-check" onclick="checkPairs()">Check 🎯</button>
+    <button class="btn btn-reset" onclick="resetExercise()">Reset 🔄</button>
+  </div>
+
+  <div class="feedback-msg" id="feedback"></div>
+</div>
+
+<script>
+  const pairsData = [
+    { id: 1, word: "often", synonym: "a lot, many times" },
+    { id: 2, word: "rarely", synonym: "not often, hardly ever" },
+    { id: 3, word: "sometimes", synonym: "now and then, from time to time, every so often, occasionally" },
+    { id: 4, word: "usually", synonym: "most of the time, typically" },
+    { id: 5, word: "always", synonym: "all the time, every time" },
+    { id: 6, word: "never", synonym: "not ever, not at all" }
+  ];
+
+  let selectedWordId = null;
+  let activePairs = {}; // wordId -> synonymId
+
+  function shuffle(array) {
+    return array.slice().sort(() => Math.random() - 0.5);
+  }
+
+  function initExercise() {
+    activePairs = {};
+    selectedWordId = null;
+    document.getElementById('feedback').textContent = '';
+
+    const wordsCol = document.getElementById('words-col');
+    const synonymsCol = document.getElementById('synonyms-col');
+    wordsCol.innerHTML = '';
+    synonymsCol.innerHTML = '';
+
+    // Standard word order
+    const words = pairsData;
+    // Shuffled synonyms order
+    const synonyms = shuffle(pairsData);
+
+    words.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'match-card word-card';
+      card.dataset.id = item.id;
+      card.dataset.side = 'word';
+      card.onclick = () => selectWord(item.id);
+      card.onmouseenter = () => speakText(item.word);
+      card.innerHTML = `
+        <span>${item.word}</span>
+        <span class="pair-badge" id="badge-word-${item.id}" style="display:none;"></span>
+      `;
+      wordsCol.appendChild(card);
+    });
+
+    synonyms.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'match-card';
+      card.dataset.id = item.id;
+      card.dataset.side = 'synonym';
+      card.onclick = () => selectSynonym(item.id);
+      card.onmouseenter = () => speakText(item.synonym);
+      card.innerHTML = `
+        <span>${item.synonym}</span>
+        <span class="pair-badge" id="badge-synonym-${item.id}" style="display:none;"></span>
+      `;
+      synonymsCol.appendChild(card);
+    });
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function selectWord(id) {
+    selectedWordId = id;
+    document.querySelectorAll('.match-card[data-side="word"]').forEach(card => {
+      card.classList.remove('selected');
+      if (parseInt(card.dataset.id) === id) {
+        card.classList.add('selected');
+      }
+    });
+  }
+
+  function selectSynonym(synonymId) {
+    if (selectedWordId === null) return;
+
+    // Remove any existing pairing with selectedWordId or synonymId
+    Object.keys(activePairs).forEach(wId => {
+      if (parseInt(wId) === selectedWordId || activePairs[wId] === synonymId) {
+        delete activePairs[wId];
+      }
+    });
+
+    activePairs[selectedWordId] = synonymId;
+    selectedWordId = null;
+
+    updateUI();
+  }
+
+  function updateUI() {
+    document.querySelectorAll('.match-card').forEach(card => {
+      card.classList.remove('selected', 'paired', 'correct', 'incorrect');
+      const side = card.dataset.side;
+      const id = parseInt(card.dataset.id);
+
+      const badge = side === 'word' ? document.getElementById(`badge-word-${id}`) : document.getElementById(`badge-synonym-${id}`);
+      badge.style.display = 'none';
+
+      if (side === 'word' && activePairs[id]) {
+        card.classList.add('paired');
+        badge.textContent = `✓`;
+        badge.style.display = 'inline-block';
+      }
+
+      if (side === 'right' || side === 'synonym') {
+        const pairedWordId = Object.keys(activePairs).find(wId => activePairs[wId] === id);
+        if (pairedWordId) {
+          card.classList.add('paired');
+          badge.textContent = `✓`;
+          badge.style.display = 'inline-block';
+        }
+      }
+    });
+  }
+
+  function checkPairs() {
+    const pairedKeys = Object.keys(activePairs);
+    if (pairedKeys.length < pairsData.length) {
+      const feedback = document.getElementById('feedback');
+      feedback.style.color = '#f59e0b';
+      feedback.textContent = 'Please match all 6 pairs before checking! ✏️';
+      return;
+    }
+
+    let correctCount = 0;
+
+    pairedKeys.forEach(wId => {
+      const sId = activePairs[wId];
+      const wordCard = document.querySelector(`.match-card[data-side="word"][data-id="${wId}"]`);
+      const synonymCard = document.querySelector(`.match-card[data-side="synonym"][data-id="${sId}"]`);
+
+      if (parseInt(wId) === sId) {
+        wordCard.classList.add('correct');
+        synonymCard.classList.add('correct');
+        correctCount++;
+      } else {
+        wordCard.classList.add('incorrect');
+        synonymCard.classList.add('incorrect');
+      }
+    });
+
+    const feedback = document.getElementById('feedback');
+    if (correctCount === pairsData.length) {
+      feedback.style.color = '#22c55e';
+      feedback.textContent = 'Excellent! All pairs are correct! 🎉';
+    } else {
+      feedback.style.color = '#ef4444';
+      feedback.textContent = `Score: ${correctCount} / ${pairsData.length}. Check the red pairs! ❌`;
+    }
+  }
+
+  function resetExercise() {
+    initExercise();
+  }
+
+  window.onload = initExercise;
+</script>
+
+</body>
+</html>
