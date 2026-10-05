@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1. Вставь подходящее слово</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --accent-color: #2563eb;
+    --border-color: #e2e8f0;
+    --highlight-bg: #e0e7ff;
+    --highlight-text: #3730a3;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 820px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .header-icon {
+    font-size: 2rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+
+  .subtitle {
+    color: #64748b;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  .word-bank-card {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+  }
+
+  .word-bank-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #475569;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .vocab-word {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background-color: var(--highlight-bg);
+    color: var(--highlight-text);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  .vocab-word:hover {
+    background-color: #c7d2fe;
+    transform: translateY(-1px);
+  }
+
+  .simple-word {
+    display: inline-flex;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  /* Tooltip */
+  .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    background-color: #0f172a;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 6px 12px;
+    position: absolute;
+    z-index: 20;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    font-weight: normal;
+    font-size: 0.85rem;
+    pointer-events: none;
+  }
+
+  .tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  .vocab-word:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .tooltip-ipa {
+    color: #818cf8;
+    font-family: Arial, sans-serif;
+  }
+
+  .tooltip-ua {
+    color: #38bdf8;
+    font-weight: 500;
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .sentence-item {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 1.05rem;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .num {
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-right: 4px;
+  }
+
+  select.word-select {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #0f172a;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  select.word-select:focus {
+    border-color: var(--accent-color);
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset {
+    background: #64748b;
+    color: #ffffff;
+  }
+
+  .btn-reset:hover {
+    background: #475569;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <span class="header-icon">📝</span>
+    <h2 class="title">1. Вставь подходящее слово</h2>
+  </div>
+  <p class="subtitle">Используй каждое слово один раз. Наведи на выделенные слова, чтобы увидеть транскрипцию и перевод, или нажми, чтобы прослушать.</p>
+
+  <div class="word-bank-card">
+    <div class="word-bank-title">Банк слов:</div>
+    <div class="word-bank">
+      <span class="simple-word">cafe</span>
+      <span class="simple-word">boat</span>
+      <span class="vocab-word" onclick="speakText('title')">
+        title 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/ˈtaɪ.təl/</span> • <span class="tooltip-ua">назва, заголовок</span></span>
+      </span>
+      <span class="vocab-word" onclick="speakText('breakfast')">
+        breakfast 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/ˈbrek.fəst/</span> • <span class="tooltip-ua">сніданок</span></span>
+      </span>
+      <span class="simple-word">air</span>
+      <span class="vocab-word" onclick="speakText('explore')">
+        explore 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/ɪkˈsplɔːr/</span> • <span class="tooltip-ua">досліджувати</span></span>
+      </span>
+      <span class="vocab-word" onclick="speakText('hang out')">
+        hang out 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/ˌhæŋ ˈaʊt/</span> • <span class="tooltip-ua">проводити час, тусуватися</span></span>
+      </span>
+      <span class="vocab-word" onclick="speakText('spend time')">
+        spend time 🔊
+        <span class="tooltip"><span class="tooltip-ipa">/spend taɪm/</span> • <span class="tooltip-ua">проводити час</span></span>
+      </span>
+    </div>
+  </div>
+
+  <div class="exercise-list">
+    <div class="sentence-item">
+      <span class="num">1.</span> I have eggs and bread for
+      <select class="word-select" id="q1">
+        <option value="">-- выбери --</option>
+      </select>.
+    </div>
+
+    <div class="sentence-item">
+      <span class="num">2.</span> We often go to a
+      <select class="word-select" id="q2">
+        <option value="">-- выбери --</option>
+      </select>
+      after school to have a drink.
+    </div>
+
+    <div class="sentence-item">
+      <span class="num">3.</span> My grandfather has a small
+      <select class="word-select" id="q3">
+        <option value="">-- выбери --</option>
+      </select>
+      on the river.
+    </div>
+
+    <div class="sentence-item">
+      <span class="num">4.</span> What is the
+      <select class="word-select" id="q4">
+        <option value="">-- выбери --</option>
+      </select>
+      of this book?
+    </div>
+
+    <div class="sentence-item">
+      <span class="num">5.</span> Open the window, please. I need some fresh
+      <select class="word-select" id="q5">
+        <option value="">-- выбери --</option>
+      </select>.
+    </div>
+
+    <div class="sentence-item">
+      <span class="num">6.</span> We like to
+      <select class="word-select" id="q6">
+        <option value="">-- выбери --</option>
+      </select>
+      new places when we travel.
+    </div>
+
+    <div class="sentence-item">
+      <span class="num">7.</span> I often
+      <select class="word-select" id="q7">
+        <option value="">-- выбери --</option>
+      </select>
+      with my friends after school.
+    </div>
+
+    <div class="sentence-item">
+      <span class="num">8.</span> I like to
+      <select class="word-select" id="q8">
+        <option value="">-- выбери --</option>
+      </select>
+      with my family at the weekend.
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-reset" onclick="resetExercise()">Сбросить ответы 🔄</button>
+  </div>
+</div>
+
+<script>
+  const wordsList = [
+    "cafe", "boat", "title", "breakfast", "air", "explore", "hang out", "spend time"
+  ];
+
+  function populateDropdowns() {
+    const selects = document.querySelectorAll('.word-select');
+    selects.forEach(select => {
+      // Clear current options except default
+      select.innerHTML = '<option value="">-- выбери --</option>';
+      wordsList.forEach(word => {
+        const option = document.createElement('option');
+        option.value = word;
+        option.textContent = word;
+        select.appendChild(option);
+      });
+    });
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function resetExercise() {
+    const selects = document.querySelectorAll('.word-select');
+    selects.forEach(select => {
+      select.value = "";
+    });
+  }
+
+  window.onload = populateDropdowns;
+</script>
+
+</body>
+</html>
