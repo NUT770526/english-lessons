@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Make Negatives and Questions</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --primary-color: #2563eb;
+    --primary-light: #eff6ff;
+    --border-color: #cbd5e1;
+    --success-color: #16a34a;
+    --success-bg: #f0fdf4;
+    --error-color: #dc2626;
+    --error-bg: #fef2f2;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 820px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .icon-box {
+    width: 48px;
+    height: 48px;
+    background-color: var(--primary-light);
+    border: 2px solid #bfdbfe;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+
+  .example-card {
+    background-color: #f1f5f9;
+    border-left: 4px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 28px;
+  }
+
+  .example-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .example-line {
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+
+  .example-line strong {
+    color: var(--primary-color);
+  }
+
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .question-item {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.2s ease;
+  }
+
+  .original-sentence {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .prefix-label {
+    font-weight: 700;
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+  }
+
+  .prefix-label.minus {
+    color: #dc2626;
+  }
+
+  .prefix-label.question {
+    color: #2563eb;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    background-color: #f8fafc;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--primary-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  input.correct {
+    border-color: #16a34a !important;
+    background-color: var(--success-bg) !important;
+  }
+
+  input.incorrect {
+    border-color: #dc2626 !important;
+    background-color: var(--error-bg) !important;
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+  }
+
+  .audio-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  .feedback-msg {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-left: 34px;
+    display: none;
+  }
+
+  .feedback-msg.show {
+    display: block;
+    color: var(--error-color);
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background-color: var(--primary-color);
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background-color: #1d4ed8;
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .score-badge {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    background-color: var(--primary-light);
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="icon-box">✍️</div>
+    <h1 class="title">2. Make negative sentences and ask questions</h1>
+  </div>
+
+  <div class="example-card">
+    <div class="example-title">Example:</div>
+    <div class="example-line">She has got a book.</div>
+    <div class="example-line"><strong style="color:#dc2626;">−</strong> She <strong>hasn't got</strong> a book.</div>
+    <div class="example-line"><strong style="color:#2563eb;">?</strong> <strong>Has she got</strong> a book?</div>
+  </div>
+
+  <div class="questions-list">
+    <!-- Item 1 -->
+    <div class="question-item">
+      <div class="original-sentence">
+        <span>1. You have got two siblings.</span>
+        <button class="audio-btn" onclick="speakText('You have got two siblings.')">🔊</button>
+      </div>
+      <div class="input-group">
+        <div class="input-row">
+          <span class="prefix-label minus">−</span>
+          <input type="text" class="input-negative" data-answers='["You havent got two siblings", "You haven&#39;t got two siblings", "You have not got two siblings"]' placeholder="Write negative sentence...">
+        </div>
+        <div class="feedback-msg" id="fb-1-neg">Correct: You haven't got two siblings.</div>
+
+        <div class="input-row">
+          <span class="prefix-label question">?</span>
+          <input type="text" class="input-question" data-answers='["Have you got two siblings?", "Have you got two siblings"]' placeholder="Write question...">
+        </div>
+        <div class="feedback-msg" id="fb-1-q">Correct: Have you got two siblings?</div>
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="question-item">
+      <div class="original-sentence">
+        <span>2. He has got a small boat.</span>
+        <button class="audio-btn" onclick="speakText('He has got a small boat.')">🔊</button>
+      </div>
+      <div class="input-group">
+        <div class="input-row">
+          <span class="prefix-label minus">−</span>
+          <input type="text" class="input-negative" data-answers='["He hasnt got a small boat", "He hasn&#39;t got a small boat", "He has not got a small boat"]' placeholder="Write negative sentence...">
+        </div>
+        <div class="feedback-msg" id="fb-2-neg">Correct: He hasn't got a small boat.</div>
+
+        <div class="input-row">
+          <span class="prefix-label question">?</span>
+          <input type="text" class="input-question" data-answers='["Has he got a small boat?", "Has he got a small boat"]' placeholder="Write question...">
+        </div>
+        <div class="feedback-msg" id="fb-2-q">Correct: Has he got a small boat?</div>
+      </div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="question-item">
+      <div class="original-sentence">
+        <span>3. They have got relatives in Ukraine.</span>
+        <button class="audio-btn" onclick="speakText('They have got relatives in Ukraine.')">🔊</button>
+      </div>
+      <div class="input-group">
+        <div class="input-row">
+          <span class="prefix-label minus">−</span>
+          <input type="text" class="input-negative" data-answers='["They havent got relatives in Ukraine", "They haven&#39;t got relatives in Ukraine", "They have not got relatives in Ukraine"]' placeholder="Write negative sentence...">
+        </div>
+        <div class="feedback-msg" id="fb-3-neg">Correct: They haven't got relatives in Ukraine.</div>
+
+        <div class="input-row">
+          <span class="prefix-label question">?</span>
+          <input type="text" class="input-question" data-answers='["Have they got relatives in Ukraine?", "Have they got relatives in Ukraine"]' placeholder="Write question...">
+        </div>
+        <div class="feedback-msg" id="fb-3-q">Correct: Have they got relatives in Ukraine?</div>
+      </div>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="question-item">
+      <div class="original-sentence">
+        <span>4. She has got three folders.</span>
+        <button class="audio-btn" onclick="speakText('She has got three folders.')">🔊</button>
+      </div>
+      <div class="input-group">
+        <div class="input-row">
+          <span class="prefix-label minus">−</span>
+          <input type="text" class="input-negative" data-answers='["She hasnt got three folders", "She hasn&#39;t got three folders", "She has not got three folders"]' placeholder="Write negative sentence...">
+        </div>
+        <div class="feedback-msg" id="fb-4-neg">Correct: She hasn't got three folders.</div>
+
+        <div class="input-row">
+          <span class="prefix-label question">?</span>
+          <input type="text" class="input-question" data-answers='["Has she got three folders?", "Has she got three folders"]' placeholder="Write question...">
+        </div>
+        <div class="feedback-msg" id="fb-4-q">Correct: Has she got three folders?</div>
+      </div>
+    </div>
+
+    <!-- Item 5 -->
+    <div class="question-item">
+      <div class="original-sentence">
+        <span>5. We have got an English test on Tuesday.</span>
+        <button class="audio-btn" onclick="speakText('We have got an English test on Tuesday.')">🔊</button>
+      </div>
+      <div class="input-group">
+        <div class="input-row">
+          <span class="prefix-label minus">−</span>
+          <input type="text" class="input-negative" data-answers='["We havent got an English test on Tuesday", "We haven&#39;t got an English test on Tuesday", "We have not got an English test on Tuesday"]' placeholder="Write negative sentence...">
+        </div>
+        <div class="feedback-msg" id="fb-5-neg">Correct: We haven't got an English test on Tuesday.</div>
+
+        <div class="input-row">
+          <span class="prefix-label question">?</span>
+          <input type="text" class="input-question" data-answers='["Have we got an English test on Tuesday?", "Have we got an English test on Tuesday"]' placeholder="Write question...">
+        </div>
+        <div class="feedback-msg" id="fb-5-q">Correct: Have we got an English test on Tuesday?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-reset" onclick="resetAnswers()">Reset 🔄</button>
+    <div class="score-badge" id="scoreBadge">Score: 0/10</div>
+    <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔</button>
+  </div>
+</div>
+
+<script>
+  function normalizeText(str) {
+    return str
+      .trim()
+      .replace(/[’']/g, "'")
+      .replace(/\s+/g, ' ')
+      .replace(/[.\?]$/, '')
+      .toLowerCase();
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    const inputs = document.querySelectorAll('input[type="text"]');
+
+    inputs.forEach(input => {
+      const userVal = normalizeText(input.value);
+      const validAnswers = JSON.parse(input.getAttribute('data-answers')).map(normalizeText);
+      const feedback = input.parentElement.nextElementSibling;
+
+      input.classList.remove('correct', 'incorrect');
+      if (feedback && feedback.classList.contains('feedback-msg')) {
+        feedback.classList.remove('show');
+      }
+
+      if (userVal && validAnswers.includes(userVal)) {
+        score++;
+        input.classList.add('correct');
+      } else {
+        input.classList.add('incorrect');
+        if (feedback && feedback.classList.contains('feedback-msg')) {
+          feedback.classList.add('show');
+        }
+      }
+    });
+
+    const scoreBadge = document.getElementById('scoreBadge');
+    scoreBadge.textContent = `Score: ${score} / ${inputs.length}`;
+    scoreBadge.style.display = 'inline-block';
+  }
+
+  function resetAnswers() {
+    const inputs = document.querySelectorAll('input[type="text"]');
+    inputs.forEach(input => {
+      input.value = '';
+      input.classList.remove('correct', 'incorrect');
+      const feedback = input.parentElement.nextElementSibling;
+      if (feedback && feedback.classList.contains('feedback-msg')) {
+        feedback.classList.remove('show');
+      }
+    });
+
+    const scoreBadge = document.getElementById('scoreBadge');
+    scoreBadge.style.display = 'none';
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
