@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Visual Grammar - Numbers vs Ordinals</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-light: #eff6ff;
+    --accent-color: #f59e0b;
+    --border-color: #e2e8f0;
+    --success-color: #16a34a;
+    --success-bg: #f0fdf4;
+    --success-border: #86efac;
+    --error-color: #dc2626;
+    --error-bg: #fef2f2;
+    --error-border: #fca5a5;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 860px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 12px 30px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .icon-box {
+    width: 52px;
+    height: 52px;
+    background-color: var(--primary-light);
+    border: 2px solid #bfdbfe;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #1e3a8a;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  /* Word Bank Floating Bar */
+  .word-bank-wrapper {
+    position: sticky;
+    top: 16px;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    border: 2px solid #bfdbfe;
+    border-radius: 16px;
+    padding: 14px 20px;
+    margin-bottom: 28px;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.1);
+  }
+
+  .word-bank-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .chip {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    border: 2px solid #bfdbfe;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+
+  .chip:hover {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
+
+  /* Cards grid */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .question-card {
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 18px;
+    padding: 24px;
+    transition: all 0.25 ease;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  }
+
+  .question-card.correct {
+    border-color: var(--success-border);
+    background-color: var(--success-bg);
+  }
+
+  .question-card.incorrect {
+    border-color: var(--error-border);
+    background-color: var(--error-bg);
+  }
+
+  .card-header-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .card-number {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #3b82f6;
+    background: #eff6ff;
+    padding: 4px 10px;
+    border-radius: 8px;
+  }
+
+  .ukr-hint {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  /* Visual Graphic Elements Area */
+  .visual-area {
+    background: #f1f5f9;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-height: 100px;
+    border: 1px dashed #cbd5e1;
+  }
+
+  /* Visual Folders */
+  .folder-item {
+    width: 68px;
+    height: 54px;
+    background-color: #fbcfe8;
+    border: 2px solid #f472b6;
+    border-radius: 8px 12px 8px 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: #9d174d;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+  }
+
+  .folder-item::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    width: 28px;
+    height: 8px;
+    background-color: #f472b6;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .folder-item.folder-blue {
+    background-color: #bae6fd;
+    border-color: #38bdf8;
+    color: #0369a1;
+  }
+
+  .folder-item.folder-blue::before {
+    background-color: #38bdf8;
+  }
+
+  .folder-item.highlighted {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 4px #3b82f6, 0 8px 15px rgba(0,0,0,0.1);
+  }
+
+  .target-badge {
+    position: absolute;
+    top: -12px;
+    right: -10px;
+    background: #ef4444;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 800;
+  }
+
+  /* Visual Exercises */
+  .exercise-box {
+    width: 110px;
+    background: white;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+
+  .exercise-box.active-ex {
+    border-color: var(--primary-color);
+    background: var(--primary-light);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+  }
+
+  .check-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #22c55e;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+  }
+
+  /* Visual Test Words */
+  .test-sheet {
+    background: white;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 12px 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .word-slot {
+    padding: 8px 14px;
+    border: 2px dashed #94a3b8;
+    border-radius: 8px;
+    font-weight: 700;
+    color: #475569;
+    background: #f8fafc;
+    font-size: 0.95rem;
+  }
+
+  .word-slot.filled {
+    border-style: solid;
+    border-color: #3b82f6;
+    background: #eff6ff;
+    color: #1e40af;
+  }
+
+  .word-slot.highlight-fifth {
+    border-color: #f59e0b;
+    background: #fef3c7;
+    color: #92400e;
+    transform: scale(1.05);
+  }
+
+  /* Sentence line & Select dropdown */
+  .sentence-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  select.dropdown {
+    font-family: inherit;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    padding: 8px 36px 8px 16px;
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    background-color: #f8fafc;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%3c2563eb' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 18px;
+    min-width: 130px;
+    text-align: center;
+  }
+
+  select.dropdown:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  }
+
+  .audio-btn {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 6px 12px;
+    border-radius: 10px;
+    transition: all 0.2s;
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--primary-color);
+  }
+
+  .audio-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+  }
+
+  .feedback-msg {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: none;
+  }
+
+  .feedback-msg.correct {
+    display: block;
+    color: var(--success-color);
+  }
+
+  .feedback-msg.incorrect {
+    display: block;
+    color: var(--error-color);
+  }
+
+  /* Controls Footer */
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 2px solid var(--border-color);
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  }
+
+  .btn-check:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn-reset {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+  }
+
+  .btn-reset:hover {
+    background-color: #e2e8f0;
+  }
+
+  .score-badge {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    background-color: var(--primary-light);
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: 2px solid #bfdbfe;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="icon-box">📂</div>
+    <div>
+      <h1 class="title">2. Read the Situation and Insert the Word</h1>
+      <p class="subtitle">Match the visual situations with the correct word: <strong>Quantity (How many?)</strong> or <strong>Order (Which one?)</strong></p>
+    </div>
+  </div>
+
+  <!-- Word Bank -->
+  <div class="word-bank-wrapper">
+    <div class="word-bank-title">Available Words</div>
+    <div class="word-bank">
+      <span class="chip" onclick="fillNextEmpty('two')">two</span>
+      <span class="chip" onclick="fillNextEmpty('second')">second</span>
+      <span class="chip" onclick="fillNextEmpty('three')">three</span>
+      <span class="chip" onclick="fillNextEmpty('third')">third</span>
+      <span class="chip" onclick="fillNextEmpty('five')">five</span>
+      <span class="chip" onclick="fillNextEmpty('fifth')">fifth</span>
+    </div>
+  </div>
+
+  <div class="questions-list">
+
+    <!-- Card 1 -->
+    <div class="question-card" data-correct="two">
+      <div class="card-header-info">
+        <span class="card-number">Situation 1</span>
+        <span class="ukr-hint">У мене дві папки</span>
+      </div>
+      
+      <div class="visual-area">
+        <div class="folder-item">#1</div>
+        <div class="folder-item folder-blue">#2</div>
+      </div>
+
+      <div class="sentence-line">
+        <span>1. I have</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="two">two</option>
+          <option value="second">second</option>
+          <option value="three">three</option>
+          <option value="third">third</option>
+          <option value="five">five</option>
+          <option value="fifth">fifth</option>
+        </select>
+        <span>folders.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('I have two folders.')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="question-card" data-correct="second">
+      <div class="card-header-info">
+        <span class="card-number">Situation 2</span>
+        <span class="ukr-hint">Візьми другу папку</span>
+      </div>
+      
+      <div class="visual-area">
+        <div class="folder-item" style="opacity: 0.5;">#1</div>
+        <div class="folder-item folder-blue highlighted">
+          #2
+          <span class="target-badge">THIS ONE</span>
+        </div>
+      </div>
+
+      <div class="sentence-line">
+        <span>2. Take the</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="two">two</option>
+          <option value="second">second</option>
+          <option value="three">three</option>
+          <option value="third">third</option>
+          <option value="five">five</option>
+          <option value="fifth">fifth</option>
+        </select>
+        <span>folder.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('Take the second folder.')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="question-card" data-correct="three">
+      <div class="card-header-info">
+        <span class="card-number">Situation 3</span>
+        <span class="ukr-hint">Я виконую три вправи</span>
+      </div>
+      
+      <div class="visual-area">
+        <div class="exercise-box"><div class="check-icon">✓</div> Ex 1</div>
+        <div class="exercise-box"><div class="check-icon">✓</div> Ex 2</div>
+        <div class="exercise-box"><div class="check-icon">✓</div> Ex 3</div>
+      </div>
+
+      <div class="sentence-line">
+        <span>3. I do</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="two">two</option>
+          <option value="second">second</option>
+          <option value="three">three</option>
+          <option value="third">third</option>
+          <option value="five">five</option>
+          <option value="fifth">fifth</option>
+        </select>
+        <span>exercises.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('I do three exercises.')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="question-card" data-correct="third">
+      <div class="card-header-info">
+        <span class="card-number">Situation 4</span>
+        <span class="ukr-hint">Я виконую третю вправу</span>
+      </div>
+      
+      <div class="visual-area">
+        <div class="exercise-box" style="opacity: 0.5;">Ex 1</div>
+        <div class="exercise-box" style="opacity: 0.5;">Ex 2</div>
+        <div class="exercise-box active-ex"><div class="check-icon">👉</div> Ex 3</div>
+      </div>
+
+      <div class="sentence-line">
+        <span>4. I do the</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="two">two</option>
+          <option value="second">second</option>
+          <option value="three">three</option>
+          <option value="third">third</option>
+          <option value="five">five</option>
+          <option value="fifth">fifth</option>
+        </select>
+        <span>exercise.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('I do the third exercise.')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="question-card" data-correct="five">
+      <div class="card-header-info">
+        <span class="card-number">Situation 5</span>
+        <span class="ukr-hint">У цьому тесті п'ять слів</span>
+      </div>
+      
+      <div class="visual-area">
+        <div class="test-sheet">
+          <div class="word-slot filled">1. Cat</div>
+          <div class="word-slot filled">2. Dog</div>
+          <div class="word-slot filled">3. Sun</div>
+          <div class="word-slot filled">4. Moon</div>
+          <div class="word-slot filled">5. Steel</div>
+        </div>
+      </div>
+
+      <div class="sentence-line">
+        <span>5. This test has</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="two">two</option>
+          <option value="second">second</option>
+          <option value="three">three</option>
+          <option value="third">third</option>
+          <option value="five">five</option>
+          <option value="fifth">fifth</option>
+        </select>
+        <span>words.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('This test has five words.')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="question-card" data-correct="fifth">
+      <div class="card-header-info">
+        <span class="card-number">Situation 6</span>
+        <span class="ukr-hint">П'яте слово — «steel»</span>
+      </div>
+      
+      <div class="visual-area">
+        <div class="test-sheet">
+          <div class="word-slot" style="opacity: 0.6;">1. Cat</div>
+          <div class="word-slot" style="opacity: 0.6;">2. Dog</div>
+          <div class="word-slot" style="opacity: 0.6;">3. Sun</div>
+          <div class="word-slot" style="opacity: 0.6;">4. Moon</div>
+          <div class="word-slot highlight-fifth">5. "steel" 👈</div>
+        </div>
+      </div>
+
+      <div class="sentence-line">
+        <span>6. The</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="two">two</option>
+          <option value="second">second</option>
+          <option value="three">three</option>
+          <option value="third">third</option>
+          <option value="five">five</option>
+          <option value="fifth">fifth</option>
+        </select>
+        <span>word is "steel".</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('The fifth word is steel.')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+  </div>
+
+  <!-- Controls Footer -->
+  <div class="controls">
+    <button class="btn btn-reset" onclick="resetAnswers()">Reset 🔄</button>
+    <div class="score-badge" id="scoreBadge">Score: 0 / 6</div>
+    <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔</button>
+  </div>
+</div>
+
+<script>
+  function fillNextEmpty(word) {
+    const dropdowns = document.querySelectorAll('.dropdown');
+    for (let select of dropdowns) {
+      if (!select.value) {
+        select.value = word;
+        break;
+      }
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    const cards = document.querySelectorAll('.question-card');
+
+    cards.forEach((card) => {
+      const select = card.querySelector('.dropdown');
+      const feedback = card.querySelector('.feedback-msg');
+      const correctAnswer = card.getAttribute('data-correct');
+      const userVal = select.value;
+
+      card.classList.remove('correct', 'incorrect');
+      feedback.classList.remove('correct', 'incorrect');
+
+      if (!userVal) {
+        card.classList.add('incorrect');
+        feedback.textContent = 'Please choose a word.';
+        feedback.className = 'feedback-msg incorrect';
+        return;
+      }
+
+      if (userVal === correctAnswer) {
+        score++;
+        card.classList.add('correct');
+        feedback.textContent = '✓ Correct!';
+        feedback.className = 'feedback-msg correct';
+      } else {
+        card.classList.add('incorrect');
+        feedback.textContent = `✗ Correct answer: "${correctAnswer}"`;
+        feedback.className = 'feedback-msg incorrect';
+      }
+    });
+
+    const scoreBadge = document.getElementById('scoreBadge');
+    scoreBadge.textContent = `Score: ${score} / ${cards.length}`;
+    scoreBadge.style.display = 'inline-block';
+  }
+
+  function resetAnswers() {
+    const cards = document.querySelectorAll('.question-card');
+    cards.forEach(card => {
+      card.classList.remove('correct', 'incorrect');
+      const select = card.querySelector('.dropdown');
+      const feedback = card.querySelector('.feedback-msg');
+      select.selectedIndex = 0;
+      feedback.textContent = '';
+      feedback.className = 'feedback-msg';
+    });
+
+    const scoreBadge = document.getElementById('scoreBadge');
+    scoreBadge.style.display = 'none';
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
