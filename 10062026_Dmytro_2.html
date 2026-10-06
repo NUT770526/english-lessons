@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find the Mistake and Correct the Sentence</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --primary-color: #2563eb;
+    --primary-light: #eff6ff;
+    --border-color: #e2e8f0;
+    --success-color: #16a34a;
+    --success-bg: #f0fdf4;
+    --error-color: #dc2626;
+    --error-bg: #fef2f2;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 820px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .icon-box {
+    width: 48px;
+    height: 48px;
+    background-color: var(--primary-light);
+    border: 2px solid #bfdbfe;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: #64748b;
+    margin-bottom: 28px;
+  }
+
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .question-item {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px 20px;
+    transition: all 0.2s ease;
+  }
+
+  .question-item.correct {
+    border-color: #86efac;
+    background-color: var(--success-bg);
+  }
+
+  .question-item.incorrect {
+    border-color: #fca5a5;
+    background-color: var(--error-bg);
+  }
+
+  .question-prompt {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+  }
+
+  .audio-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  .input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .dash {
+    color: #64748b;
+    font-weight: 700;
+  }
+
+  .input-field {
+    flex: 1;
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  .input-field:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  .feedback-msg {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: none;
+  }
+
+  .feedback-msg.correct {
+    display: block;
+    color: var(--success-color);
+  }
+
+  .feedback-msg.incorrect {
+    display: block;
+    color: var(--error-color);
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background-color: var(--primary-color);
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background-color: #1d4ed8;
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .score-badge {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    background-color: var(--primary-light);
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="icon-box">🔍</div>
+    <h1 class="title">2. Find the mistake and correct the sentence</h1>
+  </div>
+  <p class="subtitle">There is one mistake in each sentence: incorrect use of <strong>in</strong> or <strong>on</strong>.</p>
+
+  <div class="questions-list">
+    <!-- Item 1 -->
+    <div class="question-item">
+      <div class="question-prompt">
+        <span>1. I meet my relatives on January.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('I meet my relatives in January.')">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <span class="dash">–</span>
+        <input type="text" class="input-field" placeholder="Type the corrected sentence...">
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="question-item">
+      <div class="question-prompt">
+        <span>2. We have a test in Wednesday.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('We have a test on Wednesday.')">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <span class="dash">–</span>
+        <input type="text" class="input-field" placeholder="Type the corrected sentence...">
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="question-item">
+      <div class="question-prompt">
+        <span>3. My sister’s birthday is on August.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('My sister\'s birthday is in August.')">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <span class="dash">–</span>
+        <input type="text" class="input-field" placeholder="Type the corrected sentence...">
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="question-item">
+      <div class="question-prompt">
+        <span>4. I do karate in Saturday.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('I do karate on Saturday.')">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <span class="dash">–</span>
+        <input type="text" class="input-field" placeholder="Type the corrected sentence...">
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 5 -->
+    <div class="question-item">
+      <div class="question-prompt">
+        <span>5. We explore new places on June.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('We explore new places in June.')">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <span class="dash">–</span>
+        <input type="text" class="input-field" placeholder="Type the corrected sentence...">
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 6 -->
+    <div class="question-item">
+      <div class="question-prompt">
+        <span>6. I meet my friends in Monday.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('I meet my friends on Monday.')">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <span class="dash">–</span>
+        <input type="text" class="input-field" placeholder="Type the corrected sentence...">
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 7 -->
+    <div class="question-item">
+      <div class="question-prompt">
+        <span>7. We have a meeting on October.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('We have a meeting in October.')">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <span class="dash">–</span>
+        <input type="text" class="input-field" placeholder="Type the corrected sentence...">
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Item 8 -->
+    <div class="question-item">
+      <div class="question-prompt">
+        <span>8. I spend time with my siblings in Friday.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('I spend time with my siblings on Friday.')">🔊</button>
+      </div>
+      <div class="input-wrapper">
+        <span class="dash">–</span>
+        <input type="text" class="input-field" placeholder="Type the corrected sentence...">
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-reset" onclick="resetAnswers()">Reset 🔄</button>
+    <div class="score-badge" id="scoreBadge">Score: 0/8</div>
+    <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔</button>
+  </div>
+</div>
+
+<script>
+  const correctAnswers = [
+    "I meet my relatives in January.",
+    "We have a test on Wednesday.",
+    "My sister's birthday is in August.",
+    "I do karate on Saturday.",
+    "We explore new places in June.",
+    "I meet my friends on Monday.",
+    "We have a meeting in October.",
+    "I spend time with my siblings on Friday."
+  ];
+
+  function normalizeText(text) {
+    return text
+      .trim()
+      .toLowerCase()
+      .replace(/[’']/g, "'") // нормализация апострофов
+      .replace(/[.,?!]/g, '') // удаление знаков препинания
+      .replace(/\s+/g, ' ');   // удаление лишних пробелов
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    const items = document.querySelectorAll('.question-item');
+
+    items.forEach((item, index) => {
+      const input = item.querySelector('.input-field');
+      const feedback = item.querySelector('.feedback-msg');
+      const userVal = normalizeText(input.value);
+      const expectedVal = normalizeText(correctAnswers[index]);
+
+      item.classList.remove('correct', 'incorrect');
+      feedback.classList.remove('correct', 'incorrect');
+
+      if (userVal === '') {
+        item.classList.add('incorrect');
+        feedback.textContent = 'Please type your sentence.';
+        feedback.className = 'feedback-msg incorrect';
+        return;
+      }
+
+      if (userVal === expectedVal) {
+        score++;
+        item.classList.add('correct');
+        feedback.textContent = '✓ Correct!';
+        feedback.className = 'feedback-msg correct';
+      } else {
+        item.classList.add('incorrect');
+        feedback.textContent = `✗ Correct answer: "${correctAnswers[index]}"`;
+        feedback.className = 'feedback-msg incorrect';
+      }
+    });
+
+    const scoreBadge = document.getElementById('scoreBadge');
+    scoreBadge.textContent = `Score: ${score} / ${correctAnswers.length}`;
+    scoreBadge.style.display = 'inline-block';
+  }
+
+  function resetAnswers() {
+    const items = document.querySelectorAll('.question-item');
+    items.forEach(item => {
+      item.classList.remove('correct', 'incorrect');
+      const input = item.querySelector('.input-field');
+      const feedback = item.querySelector('.feedback-msg');
+      input.value = '';
+      feedback.textContent = '';
+      feedback.className = 'feedback-msg';
+    });
+
+    const scoreBadge = document.getElementById('scoreBadge');
+    scoreBadge.style.display = 'none';
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
