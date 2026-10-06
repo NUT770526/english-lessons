@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Translate into English - Interactive Exercise</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-light: #eff6ff;
+    --accent-color: #f59e0b;
+    --border-color: #e2e8f0;
+    --success-color: #15803d;
+    --success-bg: #f0fdf4;
+    --success-border: #86efac;
+    --error-color: #dc2626;
+    --error-bg: #fef2f2;
+    --error-border: #fca5a5;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 860px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 12px 30px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .icon-box {
+    width: 52px;
+    height: 52px;
+    background-color: var(--primary-light);
+    border: 2px solid #bfdbfe;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #1e3a8a;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 28px;
+  }
+
+  /* Questions Grid */
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .question-card {
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px 24px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  }
+
+  .question-card.correct {
+    border-color: var(--success-border);
+    background-color: var(--success-bg);
+  }
+
+  .question-card.incorrect {
+    border-color: var(--error-border);
+    background-color: var(--error-bg);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .card-number {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #3b82f6;
+    background: #eff6ff;
+    padding: 3px 10px;
+    border-radius: 8px;
+  }
+
+  .ukr-sentence {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 12px;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .text-input {
+    flex: 1;
+    font-family: inherit;
+    font-size: 1.05rem;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    background-color: #f8fafc;
+    color: var(--text-main);
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  .text-input:focus {
+    border-color: var(--primary-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  .audio-btn {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 8px 14px;
+    border-radius: 10px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--primary-color);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:hover {
+    background-color: var(--primary-color);
+    color: #ffffff;
+  }
+
+  .feedback-msg {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: none;
+  }
+
+  .feedback-msg.correct {
+    display: block;
+    color: var(--success-color);
+  }
+
+  .feedback-msg.incorrect {
+    display: block;
+    color: var(--error-color);
+  }
+
+  /* Controls Footer */
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 2px solid var(--border-color);
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  }
+
+  .btn-check:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn-reset {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+  }
+
+  .btn-reset:hover {
+    background-color: #e2e8f0;
+  }
+
+  .score-badge {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    background-color: var(--primary-light);
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: 2px solid #bfdbfe;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="icon-box">✍️</div>
+    <div>
+      <h1 class="title">3. Translate into English</h1>
+      <p class="subtitle">Translate the sentences from Ukrainian to English using cardinal and ordinal numbers.</p>
+    </div>
+  </div>
+
+  <div class="questions-list">
+
+    <!-- Sentence 1 -->
+    <div class="question-card" data-answers='["I have two brothers.", "I have 2 brothers."]'>
+      <div class="card-header">
+        <span class="card-number">Sentence 1</span>
+      </div>
+      <div class="ukr-sentence">1. У мене два брати.</div>
+      <div class="input-row">
+        <input type="text" class="text-input" placeholder="Type your English translation..." onkeydown="handleKey(event)">
+        <button class="audio-btn" title="Listen" onclick="speakText('I have two brothers.')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Sentence 2 -->
+    <div class="question-card" data-answers='["My second brother does karate.", "My 2nd brother does karate."]'>
+      <div class="card-header">
+        <span class="card-number">Sentence 2</span>
+      </div>
+      <div class="ukr-sentence">2. Мій другий брат займається карате.</div>
+      <div class="input-row">
+        <input type="text" class="text-input" placeholder="Type your English translation..." onkeydown="handleKey(event)">
+        <button class="audio-btn" title="Listen" onclick="speakText('My second brother does karate.')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Sentence 3 -->
+    <div class="question-card" data-answers='["We have three tests in October.", "We have 3 tests in October."]'>
+      <div class="card-header">
+        <span class="card-number">Sentence 3</span>
+      </div>
+      <div class="ukr-sentence">3. Ми маємо три тести в жовтні.</div>
+      <div class="input-row">
+        <input type="text" class="text-input" placeholder="Type your English translation..." onkeydown="handleKey(event)">
+        <button class="audio-btn" title="Listen" onclick="speakText('We have three tests in October.')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Sentence 4 -->
+    <div class="question-card" data-answers='["The third test is easy.", "The 3rd test is easy."]'>
+      <div class="card-header">
+        <span class="card-number">Sentence 4</span>
+      </div>
+      <div class="ukr-sentence">4. Третій тест легкий.</div>
+      <div class="input-row">
+        <input type="text" class="text-input" placeholder="Type your English translation..." onkeydown="handleKey(event)">
+        <button class="audio-btn" title="Listen" onclick="speakText('The third test is easy.')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Sentence 5 -->
+    <div class="question-card" data-answers='["I know five English words.", "I know 5 English words."]'>
+      <div class="card-header">
+        <span class="card-number">Sentence 5</span>
+      </div>
+      <div class="ukr-sentence">5. Я знаю п'ять англійських слів.</div>
+      <div class="input-row">
+        <input type="text" class="text-input" placeholder="Type your English translation..." onkeydown="handleKey(event)">
+        <button class="audio-btn" title="Listen" onclick="speakText('I know five English words.')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Sentence 6 -->
+    <div class="question-card" data-answers='["I don\'t know the fifth word.", "I do not know the fifth word.", "I don\'t know the 5th word.", "I do not know the 5th word."]'>
+      <div class="card-header">
+        <span class="card-number">Sentence 6</span>
+      </div>
+      <div class="ukr-sentence">6. Я не знаю п'ятого слова.</div>
+      <div class="input-row">
+        <input type="text" class="text-input" placeholder="Type your English translation..." onkeydown="handleKey(event)">
+        <button class="audio-btn" title="Listen" onclick="speakText('I don\'t know the fifth word.')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Sentence 7 -->
+    <div class="question-card" data-answers='["Do you have four folders?", "Do you have 4 folders?", "Have you got four folders?", "Have you got 4 folders?"]'>
+      <div class="card-header">
+        <span class="card-number">Sentence 7</span>
+      </div>
+      <div class="ukr-sentence">7. У тебе чотири папки?</div>
+      <div class="input-row">
+        <input type="text" class="text-input" placeholder="Type your English translation..." onkeydown="handleKey(event)">
+        <button class="audio-btn" title="Listen" onclick="speakText('Do you have four folders?')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Sentence 8 -->
+    <div class="question-card" data-answers='["Is this your fourth folder?", "Is it your fourth folder?", "Is this your 4th folder?", "Is it your 4th folder?"]'>
+      <div class="card-header">
+        <span class="card-number">Sentence 8</span>
+      </div>
+      <div class="ukr-sentence">8. Це твоя четверта папка?</div>
+      <div class="input-row">
+        <input type="text" class="text-input" placeholder="Type your English translation..." onkeydown="handleKey(event)">
+        <button class="audio-btn" title="Listen" onclick="speakText('Is this your fourth folder?')">🔊 Listen</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+  </div>
+
+  <!-- Controls Footer -->
+  <div class="controls">
+    <button class="btn btn-reset" onclick="resetAnswers()">Reset 🔄</button>
+    <div class="score-badge" id="scoreBadge">Score: 0 / 8</div>
+    <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔</button>
+  </div>
+</div>
+
+<script>
+  function normalizeText(text) {
+    return text
+      .toLowerCase()
+      .trim()
+      .replace(/[\.\?!]/g, '') // remove trailing punctuation
+      .replace(/’/g, "'")       // normalize curly apostrophe
+      .replace(/\s+/g, ' ');    // normalize multiple spaces
+  }
+
+  function handleKey(event) {
+    if (event.key === 'Enter') {
+      checkAnswers();
+    }
+  }
+
+  function checkAnswers() {
+    let score = 0;
+    const cards = document.querySelectorAll('.question-card');
+
+    cards.forEach((card) => {
+      const input = card.querySelector('.text-input');
+      const feedback = card.querySelector('.feedback-msg');
+      const validAnswers = JSON.parse(card.getAttribute('data-answers'));
+      const userText = input.value;
+      const normalizedUser = normalizeText(userText);
+
+      card.classList.remove('correct', 'incorrect');
+      feedback.classList.remove('correct', 'incorrect');
+
+      if (!userText.trim()) {
+        card.classList.add('incorrect');
+        feedback.textContent = `Please enter a translation. Answer: "${validAnswers[0]}"`;
+        feedback.className = 'feedback-msg incorrect';
+        return;
+      }
+
+      const isCorrect = validAnswers.some(ans => normalizeText(ans) === normalizedUser);
+
+      if (isCorrect) {
+        score++;
+        card.classList.add('correct');
+        feedback.textContent = '✓ Correct!';
+        feedback.className = 'feedback-msg correct';
+      } else {
+        card.classList.add('incorrect');
+        feedback.textContent = `✗ Correct answer: "${validAnswers[0]}"`;
+        feedback.className = 'feedback-msg incorrect';
+      }
+    });
+
+    const scoreBadge = document.getElementById('scoreBadge');
+    scoreBadge.textContent = `Score: ${score} / ${cards.length}`;
+    scoreBadge.style.display = 'inline-block';
+  }
+
+  function resetAnswers() {
+    const cards = document.querySelectorAll('.question-card');
+    cards.forEach(card => {
+      card.classList.remove('correct', 'incorrect');
+      const input = card.querySelector('.text-input');
+      const feedback = card.querySelector('.feedback-msg');
+      input.value = '';
+      feedback.textContent = '';
+      feedback.className = 'feedback-msg';
+    });
+
+    const scoreBadge = document.getElementById('scoreBadge');
+    scoreBadge.style.display = 'none';
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
