@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1. Choose the correct word</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-light: #eff6ff;
+    --border-color: #cbd5e1;
+    --card-border: #e2e8f0;
+    --success-color: #16a34a;
+    --success-bg: #f0fdf4;
+    --success-border: #86efac;
+    --error-color: #dc2626;
+    --error-bg: #fef2f2;
+    --error-border: #fca5a5;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .icon-box {
+    width: 48px;
+    height: 48px;
+    background-color: var(--primary-light);
+    border: 2px solid #bfdbfe;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+  }
+
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .question-item {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px 20px;
+    transition: all 0.2s ease;
+  }
+
+  .question-item.correct {
+    border-color: var(--success-border);
+    background-color: var(--success-bg);
+  }
+
+  .question-item.incorrect {
+    border-color: var(--error-border);
+    background-color: var(--error-bg);
+  }
+
+  .question-line {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  select.dropdown {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    padding: 6px 32px 6px 14px;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    background-color: #f8fafc;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%3c64748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    min-width: 110px;
+    text-align: center;
+  }
+
+  select.dropdown:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .audio-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  .feedback-msg {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: none;
+  }
+
+  .feedback-msg.correct {
+    display: block;
+    color: var(--success-color);
+  }
+
+  .feedback-msg.incorrect {
+    display: block;
+    color: var(--error-color);
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--card-border);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background-color: var(--primary-color);
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .score-badge {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    background-color: var(--primary-light);
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #bfdbfe;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="icon-box">🔢</div>
+    <h1 class="title">1. Choose the correct word</h1>
+  </div>
+  <p class="subtitle">Think: <strong>"How many?"</strong> or <strong>"Which order?"</strong></p>
+
+  <div class="questions-list">
+    <!-- Question 1 -->
+    <div class="question-item" data-correct="two">
+      <div class="question-line">
+        <span>1. I have</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="two">two</option>
+          <option value="second">second</option>
+        </select>
+        <span>siblings.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('I have two siblings.')">🔊</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="question-item" data-correct="third">
+      <div class="question-line">
+        <span>2. Do the</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="three">three</option>
+          <option value="third">third</option>
+        </select>
+        <span>exercise.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('Do the third exercise.')">🔊</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Question 3 -->
+    <div class="question-item" data-correct="five">
+      <div class="question-line">
+        <span>3. We have</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="five">five</option>
+          <option value="fifth">fifth</option>
+        </select>
+        <span>English tests in October.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('We have five English tests in October.')">🔊</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Question 4 -->
+    <div class="question-item" data-correct="first">
+      <div class="question-line">
+        <span>4. This is my</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="one">one</option>
+          <option value="first">first</option>
+        </select>
+        <span>step.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('This is my first step.')">🔊</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Question 5 -->
+    <div class="question-item" data-correct="four">
+      <div class="question-line">
+        <span>5. I meet</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="four">four</option>
+          <option value="fourth">fourth</option>
+        </select>
+        <span>relatives on Sunday.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('I meet four relatives on Sunday.')">🔊</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Question 6 -->
+    <div class="question-item" data-correct="second">
+      <div class="question-line">
+        <span>6. Take the</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="two">two</option>
+          <option value="second">second</option>
+        </select>
+        <span>folder.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('Take the second folder.')">🔊</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Question 7 -->
+    <div class="question-item" data-correct="five">
+      <div class="question-line">
+        <span>7. Spell</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="five">five</option>
+          <option value="fifth">fifth</option>
+        </select>
+        <span>words.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('Spell five words.')">🔊</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+
+    <!-- Question 8 -->
+    <div class="question-item" data-correct="fifth">
+      <div class="question-line">
+        <span>8. Spell the</span>
+        <select class="dropdown">
+          <option value="" disabled selected>---</option>
+          <option value="five">five</option>
+          <option value="fifth">fifth</option>
+        </select>
+        <span>word.</span>
+        <button class="audio-btn" title="Listen" onclick="speakText('Spell the fifth word.')">🔊</button>
+      </div>
+      <div class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-reset" onclick="resetAnswers()">Reset 🔄</button>
+    <div class="score-badge" id="scoreBadge">Score: 0/8</div>
+    <button class="btn btn-check" onclick="checkAnswers()">Check Answers ✔</button>
+  </div>
+</div>
+
+<script>
+  function checkAnswers() {
+    let score = 0;
+    const items = document.querySelectorAll('.question-item');
+
+    items.forEach((item) => {
+      const select = item.querySelector('.dropdown');
+      const feedback = item.querySelector('.feedback-msg');
+      const correctAnswer = item.getAttribute('data-correct');
+      const userVal = select.value;
+
+      item.classList.remove('correct', 'incorrect');
+      feedback.classList.remove('correct', 'incorrect');
+
+      if (!userVal) {
+        item.classList.add('incorrect');
+        feedback.textContent = 'Please choose an option.';
+        feedback.className = 'feedback-msg incorrect';
+        return;
+      }
+
+      if (userVal === correctAnswer) {
+        score++;
+        item.classList.add('correct');
+        feedback.textContent = '✓ Correct!';
+        feedback.className = 'feedback-msg correct';
+      } else {
+        item.classList.add('incorrect');
+        feedback.textContent = `✗ Correct answer: "${correctAnswer}"`;
+        feedback.className = 'feedback-msg incorrect';
+      }
+    });
+
+    const scoreBadge = document.getElementById('scoreBadge');
+    scoreBadge.textContent = `Score: ${score} / ${items.length}`;
+    scoreBadge.style.display = 'inline-block';
+  }
+
+  function resetAnswers() {
+    const items = document.querySelectorAll('.question-item');
+    items.forEach(item => {
+      item.classList.remove('correct', 'incorrect');
+      const select = item.querySelector('.dropdown');
+      const feedback = item.querySelector('.feedback-msg');
+      select.selectedIndex = 0;
+      feedback.textContent = '';
+      feedback.className = 'feedback-msg';
+    });
+
+    const scoreBadge = document.getElementById('scoreBadge');
+    scoreBadge.style.display = 'none';
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
