@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fill in the Gaps - Countries & Nationalities</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+
+    /* Word Chip Styling */
+    .word-chip {
+      user-select: none;
+      touch-action: manipulation;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: grab;
+      position: relative;
+    }
+    .word-chip:active {
+      cursor: grabbing;
+    }
+    .word-chip.used {
+      opacity: 0.35;
+      filter: grayscale(80%);
+      cursor: not-allowed;
+      transform: scale(0.95);
+    }
+    .word-chip.selected {
+      ring: 3px solid #3b82f6;
+      background-color: #dbeafe;
+      color: #1e40af;
+      transform: translateY(-2px);
+    }
+
+    /* Tooltip formatting for transcription */
+    .word-chip[data-ipa]::before {
+      content: attr(data-ipa);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background-color: #0f172a;
+      color: #f8fafc;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      pointer-events: none;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      z-index: 30;
+    }
+
+    .word-chip[data-ipa]:hover::before {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Slot Target Styling */
+    .gap-slot {
+      min-width: 130px;
+      height: 42px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      background-color: #ffffff;
+      transition: all 0.2s ease;
+      font-weight: 600;
+      color: #1e293b;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+    .gap-slot.drag-over {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+      transform: scale(1.03);
+    }
+    .gap-slot.filled {
+      border-style: solid;
+      border-color: #94a3b8;
+      background-color: #f1f5f9;
+    }
+    .gap-slot.correct {
+      border-color: #16a34a !important;
+      background-color: #f0fdf4 !important;
+      color: #15803d !important;
+    }
+    .gap-slot.incorrect {
+      border-color: #dc2626 !important;
+      background-color: #fef2f2 !important;
+      color: #b91c1c !important;
+    }
+
+    /* Custom Pulse Effect on Audio Playing */
+    .playing-audio {
+      animation: pulse-ring 1.2s infinite;
+    }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(37, 99, 235, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen py-8 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-start">
+
+  <main class="max-w-4xl w-full bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 sm:p-8 text-white">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center text-2xl border border-white/20">
+          🧩
+        </div>
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Fill in the gaps</h1>
+          <p class="text-blue-100 text-sm sm:text-base mt-1">
+            Complete sentences using countries & nationalities. Hover over options to hear pronunciation and see IPA transcription.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <div class="p-6 sm:p-8 space-y-8">
+      <!-- Word Bank -->
+      <section class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Word Bank (Click or Drag into place)</span>
+          <span class="text-xs text-slate-400">Hover for IPA & Audio 🔊</span>
+        </div>
+        <div id="wordBank" class="flex flex-wrap gap-2.5 sm:gap-3 min-h-[52px] items-center">
+          <!-- Word Chips populated via JS -->
+        </div>
+      </section>
+
+      <!-- Sentences List -->
+      <section>
+        <div id="sentencesList" class="space-y-4">
+          <!-- Sentences inserted dynamically -->
+        </div>
+      </section>
+
+      <!-- Action Controls -->
+      <footer class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <button id="resetBtn" onclick="resetExercise()" class="px-5 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-700 bg-white hover:bg-slate-50 active:bg-slate-100 transition-all flex items-center gap-2">
+            <span>Reset</span> 🔄
+          </button>
+          <button id="clearAnswersBtn" onclick="clearSlotsOnly()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">
+            Clear Gaps
+          </button>
+        </div>
+
+        <div class="flex items-center gap-4 w-full sm:w-auto justify-end">
+          <div id="scoreBadge" class="hidden px-4 py-2 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 font-bold text-sm sm:text-base">
+            Score: <span id="scoreText">0 / 10</span>
+          </div>
+          <button id="checkBtn" onclick="checkAnswers()" class="w-full sm:w-auto px-7 py-3 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2">
+            <span>Check Answers</span> ✔
+          </button>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    // Data definition with IPA transcriptions and solutions
+    const wordsData = [
+      { id: 'w1', text: 'French', ipa: '/frentʃ/' },
+      { id: 'w2', text: 'British', ipa: '/ˈbrɪt.ɪʃ/' },
+      { id: 'w3', text: 'Argentina', ipa: '/ˌɑː.dʒənˈtiː.nə/' },
+      { id: 'w4', text: 'China', ipa: '/ˈtʃaɪ.nə/' },
+      { id: 'w5', text: 'Spanish', ipa: '/ˈspæn.ɪʃ/' },
+      { id: 'w6', text: 'Polish', ipa: '/ˈpəʊ.lɪʃ/' },
+      { id: 'w7', text: 'Spain', ipa: '/speɪn/' },
+      { id: 'w8', text: 'Italy', ipa: '/ˈɪt.əl.i/' },
+      { id: 'w9', text: 'German', ipa: '/ˈdʒɜː.mən/' },
+      { id: 'w10', text: 'Turkish', ipa: '/ˈtɜː.kɪʃ/' }
+    ];
+
+    const sentencesData = [
+      { id: 1, prefix: '', answer: 'Spain', suffix: 'is famous for its delicious paella.' },
+      { id: 2, prefix: '', answer: 'Argentina', suffix: 'is a beautiful country in South America.' },
+      { id: 3, prefix: 'She is', answer: 'Polish', suffix: 'and she speaks Polish.' },
+      { id: 4, prefix: '', answer: 'China', suffix: 'is known for its Great Wall.' },
+      { id: 5, prefix: 'My', answer: 'French', suffix: 'teacher is from Paris.' },
+      { id: 6, prefix: 'My Turkish friend likes', answer: 'Turkish', suffix: 'tea and baklava.' },
+      { id: 7, prefix: 'She is from Germany and she speaks', answer: 'German', suffix: '.' },
+      { id: 8, prefix: '', answer: 'British', suffix: 'people enjoy drinking tea and watching football.' },
+      { id: 9, prefix: '', answer: 'Italy', suffix: 'is famous for its delicious pasta.' },
+      { id: 10, prefix: 'He speaks Spanish and he loves', answer: 'Spanish', suffix: 'music.' }
+    ];
+
+    // State variables
+    let selectedChipId = null;
+    let filledSlots = {}; // slotIndex -> wordText
+    let lastHoveredWord = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderWordBank();
+      renderSentences();
+    });
+
+    function renderWordBank() {
+      const bank = document.getElementById('wordBank');
+      bank.innerHTML = '';
+
+      wordsData.forEach(item => {
+        const chip = document.createElement('div');
+        chip.id = `chip-${item.id}`;
+        chip.className = 'word-chip bg-white border border-slate-200 px-4 py-2 rounded-xl font-semibold text-slate-700 shadow-sm hover:border-blue-400';
+        chip.setAttribute('data-ipa', item.ipa);
+        chip.setAttribute('data-word', item.text);
+        chip.setAttribute('data-id', item.id);
+        chip.draggable = true;
+        chip.innerText = item.text;
+
+        // Hover speech & transcription
+        chip.addEventListener('mouseenter', () => {
+          if (!chip.classList.contains('used')) {
+            speakWord(item.text);
+          }
+        });
+
+        // Click to select
+        chip.addEventListener('click', () => {
+          if (chip.classList.contains('used')) return;
+          selectChip(item.id);
+        });
+
+        // Drag Events
+        chip.addEventListener('dragstart', (e) => {
+          if (chip.classList.contains('used')) {
+            e.preventDefault();
+            return;
+          }
+          e.dataTransfer.setData('text/plain', item.text);
+          e.dataTransfer.setData('chip-id', item.id);
+          selectChip(item.id);
+        });
+
+        bank.appendChild(chip);
+      });
+    }
+
+    function renderSentences() {
+      const container = document.getElementById('sentencesList');
+      container.innerHTML = '';
+
+      sentencesData.forEach((s, idx) => {
+        const card = document.createElement('div');
+        card.className = 'sentence-card bg-slate-50/70 border border-slate-200 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:bg-slate-50';
+
+        const textWrapper = document.createElement('div');
+        textWrapper.className = 'sentence-text text-base sm:text-lg text-slate-800 leading-relaxed flex flex-wrap items-center gap-2';
+
+        const numberSpan = document.createElement('span');
+        numberSpan.className = 'font-bold text-slate-400 text-sm mr-1';
+        numberSpan.innerText = `${idx + 1}.`;
+        textWrapper.appendChild(numberSpan);
+
+        if (s.prefix) {
+          const prefixSpan = document.createElement('span');
+          prefixSpan.innerText = s.prefix;
+          textWrapper.appendChild(prefixSpan);
+        }
+
+        // Drop slot
+        const slot = document.createElement('div');
+        slot.className = 'gap-slot';
+        slot.id = `slot-${idx}`;
+        slot.setAttribute('data-index', idx);
+        slot.innerText = filledSlots[idx] || '';
+
+        if (filledSlots[idx]) {
+          slot.classList.add('filled');
+        }
+
+        // Click slot to place selected or remove existing
+        slot.addEventListener('click', () => handleSlotClick(idx));
+
+        // Drag and drop handlers
+        slot.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          slot.classList.add('drag-over');
+        });
+        slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+        slot.addEventListener('drop', (e) => {
+          e.preventDefault();
+          slot.classList.remove('drag-over');
+          const word = e.dataTransfer.getData('text/plain');
+          const chipId = e.dataTransfer.getData('chip-id');
+          if (word) {
+            placeWordInSlot(idx, word, chipId);
+          }
+        });
+
+        textWrapper.appendChild(slot);
+
+        if (s.suffix) {
+          const suffixSpan = document.createElement('span');
+          suffixSpan.innerText = s.suffix;
+          textWrapper.appendChild(suffixSpan);
+        }
+
+        card.appendChild(textWrapper);
+
+        // Audio Listen Button for Sentence
+        const audioBtn = document.createElement('button');
+        audioBtn.className = 'audio-btn p-2.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-300 transition-all flex items-center justify-center shrink-0 shadow-sm';
+        audioBtn.title = 'Listen to sentence';
+        audioBtn.innerHTML = '🔊';
+        audioBtn.onclick = () => playFullSentence(idx, audioBtn);
+
+        card.appendChild(audioBtn);
+        container.appendChild(card);
+      });
+    }
+
+    function selectChip(chipId) {
+      document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected'));
+      if (selectedChipId === chipId) {
+        selectedChipId = null;
+      } else {
+        selectedChipId = chipId;
+        const targetChip = document.getElementById(`chip-${chipId}`);
+        if (targetChip) targetChip.classList.add('selected');
+      }
+    }
+
+    function handleSlotClick(slotIdx) {
+      // If a chip is currently selected, place it
+      if (selectedChipId) {
+        const chip = document.getElementById(`chip-${selectedChipId}`);
+        if (chip) {
+          const word = chip.getAttribute('data-word');
+          placeWordInSlot(slotIdx, word, selectedChipId);
+          selectedChipId = null;
+          document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected'));
+        }
+      } else if (filledSlots[slotIdx]) {
+        // Clear this slot on tap/click if already filled
+        removeWordFromSlot(slotIdx);
+      }
+    }
+
+    function placeWordInSlot(slotIdx, word, chipId) {
+      // If slot was previously filled, free up the old chip
+      if (filledSlots[slotIdx]) {
+        markChipUsedByText(filledSlots[slotIdx], false);
+      }
+
+      filledSlots[slotIdx] = word;
+      markChipUsedByText(word, true);
+
+      // Refresh UI
+      const slot = document.getElementById(`slot-${slotIdx}`);
+      if (slot) {
+        slot.innerText = word;
+        slot.classList.add('filled');
+        slot.classList.remove('correct', 'incorrect');
+      }
+    }
+
+    function removeWordFromSlot(slotIdx) {
+      const word = filledSlots[slotIdx];
+      if (word) {
+        markChipUsedByText(word, false);
+        delete filledSlots[slotIdx];
+        const slot = document.getElementById(`slot-${slotIdx}`);
+        if (slot) {
+          slot.innerText = '';
+          slot.classList.remove('filled', 'correct', 'incorrect');
+        }
+      }
+    }
+
+    function markChipUsedByText(text, isUsed) {
+      const chips = document.querySelectorAll('.word-chip');
+      chips.forEach(chip => {
+        if (chip.getAttribute('data-word') === text) {
+          if (isUsed) {
+            chip.classList.add('used');
+          } else {
+            chip.classList.remove('used');
+          }
+        }
+      });
+    }
+
+    function checkAnswers() {
+      let score = 0;
+
+      sentencesData.forEach((s, idx) => {
+        const slot = document.getElementById(`slot-${idx}`);
+        const userWord = filledSlots[idx];
+
+        if (slot) {
+          slot.classList.remove('correct', 'incorrect');
+          if (userWord && userWord.toLowerCase() === s.answer.toLowerCase()) {
+            slot.classList.add('correct');
+            score++;
+          } else {
+            slot.classList.add('incorrect');
+          }
+        }
+      });
+
+      const badge = document.getElementById('scoreBadge');
+      const scoreText = document.getElementById('scoreText');
+      scoreText.innerText = `${score} / ${sentencesData.length}`;
+      badge.classList.remove('hidden');
+    }
+
+    function clearSlotsOnly() {
+      Object.keys(filledSlots).forEach(idx => {
+        removeWordFromSlot(idx);
+      });
+      document.getElementById('scoreBadge').classList.add('hidden');
+    }
+
+    function resetExercise() {
+      filledSlots = {};
+      selectedChipId = null;
+      renderWordBank();
+      renderSentences();
+      document.getElementById('scoreBadge').classList.add('hidden');
+    }
+
+    // Speech Synthesis Handlers
+    function speakWord(word) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function playFullSentence(index, btnEl) {
+      const s = sentencesData[index];
+      const filled = filledSlots[index] || `[${s.answer}]`;
+      const fullText = `${s.prefix} ${filled} ${s.suffix}`.replace(/\s+/g, ' ').trim();
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(fullText);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+
+        btnEl.classList.add('playing-audio', 'text-blue-600', 'border-blue-400');
+        utterance.onend = () => {
+          btnEl.classList.remove('playing-audio', 'text-blue-600', 'border-blue-400');
+        };
+        utterance.onerror = () => {
+          btnEl.classList.remove('playing-audio', 'text-blue-600', 'border-blue-400');
+        };
+
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+  </script>
+</body>
+</html>
