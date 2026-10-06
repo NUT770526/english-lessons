@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Translate into English: Present Simple & Prepositions</title>
+<!-- Tailwind CSS for modern responsive styling -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts: Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+<style>
+  /* Custom smooth focus and transition effects */
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen py-8 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
+
+<main class="w-full max-w-3xl bg-white rounded-2xl shadow-xl border border-slate-100 p-6 sm:p-10 transition-all duration-300">
+  
+  <!-- Header -->
+  <header class="mb-8 border-b border-slate-100 pb-6">
+    <div class="flex items-center gap-4 mb-3">
+      <div class="w-12 h-12 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-center text-2xl shadow-sm">
+        📝
+      </div>
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          3. Translate into English
+        </h1>
+        <p class="text-sm sm:text-base font-medium text-blue-600 mt-1">
+          Use Present Simple and prepositions <span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-md font-bold">in / on</span>
+        </p>
+      </div>
+    </div>
+    <p class="text-xs sm:text-sm text-slate-500 mt-2">
+      Type your English translations below. Click the speaker button to listen to the correct pronunciation!
+    </p>
+  </header>
+
+  <!-- Questions List Container -->
+  <div id="questions-list" class="space-y-6">
+    
+    <!-- Item 1 -->
+    <div class="question-card border border-slate-200 rounded-xl p-4 sm:p-5 transition-all duration-200 hover:border-slate-300 bg-white" data-index="0">
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <span class="text-slate-900 font-semibold text-base sm:text-lg">
+          1. Я зустрічаюся з родичами в липні.
+        </span>
+        <button onclick="speakText('I meet my relatives in July.')" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Listen to pronunciation">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-slate-400 font-bold text-lg select-none">–</span>
+        <input type="text" class="user-input w-full px-4 py-2.5 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Type your translation in English...">
+      </div>
+      <div class="feedback-message hidden mt-3 text-sm font-semibold flex items-center gap-1.5"></div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="question-card border border-slate-200 rounded-xl p-4 sm:p-5 transition-all duration-200 hover:border-slate-300 bg-white" data-index="1">
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <span class="text-slate-900 font-semibold text-base sm:text-lg">
+          2. Ми маємо тест з англійської в понеділок.
+        </span>
+        <button onclick="speakText('We have an English test on Monday.')" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Listen to pronunciation">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-slate-400 font-bold text-lg select-none">–</span>
+        <input type="text" class="user-input w-full px-4 py-2.5 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Type your translation in English...">
+      </div>
+      <div class="feedback-message hidden mt-3 text-sm font-semibold flex items-center gap-1.5"></div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="question-card border border-slate-200 rounded-xl p-4 sm:p-5 transition-all duration-200 hover:border-slate-300 bg-white" data-index="2">
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <span class="text-slate-900 font-semibold text-base sm:text-lg">
+          3. Вона займається карате у вівторок.
+        </span>
+        <button onclick="speakText('She does karate on Tuesday.')" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Listen to pronunciation">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-slate-400 font-bold text-lg select-none">–</span>
+        <input type="text" class="user-input w-full px-4 py-2.5 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Type your translation in English...">
+      </div>
+      <div class="feedback-message hidden mt-3 text-sm font-semibold flex items-center gap-1.5"></div>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="question-card border border-slate-200 rounded-xl p-4 sm:p-5 transition-all duration-200 hover:border-slate-300 bg-white" data-index="3">
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <span class="text-slate-900 font-semibold text-base sm:text-lg">
+          4. Мій день народження у квітні.
+        </span>
+        <button onclick="speakText('My birthday is in April.')" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Listen to pronunciation">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-slate-400 font-bold text-lg select-none">–</span>
+        <input type="text" class="user-input w-full px-4 py-2.5 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Type your translation in English...">
+      </div>
+      <div class="feedback-message hidden mt-3 text-sm font-semibold flex items-center gap-1.5"></div>
+    </div>
+
+    <!-- Item 5 -->
+    <div class="question-card border border-slate-200 rounded-xl p-4 sm:p-5 transition-all duration-200 hover:border-slate-300 bg-white" data-index="4">
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <span class="text-slate-900 font-semibold text-base sm:text-lg">
+          5. Він зустрічається з друзями в п'ятницю.
+        </span>
+        <button onclick="speakText('He meets his friends on Friday.')" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Listen to pronunciation">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-slate-400 font-bold text-lg select-none">–</span>
+        <input type="text" class="user-input w-full px-4 py-2.5 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Type your translation in English...">
+      </div>
+      <div class="feedback-message hidden mt-3 text-sm font-semibold flex items-center gap-1.5"></div>
+    </div>
+
+    <!-- Item 6 -->
+    <div class="question-card border border-slate-200 rounded-xl p-4 sm:p-5 transition-all duration-200 hover:border-slate-300 bg-white" data-index="5">
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <span class="text-slate-900 font-semibold text-base sm:text-lg">
+          6. Ми досліджуємо нові місця в серпні.
+        </span>
+        <button onclick="speakText('We explore new places in August.')" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Listen to pronunciation">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-slate-400 font-bold text-lg select-none">–</span>
+        <input type="text" class="user-input w-full px-4 py-2.5 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Type your translation in English...">
+      </div>
+      <div class="feedback-message hidden mt-3 text-sm font-semibold flex items-center gap-1.5"></div>
+    </div>
+
+    <!-- Item 7 -->
+    <div class="question-card border border-slate-200 rounded-xl p-4 sm:p-5 transition-all duration-200 hover:border-slate-300 bg-white" data-index="6">
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <span class="text-slate-900 font-semibold text-base sm:text-lg">
+          7. Ти проводиш час із братами та сестрами в неділю?
+        </span>
+        <button onclick="speakText('Do you spend time with your siblings on Sunday?')" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Listen to pronunciation">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-slate-400 font-bold text-lg select-none">–</span>
+        <input type="text" class="user-input w-full px-4 py-2.5 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Type your translation in English...">
+      </div>
+      <div class="feedback-message hidden mt-3 text-sm font-semibold flex items-center gap-1.5"></div>
+    </div>
+
+    <!-- Item 8 -->
+    <div class="question-card border border-slate-200 rounded-xl p-4 sm:p-5 transition-all duration-200 hover:border-slate-300 bg-white" data-index="7">
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <span class="text-slate-900 font-semibold text-base sm:text-lg">
+          8. Вона не займається карате в середу.
+        </span>
+        <button onclick="speakText('She doesn\'t do karate on Wednesday.')" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Listen to pronunciation">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-slate-400 font-bold text-lg select-none">–</span>
+        <input type="text" class="user-input w-full px-4 py-2.5 rounded-lg border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Type your translation in English...">
+      </div>
+      <div class="feedback-message hidden mt-3 text-sm font-semibold flex items-center gap-1.5"></div>
+    </div>
+
+  </div>
+
+  <!-- Action Controls -->
+  <footer class="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <button onclick="resetExercise()" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-slate-300 text-slate-700 font-bold hover:bg-slate-100 transition duration-200 flex items-center justify-center gap-2">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+      Reset Exercise
+    </button>
+    
+    <div id="scoreBadge" class="hidden px-5 py-2.5 rounded-full bg-blue-50 text-blue-700 font-extrabold text-base border border-blue-200 shadow-sm animate-pulse">
+      Score: <span id="scoreVal">0</span> / 8
+    </div>
+
+    <button onclick="checkAnswers()" class="w-full sm:w-auto px-8 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 active:bg-blue-800 shadow-lg shadow-blue-500/25 transition duration-200 flex items-center justify-center gap-2">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      Check Answers
+    </button>
+  </footer>
+
+</main>
+
+<script>
+  // List of acceptable correct options for flexible evaluation
+  const answerKeys = [
+    ["i meet my relatives in july", "i meet relatives in july"],
+    ["we have an english test on monday", "we have english test on monday"],
+    ["she does karate on tuesday"],
+    ["my birthday is in april"],
+    ["he meets his friends on friday", "he meets friends on friday"],
+    ["we explore new places in august"],
+    ["do you spend time with your siblings on sunday", "do you spend time with siblings on sunday"],
+    ["she doesn't do karate on wednesday", "she does not do karate on wednesday"]
+  ];
+
+  // Primary answer strings for recommended corrections
+  const primaryAnswers = [
+    "I meet my relatives in July.",
+    "We have an English test on Monday.",
+    "She does karate on Tuesday.",
+    "My birthday is in April.",
+    "He meets his friends on Friday.",
+    "We explore new places in August.",
+    "Do you spend time with your siblings on Sunday?",
+    "She doesn't do karate on Wednesday."
+  ];
+
+  // Helper function to normalize user string
+  function normalizeInput(str) {
+    return str
+      .trim()
+      .toLowerCase()
+      .replace(/[’']/g, "'")            // normalize apostrophes
+      .replace(/[.,?!]/g, '')           // remove punctuation
+      .replace(/\s+/g, ' ');            // condense whitespace
+  }
+
+  // Grade user inputs
+  function checkAnswers() {
+    let score = 0;
+    const cards = document.querySelectorAll('.question-card');
+
+    cards.forEach((card, idx) => {
+      const input = card.querySelector('.user-input');
+      const feedback = card.querySelector('.feedback-message');
+      const userVal = normalizeInput(input.value);
+
+      // Clear previous styles
+      card.classList.remove('bg-emerald-50/50', 'border-emerald-300', 'bg-rose-50/50', 'border-rose-300');
+      feedback.classList.remove('hidden', 'text-emerald-700', 'text-rose-700');
+
+      if (userVal === '') {
+        card.classList.add('bg-rose-50/50', 'border-rose-300');
+        feedback.innerHTML = `⚠️ Please type your translation first.`;
+        feedback.classList.add('text-rose-700');
+        return;
+      }
+
+      const isCorrect = answerKeys[idx].some(correctOption => normalizeInput(correctOption) === userVal);
+
+      if (isCorrect) {
+        score++;
+        card.classList.add('bg-emerald-50/50', 'border-emerald-300');
+        feedback.innerHTML = `✓ Correct! Perfect job.`;
+        feedback.classList.add('text-emerald-700');
+      } else {
+        card.classList.add('bg-rose-50/50', 'border-rose-300');
+        feedback.innerHTML = `✗ Correct answer: <span class="font-bold underline ml-1">${primaryAnswers[idx]}</span>`;
+        feedback.classList.add('text-rose-700');
+      }
+    });
+
+    // Update score display
+    const scoreBadge = document.getElementById('scoreBadge');
+    const scoreVal = document.getElementById('scoreVal');
+    scoreVal.textContent = score;
+    scoreBadge.classList.remove('hidden');
+  }
+
+  // Reset exercise state
+  function resetExercise() {
+    const cards = document.querySelectorAll('.question-card');
+    cards.forEach((card) => {
+      card.classList.remove('bg-emerald-50/50', 'border-emerald-300', 'bg-rose-50/50', 'border-rose-300');
+      const input = card.querySelector('.user-input');
+      const feedback = card.querySelector('.feedback-message');
+      input.value = '';
+      feedback.classList.add('hidden');
+      feedback.textContent = '';
+    });
+
+    const scoreBadge = document.getElementById('scoreBadge');
+    scoreBadge.classList.add('hidden');
+  }
+
+  // Text-to-Speech audio support
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  // Allow pressing Enter in input field to check answers
+  document.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      checkAnswers();
+    }
+  });
+</script>
+
+</body>
+</html>
