@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match the country with the nationality</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --primary-color: #2563eb;
+    --primary-light: #eff6ff;
+    --border-color: #e2e8f0;
+    --item-bg: #f1f5f9;
+    --item-hover: #e2e8f0;
+    --selected-bg: #3b82f6;
+    --selected-text: #ffffff;
+    --matched-bg: #dcfce7;
+    --matched-text: #166534;
+    --matched-border: #86efac;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 820px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .icon-box {
+    width: 48px;
+    height: 48px;
+    background-color: var(--primary-light);
+    border: 2px solid #bfdbfe;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+
+  .matching-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .match-card {
+    position: relative;
+    background-color: var(--item-bg);
+    border: 2px solid transparent;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+
+  .match-card:hover {
+    background-color: var(--item-hover);
+    transform: translateY(-2px);
+  }
+
+  /* Tooltip logic for complex words */
+  .match-card[data-transcription]:hover::after {
+    content: attr(data-transcription);
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10;
+  }
+
+  .match-card.selected {
+    background-color: var(--selected-bg);
+    color: var(--selected-text);
+    border-color: #1d4ed8;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+
+  .match-card.matched {
+    background-color: var(--matched-bg);
+    color: var(--matched-text);
+    border-color: var(--matched-border);
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .score-badge {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    background-color: var(--primary-light);
+    padding: 8px 16px;
+    border-radius: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="icon-box">🧩</div>
+    <h1 class="title">Match the country with the nationality</h1>
+  </div>
+
+  <div class="matching-board">
+    <!-- Countries Column -->
+    <div class="column" id="countriesCol">
+      <div class="match-card" data-type="country" data-id="turkey" data-transcription="/ˈtɜː.ki/" onmouseenter="handleHover(this)">Turkey</div>
+      <div class="match-card" data-type="country" data-id="germany" data-transcription="/ˈdʒɜː.mə.ni/" onmouseenter="handleHover(this)">Germany</div>
+      <div class="match-card" data-type="country" data-id="spain" data-transcription="/speɪn/" onmouseenter="handleHover(this)">Spain</div>
+      <div class="match-card" data-type="country" data-id="poland" data-transcription="/ˈpəʊ.lənd/" onmouseenter="handleHover(this)">Poland</div>
+      <div class="match-card" data-type="country" data-id="argentina" data-transcription="/ˌɑː.dʒənˈtiː.nə/" onmouseenter="handleHover(this)">Argentina</div>
+      <div class="match-card" data-type="country" data-id="italy" data-transcription="/ˈɪt.əl.i/" onmouseenter="handleHover(this)">Italy</div>
+      <div class="match-card" data-type="country" data-id="china" data-transcription="/ˈtʃaɪ.nə/" onmouseenter="handleHover(this)">China</div>
+      <div class="match-card" data-type="country" data-id="france" data-transcription="/frɑːns/" onmouseenter="handleHover(this)">France</div>
+      <div class="match-card" data-type="country" data-id="usa" data-transcription="/ðə ˌjuː.esˈeɪ/" onmouseenter="handleHover(this)">the USA</div>
+      <div class="match-card" data-type="country" data-id="uk" data-transcription="/ðə ˌjuːˈkeɪ/" onmouseenter="handleHover(this)">the UK</div>
+    </div>
+
+    <!-- Nationalities Column -->
+    <div class="column" id="nationalitiesCol">
+      <div class="match-card" data-type="nationality" data-id="france" data-transcription="/frentʃ/" onmouseenter="handleHover(this)">French</div>
+      <div class="match-card" data-type="nationality" data-id="spain" data-transcription="/ˈspæn.ɪʃ/" onmouseenter="handleHover(this)">Spanish</div>
+      <div class="match-card" data-type="nationality" data-id="uk" data-transcription="/ˈbrɪt.ɪʃ/" onmouseenter="handleHover(this)">British</div>
+      <div class="match-card" data-type="nationality" data-id="argentina" data-transcription="/ˌɑː.dʒənˈtɪn.i.ən/" onmouseenter="handleHover(this)">Argentinian</div>
+      <div class="match-card" data-type="nationality" data-id="italy" data-transcription="/ɪˈtæl.jən/" onmouseenter="handleHover(this)">Italian</div>
+      <div class="match-card" data-type="nationality" data-id="germany" data-transcription="/ˈdʒɜː.mən/" onmouseenter="handleHover(this)">German</div>
+      <div class="match-card" data-type="nationality" data-id="china" data-transcription="/ˌtʃaɪˈniːz/" onmouseenter="handleHover(this)">Chinese</div>
+      <div class="match-card" data-type="nationality" data-id="turkey" data-transcription="/ˈtɜː.kɪʃ/" onmouseenter="handleHover(this)">Turkish</div>
+      <div class="match-card" data-type="nationality" data-id="usa" data-transcription="/əˈmer.ɪ.kən/" onmouseenter="handleHover(this)">American</div>
+      <div class="match-card" data-type="nationality" data-id="poland" data-transcription="/ˈpəʊ.lɪʃ/" onmouseenter="handleHover(this)">Polish</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-reset" onclick="resetBoard()">Reset 🔄</button>
+    <div class="score-badge" id="scoreBadge">Matched: 0 / 10</div>
+  </div>
+</div>
+
+<script>
+  let selectedCountry = null;
+  let selectedNationality = null;
+  let matchesCount = 0;
+
+  document.querySelectorAll('.match-card').forEach(card => {
+    card.addEventListener('click', function() {
+      if (this.classList.contains('matched')) return;
+
+      const type = this.getAttribute('data-type');
+
+      if (type === 'country') {
+        if (selectedCountry) selectedCountry.classList.remove('selected');
+        selectedCountry = this;
+        this.classList.add('selected');
+      } else {
+        if (selectedNationality) selectedNationality.classList.remove('selected');
+        selectedNationality = this;
+        this.classList.add('selected');
+      }
+
+      if (selectedCountry && selectedNationality) {
+        checkMatch();
+      }
+    });
+  });
+
+  function checkMatch() {
+    const countryId = selectedCountry.getAttribute('data-id');
+    const nationalityId = selectedNationality.getAttribute('data-id');
+
+    if (countryId === nationalityId) {
+      selectedCountry.classList.remove('selected');
+      selectedNationality.classList.remove('selected');
+      selectedCountry.classList.add('matched');
+      selectedNationality.classList.add('matched');
+
+      matchesCount++;
+      document.getElementById('scoreBadge').textContent = `Matched: ${matchesCount} / 10`;
+
+      selectedCountry = null;
+      selectedNationality = null;
+    } else {
+      setTimeout(() => {
+        if (selectedCountry) selectedCountry.classList.remove('selected');
+        if (selectedNationality) selectedNationality.classList.remove('selected');
+        selectedCountry = null;
+        selectedNationality = null;
+      }, 400);
+    }
+  }
+
+  function handleHover(card) {
+    if (card.classList.contains('matched')) return;
+    const word = card.innerText.trim();
+    speakText(word);
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function resetBoard() {
+    matchesCount = 0;
+    selectedCountry = null;
+    selectedNationality = null;
+    document.getElementById('scoreBadge').textContent = `Matched: 0 / 10`;
+
+    document.querySelectorAll('.match-card').forEach(card => {
+      card.classList.remove('selected', 'matched');
+    });
+  }
+</script>
+
+</body>
+</html>
