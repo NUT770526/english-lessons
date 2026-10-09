@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1. З’єднай власника та його річ (Possessive 's)</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #0f172a;
+    --primary-color: #2563eb;
+    --primary-light: #eff6ff;
+    --border-color: #cbd5e1;
+    --success-color: #16a34a;
+    --success-bg: #f0fdf4;
+    --error-color: #dc2626;
+    --error-bg: #fef2f2;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 820px;
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .icon-box {
+    width: 48px;
+    height: 48px;
+    background-color: var(--primary-light);
+    border: 2px solid #bfdbfe;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e3a8a;
+  }
+
+  .example-card {
+    background-color: #f1f5f9;
+    border-left: 4px solid var(--primary-color);
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #334155;
+    margin-bottom: 28px;
+  }
+
+  .example-card strong {
+    color: var(--primary-color);
+  }
+
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .question-item {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.2s ease;
+  }
+
+  .sentence-row {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* Tooltip logic */
+  .word-tooltip {
+    position: relative;
+    cursor: pointer;
+    border-bottom: 2px dotted var(--primary-color);
+    color: #1d4ed8;
+    padding-bottom: 1px;
+    font-weight: 700;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-info);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    z-index: 10;
+  }
+
+  .input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    background-color: #f8fafc;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--primary-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  input.correct {
+    border-color: #16a34a !important;
+    background-color: var(--success-bg) !important;
+    color: #15803d;
+    font-weight: 600;
+  }
+
+  input.incorrect {
+    border-color: #dc2626 !important;
+    background-color: var(--error-bg) !important;
+    color: #b91c1c;
+  }
+
+  .feedback {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--error-color);
+    margin-top: 8px;
+    display: none;
+  }
+
+  .feedback.show {
+    display: block;
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    margin-left: auto;
+  }
+
+  .audio-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-check {
+    background-color: var(--primary-color);
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background-color: #1d4ed8;
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .score-badge {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    background-color: var(--primary-light);
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="icon-box">🔑</div>
+    <h1 class="title">1. З’єднай власника та його річ</h1>
+  </div>
+
+  <div class="example-card">
+    Запиши словосполучення за зразком. Не забудь <strong>'s</strong>!<br>
+    <strong>Зразок:</strong> Bob + TV → <em>Bob's TV</em>
+  </div>
+
+  <div class="questions-list">
+    <!-- Item 1 -->
+    <div class="question-item">
+      <div class="sentence-row">
+        <span>1. Mary +</span>
+        <span class="word-tooltip" data-info="[ˈfæm.əl.i] — сім'я, родина" onmouseenter="speakText('family')">family</span>
+        <span>→</span>
+        <button class="audio-btn" title="Послухати словосполучення" onclick="speakText('Mary\'s family')">🔊</button>
+      </div>
+      <div class="input-group">
+        <input type="text" data-answer="Mary's family" placeholder="Введи результат...">
+      </div>
+      <div class="feedback">Правильна відповідь: Mary's family</div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="question-item">
+      <div class="sentence-row">
+        <span>2. Tom +</span>
+        <span class="word-tooltip" data-info="[baɪk] — велосипед" onmouseenter="speakText('bike')">bike</span>
+        <span>→</span>
+        <button class="audio-btn" title="Послухати словосполучення" onclick="speakText('Tom\'s bike')">🔊</button>
+      </div>
+      <div class="input-group">
+        <input type="text" data-answer="Tom's bike" placeholder="Введи результат...">
+      </div>
+      <div class="feedback">Правильна відповідь: Tom's bike</div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="question-item">
+      <div class="sentence-row">
+        <span>3. Anna +</span>
+        <span class="word-tooltip" data-info="[ˈfəʊl.dər] — папка" onmouseenter="speakText('folder')">folder</span>
+        <span>→</span>
+        <button class="audio-btn" title="Послухати словосполучення" onclick="speakText('Anna\'s folder')">🔊</button>
+      </div>
+      <div class="input-group">
+        <input type="text" data-answer="Anna's folder" placeholder="Введи результат...">
+      </div>
+      <div class="feedback">Правильна відповідь: Anna's folder</div>
+    </div>
+
+    <!-- Item 4 -->
+    <div class="question-item">
+      <div class="sentence-row">
+        <span>4. Ben +</span>
+        <span class="word-tooltip" data-info="[ɡɪˈtɑːr] — гітара" onmouseenter="speakText('guitar')">guitar</span>
+        <span>→</span>
+        <button class="audio-btn" title="Послухати словосполучення" onclick="speakText('Ben\'s guitar')">🔊</button>
+      </div>
+      <div class="input-group">
+        <input type="text" data-answer="Ben's guitar" placeholder="Введи результат...">
+      </div>
+      <div class="feedback">Правильна відповідь: Ben's guitar</div>
+    </div>
+
+    <!-- Item 5 -->
+    <div class="question-item">
+      <div class="sentence-row">
+        <span>5. Kate +</span>
+        <span class="word-tooltip" data-info="[fəʊn] — телефон" onmouseenter="speakText('phone')">phone</span>
+        <span>→</span>
+        <button class="audio-btn" title="Послухати словосполучення" onclick="speakText('Kate\'s phone')">🔊</button>
+      </div>
+      <div class="input-group">
+        <input type="text" data-answer="Kate's phone" placeholder="Введи результат...">
+      </div>
+      <div class="feedback">Правильна відповідь: Kate's phone</div>
+    </div>
+
+    <!-- Item 6 -->
+    <div class="question-item">
+      <div class="sentence-row">
+        <span>6. Tom Smith +</span>
+        <span class="word-tooltip" data-info="[baɪk] — велосипед" onmouseenter="speakText('bike')">bike</span>
+        <span>→</span>
+        <button class="audio-btn" title="Послухати словосполучення" onclick="speakText('Tom Smith\'s bike')">🔊</button>
+      </div>
+      <div class="input-group">
+        <input type="text" data-answer="Tom Smith's bike" placeholder="Введи результат...">
+      </div>
+      <div class="feedback">Правильна відповідь: Tom Smith's bike</div>
+    </div>
+
+    <!-- Item 7 -->
+    <div class="question-item">
+      <div class="sentence-row">
+        <span>7. Mary Brown +</span>
+        <span class="word-tooltip" data-info="[ˈfəʊl.dər] — папка" onmouseenter="speakText('folder')">folder</span>
+        <span>→</span>
+        <button class="audio-btn" title="Послухати словосполучення" onclick="speakText('Mary Brown\'s folder')">🔊</button>
+      </div>
+      <div class="input-group">
+        <input type="text" data-answer="Mary Brown's folder" placeholder="Введи результат...">
+      </div>
+      <div class="feedback">Правильна відповідь: Mary Brown's folder</div>
+    </div>
+
+    <!-- Item 8 -->
+    <div class="question-item">
+      <div class="sentence-row">
+        <span>8. Bob Green +</span>
+        <span class="word-tooltip" data-info="[ˌtiːˈviː] — телевізор" onmouseenter="speakText('TV')">TV</span>
+        <span>→</span>
+        <button class="audio-btn" title="Послухати словосполучення" onclick="speakText('Bob Green\'s TV')">🔊</button>
+      </div>
+      <div class="input-group">
+        <input type="text" data-
