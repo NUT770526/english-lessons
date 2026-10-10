@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extreme Sports - Choose the Right Phrase</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        neonCyan: '#00f3ff',
+                        neonPink: '#ff007f',
+                        neonPurple: '#a855f7',
+                        darkBg: '#0b0f19',
+                        cardBg: '#161e2e',
+                        borderBg: '#2a364f'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        }
+        .glow-pink {
+            box-shadow: 0 0 15px rgba(ff, 0, 127, 0.3);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-neonCyan selection:text-black">
+
+    <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-borderBg px-4 py-4">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-gradient-to-tr from-neonCyan to-neonPurple rounded-2xl text-black font-extrabold text-xl shadow-lg">
+                    🏄‍♂️
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-neonCyan via-white to-neonPink bg-clip-text text-transparent">
+                        2. Choose the right phrase 🏄‍♀️
+                    </h1>
+                    <p class="text-xs text-gray-400">Vocabulary & Phrasal Verbs Challenge</p>
+                </div>
+            </div>
+            
+            <!-- Progress Tracker -->
+            <div class="w-full sm:w-auto flex items-center gap-3 bg-cardBg px-4 py-2 rounded-xl border border-borderBg">
+                <div class="text-xs font-semibold text-gray-300 whitespace-nowrap">
+                    Progress: <span id="progress-text" class="text-neonCyan font-bold">0</span>/12
+                </div>
+                <div class="w-32 bg-gray-800 h-2.5 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-gradient-to-r from-neonCyan to-neonPink h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-8 w-full flex-grow">
+        
+        <!-- Instructions Box -->
+        <div class="mb-8 p-4 sm:p-5 bg-cardBg rounded-2xl border border-neonCyan/30 relative overflow-hidden shadow-lg">
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-neonCyan/10 rounded-full blur-xl pointer-events-none"></div>
+            <div class="flex items-start gap-3">
+                <i class="fa-solid font-bold text-neonCyan text-xl mt-0.5 fa-circle-info"></i>
+                <div>
+                    <h2 class="text-base font-semibold text-white">Instructions:</h2>
+                    <p class="text-sm text-gray-300 mt-1">
+                        Read each scenario carefully and select the correct option that completes the second sentence. Once finished, click <span class="text-neonCyan font-medium">"Complete Task"</span> to generate your answers summary.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise Form / Container -->
+        <div id="questions-container" class="space-y-6">
+            <!-- Questions rendered via JS -->
+        </div>
+
+        <!-- Finish / Complete Button -->
+        <div class="mt-10 flex justify-center">
+            <button id="finish-btn" onclick="finishExercise()" class="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-neonCyan via-blue-600 to-neonPink text-white font-bold text-lg rounded-2xl shadow-xl hover:opacity-95 transform active:scale-95 transition-all duration-200">
+                <i class="fa-solid fa-paper-plane text-xl group-hover:translate-x-1 transition-transform"></i>
+                <span>Complete Task & Send</span>
+            </button>
+        </div>
+    </main>
+
+    <div id="summary-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-cardBg border border-borderBg rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl relative">
+            
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-xl p-2">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="inline-block p-3 bg-neonCyan/10 rounded-full text-neonCyan mb-2">
+                    <i class="fa-solid fa-square-check text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-extrabold text-white">Task Completed! 🎉</h3>
+                <p class="text-sm text-gray-400 mt-1">Review your answers below or copy them to send to your teacher.</p>
+            </div>
+
+            <!-- Answers List Box -->
+            <div id="summary-content" class="flex-grow overflow-y-auto space-y-3 bg-darkBg p-4 rounded-2xl border border-borderBg text-sm font-mono text-gray-200 mb-6">
+                <!-- Summary content populated here -->
+            </div>
+
+            <!-- Modal Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="copyAnswers()" id="copy-btn" class="flex-1 py-3 px-4 bg-neonCyan text-black font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-cyan-300 transition-colors active:scale-95">
+                    <i class="fa-solid fa-copy"></i>
+                    <span>Copy Answers to Clipboard</span>
+                </button>
+                <button onclick="closeModal()" class="py-3 px-6 bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold rounded-xl transition-colors">
+                    Back to Exercise
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-neonCyan text-black font-bold px-5 py-3 rounded-2xl shadow-2xl opacity-0 transition-opacity duration-300 pointer-events-none flex items-center gap-2 z-50">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toast-message">Answers copied to clipboard!</span>
+    </div>
+
+    <footer class="border-t border-borderBg py-6 px-4 text-center text-xs text-gray-500 mt-12">
+        <p>Interactive English Exercise • No Auto-Grading Mode</p>
+    </footer>
+
+    <script>
+        // Exact 12 questions from the user screenshot
+        const questionsData = [
+            {
+                id: 1,
+                context: "Ben loves skateboarding and watches videos about it every day.",
+                sentenceBefore: "He ",
+                sentenceAfter: " skateboarding.",
+                options: ["is into", "is late for"]
+            },
+            {
+                id: 2,
+                context: "I have never tried surfing, but I want to start.",
+                sentenceBefore: "I want to ",
+                sentenceAfter: " surfing.",
+                options: ["take up", "put on"]
+            },
+            {
+                id: 3,
+                context: "Everyone arrived for the lesson at nine.",
+                sentenceBefore: "Everyone ",
+                sentenceAfter: " at nine.",
+                options: ["backed out", "turned up"]
+            },
+            {
+                id: 4,
+                context: "Mia decided not to do the jump because she was scared.",
+                sentenceBefore: "She ",
+                sentenceAfter: ".",
+                options: ["backed out", "set up"]
+            },
+            {
+                id: 5,
+                context: "Leo was nervous, but he completed his first parachute jump.",
+                sentenceBefore: "He ",
+                sentenceAfter: " the jump.",
+                options: ["went through with", "was late for"]
+            },
+            {
+                id: 6,
+                context: "You need to wear your helmet before you start.",
+                sentenceBefore: "",
+                sentenceAfter: " your helmet.",
+                options: ["Put on", "Take up"]
+            },
+            {
+                id: 7,
+                context: "Our school has organised a mountain-biking club.",
+                sentenceBefore: "Our school has ",
+                sentenceAfter: " a mountain-biking club.",
+                options: ["got across", "set up"]
+            },
+            {
+                id: 8,
+                context: "The instructor is explaining the rules clearly.",
+                sentenceBefore: "He is trying to ",
+                sentenceAfter: ".",
+                options: ["get the rules across", "back out"]
+            },
+            {
+                id: 9,
+                context: "The lesson started at ten, but we arrived at ten fifteen.",
+                sentenceBefore: "We ",
+                sentenceAfter: " the lesson.",
+                options: ["were into", "were late for"]
+            },
+            {
+                id: 10,
+                context: "We can go windsurfing if there is enough wind.",
+                sentenceBefore: "It ",
+                sentenceAfter: " the wind.",
+                options: ["depends on", "turns up"]
+            },
+            {
+                id: 11,
+                context: "You want to say what you think about surfing.",
+                sentenceBefore: "",
+                sentenceAfter: ", surfing is a fantastic sport.",
+                options: ["In my opinion", "It depends on"]
+            },
+            {
+                id: 12,
+                context: "You want to explain how you see the situation.",
+                sentenceBefore: "",
+                sentenceAfter: ", beginners need an instructor.",
+                options: ["From my point of view", "Put on"]
+            }
+        ];
+
+        // Selected state dictionary: { 1: "is into", 2: null, ... }
+        const userSelections = {};
+
+        // Render questions on page load
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            questionsData.forEach((q, index) => {
+                const selectedOpt = userSelections[q.id];
+
+                const cardHtml = `
+                    <div class="bg-cardBg rounded-2xl p-5 sm:p-6 border border-borderBg shadow-md hover:border-gray-700 transition-colors">
+                        <div class="flex items-start gap-3">
+                            <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-gray-800 border border-gray-700 text-neonCyan font-bold text-sm flex items-center justify-center">
+                                ${q.id}
+                            </span>
+                            <div class="flex-grow space-y-3">
+                                <!-- Context Sentence -->
+                                <p class="text-gray-300 text-sm sm:text-base font-normal leading-relaxed">
+                                    ${q.context}
+                                </p>
+                                
+                                <!-- Question Target Sentence & Interactive Options -->
+                                <div class="bg-darkBg/60 p-4 rounded-xl border border-borderBg/80 flex flex-wrap items-center gap-2 text-base sm:text-lg text-white font-medium">
+                                    ${q.sentenceBefore ? `<span>${q.sentenceBefore}</span>` : ''}
+                                    
+                                    <!-- Options Group -->
+                                    <div class="inline-flex flex-wrap gap-2 my-1">
+                                        ${q.options.map(opt => {
+                                            const isSelected = selectedOpt === opt;
+                                            return `
+                                                <button 
+                                                    type="button"
+                                                    onclick="selectOption(${q.id}, '${opt.replace(/'/g, "\\'")}')"
+                                                    class="px-3.5 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 border ${
+                                                        isSelected 
+                                                        ? 'bg-gradient-to-r from-neonCyan/20 to-neonPurple/20 border-neonCyan text-neonCyan glow-cyan scale-105' 
+                                                        : 'bg-gray-800/80 hover:bg-gray-700 border-gray-700 text-gray-300 hover:text-white'
+                                                    }"
+                                                >
+                                                    ${opt}
+                                                </button>
+                                            `;
+                                        }).join('<span class="text-gray-500 font-bold self-center">/</span>')}
+                                    </div>
+
+                                    ${q.sentenceAfter ? `<span>${q.sentenceAfter}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+        }
+
+        // Handle clicking an option
+        function selectOption(questionId, optionValue) {
+            userSelections[questionId] = optionValue;
+            renderQuestions();
+            updateProgress();
+        }
+
+        // Update progress bar counter
+        function updateProgress() {
+            const answeredCount = Object.keys(userSelections).filter(id => userSelections[id] !== null).length;
+            const percentage = (answeredCount / 12) * 100;
+            
+            document.getElementById('progress-text').innerText = answeredCount;
+            document.getElementById('progress-bar').style.width = `${percentage}%`;
+        }
+
+        // Show Summary Screen
+        function finishExercise() {
+            const summaryContent = document.getElementById('summary-content');
+            summaryContent.innerHTML = '';
+
+            let formattedText = '';
+
+            questionsData.forEach(q => {
+                const answer = userSelections[q.id] || '[Not answered]';
+                
+                // Build full readable sentence with answer inserted
+                let fullSentence = '';
+                if (q.sentenceBefore || q.sentenceAfter) {
+                    fullSentence = `${q.sentenceBefore}<b><u class="text-neonCyan">${answer}</u></b>${q.sentenceAfter}`;
+                } else {
+                    fullSentence = `<b><u class="text-neonCyan">${answer}</u></b>`;
+                }
+
+                const itemHtml = `
+                    <div class="border-b border-borderBg/50 pb-2.5 last:border-0">
+                        <span class="text-gray-500 font-bold">${q.id}.</span> 
+                        <span class="text-gray-300">${fullSentence}</span>
+                    </div>
+                `;
+                summaryContent.innerHTML += itemHtml;
+            });
+
+            // Show Modal
+            const modal = document.getElementById('summary-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        // Close Summary Screen
+        function closeModal() {
+            const modal = document.getElementById('summary-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // Copy text answers formatted for teacher
+        function copyAnswers() {
+            let copyText = "Exercise 2: Choose the right phrase\n";
+            copyText += "-----------------------------------\n";
+
+            questionsData.forEach(q => {
+                const answer = userSelections[q.id] || '[Not answered]';
+                copyText += `${q.id}. ${answer}\n`;
+            });
+
+            // Use legacy execCommand or modern clipboard with iframe compatibility fallback
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(copyText).then(() => showToast()).catch(() => fallbackCopy(copyText));
+            } else {
+                fallbackCopy(copyText);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast();
+            } catch (err) {
+                console.error('Copy failed', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            // Initialize empty selection tracking
+            questionsData.forEach(q => userSelections[q.id] = null);
+            renderQuestions();
+            updateProgress();
+        };
+    </script>
+</body>
+</html>
