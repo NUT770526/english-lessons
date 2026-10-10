@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose the Correct Verb Form</title>
+  <!-- Google Fonts & Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Fredoka', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body class="text-slate-800 pb-16">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-sm px-4 py-3.5">
+    <div class="max-w-3xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 bg-gradient-to-tr from-sky-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-xl shadow-md shadow-sky-500/20">
+          🎯
+        </div>
+        <div>
+          <h1 class="font-display font-bold text-lg sm:text-xl text-slate-900 tracking-wide">
+            Grammar Practice
+          </h1>
+          <p class="text-xs text-slate-500 font-medium">Infinitive vs. Gerund vs. Bare Infinitive</p>
+        </div>
+      </div>
+
+      <!-- Counter Pill -->
+      <div class="flex items-center gap-2 bg-sky-50 border border-sky-100 px-3 py-1.5 rounded-xl">
+        <span class="text-xs font-bold text-sky-700" id="progress-badge">0 / 12 Answered</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 mt-6 space-y-6">
+
+    <!-- Title Card -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
+      <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center text-xl flex-shrink-0 mt-0.5">
+        <i class="fa-solid fa-list-check"></i>
+      </div>
+      <div>
+        <h2 class="font-display font-bold text-xl text-slate-900 mb-1">
+          1. Choose the correct form
+        </h2>
+        <p class="text-sm font-medium text-sky-600 mb-1">
+          Обери правильну форму дієслова.
+        </p>
+        <p class="text-xs text-slate-500">
+          Click on the correct option inside each sentence to select your answer.
+        </p>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="bg-slate-200/80 h-2.5 rounded-full overflow-hidden">
+      <div id="progress-bar" class="bg-gradient-to-r from-sky-500 to-indigo-600 h-full w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Questions Container -->
+    <div class="space-y-3.5" id="questions-list">
+      <!-- Dynamically generated items -->
+    </div>
+
+    <!-- Submission Area -->
+    <div class="pt-6 border-t border-slate-200/80 flex flex-col items-center gap-3">
+      <button onclick="finishExercise()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 text-white font-display font-bold text-lg rounded-2xl shadow-lg shadow-sky-500/20 active:scale-95 transition flex items-center justify-center gap-3">
+        <i class="fa-solid fa-paper-plane"></i>
+        <span>Finish & Copy Homework</span>
+      </button>
+      <p class="text-xs text-slate-400 font-medium">This will prepare a neat text summary to send to your teacher.</p>
+    </div>
+
+  </main>
+
+  <!-- Homework Modal -->
+  <div id="report-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="modal-card" class="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl relative scale-95 transition-transform duration-300">
+      
+      <button onclick="closeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center transition">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center mb-4">
+        <div class="w-12 h-12 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-2">
+          📝
+        </div>
+        <h3 class="font-display font-bold text-2xl text-slate-900">Your Finished Homework</h3>
+        <p class="text-xs text-slate-500">Copy these answers and paste them into a chat or email for your teacher.</p>
+      </div>
+
+      <div id="report-text" class="flex-grow overflow-y-auto bg-slate-50 p-4 rounded-2xl border border-slate-200 text-sm font-mono text-slate-800 whitespace-pre-wrap mb-5 leading-relaxed">
+        <!-- Result text populated by JS -->
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button onclick="copyResults()" class="flex-1 py-3.5 px-5 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-md shadow-sky-500/20 transition">
+          <i class="fa-solid fa-copy"></i>
+          <span>Copy to Clipboard</span>
+        </button>
+        <button onclick="closeModal()" class="py-3.5 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-2xl transition">
+          Back to Exercise
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questionsData = [
+      { id: 1, textPre: "I want", opt1: "to take up", opt2: "taking up", textPost: "rock climbing." },
+      { id: 2, textPre: "My brother enjoys", opt1: "to put on", opt2: "putting on", textPost: "his snowboarding gear." },
+      { id: 3, textPre: "We decided", opt1: "to turn up", opt2: "turning up", textPost: "early for our surfing lesson." },
+      { id: 4, textPre: "Tom is thinking about", opt1: "to back out", opt2: "backing out", textPost: "of the competition." },
+      { id: 5, textPre: "Mia would like", opt1: "to go through with", opt2: "going through with", textPost: "the parachute jump." },
+      { id: 6, textPre: "Our teacher is considering", opt1: "to set up", opt2: "setting up", textPost: "a climbing club." },
+      { id: 7, textPre: "The instructor wants", opt1: "to get", opt2: "getting", textPost: "the safety rules across clearly." },
+      { id: 8, textPre: "Let me", opt1: "put on", opt2: "to put on", textPost: "my helmet first." },
+      { id: 9, textPre: "I dream of", opt1: "to take up", opt2: "taking up", textPost: "windsurfing." },
+      { id: 10, textPre: "We finished", opt1: "to put on", opt2: "putting on", textPost: "our equipment five minutes ago." },
+      { id: 11, textPre: "Dad let us", opt1: "try", opt2: "to try", textPost: "snowboarding." },
+      { id: 12, textPre: "In my opinion, you need to think about", opt1: "to wear", opt2: "wearing", textPost: "the right equipment." }
+    ];
+
+    const selections = {};
+
+    function renderQuestions() {
+      const container = document.getElementById('questions-list');
+      container.innerHTML = '';
+
+      questionsData.forEach(item => {
+        const selectedVal = selections[item.id];
+
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm hover:border-sky-200 transition flex items-start gap-3.5";
+
+        card.innerHTML = `
+          <span class="font-display font-bold text-sky-600 text-sm sm:text-base mt-1 flex-shrink-0 w-6">
+            ${item.id}.
+          </span>
+          
+          <div class="text-base text-slate-800 font-medium leading-relaxed flex-grow">
+            <span>${item.textPre}</span>
+
+            <!-- Inline Option Buttons Group -->
+            <span class="inline-flex flex-wrap items-center gap-1 mx-1.5 p-1 bg-slate-100/90 rounded-xl border border-slate-200/70 align-middle">
+              <button 
+                onclick="selectOption(${item.id}, '${item.opt1.replace(/'/g, "\\'")}')"
+                class="px-3 py-1 rounded-lg text-sm font-semibold transition ${
+                  selectedVal === item.opt1 
+                    ? 'bg-sky-600 text-white shadow-sm' 
+                    : 'bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                }"
+              >
+                ${item.opt1}
+              </button>
+
+              <span class="text-xs text-slate-400 font-bold px-0.5">/</span>
+
+              <button 
+                onclick="selectOption(${item.id}, '${item.opt2.replace(/'/g, "\\'")}')"
+                class="px-3 py-1 rounded-lg text-sm font-semibold transition ${
+                  selectedVal === item.opt2 
+                    ? 'bg-sky-600 text-white shadow-sm' 
+                    : 'bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                }"
+              >
+                ${item.opt2}
+              </button>
+            </span>
+
+            <span>${item.textPost}</span>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      updateProgress();
+    }
+
+    function selectOption(id, value) {
+      selections[id] = value;
+      renderQuestions();
+    }
+
+    function updateProgress() {
+      const count = Object.keys(selections).length;
+      const total = questionsData.length;
+      const pct = (count / total) * 100;
+
+      document.getElementById('progress-badge').innerText = `${count} / ${total} Answered`;
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+    }
+
+    function finishExercise() {
+      let report = "===========================================\n";
+      report += "📝 GRAMMAR EXERCISE: CHOOSE THE CORRECT FORM\n";
+      report += "===========================================\n\n";
+
+      questionsData.forEach(item => {
+        const choice = selections[item.id] ? `[ ${selections[item.id]} ]` : "[ ____ ]";
+        report += `${item.id}. ${item.textPre} ${choice} ${item.textPost}\n\n`;
+      });
+
+      document.getElementById('report-text').innerText = report;
+
+      const modal = document.getElementById('report-modal');
+      const card = document.getElementById('modal-card');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-95');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('report-modal');
+      const card = document.getElementById('modal-card');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      card.classList.add('scale-95');
+    }
+
+    function copyResults() {
+      const text = document.getElementById('report-text').innerText;
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert("Homework copied to clipboard!");
+          closeModal();
+        });
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          alert("Homework copied to clipboard!");
+          closeModal();
+        } catch (err) {
+          alert("Could not copy automatically. Please copy manually.");
+        }
+        document.body.removeChild(textArea);
+      }
+    }
+
+    window.onload = renderQuestions;
+  </script>
+</body>
+</html>
