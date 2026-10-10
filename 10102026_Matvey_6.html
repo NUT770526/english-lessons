@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verb Forms - Interactive Grammar Exercise</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f6ff',
+                            100: '#e0edff',
+                            200: '#c7ddff',
+                            500: '#4f46e5',
+                            600: '#4338ca',
+                            700: '#3730a3',
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Fredoka', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f1f5f9 100%);
+            min-height: 100vh;
+        }
+
+        .input-box {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-box:focus {
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+        }
+
+        /* Smooth modal animations */
+        .modal-card {
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Custom scrollbar for modal output */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="text-slate-800 pb-16">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-sm px-4 py-3.5">
+        <div class="max-w-3xl mx-auto flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-gradient-to-tr from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-xl shadow-md shadow-indigo-500/20">
+                    🎬
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-lg sm:text-xl text-slate-900 tracking-wide">
+                        Verb Forms Practice
+                    </h1>
+                    <p class="text-xs text-slate-500 font-medium">Put the verbs in brackets into the correct tenses</p>
+                </div>
+            </div>
+
+            <!-- Simple counter pill -->
+            <div class="flex items-center gap-2 bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-xl">
+                <span class="text-xs font-bold text-indigo-700" id="progress-badge">0 / 8 Completed</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-4 mt-6 space-y-6">
+
+        <!-- Title Box -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
+            <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center text-xl flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </div>
+            <div>
+                <h2 class="font-display font-bold text-xl text-slate-900 mb-1">
+                    Put these verbs in correct forms
+                </h2>
+                <p class="text-sm text-slate-600">
+                    Pay attention to the hints in brackets <span class="text-sky-600 font-semibold">(e.g. Present Simple, Past Simple)</span>. Type your answers into the boxes provided below.
+                </p>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="bg-slate-200/80 h-2.5 rounded-full overflow-hidden">
+            <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 to-purple-600 h-full w-0 transition-all duration-300"></div>
+        </div>
+
+        <!-- Sentence Cards List -->
+        <div class="space-y-4" id="exercise-list">
+            <!-- Dynamically populated sentence cards -->
+        </div>
+
+        <!-- Finish & Submit Bar -->
+        <div class="pt-6 border-t border-slate-200/80 flex flex-col items-center gap-3">
+            <button onclick="generateAnswersReport()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-display font-bold text-lg rounded-2xl shadow-lg shadow-indigo-500/20 active:scale-95 transition flex items-center justify-center gap-3">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Finish & Copy Homework</span>
+            </button>
+            <p class="text-xs text-slate-400 font-medium">This will compile your answers into a format ready to send to your teacher.</p>
+        </div>
+
+    </main>
+
+    <!-- Report Modal -->
+    <div id="report-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="modal-card" class="modal-card bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl relative scale-95">
+            
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-5">
+                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-2">
+                    🎓
+                </div>
+                <h3 class="font-display font-bold text-2xl text-slate-900">Your Finished Exercise</h3>
+                <p class="text-xs text-slate-500">Copy your filled answers and paste them into a message for your teacher.</p>
+            </div>
+
+            <div id="report-text" class="flex-grow overflow-y-auto bg-slate-50 p-4 rounded-2xl border border-slate-200 text-sm font-mono text-slate-800 whitespace-pre-wrap mb-5 leading-relaxed">
+                <!-- Homework text filled by JS -->
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="copyReportToClipboard()" class="flex-1 py-3.5 px-5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-md shadow-indigo-500/20 transition">
+                    <i class="fa-solid fa-copy"></i>
+                    <span>Copy to Clipboard</span>
+                </button>
+                <button onclick="closeModal()" class="py-3.5 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-2xl transition">
+                    Back to Edit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white font-semibold text-sm px-5 py-3.5 rounded-2xl shadow-2xl opacity-0 transition-opacity duration-300 pointer-events-none flex items-center gap-3 z-50">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+        <span id="toast-text">Copied to clipboard!</span>
+    </div>
+
+    <script>
+        // Sentences exact match from the source image
+        const exerciseData = [
+            {
+                id: 1,
+                prefix: "1. I really",
+                hint: "to want",
+                suffix: "to take up a new hobby.",
+                tense: "Present Simple"
+            },
+            {
+                id: 2,
+                prefix: "2. What kind of extreme sports",
+                hint: "you to have",
+                suffix: "in mind?",
+                tense: "Present Simple"
+            },
+            {
+                id: 3,
+                prefix: "3. I",
+                hint: "to try",
+                suffix: "a lot of activities.",
+                tense: "Present Perfect Simple"
+            },
+            {
+                id: 4,
+                prefix: "4. I",
+                hint: "to decide",
+                suffix: "to take up extreme mountain biking.",
+                tense: "Past Simple"
+            },
+            {
+                id: 5,
+                prefix: "5. I",
+                hint: "to try",
+                suffix: "to ski last year and I had a good time.",
+                tense: "Past Simple"
+            },
+            {
+                id: 6,
+                prefix: "6. I",
+                hint: "to try",
+                suffix: "to get my brother to start snowboarding.",
+                tense: "Past Continuous"
+            },
+            {
+                id: 7,
+                prefix: "7. He",
+                hint: "to agree",
+                suffix: "and now he loves it.",
+                tense: "Past Simple"
+            },
+            {
+                id: 8,
+                prefix: "8. I",
+                hint: "to find",
+                suffix: "using skis to be difficult.",
+                tense: "Past Simple"
+            }
+        ];
+
+        function renderExercise() {
+            const container = document.getElementById('exercise-list');
+            container.innerHTML = '';
+
+            exerciseData.forEach(item => {
+                const cardHtml = `
+                    <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm hover:border-indigo-200 transition">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 leading-relaxed">
+                            
+                            <!-- Sentence Text with Input -->
+                            <div class="flex-grow text-base text-slate-800 font-medium flex flex-wrap items-center gap-2">
+                                <span>${item.prefix}</span>
+                                
+                                <div class="inline-flex items-center relative my-1">
+                                    <input 
+                                        type="text" 
+                                        id="input-${item.id}"
+                                        oninput="updateProgress()"
+                                        placeholder="${item.hint}"
+                                        class="input-box bg-slate-50 border border-slate-300 text-slate-900 font-semibold px-3 py-1.5 rounded-xl text-base w-40 sm:w-48 text-center placeholder-slate-400 focus:bg-white focus:border-indigo-500 focus:outline-none"
+                                    />
+                                    <span class="text-xs text-slate-400 font-normal ml-1.5 hover:text-slate-600 transition cursor-default hidden sm:inline" title="Verb hint">
+                                        ↩
+                                    </span>
+                                </div>
+
+                                <span>${item.suffix}</span>
+                            </div>
+
+                            <!-- Tense Badge -->
+                            <span class="self-start sm:self-center px-3 py-1 bg-sky-50 text-sky-700 border border-sky-200/80 rounded-xl text-xs font-semibold whitespace-nowrap">
+                                ${item.tense}
+                            </span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let filledCount = 0;
+            exerciseData.forEach(item => {
+                const input = document.getElementById(`input-${item.id}`);
+                if (input && input.value.trim().length > 0) {
+                    filledCount++;
+                }
+            });
+
+            const total = exerciseData.length;
+            const percentage = (filledCount / total) * 100;
+
+            document.getElementById('progress-badge').innerText = `${filledCount} / ${total} Completed`;
+            document.getElementById('progress-bar').style.width = `${percentage}%`;
+        }
+
+        function generateAnswersReport() {
+            let report = "===========================================\n";
+            report += "📝 VERB FORMS GRAMMAR EXERCISE\n";
+            report += "===========================================\n\n";
+
+            exerciseData.forEach(item => {
+                const input = document.getElementById(`input-${item.id}`);
+                const userVal = input ? input.value.trim() : "";
+                const displayAns = userVal ? userVal : "______";
+                
+                report += `${item.prefix} [ ${displayAns} ] ${item.suffix} (${item.tense})\n\n`;
+            });
+
+            document.getElementById('report-text').innerText = report;
+
+            const modal = document.getElementById('report-modal');
+            const card = document.getElementById('modal-card');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            card.classList.remove('scale-95');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('report-modal');
+            const card = document.getElementById('modal-card');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            card.classList.add('scale-95');
+        }
+
+        function copyReportToClipboard() {
+            const reportText = document.getElementById('report-text').innerText;
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(reportText)
+                    .then(() => showToast("Homework copied to clipboard!"))
+                    .catch(() => fallbackCopy(reportText));
+            } else {
+                fallbackCopy(reportText);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Homework copied to clipboard!");
+            } catch (err) {
+                console.error("Copy failed", err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        window.onload = function() {
+            renderExercise();
+        };
+    </script>
+</body>
+</html>
