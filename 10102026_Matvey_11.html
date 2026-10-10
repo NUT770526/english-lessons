@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2. Build the sentence</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Outfit', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+            },
+            indigoBrand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e0f2fe 100%);
+      min-height: 100vh;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body class="text-slate-800 pb-20">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs px-4 py-3.5">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-xl shadow-md shadow-teal-500/20">
+          🧩
+        </div>
+        <div>
+          <h1 class="font-display font-bold text-lg sm:text-xl text-slate-900 tracking-wide leading-tight">
+            Grammar Builder
+          </h1>
+          <p class="text-xs text-slate-500 font-medium">Verb Forms & Sentence Structure</p>
+        </div>
+      </div>
+
+      <!-- Counter Badge -->
+      <div class="flex items-center gap-2 bg-teal-50 border border-teal-100 px-3.5 py-1.5 rounded-xl">
+        <i class="fa-solid fa-pen-line text-teal-600 text-xs"></i>
+        <span class="text-xs font-bold text-teal-800" id="progress-badge">0 / 8 Built</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 mt-6 space-y-6">
+
+    <!-- Instructions Card -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-4">
+      <div class="flex items-start gap-3.5">
+        <div class="w-10 h-10 bg-indigoBrand-50 text-indigoBrand-600 rounded-2xl flex items-center justify-center text-lg flex-shrink-0 mt-0.5">
+          <i class="fa-solid fa-layer-group"></i>
+        </div>
+        <div>
+          <h2 class="font-display font-bold text-xl text-slate-900">
+            2. Build the sentence
+          </h2>
+          <p class="text-sm font-medium text-slate-600 mt-1 leading-relaxed">
+            Склади речення зі слів. Зміни форму дієслова в дужках, якщо потрібно. Решта слів уже подані в правильному порядку.
+          </p>
+        </div>
+      </div>
+
+      <!-- Styled Example Box -->
+      <div class="bg-gradient-to-r from-slate-50 to-teal-50/50 border border-teal-100/80 rounded-2xl p-4 sm:p-4.5 flex flex-col sm:flex-row items-start sm:items-center gap-3 text-sm">
+        <span class="px-2.5 py-1 bg-teal-600 text-white font-display font-bold text-xs rounded-lg uppercase tracking-wider flex-shrink-0">
+          Приклад
+        </span>
+        <div class="font-medium text-slate-700">
+          <span class="text-slate-500 italic">I / want / (take) up / surfing.</span>
+          <span class="mx-2 font-bold text-teal-600">→</span>
+          <span class="font-bold text-slate-900 bg-white px-2.5 py-1 rounded-lg border border-slate-200 inline-block mt-1 sm:mt-0 shadow-2xs">
+            I want to take up surfing.
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="bg-slate-200/80 h-2.5 rounded-full overflow-hidden p-0.5">
+      <div id="progress-bar" class="bg-gradient-to-r from-teal-500 to-indigo-600 h-full w-0 rounded-full transition-all duration-300"></div>
+    </div>
+
+    <!-- Sentences Input Container -->
+    <div class="space-y-4" id="sentences-list">
+      <!-- Sentence Cards generated via JS -->
+    </div>
+
+    <!-- Submit Button Area -->
+    <div class="pt-6 border-t border-slate-200/80 flex flex-col items-center gap-3">
+      <button onclick="finishExercise()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-teal-600 to-indigo-600 hover:from-teal-700 hover:to-indigo-700 text-white font-display font-bold text-lg rounded-2xl shadow-lg shadow-teal-500/20 active:scale-95 transition flex items-center justify-center gap-3 cursor-pointer">
+        <i class="fa-solid fa-paper-plane"></i>
+        <span>Finish & Copy Homework</span>
+      </button>
+      <p class="text-xs text-slate-400 font-medium">Generates a clean text copy to send to your teacher.</p>
+    </div>
+
+  </main>
+
+  <!-- Summary Output Modal -->
+  <div id="report-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="modal-card" class="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl relative scale-95 transition-transform duration-300">
+      
+      <button onclick="closeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center transition cursor-pointer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center mb-4">
+        <div class="w-12 h-12 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-2">
+          🎉
+        </div>
+        <h3 class="font-display font-bold text-2xl text-slate-900">Your Finished Sentences</h3>
+        <p class="text-xs text-slate-500">Copy your answers and paste them into a message or email for your teacher.</p>
+      </div>
+
+      <div id="report-text" class="flex-grow overflow-y-auto custom-scrollbar bg-slate-50 p-4 rounded-2xl border border-slate-200 text-sm font-mono text-slate-800 whitespace-pre-wrap mb-5 leading-relaxed">
+        <!-- Results text injected here -->
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button onclick="copyResults()" class="flex-1 py-3.5 px-5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-md shadow-teal-500/20 transition cursor-pointer">
+          <i class="fa-solid fa-copy"></i>
+          <span>Copy to Clipboard</span>
+        </button>
+        <button onclick="closeModal()" class="py-3.5 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-2xl transition cursor-pointer">
+          Back to Editing
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const sentencesData = [
+      { id: 1, prompt: "From my point of view, / beginners / need / (put) on / a helmet.", template: "From my point of view, beginners need " },
+      { id: 2, prompt: "My friend / enjoys / (turn) up / early for practice.", template: "My friend enjoys " },
+      { id: 3, prompt: "We / would like / (set) up / a skateboarding club.", template: "We would like " },
+      { id: 4, prompt: "Jack / is thinking about / (back) out / of the race.", template: "Jack is thinking about " },
+      { id: 5, prompt: "The instructor / let / us / (practise) / on a small slope.", template: "The instructor let us " },
+      { id: 6, prompt: "I / am into / (watch) / extreme sports videos.", template: "I am into " },
+      { id: 7, prompt: "Emma / decided / (go) through with / the jump.", template: "Emma decided " },
+      { id: 8, prompt: "Our coach / uses pictures / (get) / the safety rules / across.", template: "Our coach uses pictures " }
+    ];
+
+    const answers = {};
+
+    function renderSentences() {
+      const container = document.getElementById('sentences-list');
+      container.innerHTML = '';
+
+      sentencesData.forEach(item => {
+        const userVal = answers[item.id] || '';
+
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:border-teal-200 transition space-y-3";
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <span class="font-display font-bold text-teal-600 text-sm sm:text-base w-6">
+                ${item.id}.
+              </span>
+              <p class="font-mono text-xs sm:text-sm text-slate-600 bg-slate-50 border border-slate-200/80 px-2.5 py-1 rounded-lg">
+                ${item.prompt}
+              </p>
+            </div>
+            
+            <button 
+              onclick="fillTemplate(${item.id}, '${item.template.replace(/'/g, "\\'")}')" 
+              class="text-xs font-semibold text-indigoBrand-600 hover:text-indigoBrand-700 bg-indigoBrand-50 hover:bg-indigoBrand-100 px-2.5 py-1 rounded-lg transition flex items-center gap-1 flex-shrink-0 cursor-pointer"
+              title="Insert start of sentence"
+            >
+              <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
+              <span>Start sentence</span>
+            </button>
+          </div>
+
+          <div class="relative">
+            <input 
+              type="text" 
+              id="input-${item.id}"
+              value="${userVal}"
+              oninput="handleInput(${item.id}, this.value)"
+              placeholder="Type your complete sentence here..."
+              class="w-full bg-slate-50/50 focus:bg-white border border-slate-200 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-900 outline-none transition shadow-2xs focus:ring-3 focus:ring-teal-500/10"
+            />
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      updateProgress();
+    }
+
+    function handleInput(id, val) {
+      answers[id] = val;
+      updateProgress();
+    }
+
+    function fillTemplate(id, text) {
+      const input = document.getElementById(`input-${id}`);
+      if (!input.value) {
+        input.value = text;
+        answers[id] = text;
+        input.focus();
+        updateProgress();
+      }
+    }
+
+    function updateProgress() {
+      let filledCount = 0;
+      sentencesData.forEach(item => {
+        if (answers[item.id] && answers[item.id].trim().length > 3) {
+          filledCount++;
+        }
+      });
+
+      const total = sentencesData.length;
+      const pct = (filledCount / total) * 100;
+
+      document.getElementById('progress-badge').innerText = `${filledCount} / ${total} Built`;
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+    }
+
+    function finishExercise() {
+      let report = "===========================================\n";
+      report += "🧩 GRAMMAR EXERCISE: BUILD THE SENTENCE\n";
+      report += "===========================================\n\n";
+
+      sentencesData.forEach(item => {
+        const val = answers[item.id] && answers[item.id].trim() !== '' ? answers[item.id].trim() : "[ Not answered ]";
+        report += `${item.id}. ${val}\n\n`;
+      });
+
+      document.getElementById('report-text').innerText = report;
+
+      const modal = document.getElementById('report-modal');
+      const card = document.getElementById('modal-card');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-95');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('report-modal');
+      const card = document.getElementById('modal-card');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      card.classList.add('scale-95');
+    }
+
+    function copyResults() {
+      const text = document.getElementById('report-text').innerText;
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert("Homework copied to clipboard!");
+          closeModal();
+        });
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          alert("Homework copied to clipboard!");
+          closeModal();
+        } catch (err) {
+          alert("Could not copy automatically. Please copy manually.");
+        }
+        document.body.removeChild(textArea);
+      }
+    }
+
+    window.onload = renderSentences;
+  </script>
+</body>
+</html>
