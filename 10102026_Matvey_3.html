@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3. Extreme Sports Chat 💬</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            200: '#bae0fd',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        },
+                        accent: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        .chat-input {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col justify-between selection:bg-brand-100 selection:text-brand-700">
+
+    <!-- Header Component -->
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 shadow-sm px-4 py-4">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-gradient-to-tr from-brand-500 to-accent-500 rounded-2xl flex items-center justify-center text-white text-xl shadow-md shadow-brand-500/20">
+                    💬
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">
+                        3. Extreme Sports Chat 💬
+                    </h1>
+                    <p class="text-xs text-slate-500 font-medium">Interactive Vocabulary & Expression Exercise</p>
+                </div>
+            </div>
+
+            <!-- Progress Card -->
+            <div class="w-full sm:w-auto flex items-center gap-3 bg-slate-50 px-4 py-2.5 rounded-2xl border border-slate-200">
+                <div class="text-xs font-semibold text-slate-600 whitespace-nowrap">
+                    Completed: <span id="completed-count" class="text-brand-600 font-bold">0</span>/12
+                </div>
+                <div class="w-28 bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-gradient-to-r from-brand-500 to-accent-500 h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-4xl mx-auto px-4 py-8 w-full flex-grow">
+        
+        <!-- Instructions Card -->
+        <div class="mb-8 p-5 sm:p-6 bg-white rounded-3xl border border-slate-200/80 shadow-sm relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-brand-50 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="flex items-start gap-3.5">
+                <div class="p-2.5 bg-brand-50 text-brand-600 rounded-xl mt-0.5">
+                    <i class="fa-solid fa-circle-info text-lg"></i>
+                </div>
+                <div>
+                    <h2 class="text-base font-bold text-slate-900">Task Instructions:</h2>
+                    <p class="text-sm text-slate-600 mt-1 leading-relaxed">
+                        Complete the answers with your own ideas. Use the target phrases in brackets. Answer in full sentences.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Questions List -->
+        <div id="questions-list" class="space-y-6">
+            <!-- Questions rendered via JavaScript -->
+        </div>
+
+        <!-- Submit Button Section -->
+        <div class="mt-10 flex flex-col items-center justify-center gap-3">
+            <button id="review-btn" onclick="openSummaryModal()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-brand-600 to-accent-600 text-white font-bold text-base rounded-2xl shadow-lg shadow-brand-500/25 hover:shadow-xl hover:shadow-brand-500/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-3">
+                <i class="fa-solid fa-paper-plane text-lg"></i>
+                <span>Finish & Review Answers</span>
+            </button>
+            <p class="text-xs text-slate-400">You can copy your completed answers to send to your teacher.</p>
+        </div>
+    </main>
+
+    <!-- Summary Modal -->
+    <div id="summary-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-100 relative scale-95 transition-transform duration-300" id="modal-card">
+            
+            <button onclick="closeSummaryModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="inline-flex p-3 bg-brand-50 text-brand-600 rounded-2xl mb-2">
+                    <i class="fa-solid fa-clipboard-check text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight">Your Completed Answers 🏆</h3>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">Review your responses below before copying them to send to your teacher.</p>
+            </div>
+
+            <!-- Scrollable Content View -->
+            <div id="summary-answers" class="flex-grow overflow-y-auto space-y-3 bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 text-sm text-slate-800 mb-6 font-sans">
+                <!-- Summary inserted here via JS -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="copyAnswersToClipboard()" id="copy-btn" class="flex-1 py-3.5 px-5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl flex items-center justify-center gap-2.5 shadow-md shadow-brand-500/20 active:scale-98 transition-all">
+                    <i class="fa-solid fa-copy"></i>
+                    <span>Copy Answers to Clipboard</span>
+                </button>
+                <button onclick="closeSummaryModal()" class="py-3.5 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-2xl transition-colors">
+                    Back to Edit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white font-semibold text-sm px-5 py-3.5 rounded-2xl shadow-xl opacity-0 transition-opacity duration-300 pointer-events-none flex items-center gap-2.5 z-50">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+        <span id="toast-text">Copied to clipboard!</span>
+    </div>
+
+    <footer class="border-t border-slate-200/80 bg-white/50 py-6 px-4 text-center text-xs text-slate-400 mt-12">
+        <p>Interactive English Exercise • Clean Teen Light Theme</p>
+    </footer>
+
+    <script>
+        // Exact 12 questions data structured with input specifications
+        const questions = [
+            {
+                id: 1,
+                question: "Which extreme sport do you want to start?",
+                targetPhrase: "take up",
+                parts: [
+                    { type: "text", content: "I want to " },
+                    { type: "input", key: "p1", placeholder: "e.g., take up skateboarding...", width: "flex-1 min-w-[200px]" },
+                    { type: "text", content: "." }
+                ]
+            },
+            {
+                id: 2,
+                question: "Which sports does your best friend enjoy?",
+                targetPhrase: "be into",
+                parts: [
+                    { type: "text", content: "My best friend " },
+                    { type: "input", key: "p1", placeholder: "e.g., is really into BMX biking...", width: "flex-1 min-w-[200px]" },
+                    { type: "text", content: "." }
+                ]
+            },
+            {
+                id: 3,
+                question: "You arrived at the skatepark yesterday. What time?",
+                targetPhrase: "turn up",
+                parts: [
+                    { type: "text", content: "Yesterday, I " },
+                    { type: "input", key: "p1", placeholder: "e.g., turned up at 4 PM...", width: "flex-1 min-w-[200px]" },
+                    { type: "text", content: "." }
+                ]
+            },
+            {
+                id: 4,
+                question: "Imagine you decided not to do a bungee jump. Why?",
+                targetPhrase: "back out",
+                parts: [
+                    { type: "text", content: "I " },
+                    { type: "input", key: "p1", placeholder: "backed out", width: "w-36" },
+                    { type: "text", content: " because " },
+                    { type: "input", key: "p2", placeholder: "I was too scared of heights...", width: "flex-1 min-w-[180px]" },
+                    { type: "text", content: "." }
+                ]
+            },
+            {
+                id: 5,
+                question: "Imagine you completed a scary jump. How did you feel?",
+                targetPhrase: "go through with",
+                parts: [
+                    { type: "text", content: "I felt " },
+                    { type: "input", key: "p1", placeholder: "nervous at first", width: "w-44" },
+                    { type: "text", content: ", but I " },
+                    { type: "input", key: "p2", placeholder: "went through with it...", width: "flex-1 min-w-[180px]" },
+                    { type: "text", content: "." }
+                ]
+            },
+            {
+                id: 6,
+                question: "What do you wear before you go mountain biking?",
+                targetPhrase: "put on",
+                parts: [
+                    { type: "text", content: "Before I go mountain biking, I " },
+                    { type: "input", key: "p1", placeholder: "put on a helmet and knee pads...", width: "flex-1 min-w-[220px]" },
+                    { type: "text", content: "." }
+                ]
+            },
+            {
+                id: 7,
+                question: "Which sports club would you like at your school?",
+                targetPhrase: "set up",
+                parts: [
+                    { type: "text", content: "I want our school to " },
+                    { type: "input", key: "p1", placeholder: "set up a climbing club...", width: "flex-1 min-w-[220px]" },
+                    { type: "text", content: "." }
+                ]
+            },
+            {
+                id: 8,
+                question: "How can an instructor explain safety rules clearly?",
+                targetPhrase: "get across",
+                parts: [
+                    { type: "text", content: "An instructor can use " },
+                    { type: "input", key: "p1", placeholder: "clear video demonstrations", width: "w-52" },
+                    { type: "text", content: " to " },
+                    { type: "input", key: "p2", placeholder: "get the rules across easily...", width: "flex-1 min-w-[180px]" },
+                    { type: "text", content: "." }
+                ]
+            },
+            {
+                id: 9,
+                question: "Imagine you missed the start of a surfing lesson. Why?",
+                targetPhrase: "be late for",
+                parts: [
+                    { type: "text", content: "I " },
+                    { type: "input", key: "p1", placeholder: "was late for the lesson", width: "w-56" },
+                    { type: "text", content: " because " },
+                    { type: "input", key: "p2", placeholder: "the bus arrived late...", width: "flex-1 min-w-[180px]" },
+                    { type: "text", content: "." }
+                ]
+            },
+            {
+                id: 10,
+                question: "Can you go windsurfing every day?",
+                targetPhrase: "it depends on",
+                parts: [
+                    { type: "text", content: "No, " },
+                    { type: "input", key: "p1", placeholder: "it depends on the weather and the wind...", width: "flex-1 min-w-[220px]" },
+                    { type: "text", content: "." }
+                ]
+            },
+            {
+                id: 11,
+                question: "Which is more exciting: surfing or snowboarding?",
+                targetPhrase: "in my opinion",
+                parts: [
+                    { type: "input", key: "p1", placeholder: "In my opinion, snowboarding is much more exciting...", width: "w-full" }
+                ]
+            },
+            {
+                id: 12,
+                question: "What is the most important thing in extreme sports?",
+                targetPhrase: "from my point of view",
+                parts: [
+                    { type: "input", key: "p1", placeholder: "From my point of view, staying safe and wearing protective gear is most important...", width: "w-full" }
+                ]
+            }
+        ];
+
+        // Store user answers: { 1: { p1: "..." }, 4: { p1: "...", p2: "..." } }
+        const answersState = {};
+
+        // Render questions to DOM
+        function renderQuestions() {
+            const container = document.getElementById('questions-list');
+            container.innerHTML = '';
+
+            questions.forEach((q) => {
+                // Initialize state if not present
+                if (!answersState[q.id]) {
+                    answersState[q.id] = {};
+                }
+
+                // Render parts
+                let sentenceHtml = '';
+                q.parts.forEach(part => {
+                    if (part.type === 'text') {
+                        sentenceHtml += `<span class="text-slate-800 font-semibold text-base sm:text-lg">${part.content}</span>`;
+                    } else if (part.type === 'input') {
+                        const val = answersState[q.id][part.key] || '';
+                        sentenceHtml += `
+                            <input 
+                                type="text" 
+                                value="${val.replace(/"/g, '&quot;')}"
+                                placeholder="${part.placeholder}"
+                                oninput="handleInput(${q.id}, '${part.key}', this.value)"
+                                class="chat-input px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 text-sm sm:text-base font-medium placeholder-slate-400 ${part.width}"
+                            />
+                        `;
+                    }
+                });
+
+                const cardHtml = `
+                    <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex flex-col gap-3">
+                            <!-- Question Header & Badge -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-7 h-7 rounded-full bg-brand-100 text-brand-700 font-extrabold text-xs flex items-center justify-center">
+                                        ${q.id}
+                                    </span>
+                                    <h3 class="text-sm sm:text-base font-bold text-slate-900">
+                                        ${q.question}
+                                    </h3>
+                                </div>
+                                <span class="px-3 py-1 bg-accent-50 text-accent-600 border border-accent-200/60 rounded-full text-xs font-bold tracking-wide">
+                                    (${q.targetPhrase})
+                                </span>
+                            </div>
+
+                            <!-- Answer Prompts Field -->
+                            <div class="pt-2 flex flex-wrap items-center gap-2">
+                                <span class="text-brand-600 font-bold text-lg select-none">→</span>
+                                ${sentenceHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML += cardHtml;
+            });
+        }
+
+        // Handle typing input
+        function handleInput(qId, key, value) {
+            if (!answersState[qId]) answersState[qId] = {};
+            answersState[qId][key] = value;
+            updateProgress();
+        }
+
+        // Update progress bar & count
+        function updateProgress() {
+            let completedCount = 0;
+
+            questions.forEach(q => {
+                const qAnswers = answersState[q.id] || {};
+                const inputParts = q.parts.filter(p => p.type === 'input');
+                const isFullyFilled = inputParts.every(p => qAnswers[p.key] && qAnswers[p.key].trim().length > 0);
+                
+                if (isFullyFilled) {
+                    completedCount++;
+                }
+            });
+
+            const percentage = (completedCount / 12) * 100;
+            document.getElementById('completed-count').innerText = completedCount;
+            document.getElementById('progress-bar').style.width = `${percentage}%`;
+        }
+
+        // Construct full readable sentences for display & clipboard
+        function buildFullAnswer(q) {
+            const qAnswers = answersState[q.id] || {};
+            let result = '';
+
+            q.parts.forEach(part => {
+                if (part.type === 'text') {
+                    result += part.content;
+                } else if (part.type === 'input') {
+                    const userVal = qAnswers[part.key] ? qAnswers[part.key].trim() : '';
+                    result += userVal || '___';
+                }
+            });
+
+            return result;
+        }
+
+        // Open Modal Review
+        function openSummaryModal() {
+            const container = document.getElementById('summary-answers');
+            container.innerHTML = '';
+
+            questions.forEach(q => {
+                const fullSentence = buildFullAnswer(q);
+                
+                const itemHtml = `
+                    <div class="p-3.5 bg-white rounded-xl border border-slate-200">
+                        <div class="text-xs font-bold text-slate-400 mb-1">
+                            Question ${q.id} <span class="text-accent-600 font-medium">(${q.targetPhrase})</span>
+                        </div>
+                        <div class="text-slate-800 font-semibold text-sm sm:text-base leading-relaxed">
+                            → ${highlightUserEntries(q, fullSentence)}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += itemHtml;
+            });
+
+            const modal = document.getElementById('summary-modal');
+            const card = document.getElementById('modal-card');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            card.classList.remove('scale-95');
+        }
+
+        // Helper to underline typed answers in summary UI
+        function highlightUserEntries(q, text) {
+            let html = '';
+            q.parts.forEach(part => {
+                if (part.type === 'text') {
+                    html += part.content;
+                } else if (part.type === 'input') {
+                    const qAnswers = answersState[q.id] || {};
+                    const val = qAnswers[part.key] ? qAnswers[part.key].trim() : '';
+                    if (val) {
+                        html += `<u class="text-brand-600 font-bold decoration-brand-400 decoration-2">${val}</u>`;
+                    } else {
+                        html += `<span class="text-slate-400 italic">[blank]</span>`;
+                    }
+                }
+            });
+            return html;
+        }
+
+        // Close Modal
+        function closeSummaryModal() {
+            const modal = document.getElementById('summary-modal');
+            const card = document.getElementById('modal-card');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            card.classList.add('scale-95');
+        }
+
+        // Copy Answers formatted cleanly
+        function copyAnswersToClipboard() {
+            let formattedText = "Extreme Sports Chat 💬 - My Answers\n";
+            formattedText += "===================================\n\n";
+
+            questions.forEach(q => {
+                const answerText = buildFullAnswer(q);
+                formattedText += `${q.id}. ${q.question}\n`;
+                formattedText += `   → ${answerText}\n\n`;
+            });
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(formattedText)
+                    .then(() => showToast('Copied answers to clipboard!'))
+                    .catch(() => fallbackCopy(formattedText));
+            } else {
+                fallbackCopy(formattedText);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Copied answers to clipboard!');
+            } catch (err) {
+                console.error('Copy failed', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        // Initialize on DOM load
+        window.onload = function() {
+            renderQuestions();
+            updateProgress();
+        };
+    </script>
+</body>
+</html>
