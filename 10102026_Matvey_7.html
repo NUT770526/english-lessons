@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space Launch - Reading & True/False Exercise</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      
+      --highlight-bg: #e0e7ff;
+      --highlight-border: #818cf8;
+      
+      --true-color: #059669;
+      --true-bg: #ecfdf5;
+      --true-border: #a7f3d0;
+      
+      --false-color: #dc2626;
+      --false-bg: #fef2f2;
+      --false-border: #fecaca;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2.2rem;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .layout-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .section-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--border-color);
+    }
+
+    .section-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      color: var(--primary);
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 12px;
+    }
+
+    /* Reading Text Box */
+    .reading-box {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: #334155;
+      background: #fafafa;
+      padding: 24px;
+      border-radius: 16px;
+      border-left: 5px solid var(--primary);
+    }
+
+    .reading-box p {
+      margin-bottom: 14px;
+    }
+
+    .reading-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Vocab Word Popover */
+    .vocab-word {
+      background-color: var(--highlight-bg);
+      border-bottom: 2px solid var(--highlight-border);
+      padding: 2px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #3730a3;
+      position: relative;
+      display: inline-block;
+      transition: all 0.2s ease;
+    }
+
+    .vocab-word:hover {
+      background-color: #c7d2fe;
+      transform: translateY(-1px);
+    }
+
+    .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%) translateY(6px);
+      background-color: #1e293b;
+      color: #ffffff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      z-index: 100;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: center;
+    }
+
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -6px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: #1e293b transparent transparent transparent;
+    }
+
+    .vocab-word:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .tooltip .phonetic {
+      color: #94a3b8;
+      font-size: 0.8rem;
+    }
+
+    .tooltip .translation {
+      color: #38bdf8;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* True / False Questions */
+    .questions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .question-card {
+      background: #fafafa;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .question-card:hover {
+      background: #ffffff;
+      border-color: #cbd5e1;
+    }
+
+    .question-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .q-num {
+      background: #e0e7ff;
+      color: var(--primary);
+      font-weight: 700;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .q-text {
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--text-main);
+    }
+
+    .options-row {
+      display: flex;
+      gap: 12px;
+      margin-left: 42px;
+    }
+
+    .option-btn {
+      flex: 1;
+      max-width: 160px;
+      border: 2px solid var(--border-color);
+      background: white;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .option-btn:hover {
+      border-color: #cbd5e1;
+      color: var(--text-main);
+    }
+
+    .option-btn.selected-true {
+      background-color: var(--true-bg);
+      border-color: var(--true-border);
+      color: var(--true-color);
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15);
+    }
+
+    .option-btn.selected-false {
+      background-color: var(--false-bg);
+      border-color: var(--false-border);
+      color: var(--false-color);
+      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 28px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 14px;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 580px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      transform: scale(0.95);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-content-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 280px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      margin: 16px 0;
+      font-family: monospace;
+      color: #334155;
+    }
+
+    .btn-modal-copy {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .btn-close-modal {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>🚀 Crew Dragon Launch</h1>
+      <p class="subtitle">Hover over underlined words for pronunciation & translation, then answer the questions!</p>
+    </header>
+
+    <div class="layout-grid">
+      <!-- Reading Text Section -->
+      <div class="section-card">
+        <div class="section-title">
+          <span>📄</span> Read the text!
+        </div>
+
+        <div class="reading-box">
+          <p>
+            8... 7.... 6... 5... 4... 3... 2... 1... 0! 
+            <span class="vocab-word" onmouseenter="speak('ignition')">Ignition!<span class="tooltip"><span class="phonetic">/ɪɡˈnɪʃ.ən/</span><span class="translation">зажигание / запуск</span></span></span> 
+            Let's start!.. Crew Dragon... NASA... SpaceX!
+          </p>
+          <p>
+            It <span class="vocab-word" onmouseenter="speak('arises')">arises<span class="tooltip"><span class="phonetic">/əˈraɪ.zɪz/</span><span class="translation">возникает / зарождается</span></span></span> 
+            the new <span class="vocab-word" onmouseenter="speak('era')">era<span class="tooltip"><span class="phonetic">/ˈɪə.rə/</span><span class="translation">эра / эпоха</span></span></span> 
+            of American space flight.... a new generation continuing to dream... 20 seconds in the flight state, one 
+            <span class="vocab-word" onmouseenter="speak('propulsion')">propulsion<span class="tooltip"><span class="phonetic">/prəˈpʌl.ʃən/</span><span class="translation">тяга / двигательная сила</span></span></span> 
+            is norm...
+          </p>
+          <p>
+            The names of Hurley and Behnken will stand in the history books 
+            <span class="vocab-word" onmouseenter="speak('alongside')">alongside<span class="tooltip"><span class="phonetic">/əˌlɒŋˈsaɪd/</span><span class="translation">наряду с / бок о бок</span></span></span> 
+            those of legends like Alan Shepard, Gus Grissom, John Young. Now, these brave and 
+            <span class="vocab-word" onmouseenter="speak('selfless')">selfless<span class="tooltip"><span class="phonetic">/ˈself.ləs/</span><span class="translation">самоотверженные</span></span></span> 
+            astronauts will continue their mission to 
+            <span class="vocab-word" onmouseenter="speak('advance')">advance<span class="tooltip"><span class="phonetic">/ədˈvɑːns/</span><span class="translation">продвигать / развивать</span></span></span> 
+            the cause of human knowledge as they 
+            <span class="vocab-word" onmouseenter="speak('proceed')">proceed<span class="tooltip"><span class="phonetic">/prəˈsiːd/</span><span class="translation">направляются / продолжают путь</span></span></span> 
+            to the International Space Station before returning to Earth. We wish them 
+            <span class="vocab-word" onmouseenter="speak('godspeed')">good speed<span class="tooltip"><span class="phonetic">/ˈɡɒd.spiːd/</span><span class="translation">успешного пути</span></span></span> 
+            on their journey and as one proud nation, we 
+            <span class="vocab-word" onmouseenter="speak('salute')">salute<span class="tooltip"><span class="phonetic">/səˈluːt/</span><span class="translation">Приветствуем / отдаем честь</span></span></span> 
+            their <span class="vocab-word" onmouseenter="speak('fearless')">fearless<span class="tooltip"><span class="phonetic">/ˈfɪə.ləs/</span><span class="translation">бесстрашную</span></span></span> 
+            service. Thank you... thank you...
+          </p>
+        </div>
+      </div>
+
+      <!-- Exercise Section -->
+      <div class="section-card">
+        <div class="section-title">
+          <span>🎬</span> True or false? Select the correct answers
+        </div>
+
+        <div class="questions-list" id="questionsList"></div>
+
+        <div class="actions">
+          <button class="btn-submit" onclick="finishTask()">Finish & Copy Answers</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>🎉 Task Completed!</h2>
+      <p style="color: var(--text-muted);">Here are your answers. Click below to copy and send them to your teacher!</p>
+      
+      <div class="modal-content-box" id="modalContent"></div>
+
+      <button class="btn-modal-copy" onclick="copyResults()">📋 Copy Answers to Clipboard</button>
+      <button class="btn-close-modal" onclick="closeModal()">Close window</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      "Crew Dragon is the name of space ship.",
+      "Crew Dragon was created by Steve Jobs.",
+      "SpaceX is the name of the company.",
+      "Crew Dragon was launched by NASA.",
+      "Crew Dragon is flying to the Moon."
+    ];
+
+    const userAnswers = {};
+
+    // Speech synthesis
+    function speak(word) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Stop ongoing speech
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.88;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById('questionsList');
+      container.innerHTML = '';
+
+      questions.forEach((q, idx) => {
+        const qNum = idx + 1;
+        const card = document.createElement('div');
+        card.className = 'question-card';
+
+        const currentAns = userAnswers[qNum];
+
+        card.innerHTML = `
+          <div class="question-header">
+            <div class="q-num">${qNum}</div>
+            <div class="q-text">${q}</div>
+          </div>
+          <div class="options-row">
+            <button class="option-btn ${currentAns === 'True' ? 'selected-true' : ''}" onclick="setAnswer(${qNum}, 'True')">
+              ✓ True
+            </button>
+            <button class="option-btn ${currentAns === 'False' ? 'selected-false' : ''}" onclick="setAnswer(${qNum}, 'False')">
+              ✗ False
+            </button>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function setAnswer(qNum, val) {
+      userAnswers[qNum] = val;
+      renderQuestions();
+    }
+
+    function finishTask() {
+      let output = "🚀 SPACE LAUNCH - TRUE / FALSE ANSWERS\n\n";
+
+      questions.forEach((q, idx) => {
+        const qNum = idx + 1;
+        const ans = userAnswers[qNum] || "(Not answered)";
+        output += `${qNum}. ${q}\n👉 Answer: ${ans}\n\n`;
+      });
+
+      document.getElementById('modalContent').textContent = output;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function copyResults() {
+      const content = document.getElementById('modalContent').textContent;
+      navigator.clipboard.writeText(content).then(() => {
+        alert('Answers copied to clipboard! You can now send them to your teacher.');
+      }).catch(err => {
+        alert('Failed to copy. Please select and copy manually.');
+      });
+    }
+
+    // Initial render
+    renderQuestions();
+  </script>
+</body>
+</html>
