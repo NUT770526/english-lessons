@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Read the texts and complete with the correct words</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --word-bank-bg: #f1f5f9;
+      --dict-bg: #f0fdf4;
+      --dict-border: #bbf7d0;
+      --dict-title: #15803d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.75rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .instruction {
+      color: #334155;
+      font-weight: 500;
+      font-size: 1.05rem;
+    }
+
+    /* Dictionary Box */
+    .dict-box {
+      background: var(--dict-bg);
+      border: 1px solid var(--dict-border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-top: 16px;
+    }
+
+    .dict-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      color: var(--dict-title);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dict-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+
+    .dict-item {
+      background: #ffffff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #dcfce7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.95rem;
+    }
+
+    .dict-word {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .dict-phonetic {
+      color: #64748b;
+      font-size: 0.88rem;
+    }
+
+    .dict-trans {
+      color: #166534;
+      font-weight: 500;
+    }
+
+    .btn-audio-mini {
+      background: #e0e7ff;
+      border: none;
+      color: var(--primary);
+      border-radius: 6px;
+      padding: 2px 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+
+    .btn-audio-mini:hover {
+      background: #c7d2fe;
+    }
+
+    /* Word Bank */
+    .word-bank {
+      background: var(--word-bank-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .word-chip {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px 12px;
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 0.95rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .progress-bar-container {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 10px;
+      margin-top: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6366f1, #3b82f6);
+      transition: width 0.3s ease;
+    }
+
+    .text-section {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .text-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .text-card.reverse {
+      flex-direction: row-reverse;
+    }
+
+    .text-content {
+      flex: 1;
+      font-size: 1.08rem;
+    }
+
+    .img-box {
+      width: 220px;
+      height: 220px;
+      border-radius: 14px;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 1px solid #e2e8f0;
+    }
+
+    .img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gap-select {
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--primary);
+      font-weight: 600;
+      background: #fafafa;
+      outline: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      margin: 0 2px;
+    }
+
+    .gap-select:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-content-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      margin: 16px 0;
+      font-family: monospace;
+      color: #334155;
+    }
+
+    .btn-modal-copy {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .btn-close-modal {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 680px) {
+      .text-card, .text-card.reverse {
+        flex-direction: column;
+      }
+      .img-box {
+        width: 100%;
+        height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>🧩 Read the texts and complete with the correct words</h1>
+      <p class="instruction">Прочитай текст та обери відповідне слово для кожного пропуску.</p>
+      
+      <!-- Dictionary Helper Box -->
+      <div class="dict-box">
+        <div class="dict-title">📖 Словничок складних слів (натискай 🔊 для прослуховування):</div>
+        <div class="dict-grid">
+          <div class="dict-item">
+            <div>
+              <span class="dict-word">stepfather</span> <span class="dict-phonetic">/ˈstepˌfɑːðər/</span><br>
+              <span class="dict-trans">вітчим</span>
+            </div>
+            <button class="btn-audio-mini" onclick="speakText('stepfather')">🔊</button>
+          </div>
+
+          <div class="dict-item">
+            <div>
+              <span class="dict-word">twin brother</span> <span class="dict-phonetic">/twɪn ˈbrʌðər/</span><br>
+              <span class="dict-trans">брат-близнюк</span>
+            </div>
+            <button class="btn-audio-mini" onclick="speakText('twin brother')">🔊</button>
+          </div>
+
+          <div class="dict-item">
+            <div>
+              <span class="dict-word">nephew</span> <span class="dict-phonetic">/ˈnef.juː/</span><br>
+              <span class="dict-trans">племінник</span>
+            </div>
+            <button class="btn-audio-mini" onclick="speakText('nephew')">🔊</button>
+          </div>
+
+          <div class="dict-item">
+            <div>
+              <span class="dict-word">niece / nieces</span> <span class="dict-phonetic">/niːs / ˈniːsɪz/</span><br>
+              <span class="dict-trans">племінниця / племінниці</span>
+            </div>
+            <button class="btn-audio-mini" onclick="speakText('nieces')">🔊</button>
+          </div>
+
+          <div class="dict-item">
+            <div>
+              <span class="dict-word">sister-in-law</span> <span class="dict-phonetic">/ˈsɪs.tər.ɪn.lɔː/</span><br>
+              <span class="dict-trans">невістка / невістка (жена брата)</span>
+            </div>
+            <button class="btn-audio-mini" onclick="speakText('sister-in-law')">🔊</button>
+          </div>
+
+          <div class="dict-item">
+            <div>
+              <span class="dict-word">cousin</span> <span class="dict-phonetic">/ˈkʌz.ən/</span><br>
+              <span class="dict-trans">двоюрідний брат / сестра</span>
+            </div>
+            <button class="btn-audio-mini" onclick="speakText('cousin')">🔊</button>
+          </div>
+
+          <div class="dict-item">
+            <div>
+              <span class="dict-word">relatives</span> <span class="dict-phonetic">/ˈrel.ə.tɪvz/</span><br>
+              <span class="dict-trans">родичі</span>
+            </div>
+            <button class="btn-audio-mini" onclick="speakText('relatives')">🔊</button>
+          </div>
+
+          <div class="dict-item">
+            <div>
+              <span class="dict-word">great-grandfather</span> <span class="dict-phonetic">/ˌɡreɪtˈɡræn.fɑː.ðər/</span><br>
+              <span class="dict-trans">прадідусь</span>
+            </div>
+            <button class="btn-audio-mini" onclick="speakText('great-grandfather')">🔊</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Word Bank -->
+      <div class="word-bank">
+        <span class="word-chip">great-grandfather</span>
+        <span class="word-chip">twin brother</span>
+        <span class="word-chip">stepfather</span>
+        <span class="word-chip">uncle</span>
+        <span class="word-chip">grandmother</span>
+        <span class="word-chip">aunt</span>
+        <span class="word-chip">nieces</span>
+        <span class="word-chip">sister-in-law</span>
+        <span class="word-chip">cousin</span>
+        <span class="word-chip">relatives</span>
+        <span class="word-chip">nephew</span>
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </header>
+
+    <div class="text-section">
+
+      <!-- Text 1: David -->
+      <div class="text-card">
+        <div class="img-box">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80" alt="David">
+        </div>
+        <div class="text-content">
+          Hi! My name's David and I'm from Manchester. My close family consists of my mother, my 
+          <select class="gap-select" id="g1" onchange="handleSelectChange(this)"></select>
+          (my mom's husband), and my 
+          <select class="gap-select" id="g2" onchange="handleSelectChange(this)"></select>
+          who looks exactly like me. I also have a 
+          <select class="gap-select" id="g3" onchange="handleSelectChange(this)"></select>
+          on my mother's side. I don't have any children, but I have one 
+          <select class="gap-select" id="g4" onchange="handleSelectChange(this)"></select>
+          and two 
+          <select class="gap-select" id="g5" onchange="handleSelectChange(this)"></select>. 
+          They are my brother's children. My brother's wife, Emily, is my 
+          <select class="gap-select" id="g6" onchange="handleSelectChange(this)"></select>.
+        </div>
+      </div>
+
+      <!-- Text 2: Tom -->
+      <div class="text-card reverse">
+        <div class="img-box">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80" alt="Tom">
+        </div>
+        <div class="text-content">
+          Hey there! I'm Tom from London. Next week I'm going to my 
+          <select class="gap-select" id="g7" onchange="handleSelectChange(this)"></select>
+          Becky's wedding in Bristol. She is the daughter of my 
+          <select class="gap-select" id="g8" onchange="handleSelectChange(this)"></select>
+          Mary and my 
+          <select class="gap-select" id="g9" onchange="handleSelectChange(this)"></select>
+          Steve. There will be a lot of 
+          <select class="gap-select" id="g10" onchange="handleSelectChange(this)"></select>
+          there, including my 
+          <select class="gap-select" id="g11" onchange="handleSelectChange(this)"></select>
+          John, he's 98 years old!
+        </div>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button class="btn-submit" onclick="finishTask()">Finish & Copy Answers 🚀</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>🎉 Task Completed!</h2>
+      <p style="color: var(--text-muted);">Here are your answers. Click below to copy and send them to your teacher!</p>
+      
+      <div class="modal-content-box" id="modalContent"></div>
+
+      <button class="btn-modal-copy" onclick="copyResults()">📋 Copy Answers to Clipboard</button>
+      <button class="btn-close-modal" onclick="closeModal()">Close window</button>
+    </div>
+  </div>
+
+  <script>
+    const options = [
+      "great-grandfather",
+      "twin brother",
+      "stepfather",
+      "uncle",
+      "grandmother",
+      "aunt",
+      "nieces",
+      "sister-in-law",
+      "cousin",
+      "relatives",
+      "nephew"
+    ];
+
+    const gapIds = ['g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8', 'g9', 'g10', 'g11'];
+
+    // Populate selects
+    gapIds.forEach(id => {
+      const sel = document.getElementById(id);
+      let html = `<option value="">-- select --</option>`;
+      options.forEach(opt => {
+        html += `<option value="${opt}">${opt}</option>`;
+      });
+      sel.innerHTML = html;
+    });
+
+    function speakText(text) {
+      if ('speechSynthesis' in window && text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function handleSelectChange(selectEl) {
+      if (selectEl.value) {
+        speakText(selectEl.value);
+      }
+      updateProgress();
+    }
+
+    function updateProgress() {
+      let filled = 0;
+      gapIds.forEach(id => {
+        if (document.getElementById(id).value !== '') filled++;
+      });
+      const pct = (filled / gapIds.length) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function finishTask() {
+      let output = "📋 READ & COMPLETE (FAMILY VOCABULARY) - ANSWERS\n\n";
+
+      output += "TEXT 1 (David):\n";
+      output += `1. stepfather: ${getVal('g1')}\n`;
+      output += `2. twin brother: ${getVal('g2')}\n`;
+      output += `3. grandmother/uncle: ${getVal('g3')}\n`;
+      output += `4. nephew: ${getVal('g4')}\n`;
+      output += `5. nieces: ${getVal('g5')}\n`;
+      output += `6. sister-in-law: ${getVal('g6')}\n\n`;
+
+      output += "TEXT 2 (Tom):\n";
+      output += `7. cousin: ${getVal('g7')}\n`;
+      output += `8. aunt: ${getVal('g8')}\n`;
+      output += `9. uncle: ${getVal('g9')}\n`;
+      output += `10. relatives: ${getVal('g10')}\n`;
+      output += `11. great-grandfather: ${getVal('g11')}\n`;
+
+      document.getElementById('modalContent').textContent = output;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function getVal(id) {
+      const v = document.getElementById(id).value;
+      return v !== '' ? v : '___';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function copyResults() {
+      const text = document.getElementById('modalContent').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Answers copied to clipboard! Send them to your teacher.");
+      }).catch(() => {
+        alert("Failed to copy automatically. Please select and copy manually.");
+      });
+    }
+  </script>
+</body>
+</html>
