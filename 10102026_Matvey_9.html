@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Put these verbs in the correct place</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #ef4444;
+      --primary-hover: #dc2626;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --wordbox-bg: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 30px 16px;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 24px;
+    }
+
+    .play-icon {
+      background: #1e293b;
+      color: #38bdf8;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    /* Wordbox */
+    .wordbox-container {
+      display: flex;
+      border: 2px solid #ef4444;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 32px;
+      background: #ffffff;
+    }
+
+    .wordbox-label {
+      background-color: var(--wordbox-bg);
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 140px;
+    }
+
+    .wordbox-words {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 16px 20px;
+      align-items: center;
+      flex-grow: 1;
+      background: #fafafa;
+    }
+
+    .word-chip {
+      background: #ffffff;
+      border: 1.5px solid #94a3b8;
+      border-radius: 8px;
+      padding: 6px 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .word-chip:hover {
+      border-color: #6366f1;
+      color: #6366f1;
+      transform: translateY(-1px);
+    }
+
+    .word-chip .arrow {
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+
+    /* Sentences */
+    .sentence-list {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .sentence-item {
+      font-size: 1.08rem;
+      color: var(--text-main);
+      line-height: 1.8;
+    }
+
+    .gap-input {
+      border: 1.5px solid #94a3b8;
+      border-radius: 8px;
+      padding: 4px 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: #4f46e5;
+      font-weight: 600;
+      min-width: 150px;
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.2s;
+      display: inline-block;
+      margin: 0 4px;
+    }
+
+    .gap-input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .actions {
+      margin-top: 36px;
+      text-align: center;
+    }
+
+    .btn-submit {
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-submit:hover {
+      background-color: #4338ca;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      padding: 28px;
+      border-radius: 16px;
+      max-width: 520px;
+      width: 100%;
+    }
+
+    .modal h3 {
+      margin-bottom: 12px;
+      color: #4f46e5;
+    }
+
+    .modal-content {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 14px;
+      border-radius: 8px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      color: #334155;
+    }
+
+    .btn-copy {
+      background: #4f46e5;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header-title">
+      <div class="play-icon">▶</div>
+      <span>Put these verbs in the correct place</span>
+    </div>
+
+    <!-- Wordbox -->
+    <div class="wordbox-container">
+      <div class="wordbox-label">Wordbox</div>
+      <div class="wordbox-words">
+        <div class="word-chip" onclick="useWord('turn up')">turn up <span class="arrow">↵</span></div>
+        <div class="word-chip" onclick="useWord('pick you up')">pick you up <span class="arrow">↵</span></div>
+        <div class="word-chip" onclick="useWord('refused')">refused <span class="arrow">↵</span></div>
+        <div class="word-chip" onclick="useWord('agreed')">agreed <span class="arrow">↵</span></div>
+        <div class="word-chip" onclick="useWord('get across')">get across <span class="arrow">↵</span></div>
+      </div>
+    </div>
+
+    <!-- Sentences -->
+    <div class="sentence-list">
+      <div class="sentence-item">
+        1. Maybe your brother will also <input type="text" class="gap-input" id="q1" onfocus="setActive('q1')"> and both of you can teach me and give me tips.
+      </div>
+
+      <div class="sentence-item">
+        2. We can <input type="text" class="gap-input" id="q2" onfocus="setActive('q2')"> a board and some equipment this week, then hit the slopes on the weekend.
+      </div>
+
+      <div class="sentence-item">
+        3. I was trying to get my brother to start snowboarding, and he absolutely <input type="text" class="gap-input" id="q3" onfocus="setActive('q3')"> for months.
+      </div>
+
+      <div class="sentence-item">
+        4. Eventually, he <input type="text" class="gap-input" id="q4" onfocus="setActive('q4')"> and now he loves it.
+      </div>
+
+      <div class="sentence-item">
+        5. Really, it wasn't easy to <input type="text" class="gap-input" id="q5" onfocus="setActive('q5')"> the excitement of snowboarding.
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-submit" onclick="finishTask()">Finish & Copy Answers</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h3>Task Completed!</h3>
+      <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 12px;">Copy your completed answers to send to your teacher:</p>
+      <div class="modal-content" id="modalText"></div>
+      <button class="btn-copy" onclick="copyResults()">📋 Copy Answers</button>
+    </div>
+  </div>
+
+  <script>
+    let activeInputId = 'q1';
+
+    function setActive(id) {
+      activeInputId = id;
+    }
+
+    function useWord(word) {
+      if (!activeInputId) return;
+      const input = document.getElementById(activeInputId);
+      input.value = word;
+
+      // Automatically move focus to next empty field
+      for (let i = 1; i <= 5; i++) {
+        const nextInput = document.getElementById(`q${i}`);
+        if (!nextInput.value) {
+          nextInput.focus();
+          activeInputId = `q${i}`;
+          break;
+        }
+      }
+    }
+
+    function finishTask() {
+      let result = "PUT VERBS IN THE CORRECT PLACE - ANSWERS:\n\n";
+      for (let i = 1; i <= 5; i++) {
+        const val = document.getElementById(`q${i}`).value || "(empty)";
+        result += `${i}. ${val}\n`;
+      }
+      document.getElementById('modalText').textContent = result;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function copyResults() {
+      const text = document.getElementById('modalText').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Answers copied to clipboard!");
+        document.getElementById('modalOverlay').classList.remove('active');
+      });
+    }
+  </script>
+</body>
+</html>
