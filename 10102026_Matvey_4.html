@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extreme Sports Chat & Comprehension</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f6ff',
+                            100: '#e0edff',
+                            200: '#c7ddff',
+                            500: '#4f46e5',
+                            600: '#4338ca',
+                            700: '#3730a3',
+                        },
+                        amalia: {
+                            bg: '#fff1f2',
+                            border: '#fecdd3',
+                            text: '#9f1239',
+                            badge: '#e11d48'
+                        },
+                        billy: {
+                            bg: '#f0f9ff',
+                            border: '#bae6fd',
+                            text: '#0369a1',
+                            badge: '#0284c7'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Fredoka', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f0fdf4 100%);
+            min-height: 100vh;
+        }
+
+        .vocab-word {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            border-bottom: 2px dashed #ca8a04;
+            padding: 2px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #713f12;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .vocab-word:hover {
+            transform: translateY(-2px) scale(1.02);
+            background: linear-gradient(120deg, #fde047 0%, #facc15 100%);
+            box-shadow: 0 4px 10px rgba(234, 179, 8, 0.25);
+        }
+
+        .chip-btn {
+            transition: all 0.15s ease;
+        }
+        .chip-btn:hover {
+            transform: translateY(-1px);
+        }
+        .chip-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Tooltip animation */
+        .tooltip-box {
+            animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, 8px) scale(0.95); }
+            to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="text-slate-800 pb-12">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-sm px-4 py-3.5">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-gradient-to-tr from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-xl shadow-md shadow-indigo-500/20">
+                    🛹
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-xl text-slate-900 tracking-wide">
+                        Extreme Sports Dialogue & Questions
+                    </h1>
+                    <p class="text-xs text-slate-500 font-medium">Interactive Reading & Writing Exercise for Teens</p>
+                </div>
+            </div>
+
+            <!-- Quick Navigation Pills -->
+            <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl text-xs font-bold">
+                <a href="#dialogue-section" class="px-3 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600 hover:text-indigo-700 transition">
+                    💬 Dialogue
+                </a>
+                <a href="#questions-section" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">
+                    ✍️ Questions
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 mt-6 space-y-8">
+
+        <!-- Instructions Banner -->
+        <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-0.5 shadow-md">
+            <div class="bg-white rounded-[23px] p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <span class="inline-block px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold uppercase tracking-wider mb-1">
+                        How to complete this task
+                    </span>
+                    <h2 class="font-display text-lg sm:text-xl font-bold text-slate-900">
+                        Read the Chat & Answer 5 Questions
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        1. Hover or tap on highlighted yellow words for <b>Ukrainian translation</b> and <b>IPA pronunciation</b>.<br>
+                        2. Tap the 🔊 icon next to words to hear native English audio.<br>
+                        3. Write <b>1 to 3 sentences</b> for each question using the interactive vocabulary helper chips!
+                    </p>
+                </div>
+                <div class="hidden md:flex items-center justify-center w-20 h-20 bg-indigo-50 rounded-2xl text-3xl">
+                    🎧
+                </div>
+            </div>
+        </div>
+
+        <!-- Dialogue Container -->
+        <section id="dialogue-section" class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-5 sm:p-8">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">📖</span>
+                    <div>
+                        <h2 class="font-display font-bold text-xl text-slate-900">Read the Dialogue!</h2>
+                        <p class="text-xs text-slate-500">Amalia (A) and Billy (B) discussing hobbies & extreme sports</p>
+                    </div>
+                </div>
+                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full">
+                    17 Messages
+                </span>
+            </div>
+
+            <!-- Chat Messenger Stream -->
+            <div class="space-y-4" id="chat-stream">
+                <!-- Dialogue dynamically rendered with JS for audio & tooltip bindings -->
+            </div>
+        </section>
+
+        <!-- Questions & Answers Section -->
+        <section id="questions-section" class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-5 sm:p-8 space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">📢</span>
+                    <div>
+                        <h2 class="font-display font-bold text-xl text-slate-900">Answer the Questions!</h2>
+                        <p class="text-xs text-slate-500">Write detailed full sentences (1-3 sentences per question)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Questions List -->
+            <div class="space-y-6" id="questions-list">
+                <!-- Dynamically generated question cards -->
+            </div>
+
+            <!-- Finish & Submit Bar -->
+            <div class="pt-6 border-t border-slate-100 flex flex-col items-center gap-3">
+                <button onclick="generateHomeworkReport()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-display font-bold text-lg rounded-2xl shadow-lg shadow-indigo-500/20 active:scale-95 transition flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-file-circle-check"></i>
+                    <span>Finish & Copy Homework</span>
+                </button>
+                <p class="text-xs text-slate-400 font-medium">Clicking will create a formatted summary ready to copy for your teacher.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for Summary -->
+    <div id="report-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl relative scale-95 transition-transform duration-300" id="modal-card">
+            
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-5">
+                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-2">
+                    🏆
+                </div>
+                <h3 class="font-display font-bold text-2xl text-slate-900">Your Completed Exercise</h3>
+                <p class="text-xs text-slate-500">Review your answers and copy them to send to your teacher.</p>
+            </div>
+
+            <div id="report-text" class="flex-grow overflow-y-auto bg-slate-50 p-4 rounded-2xl border border-slate-200 text-sm font-mono text-slate-800 whitespace-pre-wrap mb-5 leading-relaxed">
+                <!-- Compiled report goes here -->
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="copyReportToClipboard()" class="flex-1 py-3.5 px-5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-md shadow-indigo-500/20 transition">
+                    <i class="fa-solid fa-copy"></i>
+                    <span>Copy to Clipboard</span>
+                </button>
+                <button onclick="closeModal()" class="py-3.5 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-2xl transition">
+                    Back to Edit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white font-semibold text-sm px-5 py-3.5 rounded-2xl shadow-2xl opacity-0 transition-opacity duration-300 pointer-events-none flex items-center gap-3 z-50">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+        <span id="toast-text">Copied to clipboard!</span>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        
+        // Target Vocabulary mapping with translations, IPAs, and sample usage
+        const vocabMap = {
+            "take up": { ipa: "/teɪk ʌp/", ua: "начать заниматься", en: "start a hobby" },
+            "back out": { ipa: "/bæk aʊt/", ua: "отступить / передумать", en: "decide not to do something" },
+            "hard to please": { ipa: "/hɑːd tuː pliːz/", ua: "трудно угодить", en: "difficult to satisfy" },
+            "set up": { ipa: "/set ʌp/", ua: "устанавливать / подготавливать", en: "prepare equipment" },
+            "put on": { ipa: "/pʊt ɒn/", ua: "надевать (экипировку)", en: "wear gear" },
+            "go through with": { ipa: "/ɡəʊ θruː wɪð/", ua: "решиться / сделать до конца", en: "complete a difficult action" },
+            "embarrassing": { ipa: "/ɪmˈbær.ə.sɪŋ/", ua: "смущающий / неловкий", en: "making you feel shy" },
+            "convinced": { ipa: "/kənˈvɪnst/", ua: "убедил", en: "persuaded someone" },
+            "get across": { ipa: "/ɡet əˈkrɒs/", ua: "донести / объяснить", en: "communicate an idea" },
+            "hit the slopes": { ipa: "/hɪt ðə sləʊps/", ua: "поехать кататься на трассу", en: "go skiing or snowboarding" },
+            "turn up": { ipa: "/tɜːn ʌp/", ua: "появиться / прийти", en: "arrive or show up" }
+        };
+
+        // Dialogue Lines
+        const dialogueData = [
+            { speaker: "B", name: "Billy", text: "You know, I really want to {take up} a new hobby. Something fun and interesting that I won't {back out} of in a week or two." },
+            { speaker: "A", name: "Amalia", text: "Hmmmm.... Let me think for a minute... How about chess?" },
+            { speaker: "B", name: "Billy", text: "Nah... I can't stand sitting down for too long." },
+            { speaker: "A", name: "Amalia", text: "Alright then, how about some active sports?" },
+            { speaker: "B", name: "Billy", text: "Sports hu? I dunno. Could also be a bit boring. In basketball, you just run. In football, you also just run. In rugby, you just run too." },
+            { speaker: "A", name: "Amalia", text: "You are {hard to please}! Okay.... How about extreme sports! That sounds cool." },
+            { speaker: "B", name: "Billy", text: "That's a great idea! If it's extreme, then how can it be boring? But, what kind of extreme sports do you have in mind?" },
+            { speaker: "A", name: "Amalia", text: "Honestly, I decided to take up extreme mountain biking. It's really exciting and very good exercise. Plus, you don't need to {set up} a lot of equipment. Actually, you don't need to set up anything." },
+            { speaker: "B", name: "Billy", text: "Sounds interesting, but what do you need?" },
+            { speaker: "A", name: "Amalia", text: "A good mountain bike, of course. You need to {put on} a helmet, a pair of shoulder and knee pads. A water bottle, too, because you'll get thirsty." },
+            { speaker: "B", name: "Billy", text: "I don't think I could {go through with} that. It might sound {embarrassing}, but when I was a kid, I never learned how to ride a bike. So, I doubt I could do extreme mountain biking." },
+            { speaker: "A", name: "Amalia", text: "That's alright. Maybe you would prefer snowboarding instead?" },
+            { speaker: "B", name: "Billy", text: "That's not a bad idea. I tried to ski last year and I had a good time. I found using skis to be difficult, so maybe a snowboard would be easier.... Yeah! I think that's what I'll do!" },
+            { speaker: "A", name: "Amalia", text: "Awesome! I'm glad I {convinced} you so easily. I was trying to get my brother to start snowboarding, and he absolutely refused for months. Eventually, he agreed and now he loves it. Really, it wasn't easy to {get across} the excitement of snowboarding." },
+            { speaker: "B", name: "Billy", text: "Now I'm excited to try! When can we start?" },
+            { speaker: "A", name: "Amalia", text: "Well, we can pick you up a board and some equipment this week, then {hit the slopes} on the weekend. Sounds good?" },
+            { speaker: "B", name: "Billy", text: "Yeah, sounds good. Maybe your brother will also {turn up} and both of you can teach me and give me tips." },
+            { speaker: "A", name: "Amalia", text: "We'll help you out, no worries." }
+        ];
+
+        // Questions Data with vocabulary helper chips
+        const questionsData = [
+            {
+                id: 1,
+                title: "What does Billy think about chess?",
+                chips: ["can't stand sitting down", "boring", "prefers active sports"],
+                hint: "Mention why he doesn't want a sitting hobby."
+            },
+            {
+                id: 2,
+                title: "Why Billy doesn't prefer football?",
+                chips: ["you just run", "boring", "hard to please"],
+                hint: "Explain his opinion on football, basketball, and rugby."
+            },
+            {
+                id: 3,
+                title: "What kind of extreme sports does Amalia prefer?",
+                chips: ["mountain biking", "snowboarding", "take up"],
+                hint: "What sport did Amalia originally decide to take up?"
+            },
+            {
+                id: 4,
+                title: "What things does Amalia need for mountain biking?",
+                chips: ["mountain bike", "put on a helmet", "knee pads", "water bottle"],
+                hint: "List the gear Amalia says you need to put on."
+            },
+            {
+                id: 5,
+                title: "What does Billy think about snowboarding?",
+                chips: ["easier than skiing", "excited to try", "hit the slopes"],
+                hint: "How does he compare snowboarding to skiing?"
+            }
+        ];
+
+        function playAudio(phrase) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop any active speech
+                const utterance = new SpeechSynthesisUtterance(phrase);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.88; // Slightly slower for clear learning
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                showToast("Speech synthesis not supported in this browser.");
+            }
+        }
+
+        function renderDialogue() {
+            const container = document.getElementById('chat-stream');
+            container.innerHTML = '';
+
+            dialogueData.forEach((line) => {
+                const isAmalia = line.speaker === 'A';
+                
+                // Process string to replace {phrase} with interactive span
+                let formattedText = line.text;
+                Object.keys(vocabMap).forEach(phrase => {
+                    const pattern = new RegExp(`\\{${phrase}\\}`, 'g');
+                    if (pattern.test(formattedText)) {
+                        const vocab = vocabMap[phrase];
+                        const spanHtml = `
+                            <span class="vocab-word group relative" onclick="playAudio('${phrase}')">
+                                <span>${phrase}</span>
+                                <button type="button" class="text-xs text-amber-700 hover:text-amber-900 ml-0.5" title="Listen">
+                                    <i class="fa-solid fa-volume-high"></i>
+                                </button>
+                                <!-- Interactive Hover Tooltip -->
+                                <span class="tooltip-box hidden group-hover:flex group-focus:flex absolute bottom-full left-1/2 mb-2 w-52 p-2.5 bg-slate-900 text-white rounded-xl text-xs flex-col gap-1 z-50 shadow-xl border border-slate-700 text-left pointer-events-none">
+                                    <span class="font-bold text-amber-300 flex items-center justify-between">
+                                        ${phrase}
+                                        <span class="text-[10px] text-slate-400 font-mono">${vocab.ipa}</span>
+                                    </span>
+                                    <span class="text-emerald-300 font-medium">🇺🇦 ${vocab.ua}</span>
+                                    <span class="text-slate-300 text-[11px] italic">"${vocab.en}"</span>
+                                </span>
+                            </span>
+                        `;
+                        formattedText = formattedText.replace(pattern, spanHtml);
+                    }
+                });
+
+                const bubbleHtml = `
+                    <div class="flex items-start gap-3 ${isAmalia ? 'flex-row-reverse' : 'flex-row'}">
+                        <!-- Avatar -->
+                        <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0 ${isAmalia ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-sky-100 text-sky-700 border border-sky-200'}">
+                            ${line.speaker}
+                        </div>
+
+                        <!-- Bubble -->
+                        <div class="max-w-[85%] sm:max-w-[78%] rounded-2xl p-4 text-sm sm:text-base leading-relaxed relative ${
+                            isAmalia 
+                            ? 'bg-rose-50/80 border border-rose-200/80 text-slate-800 rounded-tr-none' 
+                            : 'bg-sky-50/80 border border-sky-200/80 text-slate-800 rounded-tl-none'
+                        }">
+                            <div class="text-[11px] font-bold mb-1 ${isAmalia ? 'text-rose-600 text-right' : 'text-sky-600'}">
+                                ${line.name}
+                            </div>
+                            <div>${formattedText}</div>
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML += bubbleHtml;
+            });
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-list');
+            container.innerHTML = '';
+
+            questionsData.forEach((q) => {
+                const chipsHtml = q.chips.map(chip => `
+                    <button 
+                        type="button" 
+                        onclick="insertChip(${q.id}, '${chip}')"
+                        class="chip-btn px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-semibold flex items-center gap-1.5"
+                    >
+                        <span>+ ${chip}</span>
+                    </button>
+                `).join('');
+
+                const cardHtml = `
+                    <div class="bg-slate-50/70 rounded-2xl p-4 sm:p-6 border border-slate-200/80 hover:border-indigo-200 transition">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                            <h3 class="font-display font-bold text-base sm:text-lg text-slate-900 flex items-center gap-2">
+                                <span class="w-7 h-7 bg-indigo-600 text-white rounded-lg text-xs flex items-center justify-center font-sans font-extrabold">
+                                    ${q.id}
+                                </span>
+                                ${q.title}
+                            </h3>
+                            <span class="text-xs text-slate-500 italic">
+                                💡 ${q.hint}
+                            </span>
+                        </div>
+
+                        <!-- Vocabulary Chips Helper -->
+                        <div class="mb-3 flex flex-wrap items-center gap-1.5">
+                            <span class="text-xs text-slate-400 font-semibold mr-1">Click to add phrase:</span>
+                            ${chipsHtml}
+                        </div>
+
+                        <!-- Input Textarea -->
+                        <textarea 
+                            id="q-input-${q.id}"
+                            oninput="handleTextChange(${q.id})"
+                            rows="3"
+                            placeholder="Write 1 to 3 sentences here..."
+                            class="w-full p-3.5 bg-white border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition shadow-sm"
+                        ></textarea>
+
+                        <!-- Sentence Counter Footer -->
+                        <div class="flex items-center justify-between mt-2 text-xs text-slate-500">
+                            <span>Recommended: 1 - 3 full sentences</span>
+                            <span id="q-count-${q.id}" class="font-bold text-slate-400">
+                                Sentences: 0
+                            </span>
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML += cardHtml;
+            });
+        }
+
+        function insertChip(qId, text) {
+            const textarea = document.getElementById(`q-input-${qId}`);
+            const currentVal = textarea.value;
+            
+            if (currentVal.length === 0) {
+                textarea.value = text + ' ';
+            } else if (currentVal.endsWith(' ') || currentVal.endsWith('.')) {
+                textarea.value = currentVal + text + ' ';
+            } else {
+                textarea.value = currentVal + ' ' + text + ' ';
+            }
+            
+            textarea.focus();
+            handleTextChange(qId);
+        }
+
+        function handleTextChange(qId) {
+            const textarea = document.getElementById(`q-input-${qId}`);
+            const countEl = document.getElementById(`q-count-${qId}`);
+            const text = textarea.value.trim();
+
+            if (!text) {
+                countEl.innerText = "Sentences: 0";
+                countEl.className = "font-bold text-slate-400";
+                return;
+            }
+
+            // Split by sentence ending punctuation (. ! ?)
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            const count = sentences.length;
+
+            countEl.innerText = `Sentences: ${count}`;
+            if (count >= 1 && count <= 3) {
+                countEl.className = "font-bold text-emerald-600";
+            } else if (count > 3) {
+                countEl.className = "font-bold text-amber-600";
+            } else {
+                countEl.className = "font-bold text-slate-500";
+            }
+        }
+
+        function generateHomeworkReport() {
+            let report = "===========================================\n";
+            report += "📖 EXTREME SPORTS COMPREHENSION HOMEWORK\n";
+            report += "===========================================\n\n";
+
+            questionsData.forEach(q => {
+                const textarea = document.getElementById(`q-input-${q.id}`);
+                const answer = textarea ? textarea.value.trim() : "";
+                
+                report += `Q${q.id}: ${q.title}\n`;
+                report += `Answer: ${answer ? answer : "[No answer written]"}\n\n`;
+            });
+
+            document.getElementById('report-text').innerText = report;
+
+            const modal = document.getElementById('report-modal');
+            const card = document.getElementById('modal-card');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            card.classList.remove('scale-95');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('report-modal');
+            const card = document.getElementById('modal-card');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            card.classList.add('scale-95');
+        }
+
+        function copyReportToClipboard() {
+            const reportText = document.getElementById('report-text').innerText;
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(reportText)
+                    .then(() => showToast("Copied homework to clipboard!"))
+                    .catch(() => fallbackCopy(reportText));
+            } else {
+                fallbackCopy(reportText);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Copied homework to clipboard!");
+            } catch (err) {
+                console.error("Copy failed", err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            renderDialogue();
+            renderQuestions();
+        };
+    </script>
+</body>
+</html>
