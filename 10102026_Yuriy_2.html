@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2. Complete the sentences</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --verb-color: #0284c7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .instruction {
+      color: #334155;
+      font-weight: 500;
+      font-size: 1.05rem;
+    }
+
+    .progress-bar-container {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 10px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6366f1, #3b82f6);
+      transition: width 0.3s ease;
+    }
+
+    .sentence-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sentence-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 18px 22px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      line-height: 1.8;
+    }
+
+    .num {
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 24px;
+    }
+
+    .gap-input {
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--primary);
+      font-weight: 600;
+      min-width: 140px;
+      max-width: 200px;
+      background: #fafafa;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .gap-input:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .verb-hint {
+      color: var(--verb-color);
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-content-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      margin: 16px 0;
+      font-family: monospace;
+      color: #334155;
+    }
+
+    .btn-modal-copy {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .btn-close-modal {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>2. Complete the sentences</h1>
+      <p class="instruction">Розкрий дужки. Використовуй Present Simple або форму минулого часу, якщо є “At first” чи “Later”.</p>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </header>
+
+    <div class="sentence-list">
+
+      <div class="sentence-card">
+        <span class="num">1.</span>
+        <span>My colleague</span>
+        <input type="text" class="gap-input" id="q1" oninput="updateProgress()">
+        <span>friendly. <span class="verb-hint">(look)</span></span>
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">2.</span>
+        <span>The new manager</span>
+        <input type="text" class="gap-input" id="q2" oninput="updateProgress()">
+        <span>calm. <span class="verb-hint">(seem)</span></span>
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">3.</span>
+        <span>I</span>
+        <input type="text" class="gap-input" id="q3" oninput="updateProgress()">
+        <span>first impressions are important. <span class="verb-hint">(think)</span></span>
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">4.</span>
+        <span>She</span>
+        <input type="text" class="gap-input" id="q4" oninput="updateProgress()">
+        <span>a suit to important meetings. <span class="verb-hint">(wear)</span></span>
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">5.</span>
+        <span>We</span>
+        <input type="text" class="gap-input" id="q5" oninput="updateProgress()">
+        <span>polite to others. <span class="verb-hint">(be)</span></span>
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">6.</span>
+        <span>He</span>
+        <input type="text" class="gap-input" id="q6" oninput="updateProgress()">
+        <span>a good first impression on clients. <span class="verb-hint">(make)</span></span>
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">7.</span>
+        <span>People sometimes</span>
+        <input type="text" class="gap-input" id="q7" oninput="updateProgress()">
+        <span>the wrong impression when I am quiet. <span class="verb-hint">(get)</span></span>
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">8.</span>
+        <span>At first, I</span>
+        <input type="text" class="gap-input" id="q8" oninput="updateProgress()">
+        <span>the receptionist was rude. <span class="verb-hint">(think)</span></span>
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">9.</span>
+        <span>Later, I</span>
+        <input type="text" class="gap-input" id="q9" oninput="updateProgress()">
+        <span>she was just nervous. <span class="verb-hint">(realize)</span></span>
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">10.</span>
+        <span>At first, I thought my colleagues</span>
+        <input type="text" class="gap-input" id="q10" oninput="updateProgress()">
+        <span>unfriendly. <span class="verb-hint">(be)</span></span>
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">11.</span>
+        <span>Later, I realized they</span>
+        <input type="text" class="gap-input" id="q11" oninput="updateProgress()">
+        <span>just shy. <span class="verb-hint">(be)</span></span>
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">12.</span>
+        <span>At first, I thought my manager was nervous, but later I</span>
+        <input type="text" class="gap-input" id="q12" oninput="updateProgress()">
+        <span>he was calm. <span class="verb-hint">(realize)</span></span>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button class="btn-submit" onclick="finishTask()">Finish & Copy Answers 🚀</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>🎉 Exercise Completed!</h2>
+      <p style="color: var(--text-muted);">Here are your answers. Click below to copy and send them to your teacher!</p>
+      
+      <div class="modal-content-box" id="modalContent"></div>
+
+      <button class="btn-modal-copy" onclick="copyResults()">📋 Copy Answers to Clipboard</button>
+      <button class="btn-close-modal" onclick="closeModal()">Close window</button>
+    </div>
+  </div>
+
+  <script>
+    const totalQuestions = 12;
+
+    function updateProgress() {
+      let filled = 0;
+      for (let i = 1; i <= totalQuestions; i++) {
+        if (document.getElementById(`q${i}`).value.trim() !== '') filled++;
+      }
+      const pct = (filled / totalQuestions) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function finishTask() {
+      let output = "📋 COMPLETE THE SENTENCES - ANSWERS\n\n";
+
+      for (let i = 1; i <= totalQuestions; i++) {
+        const val = document.getElementById(`q${i}`).value.trim() || "___";
+        output += `${i}. ${val}\n`;
+      }
+
+      document.getElementById('modalContent').textContent = output;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function copyResults() {
+      const text = document.getElementById('modalContent').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Answers copied to clipboard! Send them to your teacher.");
+      }).catch(() => {
+        alert("Failed to copy automatically. Please select and copy manually.");
+      });
+    }
+  </script>
+</body>
+</html>
