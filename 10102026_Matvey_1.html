@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1. Complete the phrase 🔎</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: linear-gradient(135deg, #f0f7ff 0%, #f8fafc 50%, #eef2ff 100%);
+    min-height: 100vh;
+  }
+
+  /* Interactive Tooltip Style */
+  .word-tooltip {
+    position: relative;
+    cursor: pointer;
+    color: #2563eb;
+    border-bottom: 2px dashed #93c5fd;
+    font-weight: 700;
+    transition: all 0.2s ease;
+  }
+
+  .word-tooltip:hover {
+    color: #1d4ed8;
+    border-bottom-color: #2563eb;
+  }
+
+  .word-tooltip::after {
+    content: attr(data-info);
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 50;
+  }
+
+  .word-tooltip:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Custom focus and smooth effects */
+  .gap-input {
+    transition: all 0.2s ease;
+  }
+
+  .gap-input:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+  }
+
+  .gap-input.active-target {
+    border-color: #3b82f6 !important;
+    background-color: #eff6ff !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+  }
+
+  .chip-btn {
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+
+  .chip-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+  }
+
+  .chip-btn:active {
+    transform: translateY(0);
+  }
+
+  .pulse-subtle {
+    animation: pulseSlow 3s infinite;
+  }
+
+  @keyframes pulseSlow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+</style>
+</head>
+<body class="text-slate-800 p-4 md:p-8 flex justify-center items-center">
+
+<div class="max-w-3xl w-full bg-white/90 backdrop-blur-md rounded-3xl p-6 md:p-10 border border-slate-200/80 shadow-xl shadow-slate-200/50">
+
+  <!-- Header Section -->
+  <div class="flex items-center gap-4 mb-6">
+    <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-200 flex items-center justify-center text-2xl shadow-inner">
+      🔍
+    </div>
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-100">Phrasal Verbs & Prepositions</span>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1">1. Complete the phrase 🔎</h1>
+    </div>
+  </div>
+
+  <!-- Instruction Box -->
+  <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-4 md:p-5 mb-8">
+    <p class="text-sm md:text-base font-semibold text-slate-700 flex items-center gap-2">
+      <span>💡</span>
+      <span><strong>Instruction:</strong> Fill in the missing preposition. Each word can be used more than once.</span>
+    </p>
+    <p class="text-xs text-slate-500 mt-2 flex items-center gap-1.5">
+      <span>✨ <em>Tip: Hover over underlined words for hints and audio. Click a gap, then click a word chip below to insert it!</em></span>
+    </p>
+  </div>
+
+  <!-- Interactive Word Bank Chips -->
+  <div class="mb-8 bg-blue-50/60 border border-blue-100 rounded-2xl p-4 md:p-5">
+    <div class="text-xs font-bold uppercase tracking-wider text-blue-800 mb-3 flex items-center justify-between">
+      <span>🏷️ Word Bank</span>
+      <span class="text-blue-500 font-medium normal-case">(Click to insert into active gap)</span>
+    </div>
+    <div class="flex flex-wrap gap-2" id="wordBank">
+      <!-- Chips generated dynamically -->
+    </div>
+  </div>
+
+  <!-- Exercise Sentences List -->
+  <div class="space-y-4" id="sentencesContainer">
+
+    <!-- Sentence 1 -->
+    <div class="sentence-item bg-white border border-slate-200/80 hover:border-blue-200 rounded-2xl p-4 transition-all">
+      <div class="flex flex-wrap items-center gap-2 text-base md:text-lg font-semibold text-slate-800">
+        <span class="text-slate-400 font-bold w-6">1.</span>
+        <span>I want to take</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="1-1" placeholder="___">
+        <span class="word-tooltip" data-info="[ˈsɜː.fɪŋ] — riding waves" onmouseenter="speakWord('surfing')">surfing</span>
+        <span>this summer.</span>
+        <button class="ml-auto text-slate-400 hover:text-blue-600 p-2 rounded-xl hover:bg-blue-50 transition-colors" title="Listen to sentence" onclick="speakSentence('I want to take up surfing this summer.')">
+          🔊
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentence 2 -->
+    <div class="sentence-item bg-white border border-slate-200/80 hover:border-blue-200 rounded-2xl p-4 transition-all">
+      <div class="flex flex-wrap items-center gap-2 text-base md:text-lg font-semibold text-slate-800">
+        <span class="text-slate-400 font-bold w-6">2.</span>
+        <span>Are you</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="2-1" placeholder="___">
+        <span class="word-tooltip" data-info="[ˈmaʊn.tɪn ˈbaɪ.kɪŋ] — off-road cycling" onmouseenter="speakWord('mountain biking')">mountain biking</span>?
+        <button class="ml-auto text-slate-400 hover:text-blue-600 p-2 rounded-xl hover:bg-blue-50 transition-colors" title="Listen to sentence" onclick="speakSentence('Are you into mountain biking?')">
+          🔊
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentence 3 -->
+    <div class="sentence-item bg-white border border-slate-200/80 hover:border-blue-200 rounded-2xl p-4 transition-all">
+      <div class="flex flex-wrap items-center gap-2 text-base md:text-lg font-semibold text-slate-800">
+        <span class="text-slate-400 font-bold w-6">3.</span>
+        <span>We turned</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="3-1" placeholder="___">
+        <span>at the</span>
+        <span class="word-tooltip" data-info="[ˈskeɪt.pɑːk] — park for skating" onmouseenter="speakWord('skatepark')">skatepark</span>
+        <span>at four.</span>
+        <button class="ml-auto text-slate-400 hover:text-blue-600 p-2 rounded-xl hover:bg-blue-50 transition-colors" title="Listen to sentence" onclick="speakSentence('We turned up at the skatepark at four.')">
+          🔊
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentence 4 -->
+    <div class="sentence-item bg-white border border-slate-200/80 hover:border-blue-200 rounded-2xl p-4 transition-all">
+      <div class="flex flex-wrap items-center gap-2 text-base md:text-lg font-semibold text-slate-800">
+        <span class="text-slate-400 font-bold w-6">4.</span>
+        <span>Max was afraid of the</span>
+        <span class="word-tooltip" data-info="[ˈbʌn.dʒi dʒʌmp] — rope jumping" onmouseenter="speakWord('bungee jump')">bungee jump</span>,
+        <span>so he backed</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="4-1" placeholder="___">.
+        <button class="ml-auto text-slate-400 hover:text-blue-600 p-2 rounded-xl hover:bg-blue-50 transition-colors" title="Listen to sentence" onclick="speakSentence('Max was afraid of the bungee jump, so he backed out.')">
+          🔊
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentence 5 -->
+    <div class="sentence-item bg-white border border-slate-200/80 hover:border-blue-200 rounded-2xl p-4 transition-all">
+      <div class="flex flex-wrap items-center gap-2 text-base md:text-lg font-semibold text-slate-800">
+        <span class="text-slate-400 font-bold w-6">5.</span>
+        <span>She was nervous, but she went</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="5-1" placeholder="___">
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="5-2" placeholder="___">
+        <span>the jump.</span>
+        <button class="ml-auto text-slate-400 hover:text-blue-600 p-2 rounded-xl hover:bg-blue-50 transition-colors" title="Listen to sentence" onclick="speakSentence('She was nervous, but she went through with the jump.')">
+          🔊
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentence 6 -->
+    <div class="sentence-item bg-white border border-slate-200/80 hover:border-blue-200 rounded-2xl p-4 transition-all">
+      <div class="flex flex-wrap items-center gap-2 text-base md:text-lg font-semibold text-slate-800">
+        <span class="text-slate-400 font-bold w-6">6.</span>
+        <span>Put</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="6-1" placeholder="___">
+        <span>your</span>
+        <span class="word-tooltip" data-info="[ˈhel.mət] — head protection" onmouseenter="speakWord('helmet')">helmet</span>
+        <span>before you ride!</span>
+        <button class="ml-auto text-slate-400 hover:text-blue-600 p-2 rounded-xl hover:bg-blue-50 transition-colors" title="Listen to sentence" onclick="speakSentence('Put on your helmet before you ride!')">
+          🔊
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentence 7 -->
+    <div class="sentence-item bg-white border border-slate-200/80 hover:border-blue-200 rounded-2xl p-4 transition-all">
+      <div class="flex flex-wrap items-center gap-2 text-base md:text-lg font-semibold text-slate-800">
+        <span class="text-slate-400 font-bold w-6">7.</span>
+        <span>Our teacher has set</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="7-1" placeholder="___">
+        <span>a climbing club.</span>
+        <button class="ml-auto text-slate-400 hover:text-blue-600 p-2 rounded-xl hover:bg-blue-50 transition-colors" title="Listen to sentence" onclick="speakSentence('Our teacher has set up a climbing club.')">
+          🔊
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentence 8 -->
+    <div class="sentence-item bg-white border border-slate-200/80 hover:border-blue-200 rounded-2xl p-4 transition-all">
+      <div class="flex flex-wrap items-center gap-2 text-base md:text-lg font-semibold text-slate-800">
+        <span class="text-slate-400 font-bold w-6">8.</span>
+        <span>The instructor used pictures to get the</span>
+        <span class="word-tooltip" data-info="[ˈseɪf.ti ruːlz] — safety guidelines" onmouseenter="speakWord('safety rules')">safety rules</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="8-1" placeholder="___">.
+        <button class="ml-auto text-slate-400 hover:text-blue-600 p-2 rounded-xl hover:bg-blue-50 transition-colors" title="Listen to sentence" onclick="speakSentence('The instructor used pictures to get the safety rules across.')">
+          🔊
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentence 9 -->
+    <div class="sentence-item bg-white border border-slate-200/80 hover:border-blue-200 rounded-2xl p-4 transition-all">
+      <div class="flex flex-wrap items-center gap-2 text-base md:text-lg font-semibold text-slate-800">
+        <span class="text-slate-400 font-bold w-6">9.</span>
+        <span>We were late</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="9-1" placeholder="___">
+        <span>our surfing lesson yesterday.</span>
+        <button class="ml-auto text-slate-400 hover:text-blue-600 p-2 rounded-xl hover:bg-blue-50 transition-colors" title="Listen to sentence" onclick="speakSentence('We were late for our surfing lesson yesterday.')">
+          🔊
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentence 10 -->
+    <div class="sentence-item bg-white border border-slate-200/80 hover:border-blue-200 rounded-2xl p-4 transition-all">
+      <div class="flex flex-wrap items-center gap-2 text-base md:text-lg font-semibold text-slate-800">
+        <span class="text-slate-400 font-bold w-6">10.</span>
+        <span>It depends</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="10-1" placeholder="___">
+        <span>the weather.</span>
+        <button class="ml-auto text-slate-400 hover:text-blue-600 p-2 rounded-xl hover:bg-blue-50 transition-colors" title="Listen to sentence" onclick="speakSentence('It depends on the weather.')">
+          🔊
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentence 11 -->
+    <div class="sentence-item bg-white border border-slate-200/80 hover:border-blue-200 rounded-2xl p-4 transition-all">
+      <div class="flex flex-wrap items-center gap-2 text-base md:text-lg font-semibold text-slate-800">
+        <span class="text-slate-400 font-bold w-6">11.</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="11-1" placeholder="___">
+        <span>my</span>
+        <span class="word-tooltip" data-info="[əˈpɪn.jən] — view or belief" onmouseenter="speakWord('opinion')">opinion</span>,
+        <span class="word-tooltip" data-info="[ˈsnəʊ.bɔː.dɪŋ] — snow sport" onmouseenter="speakWord('snowboarding')">snowboarding</span>
+        <span>is exciting.</span>
+        <button class="ml-auto text-slate-400 hover:text-blue-600 p-2 rounded-xl hover:bg-blue-50 transition-colors" title="Listen to sentence" onclick="speakSentence('In my opinion, snowboarding is exciting.')">
+          🔊
+        </button>
+      </div>
+    </div>
+
+    <!-- Sentence 12 -->
+    <div class="sentence-item bg-white border border-slate-200/80 hover:border-blue-200 rounded-2xl p-4 transition-all">
+      <div class="flex flex-wrap items-center gap-2 text-base md:text-lg font-semibold text-slate-800">
+        <span class="text-slate-400 font-bold w-6">12.</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="12-1" placeholder="___">
+        <span>my point</span>
+        <input type="text" class="gap-input w-24 text-center font-bold text-blue-600 bg-slate-50 border-2 border-slate-300 focus:border-blue-500 rounded-xl px-2 py-1 outline-none" data-gap-id="12-2" placeholder="___">
+        <span>view, safety comes first.</span>
+        <button class="ml-auto text-slate-400 hover:text-blue-600 p-2 rounded-xl hover:bg-blue-50 transition-colors" title="Listen to sentence" onclick="speakSentence('From my point of view, safety comes first.')">
+          🔊
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Control Actions -->
+  <div class="mt-8 pt-6 border-t border-slate-200 flex items-center justify-between">
+    <button onclick="clearAllFields()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold px-5 py-2.5 rounded-xl transition-all flex items-center gap-2 text-sm">
+      <span>🔄</span> Clear All
+    </button>
+    <div class="text-xs font-semibold text-slate-400">
+      No auto-checking enabled • Ready for teacher review
+    </div>
+  </div>
+
+</div>
+
+<!-- JavaScript Engine -->
+<script>
+  // Words list for wordbank chips
+  const wordBankList = ['up', 'into', 'out', 'through', 'with', 'on', 'across', 'for', 'in', 'from', 'of'];
+  let activeInput = null;
+
+  // Initialize Word Bank Chips
+  const wordBankEl = document.getElementById('wordBank');
+  wordBankList.forEach(word => {
+    const chip = document.createElement('button');
+    chip.className = 'chip-btn bg-white hover:bg-blue-600 hover:text-white text-blue-600 border-2 border-blue-200 font-bold px-3.5 py-1.5 rounded-xl text-sm shadow-sm';
+    chip.textContent = word;
+    chip.onclick = () => insertWord(word);
+    wordBankEl.appendChild(chip);
+  });
+
+  // Track focused input gap
+  const gapInputs = document.querySelectorAll('.gap-input');
+  gapInputs.forEach(input => {
+    input.addEventListener('focus', function() {
+      gapInputs.forEach(i => i.classList.remove('active-target'));
+      this.classList.add('active-target');
+      activeInput = this;
+    });
+  });
+
+  // Insert word into active input or next empty input
+  function insertWord(word) {
+    if (!activeInput) {
+      // Find first empty input
+      for (let input of gapInputs) {
+        if (!input.value.trim()) {
+          activeInput = input;
+          break;
+        }
+      }
+    }
+
+    if (activeInput) {
+      activeInput.value = word;
+      
+      // Auto advance to next gap if available
+      const nextInputIndex = Array.from(gapInputs).indexOf(activeInput) + 1;
+      activeInput.classList.remove('active-target');
+      if (nextInputIndex < gapInputs.length) {
+        activeInput = gapInputs[nextInputIndex];
+        activeInput.focus();
+      } else {
+        activeInput = null;
+      }
+    }
+  }
+
+  // Clear all inputs
+  function clearAllFields() {
+    gapInputs.forEach(input => {
+      input.value = '';
+      input.classList.remove('active-target');
+    });
+    activeInput = null;
+  }
+
+  // Web Speech API - Word Pronunciation
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  // Web Speech API - Full Sentence Pronunciation
+  function speakSentence(sentence) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(sentence);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.88;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
