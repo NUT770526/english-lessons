@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Look at the picture and complete its description</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --card-bg: #f8fafc;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --wordbank-bg: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.75rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .instruction {
+      color: #334155;
+      font-weight: 500;
+      font-size: 1.05rem;
+    }
+
+    /* Wordbank Box with visible translation on top */
+    .wordbank-box {
+      background: var(--wordbank-bg);
+      border: 1.5px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+
+    .wordbank-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .wordbank-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .word-chip {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .word-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .word-top-line {
+      font-size: 0.82rem;
+      color: #166534;
+      font-weight: 600;
+    }
+
+    .word-en {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .btn-audio {
+      background: #e0e7ff;
+      border: none;
+      color: var(--primary);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .btn-audio:hover {
+      background: #c7d2fe;
+    }
+
+    .progress-bar-container {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 10px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6366f1, #3b82f6);
+      transition: width 0.3s ease;
+    }
+
+    /* Exercises list */
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 18px 22px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      line-height: 1.8;
+    }
+
+    .num {
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 24px;
+    }
+
+    .gap-input {
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--primary);
+      font-weight: 700;
+      background: #ffffff;
+      outline: none;
+      transition: all 0.2s;
+      min-width: 130px;
+      max-width: 180px;
+    }
+
+    .gap-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-content-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      margin: 16px 0;
+      font-family: monospace;
+      color: #334155;
+    }
+
+    .btn-modal-copy {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .btn-close-modal {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>🧩 Look at the picture and complete its description</h1>
+      <p class="instruction">Подивись на малюнок кімнати та заповни пропуски відповідними словами. Натискай 🔊 для прослуховування слів!</p>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </header>
+
+    <!-- СЮДА ДОБАВЛЯЙТЕ ВАШУ КАРТИНКУ -->
+    <!-- Наприклад: <div style="text-align: center; margin-bottom: 20px;"><img src="your-image.jpg" style="max-width: 100%; border-radius: 12px;"></div> -->
+
+    <!-- Wordbank Box -->
+    <div class="wordbank-box">
+      <div class="wordbank-title">📦 Useful Vocabulary (Словничок-підказка):</div>
+      <div class="wordbank-grid">
+
+        <div class="word-chip">
+          <div class="word-info">
+            <span class="word-top-line">затишна • /ˈkəʊ.zi/</span>
+            <span class="word-en">cozy</span>
+          </div>
+          <button class="btn-audio" onclick="speak('cozy')">🔊</button>
+        </div>
+
+        <div class="word-chip">
+          <div class="word-info">
+            <span class="word-top-line">письмовий стіл • /desk/</span>
+            <span class="word-en">desk</span>
+          </div>
+          <button class="btn-audio" onclick="speak('desk')">🔊</button>
+        </div>
+
+        <div class="word-chip">
+          <div class="word-info">
+            <span class="word-top-line">шафа для одягу • /ˈwɔː.drəʊb/</span>
+            <span class="word-en">wardrobe</span>
+          </div>
+          <button class="btn-audio" onclick="speak('wardrobe')">🔊</button>
+        </div>
+
+        <div class="word-chip">
+          <div class="word-info">
+            <span class="word-top-line">два пуфи • /tuː puːfs/</span>
+            <span class="word-en">two poufs</span>
+          </div>
+          <button class="btn-audio" onclick="speak('two poufs')">🔊</button>
+        </div>
+
+        <div class="word-chip">
+          <div class="word-info">
+            <span class="word-top-line">килим / підлога • /rʌɡ / flɔːr/</span>
+            <span class="word-en">rug / floor</span>
+          </div>
+          <button class="btn-audio" onclick="speak('rug')">🔊</button>
+        </div>
+
+        <div class="word-chip">
+          <div class="word-info">
+            <span class="word-top-line">іграшки • /tɔɪz/</span>
+            <span class="word-en">toys</span>
+          </div>
+          <button class="btn-audio" onclick="speak('toys')">🔊</button>
+        </div>
+
+        <div class="word-chip">
+          <div class="word-info">
+            <span class="word-top-line">телевізор • /ˌtel.ɪˈvɪʒ.ən/</span>
+            <span class="word-en">television</span>
+          </div>
+          <button class="btn-audio" onclick="speak('television')">🔊</button>
+        </div>
+
+        <div class="word-chip">
+          <div class="word-info">
+            <span class="word-top-line">книги / полиці • /bʊks / ʃelvz/</span>
+            <span class="word-en">books</span>
+          </div>
+          <button class="btn-audio" onclick="speak('books')">🔊</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Description Sentences -->
+    <div class="exercise-list">
+
+      <div class="exercise-card">
+        <span class="num">—</span>
+        <span>This room is not big but it’s very</span>
+        <input type="text" class="gap-input" id="g1" placeholder="..." oninput="updateProgress()">
+        <span>.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">—</span>
+        <span>There is a big</span>
+        <input type="text" class="gap-input" id="g2" placeholder="..." oninput="updateProgress()">
+        <span>next to the window.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">—</span>
+        <span>There isn’t a</span>
+        <input type="text" class="gap-input" id="g3" placeholder="..." oninput="updateProgress()">
+        <span>in the room.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">—</span>
+        <span>There are</span>
+        <input type="text" class="gap-input" id="g4_1" placeholder="..." oninput="updateProgress()">
+        <span>on the</span>
+        <input type="text" class="gap-input" id="g4_2" placeholder="..." oninput="updateProgress()">
+        <span>.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">—</span>
+        <span>There aren’t any</span>
+        <input type="text" class="gap-input" id="g5_1" placeholder="..." oninput="updateProgress()">
+        <span>under the</span>
+        <input type="text" class="gap-input" id="g5_2" placeholder="..." oninput="updateProgress()">
+        <span>.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">—</span>
+        <span>There is also a</span>
+        <input type="text" class="gap-input" id="g6_1" placeholder="..." oninput="updateProgress()">
+        <span>on the</span>
+        <input type="text" class="gap-input" id="g6_2" placeholder="..." oninput="updateProgress
