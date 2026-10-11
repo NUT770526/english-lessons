@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Read the Dialogue & Answer Questions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #4f46e5;
+      --jamie-bg: #e6f4f1;
+      --jamie-border: #2dd4bf;
+      --jamie-text: #0f766e;
+      --amalia-bg: #fdf2f8;
+      --amalia-border: #f472b6;
+      --amalia-text: #be185d;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .instruction {
+      color: #334155;
+      font-weight: 500;
+      font-size: 1.05rem;
+    }
+
+    .legend {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .badge {
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .badge-jamie {
+      background: #ccfbf1;
+      color: var(--jamie-text);
+      border: 1px solid var(--jamie-border);
+    }
+
+    .badge-amalia {
+      background: #fce7f3;
+      color: var(--amalia-text);
+      border: 1px solid var(--amalia-border);
+    }
+
+    /* Dialogue Container */
+    .dialogue-box {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .bubble-wrapper {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      max-width: 88%;
+    }
+
+    .bubble-wrapper.jamie {
+      align-self: flex-start;
+    }
+
+    .bubble-wrapper.amalia {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .avatar.jamie {
+      background: #14b8a6;
+    }
+
+    .avatar.amalia {
+      background: #ec4899;
+    }
+
+    .bubble {
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 1.02rem;
+      position: relative;
+      line-height: 1.7;
+    }
+
+    .bubble.jamie {
+      background: var(--jamie-bg);
+      border: 1.5px solid var(--jamie-border);
+      border-top-left-radius: 4px;
+      color: #134e4a;
+    }
+
+    .bubble.amalia {
+      background: var(--amalia-bg);
+      border: 1.5px solid var(--amalia-border);
+      border-top-right-radius: 4px;
+      color: #831843;
+    }
+
+    /* Interactive Vocabulary Word (Tooltip + TTS) */
+    .vocab {
+      border-bottom: 2px dashed #6366f1;
+      color: #4338ca;
+      font-weight: 700;
+      cursor: pointer;
+      position: relative;
+      display: inline-block;
+      padding: 0 2px;
+      transition: all 0.2s;
+    }
+
+    .vocab:hover {
+      background: #e0e7ff;
+      border-radius: 4px;
+    }
+
+    /* Tooltip styling */
+    .vocab .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      width: 220px;
+      background-color: #1e293b;
+      color: #ffffff;
+      text-align: left;
+      border-radius: 10px;
+      padding: 10px 12px;
+      position: absolute;
+      z-index: 100;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      font-size: 0.88rem;
+      font-weight: normal;
+      pointer-events: none;
+    }
+
+    .vocab .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -6px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: #1e293b transparent transparent transparent;
+    }
+
+    .vocab:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .tooltip-ukr {
+      color: #4ade80;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+
+    .tooltip-ipa {
+      color: #94a3b8;
+      font-style: italic;
+      font-size: 0.82rem;
+    }
+
+    /* Questions Section */
+    .questions-section {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 28px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+    }
+
+    .questions-section h2 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .question-card {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+    }
+
+    .question-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #1e293b;
+      margin-bottom: 10px;
+    }
+
+    .answer-input {
+      width: 100%;
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--primary);
+      font-weight: 600;
+      background: #ffffff;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .answer-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .progress-bar-container {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 10px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6366f1, #3b82f6);
+      transition: width 0.3s ease;
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: #4338ca;
+      transform: translateY(-2px);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-content-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      margin: 16px 0;
+      font-family: monospace;
+      color: #334155;
+    }
+
+    .btn-modal-copy {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .btn-close-modal {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>📙 Read the dialogue!</h1>
+      <p class="instruction">Прочитай діалог. Наводь мишкою на підкреслені слова, щоб побачити переклад, транскрипцію та прослухати вимову!</p>
+      <div class="legend">
+        <span class="badge badge-jamie">Jamie</span>
+        <span class="badge badge-amalia">Amalia</span>
+      </div>
+    </header>
+
+    <!-- Dialogue Box -->
+    <div class="dialogue-box">
+
+      <!-- Jamie 1 -->
+      <div class="bubble-wrapper jamie">
+        <div class="avatar jamie">J</div>
+        <div class="bubble jamie">
+          These trees smell so bad! There are <span class="vocab" onmouseenter="speak('bugs')" onclick="speak('bugs')">bugs<span class="tooltip"><span class="tooltip-ukr">комахи, жуки</span><span class="tooltip-ipa">/bʌɡz/</span></span></span> everywhere! My clothes are dirty! There is no toilet! And I’m sure a <span class="vocab" onmouseenter="speak('wild animal')" onclick="speak('wild animal')">wild animal<span class="tooltip"><span class="tooltip-ukr">дика тварина</span><span class="tooltip-ipa">/waɪld ˈæn.ɪ.məl/</span></span></span> is going to eat me for lunch! I <span class="vocab" onmouseenter="speak('can\'t stand')" onclick="speak('can\'t stand')">can’t stand<span class="tooltip"><span class="tooltip-ukr">терпіти не можу</span><span class="tooltip-ipa">/kɑːnt stænd/</span></span></span> this! I feel like I’m on a dangerous <span class="vocab" onmouseenter="speak('wildlife')" onclick="speak('wildlife')">wildlife<span class="tooltip"><span class="tooltip-ukr">дика природа</span><span class="tooltip-ipa">/ˈwaɪld.laɪf/</span></span></span> <span class="vocab" onmouseenter="speak('safari')" onclick="speak('safari')">safari<span class="tooltip"><span class="tooltip-ukr">сафарі</span><span class="tooltip-ipa">/səˈfɑː.ri/</span></span></span> <span class="vocab" onmouseenter="speak('adventure')" onclick="speak('adventure')">adventure<span class="tooltip"><span class="tooltip-ukr">пригода</span><span class="tooltip-ipa">/ədˈven.tʃər/</span></span></span>!
+        </div>
+      </div>
+
+      <!-- Amalia 1 -->
+      <div class="bubble-wrapper amalia">
+        <div class="avatar amalia">A</div>
+        <div class="bubble amalia">
+          Woah, woah, woah, Jamie. <span class="vocab" onmouseenter="speak('Chill out')" onclick="speak('Chill out')">Chill out<span class="tooltip"><span class="tooltip-ukr">заспокойся, розслабся</span><span class="tooltip-ipa">/tʃɪl aʊt/</span></span></span>. <span class="vocab" onmouseenter="speak('Settle down')" onclick="speak('Settle down')">Settle down<span class="tooltip"><span class="tooltip-ukr">вгамуйся</span><span class="tooltip-ipa">/ˈset.əl daʊn/</span></span></span>. No need to get <span class="vocab" onmouseenter="speak('nervous')" onclick="speak('nervous')">nervous<span class="tooltip"><span class="tooltip-ukr">знервований</span><span class="tooltip-ipa">/ˈnɜː.vəs/</span></span></span> or <span class="vocab" onmouseenter="speak('paranoid')" onclick="speak('paranoid')">paranoid<span class="tooltip"><span class="tooltip-ukr">параноїк / занадто тривожний</span><span class="tooltip-ipa">/ˈpær.ə.nɔɪd/</span></span></span>. We’re just doing some <span class="vocab" onmouseenter="speak('eco-tourism')" onclick="speak('eco-tourism')">eco-tourism<span class="tooltip"><span class="tooltip-ukr">еко-туризм</span><span class="tooltip-ipa">/ˈiː.kəʊˌtʊə.rɪ.zəm/</span></span></span> and a bit of mountain <span class="vocab" onmouseenter="speak('trekking')" onclick="speak('trekking')">trekking<span class="tooltip"><span class="tooltip-ukr">піший похід у горах</span><span class="tooltip-ipa">/ˈtrek.ɪŋ/</span></span></span>. Be <span class="vocab" onmouseenter="speak('reasonable')" onclick="speak('reasonable')">reasonable<span class="tooltip"><span class="tooltip-ukr">розважливим, розсудливим</span><span class="tooltip-ipa">/ˈriː.zən.ə.bəl/</span></span></span>, no animal is going to <span class="vocab" onmouseenter="speak('munch')" onclick="speak('munch')">munch<span class="tooltip"><span class="tooltip-ukr">жувати, гризти</span><span class="tooltip-ipa">/mʌntʃ/</span></span></span> on you.
+        </div>
+      </div>
+
+      <!-- Jamie 2 -->
+      <div class="bubble-wrapper jamie">
+        <div class="avatar jamie">J</div>
+        <div class="bubble jamie">
+          Be reasonable, Amalia! Are you <span class="vocab" onmouseenter="speak('serious')" onclick="speak('serious')">serious<span class="tooltip"><span class="tooltip-ukr">серйозна</span><span class="tooltip-ipa">/ˈsɪə.ri.əs/</span></span></span>! We are staying at a <span class="vocab" onmouseenter="speak('campsite')" onclick="speak('campsite')">campsite<span class="tooltip"><span class="tooltip-ukr">кемпінг / наметовое містечко</span><span class="tooltip-ipa">/ˈkæmp.saɪt/</span></span></span> in the <span class="vocab" onmouseenter="speak('middle of nowhere')" onclick="speak('middle of nowhere')">middle of nowhere<span class="tooltip"><span class="tooltip-ukr">у глушині / казна-де</span><span class="tooltip-ipa">/ˈmɪd.əl əv ˈnəʊ.weər/</span></span></span>. It’s rained every single day, and this morning I fell into the water five times! FIVE TIMES!
+        </div>
+      </div>
+
+      <!-- Amalia 2 -->
+      <div class="bubble-wrapper amalia">
+        <div class="avatar amalia">A</div>
+        <div class="bubble amalia">
+          No need to <span class="vocab" onmouseenter="speak('scream')" onclick="speak('scream')">scream<span class="tooltip"><span class="tooltip-ukr">кричати</span><span class="tooltip-ipa">/skriːm/</span></span></span>. Relax, okay? Yes, it is a bit cold and <span class="vocab" onmouseenter="speak('uncomfortable')" onclick="speak('uncomfortable')">uncomfortable<span class="tooltip"><span class="tooltip-ukr">незручно, некомфортно</span><span class="tooltip-ipa">/ʌnˈkʌm.ftə.bəl/</span></span></span> now, but soon it won’t be rainy. It will be sunny and <span class="vocab" onmouseenter="speak('comfortable')" onclick="speak('comfortable')">comfortable<span class="tooltip"><span class="tooltip-ukr">зручно, комфортно</span><span class="tooltip-ipa">/ˈkʌm.ftə.bəl/</span></span></span> in an hour when the rain goes away. Also, we are <span class="vocab" onmouseenter="speak('perfectly safe')" onclick="speak('perfectly safe')">perfectly safe<span class="tooltip"><span class="tooltip-ukr"> у цілковитій безпеці</span><span class="tooltip-ipa">/ˈpɜː.fekt.li seɪf/</span></span></span> from wild animals. There are only <span class="vocab" onmouseenter="speak('squirrels')" onclick="speak('squirrels')">squirrels<span class="tooltip"><span class="tooltip-ukr">білки</span><span class="tooltip-ipa">/ˈskwɪr.əlz/</span></span></span> and birds around here. Squirrels are <span class="vocab" onmouseenter="speak('exciting')" onclick="speak('exciting')">exciting<span class="tooltip"><span class="tooltip-ukr">захопливі</span><span class="tooltip-ipa">/ɪkˈsaɪ.tɪŋ/</span></span></span>! Later we’ll do some mountain trekking and a <span class="vocab" onmouseenter="speak('rafting')" onclick="speak('rafting')">rafting<span class="tooltip"><span class="tooltip-ukr">рафтинг / сплав по річці</span><span class="tooltip-ipa">/ˈrɑːf.tɪŋ/</span></span></span> tour. You’ll love it.
+        </div>
+      </div>
+
+      <!-- Jamie 3 -->
+      <div class="bubble-wrapper jamie">
+        <div class="avatar jamie">J</div>
+        <div class="bubble jamie">
+          Yeah, yeah, yeah. Whatever you say, Amalia. You’re the <span class="vocab" onmouseenter="speak('outdoor expert')" onclick="speak('outdoor expert')">outdoor expert<span class="tooltip"><span class="tooltip-ukr">експерт із відпочинку на природі</span><span class="tooltip-ipa">/ˈaʊt.dɔːr ˈek.spɜːt/</span></span></span>. You didn’t say how <span class="vocab" onmouseenter="speak('tiring')" onclick="speak('tiring')">tiring<span class="tooltip"><span class="tooltip-ukr">виснажливо, втомливо</span><span class="tooltip-ipa">/ˈtaɪə.rɪŋ/</span></span></span> all this would be. I’m just glad that we have a holiday next month so that I can relax from this crazy plan of yours.
+        </div>
+      </div>
+
+      <!-- Amalia 3 -->
+      <div class="bubble-wrapper amalia">
+        <div class="avatar amalia">A</div>
+        <div class="bubble amalia">
+          It’s not crazy, you’ll like it when it’s warmer. The sky will look so <span class="vocab" onmouseenter="speak('amazing')" onclick="speak('amazing')">amazing<span class="tooltip"><span class="tooltip-ukr">дивовижно</span><span class="tooltip-ipa">/əˈmeɪ.zɪŋ/</span></span></span>. So, have you <span class="vocab" onmouseenter="speak('decided')" onclick="speak('decided')">decided<span class="tooltip"><span class="tooltip-ukr">вирішив</span><span class="tooltip-ipa">/dɪˈsaɪ.dɪd/</span></span></span> where to go on holiday?
+        </div>
+      </div>
+
+      <!-- Jamie 4 -->
+      <div class="bubble-wrapper jamie">
+        <div class="avatar jamie">J</div>
+        <div class="bubble jamie">
+          Not back here! Not only this crazy wildlife safari!
+        </div>
+      </div>
+
+      <!-- Amalia 4 -->
+      <div class="bubble-wrapper amalia">
+        <div class="avatar amalia">A</div>
+        <div class="bubble amalia">
+          It’s not a wildlife safari. It’s <span class="vocab" onmouseenter="speak('camping')" onclick="speak('camping')">camping<span class="tooltip"><span class="tooltip-ukr">кемпінг / відпочинок у наметах</span><span class="tooltip-ipa">/ˈkæm.pɪŋ/</span></span></span>. Also, I would like to go on a safari.
+        </div>
+      </div>
+
+      <!-- Jamie 5 -->
+      <div class="bubble-wrapper jamie">
+        <div class="avatar jamie">J</div>
+        <div class="bubble jamie">
+          I <span class="vocab" onmouseenter="speak('bet')" onclick="speak('bet')">bet<span class="tooltip"><span class="tooltip-ukr">б'юся об заклад / переконаний</span><span class="tooltip-ipa">/bet/</span></span></span> you would! You like this crazy stuff. Me.... I want a <span class="vocab" onmouseenter="speak('luxurious')" onclick="speak('luxurious')">luxurious<span class="tooltip"><span class="tooltip-ukr">розкішний</span><span class="tooltip-ipa">/lʌɡˈʒʊə.ri.əs/</span></span></span> hotel that has a lot of <span class="vocab" onmouseenter="speak('variety')" onclick="speak('variety')">variety<span class="tooltip"><span class="tooltip-ukr">різноманіття</span><span class="tooltip-ipa">/vəˈraɪ.ə.ti/</span></span></span> life: a gym, a pool, a <span class="vocab" onmouseenter="speak('buffet')" onclick="speak('buffet')">buffet<span class="tooltip"><span class="tooltip-ukr">шведський стіл</span><span class="tooltip-ipa">/ˈbʊf.eɪ/</span></span></span>, and a dance club. Do you see a dance club around here, Amalia!? Hu!?
+        </div>
+      </div>
+
+      <!-- Amalia 5 -->
+      <div class="bubble-wrapper amalia">
+        <div class="avatar amalia">A</div>
+        <div class="bubble amalia">
+          No, but I see a pool that you fell into five times.
+        </div>
+      </div>
+
+      <!-- Jamie 6 -->
+      <div class="bubble-wrapper jamie">
+        <div class="avatar jamie">J</div>
+        <div class="bubble jamie">
+          Not funny! I don’t care how <span class="vocab" onmouseenter="speak('educational')" onclick="speak('educational')">educational<span class="tooltip"><span class="tooltip-ukr">пізнавальний / пізнавально</span><span class="tooltip-ipa">/ˌedʒ.ʊˈkeɪ.ʃən.əl/</span></span></span> our camping is, it’s difficult. A nice hotel is what I want. I don’t care if it is expensive or not <span class="vocab" onmouseenter="speak('good value for money')" onclick="speak('good value for money')">good value for money<span class="tooltip"><span class="tooltip-ukr">вигідне співвідношення ціни та якості</span><span class="tooltip-ipa">/ɡʊd ˈvæl.juː fər ˈmʌn.i/</span></span></span>.
+        </div>
+      </div>
+
+      <!-- Amalia 6 -->
+      <div class="bubble-wrapper amalia">
+        <div class="avatar amalia">A</div>
+        <div class="bubble amalia">
+          <span class="vocab" onmouseenter="speak('To be honest')" onclick="speak('To be honest')">To be honest<span class="tooltip"><span class="tooltip-ukr">чесно кажучи</span><span class="tooltip-ipa">/tuː bi ˈɒn.ɪst/</span></span></span>, that hotel idea sounds quite <span class="vocab" onmouseenter="speak('boring')" onclick="speak('boring')">boring<span class="tooltip"><span class="tooltip-ukr">нудно</span><span class="tooltip-ipa">/ˈbɔː.rɪŋ/</span></span></span>. I hope after a day or two you’ll <span class="vocab" onmouseenter="speak('fall in love with')" onclick="speak('fall in love with')">fall in love with<span class="tooltip"><span class="tooltip-ukr">закохаєшся у</span><span class="tooltip-ipa">/fɔːl ɪn lʌv wɪð/</span></span></span> the <span class="vocab" onmouseenter="speak('outdoors')" onclick="speak('outdoors')">outdoors<span class="tooltip"><span class="tooltip-ukr">відпочинок на свіжому повітрі / природа</span><span class="tooltip-ipa">/ˌaʊtˈdɔːz/</span></span></span>, just like I had.
+        </div>
+      </div>
+
+      <!-- Jamie 7 -->
+      <div class="bubble-wrapper jamie">
+        <div class="avatar jamie">J</div>
+        <div class="bubble jamie">
+          Pshh! <span class="vocab" onmouseenter="speak('Doubt it')" onclick="speak('Doubt it')">Doubt it<span class="tooltip"><span class="tooltip-ukr">сумніваюся!</span><span class="tooltip-ipa">/daʊt ɪt/</span></span></span>! I love the <span class="vocab" onmouseenter="speak('indoors')" onclick="speak('indoors')">indoors<span class="tooltip"><span class="tooltip-ukr">перебувати в приміщенні</span><span class="tooltip-ipa">/ˌɪnˈdɔːz/</span></span></span>!
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Questions Section -->
+    <div class="questions-section">
+      <h2>📣 Answer the questions!</h2>
+      <div class="progress-bar-container" style="margin-bottom: 20px;">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <div class="question-card">
+        <div class="question-title">1. Why doesn't Jamie like eco-tourism?</div>
+        <input type="text" class="answer-input" id="q1" placeholder="Type your answer here..." oninput="updateProgress()">
+      </div>
+
+      <div class="question-card">
+        <div class="question-title">2. Where are Jamie and Amalia staying?</div>
+        <input type="text" class="answer-input" id="q2" placeholder="Type your answer here..." oninput="updateProgress()">
+      </div>
+
+      <div class="question-card">
+        <div class="question-title">3. What animals does Amalia see?</div>
+        <input type="text" class="answer-input" id="q3" placeholder="Type your answer here..." oninput="updateProgress()">
+      </div>
+
+      <div class="question-card">
+        <div class="question-title">4. Why is Amalia the outdoor expert?</div>
+        <input type="text" class="answer-input" id="q4" placeholder="Type your answer here..." oninput="updateProgress()">
+      </div>
+
+      <div class="question-card">
+        <div class="question-title">5. What type of spending holidays does Jamie like?</div>
+        <input type="text" class="answer-input" id="q5" placeholder="Type your answer here..." oninput="updateProgress()">
+      </div>
+
+      <div class="actions">
+        <button class="btn-submit" onclick="finishTask()">Finish & Copy Answers 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>🎉 Exercise Completed!</h2>
+      <p style="color: var(--text-muted);">Here are your answers. Click below to copy and send them to your teacher!</p>
+      
+      <div class="modal-content-box" id="modalContent"></div>
+
+      <button class="btn-modal-copy" onclick="copyResults()">📋 Copy Answers to Clipboard</button>
+      <button class="btn-close-modal" onclick="closeModal()">Close window</button>
+    </div>
+  </div>
+
+  <script>
+    function speak(text) {
+      if ('speechSynthesis' in window && text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.88;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    const qIds = ['q1', 'q2', 'q3', 'q4', 'q5'];
+
+    function updateProgress() {
+      let filled = 0;
+      qIds.forEach(id => {
+        if (document.getElementById(id).value.trim() !== '') filled++;
+      });
+      const pct = (filled / qIds.length) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function finishTask() {
+      let output = "📋 DIALOGUE COMPREHENSION - ANSWERS\n\n";
+
+      const qTitles = [
+        "1. Why doesn't Jamie like eco-tourism?",
+        "2. Where are Jamie and Amalia staying?",
+        "3. What animals does Amalia see?",
+        "4. Why is Amalia the outdoor expert?",
+        "5. What type of spending holidays does Jamie like?"
+      ];
+
+      for (let i = 1; i <= 5; i++) {
+        const ans = getVal(`q${i}`);
+        output += `${qTitles[i-1]}\n👉 ${ans}\n\n`;
+      }
+
+      document.getElementById('modalContent').textContent = output;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function getVal(id) {
+      const v = document.getElementById(id).value.trim();
+      return v !== '' ? v : '___';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function copyResults() {
+      const text = document.getElementById('modalContent').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Answers copied to clipboard! Send them to your teacher.");
+      }).catch(() => {
+        alert("Failed to copy automatically. Please select and copy manually.");
+      });
+    }
+  </script>
+</body>
+</html>
