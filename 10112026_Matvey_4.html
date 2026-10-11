@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete these sentences and read the explanations!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --card-bg: #f8fafc;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --highlight-red: #ef4444;
+      --highlight-purple: #a855f7;
+      --highlight-blue: #0284c7;
+      --highlight-green: #10b981;
+      --highlight-pink: #ec4899;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.75rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .instruction {
+      color: #334155;
+      font-weight: 500;
+      font-size: 1.05rem;
+    }
+
+    /* Wordbox Section */
+    .wordbox-section {
+      background: #f1f5f9;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 28px;
+    }
+
+    .wordbox-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.15rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .wordbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+
+    .word-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      transition: border-color 0.2s;
+    }
+
+    .word-card:hover {
+      border-color: var(--primary);
+    }
+
+    .word-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .word-text {
+      font-weight: 700;
+      color: #1e293b;
+      font-size: 0.98rem;
+    }
+
+    .btn-audio {
+      background: #e0e7ff;
+      border: none;
+      color: var(--primary);
+      border-radius: 6px;
+      padding: 3px 8px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      transition: background 0.2s;
+    }
+
+    .btn-audio:hover {
+      background: #c7d2fe;
+    }
+
+    /* Tooltip styling for translations */
+    .word-card .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      width: 220px;
+      background-color: #1e293b;
+      color: #ffffff;
+      text-align: left;
+      border-radius: 8px;
+      padding: 8px 12px;
+      position: absolute;
+      z-index: 100;
+      bottom: 115%;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    .word-card:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .tooltip-ukr {
+      color: #4ade80;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .tooltip-ipa {
+      color: #94a3b8;
+      font-style: italic;
+      font-size: 0.82rem;
+    }
+
+    /* Sentence List */
+    .sentence-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .sentence-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 18px 22px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+
+    .num {
+      font-weight: 700;
+      color: var(--primary);
+      margin-right: 6px;
+    }
+
+    .gap-select {
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.98rem;
+      font-family: inherit;
+      color: var(--primary);
+      font-weight: 700;
+      background: #ffffff;
+      outline: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      margin: 0 4px;
+    }
+
+    .gap-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    /* Colored highlights inside sentences */
+    .hl-red { color: var(--highlight-red); font-weight: 600; }
+    .hl-purple { color: var(--highlight-purple); font-weight: 600; }
+    .hl-blue { color: var(--highlight-blue); font-weight: 600; }
+    .hl-green { color: var(--highlight-green); font-weight: 600; }
+    .hl-pink { color: var(--highlight-pink); font-weight: 600; }
+
+    /* Questions Section */
+    .questions-section {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 28px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+
+    .questions-section h2 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .question-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+    }
+
+    .question-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #1e293b;
+      margin-bottom: 10px;
+    }
+
+    .answer-input {
+      width: 100%;
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--primary);
+      font-weight: 600;
+      background: #fafafa;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .answer-input:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .progress-bar-container {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 10px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6366f1, #3b82f6);
+      transition: width 0.3s ease;
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-content-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      margin: 16px 0;
+      font-family: monospace;
+      color: #334155;
+    }
+
+    .btn-modal-copy {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .btn-close-modal {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>▶️ Complete these sentences and read the explanations!</h1>
+      <p class="instruction">Заповни пропуски відповідними фразовими дієсловами. Наводь на слова у блоці, щоб побачити переклад українською та транскрипцію!</p>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </header>
+
+    <!-- Wordbox -->
+    <div class="wordbox-section">
+      <div class="wordbox-title">📦 Wordbox (Hover for Translation & Transcription):</div>
+      <div class="wordbox-grid">
+
+        <div class="word-card">
+          <div class="word-info">
+            <span class="word-text">comes up</span>
+          </div>
+          <button class="btn-audio" onclick="speak('comes up')">🔊</button>
+          <div class="tooltip">
+            <div class="tooltip-ukr">трапляється / виникає</div>
+            <div class="tooltip-ipa">/kʌmz ʌp/</div>
+          </div>
+        </div>
+
+        <div class="word-card">
+          <div class="word-info">
+            <span class="word-text">get through to</span>
+          </div>
+          <button class="btn-audio" onclick="speak('get through to')">🔊</button>
+          <div class="tooltip">
+            <div class="tooltip-ukr">достукатися до / розтлумачити</div>
+            <div class="tooltip-ipa">/ɡet θruː tuː/</div>
+          </div>
+        </div>
+
+        <div class="word-card">
+          <div class="word-info">
+            <span class="word-text">calm down</span>
+          </div>
+          <button class="btn-audio" onclick="speak('calm down')">🔊</button>
+          <div class="tooltip">
+            <div class="tooltip-ukr">заспокоїтися</div>
+            <div class="tooltip-ipa">/kɑːm daʊn/</div>
+          </div>
+        </div>
+
+        <div class="word-card">
+          <div class="word-info">
+            <span class="word-text">get back to</span>
+          </div>
+          <button class="btn-audio" onclick="speak('get back to')">🔊</button>
+          <div class="tooltip">
+            <div class="tooltip-ukr">зв'язатися / передзвонити</div>
+            <div class="tooltip-ipa">/ɡet bæk tuː/</div>
+          </div>
+        </div>
+
+        <div class="word-card">
+          <div class="word-info">
+            <span class="word-text">make up</span>
+          </div>
+          <button class="btn-audio" onclick="speak('make up')">🔊</button>
+          <div class="tooltip">
+            <div class="tooltip-ukr">помиритися</div>
+            <div class="tooltip-ipa">/meɪk ʌp/</div>
+          </div>
+        </div>
+
+        <div class="word-card">
+          <div class="word-info">
+            <span class="word-text">freak out</span>
+          </div>
+          <button class="btn-audio" onclick="speak('freak out')">🔊</button>
+          <div class="tooltip">
+            <div class="tooltip-ukr">панікувати / лютувати</div>
+            <div class="tooltip-ipa">/friːk aʊt/</div>
+          </div>
+        </div>
+
+        <div class="word-card">
+          <div class="word-info">
+            <span class="word-text">go back</span>
+          </div>
+          <button class="btn-audio" onclick="speak('go back')">🔊</button>
+          <div class="tooltip">
+            <div class="tooltip-ukr">повертатися / знатися давним-давно</div>
+            <div class="tooltip-ipa">/ɡəʊ bæk/</div>
+          </div>
+        </div>
+
+        <div class="word-card">
+          <div class="word-info">
+            <span class="word-text">feel up</span>
+          </div>
+          <button class="btn-audio" onclick="speak('feel up')">🔊</button>
+          <div class="tooltip">
+            <div class="tooltip-ukr">почуватися в силах (до чогось)</div>
+            <div class="tooltip-ipa">/fiːl ʌp/</div>
+          </div>
+        </div>
+
+        <div class="word-card">
+          <div class="word-info">
+            <span class="word-text">butt in</span>
+          </div>
+          <button class="btn-audio" onclick="speak('butt in')">🔊</button>
+          <div class="tooltip">
+            <div class="tooltip-ukr">втручатися / перебивати</div>
+            <div class="tooltip-ipa">/bʌt ɪn/</div>
+          </div>
+        </div>
+
+        <div class="word-card">
+          <div class="word-info">
+            <span class="word-text">playing at</span>
+          </div>
+          <button class="btn-audio" onclick="speak('playing at')">🔊</button>
+          <div class="tooltip">
+            <div class="tooltip-ukr">замишляти / витворяти</div>
+            <div class="tooltip-ipa">/ˈpleɪ.ɪŋ æt/</div>
+          </div>
+        </div>
+
+        <div class="word-card">
+          <div class="word-info">
+            <span class="word-text">bump into</span>
+          </div>
+          <button class="btn-audio" onclick="speak('bump into')">🔊</button>
+          <div class="tooltip">
+            <div class="tooltip-ukr">випадково зустріти</div>
+            <div class="tooltip-ipa">/bʌmp ˈɪn.tuː/</div>
+          </div>
+        </div>
+
+        <div class="word-card">
+          <div class="word-info">
+            <span class="word-text">work out</span>
+          </div>
+          <button class="btn-audio" onclick="speak('work out')">🔊</button>
+          <div class="tooltip">
+            <div class="tooltip-ukr">вирішити проблеми / розібратися</div>
+            <div class="tooltip-ipa">/wɜːk aʊt/</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Sentence Exercises -->
+    <div class="sentence-list">
+
+      <div class="sentence-card">
+        <span class="num">1.</span> If you <select class="gap-select" id="s1" onchange="handleSelect(this)"></select> someone, it means that you <span class="hl-red">contact someone</span> to continue an earlier conversation, or reply to a message, question or invitation. You can get back to someone face to face, by text, phone or email.
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">2.</span> If something <select class="gap-select" id="s2" onchange="handleSelect(this)"></select> , it means that <span class="hl-red">something happens</span>, occurs or appears. It is often something that has to be dealt with straight away.
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">3.</span> If you ask someone what they are <select class="gap-select" id="s3" onchange="handleSelect(this)"></select> , it means you are <span class="hl-red">surprised by or unhappy</span> about their behaviour. Although you seem to be asking a question, you do not always expect an answer!
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">4.</span> If you <select class="gap-select" id="s4" onchange="handleSelect(this)"></select> , you stop being <span class="hl-purple">angry or excited</span> and become more relaxed.
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">5.</span> If you and another person <select class="gap-select" id="s5" onchange="handleSelect(this)"></select> , it means you <span class="hl-purple">renew a relationship</span> after an argument or, misunderstanding. It usually means that you have talked to the person and are on good terms now.
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">6.</span> If you <select class="gap-select" id="s6" onchange="handleSelect(this)"></select> to do something, it means that you <span class="hl-blue">want to do something</span>, or feel enthusiastic or excited about doing it. It is often used with the negative don't, meaning that you don't want to do the activity, or you don't feel well enough to do it.
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">7.</span> If you <select class="gap-select" id="s7" onchange="handleSelect(this)"></select> , you become very <span class="hl-blue">upset, excited, angry or crazy</span> about something.
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">8.</span> If you <select class="gap-select" id="s8" onchange="handleSelect(this)"></select> someone, you meet them by chance or unexpectedly.
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">9.</span> If you <select class="gap-select" id="s9" onchange="handleSelect(this)"></select> (for) years with someone, it means that you <span class="hl-green">have known them for a very long time</span>.
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">10.</span> If you <select class="gap-select" id="s10" onchange="handleSelect(this)"></select> , you rudely <span class="hl-green">interrupt or join</span> in a conversation without waiting for the other person to finish speaking.
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">11.</span> If you <select class="gap-select" id="s11" onchange="handleSelect(this)"></select> problems, or problems in a relationship, it means that you <span class="hl-pink">try to find a positive solution</span> to them.
+      </div>
+
+      <div class="sentence-card">
+        <span class="num">12.</span> If you <select class="gap-select" id="s12" onchange="handleSelect(this)"></select> someone, it means that you <span class="hl-red">explain yourself clearly</span> so that they understand what you are saying.
+      </div>
+
+    </div>
+
+    <!-- Questions Section -->
+    <div class="questions-section">
+      <h2>📣 Answer the questions! =)</h2>
+
+      <div class="question-card">
+        <div class="question-title">1. Do you have a friend in need?</div>
+        <input type="text" class="answer-input" id="q1" placeholder="Type your answer here..." oninput="updateProgress()">
+      </div>
+
+      <div class="question-card">
+        <div class="question-title">2. How many friends do you have?</div>
+        <input type="text" class="answer-input" id="q2" placeholder="Type your answer here..." oninput="updateProgress()">
+      </div>
+
+      <div class="question-card">
+        <div class="question-title">3. Is there a difference between colleagues and friends?</div>
+        <input type="text" class="answer-input" id="q3" placeholder="Type your answer here..." oninput="updateProgress()">
+      </div>
+
+      <div class="question-card">
+        <div class="question-title">4. How do you usually spend your free time with friends?</div>
+        <input type="text" class="answer-input" id="q4" placeholder="Type your answer here..." oninput="updateProgress()">
+      </div>
+
+      <div class="actions">
+        <button class="btn-submit" onclick="finishTask()">Finish & Copy Answers 🚀</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>🎉 Task Completed!</h2>
+      <p style="color: var(--text-muted);">Here are your answers. Click below to copy and send them to your teacher!</p>
+      
+      <div class="modal-content-box" id="modalContent"></div>
+
+      <button class="btn-modal-copy" onclick="copyResults()">📋 Copy Answers to Clipboard</button>
+      <button class="btn-close-modal" onclick="closeModal()">Close window</button>
+    </div>
+  </div>
+
+  <script>
+    const phrasalVerbs = [
+      "comes up",
+      "get through to",
+      "calm down",
+      "get back to",
+      "make up",
+      "freak out",
+      "go back",
+      "feel up",
+      "butt in",
+      "playing at",
+      "bump into",
+      "work out"
+    ];
+
+    const sentenceGapIds = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10', 's11', 's12'];
+    const questionIds = ['q1', 'q2', 'q3', 'q4'];
+
+    // Populate selects
+    sentenceGapIds.forEach(id => {
+      const sel = document.getElementById(id);
+      let html = `<option value="">-- select --</option>`;
+      phrasalVerbs.forEach(verb => {
+        html += `<option value="${verb}">${verb}</option>`;
+      });
+      sel.innerHTML = html;
+    });
+
+    function speak(text) {
+      if ('speechSynthesis' in window && text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.88;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function handleSelect(el) {
+      if (el.value) {
+        speak(el.value);
+      }
+      updateProgress();
+    }
+
+    function updateProgress() {
+      let filled = 0;
+      const total = sentenceGapIds.length + questionIds.length;
+
+      sentenceGapIds.forEach(id => {
+        if (document.getElementById(id).value !== '') filled++;
+      });
+
+      questionIds.forEach(id => {
+        if (document.getElementById(id).value.trim() !== '') filled++;
+      });
+
+      const pct = (filled / total) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function finishTask() {
+      let output = "📋 PHRASAL VERBS EXPLANATIONS & QUESTIONS - ANSWERS\n\n";
+
+      output += "PART 1: PHRASAL VERBS\n";
+      const sentenceTitles = [
+        "1. get back to",
+        "2. comes up",
+        "3. playing at",
+        "4. calm down",
+        "5. make up",
+        "6. feel up",
+        "7. freak out",
+        "8. bump into",
+        "9. go back",
+        "10. butt in",
+        "11. work out",
+        "12. get through to"
+      ];
+
+      sentenceGapIds.forEach((id, idx) => {
+        output += `${sentenceTitles[idx]}: ${getVal(id)}\n`;
+      });
+
+      output += "\nPART 2: QUESTIONS\n";
+      const qTitles = [
+        "1. Do you have a friend in need?",
+        "2. How many friends do you have?",
+        "3. Is there a difference between colleagues and friends?",
+        "4. How do you usually spend your free time with friends?"
+      ];
+
+      questionIds.forEach((id, idx) => {
+        output += `${qTitles[idx]}\n👉 ${getVal(id)}\n\n`;
+      });
+
+      document.getElementById('modalContent').textContent = output;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function getVal(id) {
+      const v = document.getElementById(id).value.trim();
+      return v !== '' ? v : '___';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function copyResults() {
+      const text = document.getElementById('modalContent').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Answers copied to clipboard! Send them to your teacher.");
+      }).catch(() => {
+        alert("Failed to copy automatically. Please select and copy manually.");
+      });
+    }
+  </script>
+</body>
+</html>
