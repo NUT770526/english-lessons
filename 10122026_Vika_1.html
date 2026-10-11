@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose the Correct Options - There is / There are</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --wordbank-bg: #eff6ff;
+      --wordbank-border: #bfdbfe;
+      --hint-green: #15803d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .instruction {
+      color: #334155;
+      font-weight: 500;
+      font-size: 1.05rem;
+    }
+
+    .wordbank-box {
+      background: var(--wordbank-bg);
+      border: 1.5px solid var(--wordbank-border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-top: 16px;
+    }
+
+    .wordbank-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .wordbank-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .word-chip {
+      background: #ffffff;
+      border: 1px solid #93c5fd;
+      border-radius: 10px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .word-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .word-top-line {
+      font-size: 0.82rem;
+      color: var(--hint-green);
+      font-weight: 600;
+    }
+
+    .word-en {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .btn-audio {
+      background: #dbeafe;
+      border: none;
+      color: var(--primary);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .btn-audio:hover {
+      background: #bfdbfe;
+    }
+
+    .progress-bar-container {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 10px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+      transition: width 0.3s ease;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 18px 22px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      line-height: 1.8;
+    }
+
+    .num {
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 24px;
+    }
+
+    .gap-select {
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--primary);
+      font-weight: 700;
+      background: #ffffff;
+      outline: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .gap-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-content-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      margin: 16px 0;
+      font-family: monospace;
+      color: #334155;
+    }
+
+    .btn-modal-copy {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .btn-close-modal {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>☑️ Choose the correct options</h1>
+      <p class="instruction">Оберіть правильну форму дієслова <b>There is / There are</b>. Переклад підказки вказано зверху кожного блока!</p>
+
+      <!-- Wordbank Box -->
+      <div class="wordbank-box">
+        <div class="wordbank-title">💡 Grammar Guide (Подсказки):</div>
+        <div class="wordbank-grid">
+
+          <div class="word-chip">
+            <div class="word-info">
+              <span class="word-top-line">Є (однина +) • /ðeər ɪz/</span>
+              <span class="word-en">There is</span>
+            </div>
+            <button class="btn-audio" onclick="speak('There is')">🔊</button>
+          </div>
+
+          <div class="word-chip">
+            <div class="word-info">
+              <span class="word-top-line">Є (множина +) • /ðeər ɑːr/</span>
+              <span class="word-en">There are</span>
+            </div>
+            <button class="btn-audio" onclick="speak('There are')">🔊</button>
+          </div>
+
+          <div class="word-chip">
+            <div class="word-info">
+              <span class="word-top-line">Немає (однина -) • /ðeər ˈɪz.ənt/</span>
+              <span class="word-en">There isn't</span>
+            </div>
+            <button class="btn-audio" onclick="speak('There isn\'t')">🔊</button>
+          </div>
+
+          <div class="word-chip">
+            <div class="word-info">
+              <span class="word-top-line">Немає (множина -) • /ðeər ˈɑːnt/</span>
+              <span class="word-en">There aren't</span>
+            </div>
+            <button class="btn-audio" onclick="speak('There aren\'t')">🔊</button>
+          </div>
+
+          <div class="word-chip">
+            <div class="word-info">
+              <span class="word-top-line">Чи є? (однина ?) • /ɪz ðeər/</span>
+              <span class="word-en">Is there</span>
+            </div>
+            <button class="btn-audio" onclick="speak('Is there')">🔊</button>
+          </div>
+
+          <div class="word-chip">
+            <div class="word-info">
+              <span class="word-top-line">Чи є? (множина ?) • /ɑːr ðeər/</span>
+              <span class="word-en">Are there</span>
+            </div>
+            <button class="btn-audio" onclick="speak('Are there')">🔊</button>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </header>
+
+    <div class="exercise-list">
+
+      <div class="exercise-card">
+        <span class="num">1.</span>
+        <select class="gap-select" id="g1" onchange="handleSelect(this)"></select>
+        <span>an armchair in the living room.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">2.</span>
+        <select class="gap-select" id="g2" onchange="handleSelect(this)"></select>
+        <span>comfortable beds in the hotel rooms.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">3.</span>
+        <select class="gap-select" id="g3" onchange="handleSelect(this)"></select>
+        <span>four chairs around the dining table.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">4.</span>
+        <select class="gap-select" id="g4" onchange="handleSelect(this)"></select>
+        <span>any shelves in the garage.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">5.</span>
+        <select class="gap-select" id="g5" onchange="handleSelect(this)"></select>
+        <span>a sofa in the waiting area, only chairs.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">6.</span>
+        <select class="gap-select" id="g6" onchange="handleSelect(this)"></select>
+        <span>a table on the balcony, just some plants and a chair.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">7.</span>
+        <span>How many beds</span>
+        <select class="gap-select" id="g7" onchange="handleSelect(this)"></select>
+        <span>in the hotel room?</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">8.</span>
+        <select class="gap-select" id="g8" onchange="handleSelect(this)"></select>
+        <span>a desk in his home office?</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">9.</span>
+        <select class="gap-select" id="g9" onchange="handleSelect(this)"></select>
+        <span>a shower or a bath in your bathroom?</span>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button class="btn-submit" onclick="finishTask()">Finish & Copy Answers 🚀</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>🎉 Task Completed!</h2>
+      <p style="color: var(--text-muted);">Here are your answers. Click below to copy and send them to your teacher!</p>
+      
+      <div class="modal-content-box" id="modalContent"></div>
+
+      <button class="btn-modal-copy" onclick="copyResults()">📋 Copy Answers to Clipboard</button>
+      <button class="btn-close-modal" onclick="closeModal()">Close window</button>
+    </div>
+  </div>
+
+  <script>
+    const standardOptions = [
+      "There is",
+      "There are",
+      "There isn't",
+      "There aren't",
+      "Is there",
+      "Are there"
+    ];
+
+    const gapIds = ['g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8', 'g9'];
+
+    // Populate selects with localized prompt "оберіть"
+    gapIds.forEach(id => {
+      const sel = document.getElementById(id);
+      let html = `<option value="">-- оберіть --</option>`;
+      
+      let currentOptions = [...standardOptions];
+      if (id === 'g7') {
+        currentOptions = ["are there", "is there", "there are", "there is"];
+      }
+
+      currentOptions.forEach(opt => {
+        html += `<option value="${opt}">${opt}</option>`;
+      });
+      sel.innerHTML = html;
+    });
+
+    function speak(text) {
+      if ('speechSynthesis' in window && text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.88;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function handleSelect(el) {
+      if (el.value) {
+        speak(el.value);
+      }
+      updateProgress();
+    }
+
+    function updateProgress() {
+      let filled = 0;
+      gapIds.forEach(id => {
+        if (document.getElementById(id).value !== '') filled++;
+      });
+      const pct = (filled / gapIds.length) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function finishTask() {
+      let output = "📋 CHOOSE THE CORRECT OPTIONS - ANSWERS\n\n";
+
+      const fullSentences = [
+        "1. [ " + getVal('g1') + " ] an armchair in the living room.",
+        "2. [ " + getVal('g2') + " ] comfortable beds in the hotel rooms.",
+        "3. [ " + getVal('g3') + " ] four chairs around the dining table.",
+        "4. [ " + getVal('g4') + " ] any shelves in the garage.",
+        "5. [ " + getVal('g5') + " ] a sofa in the waiting area, only chairs.",
+        "6. [ " + getVal('g6') + " ] a table on the balcony, just some plants and a chair.",
+        "7. How many beds [ " + getVal('g7') + " ] in the hotel room?",
+        "8. [ " + getVal('g8') + " ] a desk in his home office?",
+        "9. [ " + getVal('g9') + " ] a shower or a bath in your bathroom?"
+      ];
+
+      fullSentences.forEach(s => {
+        output += `${s}\n`;
+      });
+
+      document.getElementById('modalContent').textContent = output;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function getVal(id) {
+      const v = document.getElementById(id).value;
+      return v !== '' ? v : '___';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function copyResults() {
+      const text = document.getElementById('modalContent').textContent;
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      
+      try {
+        document.execCommand('copy');
+        alert("Answers copied to clipboard! Send them to your teacher.");
+      } catch (err) {
+        alert("Failed to copy. Please manually select and copy the text.");
+      } finally {
+        document.body.removeChild(textarea);
+      }
+    }
+  </script>
+</body>
+</html>
