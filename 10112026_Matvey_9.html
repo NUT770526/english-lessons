@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vocabulary Practice</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #0d9488;
+      --primary-hover: #0f766e;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --wordbank-bg: #f0fdf4;
+      --wordbank-border: #bbf7d0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.75rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .instruction {
+      color: #334155;
+      font-weight: 500;
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+    }
+
+    /* Wordbank with visible translation on top */
+    .wordbank-box {
+      background: var(--wordbank-bg);
+      border: 1.5px solid var(--wordbank-border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .wordbank-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      color: #166534;
+      margin-bottom: 12px;
+    }
+
+    .wordbank-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .word-chip {
+      background: #ffffff;
+      border: 1px solid #86efac;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .word-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .word-top-line {
+      font-size: 0.85rem;
+      color: #15803d;
+      font-weight: 600;
+    }
+
+    .word-en {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .word-ipa {
+      font-size: 0.8rem;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    .btn-audio {
+      background: #ccfbf1;
+      border: none;
+      color: var(--primary);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .btn-audio:hover {
+      background: #99f6e4;
+    }
+
+    .progress-bar-container {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 10px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #14b8a6, #0d9488);
+      transition: width 0.3s ease;
+    }
+
+    /* Exercises list */
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 18px 22px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      line-height: 1.8;
+    }
+
+    .num {
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 24px;
+    }
+
+    .gap-select {
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--primary);
+      font-weight: 700;
+      background: #fafafa;
+      outline: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .gap-select:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-content-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      margin: 16px 0;
+      font-family: monospace;
+      color: #334155;
+    }
+
+    .btn-modal-copy {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .btn-close-modal {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>🌲 Vocabulary Practice</h1>
+      <p class="instruction">Обери правильне слово з рамки нижче. Переклад та транскрипція вказані на верхній строчці кожної картки!</p>
+
+      <!-- Wordbank Box with visible translation on top -->
+      <div class="wordbank-box">
+        <div class="wordbank-title">📦 Wordbank (Слова з перекладом):</div>
+        <div class="wordbank-grid">
+
+          <div class="word-chip">
+            <div class="word-info">
+              <span class="word-top-line">еко-туризм • /ˌiː.kəʊˈtʊə.rɪ.zəm/</span>
+              <span class="word-en">eco-tourism</span>
+            </div>
+            <button class="btn-audio" onclick="speak('eco-tourism')">🔊</button>
+          </div>
+
+          <div class="word-chip">
+            <div class="word-info">
+              <span class="word-top-line">дика тварина • /ˈwaɪld ˈæn.ɪ.məl/</span>
+              <span class="word-en">wild animal</span>
+            </div>
+            <button class="btn-audio" onclick="speak('wild animal')">🔊</button>
+          </div>
+
+          <div class="word-chip">
+            <div class="word-info">
+              <span class="word-top-line">з'їсти / жувати • /mʌntʃ ɒn juː/</span>
+              <span class="word-en">munch on you</span>
+            </div>
+            <button class="btn-audio" onclick="speak('munch on you')">🔊</button>
+          </div>
+
+          <div class="word-chip">
+            <div class="word-info">
+              <span class="word-top-line">сонячно і зручно • /ˈsʌn.i ən ˈkʌm.ftə.bəl/</span>
+              <span class="word-en">sunny and comfortable</span>
+            </div>
+            <button class="btn-audio" onclick="speak('sunny and comfortable')">🔊</button>
+          </div>
+
+          <div class="word-chip">
+            <div class="word-info">
+              <span class="word-top-line">похід у горах • /ˈmaʊn.tɪn ˈtrek.ɪŋ/</span>
+              <span class="word-en">mountain trekking</span>
+            </div>
+            <button class="btn-audio" onclick="speak('mountain trekking')">🔊</button>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </header>
+
+    <div class="exercise-list">
+
+      <div class="exercise-card">
+        <span class="num">1.</span>
+        <span>I’m sure a</span>
+        <select class="gap-select" id="g1" onchange="handleSelect(this)"></select>
+        <span>is going to eat me for lunch!</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">2.</span>
+        <span>We’re just doing some</span>
+        <select class="gap-select" id="g2" onchange="handleSelect(this)"></select>
+        <span>and a bit of mountain trekking.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">3.</span>
+        <span>Be reasonable, no animal is going to</span>
+        <select class="gap-select" id="g3" onchange="handleSelect(this)"></select>
+        <span>.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">4.</span>
+        <span>It will be</span>
+        <select class="gap-select" id="g4" onchange="handleSelect(this)"></select>
+        <span>in an hour when the rain goes away.</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="num">5.</span>
+        <span>Later we’ll do some</span>
+        <select class="gap-select" id="g5" onchange="handleSelect(this)"></select>
+        <span>and a rafting tour.</span>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button class="btn-submit" onclick="finishTask()">Finish & Copy Answers 🚀</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>🎉 Task Completed!</h2>
+      <p style="color: var(--text-muted);">Here are your answers. Click below to copy and send them to your teacher!</p>
+      
+      <div class="modal-content-box" id="modalContent"></div>
+
+      <button class="btn-modal-copy" onclick="copyResults()">📋 Copy Answers to Clipboard</button>
+      <button class="btn-close-modal" onclick="closeModal()">Close window</button>
+    </div>
+  </div>
+
+  <script>
+    const options = [
+      "eco-tourism",
+      "wild animal",
+      "munch on you",
+      "sunny and comfortable",
+      "mountain trekking"
+    ];
+
+    const gapIds = ['g1', 'g2', 'g3', 'g4', 'g5'];
+
+    // Populate selects with localized prompt "оберіть"
+    gapIds.forEach(id => {
+      const sel = document.getElementById(id);
+      let html = `<option value="">-- оберіть --</option>`;
+      options.forEach(opt => {
+        html += `<option value="${opt}">${opt}</option>`;
+      });
+      sel.innerHTML = html;
+    });
+
+    function speak(text) {
+      if ('speechSynthesis' in window && text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.88;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function handleSelect(el) {
+      if (el.value) {
+        speak(el.value);
+      }
+      updateProgress();
+    }
+
+    function updateProgress() {
+      let filled = 0;
+      gapIds.forEach(id => {
+        if (document.getElementById(id).value !== '') filled++;
+      });
+      const pct = (filled / gapIds.length) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function finishTask() {
+      let output = "📋 VOCABULARY PRACTICE - ANSWERS\n\n";
+      gapIds.forEach((id, idx) => {
+        output += `${idx + 1}. ${getVal(id)}\n`;
+      });
+
+      document.getElementById('modalContent').textContent = output;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function getVal(id) {
+      const v = document.getElementById(id).value;
+      return v !== '' ? v : '___';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function copyResults() {
+      const text = document.getElementById('modalContent').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Answers copied to clipboard! Send them to your teacher.");
+      }).catch(() => {
+        alert("Failed to copy automatically. Please select and copy manually.");
+      });
+    }
+  </script>
+</body>
+</html>
