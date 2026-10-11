@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Read the dialogue and put in the correct words</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #4f46e5;
+      --amalia-bg: #f0f9ff;
+      --amalia-border: #38bdf8;
+      --amalia-text: #0369a1;
+      --michelle-bg: #f3e8ff;
+      --michelle-border: #c084fc;
+      --michelle-text: #6b21a8;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --wordbox-bg: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.75rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .instruction {
+      color: #334155;
+      font-weight: 500;
+      font-size: 1.05rem;
+    }
+
+    /* Wordbox Container */
+    .wordbox-section {
+      background: var(--wordbox-bg);
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 28px;
+    }
+
+    .wordbox-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.15rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .wordbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+    }
+
+    .word-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: border-color 0.2s;
+    }
+
+    .word-card:hover {
+      border-color: var(--primary);
+    }
+
+    .word-text {
+      font-weight: 600;
+      color: #1e293b;
+      font-size: 0.98rem;
+    }
+
+    .btn-audio {
+      background: #e0e7ff;
+      border: none;
+      color: var(--primary);
+      border-radius: 6px;
+      padding: 3px 8px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      transition: background 0.2s;
+    }
+
+    .btn-audio:hover {
+      background: #c7d2fe;
+    }
+
+    /* Tooltip styling for translations */
+    .word-card .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      width: 180px;
+      background-color: #1e293b;
+      color: #4ade80;
+      text-align: center;
+      border-radius: 8px;
+      padding: 6px 10px;
+      position: absolute;
+      z-index: 100;
+      bottom: 115%;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      font-size: 0.85rem;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    .word-card:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Dialogue Section */
+    .legend {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .badge {
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .badge-amalia {
+      background: #e0f2fe;
+      color: var(--amalia-text);
+      border: 1px solid var(--amalia-border);
+    }
+
+    .badge-michelle {
+      background: #f3e8ff;
+      color: var(--michelle-text);
+      border: 1px solid var(--michelle-border);
+    }
+
+    .dialogue-box {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .bubble-wrapper {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      max-width: 90%;
+    }
+
+    .bubble-wrapper.amalia {
+      align-self: flex-start;
+    }
+
+    .bubble-wrapper.michelle {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .avatar.amalia {
+      background: #0284c7;
+    }
+
+    .avatar.michelle {
+      background: #9333ea;
+    }
+
+    .bubble {
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 1.02rem;
+      line-height: 1.8;
+    }
+
+    .bubble.amalia {
+      background: var(--amalia-bg);
+      border: 1.5px solid var(--amalia-border);
+      border-top-left-radius: 4px;
+      color: #0c4a6e;
+    }
+
+    .bubble.michelle {
+      background: var(--michelle-bg);
+      border: 1.5px solid var(--michelle-border);
+      border-top-right-radius: 4px;
+      color: #581c87;
+    }
+
+    .gap-select {
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.98rem;
+      font-family: inherit;
+      color: var(--primary);
+      font-weight: 700;
+      background: #ffffff;
+      outline: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      margin: 0 4px;
+    }
+
+    .gap-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .progress-bar-container {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 10px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6366f1, #3b82f6);
+      transition: width 0.3s ease;
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: #4338ca;
+      transform: translateY(-2px);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-content-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      margin: 16px 0;
+      font-family: monospace;
+      color: #334155;
+    }
+
+    .btn-modal-copy {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .btn-close-modal {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>✏️ Read the dialogue and put in the correct words</h1>
+      <p class="instruction">Прочитай діалог та обери відповідні фразові глаголи з рамки. Наводь на слова у Wordbox, щоб побачити переклад та прослухати вимову!</p>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </header>
+
+    <!-- Wordbox -->
+    <div class="wordbox-section">
+      <div class="wordbox-title">📦 Wordbox (Phrasal Verbs)</div>
+      <div class="wordbox-grid">
+
+        <div class="word-card">
+          <span class="word-text">getting through to</span>
+          <button class="btn-audio" onclick="speak('getting through to')">🔊</button>
+          <span class="tooltip">достукатися до / додзвонитися</span>
+        </div>
+
+        <div class="word-card">
+          <span class="word-text">butting in</span>
+          <button class="btn-audio" onclick="speak('butting in')">🔊</button>
+          <span class="tooltip">втручатися / перебивати</span>
+        </div>
+
+        <div class="word-card">
+          <span class="word-text">made up</span>
+          <button class="btn-audio" onclick="speak('made up')">🔊</button>
+          <span class="tooltip">помирилися</span>
+        </div>
+
+        <div class="word-card">
+          <span class="word-text">get back to</span>
+          <button class="btn-audio" onclick="speak('get back to')">🔊</button>
+          <span class="tooltip">передзвонити / відповісти</span>
+        </div>
+
+        <div class="word-card">
+          <span class="word-text">playing at</span>
+          <button class="btn-audio" onclick="speak('playing at')">🔊</button>
+          <span class="tooltip">замишляти / витворяти</span>
+        </div>
+
+        <div class="word-card">
+          <span class="word-text">came up</span>
+          <button class="btn-audio" onclick="speak('came up')">🔊</button>
+          <span class="tooltip">трапилося / виникло</span>
+        </div>
+
+        <div class="word-card">
+          <span class="word-text">calm down</span>
+          <button class="btn-audio" onclick="speak('calm down')">🔊</button>
+          <span class="tooltip">заспокойся</span>
+        </div>
+
+        <div class="word-card">
+          <span class="word-text">freak out</span>
+          <button class="btn-audio" onclick="speak('freak out')">🔊</button>
+          <span class="tooltip">панікувати / психувати</span>
+        </div>
+
+        <div class="word-card">
+          <span class="word-text">bumped into</span>
+          <button class="btn-audio" onclick="speak('bumped into')">🔊</button>
+          <span class="tooltip">випадково зустрів / натрапив</span>
+        </div>
+
+        <div class="word-card">
+          <span class="word-text">work things out</span>
+          <button class="btn-audio" onclick="speak('work things out')">🔊</button>
+          <span class="tooltip">вирішити проблеми / розібратися</span>
+        </div>
+
+        <div class="word-card">
+          <span class="word-text">go back</span>
+          <button class="btn-audio" onclick="speak('go back')">🔊</button>
+          <span class="tooltip">повертатися / мати спільне минуле</span>
+        </div>
+
+        <div class="word-card">
+          <span class="word-text">feel up to</span>
+          <button class="btn-audio" onclick="speak('feel up to')">🔊</button>
+          <span class="tooltip">почуватися в силах / мати бажання</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="legend">
+      <span class="badge badge-amalia">Amalia</span>
+      <span class="badge badge-michelle">Michelle</span>
+    </div>
+
+    <!-- Dialogue -->
+    <div class="dialogue-box">
+
+      <!-- 1. Amalia -->
+      <div class="bubble-wrapper amalia">
+        <div class="avatar amalia">A</div>
+        <div class="bubble amalia">
+          Hey, Michelle, you didn’t <select class="gap-select" id="g1" onchange="handleSelect(this)"></select> me about the party. Are you and Stan coming?
+        </div>
+      </div>
+
+      <!-- 2. Michelle -->
+      <div class="bubble-wrapper michelle">
+        <div class="avatar michelle">M</div>
+        <div class="bubble michelle">
+          Well, actually, something <select class="gap-select" id="g2" onchange="handleSelect(this)"></select>. I don't think I can make the party.
+        </div>
+      </div>
+
+      <!-- 3. Amalia -->
+      <div class="bubble-wrapper amalia">
+        <div class="avatar amalia">A</div>
+        <div class="bubble amalia">
+          What! I told you about this party weeks ago! What are you <select class="gap-select" id="g3" onchange="handleSelect(this)"></select>, Michelle?!
+        </div>
+      </div>
+
+      <!-- 4. Michelle -->
+      <div class="bubble-wrapper michelle">
+        <div class="avatar michelle">M</div>
+        <div class="bubble michelle">
+          <select class="gap-select" id="g4" onchange="handleSelect(this)"></select>, Amalia, I just have other plans...
+        </div>
+      </div>
+
+      <!-- 5. Amalia -->
+      <div class="bubble-wrapper amalia">
+        <div class="avatar amalia">A</div>
+        <div class="bubble amalia">
+          This is about you and Stan, isn’t it? Isn’t it time that you two <select class="gap-select" id="g5" onchange="handleSelect(this)"></select>?
+        </div>
+      </div>
+
+      <!-- 6. Michelle -->
+      <div class="bubble-wrapper michelle">
+        <div class="avatar michelle">M</div>
+        <div class="bubble michelle">
+          No, it’s not that at all... I just don’t <select class="gap-select" id="g6" onchange="handleSelect(this)"></select> going to the party...
+        </div>
+      </div>
+
+      <!-- 7. Amalia -->
+      <div class="bubble-wrapper amalia">
+        <div class="avatar amalia">A</div>
+        <div class="bubble amalia">
+          Listen, Michelle... I know Stan still really likes you, don’t <select class="gap-select" id="g7" onchange="handleSelect(this)"></select> about it!
+        </div>
+      </div>
+
+      <!-- 8. Michelle -->
+      <div class="bubble-wrapper michelle">
+        <div class="avatar michelle">M</div>
+        <div class="bubble michelle">
+          Well, actually, the last time I <select class="gap-select" id="g8" onchange="handleSelect(this)"></select> Stan, I ignored him because...
+        </div>
+      </div>
+
+      <!-- 9. Amalia -->
+      <div class="bubble-wrapper amalia">
+        <div class="avatar amalia">A</div>
+        <div class="bubble amalia">
+          Don’t worry about a little thing like that! You two <select class="gap-select" id="g9" onchange="handleSelect(this)"></select> for years!
+        </div>
+      </div>
+
+      <!-- 10. Michelle -->
+      <div class="bubble-wrapper michelle">
+        <div class="avatar michelle">M</div>
+        <div class="bubble michelle">
+          Will you just stop <select class="gap-select" id="g10" onchange="handleSelect(this)"></select>, Amalia, you're not listening to me!
+        </div>
+      </div>
+
+      <!-- 11. Amalia -->
+      <div class="bubble-wrapper amalia">
+        <div class="avatar amalia">A</div>
+        <div class="bubble amalia">
+          I know you can <select class="gap-select" id="g11" onchange="handleSelect(this)"></select> with Stan, you were made for each other!
+        </div>
+      </div>
+
+      <!-- 12. Michelle -->
+      <div class="bubble-wrapper michelle">
+        <div class="avatar michelle">M</div>
+        <div class="bubble michelle">
+          I'm just not <select class="gap-select" id="g12" onchange="handleSelect(this)"></select> you, Amalia! The truth is that I ignored Stan because I was on a date with MY NEW BOYFRIEND!!!
+        </div>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button class="btn-submit" onclick="finishTask()">Finish & Copy Answers 🚀</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>🎉 Task Completed!</h2>
+      <p style="color: var(--text-muted);">Here are your chosen answers. Click below to copy and send them to your teacher!</p>
+      
+      <div class="modal-content-box" id="modalContent"></div>
+
+      <button class="btn-modal-copy" onclick="copyResults()">📋 Copy Answers to Clipboard</button>
+      <button class="btn-close-modal" onclick="closeModal()">Close window</button>
+    </div>
+  </div>
+
+  <script>
+    const options = [
+      "getting through to",
+      "butting in",
+      "made up",
+      "get back to",
+      "playing at",
+      "came up",
+      "calm down",
+      "freak out",
+      "bumped into",
+      "work things out",
+      "go back",
+      "feel up to"
+    ];
+
+    const gapIds = ['g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8', 'g9', 'g10', 'g11', 'g12'];
+
+    // Populate select elements
+    gapIds.forEach(id => {
+      const sel = document.getElementById(id);
+      let html = `<option value="">-- select --</option>`;
+      options.forEach(opt => {
+        html += `<option value="${opt}">${opt}</option>`;
+      });
+      sel.innerHTML = html;
+    });
+
+    function speak(text) {
+      if ('speechSynthesis' in window && text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.88;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function handleSelect(el) {
+      if (el.value) {
+        speak(el.value);
+      }
+      updateProgress();
+    }
+
+    function updateProgress() {
+      let filled = 0;
+      gapIds.forEach(id => {
+        if (document.getElementById(id).value !== '') filled++;
+      });
+      const pct = (filled / gapIds.length) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function finishTask() {
+      let output = "📋 PHRASAL VERBS DIALOGUE - ANSWERS\n\n";
+
+      const targets = [
+        "1. get back to",
+        "2. came up",
+        "3. playing at",
+        "4. Calm down",
+        "5. made up",
+        "6. feel up to",
+        "7. freak out",
+        "8. bumped into",
+        "9. go back",
+        "10. butting in",
+        "11. work things out",
+        "12. getting through to"
+      ];
+
+      gapIds.forEach((id, idx) => {
+        output += `${targets[idx]}: ${getVal(id)}\n`;
+      });
+
+      document.getElementById('modalContent').textContent = output;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function getVal(id) {
+      const v = document.getElementById(id).value;
+      return v !== '' ? v : '___';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function copyResults() {
+      const text = document.getElementById('modalContent').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Answers copied to clipboard! Send them to your teacher.");
+      }).catch(() => {
+        alert("Failed to copy automatically. Please select and copy manually.");
+      });
+    }
+  </script>
+</body>
+</html>
