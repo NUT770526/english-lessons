@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Put these verbs in the correct places</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+    h1, h2, h3, button {
+      font-family: 'Fredoka', sans-serif;
+    }
+    /* Custom tooltip styling for Wordbox interactive tags */
+    .vocab-tag {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .vocab-tag:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+    }
+    .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      background-color: #0f172a;
+      color: #ffffff;
+      border-radius: 10px;
+      padding: 10px 12px;
+      z-index: 50;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      pointer-events: none;
+      font-family: 'Outfit', sans-serif;
+      text-align: center;
+    }
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -6px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: #0f172a transparent transparent transparent;
+    }
+    .vocab-tag:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 sm:p-8">
+
+  <div class="max-w-3xl mx-auto space-y-6">
+
+    <!-- Header Card -->
+    <header class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">▶️</span>
+        <h1 class="text-2xl sm:text-3xl font-bold text-indigo-600">Put these verbs in the correct places</h1>
+      </div>
+      <p class="text-slate-600 font-medium">Select the most suitable phrasal verb for each gap. Hover over words in the Wordbox for translation and pronunciation!</p>
+      
+      <!-- Progress Bar -->
+      <div class="space-y-1">
+        <div class="flex justify-between text-xs font-semibold text-slate-500">
+          <span>PROGRESS</span>
+          <span id="progressText">0 / 5</span>
+        </div>
+        <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
+          <div id="progressBar" class="bg-indigo-600 h-full w-0 transition-all duration-300 rounded-full"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Wordbox Component -->
+    <section class="bg-white rounded-2xl border-2 border-indigo-500 overflow-hidden shadow-sm flex flex-col md:flex-row">
+      <!-- Label Banner -->
+      <div class="bg-indigo-600 text-white p-4 md:w-36 flex items-center justify-center text-center font-bold text-lg tracking-wide">
+        Wordbox
+      </div>
+      <!-- Words Grid -->
+      <div class="p-5 flex-1 flex flex-wrap gap-3 items-center bg-indigo-50/50" id="wordboxList">
+        <!-- Interactive tags rendered dynamically via JS -->
+      </div>
+    </section>
+
+    <!-- Sentences List -->
+    <main class="space-y-4" id="sentenceList">
+      <!-- Generated via JS -->
+    </main>
+
+    <!-- Submit Button Section -->
+    <div class="text-center pt-4">
+      <button onclick="finishTask()" class="bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-lg font-bold px-8 py-4 rounded-xl shadow-lg shadow-indigo-200 transition-all">
+        Finish & Copy Answers 🚀
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Modal Overlay -->
+  <div id="modalOverlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-slate-100 space-y-4">
+      <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-bold text-indigo-600">🎉 Great Job!</h2>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+      </div>
+      <p class="text-slate-600 text-sm">Here are your complete answers formatted for your teacher. Click the button below to copy them to your clipboard!</p>
+
+      <!-- Formatted Output Preview -->
+      <pre id="modalContent" class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs font-mono text-slate-700 whitespace-pre-wrap max-h-60 overflow-y-auto"></pre>
+
+      <button onclick="copyResults()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+        <span>📋</span> Copy Answers to Clipboard
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Phrasal verb vocabulary data
+    const verbsData = [
+      { verb: "playing at", translation: "замишляти / робити", ipa: "/ˈpleɪ.ɪŋ æt/" },
+      { verb: "get back to", translation: "перетелефонувати / відповісти", ipa: "/ɡet bæk tuː/" },
+      { verb: "bump into", translation: "випадково зустріти", ipa: "/bʌmp ˈɪn.tuː/" },
+      { verb: "got through to", translation: "додзвонитися / пояснити", ipa: "/ɡɒt θruː tuː/" },
+      { verb: "came up", translation: "несподівано з'явитися", ipa: "/keɪm ʌp/" }
+    ];
+
+    // Sentences data structure
+    const sentences = [
+      { id: 1, prefix: "I had a long conversation with Stan after lunch, and I think I ", suffix: " him." },
+      { id: 2, prefix: "I'm still waiting for Billy to ", suffix: " me about the problems with the contracts." },
+      { id: 3, prefix: "I was going to apply for the job in Paris, but a better opportunity ", suffix: " in my own company." },
+      { id: 4, prefix: "I don't know what they are ", suffix: ", losing all of those computer files." },
+      { id: 5, prefix: "Although we hadn't been in touch for years, it was wonderful to ", suffix: " Stan and Amalia the other day." }
+    ];
+
+    // Text-to-Speech function
+    function speak(text) {
+      if ('speechSynthesis' in window && text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    // Render Wordbox
+    function renderWordbox() {
+      const container = document.getElementById('wordboxList');
+      container.innerHTML = verbsData.map(item => `
+        <div class="vocab-tag bg-white border border-slate-300 text-slate-800 font-semibold px-3 py-2 rounded-lg shadow-sm" onclick="speak('${item.verb}')">
+          <span>${item.verb}</span>
+          <button class="text-indigo-500 hover:text-indigo-700 text-xs pl-1" title="Listen">🔊</button>
+          
+          <!-- Tooltip -->
+          <div class="tooltip space-y-1">
+            <div class="font-bold text-green-400 text-sm">${item.translation}</div>
+            <div class="text-slate-400 text-xs italic">${item.ipa}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render Sentences with Dropdowns
+    function renderSentences() {
+      const container = document.getElementById('sentenceList');
+      container.innerHTML = sentences.map(s => `
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm text-slate-800 text-base sm:text-lg leading-relaxed flex flex-wrap items-center gap-2">
+          <span class="font-bold text-indigo-600">${s.id}.</span>
+          <span>${s.prefix}</span>
+          <select id="gap-${s.id}" onchange="handleSelectChange(${s.id})" class="bg-slate-50 border-2 border-slate-300 focus:border-indigo-500 focus:bg-white text-indigo-600 font-bold rounded-lg px-3 py-1.5 outline-none transition-all cursor-pointer">
+            <option value="">-- select --</option>
+            ${verbsData.map(v => `<option value="${v.verb}">${v.verb}</option>`).join('')}
+          </select>
+          <span>${s.suffix}</span>
+        </div>
+      `).join('');
+    }
+
+    // Handle selection and trigger automatic audio playback
+    function handleSelectChange(id) {
+      const select = document.getElementById(`gap-${id}`);
+      const val = select.value;
+      if (val) {
+        speak(val);
+      }
+      updateProgress();
+    }
+
+    // Update Progress Bar
+    function updateProgress() {
+      let filled = 0;
+      sentences.forEach(s => {
+        const val = document.getElementById(`gap-${s.id}`).value;
+        if (val) filled++;
+      });
+      const pct = (filled / sentences.length) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+      document.getElementById('progressText').textContent = `${filled} / ${sentences.length}`;
+    }
+
+    // Modal Display & Formatting
+    function finishTask() {
+      let resultText = "📋 PUT THESE VERBS IN THE CORRECT PLACES - ANSWERS\n\n";
+
+      sentences.forEach(s => {
+        const val = document.getElementById(`gap-${s.id}`).value || "___";
+        resultText += `${s.id}. ${s.prefix}[ ${val} ]${s.suffix}\n`;
+      });
+
+      document.getElementById('modalContent').textContent = resultText;
+      document.getElementById('modalOverlay').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.add('hidden');
+    }
+
+    // Copy to Clipboard with Fallback
+    function copyResults() {
+      const text = document.getElementById('modalContent').textContent;
+      
+      // Secondary fallback for iFrame / web contexts
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      
+      try {
+        document.execCommand('copy');
+        alert("Answers copied to clipboard! You can paste them to your teacher.");
+      } catch (err) {
+        alert("Failed to copy. Please manually select and copy the text.");
+      } finally {
+        document.body.removeChild(textarea);
+      }
+    }
+
+    // Initialization
+    window.onload = function() {
+      renderWordbox();
+      renderSentences();
+    };
+  </script>
+</body>
+</html>
