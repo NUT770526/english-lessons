@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sort Sentences by Tense</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --card-bg: #f8fafc;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --wordbank-bg: #f1f5f9;
+      --past-color: #d97706;
+      --present-color: #059669;
+      --future-color: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.75rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .instruction {
+      color: #334155;
+      font-weight: 500;
+      font-size: 1.05rem;
+    }
+
+    /* Transcript Box */
+    .transcript-box {
+      background: #eff6ff;
+      border: 1.5px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .transcript-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .transcript-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.15rem;
+      color: #1e40af;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .transcript-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      background: #ffffff;
+      border: 1px solid #93c5fd;
+      color: #1e40af;
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: #dbeafe;
+    }
+
+    .transcript-text {
+      color: #1e293b;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      overflow: hidden;
+    }
+
+    .transcript-text.collapsed {
+      max-height: 0;
+      opacity: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Wordbank Box */
+    .wordbank-box {
+      background: var(--wordbank-bg);
+      border: 1.5px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+
+    .wordbank-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .wordbank-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+
+    .word-chip {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .word-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .word-top-line {
+      font-size: 0.82rem;
+      color: #166534;
+      font-weight: 600;
+    }
+
+    .word-en {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .btn-audio {
+      background: #e0e7ff;
+      border: none;
+      color: var(--primary);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .btn-audio:hover {
+      background: #c7d2fe;
+    }
+
+    .progress-bar-container {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 10px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6366f1, #3b82f6);
+      transition: width 0.3s ease;
+    }
+
+    /* Category Sections */
+    .category-section {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .category-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .category-title.past { color: var(--past-color); }
+    .category-title.present { color: var(--present-color); }
+    .category-title.future { color: var(--future-color); }
+
+    .sentence-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .bullet {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--text-muted);
+    }
+
+    .sentence-input {
+      flex-grow: 1;
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      color: var(--text-main);
+      background: #ffffff;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .sentence-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .sentence-input.prefilled {
+      font-style: italic;
+      background: #f8fafc;
+      color: #334155;
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-content-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+      margin: 16px 0;
+      font-family: monospace;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    .btn-modal-copy {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .btn-close-modal {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>⏱️ Sort Sentences by Tense</h1>
+      <p class="instruction">Прослухай або прочитай транскрипт та рознеси речення по правильних часових категоріях (Past, Present, Future).</p>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </header>
+
+    <!-- Transcript Box -->
+    <div class="transcript-box">
+      <div class="transcript-header">
+        <div class="transcript-title">📄 Transcript</div>
+        <div class="transcript-actions">
+          <button class="btn-icon" onclick="speakTranscript()">🔊 Listen</button>
+          <button class="btn-icon" id="toggleTranscriptBtn" onclick="toggleTranscript()">👁️ Hide</button>
+        </div>
+      </div>
+      <div class="transcript-text" id="transcriptText">
+        "Hey guys! What are you up to? I'm going to watch a new movie with Jason Statham tonight. I bought tickets yesterday, I was so excited about that! I like to watch new movies at the cinema with my besties. I hope to go there with Yuki. She is my best friend and we like spending time together. Now it's only 11 a.m. so I'm going to have a nice workout, see. I go to the gym twice a week cause I like to be in good shape. Last month I skipped two workouts because I had lots of work to do for my school projects."
+      </div>
+    </div>
+
+    <!-- Wordbank Box -->
+    <div class="wordbank-box">
+      <div class="wordbank-title">📦 Useful Vocabulary (Словничок-підказка):</div>
+      <div class="wordbank-grid">
+        <div class="word-chip">
+          <div class="word-info">
+            <span class="word-top-line">купив квитки • /aɪ bɔːt ˈtɪk.ɪts/</span>
+            <span class="word-en">I bought tickets</span>
+          </div>
+          <button class="btn-audio" onclick="speakWord('I bought tickets')">🔊</button>
+        </div>
+        <div class="word-chip">
+          <div class="word-info">
+            <span class="word-top-line">ходжу в спортзал • /aɪ ɡəʊ tə ðə dʒɪm/</span>
+            <span class="word-en">I go to the gym</span>
+          </div>
+          <button class="btn-audio" onclick="speakWord('I go to the gym')">🔊</button>
+        </div>
+        <div class="word-chip">
+          <div class="word-info">
+            <span class="word-top-line">дивлюся новий фільм • /aɪm ˈɡəʊ.ɪŋ tə wɒtʃ/</span>
+            <span class="word-en">I'm going to watch</span>
+          </div>
+          <button class="btn-audio" onclick="speakWord('I am going to watch a new movie')">🔊</button>
+        </div>
+        <div class="word-chip">
+          <div class="word-info">
+            <span class="word-top-line">пропустив тренування • /aɪ skɪpt ˈwɜː.kaʊts/</span>
+            <span class="word-en">I skipped workouts</span>
+          </div>
+          <button class="btn-audio" onclick="speakWord('I skipped workouts')">🔊</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAST SECTION -->
+    <div class="category-section">
+      <div class="category-title past">⏮️ Past:</div>
+      <div class="sentence-row">
+        <span class="bullet">•</span>
+        <input type="text" class="sentence-input prefilled" value="I bought tickets yesterday" readonly>
+      </div>
+      <div class="sentence-row">
+        <span class="bullet">•</span>
+        <input type="text" class="sentence-input" id="past_1" placeholder="Type sentence from transcript..." oninput="updateProgress()">
+      </div>
+      <div class="sentence-row">
+        <span class="bullet">•</span>
+        <input type="text" class="sentence-input" id="past_2" placeholder="Type sentence from transcript..." oninput="updateProgress()">
+      </div>
+    </div>
+
+    <!-- PRESENT SECTION -->
+    <div class="category-section">
+      <div class="category-title present">▶️ Present:</div>
+      <div class="sentence-row">
+        <span class="bullet">•</span>
+        <input type="text" class="sentence-input prefilled" value="I go to the gym twice a week" readonly>
+      </div>
+      <div class="sentence-row">
+        <span class="bullet">•</span>
+        <input type="text" class="sentence-input" id="present_1" placeholder="Type sentence from transcript..." oninput="updateProgress()">
+      </div>
+      <div class="sentence-row">
+        <span class="bullet">•</span>
+        <input type="text" class="sentence-input" id="present_2" placeholder="Type sentence from transcript..." oninput="updateProgress()">
+      </div>
+    </div>
+
+    <!-- FUTURE SECTION -->
+    <div class="category-section">
+      <div class="category-title future">⏭️ Future:</div>
+      <div class="sentence-row">
+        <span class="bullet">•</span>
+        <input type="text" class="sentence-input prefilled" value="I'm going to watch a new movie" readonly>
+      </div>
+      <div class="sentence-row">
+        <span class="bullet">•</span>
+        <input type="text" class="sentence-input" id="future_1" placeholder="Type sentence from transcript..." oninput="updateProgress()">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-submit" onclick="finishTask()">Finish & Copy Answers 🚀</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>🎉 Task Completed!</h2>
+      <p style="color: var(--text-muted);">Here are your sentences sorted by tense. Click below to copy and send them to your teacher!</p>
+      
+      <div class="modal-content-box" id="modalContent"></div>
+
+      <button class="btn-modal-copy" onclick="copyResults()">📋 Copy Answers to Clipboard</button>
+      <button class="btn-close-modal" onclick="closeModal()">Close window</button>
+    </div>
+  </div>
+
+  <script>
+    const inputIds = ['past_1', 'past_2', 'present_1', 'present_2', 'future_1'];
+
+    function speakTranscript() {
+      const text = document.getElementById('transcriptText').innerText;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function speakWord(text) {
+      if ('speechSynthesis' in window && text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleTranscript() {
+      const t = document.getElementById('transcriptText');
+      const btn = document.getElementById('toggleTranscriptBtn');
+      t.classList.toggle('collapsed');
+      if (t.classList.contains('collapsed')) {
+        btn.innerHTML = '👁️ Show';
+      } else {
+        btn.innerHTML = '👁️ Hide';
+      }
+    }
+
+    function updateProgress() {
+      let filled = 0;
+      inputIds.forEach(id => {
+        if (document.getElementById(id).value.trim() !== '') filled++;
+      });
+      const pct = (filled / inputIds.length) * 100;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function finishTask() {
+      let output = "⏱️ SORT SENTENCES BY TENSE - RESULTS\n\n";
+      
+      output += "Past:\n";
+      output += "- I bought tickets yesterday\n";
+      output += `- ${getVal('past_1')}\n`;
+      output += `- ${getVal('past_2')}\n\n`;
+
+      output += "Present:\n";
+      output += "- I go to the gym twice a week\n";
+      output += `- ${getVal('present_1')}\n`;
+      output += `- ${getVal('present_2')}\n\n`;
+
+      output += "Future:\n";
+      output += "- I'm going to watch a new movie\n";
+      output += `- ${getVal('future_1')}\n`;
+
+      document.getElementById('modalContent').textContent = output;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function getVal(id) {
+      const v = document.getElementById(id).value.trim();
+      return v !== '' ? v : '___';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function copyResults() {
+      const text = document.getElementById('modalContent').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Answers copied to clipboard! Send them to your teacher.");
+      }).catch(() => {
+        alert("Failed to copy automatically. Please select and copy manually.");
+      });
+    }
+  </script>
+</body>
+</html>
