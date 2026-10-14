@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Read the text and underline the verbs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --past-color: #ef4444;
+      --present-color: #10b981;
+      --future-color: #3b82f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.6rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .instruction {
+      color: #334155;
+      font-weight: 500;
+      font-size: 1.02rem;
+    }
+
+    /* Color Legend */
+    .legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    /* Instagram Card */
+    .insta-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .insta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 12px;
+    }
+
+    .insta-user {
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .text-content {
+      font-size: 1.1rem;
+      line-height: 2.2;
+      color: #1e293b;
+    }
+
+    /* Interactive text tokens */
+    .token {
+      display: inline-block;
+      padding: 0 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .token:hover {
+      background: #e2e8f0;
+    }
+
+    .token.highlight-past {
+      background: #fee2e2;
+      color: #991b1b;
+      font-weight: 600;
+      border-bottom: 2px solid var(--past-color);
+    }
+
+    .token.highlight-present {
+      background: #d1fae5;
+      color: #065f46;
+      font-weight: 600;
+      border-bottom: 2px solid var(--present-color);
+    }
+
+    .token.highlight-future {
+      background: #dbeafe;
+      color: #1e40af;
+      font-weight: 600;
+      border-bottom: 2px solid var(--future-color);
+    }
+
+    /* Toolbar for selecting tense mode */
+    .toolbar {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .toolbar-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #334155;
+    }
+
+    .mode-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-mode {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border-color);
+      background: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .btn-mode.active-past {
+      background: #fee2e2;
+      border-color: var(--past-color);
+      color: #991b1b;
+    }
+
+    .btn-mode.active-present {
+      background: #d1fae5;
+      border-color: var(--present-color);
+      color: #065f46;
+    }
+
+    .btn-mode.active-future {
+      background: #dbeafe;
+      border-color: var(--future-color);
+      color: #1e40af;
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-content-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      margin: 16px 0;
+      font-family: monospace;
+      color: #334155;
+    }
+
+    .btn-modal-copy {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .btn-close-modal {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>📖 Read the text and underline the verbs</h1>
+      <p class="instruction">Обери колір нижче та клікай на дієслова у тексті, щоб підкреслити їх для Past, Present або Future plans!</p>
+      
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background: var(--past-color)"></div> Past (Минуле)</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--present-color)"></div> Present (Теперішнє)</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--future-color)"></div> Future plans (Майбутнє)</div>
+      </div>
+    </header>
+
+    <!-- Toolbar for selection -->
+    <div class="toolbar">
+      <span class="toolbar-title">🎨 Оберіть режим фарбування:</span>
+      <div class="mode-buttons">
+        <button class="btn-mode active-past" id="modePast" onclick="setMode('past')">🔴 Past</button>
+        <button class="btn-mode" id="modePresent" onclick="setMode('present')">🟢 Present</button>
+        <button class="btn-mode" id="modeFuture" onclick="setMode('future')">🔵 Future</button>
+      </div>
+    </div>
+
+    <!-- Insta Card with Text -->
+    <div class="insta-card">
+      <div class="insta-header">
+        <span class="insta-user">📸 @michelle_france</span>
+        <span style="color: var(--text-muted); font-size: 0.9rem;">Instagram Post</span>
+      </div>
+
+      <div class="text-content" id="textContent">
+        Hi there! My name <span class="token" onclick="colorToken(this)">is</span> Michelle. I <span class="token" onclick="colorToken(this)">came</span> from France but now I <span class="token" onclick="colorToken(this)">live</span> in the UK. I <span class="token" onclick="colorToken(this)">moved</span> here to study a year ago. My hobby <span class="token" onclick="colorToken(this)">is</span> blogging on Instagram. I <span class="token" onclick="colorToken(this)">have</span> a Youtube channel with my friends. I usually <span class="token" onclick="colorToken(this)">wear</span> my airpods because I <span class="token" onclick="colorToken(this)">listen</span> to the music all day long. I <span class="token" onclick="colorToken(this)">don’t watch</span> TV at all, it <span class="token" onclick="colorToken(this)">is</span> boring. I <span class="token" onclick="colorToken(this)">want</span> to be a fashion designer. This summer, I <span class="token" onclick="colorToken(this)">am going to find</span> a job to save money for the university. I <span class="token" onclick="colorToken(this)">go</span> to the gym twice a week. I <span class="token" onclick="colorToken(this)">have</span> a lot of friends, we often <span class="token" onclick="colorToken(this)">go out</span>. We <span class="token" onclick="colorToken(this)">watch</span> movies, <span class="token" onclick="colorToken(this)">go</span> to the cinema, <span class="token" onclick="colorToken(this)">play</span> sports and <span class="token" onclick="colorToken(this)">listen</span> to live music together.
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-submit" onclick="finishTask()">Finish & Copy Answers 🚀</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>🎉 Task Completed!</h2>
+      <p style="color: var(--text-muted);">Here are your highlighted verbs. Click below to copy and send them to your teacher!</p>
+      
+      <div class="modal-content-box" id="modalContent"></div>
+
+      <button class="btn-modal-copy" onclick="copyResults()">📋 Copy Answers to Clipboard</button>
+      <button class="btn-close-modal" onclick="closeModal()">Close window</button>
+    </div>
+  </div>
+
+  <script>
+    let currentMode = 'past'; // 'past', 'present', 'future'
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('modePast').className = 'btn-mode' + (mode === 'past' ? ' active-past' : '');
+      document.getElementById('modePresent').className = 'btn-mode' + (mode === 'present' ? ' active-present' : '');
+      document.getElementById('modeFuture').className = 'btn-mode' + (mode === 'future' ? ' active-future' : '');
+    }
+
+    function colorToken(el) {
+      // Remove previous classes
+      el.classList.remove('highlight-past', 'highlight-present', 'highlight-future');
+      
+      // If clicking same mode, toggle off, otherwise apply current mode
+      if (el.dataset.mode === currentMode) {
+        delete el.dataset.mode;
+      } else {
+        el.dataset.mode = currentMode;
+        if (currentMode === 'past') el.classList.add('highlight-past');
+        if (currentMode === 'present') el.classList.add('highlight-present');
+        if (currentMode === 'future') el.classList.add('highlight-future');
+      }
+    }
+
+    function finishTask() {
+      let pastList = [];
+      let presentList = [];
+      let futureList = [];
+
+      document.querySelectorAll('.token').forEach(t => {
+        if (t.dataset.mode === 'past') pastList.push(t.textContent);
+        if (t.dataset.mode === 'present') presentList.push(t.textContent);
+        if (t.dataset.mode === 'future') futureList.push(t.textContent);
+      });
+
+      let output = "📋 TEXT VERBS HIGHLIGHTING - ANSWERS\n\n";
+      output += `🔴 Past: ${pastList.length > 0 ? pastList.join(', ') : 'None'}\n`;
+      output += `🟢 Present: ${presentList.length > 0 ? presentList.join(', ') : 'None'}\n`;
+      output += `🔵 Future plans: ${futureList.length > 0 ? futureList.join(', ') : 'None'}\n`;
+
+      document.getElementById('modalContent').textContent = output;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function copyResults() {
+      const text = document.getElementById('modalContent').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Answers copied to clipboard! Send them to your teacher.");
+      }).catch(() => {
+        alert("Failed to copy automatically. Please select and copy manually.");
+      });
+    }
+  </script>
+</body>
+</html>
