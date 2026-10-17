@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Переклади речення англійською 🌿</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0fdf4;
+    color: #14532d;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .app-container {
+    max-width: 840px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(22, 101, 52, 0.08);
+    border: 2px solid #bbf7d0;
+  }
+
+  .header-title {
+    font-size: 1.6rem;
+    color: #15803d;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+  }
+
+  .instruction {
+    background-color: #dcfce7;
+    border-left: 5px solid #22c55e;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #14532d;
+    margin-bottom: 24px;
+  }
+
+  .example-box {
+    background-color: #f0fdf4;
+    border: 2px dashed #86efac;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 1rem;
+  }
+
+  .example-title {
+    font-weight: 800;
+    color: #15803d;
+    margin-bottom: 6px;
+  }
+
+  .example-text {
+    color: #166534;
+    font-weight: 600;
+  }
+
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+
+  .question-card {
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.2s;
+  }
+
+  .question-card:hover {
+    border-color: #4ade80;
+    background-color: #f7fee7;
+  }
+
+  .ukr-prompt {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #14532d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .num-badge {
+    color: #15803d;
+    font-weight: 800;
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    margin-left: auto;
+  }
+
+  .audio-btn:hover {
+    background-color: #dcfce7;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid #bbf7d0;
+    background-color: #ffffff;
+    color: #14532d;
+    outline: none;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  input[type="text"]:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+  }
+
+  .extra-task-box {
+    background-color: #dcfce7;
+    border: 2px solid #86efac;
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 10px;
+  }
+
+  .extra-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #15803d;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .extra-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px solid #bbf7d0;
+  }
+
+  .action-btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-reset {
+    background-color: #dcfce7;
+    color: #14532d;
+  }
+
+  .btn-reset:hover {
+    background-color: #bbf7d0;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="header-title">
+    <span>🌿</span>
+    <h2>Переклади речення англійською</h2>
+  </div>
+
+  <div class="instruction">
+    Прочитай речення українською мовою та напиши їхній переклад англійською.
+  </div>
+
+  <!-- Зразок -->
+  <div class="example-box">
+    <div class="example-title">📌 Зразок:</div>
+    <div class="example-text">
+      Я снідаю вранці.<br>
+      ➔ <strong>I have breakfast in the morning.</strong>
+    </div>
+  </div>
+
+  <div class="questions-list">
+
+    <!-- 1 -->
+    <div class="question-card">
+      <div class="ukr-prompt">
+        <span class="num-badge">1.</span>
+        <span>У мене велика сім'я.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('I have a big family.')">🔊</button>
+      </div>
+      <input type="text" placeholder="Напиши переклад англійською..." autocomplete="off" spellcheck="false">
+    </div>
+
+    <!-- 2 -->
+    <div class="question-card">
+      <div class="ukr-prompt">
+        <span class="num-badge">2.</span>
+        <span>Моя сестра розумна й готова допомогти.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('My sister is clever and helpful.')">🔊</button>
+      </div>
+      <input type="text" placeholder="Напиши переклад англійською..." autocomplete="off" spellcheck="false">
+    </div>
+
+    <!-- 3 -->
+    <div class="question-card">
+      <div class="ukr-prompt">
+        <span class="num-badge">3.</span>
+        <span>Мій брат кумедний і спортивний.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('My brother is funny and sporty.')">🔊</button>
+      </div>
+      <input type="text" placeholder="Напиши переклад англійською..." autocomplete="off" spellcheck="false">
+    </div>
+
+    <!-- 4 -->
+    <div class="question-card">
+      <div class="ukr-prompt">
+        <span class="num-badge">4.</span>
+        <span>Мій телефон досить старий.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('My phone is pretty old.')">🔊</button>
+      </div>
+      <input type="text" placeholder="Напиши переклад англійською..." autocomplete="off" spellcheck="false">
+    </div>
+
+    <!-- 5 -->
+    <div class="question-card">
+      <div class="ukr-prompt">
+        <span class="num-badge">5.</span>
+        <span>Моя сумка досить нова.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('My bag is pretty new.')">🔊</button>
+      </div>
+      <input type="text" placeholder="Напиши переклад англійською..." autocomplete="off" spellcheck="false">
+    </div>
+
+    <!-- 6 -->
+    <div class="question-card">
+      <div class="ukr-prompt">
+        <span class="num-badge">6.</span>
+        <span>Мені потрібна маленька сумка.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('I need a small bag.')">🔊</button>
+      </div>
+      <input type="text" placeholder="Напиши переклад англійською..." autocomplete="off" spellcheck="false">
+    </div>
+
+    <!-- 7 -->
+    <div class="question-card">
+      <div class="ukr-prompt">
+        <span class="num-badge">7.</span>
+        <span>Я роблю домашнє завдання після обіду.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('I do my homework in the afternoon.')">🔊</button>
+      </div>
+      <input type="text" placeholder="Напиши переклад англійською..." autocomplete="off" spellcheck="false">
+    </div>
+
+    <!-- 8 -->
+    <div class="question-card">
+      <div class="ukr-prompt">
+        <span class="num-badge">8.</span>
+        <span>Я читаю ввечері.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('I read in the evening.')">🔊</button>
+      </div>
+      <input type="text" placeholder="Напиши переклад англійською..." autocomplete="off" spellcheck="false">
+    </div>
+
+  </div>
+
+  <!-- Додаткове завдання -->
+  <div class="extra-task-box">
+    <div class="extra-title">
+      <span>✨</span>
+      <span>Тепер зміни будь-які три речення, щоб вони були правдивими про тебе:</span>
+    </div>
+    <div class="extra-inputs">
+      <input type="text" placeholder="1. Твоє речення про себе..." autocomplete="off" spellcheck="false">
+      <input type="text" placeholder="2. Твоє речення про себе..." autocomplete="off" spellcheck="false">
+      <input type="text" placeholder="3. Твоє речення про себе..." autocomplete="off" spellcheck="false">
+    </div>
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="action-btn btn-reset" onclick="resetAll()">Очистити все 🔄</button>
+  </div>
+</div>
+
+<script>
+  function resetAll() {
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+      input.value = '';
+    });
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
