@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business English — Complete the Sentences</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .app-container {
+    max-width: 860px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border: 1px solid #cbd5e1;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    color: #1e3a8a;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .word-bank {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .bank-item {
+    background-color: #eff6ff;
+    border: 1px solid #93c5fd;
+    color: #1d4ed8;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.98rem;
+  }
+
+  .exercise-box {
+    background-color: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+
+  .box-header {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #1e3a8a;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sentences-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sentence-item {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sentence-line {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    line-height: 1.8;
+  }
+
+  .item-num {
+    font-weight: 700;
+    color: #64748b;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #0f172a;
+    outline: none;
+    transition: all 0.2s;
+    min-width: 140px;
+  }
+
+  input[type="text"]:focus {
+    border-color: #2563eb;
+  }
+
+  input[type="text"].is-correct {
+    border-color: #16a34a !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d !important;
+  }
+
+  input[type="text"].is-wrong {
+    border-color: #dc2626 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c !important;
+  }
+
+  /* Tooltip logic with transcription + translation + audio trigger */
+  .word-tooltip {
+    border-bottom: 2px dotted #2563eb;
+    color: #2563eb;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-hint);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    margin-left: auto;
+  }
+
+  .audio-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  .feedback-msg {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #dc2626;
+    display: none;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .action-btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-check {
+    background-color: #2563eb;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background-color: #1d4ed8;
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .score-display {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #2563eb;
+    background-color: #eff6ff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <!-- EXERCISE 1 -->
+  <div class="section-title">
+    <span>✏️</span>
+    <h2>Complete the sentences</h2>
+  </div>
+
+  <div class="word-bank">
+    <span class="bank-item">makes</span>
+    <span class="bank-item">make</span>
+    <span class="bank-item">runs</span>
+    <span class="bank-item">set up</span>
+    <span class="bank-item">gain</span>
+  </div>
+
+  <div class="exercise-box">
+    <div class="sentences-list">
+      
+      <!-- Ex 1.1 -->
+      <div class="sentence-item" data-correct="runs">
+        <div class="sentence-line">
+          <span class="item-num">1.</span>
+          <span>Do you know anyone who</span>
+          <input type="text" autocomplete="off" spellcheck="false" placeholder="...">
+          <span>their own <span class="word-tooltip" data-hint="[ˈbɪz.nɪs] — бізнес" onmouseenter="playAudio('business')">business</span>?</span>
+          <button type="button" class="audio-btn" onclick="playAudio('Do you know anyone who runs their own business?')">🔊</button>
+        </div>
+        <div class="feedback-msg">Correct answer: runs</div>
+      </div>
+
+      <!-- Ex 1.2 -->
+      <div class="sentence-item" data-correct="makes">
+        <div class="sentence-line">
+          <span class="item-num">2.</span>
+          <span>Do you think their oil company</span>
+          <input type="text" autocomplete="off" spellcheck="false" placeholder="...">
+          <span>too much <span class="word-tooltip" data-hint="[ˈprɒf.ɪt] — прибуток" onmouseenter="playAudio('profit')">profit</span>?</span>
+          <button type="button" class="audio-btn" onclick="playAudio('Do you think their oil company makes too much profit?')">🔊</button>
+        </div>
+        <div class="feedback-msg">Correct answer: makes</div>
+      </div>
+
+      <!-- Ex 1.3 -->
+      <div class="sentence-item" data-correct="set up">
+        <div class="sentence-line">
+          <span class="item-num">3.</span>
+          <span>If you could</span>
+          <input type="text" autocomplete="off" spellcheck="false" placeholder="...">
+          <span>a new company, what kind of company would it be?</span>
+          <button type="button" class="audio-btn" onclick="playAudio('If you could set up a new company, what kind of company would it be?')">🔊</button>
+        </div>
+        <div class="feedback-msg">Correct answer: set up</div>
+      </div>
+
+      <!-- Ex 1.4 -->
+      <div class="sentence-item" data-correct="make">
+        <div class="sentence-line">
+          <span class="item-num">4.</span>
+          <span>You should be <span class="word-tooltip" data-hint="[prɪˈpeəd] — готовий, підготовлений" onmouseenter="playAudio('prepared')">prepared</span> to</span>
+          <input type="text" autocomplete="off" spellcheck="false" placeholder="...">
+          <span>a <span class="word-tooltip" data-hint="[lɒs] — збиток" onmouseenter="playAudio('loss')">loss</span> during the first year your business is running.</span>
+          <button type="button" class="audio-btn" onclick="playAudio('You should be prepared to make a loss during the first year your business is running.')">🔊</button>
+        </div>
+        <div class="feedback-msg">Correct answer: make</div>
+      </div>
+
+      <!-- Ex 1.5 -->
+      <div class="sentence-item" data-correct="gain">
+        <div class="sentence-line">
+          <span class="item-num">5.</span>
+          <span>If you make a <span class="word-tooltip" data-hint="[ˈtɜːnˌəʊ.vər] — товарообіг" onmouseenter="playAudio('turnover')">turnover</span>, you</span>
+          <input type="text" autocomplete="off" spellcheck="false" placeholder="...">
+          <span>money by doing business, after your costs have been paid.</span>
+          <button type="button" class="audio-btn" onclick="playAudio('If you make a turnover, you gain money by doing business, after your costs have been paid.')">🔊</button>
+        </div>
+        <div class="feedback-msg">Correct answer: gain</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EXERCISE 2 -->
+  <div class="section-title">
+    <span>🧩</span>
+    <h2>Complete the sentences with the correct form of the verbs</h2>
+  </div>
+
+  <div class="exercise-box" style="border-color: #f97316;">
+    <div class="sentences-list">
+
+      <!-- Ex 2.1 -->
+      <div class="sentence-item" data-correct="raise money" data-alt="save up money">
+        <div class="sentence-line">
+          <span class="item-num">1.</span>
+          <span>The government has <span class="word-tooltip" data-hint="[pledʒd] — пообіцяв, зобов'язався" onmouseenter="playAudio('pledged')">pledged</span> that it will</span>
+          <input type="text" style="width: 200px;" autocomplete="off" spellcheck="false" placeholder="type phrase...">
+          <span>for <span class="word-tooltip" data-hint="[det rɪˈpeɪ.mənt] — погашення боргу" onmouseenter="playAudio('debt repayment')">debt repayment</span>.</span>
+          <button type="button" class="audio-btn" onclick="playAudio('The government has pledged that it will raise money for debt repayment.')">🔊</button>
+        </div>
+        <div class="feedback-msg">Correct answer: raise money (або save up money)</div>
+      </div>
+
+      <!-- Ex 2.2 -->
+      <div class="sentence-item" data-correct="make a loss" data-alt="go bankrupt">
+        <div class="sentence-line">
+          <span class="item-num">2.</span>
+          <span>If the firm cannot sell its products, it will</span>
+          <input type="text" style="width: 200px;" autocomplete="off" spellcheck="false" placeholder="type phrase...">.
+          <button type="button" class="audio-btn" onclick="playAudio('If the firm cannot sell its products, it will make a loss.')">🔊</button>
+        </div>
+        <div class="feedback-msg">Correct answer: make a loss (або go bankrupt)</div>
+      </div>
+
+      <!-- Ex 2.3 -->
+      <div class="sentence-item" data-correct="reach an agreement">
+        <div class="sentence-line">
+          <span class="item-num">3.</span>
+          <span>The companies have said they plan to</span>
+          <input type="text" style="width: 220px;" autocomplete="off" spellcheck="false" placeholder="type phrase...">
+          <span>by February.</span>
+          <button type="button" class="audio-btn" onclick="playAudio('The companies have said they plan to reach an agreement by February.')">🔊</button>
+        </div>
+        <div class="feedback-msg">Correct answer: reach an agreement</div>
+      </div>
+
+      <!-- Ex 2.4 -->
+      <div class="sentence-item" data-correct="make a profit">
+        <div class="sentence-line">
+          <span class="item-num">4.</span>
+          <span>Using <span class="word-tooltip" data-hint="[ˌkɒn.fɪˈden.ʃəl] — конфіденційна" onmouseenter="playAudio('confidential')">confidential</span> information <span class="word-tooltip" data-hint="[əˈkwaɪəd] — отримана" onmouseenter="playAudio('acquired')">acquired</span> in their work, they play the market and</span>
+          <input type="text" style="width: 200px;" autocomplete="off" spellcheck="false" placeholder="type phrase...">.
+          <button type="button" class="audio-btn" onclick="playAudio('Using confidential information acquired in their work, they play the market and make a profit.')">🔊</button>
+        </div>
+        <div class="feedback-msg">Correct answer: make a profit</div>
+      </div>
+
+      <!-- Ex 2.5 -->
+      <div class="sentence-item" data-correct="raising money" data-alt="saving up money">
+        <div class="sentence-line">
+          <span class="item-num">5.</span>
+          <span>She's</span>
+          <input type="text" style="width: 200px;" autocomplete="off" spellcheck="false" placeholder="type phrase...">
+          <span>for a new coffee shop.</span>
+          <button type="button" class="audio-btn" onclick="playAudio('She is raising money for a new coffee shop.')">🔊</button>
+        </div>
+        <div class="feedback-msg">Correct answer: raising money (або saving up money)</div>
+      </div>
+
+      <!-- Ex 2.6 -->
+      <div class="sentence-item" data-correct="sign a contract" data-alt="do business">
+        <div class="sentence-line">
+          <span class="item-num">6.</span>
+          <span>Today, I will</span>
+          <input type="text" style="width: 200px;" autocomplete="off" spellcheck="false" placeholder="type phrase...">
+          <span>with one of the companies to produce the toys.</span>
+          <button type="button" class="audio-btn" onclick="playAudio('Today, I will sign a contract with one of the companies to produce the toys.')">🔊</button>
+        </div>
+        <div class="feedback-msg">Correct answer: sign a contract (або do business)</div>
+      </div>
+
+      <!-- Ex 2.7 -->
+      <div class="sentence-item" data-correct="take a risk">
+        <div class="sentence-line">
+          <span class="item-num">7.</span>
+          <span><span class="word-tooltip" data-hint="[ˈven.tʃər ˈkæp.ɪ.təl.ɪsts] — венчурні капіталісти" onmouseenter="playAudio('venture capitalists')">Venture capitalists</span> always</span>
+          <input type="text" style="width: 200px;" autocomplete="off" spellcheck="false" placeholder="type phrase...">
+          <span>and invest in <span class="word-tooltip" data-hint="[ʌnˈsteɪ.bəl] — нестабільний" onmouseenter="playAudio('unstable')">unstable</span> businesses.</span>
+          <button type="button" class="audio-btn" onclick="playAudio('Venture capitalists always take a risk and invest in unstable businesses.')">🔊</button>
+        </div>
+        <div class="feedback-msg">Correct answer: take a risk</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="action-btn btn-reset" onclick="resetAll()">Reset 🔄</button>
+    <div class="score-display" id="scoreDisplay">Score: 0 / 12</div>
+    <button type="button" class="action-btn btn-check" onclick="checkAll()">Check Answers ✔</button>
+  </div>
+
+</div>
+
+<script>
+  function normalizeText(text) {
+    return text.toLowerCase()
+      .replace(/’/g, "'")
+      .replace(/`/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function checkAll() {
+    let score = 0;
+    const items = document.querySelectorAll('.sentence-item');
+
+    items.forEach(item => {
+      const input = item.querySelector('input[type="text"]');
+      const correctVal = normalizeText(item.getAttribute('data-correct'));
+      const altVal = item.getAttribute('data-alt') ? normalizeText(item.getAttribute('data-alt')) : null;
+      const userVal = normalizeText(input.value);
+      const feedback = item.querySelector('.feedback-msg');
+
+      input.classList.remove('is-correct', 'is-wrong');
+
+      if (userVal === correctVal || (altVal && userVal === altVal)) {
+        score++;
+        input.classList.add('is-correct');
+        if (feedback) feedback.style.display = 'none';
+      } else {
+        input.classList.add('is-wrong');
+        if (feedback) feedback.style.display = 'block';
+      }
+    });
+
+    const scoreDiv = document.getElementById('scoreDisplay');
+    scoreDiv.innerText = 'Score: ' + score + ' / ' + items.length;
+    scoreDiv.style.display = 'block';
+  }
+
+  function resetAll() {
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+      input.value = '';
+      input.classList.remove('is-correct', 'is-wrong');
+    });
+    document.querySelectorAll('.feedback-msg').forEach(f => f.style.display = 'none');
+    document.getElementById('scoreDisplay').style.display = 'none';
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
