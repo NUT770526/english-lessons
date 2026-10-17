@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1. Знайдіть пару — Business English</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .app-container {
+    max-width: 840px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border: 1px solid #cbd5e1;
+  }
+
+  .header-title {
+    font-size: 1.6rem;
+    color: #1e3a8a;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .instruction {
+    background-color: #eff6ff;
+    border-left: 5px solid #2563eb;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 24px;
+  }
+
+  .matching-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+
+  .matching-table th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    color: #64748b;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  .matching-row {
+    background-color: #f8fafc;
+    border-radius: 10px;
+    transition: all 0.2s;
+  }
+
+  .matching-row:hover {
+    background-color: #f1f5f9;
+  }
+
+  .matching-row td {
+    padding: 12px;
+    vertical-align: middle;
+  }
+
+  .num-cell {
+    font-weight: 700;
+    color: #64748b;
+    width: 40px;
+  }
+
+  /* Tooltip logic for vocabulary hint & sound */
+  .word-tooltip {
+    border-bottom: 2px dotted #2563eb;
+    color: #2563eb;
+    font-weight: 700;
+    font-size: 1.05rem;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-ipa);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #0f172a;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  select:focus {
+    border-color: #2563eb;
+  }
+
+  select.is-correct {
+    border-color: #16a34a !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d !important;
+  }
+
+  select.is-wrong {
+    border-color: #dc2626 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c !important;
+  }
+
+  .ukr-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155;
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    margin-left: 6px;
+  }
+
+  .audio-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .action-btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-check {
+    background-color: #2563eb;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background-color: #1d4ed8;
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .score-display {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #2563eb;
+    background-color: #eff6ff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="header-title">
+    <span>💼</span>
+    <h2>1. Знайдіть пару</h2>
+  </div>
+
+  <div class="instruction">
+    Поєднайте англійські слова з українськими перекладами. Наводьте курсор на англійське слово, щоб побачити транскрипцію та прослухати вимову!
+  </div>
+
+  <table class="matching-table">
+    <thead>
+      <tr>
+        <th style="width: 5%;">№</th>
+        <th style="width: 35%;">English</th>
+        <th style="width: 20%;">Літера</th>
+        <th style="width: 40%;">Українською</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Item 1 -->
+      <tr class="matching-row">
+        <td class="num-cell">1</td>
+        <td>
+          <span class="word-tooltip" data-ipa="[ˌɒn.trə.prəˈnɜːr]" onmouseenter="playAudio('entrepreneur')">entrepreneur</span>
+          <button type="button" class="audio-btn" onclick="playAudio('entrepreneur')">🔊</button>
+        </td>
+        <td>
+          <select data-correct="В">
+            <option value="">--</option>
+            <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+            <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            <option value="Е">Е</option><option value="Є">Є</option><option value="Ж">Ж</option>
+            <option value="З">З</option><option value="И">И</option>
+          </select>
+        </td>
+        <td class="ukr-text">А — заробітна плата</td>
+      </tr>
+
+      <!-- Item 2 -->
+      <tr class="matching-row">
+        <td class="num-cell">2</td>
+        <td>
+          <span class="word-tooltip" data-ipa="[ˈfʌn.dɪŋ]" onmouseenter="playAudio('funding')">funding</span>
+          <button type="button" class="audio-btn" onclick="playAudio('funding')">🔊</button>
+        </td>
+        <td>
+          <select data-correct="Ґ">
+            <option value="">--</option>
+            <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+            <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            <option value="Е">Е</option><option value="Є">Є</option><option value="Ж">Ж</option>
+            <option value="З">З</option><option value="И">И</option>
+          </select>
+        </td>
+        <td class="ukr-text">Б — збиток</td>
+      </tr>
+
+      <!-- Item 3 -->
+      <tr class="matching-row">
+        <td class="num-cell">3</td>
+        <td>
+          <span class="word-tooltip" data-ipa="[ˈsæl.ər.i]" onmouseenter="playAudio('salary')">salary</span>
+          <button type="button" class="audio-btn" onclick="playAudio('salary')">🔊</button>
+        </td>
+        <td>
+          <select data-correct="А">
+            <option value="">--</option>
+            <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+            <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            <option value="Е">Е</option><option value="Є">Є</option><option value="Ж">Ж</option>
+            <option value="З">З</option><option value="И">И</option>
+          </select>
+        </td>
+        <td class="ukr-text">В — підприємець</td>
+      </tr>
+
+      <!-- Item 4 -->
+      <tr class="matching-row">
+        <td class="num-cell">4</td>
+        <td>
+          <span class="word-tooltip" data-ipa="[ɪnˈves.tər]" onmouseenter="playAudio('investor')">investor</span>
+          <button type="button" class="audio-btn" onclick="playAudio('investor')">🔊</button>
+        </td>
+        <td>
+          <select data-correct="Д">
+            <option value="">--</option>
+            <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+            <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            <option value="Е">Е</option><option value="Є">Є</option><option value="Ж">Ж</option>
+            <option value="З">З</option><option value="И">И</option>
+          </select>
+        </td>
+        <td class="ukr-text">Г — виробництво</td>
+      </tr>
+
+      <!-- Item 5 -->
+      <tr class="matching-row">
+        <td class="num-cell">5</td>
+        <td>
+          <span class="word-tooltip" data-ipa="[ˌmæn.jəˈfæk.tʃər.ɪŋ]" onmouseenter="playAudio('manufacturing')">manufacturing</span>
+          <button type="button" class="audio-btn" onclick="playAudio('manufacturing')">🔊</button>
+        </td>
+        <td>
+          <select data-correct="Г">
+            <option value="">--</option>
+            <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+            <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            <option value="Е">Е</option><option value="Є">Є</option><option value="Ж">Ж</option>
+            <option value="З">З</option><option value="И">И</option>
+          </select>
+        </td>
+        <td class="ukr-text">Ґ — фінансування</td>
+      </tr>
+
+      <!-- Item 6 -->
+      <tr class="matching-row">
+        <td class="num-cell">6</td>
+        <td>
+          <span class="word-tooltip" data-ipa="[lɒs]" onmouseenter="playAudio('loss')">loss</span>
+          <button type="button" class="audio-btn" onclick="playAudio('loss')">🔊</button>
+        </td>
+        <td>
+          <select data-correct="Б">
+            <option value="">--</option>
+            <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+            <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            <option value="Е">Е</option><option value="Є">Є</option><option value="Ж">Ж</option>
+            <option value="З">З</option><option value="И">И</option>
+          </select>
+        </td>
+        <td class="ukr-text">Д — інвестор</td>
+      </tr>
+
+      <!-- Item 7 -->
+      <tr class="matching-row">
+        <td class="num-cell">7</td>
+        <td>
+          <span class="word-tooltip" data-ipa="[ˌsiː.iːˈəʊ]" onmouseenter="playAudio('CEO')">CEO</span>
+          <button type="button" class="audio-btn" onclick="playAudio('CEO')">🔊</button>
+        </td>
+        <td>
+          <select data-correct="З">
+            <option value="">--</option>
+            <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+            <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            <option value="Е">Е</option><option value="Є">Є</option><option value="Ж">Ж</option>
+            <option value="З">З</option><option value="И">И</option>
+          </select>
+        </td>
+        <td class="ukr-text">Е — прибуток</td>
+      </tr>
+
+      <!-- Item 8 -->
+      <tr class="matching-row">
+        <td class="num-cell">8</td>
+        <td>
+          <span class="word-tooltip" data-ipa="[ˈɪn.kʌm]" onmouseenter="playAudio('income')">income</span>
+          <button type="button" class="audio-btn" onclick="playAudio('income')">🔊</button>
+        </td>
+        <td>
+          <select data-correct="И">
+            <option value="">--</option>
+            <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+            <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            <option value="Е">Е</option><option value="Є">Є</option><option value="Ж">Ж</option>
+            <option value="З">З</option><option value="И">И</option>
+          </select>
+        </td>
+        <td class="ukr-text">Є — ринок</td>
+      </tr>
+
+      <!-- Item 9 -->
+      <tr class="matching-row">
+        <td class="num-cell">9</td>
+        <td>
+          <span class="word-tooltip" data-ipa="[ˈprɒf.ɪt]" onmouseenter="playAudio('profit')">profit</span>
+          <button type="button" class="audio-btn" onclick="playAudio('profit')">🔊</button>
+        </td>
+        <td>
+          <select data-correct="Е">
+            <option value="">--</option>
+            <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+            <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            <option value="Е">Е</option><option value="Є">Є</option><option value="Ж">Ж</option>
+            <option value="З">З</option><option value="И">И</option>
+          </select>
+        </td>
+        <td class="ukr-text">Ж — договір</td>
+      </tr>
+
+      <!-- Item 10 -->
+      <tr class="matching-row">
+        <td class="num-cell">10</td>
+        <td>
+          <span class="word-tooltip" data-ipa="[ˈmɑː.kɪt]" onmouseenter="playAudio('market')">market</span>
+          <button type="button" class="audio-btn" onclick="playAudio('market')">🔊</button>
+        </td>
+        <td>
+          <select data-correct="Є">
+            <option value="">--</option>
+            <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+            <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            <option value="Е">Е</option><option value="Є">Є</option><option value="Ж">Ж</option>
+            <option value="З">З</option><option value="И">И</option>
+          </select>
+        </td>
+        <td class="ukr-text">З — генеральний директор</td>
+      </tr>
+
+      <!-- Item 11 -->
+      <tr class="matching-row">
+        <td class="num-cell">11</td>
+        <td>
+          <span class="word-tooltip" data-ipa="[ˈkɒn.trækt]" onmouseenter="playAudio('contract')">contract</span>
+          <button type="button" class="audio-btn" onclick="playAudio('contract')">🔊</button>
+        </td>
+        <td>
+          <select data-correct="Ж">
+            <option value="">--</option>
+            <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+            <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            <option value="Е">Е</option><option value="Є">Є</option><option value="Ж">Ж</option>
+            <option value="З">З</option><option value="И">И</option>
+          </select>
+        </td>
+        <td class="ukr-text">И — дохід</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer-controls">
+    <button type="button" class="action-btn btn-reset" onclick="resetAll()">Скинути 🔄</button>
+    <div class="score-display" id="scoreDisplay">Результат: 0 / 11</div>
+    <button type="button" class="action-btn btn-check" onclick="checkAll()">Перевірити ✔</button>
+  </div>
+</div>
+
+<script>
+  function checkAll() {
+    let score = 0;
+    const selects = document.querySelectorAll('select');
+
+    selects.forEach(select => {
+      const correctVal = select.getAttribute('data-correct');
+      const userVal = select.value;
+
+      select.classList.remove('is-correct', 'is-wrong');
+
+      if (userVal === correctVal) {
+        score++;
+        select.classList.add('is-correct');
+      } else {
+        select.classList.add('is-wrong');
+      }
+    });
+
+    const scoreDiv = document.getElementById('scoreDisplay');
+    scoreDiv.innerText = 'Результат: ' + score + ' / ' + selects.length;
+    scoreDiv.style.display = 'block';
+  }
+
+  function resetAll() {
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('is-correct', 'is-wrong');
+    });
+    document.getElementById('scoreDisplay').style.display = 'none';
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
