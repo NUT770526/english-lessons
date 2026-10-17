@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3. Оберіть слово за ситуацією — Business English</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .app-container {
+    max-width: 840px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border: 1px solid #cbd5e1;
+  }
+
+  .header-title {
+    font-size: 1.6rem;
+    color: #1e3a8a;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .instruction {
+    background-color: #eff6ff;
+    border-left: 5px solid #2563eb;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 24px;
+  }
+
+  .questions-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .exercise-card {
+    background-color: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 18px;
+    transition: all 0.2s;
+  }
+
+  .exercise-card:hover {
+    border-color: #bfdbfe;
+  }
+
+  .context-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 12px;
+  }
+
+  .buttons-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn-choice {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 2px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #0f172a;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    user-select: none;
+    position: relative;
+  }
+
+  .btn-choice:hover {
+    border-color: #2563eb;
+    background-color: #eff6ff;
+  }
+
+  /* ЧІТКЕ ФІКСУВАННЯ ВИБОРУ */
+  .btn-choice[data-selected="true"] {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+  }
+
+  /* Підсвітка при перевірці */
+  .btn-choice.is-correct {
+    background-color: #22c55e !important;
+    color: #ffffff !important;
+    border-color: #16a34a !important;
+  }
+
+  .btn-choice.is-wrong {
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+    border-color: #dc2626 !important;
+  }
+
+  /* Tooltip logic for vocabulary hint & sound */
+  .word-tooltip {
+    border-bottom: 2px dotted #2563eb;
+    color: #2563eb;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-ipa);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .sentence-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    color: #64748b;
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    margin-left: auto;
+  }
+
+  .audio-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  .feedback-msg {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #dc2626;
+    margin-top: 8px;
+    display: none;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .action-btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-check {
+    background-color: #2563eb;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background-color: #1d4ed8;
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .score-display {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #2563eb;
+    background-color: #eff6ff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="header-title">
+    <span>💡</span>
+    <h2>3. Оберіть слово за ситуацією</h2>
+  </div>
+
+  <div class="instruction">
+    Прочитайте ситуацію українською. Виберіть відповідне англійське слово або словосполучення.
+  </div>
+
+  <div class="questions-wrapper">
+
+    <!-- 1 -->
+    <div class="exercise-card" data-correct="an entrepreneur">
+      <div class="context-text">1. Олена має власний бізнес. Вона — ...</div>
+      <div class="buttons-row">
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[ˌɒn.trə.prəˈnɜːr]" onmouseenter="playAudio('an entrepreneur')">an entrepreneur</span>
+        </button>
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[ˈsæl.ər.i]" onmouseenter="playAudio('a salary')">a salary</span>
+        </button>
+      </div>
+      <div class="sentence-line">
+        <span>Послухати правильно:</span>
+        <button type="button" class="audio-btn" onclick="playAudio('Olena has her own business. She is an entrepreneur.')">🔊</button>
+      </div>
+      <div class="feedback-msg">Правильна відповідь: an entrepreneur</div>
+    </div>
+
+    <!-- 2 -->
+    <div class="exercise-card" data-correct="funding">
+      <div class="context-text">2. Компанії потрібні гроші для нового проєкту. Їй потрібне ...</div>
+      <div class="buttons-row">
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[ˈfʌn.dɪŋ]" onmouseenter="playAudio('funding')">funding</span>
+        </button>
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[ˌmæn.jəˈfæk.tʃər.ɪŋ]" onmouseenter="playAudio('manufacturing')">manufacturing</span>
+        </button>
+      </div>
+      <div class="sentence-line">
+        <span>Послухати правильно:</span>
+        <button type="button" class="audio-btn" onclick="playAudio('The company needs funding for a new project.')">🔊</button>
+      </div>
+      <div class="feedback-msg">Правильна відповідь: funding</div>
+    </div>
+
+    <!-- 3 -->
+    <div class="exercise-card" data-correct="an investor">
+      <div class="context-text">3. Людина вкладає гроші в бізнес. Це ...</div>
+      <div class="buttons-row">
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[ɪnˈves.tər]" onmouseenter="playAudio('an investor')">an investor</span>
+        </button>
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[ˈkɒn.trækt]" onmouseenter="playAudio('a contract')">a contract</span>
+        </button>
+      </div>
+      <div class="sentence-line">
+        <span>Послухати правильно:</span>
+        <button type="button" class="audio-btn" onclick="playAudio('A person who puts money into business is an investor.')">🔊</button>
+      </div>
+      <div class="feedback-msg">Правильна відповідь: an investor</div>
+    </div>
+
+    <!-- 4 -->
+    <div class="exercise-card" data-correct="salary">
+      <div class="context-text">4. Компанія щомісяця платить вам за роботу. Це ваша ...</div>
+      <div class="buttons-row">
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[ˈsæl.ər.i]" onmouseenter="playAudio('salary')">salary</span>
+        </button>
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[lɒs]" onmouseenter="playAudio('loss')">loss</span>
+        </button>
+      </div>
+      <div class="sentence-line">
+        <span>Послухати правильно:</span>
+        <button type="button" class="audio-btn" onclick="playAudio('The company pays you every month. This is your salary.')">🔊</button>
+      </div>
+      <div class="feedback-msg">Правильна відповідь: salary</div>
+    </div>
+
+    <!-- 5 -->
+    <div class="exercise-card" data-correct="set up a company">
+      <div class="context-text">5. Ви хочете відкрити власну компанію. Ви хочете ...</div>
+      <div class="buttons-row">
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[set ʌp ə ˈkʌm.pə.ni]" onmouseenter="playAudio('set up a company')">set up a company</span>
+        </button>
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[ɡəʊ ˈbæŋk.rʌpt]" onmouseenter="playAudio('go bankrupt')">go bankrupt</span>
+        </button>
+      </div>
+      <div class="sentence-line">
+        <span>Послухати правильно:</span>
+        <button type="button" class="audio-btn" onclick="playAudio('You want to set up a company.')">🔊</button>
+      </div>
+      <div class="feedback-msg">Правильна відповідь: set up a company</div>
+    </div>
+
+    <!-- 6 -->
+    <div class="exercise-card" data-correct="meet the deadline">
+      <div class="context-text">6. Ви закінчили звіт до встановленого терміну. Ви змогли ...</div>
+      <div class="buttons-row">
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[miːt ðə ˈded.laɪn]" onmouseenter="playAudio('meet the deadline')">meet the deadline</span>
+        </button>
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[breɪk ðə lɔː]" onmouseenter="playAudio('break the law')">break the law</span>
+        </button>
+      </div>
+      <div class="sentence-line">
+        <span>Послухати правильно:</span>
+        <button type="button" class="audio-btn" onclick="playAudio('You managed to meet the deadline.')">🔊</button>
+      </div>
+      <div class="feedback-msg">Правильна відповідь: meet the deadline</div>
+    </div>
+
+    <!-- 7 -->
+    <div class="exercise-card" data-correct="reach an agreement">
+      <div class="context-text">7. Після обговорення ви та клієнт погодили ціну. Ви змогли ...</div>
+      <div class="buttons-row">
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[riːtʃ ən əˈɡriː.mənt]" onmouseenter="playAudio('reach an agreement')">reach an agreement</span>
+        </button>
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[meɪk ə lɒs]" onmouseenter="playAudio('make a loss')">make a loss</span>
+        </button>
+      </div>
+      <div class="sentence-line">
+        <span>Послухати правильно:</span>
+        <button type="button" class="audio-btn" onclick="playAudio('You managed to reach an agreement.')">🔊</button>
+      </div>
+      <div class="feedback-msg">Правильна відповідь: reach an agreement</div>
+    </div>
+
+    <!-- 8 -->
+    <div class="exercise-card" data-correct="made a loss">
+      <div class="context-text">8. Компанія витратила більше, ніж отримала від продажів. Вона ...</div>
+      <div class="buttons-row">
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[meɪd ə lɒs]" onmouseenter="playAudio('made a loss')">made a loss</span>
+        </button>
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[meɪd ə ˈprɒf.ɪt]" onmouseenter="playAudio('made a profit')">made a profit</span>
+        </button>
+      </div>
+      <div class="sentence-line">
+        <span>Послухати правильно:</span>
+        <button type="button" class="audio-btn" onclick="playAudio('The company made a loss.')">🔊</button>
+      </div>
+      <div class="feedback-msg">Правильна відповідь: made a loss</div>
+    </div>
+
+    <!-- 9 -->
+    <div class="exercise-card" data-correct="save up money">
+      <div class="context-text">9. Ви відкладаєте частину зарплати на власний бізнес. Ви ...</div>
+      <div class="buttons-row">
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[seɪv ʌp ˈmʌn.i]" onmouseenter="playAudio('save up money')">save up money</span>
+        </button>
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[saɪn ə ˈkɒn.trækt]" onmouseenter="playAudio('sign a contract')">sign a contract</span>
+        </button>
+      </div>
+      <div class="sentence-line">
+        <span>Послухати правильно:</span>
+        <button type="button" class="audio-btn" onclick="playAudio('You save up money for your business.')">🔊</button>
+      </div>
+      <div class="feedback-msg">Правильна відповідь: save up money</div>
+    </div>
+
+    <!-- 10 -->
+    <div class="exercise-card" data-correct="take a risk">
+      <div class="context-text">10. Ви починаєте бізнес, хоча не впевнені в успіху. Ви вирішили ...</div>
+      <div class="buttons-row">
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[teɪk ə rɪsk]" onmouseenter="playAudio('take a risk')">take a risk</span>
+        </button>
+        <button type="button" class="btn-choice" onclick="selectOption(this)">
+          <span class="word-tooltip" data-ipa="[miːt ə ˈded.laɪn]" onmouseenter="playAudio('meet a deadline')">meet a deadline</span>
+        </button>
+      </div>
+      <div class="sentence-line">
+        <span>Послухати правильно:</span>
+        <button type="button" class="audio-btn" onclick="playAudio('You decided to take a risk.')">🔊</button>
+      </div>
+      <div class="feedback-msg">Правильна відповідь: take a risk</div>
+    </div>
+
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="action-btn btn-reset" onclick="resetAll()">Скинути 🔄</button>
+    <div class="score-display" id="scoreDisplay">Результат: 0 / 10</div>
+    <button type="button" class="action-btn btn-check" onclick="checkAll()">Перевірити ✔</button>
+  </div>
+</div>
+
+<script>
+  function selectOption(btn) {
+    const parentRow = btn.closest('.buttons-row');
+    const siblingBtns = parentRow.querySelectorAll('.btn-choice');
+    
+    siblingBtns.forEach(b => {
+      b.removeAttribute('data-selected');
+      b.classList.remove('is-correct', 'is-wrong');
+    });
+    
+    btn.setAttribute('data-selected', 'true');
+
+    const card = btn.closest('.exercise-card');
+    const feedback = card.querySelector('.feedback-msg');
+    if (feedback) feedback.style.display = 'none';
+  }
+
+  function checkAll() {
+    let score = 0;
+    const cards = document.querySelectorAll('.exercise-card');
+
+    cards.forEach(card => {
+      const correctAns = card.getAttribute('data-correct');
+      const selectedBtn = card.querySelector('.btn-choice[data-selected="true"]');
+      const allBtns = card.querySelectorAll('.btn-choice');
+      const feedback = card.querySelector('.feedback-msg');
+
+      allBtns.forEach(b => b.classList.remove('is-correct', 'is-wrong'));
+
+      if (selectedBtn) {
+        const textVal = selectedBtn.innerText.trim();
+        if (textVal === correctAns) {
+          score++;
+          selectedBtn.classList.add('is-correct');
+          if (feedback) feedback.style.display = 'none';
+        } else {
+          selectedBtn.classList.add('is-wrong');
+          allBtns.forEach(b => {
+            if (b.innerText.trim() === correctAns) b.classList.add('is-correct');
+          });
+          if (feedback) feedback.style.display = 'block';
+        }
+      } else {
+        allBtns.forEach(b => {
+          if (b.innerText.trim() === correctAns) b.classList.add('is-correct');
+        });
+        if (feedback) feedback.style.display = 'block';
+      }
+    });
+
+    const scoreDiv = document.getElementById('scoreDisplay');
+    scoreDiv.innerText = 'Результат: ' + score + ' / ' + cards.length;
+    scoreDiv.style.display = 'block';
+  }
+
+  function resetAll() {
+    document.querySelectorAll('.btn-choice').forEach(b => {
+      b.removeAttribute('data-selected');
+      b.classList.remove('is-correct', 'is-wrong');
+    });
+    document.querySelectorAll('.feedback-msg').forEach(f => f.style.display = 'none');
+    document.getElementById('scoreDisplay').style.display = 'none';
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
