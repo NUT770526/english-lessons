@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4. Скажіть про себе — Business English</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .app-container {
+    max-width: 840px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border: 1px solid #cbd5e1;
+  }
+
+  .header-title {
+    font-size: 1.6rem;
+    color: #1e3a8a;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .step-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #1e3a8a;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .instruction {
+    background-color: #eff6ff;
+    border-left: 5px solid #2563eb;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 16px;
+  }
+
+  /* Table Step 1 & Step 2 */
+  .self-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+  }
+
+  .self-table th {
+    text-align: left;
+    padding: 10px 14px;
+    background-color: #f1f5f9;
+    color: #475569;
+    font-size: 0.95rem;
+    border-bottom: 2px solid #cbd5e1;
+  }
+
+  .self-table td {
+    padding: 14px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+  }
+
+  .eng-column {
+    transition: opacity 0.3s ease;
+  }
+
+  .eng-column.hidden-text {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .option-toggle-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+
+  .btn-opt {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #0f172a;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .btn-opt:hover {
+    border-color: #2563eb;
+    background-color: #eff6ff;
+  }
+
+  .btn-opt[data-selected="true"] {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+  }
+
+  /* Tooltip logic */
+  .word-tooltip {
+    border-bottom: 2px dotted #2563eb;
+    color: #2563eb;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-ipa);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+
+  .audio-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  .ukr-text {
+    font-weight: 600;
+    color: #334155;
+    font-size: 0.98rem;
+  }
+
+  /* Step 3 List */
+  .memory-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .memory-item {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    padding: 12px 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .item-num {
+    font-weight: 700;
+    color: #64748b;
+    width: 20px;
+  }
+
+  .ukr-label {
+    font-weight: 700;
+    color: #1e293b;
+    min-width: 180px;
+  }
+
+  .dash {
+    color: #94a3b8;
+    font-weight: 700;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #0f172a;
+    width: 140px;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  input[type="text"]:focus {
+    border-color: #2563eb;
+  }
+
+  input[type="text"].is-correct {
+    border-color: #16a34a !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d !important;
+  }
+
+  input[type="text"].is-wrong {
+    border-color: #dc2626 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c !important;
+  }
+
+  .target-phrase {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #0f172a;
+  }
+
+  .feedback-msg {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #dc2626;
+    width: 100%;
+    display: none;
+    margin-top: 4px;
+  }
+
+  .toggle-hide-btn {
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid #2563eb;
+    background-color: #eff6ff;
+    color: #2563eb;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .toggle-hide-btn:hover {
+    background-color: #2563eb;
+    color: #ffffff;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .action-btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-check {
+    background-color: #2563eb;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background-color: #1d4ed8;
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .score-display {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #2563eb;
+    background-color: #eff6ff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="header-title">
+    <span>🗣️</span>
+    <h2>4. Скажіть про себе — потім згадайте без підказки</h2>
+  </div>
+
+  <!-- Крок 1 -->
+  <div class="step-title">
+    <span>Крок 1. Прочитайте речення та оберіть правдивий для себе варіант.</span>
+  </div>
+  <div class="instruction">
+    Натисніть на варіант, який підходить саме вам. Наводьте на англійські слова, щоб побачити транскрипцію та прослухати вимову!
+  </div>
+
+  <table class="self-table">
+    <thead>
+      <tr>
+        <th style="width: 55%;">English</th>
+        <th style="width: 45%;">Українською</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Row 1 -->
+      <tr>
+        <td>
+          <div class="eng-column">
+            <div class="option-toggle-group">
+              <button type="button" class="btn-opt" onclick="togglePersonal(this)">I want</button>
+              <span>/</span>
+              <button type="button" class="btn-opt" onclick="togglePersonal(this)">don't want</button>
+              <span>to be</span>
+            </div>
+            <div>
+              <span>an</span>
+              <span class="word-tooltip" data-ipa="[ˌɒn.trə.prəˈnɜːr]" onmouseenter="playAudio('entrepreneur')">entrepreneur</span>.
+              <button type="button" class="audio-btn" onclick="playAudio('I want to be an entrepreneur.')">🔊</button>
+            </div>
+          </div>
+        </td>
+        <td class="ukr-text">Я хочу / не хочу бути підприємцем.</td>
+      </tr>
+
+      <!-- Row 2 -->
+      <tr>
+        <td>
+          <div class="eng-column">
+            <div class="option-toggle-group">
+              <button type="button" class="btn-opt" onclick="togglePersonal(this)">I want</button>
+              <span>/</span>
+              <button type="button" class="btn-opt" onclick="togglePersonal(this)">don't want</button>
+              <span>to</span>
+            </div>
+            <div>
+              <span class="word-tooltip" data-ipa="[rʌn]" onmouseenter="playAudio('run')">run</span>
+              <span>a company.</span>
+              <button type="button" class="audio-btn" onclick="playAudio('I want to run a company.')">🔊</button>
+            </div>
+          </div>
+        </td>
+        <td class="ukr-text">Я хочу / не хочу керувати компанією.</td>
+      </tr>
+
+      <!-- Row 3 -->
+      <tr>
+        <td>
+          <div class="eng-column">
+            <div class="option-toggle-group">
+              <button type="button" class="btn-opt" onclick="togglePersonal(this)">I work</button>
+              <span>/</span>
+              <button type="button" class="btn-opt" onclick="togglePersonal(this)">don't work</button>
+            </div>
+            <div>
+              <span>in</span>
+              <span class="word-tooltip" data-ipa="[ˌmæn.jəˈfæk.tʃər.ɪŋ]" onmouseenter="playAudio('manufacturing')">manufacturing</span>.
+              <button type="button" class="audio-btn" onclick="playAudio('I work in manufacturing.')">🔊</button>
+            </div>
+          </div>
+        </td>
+        <td class="ukr-text">Я працюю / не працюю у виробництві.</td>
+      </tr>
+
+      <!-- Row 4 -->
+      <tr>
+        <td>
+          <div class="eng-column">
+            <div class="option-toggle-group">
+              <button type="button" class="btn-opt" onclick="togglePersonal(this)">I save up</button>
+              <span>/</span>
+              <button type="button" class="btn-opt" onclick="togglePersonal(this)">don't save up</button>
+            </div>
+            <div>
+              <span class="word-tooltip" data-ipa="[ˈmʌn.i]" onmouseenter="playAudio('money')">money</span>
+              <span>every month.</span>
+              <button type="button" class="audio-btn" onclick="playAudio('I save up money every month.')">🔊</button>
+            </div>
+          </div>
+        </td>
+        <td class="ukr-text">Я накопичую / не накопичую гроші щомісяця.</td>
+      </tr>
+
+      <!-- Row 5 -->
+      <tr>
+        <td>
+          <div class="eng-column">
+            <div class="option-toggle-group">
+              <button type="button" class="btn-opt" onclick="togglePersonal(this)">I sometimes</button>
+              <span>/</span>
+              <button type="button" class="btn-opt" onclick="togglePersonal(this)">never</button>
+            </div>
+            <div>
+              <span class="word-tooltip" data-ipa="[saɪn ˈkɒn.trækts]" onmouseenter="playAudio('sign contracts')">sign contracts</span>
+              <span>at work.</span>
+              <button type="button" class="audio-btn" onclick="playAudio('I sometimes sign contracts at work.')">🔊</button>
+            </div>
+          </div>
+        </td>
+        <td class="ukr-text">Я іноді / ніколи не підписую договори на роботі.</td>
+      </tr>
+
+      <!-- Row 6 -->
+      <tr>
+        <td>
+          <div class="eng-column">
+            <div class="option-toggle-group">
+              <button type="button" class="btn-opt" onclick="togglePersonal(this)">I like</button>
+              <span>/</span>
+              <button type="button" class="btn-opt" onclick="togglePersonal(this)">don't like</button>
+            </div>
+            <div>
+              <span>to</span>
+              <span class="word-tooltip" data-ipa="[teɪk rɪsks]" onmouseenter="playAudio('take risks')">take risks</span>.
+              <button type="button" class="audio-btn" onclick="playAudio('I like to take risks.')">🔊</button>
+            </div>
+          </div>
+        </td>
+        <td class="ukr-text">Я люблю / не люблю ризикувати.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Крок 2 -->
+  <div class="step-title">
+    <span>Крок 2. Тренажер пам'яті</span>
+    <button type="button" class="toggle-hide-btn" onclick="toggleEnglishColumn()">Приховати англійську колонку 👁️</button>
+  </div>
+  <div class="instruction">
+    Спробуйте сказати свої речення англійською, дивлячись лише на український переклад.
+  </div>
+
+  <!-- Крок 3 -->
+  <div class="step-title">
+    <span>Крок 3. Доповніть фрази з пам'яті:</span>
+  </div>
+
+  <div class="memory-list">
+    <!-- 1 -->
+    <div class="memory-item" data-correct="set up">
+      <span class="item-num">1.</span>
+      <span class="ukr-label">заснувати компанію</span>
+      <span class="dash">—</span>
+      <input type="text" placeholder="пропущене слово" autocomplete="off" spellcheck="false">
+      <span class="target-phrase">a company</span>
+      <button type="button" class="audio-btn" onclick="playAudio('set up a company')">🔊</button>
+      <div class="feedback-msg">Правильно: set up</div>
+    </div>
+
+    <!-- 2 -->
+    <div class="memory-item" data-correct="run">
+      <span class="item-num">2.</span>
+      <span class="ukr-label">керувати компанією</span>
+      <span class="dash">—</span>
+      <input type="text" placeholder="пропущене слово" autocomplete="off" spellcheck="false">
+      <span class="target-phrase">a company</span>
+      <button type="button" class="audio-btn" onclick="playAudio('run a company')">🔊</button>
+      <div class="feedback-msg">Правильно: run</div>
+    </div>
+
+    <!-- 3 -->
+    <div class="memory-item" data-correct="sign">
+      <span class="item-num">3.</span>
+      <span class="ukr-label">підписати договір</span>
+      <span class="dash">—</span>
+      <input type="text" placeholder="пропущене слово" autocomplete="off" spellcheck="false">
+      <span class="target-phrase">a contract</span>
+      <button type="button" class="audio-btn" onclick="playAudio('sign a contract')">🔊</button>
+      <div class="feedback-msg">Правильно: sign</div>
+    </div>
+
+    <!-- 4 -->
+    <div class="memory-item" data-correct="reach">
+      <span class="item-num">4.</span>
+      <span class="ukr-label">дійти згоди</span>
+      <span class="dash">—</span>
+      <input type="text" placeholder="пропущене слово" autocomplete="off" spellcheck="false">
+      <span class="target-phrase">an agreement</span>
+      <button type="button" class="audio-btn" onclick="playAudio('reach an agreement')">🔊</button>
+      <div class="feedback-msg">Правильно: reach</div>
+    </div>
+
+    <!-- 5 -->
+    <div class="memory-item" data-correct="save up">
+      <span class="item-num">5.</span>
+      <span class="ukr-label">накопичувати гроші</span>
+      <span class="dash">—</span>
+      <input type="text" placeholder="пропущене слово" autocomplete="off" spellcheck="false">
+      <span class="target-phrase">money</span>
+      <button type="button" class="audio-btn" onclick="playAudio('save up money')">🔊</button>
+      <div class="feedback-msg">Правильно: save up</div>
+    </div>
+
+    <!-- 6 -->
+    <div class="memory-item" data-correct="take">
+      <span class="item-num">6.</span>
+      <span class="ukr-label">ризикувати</span>
+      <span class="dash">—</span>
+      <input type="text" placeholder="пропущене слово" autocomplete="off" spellcheck="false">
+      <span class="target-phrase">a risk</span>
+      <button type="button" class="audio-btn" onclick="playAudio('take a risk')">🔊</button>
+      <div class="feedback-msg">Правильно: take</div>
+    </div>
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="action-btn btn-reset" onclick="resetAll()">Скинути 🔄</button>
+    <div class="score-display" id="scoreDisplay">Результат Кроку 3: 0 / 6</div>
+    <button type="button" class="action-btn btn-check" onclick="checkStep3()">Перевірити Крок 3 ✔</button>
+  </div>
+</div>
+
+<script>
+  let isHidden = false;
+
+  function togglePersonal(btn) {
+    const parent = btn.closest('.option-toggle-group');
+    const siblingBtns = parent.querySelectorAll('.btn-opt');
+    siblingBtns.forEach(b => b.removeAttribute('data-selected'));
+    btn.setAttribute('data-selected', 'true');
+  }
+
+  function toggleEnglishColumn() {
+    const columns = document.querySelectorAll('.eng-column');
+    const btn = document.querySelector('.toggle-hide-btn');
+    isHidden = !isHidden;
+
+    columns.forEach(col => {
+      if (isHidden) {
+        col.classList.add('hidden-text');
+      } else {
+        col.classList.remove('hidden-text');
+      }
+    });
+
+    btn.innerText = isHidden ? 'Показати англійську колонку 👁️' : 'Приховати англійську колонку 👁️';
+  }
+
+  function checkStep3() {
+    let score = 0;
+    const items = document.querySelectorAll('.memory-item');
+
+    items.forEach(item => {
+      const input = item.querySelector('input[type="text"]');
+      const correctVal = item.getAttribute('data-correct').toLowerCase().trim();
+      const userVal = input.value.toLowerCase().trim();
+      const feedback = item.querySelector('.feedback-msg');
+
+      input.classList.remove('is-correct', 'is-wrong');
+
+      if (userVal === correctVal) {
+        score++;
+        input.classList.add('is-correct');
+        if (feedback) feedback.style.display = 'none';
+      } else {
+        input.classList.add('is-wrong');
+        if (feedback) feedback.style.display = 'block';
+      }
+    });
+
+    const scoreDiv = document.getElementById('scoreDisplay');
+    scoreDiv.innerText = 'Результат Кроку 3: ' + score + ' / ' + items.length;
+    scoreDiv.style.display = 'block';
+  }
+
+  function resetAll() {
+    document.querySelectorAll('.btn-opt').forEach(b => b.removeAttribute('data-selected'));
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+      input.value = '';
+      input.classList.remove('is-correct', 'is-wrong');
+    });
+    document.querySelectorAll('.feedback-msg').forEach(f => f.style.display = 'none');
+    document.getElementById('scoreDisplay').style.display = 'none';
+    
+    if (isHidden) {
+      toggleEnglishColumn();
+    }
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
