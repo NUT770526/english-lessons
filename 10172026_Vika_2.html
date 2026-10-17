@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2. Допоможи Софії розповісти про себе 🌟</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fefce8;
+    color: #451a03;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .app-container {
+    max-width: 840px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(217, 119, 6, 0.08);
+    border: 2px solid #fde68a;
+  }
+
+  .header-title {
+    font-size: 1.6rem;
+    color: #b45309;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+  }
+
+  .instruction {
+    background-color: #fef3c7;
+    border-left: 5px solid #f59e0b;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #78350f;
+    margin-bottom: 24px;
+  }
+
+  .block-section {
+    margin-bottom: 28px;
+    background-color: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  .block-header {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #b45309;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .word-bank {
+    background-color: #ffffff;
+    border: 2px dashed #fcd34d;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    color: #d97706;
+    margin-bottom: 18px;
+    font-size: 1rem;
+  }
+
+  .phrases-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .phrase-row {
+    background-color: #ffffff;
+    border: 1px solid #fde68a;
+    padding: 12px 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    transition: all 0.2s;
+  }
+
+  .phrase-row:hover {
+    border-color: #f59e0b;
+    background-color: #fffdf5;
+  }
+
+  .phrase-num {
+    font-weight: 700;
+    color: #b45309;
+    width: 25px;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 2px solid #fde68a;
+    background-color: #fffdf5;
+    color: #78350f;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  select:focus {
+    border-color: #f59e0b;
+    background-color: #ffffff;
+  }
+
+  .sentence-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #451a03;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  /* Tooltip logic for TRANSCRIPTION ONLY */
+  .word-tooltip {
+    border-bottom: 2px dotted #f59e0b;
+    color: #b45309;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-ipa);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #78350f;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    margin-left: auto;
+  }
+
+  .audio-btn:hover {
+    background-color: #fef3c7;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px solid #fde68a;
+  }
+
+  .action-btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-reset {
+    background-color: #fef3c7;
+    color: #78350f;
+  }
+
+  .btn-reset:hover {
+    background-color: #fde68a;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="header-title">
+    <span>🌟</span>
+    <h2>2. Допоможи Софії розповісти про себе</h2>
+  </div>
+
+  <div class="instruction">
+    Встав слова з рамки. Кожне слово або словосполучення використай <strong>один раз у своєму блоці</strong>. Наводь курсор на англійські слова, щоб побачити транскрипцію та прослухати вимову!
+  </div>
+
+  <!-- Блок А -->
+  <div class="block-section">
+    <div class="block-header">🌼 Блок А</div>
+    <div class="word-bank">
+      clever • helpful • funny • sporty • friendly
+    </div>
+
+    <div class="phrases-list">
+      <!-- 1 -->
+      <div class="phrase-row">
+        <span class="phrase-num">1.</span>
+        <div class="sentence-text">
+          <span>My sister is</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="clever">clever</option>
+            <option value="helpful">helpful</option>
+            <option value="funny">funny</option>
+            <option value="sporty">sporty</option>
+            <option value="friendly">friendly</option>
+          </select>
+          <span>. She helps me with my homework.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('My sister is helpful. She helps me with my homework.')">🔊</button>
+      </div>
+
+      <!-- 2 -->
+      <div class="phrase-row">
+        <span class="phrase-num">2.</span>
+        <div class="sentence-text">
+          <span>My brother is</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="clever">clever</option>
+            <option value="helpful">helpful</option>
+            <option value="funny">funny</option>
+            <option value="sporty">sporty</option>
+            <option value="friendly">friendly</option>
+          </select>
+          <span>. He loves football.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('My brother is sporty. He loves football.')">🔊</button>
+      </div>
+
+      <!-- 3 -->
+      <div class="phrase-row">
+        <span class="phrase-num">3.</span>
+        <div class="sentence-text">
+          <span>My friend is</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="clever">clever</option>
+            <option value="helpful">helpful</option>
+            <option value="funny">funny</option>
+            <option value="sporty">sporty</option>
+            <option value="friendly">friendly</option>
+          </select>
+          <span>. She</span>
+          <span class="word-tooltip" data-ipa="[smaɪlz]" onmouseenter="playAudio('smiles')">smiles</span>
+          <span>and says hello to everyone.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('My friend is friendly. She smiles and says hello to everyone.')">🔊</button>
+      </div>
+
+      <!-- 4 -->
+      <div class="phrase-row">
+        <span class="phrase-num">4.</span>
+        <div class="sentence-text">
+          <span>My dad is</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="clever">clever</option>
+            <option value="helpful">helpful</option>
+            <option value="funny">funny</option>
+            <option value="sporty">sporty</option>
+            <option value="friendly">friendly</option>
+          </select>
+          <span>. He makes me laugh.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('My dad is funny. He makes me laugh.')">🔊</button>
+      </div>
+
+      <!-- 5 -->
+      <div class="phrase-row">
+        <span class="phrase-num">5.</span>
+        <div class="sentence-text">
+          <span>My mum is</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="clever">clever</option>
+            <option value="helpful">helpful</option>
+            <option value="funny">funny</option>
+            <option value="sporty">sporty</option>
+            <option value="friendly">friendly</option>
+          </select>
+          <span>. She knows the answers to</span>
+          <span class="word-tooltip" data-ipa="[ˈdɪf.ɪ.kəlt]" onmouseenter="playAudio('difficult')">difficult</span>
+          <span>questions.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('My mum is clever. She knows the answers to difficult questions.')">🔊</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Блок Б -->
+  <div class="block-section">
+    <div class="block-header">☀️ Блок Б</div>
+    <div class="word-bank">
+      in the evening • breakfast • in the morning • in the afternoon
+    </div>
+
+    <div class="phrases-list">
+      <!-- 6 -->
+      <div class="phrase-row">
+        <span class="phrase-num">6.</span>
+        <div class="sentence-text">
+          <span>I get up at seven</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="in the evening">in the evening</option>
+            <option value="breakfast">breakfast</option>
+            <option value="in the morning">in the morning</option>
+            <option value="in the afternoon">in the afternoon</option>
+          </select>
+          <span>.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('I get up at seven in the morning.')">🔊</button>
+      </div>
+
+      <!-- 7 -->
+      <div class="phrase-row">
+        <span class="phrase-num">7.</span>
+        <div class="sentence-text">
+          <span>My</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="in the evening">in the evening</option>
+            <option value="breakfast">breakfast</option>
+            <option value="in the morning">in the morning</option>
+            <option value="in the afternoon">in the afternoon</option>
+          </select>
+          <span>is ready. There is an egg and some bread.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('My breakfast is ready. There is an egg and some bread.')">🔊</button>
+      </div>
+
+      <!-- 8 -->
+      <div class="phrase-row">
+        <span class="phrase-num">8.</span>
+        <div class="sentence-text">
+          <span>After school, I do my homework</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="in the evening">in the evening</option>
+            <option value="breakfast">breakfast</option>
+            <option value="in the morning">in the morning</option>
+            <option value="in the afternoon">in the afternoon</option>
+          </select>
+          <span>.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('After school, I do my homework in the afternoon.')">🔊</button>
+      </div>
+
+      <!-- 9 -->
+      <div class="phrase-row">
+        <span class="phrase-num">9.</span>
+        <div class="sentence-text">
+          <span>I watch TV with my family</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="in the evening">in the evening</option>
+            <option value="breakfast">breakfast</option>
+            <option value="in the morning">in the morning</option>
+            <option value="in the afternoon">in the afternoon</option>
+          </select>
+          <span>, after dinner.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('I watch TV with my family in the evening, after dinner.')">🔊</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Блок В -->
+  <div class="block-section">
+    <div class="block-header">🌻 Блок В</div>
+    <div class="word-bank">
+      need • smile at • have breakfast • am like
+    </div>
+
+    <div class="phrases-list">
+      <!-- 10 -->
+      <div class="phrase-row">
+        <span class="phrase-num">10.</span>
+        <div class="sentence-text">
+          <span>I</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="need">need</option>
+            <option value="smile at">smile at</option>
+            <option value="have breakfast">have breakfast</option>
+            <option value="am like">am like</option>
+          </select>
+          <span>a pen to write my name.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('I need a pen to write my name.')">🔊</button>
+      </div>
+
+      <!-- 11 -->
+      <div class="phrase-row">
+        <span class="phrase-num">11.</span>
+        <div class="sentence-text">
+          <span>I</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="need">need</option>
+            <option value="smile at">smile at</option>
+            <option value="have breakfast">have breakfast</option>
+            <option value="am like">am like</option>
+          </select>
+          <span>my friend when I see her.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('I smile at my friend when I see her.')">🔊</button>
+      </div>
+
+      <!-- 12 -->
+      <div class="phrase-row">
+        <span class="phrase-num">12.</span>
+        <div class="sentence-text">
+          <span>I</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="need">need</option>
+            <option value="smile at">smile at</option>
+            <option value="have breakfast">have breakfast</option>
+            <option value="am like">am like</option>
+          </select>
+          <span>at eight every morning.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('I have breakfast at eight every morning.')">🔊</button>
+      </div>
+
+      <!-- 13 -->
+      <div class="phrase-row">
+        <span class="phrase-num">13.</span>
+        <div class="sentence-text">
+          <span>I</span>
+          <select>
+            <option value="">-- обери --</option>
+            <option value="need">need</option>
+            <option value="smile at">smile at</option>
+            <option value="have breakfast">have breakfast</option>
+            <option value="am like">am like</option>
+          </select>
+          <span>my mum. We are both friendly.</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('I am like my mum. We are both friendly.')">🔊</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="action-btn btn-reset" onclick="resetAll()">Скинути 🔄</button>
+  </div>
+</div>
+
+<script>
+  function resetAll() {
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => {
+      select.value = '';
+    });
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
