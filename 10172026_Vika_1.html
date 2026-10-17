@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>З'єднай слово з перекладом ✨</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fdf2f8;
+    color: #4a044e;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .app-container {
+    max-width: 840px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(219, 39, 119, 0.08);
+    border: 2px solid #fbcfe8;
+  }
+
+  .header-title {
+    font-size: 1.7rem;
+    color: #be185d;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+  }
+
+  .instruction {
+    background-color: #fce7f3;
+    border-left: 5px solid #ec4899;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #9d174d;
+    margin-bottom: 24px;
+  }
+
+  .block-section {
+    margin-bottom: 28px;
+    background-color: #fff1f2;
+    border: 1px solid #fecdd3;
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  .block-header {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #be185d;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .matching-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+  }
+
+  .matching-table th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    color: #9d174d;
+    border-bottom: 2px solid #fbcfe8;
+  }
+
+  .matching-row {
+    background-color: #ffffff;
+    border-radius: 10px;
+    transition: all 0.2s;
+  }
+
+  .matching-row:hover {
+    background-color: #fdf2f8;
+  }
+
+  .matching-row td {
+    padding: 10px 12px;
+    vertical-align: middle;
+  }
+
+  .num-cell {
+    font-weight: 700;
+    color: #be185d;
+    width: 35px;
+  }
+
+  /* Tooltip logic for TRANSCRIPTION ONLY */
+  .word-tooltip {
+    border-bottom: 2px dotted #ec4899;
+    color: #be185d;
+    font-weight: 700;
+    font-size: 1.05rem;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-ipa);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #831843;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 2px solid #fbcfe8;
+    background-color: #ffffff;
+    color: #831843;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  select:focus {
+    border-color: #ec4899;
+  }
+
+  select.is-correct {
+    border-color: #16a34a !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d !important;
+  }
+
+  select.is-wrong {
+    border-color: #dc2626 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c !important;
+  }
+
+  .ukr-cell {
+    transition: opacity 0.3s ease;
+  }
+
+  .ukr-cell.hidden-text {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .ukr-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #701a75;
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    margin-left: 6px;
+  }
+
+  .audio-btn:hover {
+    background-color: #fce7f3;
+  }
+
+  .tip-card {
+    background-color: #fdf2f8;
+    border: 2px dashed #f472b6;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 0.98rem;
+    color: #831843;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .toggle-btn {
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 2px solid #ec4899;
+    background-color: #ffffff;
+    color: #be185d;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .toggle-btn:hover {
+    background-color: #ec4899;
+    color: #ffffff;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px solid #fbcfe8;
+  }
+
+  .action-btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-check {
+    background-color: #ec4899;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background-color: #db2777;
+  }
+
+  .btn-reset {
+    background-color: #fce7f3;
+    color: #831843;
+  }
+
+  .btn-reset:hover {
+    background-color: #fbcfe8;
+  }
+
+  .score-display {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #be185d;
+    background-color: #fce7f3;
+    padding: 6px 16px;
+    border-radius: 20px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="header-title">
+    <span>🌸</span>
+    <h2>З'єднай слово з перекладом</h2>
+  </div>
+
+  <div class="instruction">
+    З'єднай слово з перекладом. Наводь курсор на англійське слово, щоб побачити транскрипцію та прослухати вимову!
+  </div>
+
+  <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+    <button type="button" class="toggle-btn" onclick="toggleUkrainian()">Приховати українські слова 👁️</button>
+  </div>
+
+  <!-- Блок А -->
+  <div class="block-section">
+    <div class="block-header">🎀 Блок А</div>
+    
+    <table class="matching-table">
+      <thead>
+        <tr>
+          <th style="width: 5%;">№</th>
+          <th style="width: 35%;">English</th>
+          <th style="width: 20%;">Літера</th>
+          <th style="width: 40%;">Українською</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- A1 -->
+        <tr class="matching-row">
+          <td class="num-cell">1</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[ˈklev.ər]" onmouseenter="playAudio('clever')">clever</span>
+            <button type="button" class="audio-btn" onclick="playAudio('clever')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="В">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">А — кумедний</span></td>
+        </tr>
+
+        <!-- A2 -->
+        <tr class="matching-row">
+          <td class="num-cell">2</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[ˈfrend.li]" onmouseenter="playAudio('friendly')">friendly</span>
+            <button type="button" class="audio-btn" onclick="playAudio('friendly')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="Ґ">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">Б — спортивний</span></td>
+        </tr>
+
+        <!-- A3 -->
+        <tr class="matching-row">
+          <td class="num-cell">3</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[ˈfʌn.i]" onmouseenter="playAudio('funny')">funny</span>
+            <button type="button" class="audio-btn" onclick="playAudio('funny')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="А">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">В — розумний</span></td>
+        </tr>
+
+        <!-- A4 -->
+        <tr class="matching-row">
+          <td class="num-cell">4</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[ˈhelp.fəl]" onmouseenter="playAudio('helpful')">helpful</span>
+            <button type="button" class="audio-btn" onclick="playAudio('helpful')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="Д">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">Г — вродливий; гарний</span></td>
+        </tr>
+
+        <!-- A5 -->
+        <tr class="matching-row">
+          <td class="num-cell">5</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[ˈspɔː.ti]" onmouseenter="playAudio('sporty')">sporty</span>
+            <button type="button" class="audio-btn" onclick="playAudio('sporty')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="Б">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">Ґ — привітний</span></td>
+        </tr>
+
+        <!-- A6 -->
+        <tr class="matching-row">
+          <td class="num-cell">6</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[ˈprɪt.i]" onmouseenter="playAudio('pretty')">pretty</span>
+            <button type="button" class="audio-btn" onclick="playAudio('pretty')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="Г">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">Д — готовий допомогти</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Блок Б -->
+  <div class="block-section">
+    <div class="block-header">🌷 Блок Б</div>
+
+    <table class="matching-table">
+      <thead>
+        <tr>
+          <th style="width: 5%;">№</th>
+          <th style="width: 35%;">English</th>
+          <th style="width: 20%;">Літера</th>
+          <th style="width: 40%;">Українською</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- B1 -->
+        <tr class="matching-row">
+          <td class="num-cell">1</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[bɪɡ]" onmouseenter="playAudio('big')">big</span>
+            <button type="button" class="audio-btn" onclick="playAudio('big')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="В">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+              <option value="Е">Е</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">А — новий</span></td>
+        </tr>
+
+        <!-- B2 -->
+        <tr class="matching-row">
+          <td class="num-cell">2</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[əʊld]" onmouseenter="playAudio('old')">old</span>
+            <button type="button" class="audio-btn" onclick="playAudio('old')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="Ґ">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+              <option value="Е">Е</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">Б — правильний</span></td>
+        </tr>
+
+        <!-- B3 -->
+        <tr class="matching-row">
+          <td class="num-cell">3</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[smɔːl]" onmouseenter="playAudio('small')">small</span>
+            <button type="button" class="audio-btn" onclick="playAudio('small')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="Д">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+              <option value="Е">Е</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">В — великий</span></td>
+        </tr>
+
+        <!-- B4 -->
+        <tr class="matching-row">
+          <td class="num-cell">4</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[njuː]" onmouseenter="playAudio('new')">new</span>
+            <button type="button" class="audio-btn" onclick="playAudio('new')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="А">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+              <option value="Е">Е</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">Г — досить новий</span></td>
+        </tr>
+
+        <!-- B5 -->
+        <tr class="matching-row">
+          <td class="num-cell">5</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[kəˈrekt]" onmouseenter="playAudio('correct')">correct</span>
+            <button type="button" class="audio-btn" onclick="playAudio('correct')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="Б">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+              <option value="Е">Е</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">Ґ — старий</span></td>
+        </tr>
+
+        <!-- B6 -->
+        <tr class="matching-row">
+          <td class="num-cell">6</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[ˈprɪt.i əʊld]" onmouseenter="playAudio('pretty old')">pretty old</span>
+            <button type="button" class="audio-btn" onclick="playAudio('pretty old')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="Е">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+              <option value="Е">Е</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">Д — маленький</span></td>
+        </tr>
+
+        <!-- B7 -->
+        <tr class="matching-row">
+          <td class="num-cell">7</td>
+          <td>
+            <span class="word-tooltip" data-ipa="[ˈprɪt.i njuː]" onmouseenter="playAudio('pretty new')">pretty new</span>
+            <button type="button" class="audio-btn" onclick="playAudio('pretty new')">🔊</button>
+          </td>
+          <td>
+            <select data-correct="Г">
+              <option value="">--</option>
+              <option value="А">А</option><option value="Б">Б</option><option value="В">В</option>
+              <option value="Г">Г</option><option value="Ґ">Ґ</option><option value="Д">Д</option>
+              <option value="Е">Е</option>
+            </select>
+          </td>
+          <td class="ukr-cell"><span class="ukr-text">Е — досить старий</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tip-card">
+    💡 <strong>Підказка:</strong> <em>Pretty</em> означає «гарний», але <em>pretty old / pretty new</em> — означає «досить старий / досить новий»!
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="action-btn btn-reset" onclick="resetAll()">Скинути 🔄</button>
+    <div class="score-display" id="scoreDisplay">Результат: 0 / 13</div>
+    <button type="button" class="action-btn btn-check" onclick="checkAll()">Перевірити ✔</button>
+  </div>
+</div>
+
+<script>
+  let isUkrHidden = false;
+
+  function toggleUkrainian() {
+    isUkrHidden = !isUkrHidden;
+    const ukrCells = document.querySelectorAll('.ukr-cell');
+    const btn = document.querySelector('.toggle-btn');
+
+    ukrCells.forEach(cell => {
+      if (isUkrHidden) {
+        cell.classList.add('hidden-text');
+      } else {
+        cell.classList.remove('hidden-text');
+      }
+    });
+
+    btn.innerText = isUkrHidden ? 'Показати українські слова 👁️' : 'Приховати українські слова 👁️';
+  }
+
+  function checkAll() {
+    let score = 0;
+    const selects = document.querySelectorAll('select');
+
+    selects.forEach(select => {
+      const correctVal = select.getAttribute('data-correct');
+      const userVal = select.value;
+
+      select.classList.remove('is-correct', 'is-wrong');
+
+      if (userVal === correctVal) {
+        score++;
+        select.classList.add('is-correct');
+      } else {
+        select.classList.add('is-wrong');
+      }
+    });
+
+    const scoreDiv = document.getElementById('scoreDisplay');
+    scoreDiv.innerText = 'Результат: ' + score + ' / ' + selects.length;
+    scoreDiv.style.display = 'block';
+  }
+
+  function resetAll() {
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('is-correct', 'is-wrong');
+    });
+    document.getElementById('scoreDisplay').style.display = 'none';
+
+    if (isUkrHidden) {
+      toggleUkrainian();
+    }
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
