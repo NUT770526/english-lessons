@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3. Одне речення — три форми — Business English</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .app-container {
+    max-width: 860px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border: 1px solid #cbd5e1;
+  }
+
+  .header-title {
+    font-size: 1.6rem;
+    color: #1e3a8a;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .instruction {
+    background-color: #eff6ff;
+    border-left: 5px solid #2563eb;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 24px;
+  }
+
+  .questions-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .exercise-card {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .exercise-card:hover {
+    border-color: #93c5fd;
+  }
+
+  .sentence-line {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .item-num {
+    color: #64748b;
+    font-weight: 700;
+  }
+
+  .form-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 20px;
+    flex-wrap: wrap;
+  }
+
+  .form-sign {
+    font-weight: 800;
+    color: #2563eb;
+    width: 15px;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #0f172a;
+    outline: none;
+    transition: all 0.2s;
+    width: 320px;
+  }
+
+  @media (max-width: 600px) {
+    input[type="text"] {
+      width: 100%;
+    }
+  }
+
+  input[type="text"]:focus {
+    border-color: #2563eb;
+    background-color: #ffffff;
+  }
+
+  input[type="text"].is-correct {
+    border-color: #16a34a !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d !important;
+  }
+
+  input[type="text"].is-wrong {
+    border-color: #dc2626 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c !important;
+  }
+
+  /* Tooltip logic for vocabulary hint & sound */
+  .word-tooltip {
+    border-bottom: 2px dotted #2563eb;
+    color: #2563eb;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-ipa);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    margin-left: auto;
+  }
+
+  .audio-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .action-btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-check {
+    background-color: #2563eb;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background-color: #1d4ed8;
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .score-display {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #2563eb;
+    background-color: #eff6ff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="header-title">
+    <span>🔄</span>
+    <h2>3. Одне речення — три форми</h2>
+  </div>
+
+  <div class="instruction">
+    Перетворіть твердження на <strong>заперечення</strong> (–) та <strong>запитання</strong> (?).
+  </div>
+
+  <div class="questions-wrapper">
+
+    <!-- 1 -->
+    <div class="exercise-card">
+      <div class="sentence-line">
+        <span class="item-num">1.</span>
+        <span>He is an entrepreneur.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('He is an entrepreneur.')">🔊</button>
+      </div>
+      <div class="form-row">
+        <span class="form-sign">–</span>
+        <input type="text" class="ans-input" data-correct="he isn't an entrepreneur" placeholder="заперечення..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="form-row">
+        <span class="form-sign">?</span>
+        <input type="text" class="ans-input" data-correct="is he an entrepreneur?" placeholder="запитання..." autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="exercise-card">
+      <div class="sentence-line">
+        <span class="item-num">2.</span>
+        <span>She runs a company.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('She runs a company.')">🔊</button>
+      </div>
+      <div class="form-row">
+        <span class="form-sign">–</span>
+        <input type="text" class="ans-input" data-correct="she doesn't run a company" placeholder="заперечення..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="form-row">
+        <span class="form-sign">?</span>
+        <input type="text" class="ans-input" data-correct="does she run a company?" placeholder="запитання..." autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="exercise-card">
+      <div class="sentence-line">
+        <span class="item-num">3.</span>
+        <span>They are at the office.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('They are at the office.')">🔊</button>
+      </div>
+      <div class="form-row">
+        <span class="form-sign">–</span>
+        <input type="text" class="ans-input" data-correct="they aren't at the office" placeholder="заперечення..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="form-row">
+        <span class="form-sign">?</span>
+        <input type="text" class="ans-input" data-correct="are they at the office?" placeholder="запитання..." autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="exercise-card">
+      <div class="sentence-line">
+        <span class="item-num">4.</span>
+        <span>Our company makes a profit.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('Our company makes a profit.')">🔊</button>
+      </div>
+      <div class="form-row">
+        <span class="form-sign">–</span>
+        <input type="text" class="ans-input" data-correct="our company doesn't make a profit" placeholder="заперечення..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="form-row">
+        <span class="form-sign">?</span>
+        <input type="text" class="ans-input" data-correct="does our company make a profit?" placeholder="запитання..." autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="exercise-card">
+      <div class="sentence-line">
+        <span class="item-num">5.</span>
+        <span>You sign contracts.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('You sign contracts.')">🔊</button>
+      </div>
+      <div class="form-row">
+        <span class="form-sign">–</span>
+        <input type="text" class="ans-input" data-correct="you don't sign contracts" placeholder="заперечення..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="form-row">
+        <span class="form-sign">?</span>
+        <input type="text" class="ans-input" data-correct="do you sign contracts?" placeholder="запитання..." autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="exercise-card">
+      <div class="sentence-line">
+        <span class="item-num">6.</span>
+        <span>Her salary is high.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('Her salary is high.')">🔊</button>
+      </div>
+      <div class="form-row">
+        <span class="form-sign">–</span>
+        <input type="text" class="ans-input" data-correct="her salary isn't high" placeholder="заперечення..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="form-row">
+        <span class="form-sign">?</span>
+        <input type="text" class="ans-input" data-correct="is her salary high?" placeholder="запитання..." autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="exercise-card">
+      <div class="sentence-line">
+        <span class="item-num">7.</span>
+        <span>He works in manufacturing.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('He works in manufacturing.')">🔊</button>
+      </div>
+      <div class="form-row">
+        <span class="form-sign">–</span>
+        <input type="text" class="ans-input" data-correct="he doesn't work in manufacturing" placeholder="заперечення..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="form-row">
+        <span class="form-sign">?</span>
+        <input type="text" class="ans-input" data-correct="does he work in manufacturing?" placeholder="запитання..." autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="exercise-card">
+      <div class="sentence-line">
+        <span class="item-num">8.</span>
+        <span>They do business with investors.</span>
+        <button type="button" class="audio-btn" onclick="playAudio('They do business with investors.')">🔊</button>
+      </div>
+      <div class="form-row">
+        <span class="form-sign">–</span>
+        <input type="text" class="ans-input" data-correct="they don't do business with investors" placeholder="заперечення..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="form-row">
+        <span class="form-sign">?</span>
+        <input type="text" class="ans-input" data-correct="do they do business with investors?" placeholder="запитання..." autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="action-btn btn-reset" onclick="resetAll()">Скинути 🔄</button>
+    <div class="score-display" id="scoreDisplay">Результат: 0 / 16</div>
+    <button type="button" class="action-btn btn-check" onclick="checkAll()">Перевірити ✔</button>
+  </div>
+</div>
+
+<script>
+  function normalizeText(text) {
+    return text.toLowerCase()
+      .replace(/’/g, "'")
+      .replace(/`/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function checkAll() {
+    let score = 0;
+    let total = 0;
+    const inputs = document.querySelectorAll('.ans-input');
+
+    inputs.forEach(input => {
+      total++;
+      const correctVal = normalizeText(input.getAttribute('data-correct'));
+      const userVal = normalizeText(input.value);
+
+      input.classList.remove('is-correct', 'is-wrong');
+
+      if (userVal === correctVal) {
+        score++;
+        input.classList.add('is-correct');
+      } else {
+        input.classList.add('is-wrong');
+      }
+    });
+
+    const scoreDiv = document.getElementById('scoreDisplay');
+    scoreDiv.innerText = 'Результат: ' + score + ' / ' + total;
+    scoreDiv.style.display = 'block';
+  }
+
+  function resetAll() {
+    document.querySelectorAll('.ans-input').forEach(input => {
+      input.value = '';
+      input.classList.remove('is-correct', 'is-wrong');
+    });
+    document.getElementById('scoreDisplay').style.display = 'none';
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
