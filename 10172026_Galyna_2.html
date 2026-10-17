@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2. Зберіть ділові фрази — Business English</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+  }
+
+  .app-container {
+    max-width: 840px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border: 1px solid #cbd5e1;
+  }
+
+  .header-title {
+    font-size: 1.6rem;
+    color: #1e3a8a;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .instruction {
+    background-color: #eff6ff;
+    border-left: 5px solid #2563eb;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 24px;
+  }
+
+  .block-section {
+    margin-bottom: 28px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  .block-header {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #1e3a8a;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .word-bank {
+    background-color: #ffffff;
+    border: 2px dashed #93c5fd;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    color: #1d4ed8;
+    margin-bottom: 16px;
+    font-size: 1rem;
+  }
+
+  .phrases-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .phrase-row {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    padding: 12px 16px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .phrase-num {
+    font-weight: 700;
+    color: #64748b;
+    width: 24px;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #0f172a;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  select:focus {
+    border-color: #2563eb;
+    background-color: #ffffff;
+  }
+
+  select.is-correct {
+    border-color: #16a34a !important;
+    background-color: #f0fdf4 !important;
+    color: #15803d !important;
+  }
+
+  select.is-wrong {
+    border-color: #dc2626 !important;
+    background-color: #fef2f2 !important;
+    color: #b91c1c !important;
+  }
+
+  .phrase-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Tooltip logic for vocabulary hint & sound */
+  .word-tooltip {
+    border-bottom: 2px dotted #2563eb;
+    color: #2563eb;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-ipa);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .translation {
+    color: #475569;
+    font-weight: 500;
+    margin-left: 4px;
+  }
+
+  .audio-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    margin-left: auto;
+  }
+
+  .audio-btn:hover {
+    background-color: #e2e8f0;
+  }
+
+  .feedback-msg {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #dc2626;
+    width: 100%;
+    display: none;
+    margin-top: 4px;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .action-btn {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-check {
+    background-color: #2563eb;
+    color: #ffffff;
+  }
+
+  .btn-check:hover {
+    background-color: #1d4ed8;
+  }
+
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+
+  .score-display {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #2563eb;
+    background-color: #eff6ff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="header-title">
+    <span>📈</span>
+    <h2>2. Зберіть ділові фрази</h2>
+  </div>
+
+  <div class="instruction">
+    Вставте слова з рамки. Наводьте курсор на англійські слова, щоб побачити транскрипцію та прослухати вимову!
+  </div>
+
+  <!-- Блок А -->
+  <div class="block-section">
+    <div class="block-header">Блок А</div>
+    <div class="word-bank">
+      run • sign • meet • set up • reach • take
+    </div>
+
+    <div class="phrases-list">
+      <!-- 1 -->
+      <div class="phrase-row" data-correct="set up">
+        <span class="phrase-num">1.</span>
+        <select>
+          <option value="">-- обери --</option>
+          <option value="run">run</option>
+          <option value="sign">sign</option>
+          <option value="meet">meet</option>
+          <option value="set up">set up</option>
+          <option value="reach">reach</option>
+          <option value="take">take</option>
+        </select>
+        <div class="phrase-text">
+          <span>a</span>
+          <span class="word-tooltip" data-ipa="[ˈkʌm.pə.ni]" onmouseenter="playAudio('company')">company</span>
+          <span class="translation">— заснувати компанію</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('set up a company')">🔊</button>
+        <div class="feedback-msg">Правильно: set up</div>
+      </div>
+
+      <!-- 2 -->
+      <div class="phrase-row" data-correct="run">
+        <span class="phrase-num">2.</span>
+        <select>
+          <option value="">-- обери --</option>
+          <option value="run">run</option>
+          <option value="sign">sign</option>
+          <option value="meet">meet</option>
+          <option value="set up">set up</option>
+          <option value="reach">reach</option>
+          <option value="take">take</option>
+        </select>
+        <div class="phrase-text">
+          <span>a</span>
+          <span class="word-tooltip" data-ipa="[ˈkʌm.pə.ni]" onmouseenter="playAudio('company')">company</span>
+          <span class="translation">— керувати компанією</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('run a company')">🔊</button>
+        <div class="feedback-msg">Правильно: run</div>
+      </div>
+
+      <!-- 3 -->
+      <div class="phrase-row" data-correct="sign">
+        <span class="phrase-num">3.</span>
+        <select>
+          <option value="">-- обери --</option>
+          <option value="run">run</option>
+          <option value="sign">sign</option>
+          <option value="meet">meet</option>
+          <option value="set up">set up</option>
+          <option value="reach">reach</option>
+          <option value="take">take</option>
+        </select>
+        <div class="phrase-text">
+          <span>a</span>
+          <span class="word-tooltip" data-ipa="[ˈkɒn.trækt]" onmouseenter="playAudio('contract')">contract</span>
+          <span class="translation">— підписати договір</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('sign a contract')">🔊</button>
+        <div class="feedback-msg">Правильно: sign</div>
+      </div>
+
+      <!-- 4 -->
+      <div class="phrase-row" data-correct="meet">
+        <span class="phrase-num">4.</span>
+        <select>
+          <option value="">-- обери --</option>
+          <option value="run">run</option>
+          <option value="sign">sign</option>
+          <option value="meet">meet</option>
+          <option value="set up">set up</option>
+          <option value="reach">reach</option>
+          <option value="take">take</option>
+        </select>
+        <div class="phrase-text">
+          <span>a</span>
+          <span class="word-tooltip" data-ipa="[ˈded.laɪn]" onmouseenter="playAudio('deadline')">deadline</span>
+          <span class="translation">— виконати роботу вчасно</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('meet a deadline')">🔊</button>
+        <div class="feedback-msg">Правильно: meet</div>
+      </div>
+
+      <!-- 5 -->
+      <div class="phrase-row" data-correct="reach">
+        <span class="phrase-num">5.</span>
+        <select>
+          <option value="">-- обери --</option>
+          <option value="run">run</option>
+          <option value="sign">sign</option>
+          <option value="meet">meet</option>
+          <option value="set up">set up</option>
+          <option value="reach">reach</option>
+          <option value="take">take</option>
+        </select>
+        <div class="phrase-text">
+          <span>an</span>
+          <span class="word-tooltip" data-ipa="[əˈɡriː.mənt]" onmouseenter="playAudio('agreement')">agreement</span>
+          <span class="translation">— дійти згоди</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('reach an agreement')">🔊</button>
+        <div class="feedback-msg">Правильно: reach</div>
+      </div>
+
+      <!-- 6 -->
+      <div class="phrase-row" data-correct="take">
+        <span class="phrase-num">6.</span>
+        <select>
+          <option value="">-- обери --</option>
+          <option value="run">run</option>
+          <option value="sign">sign</option>
+          <option value="meet">meet</option>
+          <option value="set up">set up</option>
+          <option value="reach">reach</option>
+          <option value="take">take</option>
+        </select>
+        <div class="phrase-text">
+          <span>a</span>
+          <span class="word-tooltip" data-ipa="[rɪsk]" onmouseenter="playAudio('risk')">risk</span>
+          <span class="translation">— ризикувати</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('take a risk')">🔊</button>
+        <div class="feedback-msg">Правильно: take</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Блок Б -->
+  <div class="block-section">
+    <div class="block-header">Блок Б</div>
+    <div class="word-bank">
+      save up • do • go • break • make • make
+    </div>
+
+    <div class="phrases-list">
+      <!-- 7 -->
+      <div class="phrase-row" data-correct="do">
+        <span class="phrase-num">7.</span>
+        <select>
+          <option value="">-- обери --</option>
+          <option value="save up">save up</option>
+          <option value="do">do</option>
+          <option value="go">go</option>
+          <option value="break">break</option>
+          <option value="make">make</option>
+        </select>
+        <div class="phrase-text">
+          <span class="word-tooltip" data-ipa="[ˈbɪz.nɪs]" onmouseenter="playAudio('business')">business</span>
+          <span>with someone</span>
+          <span class="translation">— вести бізнес із кимось</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('do business with someone')">🔊</button>
+        <div class="feedback-msg">Правильно: do</div>
+      </div>
+
+      <!-- 8 -->
+      <div class="phrase-row" data-correct="save up">
+        <span class="phrase-num">8.</span>
+        <select>
+          <option value="">-- обери --</option>
+          <option value="save up">save up</option>
+          <option value="do">do</option>
+          <option value="go">go</option>
+          <option value="break">break</option>
+          <option value="make">make</option>
+        </select>
+        <div class="phrase-text">
+          <span class="word-tooltip" data-ipa="[ˈmʌn.i]" onmouseenter="playAudio('money')">money</span>
+          <span class="translation">— накопичувати гроші</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('save up money')">🔊</button>
+        <div class="feedback-msg">Правильно: save up</div>
+      </div>
+
+      <!-- 9 -->
+      <div class="phrase-row" data-correct="go">
+        <span class="phrase-num">9.</span>
+        <select>
+          <option value="">-- обери --</option>
+          <option value="save up">save up</option>
+          <option value="do">do</option>
+          <option value="go">go</option>
+          <option value="break">break</option>
+          <option value="make">make</option>
+        </select>
+        <div class="phrase-text">
+          <span class="word-tooltip" data-ipa="[ˈbæŋk.rʌpt]" onmouseenter="playAudio('bankrupt')">bankrupt</span>
+          <span class="translation">— збанкрутувати</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('go bankrupt')">🔊</button>
+        <div class="feedback-msg">Правильно: go</div>
+      </div>
+
+      <!-- 10 -->
+      <div class="phrase-row" data-correct="break">
+        <span class="phrase-num">10.</span>
+        <select>
+          <option value="">-- обери --</option>
+          <option value="save up">save up</option>
+          <option value="do">do</option>
+          <option value="go">go</option>
+          <option value="break">break</option>
+          <option value="make">make</option>
+        </select>
+        <div class="phrase-text">
+          <span>the</span>
+          <span class="word-tooltip" data-ipa="[lɔː]" onmouseenter="playAudio('law')">law</span>
+          <span class="translation">— порушувати закон</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('break the law')">🔊</button>
+        <div class="feedback-msg">Правильно: break</div>
+      </div>
+
+      <!-- 11 -->
+      <div class="phrase-row" data-correct="make">
+        <span class="phrase-num">11.</span>
+        <select>
+          <option value="">-- обери --</option>
+          <option value="save up">save up</option>
+          <option value="do">do</option>
+          <option value="go">go</option>
+          <option value="break">break</option>
+          <option value="make">make</option>
+        </select>
+        <div class="phrase-text">
+          <span>a</span>
+          <span class="word-tooltip" data-ipa="[ˈprɒf.ɪt]" onmouseenter="playAudio('profit')">profit</span>
+          <span class="translation">— отримувати прибуток</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('make a profit')">🔊</button>
+        <div class="feedback-msg">Правильно: make</div>
+      </div>
+
+      <!-- 12 -->
+      <div class="phrase-row" data-correct="make">
+        <span class="phrase-num">12.</span>
+        <select>
+          <option value="">-- обери --</option>
+          <option value="save up">save up</option>
+          <option value="do">do</option>
+          <option value="go">go</option>
+          <option value="break">break</option>
+          <option value="make">make</option>
+        </select>
+        <div class="phrase-text">
+          <span>a</span>
+          <span class="word-tooltip" data-ipa="[lɒs]" onmouseenter="playAudio('loss')">loss</span>
+          <span class="translation">— зазнавати збитків</span>
+        </div>
+        <button type="button" class="audio-btn" onclick="playAudio('make a loss')">🔊</button>
+        <div class="feedback-msg">Правильно: make</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="action-btn btn-reset" onclick="resetAll()">Скинути 🔄</button>
+    <div class="score-display" id="scoreDisplay">Результат: 0 / 12</div>
+    <button type="button" class="action-btn btn-check" onclick="checkAll()">Перевірити ✔</button>
+  </div>
+</div>
+
+<script>
+  function checkAll() {
+    let score = 0;
+    const rows = document.querySelectorAll('.phrase-row');
+
+    rows.forEach(row => {
+      const select = row.querySelector('select');
+      const correctVal = row.getAttribute('data-correct');
+      const feedback = row.querySelector('.feedback-msg');
+      const userVal = select.value;
+
+      select.classList.remove('is-correct', 'is-wrong');
+
+      if (userVal === correctVal) {
+        score++;
+        select.classList.add('is-correct');
+        if (feedback) feedback.style.display = 'none';
+      } else {
+        select.classList.add('is-wrong');
+        if (feedback) feedback.style.display = 'block';
+      }
+    });
+
+    const scoreDiv = document.getElementById('scoreDisplay');
+    scoreDiv.innerText = 'Результат: ' + score + ' / ' + rows.length;
+    scoreDiv.style.display = 'block';
+  }
+
+  function resetAll() {
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => {
+      select.value = '';
+      select.classList.remove('is-correct', 'is-wrong');
+    });
+    document.querySelectorAll('.feedback-msg').forEach(f => f.style.display = 'none');
+    document.getElementById('scoreDisplay').style.display = 'none';
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
