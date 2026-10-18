@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Read the Dialogue — English Practice</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fefce8;
+    color: #451a03;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .app-container {
+    max-width: 860px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(217, 119, 6, 0.08);
+    border: 2px solid #fde68a;
+  }
+
+  .header-title {
+    font-size: 1.6rem;
+    color: #b45309;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+  }
+
+  /* Chat Dialogue styling */
+  .chat-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 36px;
+    background-color: #fffdf5;
+    border: 1px solid #fde68a;
+    border-radius: 20px;
+    padding: 20px;
+  }
+
+  .chat-bubble {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 88%;
+  }
+
+  .chat-bubble.stan {
+    align-self: flex-start;
+  }
+
+  .chat-bubble.michelle {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  .avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: #ffffff;
+    flex-shrink: 0;
+  }
+
+  .avatar.stan {
+    background-color: #3b82f6;
+  }
+
+  .avatar.michelle {
+    background-color: #ec4899;
+  }
+
+  .bubble-content {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 12px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    position: relative;
+  }
+
+  .chat-bubble.stan .bubble-content {
+    border: 2px solid #93c5fd;
+    border-top-left-radius: 4px;
+  }
+
+  .chat-bubble.michelle .bubble-content {
+    border: 2px solid #fbcfe8;
+    border-top-right-radius: 4px;
+  }
+
+  /* Tooltip logic with transcription + translation + audio trigger */
+  .word-tooltip {
+    border-bottom: 2px dotted #f59e0b;
+    color: #b45309;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-hint);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #78350f;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.18);
+    text-align: center;
+  }
+
+  /* Questions Section */
+  .questions-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #b45309;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .question-card {
+    background-color: #fffdf5;
+    border: 1px solid #fde68a;
+    border-radius: 16px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.2s;
+  }
+
+  .question-card:hover {
+    border-color: #f59e0b;
+  }
+
+  .question-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #78350f;
+  }
+
+  textarea {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #fde68a;
+    background-color: #ffffff;
+    color: #451a03;
+    outline: none;
+    transition: all 0.2s;
+    width: 100%;
+    resize: vertical;
+    min-height: 70px;
+  }
+
+  textarea:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px solid #fde68a;
+  }
+
+  .btn-reset {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background-color: #fef3c7;
+    color: #78350f;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-reset:hover {
+    background-color: #fde68a;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <div class="header-title">
+    <span>📙</span>
+    <h2>Read the dialogue!</h2>
+  </div>
+
+  <div class="chat-wrapper">
+
+    <!-- Stan 1 -->
+    <div class="chat-bubble stan">
+      <div class="avatar stan">S</div>
+      <div class="bubble-content">
+        Yeah, they were. Then they had a giant 
+        <span class="word-tooltip" data-hint="[ˈɑːɡ.jə.mənt] — суперечка / сварка" onmouseenter="playAudio('argument')">argument</span>. 
+        He wanted to go to a sunny coast, jump on a surfboard, do some sailing, and then 
+        <span class="word-tooltip" data-hint="[ˈskuː.bə daɪv] — пірнати з аквалангом" onmouseenter="playAudio('scuba dive')">scuba dive</span> 
+        to see some sharks. Amalia got super angry and 
+        <span class="word-tooltip" data-hint="[bækt aʊt əv] — відмовилася / відступила" onmouseenter="playAudio('backed out of')">backed out of</span> 
+        everything. 
+        <span class="word-tooltip" data-hint="[əˈpær.ənt.li] — судячи з усього" onmouseenter="playAudio('apparently')">Apparently</span>, 
+        she thinks it's not safe.
+      </div>
+    </div>
+
+    <!-- Michelle 1 -->
+    <div class="chat-bubble michelle">
+      <div class="avatar michelle">M</div>
+      <div class="bubble-content">
+        Oh man! That's sad, they had an argument. Billy 
+        <span class="word-tooltip" data-hint="[ˈmen.ʃənd] — згадав" onmouseenter="playAudio('mentioned')">mentioned</span> 
+        that idea to me. Really, I understood his 
+        <span class="word-tooltip" data-hint="[sens əv ədˈven.tʃər] — дух пригод" onmouseenter="playAudio('sense of adventure')">sense of adventure</span>. 
+        She is not the one who 
+        <span class="word-tooltip" data-hint="[prɪˈfɜːz] — надає перевагу" onmouseenter="playAudio('prefers')">prefers</span> 
+        to spend time on the coast.
+      </div>
+    </div>
+
+    <!-- Stan 2 -->
+    <div class="chat-bubble stan">
+      <div class="avatar stan">S</div>
+      <div class="bubble-content">
+        But to have an argument about it? Seems 
+        <span class="word-tooltip" data-hint="[ɪkˈstriːm] — крайність / надто" onmouseenter="playAudio('extreme')">extreme</span>, 
+        doesn't it?
+      </div>
+    </div>
+
+    <!-- Michelle 2 -->
+    <div class="chat-bubble michelle">
+      <div class="avatar michelle">M</div>
+      <div class="bubble-content">
+        Well, if she really hates it, I can see her point. The coast can be boring sometimes, and even expensive. You can't just sleep on the beach, you know. To 
+        <span class="word-tooltip" data-hint="[ɡəʊ θruː wɪð] — довести до кінця / здійснити" onmouseenter="playAudio('go through with')">go through with</span> 
+        such a trip, you need to find 
+        <span class="word-tooltip" data-hint="[ˈriː.zən.ə.bli praɪst əˌkɒm.əˈdeɪ.ʃən] — житло за розумною ціною" onmouseenter="playAudio('reasonably priced accommodation')">reasonably priced accommodation</span>.
+      </div>
+    </div>
+
+    <!-- Stan 3 -->
+    <div class="chat-bubble stan">
+      <div class="avatar stan">S</div>
+      <div class="bubble-content">
+        So, what's the 
+        <span class="word-tooltip" data-hint="[bɪɡ diːl] — велика проблема / подія" onmouseenter="playAudio('big deal')">big deal</span>?
+      </div>
+    </div>
+
+    <!-- Michelle 3 -->
+    <div class="chat-bubble michelle">
+      <div class="avatar michelle">M</div>
+      <div class="bubble-content">
+        All hotels might be booked and only the 
+        <span class="word-tooltip" data-hint="[ˈkreɪ.zɪ.li ɪkˈspen.sɪv] — божевільно дорогі" onmouseenter="playAudio('crazily expensive')">crazily expensive</span>, 
+        <span class="word-tooltip" data-hint="[lʌɡˈʒʊə.ri.əs] — розкішні" onmouseenter="playAudio('luxurious')">luxurious</span> 
+        ones will be available. Not good 
+        <span class="word-tooltip" data-hint="[ˈvæl.juː fər ˈmʌn.i] — варте своїх грошей" onmouseenter="playAudio('value for money')">value for money</span>, 
+        in my opinion.
+      </div>
+    </div>
+
+    <!-- Stan 4 -->
+    <div class="chat-bubble stan">
+      <div class="avatar stan">S</div>
+      <div class="bubble-content">
+        You speak like some sort of expert. Have you had a lot of trips to the coast?
+      </div>
+    </div>
+
+    <!-- Michelle 4 -->
+    <div class="chat-bubble michelle">
+      <div class="avatar michelle">M</div>
+      <div class="bubble-content">
+        Actually, yeah. My family is really into 
+        <span class="word-tooltip" data-hint="[ˈaʊt.dɔːr ˈhɒl.ə.deɪz] — відпочинок на природі" onmouseenter="playAudio('outdoor holidays')">outdoor holidays</span>. 
+        They think that nature has a lot of 
+        <span class="word-tooltip" data-hint="[vəˈraɪ.ə.ti] — різноманітність" onmouseenter="playAudio('variety')">variety</span> 
+        in activities that you can do and can be very 
+        <span class="word-tooltip" data-hint="[ˌedʒ.ʊˈkeɪ.ʃən.əl] — пізнавальний" onmouseenter="playAudio('educational')">educational</span>. 
+        One time we went 
+        <span class="word-tooltip" data-hint="[kəˈnuː.ɪŋ] — катання на каное" onmouseenter="playAudio('canoeing')">canoeing</span> 
+        and our guide gave us a crocodile for lunch. OMG! It didn't taste good to me, but they loved it.
+      </div>
+    </div>
+
+    <!-- Stan 5 -->
+    <div class="chat-bubble stan">
+      <div class="avatar stan">S</div>
+      <div class="bubble-content">
+        That's sounds terrible! Are you bored and 
+        <span class="word-tooltip" data-hint="[fed ʌp wɪð] — ситий по горло" onmouseenter="playAudio('fed up with')">fed up with</span> 
+        such holidays?
+      </div>
+    </div>
+
+    <!-- Michelle 5 -->
+    <div class="chat-bubble michelle">
+      <div class="avatar michelle">M</div>
+      <div class="bubble-content">
+        Nah, they are always a lot of fun.
+      </div>
+    </div>
+
+    <!-- Stan 6 -->
+    <div class="chat-bubble stan">
+      <div class="avatar stan">S</div>
+      <div class="bubble-content">
+        Honestly, no one can ever 
+        <span class="word-tooltip" data-hint="[ɡet əˈkrɒs] — донести думку" onmouseenter="playAudio('get across')">get across</span> 
+        to me how nature holidays are better than going to a hotel and seeing the 
+        <span class="word-tooltip" data-hint="[saɪts] — визначні місця" onmouseenter="playAudio('sights')">sights</span> 
+        in a city. I mean, come on! The hotel bed is comfortable, the cafés don't sell crocodile and if it is rainy then I can just 
+        <span class="word-tooltip" data-hint="[pɒp ˈɪn.tuː] — заскочити / завітати" onmouseenter="playAudio('pop into')">pop into</span> 
+        a dance club.
+      </div>
+    </div>
+
+    <!-- Michelle 6 -->
+    <div class="chat-bubble michelle">
+      <div class="avatar michelle">M</div>
+      <div class="bubble-content">
+        Maybe we should go on a holiday together one day, and I'll show you some fun nature and outdoor activities.
+      </div>
+    </div>
+
+    <!-- Stan 7 -->
+    <div class="chat-bubble stan">
+      <div class="avatar stan">S</div>
+      <div class="bubble-content">
+        Like what?
+      </div>
+    </div>
+
+    <!-- Michelle 7 -->
+    <div class="chat-bubble michelle">
+      <div class="avatar michelle">M</div>
+      <div class="bubble-content">
+        <span class="word-tooltip" data-hint="[ˈpær.ə.ʃuː.tɪŋ] — стрибки з парашутом" onmouseenter="playAudio('parachuting')">Parachuting</span> 
+        maybe?
+      </div>
+    </div>
+
+    <!-- Stan 8 -->
+    <div class="chat-bubble stan">
+      <div class="avatar stan">S</div>
+      <div class="bubble-content">
+        Michelle! Do you want us to argue like Amalia and Billy?
+      </div>
+    </div>
+
+    <!-- Michelle 8 -->
+    <div class="chat-bubble michelle">
+      <div class="avatar michelle">M</div>
+      <div class="bubble-content">
+        Only if I win the argument.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Questions Section -->
+  <div class="questions-title">
+    <span>📣</span>
+    <span>Answer the questions!</span>
+  </div>
+
+  <div class="questions-list">
+
+    <div class="question-card">
+      <div class="question-text">1. Why did Amalia and Billy have a big fight?</div>
+      <textarea placeholder="Write your answer here..."></textarea>
+    </div>
+
+    <div class="question-card">
+      <div class="question-text">2. Why doesn't Michelle like the coast?</div>
+      <textarea placeholder="Write your answer here..."></textarea>
+    </div>
+
+    <div class="question-card">
+      <div class="question-text">3. Why do you need to find reasonably priced accommodation to go on a trip?</div>
+      <textarea placeholder="Write your answer here..."></textarea>
+    </div>
+
+    <div class="question-card">
+      <div class="question-text">4. What holidays does Michelle's family like?</div>
+      <textarea placeholder="Write your answer here..."></textarea>
+    </div>
+
+    <div class="question-card">
+      <div class="question-text">5. What holidays does Stan prefer to have?</div>
+      <textarea placeholder="Write your answer here..."></textarea>
+    </div>
+
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="btn-reset" onclick="resetAll()">Очистити відповіді 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function resetAll() {
+    document.querySelectorAll('textarea').forEach(area => {
+      area.value = '';
+    });
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
