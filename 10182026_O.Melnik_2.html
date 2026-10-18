@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listen again and tick the phrases you hear</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Custom Tooltip Styling */
+  .word-tooltip {
+    border-bottom: 2px dashed #0284c7;
+    color: #0369a1;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    transition: color 0.15s ease;
+  }
+
+  .word-tooltip:hover {
+    color: #0284c7;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-hint);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+  }
+
+  /* Custom Checkbox Appearance */
+  .custom-checkbox {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    outline: none;
+    transition: all 0.2s ease;
+    position: relative;
+    cursor: pointer;
+    background-color: #ffffff;
+    flex-shrink: 0;
+  }
+
+  .custom-checkbox:checked {
+    border-color: #0284c7;
+    background-color: #0284c7;
+  }
+
+  .custom-checkbox:checked::after {
+    content: '✔';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .phrase-card:has(.custom-checkbox:checked) {
+    border-color: #38bdf8;
+    background-color: #f0f9ff;
+    color: #0369a1;
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 p-4 sm:p-8 flex justify-center min-h-screen">
+
+<div class="max-w-3xl w-full bg-white rounded-2xl p-6 sm:p-10 shadow-sm border border-slate-200 self-start my-auto">
+
+  <!-- Header -->
+  <div class="flex items-center gap-3 mb-6">
+    <div class="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600 font-bold text-xl">
+      ✓
+    </div>
+    <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900">
+      Listen again and tick the phrases you hear
+    </h1>
+  </div>
+
+  <!-- Speech Player Card -->
+  <div class="bg-slate-900 text-white rounded-xl p-5 mb-6 shadow-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <button id="playPauseBtn" onclick="toggleAudio()" class="w-12 h-12 bg-sky-500 hover:bg-sky-400 text-white rounded-full flex items-center justify-center text-lg font-bold transition-transform active:scale-95 shadow">
+          ▶
+        </button>
+        <button id="resetAudioBtn" onclick="stopAudio()" class="w-10 h-10 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-full flex items-center justify-center text-sm transition">
+          ⏹
+        </button>
+        <div>
+          <div class="text-xs uppercase tracking-wider text-sky-400 font-semibold">Audio Dialogue Player</div>
+          <div id="playerStatus" class="text-sm font-medium text-slate-200">Ready to play dialogues</div>
+        </div>
+      </div>
+      
+      <!-- Speed selector -->
+      <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-lg self-start sm:self-center">
+        <span class="text-xs text-slate-400 font-medium">Speed:</span>
+        <select id="speedSelect" class="bg-transparent text-xs font-semibold text-sky-300 focus:outline-none cursor-pointer">
+          <option value="0.8" class="bg-slate-900 text-white">0.8x (Slower)</option>
+          <option value="0.95" selected class="bg-slate-900 text-white">1.0x (Normal)</option>
+          <option value="1.1" class="bg-slate-900 text-white">1.1x (Faster)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Active Sentence Indicator -->
+    <div id="nowPlayingText" class="mt-4 pt-3 border-t border-slate-800 text-xs italic text-slate-400 min-h-[32px] flex items-center">
+      Click Play to start listening to Dialogue 1, 2 & 3...
+    </div>
+  </div>
+
+  <!-- Transcript Section -->
+  <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-8">
+    <div class="flex justify-between items-center mb-3">
+      <div class="flex items-center gap-2 font-bold text-slate-800 text-lg">
+        <span>📄</span> Transcript
+      </div>
+      <button type="button" onclick="toggleTranscript()" id="toggleTranscriptBtn" class="text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-200 hover:bg-slate-300 px-3 py-1.5 rounded-lg transition">
+        Hide transcript 👁️
+      </button>
+    </div>
+
+    <div id="transcriptContent" class="space-y-4 text-sm text-slate-700 leading-relaxed transition-all">
+      
+      <!-- Dialogue 1 -->
+      <div class="p-3 bg-white rounded-lg border border-slate-200/80">
+        <div class="font-bold text-sky-700 text-xs uppercase tracking-wider mb-2">Dialogue 1</div>
+        <p class="mb-1"><strong class="text-slate-900">Assistant:</strong> Good morning, Dr. Smith's office. How may I help you?</p>
+        <p class="mb-1"><strong class="text-slate-900">Jane:</strong> Hi, this is Jane. I need to <span class="word-tooltip" data-hint="[ˌriːˈʃed.juːl] — перенести" onmouseenter="playWord('reschedule')">reschedule</span> my <span class="word-tooltip" data-hint="[əˈpɔɪnt.mənt] — встреча" onmouseenter="playWord('appointment')">appointment</span>.</p>
+        <p class="mb-1"><strong class="text-slate-900">Assistant:</strong> Okay, Jane. How about Friday at 10 AM?</p>
+        <p class="mb-1"><strong class="text-slate-900">Jane:</strong> That will work for me.</p>
+        <p class="mb-1"><strong class="text-slate-900">Assistant:</strong> Anything <span class="word-tooltip" data-hint="[ˈen.i.θɪŋ els] — что-то еще" onmouseenter="playWord('anything else')">else</span>?</p>
+        <p class="mb-1"><strong class="text-slate-900">Jane:</strong> No, that's all, thank you!</p>
+        <p class="mb-1"><strong class="text-slate-900">Assistant:</strong> You're welcome. Goodbye!</p>
+        <p><strong class="text-slate-900">Jane:</strong> Bye!</p>
+      </div>
+
+      <!-- Dialogue 2 -->
+      <div class="p-3 bg-white rounded-lg border border-slate-200/80">
+        <div class="font-bold text-sky-700 text-xs uppercase tracking-wider mb-2">Dialogue 2</div>
+        <p class="mb-1"><strong class="text-slate-900">Sarah's Mom:</strong> Hello, who’s calling, please?</p>
+        <p class="mb-1"><strong class="text-slate-900">Teacher:</strong> Hello, Mrs. Johnson. It’s Sarah’s teacher, Mr. Thomson. Is Sarah home?</p>
+        <p class="mb-1"><strong class="text-slate-900">Sarah's Mom:</strong> Sarah’s at dance class. Can I <span class="word-tooltip" data-hint="[teɪk ə ˈmes.ɪdʒ] — принять сообщение" onmouseenter="playWord('take a message')">take a message</span>?</p>
+        <p class="mb-1"><strong class="text-slate-900">Teacher:</strong> Yes, tell her the Spanish class is on Saturday at 2 PM.</p>
+        <p class="mb-1"><strong class="text-slate-900">Sarah's Mom:</strong> Alright, I’ll let Sarah know you called.</p>
+        <p class="mb-1"><strong class="text-slate-900">Teacher:</strong> Thanks, Mrs. Johnson!</p>
+        <p><strong class="text-slate-900">Sarah's Mom:</strong> You're welcome. Bye!</p>
+      </div>
+
+      <!-- Dialogue 3 -->
+      <div class="p-3 bg-white rounded-lg border border-slate-200/80">
+        <div class="font-bold text-sky-700 text-xs uppercase tracking-wider mb-2">Dialogue 3</div>
+        <p class="mb-1"><strong class="text-slate-900">Secretary:</strong> Good afternoon, GreenTech Solutions.</p>
+        <p class="mb-1"><strong class="text-slate-900">Robert:</strong> Hi, can I speak with Mr. Adams?</p>
+        <p class="mb-1"><strong class="text-slate-900">Secretary:</strong> He’s in a meeting. Is this something <span class="word-tooltip" data-hint="[ˈɜː.dʒənt] — срочное" onmouseenter="playWord('urgent')">urgent</span>?</p>
+        <p class="mb-1"><strong class="text-slate-900">Robert:</strong> Yes, tell him Robert from BlueCorp needs his <span class="word-tooltip" data-hint="[ˈfiːd.bæk] — отзыв / фидбек" onmouseenter="playWord('feedback')">feedback</span> on the <span class="word-tooltip" data-hint="[ˈkɒn.trækt] — контракт" onmouseenter="playWord('contract')">contract</span> by tomorrow.</p>
+        <p class="mb-1"><strong class="text-slate-900">Secretary:</strong> Will do. Thanks for calling!</p>
+        <p class="mb-1"><strong class="text-slate-900">Robert:</strong> Thanks. Bye!</p>
+        <p><strong class="text-slate-900">Secretary:</strong> Goodbye!</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Checklist Title -->
+  <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+    <span>1.</span> Choose:
+  </h2>
+
+  <!-- Phrases Checklist -->
+  <div class="space-y-2.5 mb-8" id="phrasesList">
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>How may I help you?</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>How do I help you?</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>Anything <span class="word-tooltip" data-hint="[ˈen.i.θɪŋ els] — что-то еще" onmouseenter="playWord('anything else')">else</span>?</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>Nothing else?</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>Hello, who’s calling, please?</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>Hello, who’s smiling, please?</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>Can I <span class="word-tooltip" data-hint="[teɪk ə ˈmes.ɪdʒ] — принять сообщение" onmouseenter="playWord('take a message')">take a message</span>?</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>Can I leave a message?</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>What can I get you?</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>Alright, I’ll let Sarah know you called.</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>Is this something funny?</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>Is this something <span class="word-tooltip" data-hint="[ˈɜː.dʒənt] — срочное" onmouseenter="playWord('urgent')">urgent</span>?</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>Thank you for your call!</span>
+    </label>
+
+    <label class="phrase-card flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer font-medium text-slate-700">
+      <input type="checkbox" class="custom-checkbox">
+      <span>Thanks for <span class="word-tooltip" data-hint="[fɔːr ˈkɔː.lɪŋ] — за звонок" onmouseenter="playWord('for calling')">calling</span>!</span>
+    </label>
+
+  </div>
+
+  <!-- Footer Controls -->
+  <div class="pt-4 border-t border-slate-200 flex flex-wrap gap-3 justify-between items-center">
+    <button type="button" onclick="resetCheckboxes()" class="px-5 py-2.5 rounded-xl font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 active:scale-95 transition text-sm">
+      Сбросить выбор 🔄
+    </button>
+  </div>
+
+</div>
+
+<script>
+  // Full dialogues structured with distinct voice pitch/rate for multi-speaker effect
+  const dialogueScript = [
+    // Dialogue 1
+    { speaker: "Assistant", text: "Good morning, Dr. Smith's office. How may I help you?", pitch: 1.1 },
+    { speaker: "Jane", text: "Hi, this is Jane. I need to reschedule my appointment.", pitch: 0.95 },
+    { speaker: "Assistant", text: "Okay, Jane. How about Friday at 10 AM?", pitch: 1.1 },
+    { speaker: "Jane", text: "That will work for me.", pitch: 0.95 },
+    { speaker: "Assistant", text: "Anything else?", pitch: 1.1 },
+    { speaker: "Jane", text: "No, that's all, thank you!", pitch: 0.95 },
+    { speaker: "Assistant", text: "You're welcome. Goodbye!", pitch: 1.1 },
+    { speaker: "Jane", text: "Bye!", pitch: 0.95 },
+
+    // Dialogue 2
+    { speaker: "Sarah's Mom", text: "Hello, who’s calling, please?", pitch: 1.05 },
+    { speaker: "Teacher", text: "Hello, Mrs. Johnson. It’s Sarah’s teacher, Mr. Thomson. Is Sarah home?", pitch: 0.85 },
+    { speaker: "Sarah's Mom", text: "Sarah’s at dance class. Can I take a message?", pitch: 1.05 },
+    { speaker: "Teacher", text: "Yes, tell her the Spanish class is on Saturday at 2 PM.", pitch: 0.85 },
+    { speaker: "Sarah's Mom", text: "Alright, I’ll let Sarah know you called.", pitch: 1.05 },
+    { speaker: "Teacher", text: "Thanks, Mrs. Johnson!", pitch: 0.85 },
+    { speaker: "Sarah's Mom", text: "You're welcome. Bye!", pitch: 1.05 },
+
+    // Dialogue 3
+    { speaker: "Secretary", text: "Good afternoon, GreenTech Solutions.", pitch: 1.15 },
+    { speaker: "Robert", text: "Hi, can I speak with Mr. Adams?", pitch: 0.9 },
+    { speaker: "Secretary", text: "He’s in a meeting. Is this something urgent?", pitch: 1.15 },
+    { speaker: "Robert", text: "Yes, tell him Robert from BlueCorp needs his feedback on the contract by tomorrow.", pitch: 0.9 },
+    { speaker: "Secretary", text: "Will do. Thanks for calling!", pitch: 1.15 },
+    { speaker: "Robert", text: "Thanks. Bye!", pitch: 0.9 },
+    { speaker: "Secretary", text: "Goodbye!", pitch: 1.15 }
+  ];
+
+  let currentLineIndex = 0;
+  let isPlaying = false;
+  let synth = window.speechSynthesis;
+
+  // Initialize Speech Synthesis Voices
+  function getEnglishVoice() {
+    if (!synth) return null;
+    const voices = synth.getVoices();
+    return voices.find(v => v.lang.startsWith('en')) || voices[0] || null;
+  }
+
+  // Pre-load voices
+  if (synth) {
+    synth.onvoiceschanged = () => getEnglishVoice();
+  }
+
+  function playNextLine() {
+    if (!isPlaying) return;
+
+    if (currentLineIndex >= dialogueScript.length) {
+      isPlaying = false;
+      currentLineIndex = 0;
+      updatePlayerUI(false, "Playback finished");
+      document.getElementById('nowPlayingText').innerText = "Finished playing all dialogues. Click Play to listen again.";
+      return;
+    }
+
+    const line = dialogueScript[currentLineIndex];
+    const speed = parseFloat(document.getElementById('speedSelect').value) || 1.0;
+
+    const utterance = new SpeechSynthesisUtterance(line.text);
+    utterance.lang = 'en-US';
+    utterance.rate = speed;
+    utterance.pitch = line.pitch;
+
+    const voice = getEnglishVoice();
+    if (voice) utterance.voice = voice;
+
+    document.getElementById('nowPlayingText').innerHTML = `<span class="text-sky-400 font-bold">${line.speaker}:</span> "${line.text}"`;
+    updatePlayerUI(true, `Playing line ${currentLineIndex + 1} of ${dialogueScript.length}`);
+
+    utterance.onend = () => {
+      currentLineIndex++;
+      // Brief pause between lines
+      setTimeout(() => {
+        if (isPlaying) playNextLine();
+      }, 300);
+    };
+
+    utterance.onerror = () => {
+      currentLineIndex++;
+      if (isPlaying) playNextLine();
+    };
+
+    synth.speak(utterance);
+  }
+
+  function toggleAudio() {
+    if (!synth) {
+      alert("Speech synthesis is not supported in this browser.");
+      return;
+    }
+
+    if (isPlaying) {
+      // Pause
+      synth.cancel();
+      isPlaying = false;
+      updatePlayerUI(false, "Paused");
+    } else {
+      // Start/Resume
+      synth.cancel();
+      isPlaying = true;
+      playNextLine();
+    }
+  }
+
+  function stopAudio() {
+    if (synth) synth.cancel();
+    isPlaying = false;
+    currentLineIndex = 0;
+    updatePlayerUI(false, "Stopped");
+    document.getElementById('nowPlayingText').innerText = "Stopped. Click Play to start from the beginning.";
+  }
+
+  function updatePlayerUI(playing, statusText) {
+    const playBtn = document.getElementById('playPauseBtn');
+    const statusLabel = document.getElementById('playerStatus');
+
+    playBtn.innerText = playing ? "⏸" : "▶";
+    statusLabel.innerText = statusText;
+  }
+
+  // Single word hover pronunciation
+  function playWord(text) {
+    if (!synth) return;
+    // Don't interrupt main dialogue if playing
+    if (isPlaying) return;
+
+    synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+
+    const voice = getEnglishVoice();
+    if (voice) utterance.voice = voice;
+
+    synth.speak(utterance);
+  }
+
+  // Toggle Transcript Display
+  let isTranscriptVisible = true;
+  function toggleTranscript() {
+    isTranscriptVisible = !isTranscriptVisible;
+    const content = document.getElementById('transcriptContent');
+    const btn = document.getElementById('toggleTranscriptBtn');
+
+    if (isTranscriptVisible) {
+      content.style.display = 'block';
+      btn.innerText = 'Hide transcript 👁️';
+    } else {
+      content.style.display = 'none';
+      btn.innerText = 'Show transcript 👁️';
+    }
+  }
+
+  // Reset all exercise checkboxes
+  function resetCheckboxes() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+  }
+</script>
+
+</body>
+</html>
