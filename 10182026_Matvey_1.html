@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Great Pyramid Climb — Reading Practice</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0fdf4;
+    color: #14532d;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .app-container {
+    max-width: 860px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(22, 101, 52, 0.08);
+    border: 2px solid #bbf7d0;
+  }
+
+  .header-title {
+    font-size: 1.6rem;
+    color: #15803d;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+  }
+
+  /* Transcript Section */
+  .transcript-card {
+    background-color: #f0fdf4;
+    border: 2px solid #86efac;
+    border-radius: 18px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .transcript-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .transcript-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #15803d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toggle-btn {
+    background: #dcfce7;
+    border: 2px solid #4ade80;
+    color: #15803d;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 6px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .toggle-btn:hover {
+    background-color: #22c55e;
+    color: #ffffff;
+  }
+
+  .transcript-text {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #166534;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+  }
+
+  .transcript-text.hidden-text {
+    display: none;
+  }
+
+  /* Hover Tooltip logic for Vocab */
+  .word-tooltip {
+    border-bottom: 2px dotted #22c55e;
+    color: #15803d;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-hint);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #14532d;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.18);
+    text-align: center;
+  }
+
+  .instruction-box {
+    background-color: #dcfce7;
+    border-left: 5px solid #22c55e;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #14532d;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Questions Section */
+  .questions-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .question-card {
+    background-color: #ffffff;
+    border: 1px solid #bbf7d0;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  }
+
+  .question-title {
+    font-size: 1.08rem;
+    font-weight: 800;
+    color: #14532d;
+  }
+
+  .options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    background-color: #f8fafc;
+    cursor: pointer;
+    font-weight: 600;
+    color: #334155;
+    transition: all 0.2s ease;
+  }
+
+  .option-label:hover {
+    border-color: #4ade80;
+    background-color: #f0fdf4;
+  }
+
+  .option-label input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cbd5e1;
+    border-radius: 50%;
+    outline: none;
+    transition: all 0.2s ease;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .option-label input[type="radio"]:checked {
+    border-color: #22c55e;
+    background-color: #22c55e;
+    box-shadow: inset 0 0 0 4px #ffffff;
+  }
+
+  .option-label:has(input[type="radio"]:checked) {
+    border-color: #22c55e;
+    background-color: #f0fdf4;
+    color: #14532d;
+    font-weight: 700;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 2px solid #bbf7d0;
+  }
+
+  .btn-reset {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background-color: #dcfce7;
+    color: #14532d;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-reset:hover {
+    background-color: #bbf7d0;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <div class="header-title">
+    <span>📜</span>
+    <h2>Transcript Practice & Quiz</h2>
+  </div>
+
+  <!-- Transcript Section -->
+  <div class="transcript-card">
+    <div class="transcript-header">
+      <div class="transcript-title">
+        <span>📝</span> Transcript
+      </div>
+      <button type="button" class="toggle-btn" onclick="toggleTranscript()">Приховати текст 👁️</button>
+    </div>
+
+    <div class="transcript-text" id="transcriptText">
+      A German tourist says he 
+      <span class="word-tooltip" data-hint="[ɪˈliː.ɡəl.i] — незаконно" onmouseenter="playAudio('illegally')">illegally</span> 
+      <span class="word-tooltip" data-hint="[skeɪld] — піднявся / виліз" onmouseenter="playAudio('scaled')">scaled</span> 
+      Egypt's Great Pyramid of Giza 
+      <span class="word-tooltip" data-hint="[ɪn brɔːd ˈdeɪ.laɪt] — серед білого дня" onmouseenter="playAudio('in broad daylight')">in broad daylight</span> 
+      and lived to tell the 
+      <span class="word-tooltip" data-hint="[teɪl] — історія / розповідь" onmouseenter="playAudio('tale')">tale</span>. 
+      <span class="word-tooltip" data-hint="[ɑːmd] — озброєний" onmouseenter="playAudio('armed')">Armed</span> 
+      with the GoPro and a strong 
+      <span class="word-tooltip" data-hint="[wɪl] — воля / рішучість" onmouseenter="playAudio('will')">will</span>, 
+      18-year-old Andre holds a journey from Cairo to Giza to climb nearly 500 feet to the top of the pyramid. Climbing the oldest and largest pyramid comes at a 
+      <span class="word-tooltip" data-hint="[stiːp kɒst] — висока ціна" onmouseenter="playAudio('steep cost')">steep cost</span>, 
+      a possible three-year 
+      <span class="word-tooltip" data-hint="[dʒeɪl ˈsen.təns] — тюремний термін" onmouseenter="playAudio('jail sentence')">jail sentence</span> 
+      if 
+      <span class="word-tooltip" data-hint="[kənˈvɪk.tɪd] — засуджений" onmouseenter="playAudio('convicted')">convicted</span>. 
+      Yeah, Andre said in an interview he knew the risks going in but decided the view from the top would make it all 
+      <span class="word-tooltip" data-hint="[wɜːθ ɪt] — варте того" onmouseenter="playAudio('worth it')">worth it</span>. 
+      He was about halfway up the 
+      <span class="word-tooltip" data-hint="[ˈeɪn.ʃənt ˈstrʌk.tʃər] — стародавня споруда" onmouseenter="playAudio('ancient structure')">ancient structure</span>, 
+      Andre was 
+      <span class="word-tooltip" data-hint="[ˈspɒt.ɪd] — помічений" onmouseenter="playAudio('spotted')">spotted</span> 
+      by Egyptian police, it didn't stop him from finishing his climb and taking in the 
+      <span class="word-tooltip" data-hint="[ɪnˈkred.ə.bəl] — неймовірний" onmouseenter="playAudio('incredible')">incredible</span> 
+      view. Although it took him eight minutes to reach the top, it took him 20 minutes to safely 
+      <span class="word-tooltip" data-hint="[dɪˈsent] — спуститися" onmouseenter="playAudio('descent')">descent</span>, 
+      when he was back on the ground he was taken into 
+      <span class="word-tooltip" data-hint="[pəˈliːs ˈkʌs.tə.di] — під варту поліції" onmouseenter="playAudio('police custody')">police custody</span>. 
+      According to Andre, officers said they would not 
+      <span class="word-tooltip" data-hint="[pres ˈtʃɑː.dʒɪz] — висувати звинувачення" onmouseenter="playAudio('press charges')">press charges</span> 
+      if he deleted photographic 
+      <span class="word-tooltip" data-hint="[ˈev.ɪ.dəns] — докази" onmouseenter="playAudio('evidence')">evidence</span> 
+      of the climb. He says 
+      <span class="word-tooltip" data-hint="[ɔːˈθɒr.ə.tiːz] — влада / поліція" onmouseenter="playAudio('authorities')">authorities</span> 
+      were 
+      <span class="word-tooltip" data-hint="[ˌʌn.əˈweər] — не знали" onmouseenter="playAudio('unaware')">unaware</span> 
+      that the 
+      <span class="word-tooltip" data-hint="[tek ˈsæv.i] — той, що розбирається в техніці" onmouseenter="playAudio('tech savvy')">tech-savvy</span> 
+      team had software that allowed him to recover the files. Be sure to watch the inside edition!
+    </div>
+  </div>
+
+  <!-- Instruction -->
+  <div class="instruction-box">
+    <span>📺</span>
+    <span>And now answer the questions! Select the correct variants</span>
+  </div>
+
+  <!-- Questions Section -->
+  <div class="questions-wrapper">
+
+    <!-- Q1 -->
+    <div class="question-card">
+      <div class="question-title">1. The name of German tourist was:</div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q1" value="Andre">
+          <span>Andre</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q1" value="Andy">
+          <span>Andy</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-card">
+      <div class="question-title">2. Egypt's Great Pyramid is located in:</div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q2" value="Cairo">
+          <span>Cairo</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q2" value="Giza">
+          <span>Giza</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-card">
+      <div class="question-title">3. German tourist was:</div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q3" value="20-year-old">
+          <span>20-year-old</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q3" value="18-year-old">
+          <span>18-year-old</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-card">
+      <div class="question-title">4. To reach the top of the pyramid you should climb:</div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q4" value="500 feet">
+          <span>500 feet</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q4" value="300 feet">
+          <span>300 feet</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-card">
+      <div class="question-title">5. Andre was spotted by:</div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q5" value="Egyptian medical officers">
+          <span>Egyptian medical officers</span>
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q5" value="Egyptian police">
+          <span>Egyptian police</span>
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="btn-reset" onclick="resetAll()">Скинути вибір 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  let isTranscriptHidden = false;
+
+  function toggleTranscript() {
+    isTranscriptHidden = !isTranscriptHidden;
+    const textDiv = document.getElementById('transcriptText');
+    const btn = document.querySelector('.toggle-btn');
+
+    if (isTranscriptHidden) {
+      textDiv.classList.add('hidden-text');
+      btn.innerText = 'Показати текст 👁️';
+    } else {
+      textDiv.classList.remove('hidden-text');
+      btn.innerText = 'Приховати текст 👁️';
+    }
+  }
+
+  function resetAll() {
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+      radio.checked = false;
+    });
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
