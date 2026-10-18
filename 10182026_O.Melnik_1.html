@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listen to 3 dialogues and match them with situations</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .app-container {
+    max-width: 860px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+    border: 2px solid #e2e8f0;
+  }
+
+  .header-title {
+    font-size: 1.5rem;
+    color: #0f172a;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+  }
+
+  /* Transcript Section */
+  .transcript-card {
+    background-color: #f8fafc;
+    border: 2px solid #cbd5e1;
+    border-radius: 18px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .transcript-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .transcript-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toggle-btn {
+    background: #e2e8f0;
+    border: 2px solid #94a3b8;
+    color: #334155;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 6px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .toggle-btn:hover {
+    background-color: #475569;
+    color: #ffffff;
+    border-color: #475569;
+  }
+
+  .transcript-text {
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: #334155;
+  }
+
+  .transcript-text.hidden-text {
+    display: none;
+  }
+
+  .dialogue-title {
+    font-weight: 800;
+    color: #0f172a;
+    margin-top: 12px;
+    margin-bottom: 4px;
+  }
+
+  .dialogue-line {
+    margin-left: 16px;
+    margin-bottom: 4px;
+  }
+
+  /* Tooltip logic */
+  .word-tooltip {
+    border-bottom: 2px dotted #0284c7;
+    color: #0369a1;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-hint);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.18);
+    text-align: center;
+  }
+
+  /* Matching Section */
+  .matching-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media(max-width: 700px) {
+    .matching-container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .matching-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .match-box {
+    background-color: #f1f5f9;
+    border: 2px solid #cbd5e1;
+    border-radius: 14px;
+    padding: 16px;
+    font-weight: 700;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 60px;
+  }
+
+  select {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #0f172a;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  select:focus {
+    border-color: #0284c7;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .btn-reset {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f1f5f9;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-reset:hover {
+    background-color: #e2e8f0;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <div class="header-title">
+    <span>🎧</span>
+    <h2>Listen to 3 dialogues and match them with situations</h2>
+  </div>
+
+  <!-- Transcript Section -->
+  <div class="transcript-card">
+    <div class="transcript-header">
+      <div class="transcript-title">
+        <span>📄</span> Transcript
+      </div>
+      <button type="button" class="toggle-btn" onclick="toggleTranscript()">Скрыть текст 👁️</button>
+    </div>
+
+    <div class="transcript-text" id="transcriptText">
+      <div class="dialogue-title">Dialogue 1</div>
+      <div class="dialogue-line">Assistant: Good morning, Dr. Smith's office. How may I help you?</div>
+      <div class="dialogue-line">Jane: Hi, this is Jane. I need to <span class="word-tooltip" data-hint="[ˌriːˈʃed.juːl] — перенести (встречу)" onmouseenter="playAudio('reschedule')">reschedule</span> my <span class="word-tooltip" data-hint="[əˈpɔɪnt.mənt] — встреча / прием" onmouseenter="playAudio('appointment')">appointment</span>.</div>
+      <div class="dialogue-line">Assistant: Okay, Jane. How about Friday at 10 AM?</div>
+      <div class="dialogue-line">Jane: That will work for me.</div>
+      <div class="dialogue-line">Assistant: Anything else?</div>
+      <div class="dialogue-line">Jane: No, that's all, thank you!</div>
+      <div class="dialogue-line">Assistant: You're welcome. Goodbye!</div>
+      <div class="dialogue-line">Jane: Bye!</div>
+
+      <div class="dialogue-title" style="margin-top: 14px;">Dialogue 2</div>
+      <div class="dialogue-line">Sarah's Mom: Hello, who’s calling, please?</div>
+      <div class="dialogue-line">Teacher: Hello, Mrs. Johnson. It’s Sarah’s teacher, Mr. Thomson. Is Sarah home?</div>
+      <div class="dialogue-line">Sarah's Mom: Sarah’s at dance class. Can I <span class="word-tooltip" data-hint="[teɪk ə ˈmes.ɪdʒ] — передать / записать сообщение" onmouseenter="playAudio('take a message')">take a message</span>?</div>
+      <div class="dialogue-line">Teacher: Yes, tell her the Spanish class is on Saturday at 2 PM.</div>
+      <div class="dialogue-line">Sarah's Mom: Alright, I’ll let Sarah know you called.</div>
+      <div class="dialogue-line">Teacher: Thanks, Mrs. Johnson!</div>
+      <div class="dialogue-line">Sarah's Mom: You’re welcome. Bye!</div>
+
+      <div class="dialogue-title" style="margin-top: 14px;">Dialogue 3</div>
+      <div class="dialogue-line">Secretary: Good afternoon, GreenTech Solutions.</div>
+      <div class="dialogue-line">Robert: Hi, can I speak with Mr. Adams?</div>
+      <div class="dialogue-line">Secretary: He’s in a meeting. Is this something <span class="word-tooltip" data-hint="[ˈɜː.dʒənt] — срочный" onmouseenter="playAudio('urgent')">urgent</span>?</div>
+      <div class="dialogue-line">Robert: Yes, tell him Robert from BlueCorp needs his <span class="word-tooltip" data-hint="[ˈfiːd.bæk] — отзыв / обратная связь" onmouseenter="playAudio('feedback')">feedback</span> on the <span class="word-tooltip" data-hint="[ˈkɒn.trækt] — контракт / договор" onmouseenter="playAudio('contract')">contract</span> by tomorrow.</div>
+      <div class="dialogue-line">Secretary: Will do. Thanks for calling!</div>
+      <div class="dialogue-line">Robert: Thanks. Bye!</div>
+      <div class="dialogue-line">Secretary: Goodbye!</div>
+    </div>
+  </div>
+
+  <!-- Matching Section -->
+  <div class="matching-container">
+    
+    <!-- Left column: Dialogues -->
+    <div class="matching-column">
+      <div class="match-box">Dialogue 1</div>
+      <div class="match-box">Dialogue 2</div>
+      <div class="match-box">Dialogue 3</div>
+    </div>
+
+    <!-- Right column: Situations with selects -->
+    <div class="matching-column">
+      <div class="match-box">
+        <select>
+          <option value="">-- выберите ситуацию --</option>
+          <option value="1">a secretary and a client</option>
+          <option value="2">a teacher and student’s mom</option>
+          <option value="3">clinic’s assistant and a client</option>
+        </select>
+      </div>
+      <div class="match-box">
+        <select>
+          <option value="">-- выберите ситуацию --</option>
+          <option value="1">a secretary and a client</option>
+          <option value="2">a teacher and student’s mom</option>
+          <option value="3">clinic’s assistant and a client</option>
+        </select>
+      </div>
+      <div class="match-box">
+        <select>
+          <option value="">-- выберите ситуацию --</option>
+          <option value="1">a secretary and a client</option>
+          <option value="2">a teacher and student’s mom</option>
+          <option value="3">clinic’s assistant and a client</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="btn-reset" onclick="resetAll()">Сбросить выбор 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  let isTranscriptHidden = false;
+
+  function toggleTranscript() {
+    isTranscriptHidden = !isTranscriptHidden;
+    const textDiv = document.getElementById('transcriptText');
+    const btn = document.querySelector('.toggle-btn');
+
+    if (isTranscriptHidden) {
+      textDiv.classList.add('hidden-text');
+      btn.innerText = 'Показать текст 👁️';
+    } else {
+      textDiv.classList.remove('hidden-text');
+      btn.innerText = 'Скрыть текст 👁️';
+    }
+  }
+
+  function resetAll() {
+    document.querySelectorAll('select').forEach(select => {
+      select.value = '';
+    });
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
