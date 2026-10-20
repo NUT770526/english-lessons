@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2. Раскройте скобки — Grammar Practice</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .app-container {
+    max-width: 860px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 36px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+    border: 2px solid #e2e8f0;
+  }
+
+  .header-title {
+    font-size: 1.5rem;
+    color: #0f172a;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 28px;
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+
+  .exercise-item {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 18px 22px;
+    transition: all 0.2s;
+  }
+
+  .exercise-item:hover {
+    border-color: #cbd5e1;
+    background-color: #ffffff;
+  }
+
+  .sentence-line {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.8;
+  }
+
+  .verb-hint {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #0284c7;
+    font-style: italic;
+    margin-top: 6px;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #0284c7;
+    outline: none;
+    transition: all 0.2s;
+    width: 140px;
+    display: inline-block;
+    text-align: center;
+    margin: 0 4px;
+  }
+
+  input[type="text"]:focus {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  /* Fixed Tooltip logic — drops BELOW the word */
+  .word-tooltip {
+    border-bottom: 2px dotted #0284c7;
+    color: #0369a1;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-hint);
+    position: absolute;
+    top: 130%;
+    left: 0;
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 9999;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    text-align: left;
+    pointer-events: none;
+  }
+
+  .hint-box {
+    background-color: #f0fdf4;
+    border-left: 5px solid #16a34a;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 0.95rem;
+    color: #14532d;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .btn-reset {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f1f5f9;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-reset:hover {
+    background-color: #e2e8f0;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <div class="header-title">
+    <span>✏️</span>
+    <h2>2. Раскройте скобки</h2>
+  </div>
+  <div class="subtitle">Обратите внимание на время, отрицание и порядок слов в вопросе.</div>
+
+  <div class="exercise-list">
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        1. What time <input type="text" autocomplete="off"> your manager usually <input type="text" autocomplete="off"> you back?
+      </div>
+      <div class="verb-hint">(call)</div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        2. Our <span class="word-tooltip" data-hint="[rɪˈsep.ʃən.ɪst] — администратор / ресепшионист" onmouseenter="playAudio('receptionist')">receptionist</span> <input type="text" style="width: 180px;" autocomplete="off"> <span class="word-tooltip" data-hint="[əˈpɔɪnt.mənts] — встречи / записи" onmouseenter="playAudio('appointments')">appointments</span> on Fridays.
+      </div>
+      <div class="verb-hint">(not / reschedule)</div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        3. <input type="text" style="width: 100px;" autocomplete="off"> this request <span class="word-tooltip" data-hint="[ˈɜː.dʒənt] — срочный" onmouseenter="playAudio('urgent')">urgent</span>?
+      </div>
+      <div class="verb-hint">(be — настоящее время)</div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        4. Who <input type="text" autocomplete="off"> you yesterday?
+      </div>
+      <div class="verb-hint">(call)</div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        5. The client <input type="text" style="width: 160px;" autocomplete="off"> a message yesterday.
+      </div>
+      <div class="verb-hint">(not / leave)</div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        6. How <input type="text" style="width: 100px;" autocomplete="off"> you <input type="text" style="width: 110px;" autocomplete="off"> <span class="word-tooltip" data-hint="[ɪn tʌtʃ] — на связи / связываться" onmouseenter="playAudio('in touch')">in touch</span> with the <span class="word-tooltip" data-hint="[səˈplaɪ.ər] — поставщик" onmouseenter="playAudio('supplier')">supplier</span> last week?
+      </div>
+      <div class="verb-hint">(get)</div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        7. <input type="text" style="width: 100px;" autocomplete="off"> you <input type="text" style="width: 110px;" autocomplete="off"> an <span class="word-tooltip" data-hint="[əˈpɔɪnt.mənt] — встреча / прием" onmouseenter="playAudio('appointment')">appointment</span> yesterday?
+      </div>
+      <div class="verb-hint">(have)</div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        8. I <input type="text" style="width: 160px;" autocomplete="off"> <span class="word-tooltip" data-hint="[əˈveɪ.lə.bəl] — свободен / доступен" onmouseenter="playAudio('available')">available</span> tomorrow morning.
+      </div>
+      <div class="verb-hint">(not / be)</div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        9. When <input type="text" style="width: 100px;" autocomplete="off"> you <input type="text" autocomplete="off"> the client back tomorrow?
+      </div>
+      <div class="verb-hint">(call)</div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        10. We <input type="text" style="width: 200px;" autocomplete="off"> the <span class="word-tooltip" data-hint="[əˈpɔɪnt.mənt] — встреча" onmouseenter="playAudio('appointment')">appointment</span> next week.
+      </div>
+      <div class="verb-hint">(not / reschedule)</div>
+    </div>
+
+  </div>
+
+  <div class="hint-box">
+    <strong>Подсказка к № 4:</strong> если спрашиваем <strong>кто выполнил действие</strong>, говорим <em>Who called?</em>
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="btn-reset" onclick="resetAll()">Сбросить ответы 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function resetAll() {
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+      input.value = '';
+    });
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
