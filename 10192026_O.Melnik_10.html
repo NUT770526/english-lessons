@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4. Переведите на английский — Practice Exercise</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .app-container {
+    max-width: 860px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 36px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+    border: 2px solid #e2e8f0;
+  }
+
+  .header-title {
+    font-size: 1.5rem;
+    color: #0f172a;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 28px;
+  }
+
+  .time-section-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0284c7;
+    margin: 28px 0 16px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  .exercise-item {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+    transition: all 0.2s;
+  }
+
+  .exercise-item:hover {
+    border-color: #cbd5e1;
+    background-color: #ffffff;
+  }
+
+  .sentence-line {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 10px;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .input-symbol {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #0284c7;
+    width: 20px;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #0f172a;
+    outline: none;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  input[type="text"]:focus {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  /* Fixed Tooltip logic — drops BELOW the word */
+  .word-tooltip {
+    border-bottom: 2px dotted #0284c7;
+    color: #0369a1;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-hint);
+    position: absolute;
+    top: 130%;
+    left: 0;
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 9999;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    text-align: left;
+    pointer-events: none;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .btn-reset {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f1f5f9;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-reset:hover {
+    background-color: #e2e8f0;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <div class="header-title">
+    <span>🌐</span>
+    <h2>4. Переведите на английский</h2>
+  </div>
+  <div class="subtitle">Используйте слова и выражения из списка. Наведите на выделенные слова для подсказки.</div>
+
+  <!-- Present Simple -->
+  <div class="time-section-title">Present Simple</div>
+
+  <div class="exercise-item">
+    <div class="sentence-line">
+      1. Как пишется ваша <span class="word-tooltip" data-hint="[spel / ˈsɜː.neɪm] — spell your last name" onmouseenter="playAudio('spell your last name')">фамилия по буквам</span>?
+    </div>
+    <div class="input-row">
+      <span class="input-symbol">→</span>
+      <input type="text" placeholder="Перевод на английский..." autocomplete="off">
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-line">
+      2. По какому номеру с вами <span class="word-tooltip" data-hint="[best number to reach you] — best number to reach you" onmouseenter="playAudio('best number to reach you')">лучше связаться</span>?
+    </div>
+    <div class="input-row">
+      <span class="input-symbol">→</span>
+      <input type="text" placeholder="Перевод на английский..." autocomplete="off">
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-line">
+      3. Она не хочет <span class="word-tooltip" data-hint="[liːv ə ˈmes.ɪdʒ] — leave a message" onmouseenter="playAudio('leave a message')">оставлять сообщение</span>.
+    </div>
+    <div class="input-row">
+      <span class="input-symbol">→</span>
+      <input type="text" placeholder="Перевод на английский..." autocomplete="off">
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-line">
+      4. У вас есть <span class="word-tooltip" data-hint="[hæv ən əˈpɔɪnt.mənt] — have an appointment" onmouseenter="playAudio('have an appointment')">назначенная встреча</span> сегодня?
+    </div>
+    <div class="input-row">
+      <span class="input-symbol">→</span>
+      <input type="text" placeholder="Перевод на английский..." autocomplete="off">
+    </div>
+  </div>
+
+  <!-- Past Simple -->
+  <div class="time-section-title">Past Simple</div>
+
+  <div class="exercise-item">
+    <div class="sentence-line">
+      5. Вы <span class="word-tooltip" data-hint="[ˌriːˈʃed.juːl ðə ˈmiː.tɪŋ] — reschedule the meeting" onmouseenter="playAudio('reschedule the meeting')">перенесли встречу</span> вчера?
+    </div>
+    <div class="input-row">
+      <span class="input-symbol">→</span>
+      <input type="text" placeholder="Перевод на английский..." autocomplete="off">
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-line">
+      6. Он не <span class="word-tooltip" data-hint="[kɔːl bæk] — call back" onmouseenter="playAudio('call back')">перезвонил</span> мне вчера.
+    </div>
+    <div class="input-row">
+      <span class="input-symbol">→</span>
+      <input type="text" placeholder="Перевод на английский..." autocomplete="off">
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-line">
+      7. Это было <span class="word-tooltip" data-hint="[ˈɜː.dʒənt] — urgent" onmouseenter="playAudio('urgent')">срочно</span>?
+    </div>
+    <div class="input-row">
+      <span class="input-symbol">→</span>
+      <input type="text" placeholder="Перевод на английский..." autocomplete="off">
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-line">
+      8. Во сколько клиент <span class="word-tooltip" data-hint="[ɡet ɪn tʌtʃ] — get in touch with you" onmouseenter="playAudio('get in touch with you')">связался с вами</span> вчера?
+    </div>
+    <div class="input-row">
+      <span class="input-symbol">→</span>
+      <input type="text" placeholder="Перевод на английский..." autocomplete="off">
+    </div>
+  </div>
+
+  <!-- Future Simple -->
+  <div class="time-section-title">Future Simple</div>
+
+  <div class="exercise-item">
+    <div class="sentence-line">
+      9. Я <span class="word-tooltip" data-hint="[let her knəʊ juː kɔːld] — let Anna know you called" onmouseenter="playAudio('let Anna know you called')">передам Анне, что вы звонили</span>.
+    </div>
+    <div class="input-row">
+      <span class="input-symbol">→</span>
+      <input type="text" placeholder="Перевод на английский..." autocomplete="off">
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-line">
+      10. Вам <span class="word-tooltip" data-hint="[wɜːk fɔːr juː] — work for you" onmouseenter="playAudio('work for you')">подойдёт</span> завтра в три?
+    </div>
+    <div class="input-row">
+      <span class="input-symbol">→</span>
+      <input type="text" placeholder="Перевод на английский..." autocomplete="off">
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-line">
+      11. Мы не будем <span class="word-tooltip" data-hint="[ˌriːˈʃed.juːl ðə ˈmiː.tɪŋ] — reschedule the meeting" onmouseenter="playAudio('reschedule the meeting')">переносить встречу</span>.
+    </div>
+    <div class="input-row">
+      <span class="input-symbol">→</span>
+      <input type="text" placeholder="Перевод на английский..." autocomplete="off">
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-line">
+      12. Когда вы мне <span class="word-tooltip" data-hint="[kɔːl me bæk] — call me back" onmouseenter="playAudio('call me back')">перезвоните</span>?
+    </div>
+    <div class="input-row">
+      <span class="input-symbol">→</span>
+      <input type="text" placeholder="Перевод на английский..." autocomplete="off">
+    </div>
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="btn-reset" onclick="resetAll()">Сбросить ответы 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function resetAll() {
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+      input.value = '';
+    });
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
