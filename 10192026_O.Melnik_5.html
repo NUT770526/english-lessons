@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match the dialogues with the situations — Telephone English</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Chat Bubble Styles */
+  .chat-bubble-left {
+    border: 2px solid #a855f7;
+    background-color: #ffffff;
+    border-radius: 14px;
+    padding: 12px 18px;
+    position: relative;
+    max-width: 85%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  }
+
+  .chat-bubble-left::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 14px;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 8px solid #a855f7;
+  }
+
+  .chat-bubble-right {
+    border: 2px solid #f59e0b;
+    background-color: #ffffff;
+    border-radius: 14px;
+    padding: 12px 18px;
+    position: relative;
+    max-width: 85%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  }
+
+  .chat-bubble-right::after {
+    content: '';
+    position: absolute;
+    right: -8px;
+    top: 14px;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 8px solid #f59e0b;
+  }
+
+  /* Custom Tooltip Styling */
+  .word-tooltip {
+    border-bottom: 2px dotted #0284c7;
+    color: #0369a1;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    transition: color 0.15s ease;
+  }
+
+  .word-tooltip:hover {
+    color: #0284c7;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-hint);
+    position: absolute;
+    top: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 1000;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    text-align: center;
+  }
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800 p-4 sm:p-8 flex justify-center min-h-screen">
+
+<div class="max-w-4xl w-full bg-white rounded-3xl p-6 sm:p-10 shadow-lg border border-slate-200 self-start my-auto">
+
+  <!-- Main Header -->
+  <div class="flex items-center gap-3 mb-6">
+    <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-2xl shadow-sm">
+      📞
+    </div>
+    <div>
+      <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900">
+        Telephone Dialogues & Matching Practice
+      </h1>
+      <p class="text-xs text-slate-500 font-medium mt-0.5">
+        Наводите мышкой на выделенные фразы для прослушивания, транскрипции и перевода
+      </p>
+    </div>
+  </div>
+
+  <!-- Speech Audio Player Bar -->
+  <div class="bg-slate-900 text-white rounded-2xl p-5 mb-8 shadow-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <button id="playPauseBtn" onclick="toggleAudio()" class="w-12 h-12 bg-purple-500 hover:bg-purple-400 text-white rounded-full flex items-center justify-center text-lg font-bold transition-transform active:scale-95 shadow">
+          ▶
+        </button>
+        <button id="resetAudioBtn" onclick="stopAudio()" class="w-10 h-10 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-full flex items-center justify-center text-sm transition">
+          ⏹
+        </button>
+        <div>
+          <div class="text-xs uppercase tracking-wider text-purple-400 font-semibold">Audio Dialogue Player</div>
+          <div id="playerStatus" class="text-sm font-medium text-slate-200">Ready to play dialogues</div>
+        </div>
+      </div>
+
+      <!-- Speed selector -->
+      <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-xl self-start sm:self-center">
+        <span class="text-xs text-slate-400 font-medium">Speed:</span>
+        <select id="speedSelect" class="bg-transparent text-xs font-semibold text-purple-300 focus:outline-none cursor-pointer">
+          <option value="0.8" class="bg-slate-900 text-white">0.8x (Slower)</option>
+          <option value="1.0" selected class="bg-slate-900 text-white">1.0x (Normal)</option>
+          <option value="1.15" class="bg-slate-900 text-white">1.15x (Faster)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Active Line Indicator -->
+    <div id="nowPlayingText" class="mt-4 pt-3 border-t border-slate-800 text-xs italic text-slate-400 min-h-[32px] flex items-center">
+      Click Play to start listening to all dialogues line by line...
+    </div>
+  </div>
+
+  <!-- Dialogues Display Container -->
+  <div class="space-y-10 mb-12">
+
+    <!-- DIALOGUE 1 -->
+    <div>
+      <div class="flex justify-center mb-4">
+        <span class="bg-indigo-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-sm">
+          Dialogue 1
+        </span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        <div class="md:col-span-4 flex justify-center">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80" 
+               alt="Receptionist at phone" 
+               class="rounded-2xl object-cover h-48 w-full shadow-sm border border-slate-200"
+               onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/475569?text=Receptionist';">
+        </div>
+        <div class="md:col-span-8 space-y-3.5">
+          <div class="flex justify-start">
+            <div class="chat-bubble-left text-sm font-medium text-slate-700">
+              Good morning, could you please <span class="word-tooltip" data-hint="[kəˈnekt] — соединить" onmouseenter="playWord('connect')">connect</span> me to Mr. Johnson?
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <div class="chat-bubble-right text-sm font-medium text-slate-700">
+              Certainly. Please <span class="word-tooltip" data-hint="[həʊld ɒn] — подождите на линии" onmouseenter="playWord('hold on')">hold on</span> while I <span class="word-tooltip" data-hint="[pʊt θruː] — соединяю (вас по телефону)" onmouseenter="playWord('put you through')">put you through</span>.
+            </div>
+          </div>
+          <div class="flex justify-start">
+            <div class="chat-bubble-left text-sm font-medium text-slate-700">
+              Thank you.
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <div class="chat-bubble-right text-sm font-medium text-slate-700">
+              You're welcome. One moment, please.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIALOGUE 2 -->
+    <div>
+      <div class="flex justify-center mb-4">
+        <span class="bg-indigo-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-sm">
+          Dialogue 2
+        </span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        <div class="md:col-span-8 space-y-3.5 order-2 md:order-1">
+          <div class="flex justify-start">
+            <div class="chat-bubble-left text-sm font-medium text-slate-700">
+              Your voice is <span class="word-tooltip" data-hint="[ˈbreɪ.kɪŋ ʌp] — прерывается (связь)" onmouseenter="playWord('breaking up')">breaking up</span>, can you <span class="word-tooltip" data-hint="[spiːk ʌp] — говорить громче" onmouseenter="playWord('speak up')">speak up</span>?
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <div class="chat-bubble-right text-sm font-medium text-slate-700">
+              Can you hear me now?
+            </div>
+          </div>
+          <div class="flex justify-start">
+            <div class="chat-bubble-left text-sm font-medium text-slate-700">
+              Yes, that's better. I think we got <span class="word-tooltip" data-hint="[kʌt ɒf] — разъединились / связь оборвалась" onmouseenter="playWord('cut off')">cut off</span> earlier.
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <div class="chat-bubble-right text-sm font-medium text-slate-700">
+              Yeah, my signal is bad.
+            </div>
+          </div>
+        </div>
+        <div class="md:col-span-4 flex justify-center order-1 md:order-2">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" 
+               alt="Woman confused on bad phone call" 
+               class="rounded-2xl object-cover h-48 w-full shadow-sm border border-slate-200"
+               onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/475569?text=Bad+Signal';">
+        </div>
+      </div>
+    </div>
+
+    <!-- DIALOGUE 3 -->
+    <div>
+      <div class="flex justify-center mb-4">
+        <span class="bg-indigo-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-sm">
+          Dialogue 3
+        </span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        <div class="md:col-span-4 flex justify-center">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80" 
+               alt="Man talking on smartphone" 
+               class="rounded-2xl object-cover h-48 w-full shadow-sm border border-slate-200"
+               onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/475569?text=Phone+Call';">
+        </div>
+        <div class="md:col-span-8 space-y-3.5">
+          <div class="flex justify-start">
+            <div class="chat-bubble-left text-sm font-medium text-slate-700">
+              Hey, why did you <span class="word-tooltip" data-hint="[hæŋ ʌp] — повесить трубку / бросить звонок" onmouseenter="playWord('hang up')">hang up</span>?
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <div class="chat-bubble-right text-sm font-medium text-slate-700">
+              Sorry, my phone died. Can I <span class="word-tooltip" data-hint="[kɔːl bæk] — перезвонить" onmouseenter="playWord('call you back')">call you back</span> later?
+            </div>
+          </div>
+          <div class="flex justify-start">
+            <div class="chat-bubble-left text-sm font-medium text-slate-700">
+              Sure, no problem.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIALOGUE 4 -->
+    <div>
+      <div class="flex justify-center mb-4">
+        <span class="bg-indigo-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-sm">
+          Dialogue 4
+        </span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        <div class="md:col-span-8 space-y-3.5 order-2 md:order-1">
+          <div class="flex justify-start">
+            <div class="chat-bubble-left text-sm font-medium text-slate-700">
+              Hello, can I talk to Mr. Clark?
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <div class="chat-bubble-right text-sm font-medium text-slate-700">
+              I’m sorry, you’ve <span class="word-tooltip" data-hint="[ˈdaɪ.əld ʌp] — набрали (номер)" onmouseenter="playWord('dialed up')">dialed up</span> the wrong number.
+            </div>
+          </div>
+          <div class="flex justify-start">
+            <div class="chat-bubble-left text-sm font-medium text-slate-700">
+              Oh, sorry!
+            </div>
+          </div>
+        </div>
+        <div class="md:col-span-4 flex justify-center order-1 md:order-2">
+          <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80" 
+               alt="Businessman looking surprised on call" 
+               class="rounded-2xl object-cover h-48 w-full shadow-sm border border-slate-200"
+               onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/475569?text=Wrong+Number';">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- EXERCISE: Match the dialogues with the situations -->
+  <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-xl">
+        🧩
+      </div>
+      <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">
+        Match the dialogues with the situations
+      </h2>
+    </div>
+
+    <div class="space-y-4" id="matchingContainer">
+
+      <!-- Item 1 -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white rounded-xl border border-slate-200 gap-4 shadow-sm">
+        <select class="match-select bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer">
+          <option value="">Select dialogue...</option>
+          <option value="d1">Dialogue 1</option>
+          <option value="d2">Dialogue 2</option>
+          <option value="d3">Dialogue 3</option>
+          <option value="d4">Dialogue 4</option>
+        </select>
+        <div class="text-sm font-medium text-slate-700 flex-1">
+          Two friends are having trouble talking on the phone because the signal is bad
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white rounded-xl border border-slate-200 gap-4 shadow-sm">
+        <select class="match-select bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer">
+          <option value="">Select dialogue...</option>
+          <option value="d1">Dialogue 1</option>
+          <option value="d2">Dialogue 2</option>
+          <option value="d3">Dialogue 3</option>
+          <option value="d4">Dialogue 4</option>
+        </select>
+        <div class="text-sm font-medium text-slate-700 flex-1">
+          Someone accidentally called the wrong number
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white rounded-xl border border-slate-200 gap-4 shadow-sm">
+        <select class="match-select bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer">
+          <option value="">Select dialogue...</option>
+          <option value="d1">Dialogue 1</option>
+          <option value="d2">Dialogue 2</option>
+          <option value="d3">Dialogue 3</option>
+          <option value="d4">Dialogue 4</option>
+        </select>
+        <div class="text-sm font-medium text-slate-700 flex-1">
+          The client is waiting while the receptionist is connecting him to another person
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white rounded-xl border border-slate-200 gap-4 shadow-sm">
+        <select class="match-select bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer">
+          <option value="">Select dialogue...</option>
+          <option value="d1">Dialogue 1</option>
+          <option value="d2">Dialogue 2</option>
+          <option value="d3">Dialogue 3</option>
+          <option value="d4">Dialogue 4</option>
+        </select>
+        <div class="text-sm font-medium text-slate-700 flex-1">
+          A phone call between two friends got cut off, so they agreed to talk again later
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-6 flex justify-between items-center flex-wrap gap-3 pt-4 border-t border-slate-200">
+      <button type="button" onclick="resetMatching()" class="px-5 py-2.5 rounded-xl font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 active:scale-95 transition text-sm">
+        Сбросить выбор 🔄
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // All dialogue lines structured for full sequential audio playback
+  const fullAudioScript = [
+    { label: "Dialogue 1", speaker: "Caller", text: "Good morning, could you please connect me to Mr. Johnson?", pitch: 1.0 },
+    { label: "Dialogue 1", speaker: "Receiver", text: "Certainly. Please hold on while I put you through.", pitch: 1.15 },
+    { label: "Dialogue 1", speaker: "Caller", text: "Thank you.", pitch: 1.0 },
+    { label: "Dialogue 1", speaker: "Receiver", text: "You're welcome. One moment, please.", pitch: 1.15 },
+
+    { label: "Dialogue 2", speaker: "Caller", text: "Your voice is breaking up, can you speak up?", pitch: 0.95 },
+    { label: "Dialogue 2", speaker: "Receiver", text: "Can you hear me now?", pitch: 1.10 },
+    { label: "Dialogue 2", speaker: "Caller", text: "Yes, that's better. I think we got cut off earlier.", pitch: 0.95 },
+    { label: "Dialogue 2", speaker: "Receiver", text: "Yeah, my signal is bad.", pitch: 1.10 },
+
+    { label: "Dialogue 3", speaker: "Caller", text: "Hey, why did you hang up?", pitch: 1.05 },
+    { label: "Dialogue 3", speaker: "Receiver", text: "Sorry, my phone died. Can I call you back later?", pitch: 0.9 },
+    { label: "Dialogue 3", speaker: "Caller", text: "Sure, no problem.", pitch: 1.05 },
+
+    { label: "Dialogue 4", speaker: "Caller", text: "Hello, can I talk to Mr. Clark?", pitch: 0.95 },
+    { label: "Dialogue 4", speaker: "Receiver", text: "I’m sorry, you’ve dialed up the wrong number.", pitch: 1.1 },
+    { label: "Dialogue 4", speaker: "Caller", text: "Oh, sorry!", pitch: 0.95 }
+  ];
+
+  let currentLineIndex = 0;
+  let isPlaying = false;
+  let synth = window.speechSynthesis;
+
+  function getEnglishVoice() {
+    if (!synth) return null;
+    const voices = synth.getVoices();
+    return voices.find(v => v.lang.startsWith('en')) || voices[0] || null;
+  }
+
+  if (synth) {
+    synth.onvoiceschanged = () => getEnglishVoice();
+  }
+
+  function playNextLine() {
+    if (!isPlaying) return;
+
+    if (currentLineIndex >= fullAudioScript.length) {
+      isPlaying = false;
+      currentLineIndex = 0;
+      updatePlayerUI(false, "Playback finished");
+      document.getElementById('nowPlayingText').innerText = "Finished playing all dialogues. Click Play to listen again.";
+      return;
+    }
+
+    const line = fullAudioScript[currentLineIndex];
+    const speed = parseFloat(document.getElementById('speedSelect').value) || 1.0;
+
+    const utterance = new SpeechSynthesisUtterance(line.text);
+    utterance.lang = 'en-US';
+    utterance.rate = speed;
+    utterance.pitch = line.pitch;
+
+    const voice = getEnglishVoice();
+    if (voice) utterance.voice = voice;
+
+    document.getElementById('nowPlayingText').innerHTML = `<span class="text-purple-400 font-bold">[${line.label}] ${line.speaker}:</span> "${line.text}"`;
+    updatePlayerUI(true, `Playing line ${currentLineIndex + 1} of ${fullAudioScript.length}`);
+
+    utterance.onend = () => {
+      currentLineIndex++;
+      setTimeout(() => {
+        if (isPlaying) playNextLine();
+      }, 350);
+    };
+
+    utterance.onerror = () => {
+      currentLineIndex++;
+      if (isPlaying) playNextLine();
+    };
+
+    synth.speak(utterance);
+  }
+
+  function toggleAudio() {
+    if (!synth) return;
+
+    if (isPlaying) {
+      synth.cancel();
+      isPlaying = false;
+      updatePlayerUI(false, "Paused");
+    } else {
+      synth.cancel();
+      isPlaying = true;
+      playNextLine();
+    }
+  }
+
+  function stopAudio() {
+    if (synth) synth.cancel();
+    isPlaying = false;
+    currentLineIndex = 0;
+    updatePlayerUI(false, "Stopped");
+    document.getElementById('nowPlayingText').innerText = "Stopped. Click Play to start from the beginning.";
+  }
+
+  function updatePlayerUI(playing, statusText) {
+    const playBtn = document.getElementById('playPauseBtn');
+    const statusLabel = document.getElementById('playerStatus');
+
+    playBtn.innerText = playing ? "⏸" : "▶";
+    statusLabel.innerText = statusText;
+  }
+
+  // Hover pronunciation for individual phrasal verbs/words
+  function playWord(text) {
+    if (!synth || isPlaying) return;
+
+    synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+
+    const voice = getEnglishVoice();
+    if (voice) utterance.voice = voice;
+
+    synth.speak(utterance);
+  }
+
+  // Matching Exercise Reset
+  function resetMatching() {
+    document.querySelectorAll('.match-select').forEach(select => {
+      select.value = '';
+    });
+  }
+</script>
+
+</body>
+</html>
