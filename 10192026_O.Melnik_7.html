@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Make Negatives and Questions — Grammar Practice</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .app-container {
+    max-width: 860px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 36px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+    border: 2px solid #e2e8f0;
+  }
+
+  .header-title {
+    font-size: 1.5rem;
+    color: #0f172a;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+  }
+
+  .example-box {
+    background-color: #f1f5f9;
+    border-left: 5px solid #0284c7;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.98rem;
+    color: #334155;
+  }
+
+  .example-title {
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  .example-line {
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  .time-section-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0284c7;
+    margin: 28px 0 16px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  .exercise-item {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    transition: all 0.2s;
+  }
+
+  .exercise-item:hover {
+    border-color: #cbd5e1;
+    background-color: #ffffff;
+  }
+
+  .sentence-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 12px;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .input-symbol {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #64748b;
+    width: 24px;
+    text-align: center;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #0f172a;
+    outline: none;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  input[type="text"]:focus {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  /* Fixed Tooltip logic — drops BELOW the word */
+  .word-tooltip {
+    border-bottom: 2px dotted #0284c7;
+    color: #0369a1;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-hint);
+    position: absolute;
+    top: 130%;
+    left: 0;
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 9999;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    text-align: left;
+    pointer-events: none;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .btn-reset {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f1f5f9;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-reset:hover {
+    background-color: #e2e8f0;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <div class="header-title">
+    <span>✏️</span>
+    <h2>1. Сделайте отрицание и задайте вопрос</h2>
+  </div>
+
+  <!-- Example Card -->
+  <div class="example-box">
+    <div class="example-title">Образец:</div>
+    <div class="example-line">She calls clients every morning.</div>
+    <div class="example-line" style="color: #ef4444;">→ She <strong>doesn’t call</strong> clients every morning.</div>
+    <div class="example-line" style="color: #0284c7;">→ <strong>Does</strong> she <strong>call</strong> clients every morning?</div>
+  </div>
+
+  <!-- Present Simple -->
+  <div class="time-section-title">Present Simple</div>
+
+  <div class="exercise-item">
+    <div class="sentence-text">1. She leaves a message when the manager is busy.</div>
+    <div class="input-group">
+      <div class="input-row">
+        <span class="input-symbol" style="color: #ef4444;">→</span>
+        <input type="text" placeholder="Отрицательное предложение (-)..." autocomplete="off">
+      </div>
+      <div class="input-row">
+        <span class="input-symbol" style="color: #0284c7;">→</span>
+        <input type="text" placeholder="Вопросительное предложение (?)..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-text">2. This number works for our clients.</div>
+    <div class="input-group">
+      <div class="input-row">
+        <span class="input-symbol" style="color: #ef4444;">→</span>
+        <input type="text" placeholder="Отрицательное предложение (-)..." autocomplete="off">
+      </div>
+      <div class="input-row">
+        <span class="input-symbol" style="color: #0284c7;">→</span>
+        <input type="text" placeholder="Вопросительное предложение (?)..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-text">
+      3. He has an <span class="word-tooltip" data-hint="[əˈpɔɪnt.mənt] — встреча / прием" onmouseenter="playAudio('appointment')">appointment</span> every Monday.
+    </div>
+    <div class="input-group">
+      <div class="input-row">
+        <span class="input-symbol" style="color: #ef4444;">→</span>
+        <input type="text" placeholder="Отрицательное предложение (-)..." autocomplete="off">
+      </div>
+      <div class="input-row">
+        <span class="input-symbol" style="color: #0284c7;">→</span>
+        <input type="text" placeholder="Вопросительное предложение (?)..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <!-- Past Simple -->
+  <div class="time-section-title">Past Simple</div>
+
+  <div class="exercise-item">
+    <div class="sentence-text">
+      4. They <span class="word-tooltip" data-hint="[ˌriːˈʃed.juːld] — перенесли (встречу)" onmouseenter="playAudio('rescheduled')">rescheduled</span> the meeting yesterday.
+    </div>
+    <div class="input-group">
+      <div class="input-row">
+        <span class="input-symbol" style="color: #ef4444;">→</span>
+        <input type="text" placeholder="Отрицательное предложение (-)..." autocomplete="off">
+      </div>
+      <div class="input-row">
+        <span class="input-symbol" style="color: #0284c7;">→</span>
+        <input type="text" placeholder="Вопросительное предложение (?)..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-text">5. The client left a message this morning.</div>
+    <div class="input-group">
+      <div class="input-row">
+        <span class="input-symbol" style="color: #ef4444;">→</span>
+        <input type="text" placeholder="Отрицательное предложение (-)..." autocomplete="off">
+      </div>
+      <div class="input-row">
+        <span class="input-symbol" style="color: #0284c7;">→</span>
+        <input type="text" placeholder="Вопросительное предложение (?)..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-text">
+      6. The request was <span class="word-tooltip" data-hint="[ˈɜː.dʒənt] — срочный" onmouseenter="playAudio('urgent')">urgent</span>.
+    </div>
+    <div class="input-group">
+      <div class="input-row">
+        <span class="input-symbol" style="color: #ef4444;">→</span>
+        <input type="text" placeholder="Отрицательное предложение (-)..." autocomplete="off">
+      </div>
+      <div class="input-row">
+        <span class="input-symbol" style="color: #0284c7;">→</span>
+        <input type="text" placeholder="Вопросительное предложение (?)..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <!-- Future Simple -->
+  <div class="time-section-title">Future Simple</div>
+
+  <div class="exercise-item">
+    <div class="sentence-text">7. Anna will call you back tomorrow.</div>
+    <div class="input-group">
+      <div class="input-row">
+        <span class="input-symbol" style="color: #ef4444;">→</span>
+        <input type="text" placeholder="Отрицательное предложение (-)..." autocomplete="off">
+      </div>
+      <div class="input-row">
+        <span class="input-symbol" style="color: #0284c7;">→</span>
+        <input type="text" placeholder="Вопросительное предложение (?)..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-text">8. That time will work for me.</div>
+    <div class="input-group">
+      <div class="input-row">
+        <span class="input-symbol" style="color: #ef4444;">→</span>
+        <input type="text" placeholder="Отрицательное предложение (-)..." autocomplete="off">
+      </div>
+      <div class="input-row">
+        <span class="input-symbol" style="color: #0284c7;">→</span>
+        <input type="text" placeholder="Вопросительное предложение (?)..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise-item">
+    <div class="sentence-text">
+      9. We will <span class="word-tooltip" data-hint="[ɡet ɪn tʌtʃ] — связаться / выйти на связь" onmouseenter="playAudio('get in touch')">get in touch</span> by email.
+    </div>
+    <div class="input-group">
+      <div class="input-row">
+        <span class="input-symbol" style="color: #ef4444;">→</span>
+        <input type="text" placeholder="Отрицательное предложение (-)..." autocomplete="off">
+      </div>
+      <div class="input-row">
+        <span class="input-symbol" style="color: #0284c7;">→</span>
+        <input type="text" placeholder="Вопросительное предложение (?)..." autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="btn-reset" onclick="resetAll()">Сбросить ответы 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function resetAll() {
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+      input.value = '';
+    });
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
