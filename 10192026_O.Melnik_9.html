@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3. Найдите и исправьте ошибку — Grammar Practice</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .app-container {
+    max-width: 860px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 36px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+    border: 2px solid #e2e8f0;
+  }
+
+  .header-title {
+    font-size: 1.5rem;
+    color: #0f172a;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 28px;
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+
+  .exercise-item {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 18px 22px;
+    transition: all 0.2s;
+  }
+
+  .exercise-item:hover {
+    border-color: #cbd5e1;
+    background-color: #ffffff;
+  }
+
+  .sentence-line {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 10px;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .input-symbol {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #16a34a;
+    width: 20px;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #0f172a;
+    outline: none;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  input[type="text"]:focus {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  /* Fixed Tooltip logic — drops BELOW the word */
+  .word-tooltip {
+    border-bottom: 2px dotted #0284c7;
+    color: #0369a1;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-hint);
+    position: absolute;
+    top: 130%;
+    left: 0;
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 9999;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    text-align: left;
+    pointer-events: none;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .btn-reset {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f1f5f9;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-reset:hover {
+    background-color: #e2e8f0;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <div class="header-title">
+    <span>🔍</span>
+    <h2>3. Найдите и исправьте ошибку</h2>
+  </div>
+  <div class="subtitle">В каждом предложении <strong>одна ошибка</strong>. Напишите правильный вариант предложения ниже.</div>
+
+  <div class="exercise-list">
+
+    <div class="exercise-item">
+      <div class="sentence-line">1. Does she leaves a message every time?</div>
+      <div class="input-row">
+        <span class="input-symbol">→</span>
+        <input type="text" placeholder="Исправленное предложение..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        2. He don’t have an <span class="word-tooltip" data-hint="[əˈpɔɪnt.mənt] — встреча / прием" onmouseenter="playAudio('appointment')">appointment</span> today.
+      </div>
+      <div class="input-row">
+        <span class="input-symbol">→</span>
+        <input type="text" placeholder="Исправленное предложение..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">3. Is this number work for you?</div>
+      <div class="input-row">
+        <span class="input-symbol">→</span>
+        <input type="text" placeholder="Исправленное предложение..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        4. Did you <span class="word-tooltip" data-hint="[ˌriːˈʃed.juːld] — перенесли (встречу)" onmouseenter="playAudio('rescheduled')">rescheduled</span> the <span class="word-tooltip" data-hint="[əˈpɔɪnt.mənt] — встреча" onmouseenter="playAudio('appointment')">appointment</span> yesterday?
+      </div>
+      <div class="input-row">
+        <span class="input-symbol">→</span>
+        <input type="text" placeholder="Исправленное предложение..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">5. The client didn’t left a message.</div>
+      <div class="input-row">
+        <span class="input-symbol">→</span>
+        <input type="text" placeholder="Исправленное предложение..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        6. Did the request <span class="word-tooltip" data-hint="[ˈɜː.dʒənt] — срочный" onmouseenter="playAudio('urgent')">urgent</span>?
+      </div>
+      <div class="input-row">
+        <span class="input-symbol">→</span>
+        <input type="text" placeholder="Исправленное предложение..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">7. Will she calls me back tomorrow?</div>
+      <div class="input-row">
+        <span class="input-symbol">→</span>
+        <input type="text" placeholder="Исправленное предложение..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        8. I won’t <span class="word-tooltip" data-hint="[əˈveɪ.lə.bəl] — свободен / доступен" onmouseenter="playAudio('available')">available</span> at 3 p.m.
+      </div>
+      <div class="input-row">
+        <span class="input-symbol">→</span>
+        <input type="text" placeholder="Исправленное предложение..." autocomplete="off">
+      </div>
+    </div>
+
+    <div class="exercise-item">
+      <div class="sentence-line">
+        9. When you will <span class="word-tooltip" data-hint="[ɡet ɪn tʌtʃ] — связаться / выйти на связь" onmouseenter="playAudio('get in touch')">get in touch</span> with the client?
+      </div>
+      <div class="input-row">
+        <span class="input-symbol">→</span>
+        <input type="text" placeholder="Исправленное предложение..." autocomplete="off">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="btn-reset" onclick="resetAll()">Сбросить ответы 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  function resetAll() {
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+      input.value = '';
+    });
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
