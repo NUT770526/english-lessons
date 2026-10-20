@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete the dialogues — Interactive Practice</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  .app-container {
+    max-width: 860px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+    border: 2px solid #e2e8f0;
+    position: relative;
+  }
+
+  .header-title {
+    font-size: 1.5rem;
+    color: #0f172a;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+  }
+
+  /* Audio Player Card */
+  .audio-player-card {
+    background-color: #f1f5f9;
+    border: 2px solid #cbd5e1;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .player-btn {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    background-color: #0284c7;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .player-btn:hover {
+    background-color: #0369a1;
+  }
+
+  .player-btn.secondary {
+    background-color: #e2e8f0;
+    color: #334155;
+  }
+
+  .player-btn.secondary:hover {
+    background-color: #cbd5e1;
+  }
+
+  .player-status {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #475569;
+    margin-left: auto;
+  }
+
+  /* Word Bank */
+  .word-bank {
+    background-color: #f0fdf4;
+    border: 2px solid #86efac;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+
+  .bank-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #166534;
+    margin-bottom: 10px;
+  }
+
+  .bank-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .bank-pill {
+    background-color: #ffffff;
+    border: 2px solid #4ade80;
+    color: #14532d;
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-weight: 700;
+  }
+
+  /* Dialogue Cards Layout */
+  .dialogue-section-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 24px 0 16px;
+    text-align: center;
+  }
+
+  .badge-dialogue {
+    display: inline-block;
+    background-color: #8b5cf6;
+    color: #ffffff;
+    padding: 4px 16px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 800;
+  }
+
+  .chat-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .chat-bubble {
+    padding: 16px 20px;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    max-width: 85%;
+    line-height: 1.6;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  }
+
+  .chat-bubble.left {
+    align-self: flex-start;
+    background-color: #ffffff;
+    border: 2px solid #c084fc;
+    color: #334155;
+    border-top-left-radius: 4px;
+  }
+
+  .chat-bubble.right {
+    align-self: flex-end;
+    background-color: #ffffff;
+    border: 2px solid #fbbf24;
+    color: #334155;
+    border-top-right-radius: 4px;
+  }
+
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #0f172a;
+    outline: none;
+    transition: all 0.2s;
+    width: 250px;
+    display: inline-block;
+    margin: 4px 0;
+  }
+
+  input[type="text"]:focus {
+    border-color: #0284c7;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  /* Fixed Tooltip logic — drops BELOW the word so it never gets cut off */
+  .word-tooltip {
+    border-bottom: 2px dotted #0284c7;
+    color: #0369a1;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+  }
+
+  .word-tooltip:hover::after {
+    content: attr(data-hint);
+    position: absolute;
+    top: 130%;
+    left: 0;
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 9999;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    text-align: left;
+    pointer-events: none;
+  }
+
+  .footer-controls {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .btn-reset {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f1f5f9;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-reset:hover {
+    background-color: #e2e8f0;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <div class="header-title">
+    <span>🧩</span>
+    <h2>Complete the dialogues</h2>
+  </div>
+
+  <!-- Audio Player Controls -->
+  <div class="audio-player-card">
+    <button type="button" class="player-btn" id="playBtn" onclick="togglePlayAudio()">▶️ Play Audio</button>
+    <button type="button" class="player-btn secondary" onclick="stopAudio()">⏹️ Stop</button>
+    <div class="player-status" id="playerStatus">Ready to play</div>
+  </div>
+
+  <!-- Dialogue 1 Section -->
+  <div class="word-bank">
+    <div class="bank-title">Phrases to choose from (Dialogue 1):</div>
+    <div class="bank-items">
+      <span class="bank-pill">that's all</span>
+      <span class="bank-pill">How may I help you</span>
+      <span class="bank-pill">I’ll let him know you called</span>
+      <span class="bank-pill">Can I take a message</span>
+    </div>
+  </div>
+
+  <div class="dialogue-section-title">
+    <span class="badge-dialogue">Dialogue 1</span>
+  </div>
+
+  <div class="chat-wrapper">
+    <div class="chat-bubble left">
+      Good morning, Telecom <span class="word-tooltip" data-hint="[ˌkɔː.pərˈeɪ.ʃən] — корпорація / компанія" onmouseenter="playAudio('corporation')">Corporation</span>.<br>
+      <input type="text" placeholder="Type phrase..." autocomplete="off"> ?
+    </div>
+
+    <div class="chat-bubble right">
+      Hi, this is John from Brighton Ltd. I need to speak with Mr. Smith.
+    </div>
+
+    <div class="chat-bubble left">
+      I'm sorry, Mr. Smith is in a meeting.<br>
+      <input type="text" placeholder="Type phrase..." autocomplete="off"> ?
+    </div>
+
+    <div class="chat-bubble right">
+      Yes, please. Let him know that the project <span class="word-tooltip" data-hint="[prəˈpəʊ.zəl] — пропозиція / проект" onmouseenter="playAudio('proposal')">proposal</span> has been sent to his email.
+    </div>
+
+    <div class="chat-bubble left">
+      Alright,<br>
+      <input type="text" placeholder="Type phrase..." autocomplete="off"> .<br>
+      Anything else?
+    </div>
+
+    <div class="chat-bubble right">
+      No,<br>
+      <input type="text" placeholder="Type phrase..." autocomplete="off"> .<br>
+      Thank you.
+    </div>
+
+    <div class="chat-bubble left">
+      Thanks for calling!
+    </div>
+
+    <div class="chat-bubble right">
+      Goodbye!
+    </div>
+
+    <div class="chat-bubble left">
+      Goodbye!
+    </div>
+  </div>
+
+
+  <!-- Dialogue 2 Section -->
+  <div class="word-bank" style="margin-top: 36px;">
+    <div class="bank-title">Phrases to choose from (Dialogue 2):</div>
+    <div class="bank-items">
+      <span class="bank-pill">Is this something urgent</span>
+      <span class="bank-pill">Is Jack there</span>
+      <span class="bank-pill">who’s calling</span>
+      <span class="bank-pill">Can you just tell him I called</span>
+    </div>
+  </div>
+
+  <div class="dialogue-section-title">
+    <span class="badge-dialogue">Dialogue 2</span>
+  </div>
+
+  <div class="chat-wrapper">
+    <div class="chat-bubble left">
+      Hi,<br>
+      <input type="text" placeholder="Type phrase..." autocomplete="off"> ?
+    </div>
+
+    <div class="chat-bubble right">
+      Hi, it's Emily.<br>
+      <input type="text" placeholder="Type phrase..." autocomplete="off"> ?
+    </div>
+
+    <div class="chat-bubble left">
+      Hi, Emily. Jack <span class="word-tooltip" data-hint="[stept aʊt] — ненадовго відлучився" onmouseenter="playAudio('stepped out')">stepped out</span> for a bit.<br>
+      <input type="text" placeholder="Type phrase..." autocomplete="off"> ?
+    </div>
+
+    <div class="chat-bubble right">
+      Not really.<br>
+      <input type="text" placeholder="Type phrase..." autocomplete="off"> ?
+    </div>
+
+    <div class="chat-bubble left">
+      Sure, I can do that.
+    </div>
+
+    <div class="chat-bubble right">
+      Thanks! Bye!
+    </div>
+
+    <div class="chat-bubble left">
+      Bye!
+    </div>
+  </div>
+
+  <div class="footer-controls">
+    <button type="button" class="btn-reset" onclick="resetAll()">Скинути відповіді 🔄</button>
+  </div>
+
+</div>
+
+<script>
+  let isPlaying = false;
+  let currentLineIndex = 0;
+
+  const fullDialogues = [
+    "Dialogue 1.",
+    "Good morning, Telecom Corporation. How may I help you?",
+    "Hi, this is John from Brighton Ltd. I need to speak with Mr. Smith.",
+    "I'm sorry, Mr. Smith is in a meeting. Can I take a message?",
+    "Yes, please. Let him know that the project proposal has been sent to his email.",
+    "Alright, I’ll let him know you called. Anything else?",
+    "No, that's all. Thank you.",
+    "Thanks for calling!",
+    "Goodbye!",
+    "Goodbye!",
+    "Dialogue 2.",
+    "Hi, Is Jack there?",
+    "Hi, it's Emily. who’s calling?",
+    "Hi, Emily. Jack stepped out for a bit. Is this something urgent?",
+    "Not really. Can you just tell him I called?",
+    "Sure, I can do that.",
+    "Thanks! Bye!",
+    "Bye!"
+  ];
+
+  function togglePlayAudio() {
+    if (!('speechSynthesis' in window)) {
+      alert("Ваш браузер не підтримує Web Speech API.");
+      return;
+    }
+
+    if (isPlaying) {
+      pauseAudio();
+    } else {
+      startPlaying();
+    }
+  }
+
+  function startPlaying() {
+    isPlaying = true;
+    document.getElementById('playBtn').innerText = '⏸️ Pause';
+    document.getElementById('playerStatus').innerText = 'Playing dialogues...';
+    speakLine();
+  }
+
+  function speakLine() {
+    if (!isPlaying) return;
+
+    if (currentLineIndex >= fullDialogues.length) {
+      stopAudio();
+      document.getElementById('playerStatus').innerText = 'Finished';
+      return;
+    }
+
+    const text = fullDialogues[currentLineIndex];
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+
+    utterance.onend = () => {
+      currentLineIndex++;
+      if (isPlaying) {
+        setTimeout(speakLine, 400);
+      }
+    };
+
+    utterance.onerror = () => {
+      stopAudio();
+    };
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function pauseAudio() {
+    isPlaying = false;
+    window.speechSynthesis.cancel();
+    document.getElementById('playBtn').innerText = '▶️ Resume';
+    document.getElementById('playerStatus').innerText = 'Paused';
+  }
+
+  function stopAudio() {
+    isPlaying = false;
+    currentLineIndex = 0;
+    window.speechSynthesis.cancel();
+    document.getElementById('playBtn').innerText = '▶️ Play Audio';
+    document.getElementById('playerStatus').innerText = 'Stopped';
+  }
+
+  function resetAll() {
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+      input.value = '';
+    });
+    stopAudio();
+  }
+
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      if (isPlaying) pauseAudio();
+      else window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
