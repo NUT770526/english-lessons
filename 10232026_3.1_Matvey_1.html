@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.1: Fact or Fiction - Interactive English Exercise</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #F8FAF8;
+      color: #2D3748;
+    }
+    .font-serif-title {
+      font-family: 'Lora', serif;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F1F1;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E0;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #A0AEC0;
+    }
+
+    /* Interactive Vocab Highlight */
+    .vocab-word {
+      background-color: #FEF3C7;
+      border-bottom: 2px dashed #D97706;
+      color: #78350F;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+      display: inline-block;
+    }
+    .vocab-word:hover {
+      background-color: #FDE68A;
+      border-bottom-style: solid;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+    }
+
+    /* Tooltip Card Styling */
+    .tooltip-card {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: 130%;
+      left: 50%;
+      transform: translateX(-50%) translateY(6px);
+      width: 250px;
+      background-color: #FFFFFF;
+      box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+      padding: 12px 14px;
+      z-index: 50;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      border: 1px solid #E2E8F0;
+      text-align: left;
+    }
+
+    .vocab-word:hover .tooltip-card,
+    .vocab-word:focus .tooltip-card {
+      visibility: visible;
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    .tooltip-card::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -6px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: #FFFFFF transparent transparent transparent;
+    }
+
+    /* Chat bubble indicators */
+    .bubble-speaker-a::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: -8px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-right: 8px solid #FFFDF5;
+    }
+
+    .bubble-speaker-b::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      right: -8px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 8px solid #F0FDF4;
+    }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.96); opacity: 0.9; }
+      50% { transform: scale(1.04); opacity: 0.5; }
+      100% { transform: scale(0.96); opacity: 0.9; }
+    }
+    .playing-pulse {
+      animation: pulse-ring 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col pb-16 antialiased">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-white/90 backdrop-blur-md border-b border-stone-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Lesson 3.1</span>
+        <h1 class="text-lg sm:text-xl font-bold text-stone-800">Fact or Fiction</h1>
+      </div>
+      <div class="flex items-center space-x-2 text-xs sm:text-sm font-semibold text-stone-500">
+        <i class="fa-solid fa-graduation-cap text-amber-600 text-lg"></i>
+        <span>Interactive Practice</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 mt-8 flex-grow w-full space-y-8">
+
+    <!-- Audio Player Banner Header -->
+    <section class="bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-teal-500/10 p-1 rounded-3xl shadow-sm">
+      <div class="bg-white rounded-[22px] p-5 sm:p-6 border border-stone-200/80 shadow-sm">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          
+          <div class="flex items-center space-x-4 w-full sm:w-auto">
+            <button id="main-play-btn" onclick="toggleMainAudio()" class="w-14 h-14 bg-amber-600 hover:bg-amber-700 text-white rounded-2xl flex items-center justify-center shadow-md hover:shadow-lg transition-all transform active:scale-95 flex-shrink-0">
+              <i id="main-play-icon" class="fa-solid fa-play text-xl ml-1"></i>
+            </button>
+            <div>
+              <div class="text-xs font-bold uppercase tracking-wider text-amber-700 mb-0.5">Audio Listening Task</div>
+              <div class="text-base font-bold text-stone-800" id="audio-status-title">Listen to Full Dialogue</div>
+              <div class="text-xs text-stone-500" id="audio-status-sub">Powered by Speech Synthesis</div>
+            </div>
+          </div>
+
+          <!-- Controls & Speed -->
+          <div class="flex items-center space-x-3 w-full sm:w-auto justify-end border-t sm:border-t-0 pt-3 sm:pt-0 border-stone-100">
+            <label class="text-xs font-semibold text-stone-500">Playback Speed:</label>
+            <select id="speed-select" class="bg-stone-50 border border-stone-200 text-stone-700 text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500">
+              <option value="0.85">0.85x (Slower)</option>
+              <option value="1" selected>1.0x (Normal)</option>
+              <option value="1.15">1.15x (Faster)</option>
+            </select>
+            <button onclick="stopMainAudio()" class="p-2.5 bg-stone-100 hover:bg-red-50 text-stone-500 hover:text-red-600 rounded-xl transition-colors" title="Stop Audio">
+              <i class="fa-solid fa-square text-sm"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- TASK 1: DIALOGUE CARD FRAME -->
+    <section class="bg-white rounded-3xl border border-stone-200/90 shadow-md overflow-hidden">
+      
+      <!-- Card Banner Header -->
+      <div class="bg-gradient-to-r from-stone-900 to-stone-800 text-white p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center space-x-3.5">
+          <span class="w-10 h-10 bg-amber-500/20 border border-amber-400/40 text-amber-300 rounded-2xl flex items-center justify-center text-lg">
+            <i class="fa-solid fa-comments"></i>
+          </span>
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-widest text-amber-400">Exercise Frame</span>
+            <h2 class="text-xl sm:text-2xl font-bold font-serif-title text-stone-100">TASK 1: Read & Study the Dialogue</h2>
+          </div>
+        </div>
+        <div class="text-xs bg-stone-800/90 px-3.5 py-2 rounded-xl border border-stone-700 text-stone-300 self-start sm:self-auto">
+          <i class="fa-solid fa-hand-pointer text-amber-400 mr-1.5"></i> Hover or tap <span class="text-amber-300 font-semibold underline">highlighted words</span> for translation
+        </div>
+      </div>
+
+      <!-- Dialogue Sub-Bar / Legend -->
+      <div class="bg-stone-50 border-b border-stone-200/80 px-6 py-3 flex items-center justify-between text-xs font-semibold text-stone-500">
+        <div class="flex items-center space-x-4">
+          <span class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span><span>Speaker A</span></span>
+          <span class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span><span>Speaker B</span></span>
+        </div>
+        <span class="text-stone-400 font-medium hidden sm:inline">Focus on movie genres & vocabulary</span>
+      </div>
+
+      <!-- Dialogue Chat Bubbles Container -->
+      <div id="dialogue-container" class="p-4 sm:p-7 space-y-4 max-w-3xl mx-auto">
+        <!-- JS renders dialogue lines -->
+      </div>
+    </section>
+
+    <!-- EXERCISES SECTION -->
+    <section class="space-y-6 pt-2">
+
+      <!-- Exercise Section Bar -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <span class="w-9 h-9 bg-emerald-100 text-emerald-800 rounded-2xl flex items-center justify-center">
+            <i class="fa-solid fa-list-check text-base"></i>
+          </span>
+          <h2 class="text-xl sm:text-2xl font-bold text-stone-800 font-serif-title">Comprehension & Vocabulary Tasks</h2>
+        </div>
+        
+        <div class="flex items-center space-x-2 bg-white px-3.5 py-2 rounded-2xl border border-stone-200 shadow-sm text-xs font-semibold text-stone-600">
+          <span>Instant Feedback:</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="instant-feedback-toggle" class="sr-only peer" checked>
+            <div class="w-8 h-4.5 bg-stone-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-emerald-600"></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- TASK 2: True / False / Not Stated -->
+      <div class="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200/90 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-lg font-bold text-stone-800 flex items-center space-x-2">
+            <span class="w-7 h-7 bg-amber-100 text-amber-800 rounded-full inline-flex items-center justify-center text-xs font-bold">2</span>
+            <span>TASK 2: Reading Comprehension (True / False / Not Stated)</span>
+          </h3>
+          <span id="ex1-score" class="text-xs font-bold px-3 py-1 bg-amber-50 text-amber-800 rounded-xl border border-amber-200">
+            Score: -/5
+          </span>
+        </div>
+        <p class="text-xs sm:text-sm text-stone-500 mb-6">Determine whether each statement is True, False, or Not Stated based on the dialogue.</p>
+
+        <div class="space-y-4" id="ex1-container">
+          <!-- JS dynamic questions -->
+        </div>
+
+        <div class="mt-6 flex justify-end">
+          <button onclick="checkExercise1()" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-semibold text-xs sm:text-sm transition-all shadow-sm hover:shadow flex items-center space-x-2">
+            <i class="fa-solid fa-check-circle"></i>
+            <span>Check Task 2</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TASK 3: Vocabulary Gap Fill -->
+      <div class="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200/90 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-lg font-bold text-stone-800 flex items-center space-x-2">
+            <span class="w-7 h-7 bg-emerald-100 text-emerald-800 rounded-full inline-flex items-center justify-center text-xs font-bold">3</span>
+            <span>TASK 3: Vocabulary Practice (Fill in the Blanks)</span>
+          </h3>
+          <span id="ex2-score" class="text-xs font-bold px-3 py-1 bg-emerald-50 text-emerald-800 rounded-xl border border-emerald-200">
+            Score: -/5
+          </span>
+        </div>
+        <p class="text-xs sm:text-sm text-stone-500 mb-6">Select the correct target vocabulary word to complete each sentence.</p>
+
+        <div class="space-y-4" id="ex2-container">
+          <!-- JS dynamic questions -->
+        </div>
+
+        <div class="mt-6 flex justify-end">
+          <button onclick="checkExercise2()" class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-semibold text-xs sm:text-sm transition-all shadow-sm hover:shadow flex items-center space-x-2">
+            <i class="fa-solid fa-check-circle"></i>
+            <span>Check Task 3</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Vocabulary Summary Card -->
+    <section class="bg-stone-100/80 rounded-3xl p-5 sm:p-6 border border-stone-200">
+      <h3 class="text-base font-bold text-stone-800 mb-4 flex items-center space-x-2">
+        <i class="fa-solid fa-book text-amber-600"></i>
+        <span>Key Vocabulary Reference Deck</span>
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs" id="vocab-grid">
+        <!-- Generated by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-12 text-center text-xs text-stone-400 py-4">
+    Interactive English Exercise Module • Lesson 3.1
+  </footer>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-stone-900 text-white px-4 py-3 rounded-2xl shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center space-x-2 z-50 text-xs sm:text-sm font-medium">
+    <i id="toast-icon" class="fa-solid fa-circle-info text-amber-400 text-base"></i>
+    <span id="toast-msg">Notification</span>
+  </div>
+
+  <script>
+    // --- VOCABULARY DATABASE WITH TRANSLATIONS & TRANSCRIBES ---
+    const vocabulary = {
+      "stressed out": { ipa: "[strɛst aʊt]", ru: "в состоянии стресса / нервничающий", audioText: "stressed out" },
+      "script": { ipa: "[skrɪpt]", ru: "сценарий", audioText: "script" },
+      "audition": { ipa: "[ɔːˈdɪʃn]", ru: "прослушивание, кастинг", audioText: "audition" },
+      "blow it": { ipa: "[bləʊ ɪt]", ru: "провалить, испортить шанс", audioText: "blow it" },
+      "clear your head": { ipa: "[klɪə jɔː hɛd]", ru: "проветрить мозги / очистить мысли", audioText: "clear your head" },
+      "keen on": { ipa: "[kiːn ɒn]", ru: "увлеченный чем-то", audioText: "keen on" },
+      "science fiction": { ipa: "[ˈsaɪəns ˈfɪkʃn]", ru: "научная фантастика", audioText: "science fiction" },
+      "adored": { ipa: "[əˈdɔːd]", ru: "обожал, очень любил", audioText: "adored" },
+      "aliens": { ipa: "[ˈeɪliənz]", ru: "инопланетяне, пришельцы", audioText: "aliens" },
+      "looking for treasure": { ipa: "[ˈlʊkɪŋ fər ˈtreʒər]", ru: "поиск сокровищ / в поисках клада", audioText: "looking for treasure" },
+      "romcoms": { ipa: "[ˈrɒmˌkɒmz]", ru: "романтические комедии", audioText: "romcoms" },
+      "psychological thrillers": { ipa: "[ˌsaɪkəˈlɒdʒɪkl ˈθrɪləz]", ru: "психологические триллеры", audioText: "psychological thrillers" },
+      "disaster movies": { ipa: "[dɪˈzɑːstə ˈmuːviz]", ru: "фильмы-катастрофы", audioText: "disaster movies" },
+      "plot": { ipa: "[plɒt]", ru: "сюжет", audioText: "plot" },
+      "hooked on": { ipa: "[hʊkt ɒn]", ru: "подсевший, очень увлеченный", audioText: "hooked on" },
+      "biopics": { ipa: "[ˈbaɪəʊˌpɪks]", ru: "биографические фильмы", audioText: "biopics" },
+      "docudramas": { ipa: "[ˈdɒkjʊˌdrɑːməz]", ru: "документально-художественные фильмы", audioText: "docudramas" },
+      "bandit": { ipa: "[ˈbændɪt]", ru: "бандит, грабитель", audioText: "bandit" },
+      "gunslinger": { ipa: "[ˈɡʌnˌslɪŋə]", ru: "стрелок, вооруженный боевик", audioText: "gunslinger" }
+    };
+
+    // --- RAW DIALOGUE DATA ---
+    const rawDialogue = [
+      { speaker: "A", name: "Speaker A", text: "Oh man, I'm so {stressed out}. I don't know what to do." },
+      { speaker: "B", name: "Speaker B", text: "Chill, chill. What's going on?" },
+      { speaker: "A", name: "Speaker A", text: "I have this {script} to memorize, and I have to know all the words by tomorrow." },
+      { speaker: "B", name: "Speaker B", text: "A {script}? For what?" },
+      { speaker: "A", name: "Speaker A", text: "I have an {audition} tomorrow for a TV show, and I don't want to {blow it}." },
+      { speaker: "B", name: "Speaker B", text: "A TV show? Are you serious? That's so cool! Have you ever been on TV?" },
+      { speaker: "A", name: "Speaker A", text: "No! That's why I'm so nervous. I've been in the theatre before, but never TV. I really want to do it." },
+      { speaker: "B", name: "Speaker B", text: "Look, take a break for a bit and think about something else. It will {clear your head}." },
+      { speaker: "A", name: "Speaker A", text: "Maybe you're right." },
+      { speaker: "B", name: "Speaker B", text: "I know I'm right. Ha! So, you are going to be a big TV star one day. What got you into that?" },
+      { speaker: "A", name: "Speaker A", text: "Well, when I was a child, I loved to watch movies. My parents hated it, but I loved it. I was so {keen on} fantasy and {science fiction} films. I also {adored} all action and adventure films." },
+      { speaker: "B", name: "Speaker B", text: "Really? I would never believe you've ever enjoyed anything with {aliens}, magic or someone {looking for treasure}." },
+      { speaker: "A", name: "Speaker A", text: "I enjoyed them as a child. I've watched pretty much every good fantasy and {science fiction} film... So, I got bored and moved onto different genres." },
+      { speaker: "B", name: "Speaker B", text: "Like what? Horror? Romantic comedies? I think you're into {romcoms}, yeah?" },
+      { speaker: "A", name: "Speaker A", text: "Heck no! I hate {romcoms}! All that love and unrealistic comedy. At first, I got into {psychological thrillers} and {disaster movies}... But, they all became the same. They all have the same {plot} and the same ending. Totally boring." },
+      { speaker: "B", name: "Speaker B", text: "Wow, you really do watch a lot of films... So, you think so many genres are boring, what are you into now?" },
+      { speaker: "A", name: "Speaker A", text: "I like films that are a bit more realistic, like mystery and crime. For the last month, I've been {hooked on} {biopics} and {docudramas}. I saw one docudrama over the weekend about a famous {bandit} from about one hundred years ago. He was a wild {gunslinger} and an all around bad dude. One day, he decided to change his life when he met the love of his life." },
+      { speaker: "B", name: "Speaker B", text: "Did he become a good guy at the end of his life?" },
+      { speaker: "A", name: "Speaker A", text: "Nah, he went back to the bandit life after a year, and so did the love of his life. They robbed 15 banks together. Ha! I feel better now, thanks. Let me read the script, and you can tell me what you think." },
+      { speaker: "B", name: "Speaker B", text: "Sure, let's start." }
+    ];
+
+    // --- TASK 2 QUESTIONS (TRUE / FALSE / NOT STATED) ---
+    const ex1Questions = [
+      {
+        id: 1,
+        question: "Speaker A is stressed because they have an audition for a feature film tomorrow.",
+        options: ["True", "False", "Not Stated"],
+        correct: 1, // False
+        explanation: "False: Speaker A has an audition for a TV show, not a feature film."
+      },
+      {
+        id: 2,
+        question: "Speaker A has acted in theatrical productions before.",
+        options: ["True", "False", "Not Stated"],
+        correct: 0, // True
+        explanation: "True: Speaker A states: 'I've been in the theatre before, but never TV.'"
+      },
+      {
+        id: 3,
+        question: "Speaker A's parents enjoyed watching fantasy films with them when they were young.",
+        options: ["True", "False", "Not Stated"],
+        correct: 1, // False
+        explanation: "False: Speaker A mentions: 'My parents hated it, but I loved it.'"
+      },
+      {
+        id: 4,
+        question: "Speaker A stopped watching disaster movies because they found the plots predictable.",
+        options: ["True", "False", "Not Stated"],
+        correct: 0, // True
+        explanation: "True: Speaker A notes that disaster movies 'all have the same plot and the same ending.'"
+      },
+      {
+        id: 5,
+        question: "The bandit in the docudrama died during a bank robbery.",
+        options: ["True", "False", "Not Stated"],
+        correct: 2, // Not Stated
+        explanation: "Not Stated: The text mentions they robbed 15 banks, but does not state how the bandit died."
+      }
+    ];
+
+    // --- TASK 3 QUESTIONS (VOCABULARY FILL IN) ---
+    const ex2Questions = [
+      {
+        id: 1,
+        sentence: "He couldn't sleep because he was so ________ about his upcoming job interview.",
+        options: ["keen on", "stressed out", "looking for treasure", "adored"],
+        correct: "stressed out"
+      },
+      {
+        id: 2,
+        sentence: "In sci-fi movies, strange creatures from outer space are often called ________.",
+        options: ["romcoms", "aliens", "biopics", "bandits"],
+        correct: "aliens"
+      },
+      {
+        id: 3,
+        sentence: "Pirates spent years sailing across oceans ________ buried on hidden islands.",
+        options: ["looking for treasure", "clearing their head", "blowing it", "keen on"],
+        correct: "looking for treasure"
+      },
+      {
+        id: 4,
+        sentence: "Lately, she has been completely ________ documentary series about real historical events.",
+        options: ["hooked on", "blow it", "script", "gunslinger"],
+        correct: "hooked on"
+      },
+      {
+        id: 5,
+        sentence: "After studying continuously for five hours, I went for a walk to ________.",
+        options: ["blow it", "clear my head", "be keen on", "adored"],
+        correct: "clear my head"
+      }
+    ];
+
+    // --- SPEECH SYNTHESIS ENGINE ---
+    let synth = window.speechSynthesis;
+    let isPlayingMain = false;
+
+    function speakText(text, rate = 1.0, onEndCallback = null) {
+      if (!synth) {
+        showToast("Speech synthesis is not supported in this browser.", "error");
+        return;
+      }
+      synth.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = parseFloat(rate);
+
+      const voices = synth.getVoices();
+      const enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Daniel')));
+      if (enVoice) utterance.voice = enVoice;
+
+      if (onEndCallback) {
+        utterance.onend = onEndCallback;
+        utterance.onerror = onEndCallback;
+      }
+
+      synth.speak(utterance);
+    }
+
+    function speakWord(wordKey, event) {
+      if (event) event.stopPropagation();
+      const item = vocabulary[wordKey];
+      if (item) {
+        speakText(item.audioText, 0.9);
+        showToast(`Pronunciation: "${item.audioText}"`, "info");
+      }
+    }
+
+    // --- MAIN AUDIO DIALOGUE PLAYBACK ---
+    function getFullDialogueText() {
+      return rawDialogue.map(line => {
+        let cleanText = line.text.replace(/\{([^}]+)\}/g, '$1');
+        return `${line.name}: ${cleanText}`;
+      }).join('. ');
+    }
+
+    function toggleMainAudio() {
+      if (isPlayingMain) {
+        stopMainAudio();
+      } else {
+        startMainAudio();
+      }
+    }
+
+    function startMainAudio() {
+      const fullText = getFullDialogueText();
+      const speed = document.getElementById('speed-select').value;
+      
+      isPlayingMain = true;
+      updatePlayBtnUI(true);
+
+      speakText(fullText, speed, () => {
+        isPlayingMain = false;
+        updatePlayBtnUI(false);
+      });
+    }
+
+    function stopMainAudio() {
+      if (synth) synth.cancel();
+      isPlayingMain = false;
+      updatePlayBtnUI(false);
+    }
+
+    function updatePlayBtnUI(playing) {
+      const btnIcon = document.getElementById('main-play-icon');
+      const title = document.getElementById('audio-status-title');
+      const sub = document.getElementById('audio-status-sub');
+      const btn = document.getElementById('main-play-btn');
+
+      if (playing) {
+        btnIcon.className = "fa-solid fa-pause text-xl";
+        title.textContent = "Playing Dialogue...";
+        sub.textContent = "Click button to pause playback";
+        btn.classList.add('playing-pulse', 'bg-amber-700');
+      } else {
+        btnIcon.className = "fa-solid fa-play text-xl ml-1";
+        title.textContent = "Listen to Full Dialogue";
+        sub.textContent = "Powered by Speech Synthesis";
+        btn.classList.remove('playing-pulse', 'bg-amber-700');
+      }
+    }
+
+    // --- RENDER DIALOGUE WITH TOOLTIPS ---
+    function renderDialogue() {
+      const container = document.getElementById('dialogue-container');
+      container.innerHTML = '';
+
+      rawDialogue.forEach((item) => {
+        const isSpeakerA = item.speaker === 'A';
+        const bubbleBg = isSpeakerA ? 'bg-[#FFFDF5] border-amber-200/90 bubble-speaker-a' : 'bg-[#F0FDF4] border-emerald-200/90 bubble-speaker-b';
+        const avatarBg = isSpeakerA ? 'bg-amber-500 text-white' : 'bg-emerald-600 text-white';
+        const alignment = isSpeakerA ? 'justify-start' : 'justify-end sm:flex-row-reverse sm:space-x-reverse';
+
+        let formattedText = item.text.replace(/\{([^}]+)\}/g, (match, wordKey) => {
+          const vocabData = vocabulary[wordKey];
+          if (!vocabData) return wordKey;
+
+          return `
+            <span class="vocab-word" tabindex="0" onclick="speakWord('${wordKey}', event)">
+              ${wordKey}
+              <span class="tooltip-card shadow-xl border">
+                <span class="flex items-center justify-between border-b border-stone-100 pb-1.5 mb-1.5">
+                  <span class="font-bold text-xs sm:text-sm text-stone-800">${wordKey}</span>
+                  <button class="p-1 text-amber-600 hover:text-amber-800 rounded-full hover:bg-amber-50 transition-colors" onclick="speakWord('${wordKey}', event)" title="Listen">
+                    <i class="fa-solid fa-volume-high text-xs"></i>
+                  </button>
+                </span>
+                <span class="block text-xs font-mono text-amber-700 font-semibold mb-0.5">${vocabData.ipa}</span>
+                <span class="block text-xs font-medium text-stone-600">${vocabData.ru}</span>
+              </span>
+            </span>
+          `;
+        });
+
+        const lineHTML = `
+          <div class="flex items-start space-x-3 my-3.5 ${alignment}">
+            <div class="w-8 h-8 rounded-2xl ${avatarBg} flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0 mt-1" title="${item.name}">
+              ${item.speaker}
+            </div>
+            <div class="relative max-w-[88%] sm:max-w-[78%] p-3.5 sm:p-4 rounded-2xl border shadow-sm ${bubbleBg} text-sm sm:text-base leading-relaxed">
+              <div class="text-[10px] font-bold uppercase tracking-wider text-stone-400 mb-1">${item.name}</div>
+              <p class="text-stone-800">${formattedText}</p>
+            </div>
+          </div>
+        `;
+        container.innerHTML += lineHTML;
+      });
+    }
+
+    // --- RENDER TASK 2 (TRUE/FALSE) ---
+    function renderExercise1() {
+      const container = document.getElementById('ex1-container');
+      container.innerHTML = '';
+
+      ex1Questions.forEach((q, idx) => {
+        const itemHTML = `
+          <div class="p-4 rounded-2xl border border-stone-200/70 bg-stone-50/50 hover:bg-white transition-all duration-200" id="ex1-card-${q.id}">
+            <div class="font-medium text-stone-800 text-sm sm:text-base mb-3">
+              <span class="text-stone-400 font-bold mr-1.5">${idx + 1}.</span> ${q.question}
+            </div>
+            <div class="flex flex-wrap gap-2 mb-1">
+              ${q.options.map((opt, optIdx) => `
+                <button onclick="selectEx1Option(${q.id}, ${optIdx})" id="ex1-btn-${q.id}-${optIdx}" 
+                  class="ex1-option-btn-${q.id} px-4 py-1.5 rounded-xl text-xs sm:text-sm font-semibold border border-stone-200 bg-white text-stone-700 hover:bg-amber-50 hover:border-amber-300 transition-all">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+            <div id="ex1-feedback-${q.id}" class="hidden text-xs mt-2.5 p-3 rounded-xl font-medium"></div>
+          </div>
+        `;
+        container.innerHTML += itemHTML;
+      });
+    }
+
+    const ex1Answers = {};
+
+    function selectEx1Option(qId, optionIdx) {
+      ex1Answers[qId] = optionIdx;
+
+      document.querySelectorAll(`.ex1-option-btn-${qId}`).forEach((btn, idx) => {
+        if (idx === optionIdx) {
+          btn.className = `ex1-option-btn-${qId} px-4 py-1.5 rounded-xl text-xs sm:text-sm font-bold border-2 border-amber-500 bg-amber-50 text-amber-900`;
+        } else {
+          btn.className = `ex1-option-btn-${qId} px-4 py-1.5 rounded-xl text-xs sm:text-sm font-semibold border border-stone-200 bg-white text-stone-600 opacity-60`;
+        }
+      });
+
+      if (document.getElementById('instant-feedback-toggle').checked) {
+        checkEx1Single(qId);
+      }
+    }
+
+    function checkEx1Single(qId) {
+      const q = ex1Questions.find(item => item.id === qId);
+      const userAns = ex1Answers[qId];
+      const feedbackEl = document.getElementById(`ex1-feedback-${qId}`);
+
+      if (userAns === undefined) return;
+
+      feedbackEl.classList.remove('hidden', 'bg-red-50', 'text-red-800', 'bg-emerald-50', 'text-emerald-800', 'border-red-200', 'border-emerald-200');
+
+      if (userAns === q.correct) {
+        feedbackEl.classList.add('bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-200');
+        feedbackEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i> <strong>Correct!</strong> ${q.explanation}`;
+      } else {
+        feedbackEl.classList.add('bg-red-50', 'text-red-800', 'border', 'border-red-200');
+        feedbackEl.innerHTML = `<i class="fa-solid fa-circle-xmark text-red-600 mr-1.5"></i> <strong>Incorrect.</strong> ${q.explanation}`;
+      }
+    }
+
+    function checkExercise1() {
+      let score = 0;
+      ex1Questions.forEach(q => {
+        checkEx1Single(q.id);
+        if (ex1Answers[q.id] === q.correct) score++;
+      });
+      document.getElementById('ex1-score').textContent = `Score: ${score}/${ex1Questions.length}`;
+      showToast(`Task 2 checked: ${score} out of ${ex1Questions.length} correct.`, score === 5 ? "success" : "info");
+    }
+
+    // --- RENDER TASK 3 (VOCAB FILL-IN) ---
+    function renderExercise2() {
+      const container = document.getElementById('ex2-container');
+      container.innerHTML = '';
+
+      ex2Questions.forEach((q, idx) => {
+        const optionsHTML = q.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+
+        const itemHTML = `
+          <div class="p-4 rounded-2xl border border-stone-200/70 bg-stone-50/50 hover:bg-white transition-all duration-200" id="ex2-card-${q.id}">
+            <div class="text-sm sm:text-base font-medium text-stone-800 flex flex-wrap items-center gap-2">
+              <span class="text-stone-400 font-bold">${idx + 1}.</span>
+              <span>${q.sentence.split('________')[0]}</span>
+              <select id="ex2-select-${q.id}" onchange="onEx2Change(${q.id})" 
+                class="bg-white border-2 border-emerald-300 hover:border-emerald-400 text-emerald-900 font-semibold text-xs sm:text-sm rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <option value="">-- select answer --</option>
+                ${optionsHTML}
+              </select>
+              <span>${q.sentence.split('________')[1]}</span>
+            </div>
+            <div id="ex2-feedback-${q.id}" class="hidden text-xs mt-2.5 p-2.5 rounded-xl font-medium"></div>
+          </div>
+        `;
+        container.innerHTML += itemHTML;
+      });
+    }
+
+    function onEx2Change(qId) {
+      if (document.getElementById('instant-feedback-toggle').checked) {
+        checkEx2Single(qId);
+      }
+    }
+
+    function checkEx2Single(qId) {
+      const q = ex2Questions.find(item => item.id === qId);
+      const selectEl = document.getElementById(`ex2-select-${qId}`);
+      const val = selectEl.value;
+      const feedbackEl = document.getElementById(`ex2-feedback-${qId}`);
+
+      if (!val) {
+        feedbackEl.classList.add('hidden');
+        selectEl.className = "bg-white border-2 border-emerald-300 text-emerald-900 font-semibold text-xs sm:text-sm rounded-xl px-3 py-1.5 focus:outline-none";
+        return;
+      }
+
+      feedbackEl.classList.remove('hidden', 'bg-red-50', 'text-red-800', 'bg-emerald-50', 'text-emerald-800');
+
+      if (val === q.correct) {
+        selectEl.className = "bg-emerald-50 border-2 border-emerald-600 text-emerald-900 font-bold text-xs sm:text-sm rounded-xl px-3 py-1.5 focus:outline-none";
+        feedbackEl.classList.add('bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-200');
+        feedbackEl.innerHTML = `<i class="fa-solid fa-check text-emerald-600 mr-1.5"></i> Well done! Correct vocabulary choice.`;
+      } else {
+        selectEl.className = "bg-red-50 border-2 border-red-400 text-red-900 font-bold text-xs sm:text-sm rounded-xl px-3 py-1.5 focus:outline-none";
+        feedbackEl.classList.add('bg-red-50', 'text-red-800', 'border', 'border-red-200');
+        feedbackEl.innerHTML = `<i class="fa-solid fa-xmark text-red-500 mr-1.5"></i> Not quite. Try another option.`;
+      }
+    }
+
+    function checkExercise2() {
+      let score = 0;
+      ex2Questions.forEach(q => {
+        checkEx2Single(q.id);
+        const val = document.getElementById(`ex2-select-${q.id}`).value;
+        if (val === q.correct) score++;
+      });
+      document.getElementById('ex2-score').textContent = `Score: ${score}/${ex2Questions.length}`;
+      showToast(`Task 3 checked: ${score} out of ${ex2Questions.length} correct.`, score === 5 ? "success" : "info");
+    }
+
+    // --- VOCABULARY SUMMARY GRID ---
+    function renderVocabSummary() {
+      const container = document.getElementById('vocab-grid');
+      container.innerHTML = '';
+
+      Object.keys(vocabulary).forEach(key => {
+        const item = vocabulary[key];
+        const card = `
+          <div onclick="speakWord('${key}')" class="bg-white hover:bg-amber-50/50 p-3 rounded-2xl border border-stone-200/80 flex items-center justify-between cursor-pointer transition-all hover:shadow-sm group">
+            <div>
+              <div class="font-bold text-stone-800 group-hover:text-amber-700 transition-colors">${key}</div>
+              <div class="text-[11px] text-amber-700 font-mono font-semibold">${item.ipa}</div>
+              <div class="text-[11px] text-stone-500">${item.ru}</div>
+            </div>
+            <button class="w-7 h-7 bg-amber-100/70 text-amber-800 rounded-xl flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-all">
+              <i class="fa-solid fa-volume-high text-xs"></i>
+            </button>
+          </div>
+        `;
+        container.innerHTML += card;
+      });
+    }
+
+    // --- TOAST NOTIFICATIONS ---
+    function showToast(msg, type = "info") {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      const toastIcon = document.getElementById('toast-icon');
+
+      toastMsg.textContent = msg;
+
+      if (type === "success") {
+        toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-base";
+      } else if (type === "error") {
+        toastIcon.className = "fa-solid fa-circle-xmark text-red-400 text-base";
+      } else {
+        toastIcon.className = "fa-solid fa-circle-info text-amber-400 text-base";
+      }
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3000);
+    }
+
+    // Initialize Speech Synthesis
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {};
+    }
+
+    // On Load
+    window.onload = function() {
+      renderDialogue();
+      renderExercise1();
+      renderExercise2();
+      renderVocabSummary();
+    };
+  </script>
+</body>
+</html>
