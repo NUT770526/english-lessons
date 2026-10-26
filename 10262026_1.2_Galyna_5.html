@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business English: Small Talk Framework Exercise</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-pink: #FFF5F7;
+            --card-yellow: #FFFDE7;
+            --card-green: #F0FDF4;
+            --accent-purple: #7c3aed;
+            --accent-purple-hover: #6d28d9;
+            --text-dark: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .header {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 850px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-card.transcript-card {
+            background-color: var(--card-pink);
+            border-color: #fbcfe8;
+        }
+
+        .section-card.questions-card {
+            background-color: var(--card-green);
+            border-color: #bbf7d0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .transcript-content {
+            font-size: 14.5px;
+            line-height: 1.6;
+            color: #334155;
+            max-height: 550px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .transcript-content p {
+            margin-top: 0;
+            margin-bottom: 14px;
+        }
+
+        .vocab-term {
+            background-color: rgba(124, 58, 237, 0.1);
+            color: var(--accent-purple);
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            border-bottom: 1px dashed var(--accent-purple);
+        }
+
+        .btn {
+            background-color: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-purple-hover);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        .question-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .question-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        textarea {
+            width: 100%;
+            height: 70px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-purple);
+        }
+
+        .sample-answer {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: var(--card-yellow);
+            border-left: 4px solid #eab308;
+            border-radius: 4px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .sample-answer-title {
+            font-weight: 700;
+            color: #854d0e;
+            margin-bottom: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 14px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🗣️ Business English: Small Talk Framework</h1>
+        <p class="subtitle">Ознайомтеся з транскриптом Стіва Далтона та дайте відповіді на запитання для практики ділової мови.</p>
+    </div>
+
+    <div class="layout">
+        <!-- Transcript Section -->
+        <div class="section-card transcript-card">
+            <div class="section-title">
+                <span>📖 Transcript</span>
+                <button class="btn" onclick="readTranscript()">🔊 Прослухати</button>
+            </div>
+
+            <div class="transcript-content" id="transcriptText">
+                <p>- Hi, I'm Steve Dalton. I'm Program Director for Daytime Career Services. And today's topic is small talk. Small talk is a critical and near-universal element of American business. It's common to have polite conversation before diving into business topics.</p>
+                
+                <p>Small talk is critical because it allows you to develop trust with your business partners before getting down to business. And it's universal because everybody's expecting you to use it. It's a chance for them to <span class="vocab-term" onclick="showVocab('gauge cultural intelligence', '[ɡeɪdʒ ˈkʌltʃərəl ɪnˈtelɪdʒəns]', 'оцінити культурний інтелект / рівень адаптованості')">gauge your cultural intelligence</span>. Now for many of you, this is no problem whatsoever. It's very intuitive to you. However, for others of you, such as myself, small talk may fill you with anxiety or <span class="vocab-term" onclick="showVocab('trepidation', '[ˌtrepɪˈdeɪʃn]', 'тривожність, хвилювання')">trepidation</span>. So, today we're going to talk about how to make small talk easier. I'm going to give you my framework for small talk to help take away some of the anxiety you may experience when engaging in this practice if it's not intuitive to you.</p>
+
+                <p>Frameworks are very helpful. They take away anxiety, and help give you a structure to help you perform in the moment before you develop true proficiency. Frameworks also make it easier for you to do what's very important in small talk, which is listen. Success in small talk is less about what you say, and it's more about how you respond to the answers that you're given.</p>
+
+                <p>So here's my three question algorithm for small talk. First, <strong>"How is your day going so far?"</strong> This is a <span class="vocab-term" onclick="showVocab('temperature check question', '[ˈtemprətʃər tʃek ˈkwestʃən]', 'питання для перевірки настрою / обстановки')">temperature check question</span>. If the person is all business, they will say, "fine, and yours?" In which case, your response should be "fine." And you'll move on to your next question.</p>
+
+                <p>However, if they're chattier, and they give you <span class="vocab-term" onclick="showVocab('extraneous information', '[ɪkˈstreɪniəs ˌɪnfərˈmeɪʃn]', 'додаткова / побічна інформація')">extraneous information</span> to answer this question ("my morning's been crazy, my dog got sick..."), the appropriate response is to ask a follow-up question on that extraneous information ("Is your dog okay?"). It lets them know right away that you're listening rather than just running through a list of questions. It's an easy, quick way to build likability during small talk.</p>
+
+                <p>Second question I recommend: <strong>"How did you join your organization?"</strong> You want to ask them about themselves before they get a chance to ask you about yourself. Because I want you to <span class="vocab-term" onclick="showVocab('mirror their behavior', '[ˈmɪrər ðeər bɪˈheɪvjər]', 'дзеркально копіювати їхню поведінку')">mirror their behavior</span>. If they take 30 seconds and they're all business, you should take 30 seconds. If they're chatty and take two minutes, you take two minutes. That's the maximum amount of time I want you to speak.</p>
+
+                <p>The third question is <strong>"What are you working on right now?"</strong> This gives you a chance to demonstrate a sincere interest in the work that this person is doing. It also gives them a chance, if they seem distracted, to talk about what's really on their mind, which is usually working.</p>
+
+                <p>So in summary, small talk is a way to build relationships. It's intuitive to some of you. But for those of you to whom it's not intuitive, this framework will help you do it well.</p>
+            </div>
+        </div>
+
+        <!-- Questions Section -->
+        <div class="section-card questions-card">
+            <div class="section-title">
+                <span>📝 Answer the Questions</span>
+                <button class="btn btn-outline" onclick="toggleAnswers()">💡 Показати зразки</button>
+            </div>
+
+            <div class="question-item">
+                <div class="question-title">1. Why is small talk important in American business?</div>
+                <textarea id="q1" placeholder="Type your answer here..."></textarea>
+                <div class="sample-answer" id="sa1">
+                    <div class="sample-answer-title">Key Answer:</div>
+                    It allows you to develop trust with business partners before diving into business topics, and it helps partners gauge your cultural intelligence.
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-title">2. What is the first question in the algorithm, and what is its purpose?</div>
+                <textarea id="q2" placeholder="Type your answer here..."></textarea>
+                <div class="sample-answer" id="sa2">
+                    <div class="sample-answer-title">Key Answer:</div>
+                    "How is your day going so far?" Its purpose is to act as a temperature check to see if the person is all business or open to chatting.
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-title">3. What is the second question in the three-question algorithm?</div>
+                <textarea id="q3" placeholder="Type your answer here..."></textarea>
+                <div class="sample-answer" id="sa3">
+                    <div class="sample-answer-title">Key Answer:</div>
+                    "How did you join your organization?" It lets you ask about them first so you can mirror their behavior and response length.
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-title">4. What is the third question in this algorithm, and what is its purpose?</div>
+                <textarea id="q4" placeholder="Type your answer here..."></textarea>
+                <div class="sample-answer" id="sa4">
+                    <div class="sample-answer-title">Key Answer:</div>
+                    "What are you working on right now?" It demonstrates sincere interest in their work and lets them talk about what is currently on their mind.
+                </div>
+            </div>
+
+            <div class="question-item">
+                <div class="question-title">5. How can small talk help build relationships in business?</div>
+                <textarea id="q5" placeholder="Type your answer here..."></textarea>
+                <div class="sample-answer" id="sa5">
+                    <div class="sample-answer-title">Key Answer:</div>
+                    It shows that you are actively listening, builds likability, and helps establish mutual trust before starting negotiations.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vocabulary Modal -->
+<div class="modal" id="vocabModal" onclick="closeVocab()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3 id="vocabWord" style="margin-top:0; color:var(--accent-purple);">Term</h3>
+        <p><strong>IPA:</strong> <span id="vocabIpa">[]</span></p>
+        <p><strong>Переклад:</strong> <span id="vocabTranslation"></span></p>
+        <button class="btn" style="width:100%; justify-content:center;" onclick="closeVocab()">Зрозуміло</button>
+    </div>
+</div>
+
+<script>
+    function readTranscript() {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const text = document.getElementById('transcriptText').innerText;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.95;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert('Ваш браузер не підтримує озвучку.');
+        }
+    }
+
+    function showVocab(term, ipa, translation) {
+        document.getElementById('vocabWord').innerText = term;
+        document.getElementById('vocabIpa').innerText = ipa;
+        document.getElementById('vocabTranslation').innerText = translation;
+        document.getElementById('vocabModal').style.display = 'flex';
+    }
+
+    function closeVocab() {
+        document.getElementById('vocabModal').style.display = 'none';
+    }
+
+    function toggleAnswers() {
+        for (let i = 1; i <= 5; i++) {
+            const sa = document.getElementById('sa' + i);
+            sa.style.display = (sa.style.display === 'block') ? 'none' : 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
