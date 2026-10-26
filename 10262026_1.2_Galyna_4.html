@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business English Dialogue Practice</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-pink: #FFF5F7;
+            --card-yellow: #FFFDE7;
+            --card-green: #F0FDF4;
+            --accent-purple: #7c3aed;
+            --text-dark: #1e293b;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 24px;
+            font-size: 15px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            background-color: #edf2f7;
+            color: #2d3748;
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-purple);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #6d28d9;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            position: relative;
+        }
+
+        .message.daniel {
+            align-self: flex-end;
+            background-color: var(--card-green);
+            border: 1px solid #bbf7d0;
+            border-bottom-right-radius: 2px;
+        }
+
+        .message.amy {
+            align-self: flex-start;
+            background-color: var(--card-pink);
+            border: 1px solid #fbcfe8;
+            border-bottom-left-radius: 2px;
+        }
+
+        .message.miles {
+            align-self: flex-start;
+            background-color: var(--card-yellow);
+            border: 1px solid #fef08a;
+            border-bottom-left-radius: 2px;
+        }
+
+        .speaker-name {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .daniel .speaker-name { color: #15803d; }
+        .amy .speaker-name { color: #be185d; }
+        .miles .speaker-name { color: #b45309; }
+
+        .message-content {
+            font-size: 16px;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .audio-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .audio-btn:hover {
+            opacity: 1;
+            background: rgba(0,0,0,0.05);
+        }
+
+        input[type="text"] {
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 110px;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-purple);
+        }
+
+        input.correct {
+            border-color: #22c55e !important;
+            background-color: #f0fdf4;
+        }
+
+        input.incorrect {
+            border-color: #ef4444 !important;
+            background-color: #fef2f2;
+        }
+
+        .ukr-translation {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 6px;
+            font-style: italic;
+            display: none;
+        }
+
+        .score-board {
+            background: #f1f5f9;
+            padding: 16px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📢 Let's Practice: Business Dialogue</h1>
+    <p class="subtitle">Заповніть пропуски у діалозі, прослухайте вимову та перевірте свої відповіді.</p>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="playFullDialogue()">▶ Прослухати весь діалог</button>
+        <button class="btn" onclick="toggleTranslation()">🌐 Переклад (Укр)</button>
+        <button class="btn" onclick="checkAnswers()">✅ Перевірити</button>
+        <button class="btn" onclick="resetForm()">🔄 Скинути</button>
+    </div>
+
+    <div class="chat-container">
+        <!-- Daniel 1 -->
+        <div class="message daniel">
+            <div class="speaker-name">Daniel Goldman</div>
+            <div class="message-content">
+                I’d like you to meet Miles Henderson from Simtech Ltd.
+                <button class="audio-btn" onclick="speakText('I’d like you to meet Miles Henderson from Simtech Ltd.')">🔊</button>
+            </div>
+            <div class="ukr-translation">Я б хотів познайомити вас із Майлзом Хендерсоном з Simtech Ltd.</div>
+        </div>
+
+        <!-- Amy 1 -->
+        <div class="message amy">
+            <div class="speaker-name">Amy</div>
+            <div class="message-content">
+                How do you do, Mr Henderson?
+                <button class="audio-btn" onclick="speakText('How do you do, Mr Henderson?')">🔊</button>
+            </div>
+            <div class="ukr-translation">Вітаю, пане Хендерсон.</div>
+        </div>
+
+        <!-- Miles 1 -->
+        <div class="message miles">
+            <div class="speaker-name">Miles Henderson</div>
+            <div class="message-content">
+                Pleased to meet you. So what do you do here?
+                <button class="audio-btn" onclick="speakText('Pleased to meet you. So what do you do here?')">🔊</button>
+            </div>
+            <div class="ukr-translation">Приємно познайомитися. Чим ви тут займаєтеся?</div>
+        </div>
+
+        <!-- Amy 2 -->
+        <div class="message amy">
+            <div class="speaker-name">Amy</div>
+            <div class="message-content">
+                I’m in charge of our HR department. And you?
+                <button class="audio-btn" onclick="speakText('I’m in charge of our HR department. And you?')">🔊</button>
+            </div>
+            <div class="ukr-translation">Я відповідаю за наш відділ кадрів. А ви?</div>
+        </div>
+
+        <!-- Miles 2 -->
+        <div class="message miles">
+            <div class="speaker-name">Miles Henderson</div>
+            <div class="message-content">
+                I’m responsible for sales and marketing.
+                <button class="audio-btn" onclick="speakText('I’m responsible for sales and marketing.')">🔊</button>
+            </div>
+            <div class="ukr-translation">Я відповідаю за продажі та маркетинг.</div>
+        </div>
+
+        <!-- Daniel 2 -->
+        <div class="message daniel">
+            <div class="speaker-name">Daniel Goldman</div>
+            <div class="message-content">
+                Is this your first visit to Boston, Mr Henderson?
+                <button class="audio-btn" onclick="speakText('Is this your first visit to Boston, Mr Henderson?')">🔊</button>
+            </div>
+            <div class="ukr-translation">Це ваш перший візит до Бостона, пане Хендерсон?</div>
+        </div>
+
+        <!-- Miles 3 -->
+        <div class="message miles">
+            <div class="speaker-name">Miles Henderson</div>
+            <div class="message-content">
+                No, actually, I’ve been here four times already.
+                <button class="audio-btn" onclick="speakText('No, actually, I’ve been here four times already.')">🔊</button>
+            </div>
+            <div class="ukr-translation">Ні, насправді я був тут уже чотири рази.</div>
+        </div>
+
+        <!-- Daniel 3 -->
+        <div class="message daniel">
+            <div class="speaker-name">Daniel Goldman</div>
+            <div class="message-content">
+                Really? On holiday or business?
+                <button class="audio-btn" onclick="speakText('Really? On holiday or business?')">🔊</button>
+            </div>
+            <div class="ukr-translation">Справді? У відпустці чи у справах?</div>
+        </div>
+
+        <!-- Miles 4 -->
+        <div class="message miles">
+            <div class="speaker-name">Miles Henderson</div>
+            <div class="message-content">
+                Mostly business.
+                <button class="audio-btn" onclick="speakText('Mostly business.')">🔊</button>
+            </div>
+            <div class="ukr-translation">Здебільшого у справах.</div>
+        </div>
+
+        <!-- Daniel 4 (Gap Fill 1) -->
+        <div class="message daniel">
+            <div class="speaker-name">Daniel Goldman</div>
+            <div class="message-content">
+                How long have you been 
+                <input type="text" id="gap1" data-answer="working" placeholder="verb"> 
+                for your company?
+                <button class="audio-btn" onclick="speakText('How long have you been working for your company?')">🔊</button>
+            </div>
+            <div class="ukr-translation">Як довго ви працюєте у своїй компанії?</div>
+        </div>
+
+        <!-- Miles 5 (Gap Fill 2) -->
+        <div class="message miles">
+            <div class="speaker-name">Miles Henderson</div>
+            <div class="message-content">
+                Oh, I’ve been with Simtech for almost five years now. How about you? When did you 
+                <input type="text" id="gap2" data-answer="join" placeholder="verb"> 
+                your company?
+                <button class="audio-btn" onclick="speakText('Oh, I’ve been with Simtech for almost five years now. How about you? When did you join your company?')">🔊</button>
+            </div>
+            <div class="ukr-translation">О, я в Simtech вже майже п'ять років. А ви? Коли ви приєдналися до своєї компанії?</div>
+        </div>
+
+        <!-- Daniel 5 -->
+        <div class="message daniel">
+            <div class="speaker-name">Daniel Goldman</div>
+            <div class="message-content">
+                I started working for Xcel Systems about 10 years ago.
+                <button class="audio-btn" onclick="speakText('I started working for Xcel Systems about 10 years ago.')">🔊</button>
+            </div>
+            <div class="ukr-translation">Я почав працювати в Xcel Systems близько 10 років тому.</div>
+        </div>
+    </div>
+
+    <div class="score-board">
+        <span>Результат: <span id="score">0</span> / 2</span>
+        <span id="feedback-msg">Заповніть пропуски та натисніть "Перевірити".</span>
+    </div>
+</div>
+
+<script>
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert('Ваш браузер не підтримує озвучку тексту.');
+        }
+    }
+
+    function toggleTranslation() {
+        const translations = document.querySelectorAll('.ukr-translation');
+        translations.forEach(el => {
+            el.style.display = el.style.display === 'block' ? 'none' : 'block';
+        });
+    }
+
+    function checkAnswers() {
+        let score = 0;
+        const gap1 = document.getElementById('gap1');
+        const gap2 = document.getElementById('gap2');
+
+        if (gap1.value.trim().toLowerCase() === gap1.dataset.answer) {
+            gap1.className = 'correct';
+            score++;
+        } else {
+            gap1.className = 'incorrect';
+        }
+
+        if (gap2.value.trim().toLowerCase() === gap2.dataset.answer) {
+            gap2.className = 'correct';
+            score++;
+        } else {
+            gap2.className = 'incorrect';
+        }
+
+        document.getElementById('score').innerText = score;
+        const msg = document.getElementById('feedback-msg');
+        if (score === 2) {
+            msg.innerText = "Чудово! Усі відповіді правильні 🎉";
+            msg.style.color = "#16a34a";
+        } else {
+            msg.innerText = "Є помилки. Спробуйте ще раз ✏️";
+            msg.style.color = "#dc2626";
+        }
+    }
+
+    function resetForm() {
+        ['gap1', 'gap2'].forEach(id => {
+            const input = document.getElementById(id);
+            input.value = '';
+            input.className = '';
+        });
+        document.getElementById('score').innerText = '0';
+        document.getElementById('feedback-msg').innerText = 'Заповніть пропуски та натисніть "Перевірити".';
+        document.getElementById('feedback-msg').style.color = 'inherit';
+    }
+
+    function playFullDialogue() {
+        const lines = [
+            "Daniel Goldman: I’d like you to meet Miles Henderson from Simtech Ltd.",
+            "Amy: How do you do, Mr Henderson?",
+            "Miles Henderson: Pleased to meet you. So what do you do here?",
+            "Amy: I’m in charge of our HR department. And you?",
+            "Miles Henderson: I’m responsible for sales and marketing.",
+            "Daniel Goldman: Is this your first visit to Boston, Mr Henderson?",
+            "Miles Henderson: No, actually, I’ve been here four times already.",
+            "Daniel Goldman: Really? On holiday or business?",
+            "Miles Henderson: Mostly business.",
+            "Daniel Goldman: How long have you been working for your company?",
+            "Miles Henderson: Oh, I’ve been with Simtech for almost five years now. How about you? When did you join your company?",
+            "Daniel Goldman: I started working for Xcel Systems about 10 years ago."
+        ];
+
+        window.speechSynthesis.cancel();
+        lines.forEach((line, index) => {
+            const utterance = new SpeechSynthesisUtterance(line);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.95;
+            window.speechSynthesis.speak(utterance);
+        });
+    }
+</script>
+
+</body>
+</html>
