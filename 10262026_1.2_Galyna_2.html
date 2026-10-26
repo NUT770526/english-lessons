@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business English - Introductions & Networking</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            pink: '#FFF5F7',
+                            pinkBorder: '#FBCFE8',
+                            pinkText: '#DB2777',
+                            yellow: '#FFFDE7',
+                            yellowBorder: '#FEF08A',
+                            yellowText: '#CA8A04',
+                            green: '#F0FDF4',
+                            greenBorder: '#BBF7D0',
+                            greenText: '#16A34A',
+                            blue: '#EFF6FF',
+                            blueBorder: '#BFDBFE',
+                            blueText: '#2563EB',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #FFF5F7 0%, #FFFDE7 50%, #F0FDF4 100%);
+            min-height: 100vh;
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.02);
+        }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+        }
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+        }
+        .has-tooltip:hover .tooltip, .has-tooltip:focus-within .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-800 p-4 sm:p-6 md:p-10">
+
+    <div class="max-w-5xl mx-auto space-y-8">
+
+        <!-- Header -->
+        <header class="glass-header rounded-3xl p-6 md:p-8 border border-pink-200/60 card-shadow flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-pink-400 to-rose-500 flex items-center justify-center text-white text-3xl shadow-lg shadow-pink-500/20 flex-shrink-0">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-pink-600 bg-pink-100 px-3 py-1 rounded-full">Business English Module</span>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1">
+                        Introductions & Job Descriptions
+                    </h1>
+                    <p class="text-xs sm:text-sm text-slate-500 font-medium">Інтерактивний тренажер ділового знайомства</p>
+                </div>
+            </div>
+
+            <!-- Global Action Bar -->
+            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-stretch md:justify-end">
+                <button onclick="exportSummary()" class="px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold rounded-2xl transition-all shadow-md flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-export"></i>
+                    <span>Експортувати Звіт</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- SECTION 1: Phrases & Pronunciation Reference (Image 1) -->
+        <section class="bg-pastel-pink/70 rounded-3xl p-6 sm:p-8 border border-pastel-pinkBorder card-shadow space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-pink-200/60 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-pink-500 text-white flex items-center justify-center text-lg font-bold">1</div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Useful Expressions for Self-Introduction</h2>
+                        <p class="text-xs sm:text-sm text-slate-600">Натисніть на вираз для прослуховування. Наведіть для перекладу та транскрипції.</p>
+                    </div>
+                </div>
+                <button onclick="playAllPhrases()" class="px-4 py-2 bg-white hover:bg-pink-50 text-pink-700 border border-pink-200 rounded-xl text-xs font-bold transition-all flex items-center gap-2 self-start sm:self-auto shadow-sm">
+                    <i class="fa-solid fa-play"></i> Прослухати все
+                </button>
+            </div>
+
+            <!-- Grid of Expressions -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5" id="phrases-grid">
+                <!-- Javascript will inject cards here -->
+            </div>
+        </section>
+
+        <!-- SECTION 2: Let's Make a Match! Exercise (Image 2) -->
+        <section class="bg-pastel-yellow/70 rounded-3xl p-6 sm:p-8 border border-pastel-yellowBorder card-shadow space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-amber-200/60 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-puzzle-piece"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Let's make a match!</h2>
+                        <p class="text-xs sm:text-sm text-slate-600">З'єднайте питання з відповідними відповідями про роботу.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <label class="inline-flex items-center cursor-pointer text-xs font-semibold text-amber-900">
+                        <input type="checkbox" id="auto-check-toggle" onchange="toggleAutoCheck()" class="sr-only peer">
+                        <div class="relative w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-600"></div>
+                        <span class="ms-2">Автоперевірка</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Available Answers Bank -->
+            <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-800 block mb-3">
+                    <i class="fa-solid fa-cubes text-amber-600 mr-1"></i> Доступні відповіді (Натисніть для вибору):
+                </span>
+                <div id="answers-bank" class="flex flex-wrap gap-2.5">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Matching Questions List -->
+            <div class="space-y-4 pt-2" id="matching-list">
+                <!-- Rendered by JS -->
+            </div>
+
+            <!-- Action Controls for Matching -->
+            <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-amber-200/60">
+                <div id="matching-score" class="text-xs font-bold text-amber-900">
+                    Статус: Не перевірено
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="resetMatching()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all">
+                        Скинути
+                    </button>
+                    <button onclick="checkMatching()" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-check"></i> Перевірити
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: Practical Speaking & Roleplay (Image 3) -->
+        <section class="bg-pastel-green/70 rounded-3xl p-6 sm:p-8 border border-pastel-greenBorder card-shadow space-y-6">
+            <div class="flex items-center gap-3 border-b border-emerald-200/60 pb-4">
+                <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg font-bold">3</div>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Roleplay & Practical Speaking Exercise</h2>
+                    <p class="text-xs sm:text-sm text-slate-600">Симуляція співбесіди чи знайомства на практиці.</p>
+                </div>
+            </div>
+
+            <!-- Scenario Banner -->
+            <div class="bg-amber-50 rounded-2xl p-5 border border-amber-200/80 flex flex-col md:flex-row gap-5 items-center">
+                <div class="w-full md:w-48 h-32 rounded-xl bg-white border border-amber-200 flex items-center justify-center p-3 flex-shrink-0 shadow-sm">
+                    <!-- Google Logo representation -->
+                    <div class="flex items-center gap-2">
+                        <i class="fa-laptop text-amber-500 text-3xl"></i>
+                        <span class="text-xl font-bold tracking-tight text-slate-700">Google</span>
+                    </div>
+                </div>
+                <div class="space-y-2 text-slate-800 text-xs sm:text-sm">
+                    <h3 class="font-bold text-amber-900 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-user-tie"></i> Завдання для рольової гри:
+                    </h3>
+                    <ul class="space-y-1.5 list-disc list-inside text-slate-700 font-medium">
+                        <li><strong>Imagine:</strong> You are a Project Manager at <strong>Google</strong>.</li>
+                        <li><strong>Task:</strong> Introduce yourself to your partner/colleague.</li>
+                        <li><strong>Explain:</strong> Your job title, company details, and primary daily activities.</li>
+                        <li><strong>Requirement:</strong> Use the target expressions from Tasks 1 and 2.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Useful Sentence Building Chips -->
+            <div class="space-y-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 block">
+                    <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Конструктор фраз (Натисніть для вставки у вашу відповідь):
+                </span>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="insertChip('Hello, my name is Alex.')" class="px-3 py-1.5 bg-white hover:bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-medium text-emerald-900 shadow-sm transition-all">+ Hello, my name is...</button>
+                    <button onclick="insertChip('I work for Google as a Project Manager.')" class="px-3 py-1.5 bg-white hover:bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-medium text-emerald-900 shadow-sm transition-all">+ I work for Google as a...</button>
+                    <button onclick="insertChip('I am responsible for project management and team coordination.')" class="px-3 py-1.5 bg-white hover:bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-medium text-emerald-900 shadow-sm transition-all">+ I am responsible for...</button>
+                    <button onclick="insertChip('We provide web design and software services.')" class="px-3 py-1.5 bg-white hover:bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-medium text-emerald-900 shadow-sm transition-all">+ We provide...</button>
+                    <button onclick="insertChip('It is a pleasure to meet you!')" class="px-3 py-1.5 bg-white hover:bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-medium text-emerald-900 shadow-sm transition-all">+ It's a pleasure to meet you!</button>
+                </div>
+            </div>
+
+            <!-- Interactive Speech / Text Practice Box -->
+            <div class="space-y-3">
+                <div class="flex justify-between items-center px-1">
+                    <label for="roleplay-notes" class="text-xs font-bold text-slate-700 flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-emerald-600"></i> Ваш підготовлений текст презентації (Self-Introduction):
+                    </label>
+                    <span id="roleplay-word-count" class="text-xs font-bold text-slate-500">0 слів | 0 символів</span>
+                </div>
+                <textarea id="roleplay-notes" oninput="handleRoleplayInput()" placeholder="Наприклад: Hello! My name is John. I work as a Project Manager at Google. I'm in charge of software development..." rows="5" class="w-full p-4 rounded-2xl border border-emerald-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none text-xs sm:text-sm text-slate-800 bg-white shadow-inner resize-y transition-all"></textarea>
+            </div>
+
+            <!-- Speech Audio Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+                <div class="flex flex-wrap items-center gap-3">
+                    <button onclick="speakRoleplay()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-volume-high"></i> Озвучити мій текст
+                    </button>
+                    <button id="record-btn" onclick="toggleRecordingSimulation()" class="px-4 py-2.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm">
+                        <i id="record-icon" class="fa-solid fa-microphone text-rose-500"></i>
+                        <span id="record-text">Симуляція запису виступу</span>
+                    </button>
+                </div>
+                <span id="save-indicator" class="text-xs font-semibold text-emerald-600 opacity-0 transition-opacity flex items-center gap-1">
+                    <i class="fa-solid fa-circle-check"></i> Збережено
+                </span>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Data for Task 1: Reference Phrases from Image 1
+        const phrasesData = [
+            { id: 1, text: "My name is..", ipa: "/maɪ neɪm ɪz/", translation: "Мене звати..." },
+            { id: 2, text: "Can I introduce myself?", ipa: "/kæn aɪ ˌɪntrəˈdjuːs maɪˈsɛlf/", translation: "Дозвольте відрекомендуватися?" },
+            { id: 3, text: "How do you do?", ipa: "/haʊ duː juː duː/", translation: "Вітаю / Як ваші справи? (Офіційне вітання)" },
+            { id: 4, text: "I'd like to introduce you to..", ipa: "/aɪd laɪk tuː ˌɪntrəˈdjuːs juː tuː/", translation: "Я б хотів/хотіла познайомити вас з..." },
+            { id: 5, text: "What do you do for a living?", ipa: "/wɒt duː juː duː fɔːr ə ˈlɪvɪŋ/", translation: "Чим ви займаєтеся? / Хто ви за професією?" },
+            { id: 6, text: "I'm in charge of.. / I'm responsible for..", ipa: "/aɪm ɪn tʃɑːdʒ ɒv/ | /aɪm rɪˈspɒnsəbl fɔːr/", translation: "Я відповідаю за... / У мої обов'язки входить..." },
+            { id: 7, text: "It's nice to meet you.", ipa: "/ɪts naɪs tuː miːt juː/", translation: "Приємно познайомитися." },
+            { id: 8, text: "It's a pleasure to meet you, too.", ipa: "/ɪts ə ˈplɛʒər tuː miːt juː tuː/", translation: "Мені також дуже приємно познайомитися." }
+        ];
+
+        // Data for Task 2: Matching Questions & Options from Image 2
+        const matchingQuestions = [
+            { id: 1, question: "1. What kind of company do you work for?", correct: "I work for a media company." },
+            { id: 2, question: "2. What does your company do?", correct: "We provide web design services." },
+            { id: 3, question: "3. What do you do in your job?", correct: "I'm responsible for project management." },
+            { id: 4, question: "4. What's your job?", correct: "I work as a project manager." }
+        ];
+
+        const matchingOptions = [
+            "I work for a media company.",
+            "I'm responsible for project management.",
+            "We provide web design services.",
+            "I work as a project manager."
+        ];
+
+        // State variables
+        let selectedAnswers = { 1: null, 2: null, 3: null, 4: null };
+        let activeSelection = null;
+        let isRecording = false;
+        let recordingTimer = null;
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPhrases();
+            renderMatching();
+            loadSavedRoleplay();
+        });
+
+        // --- SECTION 1 LOGIC ---
+        function renderPhrases() {
+            const container = document.getElementById('phrases-grid');
+            container.innerHTML = '';
+
+            phrasesData.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "has-tooltip relative bg-white rounded-2xl p-4 border border-pink-100 hover:border-pink-300 shadow-sm transition-all cursor-pointer flex items-center justify-between group";
+                card.onclick = () => speakText(p.text);
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-7 h-7 rounded-lg bg-pink-50 text-pink-600 font-bold text-xs flex items-center justify-center flex-shrink-0 group-hover:bg-pink-500 group-hover:text-white transition-colors">${p.id}</span>
+                        <div>
+                            <p class="font-bold text-slate-800 text-sm sm:text-base">${p.text}</p>
+                            <p class="text-xs text-slate-400 font-mono mt-0.5">${p.ipa}</p>
+                        </div>
+                    </div>
+                    <button title="Play Audio" class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-pink-100 text-slate-500 group-hover:text-pink-600 flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-volume-high text-sm"></i>
+                    </button>
+
+                    <!-- Tooltip for translation -->
+                    <div class="tooltip pointer-events-none absolute z-20 bottom-full mb-2 left-1/2 -translate-x-1/2 w-64 p-2.5 bg-slate-900 text-white text-xs rounded-xl shadow-xl text-center">
+                        <span class="text-pink-300 font-semibold block mb-0.5">Переклад:</span>
+                        ${p.translation}
+                        <div class="w-2 h-2 bg-slate-900 rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) {
+                alert('Синтез мовлення не підтримується у вашому браузері.');
+                return;
+            }
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function playAllPhrases() {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            let index = 0;
+
+            function playNext() {
+                if (index < phrasesData.length) {
+                    const utterance = new SpeechSynthesisUtterance(phrasesData[index].text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.85;
+                    utterance.onend = () => {
+                        index++;
+                        setTimeout(playNext, 500);
+                    };
+                    window.speechSynthesis.speak(utterance);
+                }
+            }
+            playNext();
+        }
+
+        // --- SECTION 2 LOGIC ---
+        function renderMatching() {
+            const bank = document.getElementById('answers-bank');
+            const list = document.getElementById('matching-list');
+            bank.innerHTML = '';
+            list.innerHTML = '';
+
+            // Render option chips
+            matchingOptions.forEach((opt, idx) => {
+                const isUsed = Object.values(selectedAnswers).includes(opt);
+                const isSelected = activeSelection === opt;
+
+                const btn = document.createElement('button');
+                btn.className = `px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold transition-all border ${
+                    isUsed 
+                        ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed opacity-60' 
+                        : isSelected 
+                            ? 'bg-amber-600 text-white border-amber-600 shadow-md scale-105 ring-2 ring-amber-300' 
+                            : 'bg-white border-amber-200 hover:border-amber-400 text-slate-800 shadow-sm'
+                }`;
+                btn.disabled = isUsed;
+                btn.onclick = () => {
+                    activeSelection = activeSelection === opt ? null : opt;
+                    renderMatching();
+                };
+                btn.textContent = opt;
+                bank.appendChild(btn);
+            });
+
+            // Render matching slots
+            matchingQuestions.forEach(q => {
+                const currentAns = selectedAnswers[q.id];
+
+                const row = document.createElement('div');
+                row.className = "bg-white p-4 rounded-2xl border border-amber-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm";
+
+                row.innerHTML = `
+                    <span class="font-bold text-slate-800 text-xs sm:text-sm">${q.question}</span>
+                    <div class="w-full sm:w-auto flex-1 max-w-md">
+                        <div onclick="assignAnswer(${q.id})" class="min-h-[44px] p-2.5 rounded-xl border-2 border-dashed ${
+                            currentAns ? 'border-amber-400 bg-amber-50/50' : 'border-slate-200 bg-slate-50'
+                        } hover:border-amber-400 cursor-pointer transition-all flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-800">
+                            <span>${currentAns || '<span class="text-slate-400 font-normal italic">Натисніть сюди для вставки обраного варіанту</span>'}</span>
+                            ${currentAns ? `<button onclick="event.stopPropagation(); clearSlot(${q.id})" class="text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-xmark"></i></button>` : ''}
+                        </div>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        function assignAnswer(qId) {
+            if (activeSelection) {
+                selectedAnswers[qId] = activeSelection;
+                activeSelection = null;
+                renderMatching();
+                if (document.getElementById('auto-check-toggle').checked) {
+                    checkMatching();
+                }
+            }
+        }
+
+        function clearSlot(qId) {
+            selectedAnswers[qId] = null;
+            renderMatching();
+            if (document.getElementById('auto-check-toggle').checked) {
+                checkMatching();
+            }
+        }
+
+        function resetMatching() {
+            selectedAnswers = { 1: null, 2: null, 3: null, 4: null };
+            activeSelection = null;
+            document.getElementById('matching-score').innerHTML = 'Статус: Не перевірено';
+            document.getElementById('matching-score').className = 'text-xs font-bold text-amber-900';
+            renderMatching();
+        }
+
+        function checkMatching() {
+            let correctCount = 0;
+            const total = matchingQuestions.length;
+
+            matchingQuestions.forEach(q => {
+                if (selectedAnswers[q.id] === q.correct) {
+                    correctCount++;
+                }
+            });
+
+            const scoreDiv = document.getElementById('matching-score');
+            if (correctCount === total) {
+                scoreDiv.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Чудово! Всі ${total} з ${total} відповідей вірні!`;
+                scoreDiv.className = 'text-xs font-bold text-emerald-700';
+            } else {
+                scoreDiv.innerHTML = `Правильно: ${correctCount} з ${total}. Перевірте ще раз!`;
+                scoreDiv.className = 'text-xs font-bold text-rose-600';
+            }
+        }
+
+        function toggleAutoCheck() {
+            if (document.getElementById('auto-check-toggle').checked) {
+                checkMatching();
+            }
+        }
+
+        // --- SECTION 3 LOGIC ---
+        function insertChip(text) {
+            const area = document.getElementById('roleplay-notes');
+            if (area.value.trim() === '') {
+                area.value = text;
+            } else {
+                area.value += ' ' + text;
+            }
+            handleRoleplayInput();
+            area.focus();
+        }
+
+        function handleRoleplayInput() {
+            const text = document.getElementById('roleplay-notes').value;
+            localStorage.setItem('be_intro_roleplay', text);
+
+            const chars = text.length;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            document.getElementById('roleplay-word-count').textContent = `${words} слів | ${chars} символів`;
+
+            // Indicator
+            const ind = document.getElementById('save-indicator');
+            ind.style.opacity = '1';
+            setTimeout(() => { ind.style.opacity = '0'; }, 1000);
+        }
+
+        function loadSavedRoleplay() {
+            const saved = localStorage.getItem('be_intro_roleplay');
+            if (saved) {
+                document.getElementById('roleplay-notes').value = saved;
+                handleRoleplayInput();
+            }
+        }
+
+        function speakRoleplay() {
+            const text = document.getElementById('roleplay-notes').value;
+            if (!text.trim()) {
+                alert('Будь ласка, введіть або згенеруйте текст для прослуховування.');
+                return;
+            }
+            speakText(text);
+        }
+
+        function toggleRecordingSimulation() {
+            const btn = document.getElementById('record-btn');
+            const icon = document.getElementById('record-icon');
+            const label = document.getElementById('record-text');
+
+            if (!isRecording) {
+                isRecording = true;
+                icon.className = 'fa-solid fa-stop text-white animate-pulse';
+                btn.className = 'px-4 py-2.5 bg-rose-600 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-md';
+                label.textContent = 'Запис триває... (Натисніть для зупинки)';
+
+                let sec = 0;
+                recordingTimer = setInterval(() => {
+                    sec++;
+                    label.textContent = `Запис... (${sec} сек)`;
+                }, 1000);
+            } else {
+                isRecording = false;
+                clearInterval(recordingTimer);
+                icon.className = 'fa-solid fa-microphone text-rose-500';
+                btn.className = 'px-4 py-2.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm';
+                label.textContent = 'Запис завершено (Спробувати ще раз)';
+            }
+        }
+
+        // --- EXPORT SUMMARY REPORT ---
+        function exportSummary() {
+            let content = "========================================================\n";
+            content += " BUSINESS ENGLISH: INTRODUCTIONS & NETWORKING REPORT\n";
+            content += "========================================================\n\n";
+
+            content += "TASK 1: REFERENCE PHRASES LEARNED\n";
+            phrasesData.forEach(p => {
+                content += `${p.id}. ${p.text} -> ${p.translation}\n`;
+            });
+            content += "\n--------------------------------------------------------\n\n";
+
+            content += "TASK 2: MATCHING EXERCISE RESPONSES\n";
+            matchingQuestions.forEach(q => {
+                const userAns = selectedAnswers[q.id] || "(Unanswered)";
+                const status = selectedAnswers[q.id] === q.correct ? "✓ Correct" : "✗ Incorrect";
+                content += `${q.question}\nAnswer: ${userAns} [${status}]\n\n`;
+            });
+            content += "--------------------------------------------------------\n\n";
+
+            content += "TASK 3: ROLEPLAY SELF-INTRODUCTION (Google PM)\n";
+            const userText = localStorage.getItem('be_intro_roleplay') || "(No notes provided)";
+            content += userText + "\n\n";
+            content += "========================================================\n";
+
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Business_English_Introductions_Report.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
