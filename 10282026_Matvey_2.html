@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write Down Your Answers - Movie Preferences</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fafaf9;
+        }
+
+        .gradient-border {
+            border: 1px solid #f3f4f6;
+        }
+
+        /* Custom scrollbar for textareas */
+        textarea::-webkit-scrollbar {
+            width: 6px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        textarea::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 p-4 sm:p-6 md:p-10 flex flex-col items-center">
+
+    <main class="w-full max-w-4xl bg-white rounded-3xl shadow-sm border border-stone-200/80 p-5 sm:p-8 md:p-10">
+        
+        <!-- Header Section -->
+        <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-stone-100">
+            <div>
+                <div class="flex items-center gap-3 mb-1">
+                    <span class="text-2xl sm:text-3xl">✏️</span>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Write down your answers</h1>
+                </div>
+                <p class="text-slate-500 text-sm sm:text-base">Answer the discussion questions using complete English sentences. Hints and sentence starters are available for extra help!</p>
+            </div>
+            
+            <div class="flex items-center gap-2 self-start sm:self-auto">
+                <button id="clearBtn" onclick="clearAllAnswers()" class="px-3.5 py-2 text-xs sm:text-sm font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors duration-150 flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin=" His" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    Clear All
+                </button>
+                <button id="copyBtn" onclick="copyAllAnswers()" class="px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 active:bg-amber-700 rounded-xl transition-all shadow-sm flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                    Copy Answers
+                </button>
+            </div>
+        </header>
+
+        <!-- Notification Toast -->
+        <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-lg text-sm font-medium transition-all duration-300 opacity-0 pointer-events-none translate-y-2 z-50 flex items-center gap-2">
+            <span id="toastIcon">✨</span>
+            <span id="toastMsg">Answers copied to clipboard!</span>
+        </div>
+
+        <!-- Questions & Interactive Inputs List -->
+        <div class="space-y-6" id="questionsContainer">
+            
+            <!-- Question 1 -->
+            <div class="rounded-2xl border border-rose-100 bg-rose-50/40 p-5 sm:p-6 transition-all hover:shadow-md hover:border-rose-200">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+                    <div class="md:col-span-5 flex flex-col justify-between h-full space-y-2">
+                        <div class="flex items-start gap-3">
+                            <button onclick="speakQuestion('Which do you prefer, videos, DVDs, Netflix, or the cinema?')" class="mt-0.5 p-2 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-xl transition-colors flex-shrink-0" title="Listen to question">
+                                🔊
+                            </button>
+                            <label for="q1" class="font-semibold text-slate-800 text-base sm:text-lg leading-snug">
+                                Which do you prefer, videos (DVDs, Netflix) or the cinema?
+                            </label>
+                        </div>
+                        
+                        <!-- Toggle Hints Button -->
+                        <div>
+                            <button onclick="toggleHint(1)" class="text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-100/60 hover:bg-rose-100 px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1">
+                                💡 Useful Phrases & Hints
+                            </button>
+                            <div id="hint-1" class="hidden mt-2 p-3 bg-white/80 rounded-xl text-xs text-slate-600 border border-rose-100 space-y-1">
+                                <p class="font-medium text-rose-900">Sentence Starters:</p>
+                                <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                    <li>"I personally prefer watching movies on <strong>Netflix / streaming platforms</strong> because..."</li>
+                                    <li>"I definitely prefer going to <strong>the cinema</strong> because..."</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-7 flex flex-col gap-1.5">
+                        <textarea id="q1" oninput="handleInput(1)" placeholder="Write your full answer here..." class="w-full h-28 p-3.5 text-sm sm:text-base text-slate-800 bg-white border border-rose-200/80 rounded-xl shadow-xs focus:ring-2 focus:ring-rose-400 focus:border-rose-400 outline-none transition-all resize-y"></textarea>
+                        <div class="flex justify-between items-center text-xs text-slate-400 px-1">
+                            <span id="saved-1" class="text-emerald-600 opacity-0 transition-opacity flex items-center gap-1 font-medium">✓ Saved</span>
+                            <span id="count-1">0 words</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="rounded-2xl border border-amber-100 bg-amber-50/40 p-5 sm:p-6 transition-all hover:shadow-md hover:border-amber-200">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+                    <div class="md:col-span-5 flex flex-col justify-between h-full space-y-2">
+                        <div class="flex items-start gap-3">
+                            <button onclick="speakQuestion('Why do you prefer it?')" class="mt-0.5 p-2 bg-amber-100 hover:bg-amber-200 text-amber-700 rounded-xl transition-colors flex-shrink-0" title="Listen to question">
+                                🔊
+                            </button>
+                            <label for="q2" class="font-semibold text-slate-800 text-base sm:text-lg leading-snug">
+                                Why do you prefer it?
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <button onclick="toggleHint(2)" class="text-xs font-semibold text-amber-700 hover:text-amber-800 bg-amber-100/60 hover:bg-amber-100 px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1">
+                                💡 Useful Phrases & Hints
+                            </button>
+                            <div id="hint-2" class="hidden mt-2 p-3 bg-white/80 rounded-xl text-xs text-slate-600 border border-amber-100 space-y-1">
+                                <p class="font-medium text-amber-900">Sentence Starters:</p>
+                                <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                    <li>"The main reason I prefer it is that..."</li>
+                                    <li>"It is more <strong>convenient / comfortable / immersive</strong> because..."</li>
+                                    <li>"I can pause whenever I want / get snacks easily..."</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-7 flex flex-col gap-1.5">
+                        <textarea id="q2" oninput="handleInput(2)" placeholder="Explain your reasons in detail..." class="w-full h-28 p-3.5 text-sm sm:text-base text-slate-800 bg-white border border-amber-200/80 rounded-xl shadow-xs focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition-all resize-y"></textarea>
+                        <div class="flex justify-between items-center text-xs text-slate-400 px-1">
+                            <span id="saved-2" class="text-emerald-600 opacity-0 transition-opacity flex items-center gap-1 font-medium">✓ Saved</span>
+                            <span id="count-2">0 words</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="rounded-2xl border border-emerald-100 bg-emerald-50/40 p-5 sm:p-6 transition-all hover:shadow-md hover:border-emerald-200">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+                    <div class="md:col-span-5 flex flex-col justify-between h-full space-y-2">
+                        <div class="flex items-start gap-3">
+                            <button onclick="speakQuestion('How is the experience different?')" class="mt-0.5 p-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-xl transition-colors flex-shrink-0" title="Listen to question">
+                                🔊
+                            </button>
+                            <label for="q3" class="font-semibold text-slate-800 text-base sm:text-lg leading-snug">
+                                How is the experience different?
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <button onclick="toggleHint(3)" class="text-xs font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-100/60 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1">
+                                💡 Useful Phrases & Hints
+                            </button>
+                            <div id="hint-3" class="hidden mt-2 p-3 bg-white/80 rounded-xl text-xs text-slate-600 border border-emerald-100 space-y-1">
+                                <p class="font-medium text-emerald-900">Comparison Ideas:</p>
+                                <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                    <li>"At the cinema, you get a <strong>giant screen</strong> and <strong>surround sound</strong>..."</li>
+                                    <li>"On the other hand, streaming at home offers a <strong>cozy atmosphere</strong>..."</li>
+                                    <li>"In contrast to home viewing, going out to the theater feels like a special event."</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-7 flex flex-col gap-1.5">
+                        <textarea id="q3" oninput="handleInput(3)" placeholder="Compare the two movie-watching experiences..." class="w-full h-28 p-3.5 text-sm sm:text-base text-slate-800 bg-white border border-emerald-200/80 rounded-xl shadow-xs focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all resize-y"></textarea>
+                        <div class="flex justify-between items-center text-xs text-slate-400 px-1">
+                            <span id="saved-3" class="text-emerald-600 opacity-0 transition-opacity flex items-center gap-1 font-medium">✓ Saved</span>
+                            <span id="count-3">0 words</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="rounded-2xl border border-sky-100 bg-sky-50/40 p-5 sm:p-6 transition-all hover:shadow-md hover:border-sky-200">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+                    <div class="md:col-span-5 flex flex-col justify-between h-full space-y-2">
+                        <div class="flex items-start gap-3">
+                            <button onclick="speakQuestion('Do you like to rent videos?')" class="mt-0.5 p-2 bg-sky-100 hover:bg-sky-200 text-sky-700 rounded-xl transition-colors flex-shrink-0" title="Listen to question">
+                                🔊
+                            </button>
+                            <label for="q4" class="font-semibold text-slate-800 text-base sm:text-lg leading-snug">
+                                Do you like to rent videos?
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <button onclick="toggleHint(4)" class="text-xs font-semibold text-sky-700 hover:text-sky-800 bg-sky-100/60 hover:bg-sky-100 px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1">
+                                💡 Useful Phrases & Hints
+                            </button>
+                            <div id="hint-4" class="hidden mt-2 p-3 bg-white/80 rounded-xl text-xs text-slate-600 border border-sky-100 space-y-1">
+                                <p class="font-medium text-sky-900">Sentence Starters:</p>
+                                <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                    <li>"Yes, I like renting movies online via Apple TV / Amazon Prime..."</li>
+                                    <li>"To be honest, I rarely rent videos nowadays because I use monthly subscriptions..."</li>
+                                    <li>"I used to rent physical DVDs, but now I prefer digital downloads..."</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-7 flex flex-col gap-1.5">
+                        <textarea id="q4" oninput="handleInput(4)" placeholder="Share your habits on renting movies..." class="w-full h-28 p-3.5 text-sm sm:text-base text-slate-800 bg-white border border-sky-200/80 rounded-xl shadow-xs focus:ring-2 focus:ring-sky-400 focus:border-sky-400 outline-none transition-all resize-y"></textarea>
+                        <div class="flex justify-between items-center text-xs text-slate-400 px-1">
+                            <span id="saved-4" class="text-emerald-600 opacity-0 transition-opacity flex items-center gap-1 font-medium">✓ Saved</span>
+                            <span id="count-4">0 words</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="rounded-2xl border border-indigo-100 bg-indigo-50/40 p-5 sm:p-6 transition-all hover:shadow-md hover:border-indigo-200">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+                    <div class="md:col-span-5 flex flex-col justify-between h-full space-y-2">
+                        <div class="flex items-start gap-3">
+                            <button onclick="speakQuestion('If so, how often do you rent them?')" class="mt-0.5 p-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-xl transition-colors flex-shrink-0" title="Listen to question">
+                                🔊
+                            </button>
+                            <label for="q5" class="font-semibold text-slate-800 text-base sm:text-lg leading-snug">
+                                If so, how often do you rent them?
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <button onclick="toggleHint(5)" class="text-xs font-semibold text-indigo-700 hover:text-indigo-800 bg-indigo-100/60 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1">
+                                💡 Useful Phrases & Hints
+                            </button>
+                            <div id="hint-5" class="hidden mt-2 p-3 bg-white/80 rounded-xl text-xs text-slate-600 border border-indigo-100 space-y-1">
+                                <p class="font-medium text-indigo-900">Frequency Expressions:</p>
+                                <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                    <li>"I rent movies about <strong>once or twice a month</strong>..."</li>
+                                    <li>"Only on special occasions when a new blockbuster comes out..."</li>
+                                    <li>"Since I don't rent videos, I usually stream movies every weekend instead."</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-7 flex flex-col gap-1.5">
+                        <textarea id="q5" oninput="handleInput(5)" placeholder="Describe how frequently you rent or stream movies..." class="w-full h-28 p-3.5 text-sm sm:text-base text-slate-800 bg-white border border-indigo-200/80 rounded-xl shadow-xs focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition-all resize-y"></textarea>
+                        <div class="flex justify-between items-center text-xs text-slate-400 px-1">
+                            <span id="saved-5" class="text-emerald-600 opacity-0 transition-opacity flex items-center gap-1 font-medium">✓ Saved</span>
+                            <span id="count-5">0 words</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer Bar -->
+        <footer class="mt-8 pt-6 border-t border-stone-100 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+            <p>💡 Your progress is automatically saved locally in your web browser.</p>
+            <div class="flex items-center gap-4">
+                <span id="totalWordCount" class="font-medium bg-slate-100 px-3 py-1.5 rounded-lg text-slate-700">Total: 0 words</span>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        const questionsList = [
+            "Which do you prefer, videos (DVDs, Netflix) or the cinema?",
+            "Why do you prefer it?",
+            "How is the experience different?",
+            "Do you like to rent videos?",
+            "If so, how often do you rent them?"
+        ];
+
+        // Save timeout handles
+        const saveTimeouts = {};
+
+        // Load saved content on startup
+        window.addEventListener('DOMContentLoaded', () => {
+            for (let i = 1; i <= 5; i++) {
+                const savedVal = localStorage.getItem(`task_q${i}`);
+                if (savedVal) {
+                    const el = document.getElementById(`q${i}`);
+                    if (el) {
+                        el.value = savedVal;
+                        updateCounts(i);
+                    }
+                }
+            }
+            updateTotalWordCount();
+        });
+
+        // Toggle hintVisibility
+        function toggleHint(index) {
+            const hintEl = document.getElementById(`hint-${index}`);
+            if (hintEl) {
+                hintEl.classList.toggle('hidden');
+            }
+        }
+
+        // Handle user writing in textarea
+        function handleInput(index) {
+            updateCounts(index);
+            updateTotalWordCount();
+
+            // Auto-save debounced
+            const indicator = document.getElementById(`saved-${index}`);
+            if (indicator) {
+                indicator.classList.add('opacity-0');
+            }
+
+            clearTimeout(saveTimeouts[index]);
+            saveTimeouts[index] = setTimeout(() => {
+                const val = document.getElementById(`q${index}`).value;
+                localStorage.setItem(`task_q${index}`, val);
+                
+                if (indicator) {
+                    indicator.classList.remove('opacity-0');
+                    setTimeout(() => {
+                        indicator.classList.add('opacity-0');
+                    }, 2000);
+                }
+            }, 600);
+        }
+
+        // Word count updater
+        function updateCounts(index) {
+            const val = document.getElementById(`q${index}`).value.trim();
+            const words = val ? val.split(/\s+/).length : 0;
+            const countEl = document.getElementById(`count-${index}`);
+            if (countEl) {
+                countEl.textContent = `${words} ${words === 1 ? 'word' : 'words'}`;
+            }
+        }
+
+        function updateTotalWordCount() {
+            let total = 0;
+            for (let i = 1; i <= 5; i++) {
+                const val = document.getElementById(`q${i}`).value.trim();
+                if (val) {
+                    total += val.split(/\s+/).length;
+                }
+            }
+            const totalEl = document.getElementById('totalWordCount');
+            if (totalEl) {
+                totalEl.textContent = `Total: ${total} ${total === 1 ? 'word' : 'words'}`;
+            }
+        }
+
+        // Text-to-speech for reading question aloud
+        function speakQuestion(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                showToast("Text-to-speech is not supported in this browser.", "⚠️");
+            }
+        }
+
+        // Copy all student answers to clipboard
+        function copyAllAnswers() {
+            let compiledText = "📝 Movie Preferences - Speaking & Writing Task\n";
+            compiledText += "========================================\n\n";
+
+            let hasContent = false;
+            for (let i = 1; i <= 5; i++) {
+                const answer = document.getElementById(`q${i}`).value.trim();
+                compiledText += `${i}. ${questionsList[i-1]}\n`;
+                compiledText += `   Answer: ${answer || "(No answer provided)"}\n\n`;
+                if (answer) hasContent = true;
+            }
+
+            if (!hasContent) {
+                showToast("Please write at least one answer before copying!", "⚠️");
+                return;
+            }
+
+            // Copy using fallback execution method
+            const tempInput = document.createElement("textarea");
+            tempInput.value = compiledText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                document.execCommand('copy');
+                showToast("All answers copied to clipboard!", "📋");
+            } catch (err) {
+                showToast("Failed to copy answers.", "❌");
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        // Clear all text fields
+        function clearAllAnswers() {
+            if (confirm("Are you sure you want to clear all your written answers?")) {
+                for (let i = 1; i <= 5; i++) {
+                    const el = document.getElementById(`q${i}`);
+                    if (el) el.value = "";
+                    localStorage.removeItem(`task_q${i}`);
+                    updateCounts(i);
+                }
+                updateTotalWordCount();
+                showToast("All answers cleared.", "🗑️");
+            }
+        }
+
+        // Custom notification Toast
+        function showToast(message, icon = "✨") {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.textContent = message;
+            toastIcon.textContent = icon;
+
+            toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-2');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
