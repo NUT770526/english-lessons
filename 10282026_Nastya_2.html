@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose what in Yuki’s bag is</title>
+    <style>
+        :root {
+            --bg-color: #fcfbf9;
+            --card-pink: #fff0f3;
+            --card-yellow: #fffbeb;
+            --card-green: #f0fdf4;
+            --accent-purple: #8b5cf6;
+            --accent-purple-hover: #7c3aed;
+            --text-dark: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px dashed #f1f5f9;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #0f172a;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .audio-player {
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background-color: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-purple-hover);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 650px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .item-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        }
+
+        .item-image {
+            height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-image img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            border-radius: 8px;
+            border: 2px solid #cbd5e1;
+            background-color: white;
+            color: var(--text-dark);
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+            font-weight: 600;
+        }
+
+        select:focus {
+            border-color: var(--accent-purple);
+        }
+
+        /* Transcript Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            line-height: 1.6;
+        }
+
+        .transcript-line {
+            margin-bottom: 8px;
+        }
+
+        .speaker {
+            font-weight: 700;
+            color: var(--accent-purple);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🦒 Choose what in Yuki’s bag is</h1>
+        <button class="btn btn-outline" onclick="toggleTranscript()">📜 Transcript</button>
+    </div>
+
+    <!-- Audio Player controls -->
+    <div class="audio-player">
+        <button class="btn" onclick="playAudioDialogue()">▶ Listen to Dialogue</button>
+        <span style="font-size: 14px; color: #64748b;">Listen to Stan and Yuki talking about school objects!</span>
+    </div>
+
+    <!-- 6 Items Grid -->
+    <div class="grid-container">
+        <!-- 1. Sharpener -->
+        <div class="item-card" style="background-color: var(--card-pink);">
+            <div class="item-image">
+                <svg width="90" height="90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" fill="#ef4444"/>
+                    <circle cx="50" cy="50" r="22" fill="#991b1b"/>
+                    <rect x="42" y="10" width="16" height="30" fill="#cbd5e1"/>
+                    <circle cx="50" cy="20" r="3" fill="#475569"/>
+                </svg>
+            </div>
+            <select id="item1">
+                <option value="">-- Select --</option>
+                <option value="yes">Yes, in bag</option>
+                <option value="no">No, not in bag</option>
+            </select>
+        </div>
+
+        <!-- 2. Pen -->
+        <div class="item-card" style="background-color: var(--card-yellow);">
+            <div class="item-image">
+                <svg width="90" height="90" viewBox="0 0 100 100">
+                    <rect x="15" y="45" width="70" height="10" rx="4" fill="#1e293b" transform="rotate(-25 50 50)"/>
+                    <polygon points="12,58 5,61 16,50" fill="#e2e8f0" transform="rotate(-25 50 50)"/>
+                    <rect x="70" y="43" width="12" height="14" rx="2" fill="#eab308" transform="rotate(-25 50 50)"/>
+                </svg>
+            </div>
+            <select id="item2">
+                <option value="">-- Select --</option>
+                <option value="yes">Yes, in bag</option>
+                <option value="no">No, not in bag</option>
+            </select>
+        </div>
+
+        <!-- 3. Book -->
+        <div class="item-card" style="background-color: var(--card-green);">
+            <div class="item-image">
+                <svg width="90" height="90" viewBox="0 0 100 100">
+                    <rect x="25" y="15" width="55" height="70" rx="4" fill="#be123c"/>
+                    <rect x="20" y="15" width="8" height="70" rx="2" fill="#881337"/>
+                    <line x1="35" y1="30" x2="70" y2="30" stroke="#fda4af" stroke-width="3"/>
+                </svg>
+            </div>
+            <select id="item3">
+                <option value="">-- Select --</option>
+                <option value="yes">Yes, in bag</option>
+                <option value="no">No, not in bag</option>
+            </select>
+        </div>
+
+        <!-- 4. Pencil case -->
+        <div class="item-card" style="background-color: #f0f9ff;">
+            <div class="item-image">
+                <svg width="100" height="90" viewBox="0 0 100 100">
+                    <rect x="10" y="40" width="80" height="40" rx="10" fill="#38bdf8"/>
+                    <rect x="10" y="35" width="80" height="8" fill="#0284c7"/>
+                    <line x1="20" y1="20" x2="25" y2="35" stroke="#eab308" stroke-width="4"/>
+                    <line x1="35" y1="15" x2="38" y2="35" stroke="#ef4444" stroke-width="4"/>
+                </svg>
+            </div>
+            <select id="item4">
+                <option value="">-- Select --</option>
+                <option value="yes">Yes, in bag</option>
+                <option value="no">No, not in bag</option>
+            </select>
+        </div>
+
+        <!-- 5. Ruler -->
+        <div class="item-card" style="background-color: #faf5ff;">
+            <div class="item-image">
+                <svg width="100" height="90" viewBox="0 0 100 100">
+                    <rect x="10" y="35" width="80" height="25" rx="3" fill="#334155" transform="rotate(-15 50 50)"/>
+                    <line x1="20" y1="35" x2="20" y2="45" stroke="#white" stroke-width="2" transform="rotate(-15 50 50)"/>
+                    <line x1="30" y1="35" x2="30" y2="48" stroke="#white" stroke-width="2" transform="rotate(-15 50 50)"/>
+                    <line x1="40" y1="35" x2="40" y2="45" stroke="#white" stroke-width="2" transform="rotate(-15 50 50)"/>
+                    <line x1="50" y1="35" x2="50" y2="48" stroke="#white" stroke-width="2" transform="rotate(-15 50 50)"/>
+                </svg>
+            </div>
+            <select id="item5">
+                <option value="">-- Select --</option>
+                <option value="yes">Yes, in bag</option>
+                <option value="no">No, not in bag</option>
+            </select>
+        </div>
+
+        <!-- 6. Scissors -->
+        <div class="item-card" style="background-color: #fff7ed;">
+            <div class="item-image">
+                <svg width="90" height="90" viewBox="0 0 100 100">
+                    <circle cx="25" cy="75" r="12" stroke="#0284c7" stroke-width="4" fill="none"/>
+                    <circle cx="55" cy="75" r="12" stroke="#0284c7" stroke-width="4" fill="none"/>
+                    <line x1="30" y1="65" x2="70" y2="20" stroke="#94a3b8" stroke-width="5"/>
+                    <line x1="50" y1="65" x2="20" y2="20" stroke="#94a3b8" stroke-width="5"/>
+                </svg>
+            </div>
+            <select id="item6">
+                <option value="">-- Select --</option>
+                <option value="yes">Yes, in bag</option>
+                <option value="no">No, not in bag</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Transcript Modal -->
+<div class="modal" id="transcriptModal" onclick="toggleTranscript()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3 style="margin-top:0; color:var(--accent-purple);">Dialogue Transcript</h3>
+        <div class="transcript-line"><span class="speaker">Stan:</span> Hi, Yuki!</div>
+        <div class="transcript-line"><span class="speaker">Yuki:</span> Hello, Stan!</div>
+        <div class="transcript-line"><span class="speaker">Stan:</span> How are you?</div>
+        <div class="transcript-line"><span class="speaker">Yuki:</span> I'm fine. And you?</div>
+        <div class="transcript-line"><span class="speaker">Stan:</span> I am great. What is in your bag?</div>
+        <div class="transcript-line"><span class="speaker">Yuki:</span> I have two pens, a pencil, a pencil case, seven colored pencils, a ruler, a book, a notebook, and a sandwich.</div>
+        <div class="transcript-line"><span class="speaker">Stan:</span> What color are your pencils?</div>
+        <div class="transcript-line"><span class="speaker">Yuki:</span> My pencils are orange, red, yellow, blue, green, black, and purple.</div>
+        <div class="transcript-line"><span class="speaker">Stan:</span> Do you have a sharpener or scissors?</div>
+        <div class="transcript-line"><span class="speaker">Yuki:</span> No, I don't.</div>
+        <button class="btn" style="width:100%; justify-content:center; margin-top:16px;" onclick="toggleTranscript()">Close</button>
+    </div>
+</div>
+
+<script>
+    function playAudioDialogue() {
+        if (!('speechSynthesis' in window)) {
+            alert('Your browser does not support Speech Synthesis.');
+            return;
+        }
+
+        const dialogue = [
+            { speaker: 'Stan', text: "Hi, Yuki!" },
+            { speaker: 'Yuki', text: "Hello, Stan!" },
+            { speaker: 'Stan', text: "How are you?" },
+            { speaker: 'Yuki', text: "I'm fine. And you?" },
+            { speaker: 'Stan', text: "I am great. What is in your bag?" },
+            { speaker: 'Yuki', text: "I have two pens, a pencil, a pencil case, seven colored pencils, a ruler, a book, a notebook, and a sandwich." },
+            { speaker: 'Stan', text: "What color are your pencils?" },
+            { speaker: 'Yuki', text: "My pencils are orange, red, yellow, blue, green, black, and purple." },
+            { speaker: 'Stan', text: "Do you have a sharpener or scissors?" },
+            { speaker: 'Yuki', text: "No, I don't." }
+        ];
+
+        window.speechSynthesis.cancel();
+        dialogue.forEach(item => {
+            const utterance = new SpeechSynthesisUtterance(item.text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            utterance.pitch = (item.speaker === 'Yuki') ? 1.2 : 0.9;
+            window.speechSynthesis.speak(utterance);
+        });
+    }
+
+    function toggleTranscript() {
+        const modal = document.getElementById('transcriptModal');
+        modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+    }
+</script>
+
+</body>
+</html>
