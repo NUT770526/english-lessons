@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listen, repeat and write the letters to get the words!</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fafaf9;
+        }
+
+        .title-font {
+            font-family: 'Fredoka', cursive, sans-serif;
+        }
+
+        /* Custom styling for range input */
+        input[type=range] {
+            accent-color: #8b5cf6;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 p-4 sm:p-6 md:p-10 flex flex-col items-center">
+
+    <main class="w-full max-w-3xl bg-white rounded-3xl shadow-sm border border-stone-200/80 p-5 sm:p-8 md:p-10">
+        
+        <!-- Header Section with Mascot icon -->
+        <header class="flex items-center gap-3 mb-6 pb-4 border-b border-stone-100">
+            <div class="w-12 h-12 bg-amber-100 border-2 border-amber-300 rounded-2xl flex items-center justify-center text-2xl shadow-xs">
+                🦒
+            </div>
+            <h1 class="title-font text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 tracking-wide">
+                Listen , repeat and write the letters to get the words!
+            </h1>
+        </header>
+
+        <!-- Main Audio Player Box -->
+        <div class="bg-slate-100/90 rounded-2xl p-4 sm:p-5 mb-8 border border-slate-200/70 shadow-inner flex flex-col gap-3">
+            <div class="flex items-center justify-between gap-3">
+                <!-- Play / Pause Button -->
+                <button id="playAudioBtn" onclick="toggleFullAudio()" class="w-12 h-12 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white rounded-xl flex items-center justify-center transition-all shadow-sm flex-shrink-0">
+                    <span id="playIcon" class="text-xl ml-0.5">▶</span>
+                </button>
+
+                <!-- Time counter current -->
+                <span id="currentTime" class="text-xs sm:text-sm font-semibold text-slate-600 font-mono w-12 text-center">00:00</span>
+
+                <!-- Progress Bar Slider -->
+                <input type="range" id="progressBar" value="0" min="0" max="100" class="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer" oninput="seekAudio(this.value)">
+
+                <!-- Total duration -->
+                <span id="totalTime" class="text-xs sm:text-sm font-semibold text-slate-600 font-mono w-12 text-center">00:30</span>
+
+                <!-- Mute / Volume icon -->
+                <button onclick="toggleMute()" class="p-2 text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
+                    <span id="volumeIcon" class="text-lg">🔊</span>
+                </button>
+
+                <!-- Speed indicator -->
+                <button onclick="changeSpeed()" id="speedBtn" class="px-2.5 py-1 text-xs font-bold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+                    1x
+                </button>
+            </div>
+
+            <div class="text-xs text-slate-500 font-medium text-center sm:text-left flex items-center justify-between px-1">
+                <span>🔊 Full audio track (Spelling 1 to 6)</span>
+                <span id="trackStatus" class="text-indigo-600 font-semibold hidden">Playing audio...</span>
+            </div>
+        </div>
+
+        <!-- 6 Numbered Input Fields Section -->
+        <div class="space-y-4 max-w-md">
+
+            <!-- Item 1 -->
+            <div class="flex items-center gap-3">
+                <span class="text-lg font-bold text-slate-700 w-6 text-right">1.</span>
+                <div class="relative flex-1">
+                    <input type="text" id="input-1" placeholder="" class="w-full py-3 px-4 pr-10 text-lg font-medium text-slate-800 bg-white border-2 border-slate-200 rounded-xl outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all uppercase tracking-widest shadow-xs">
+                    <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-300 text-lg font-sans">↵</span>
+                </div>
+                <button onclick="speakItemSpelling(1)" class="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 active:bg-rose-200 flex items-center justify-center transition-colors" title="Listen to word #1">
+                    🔊
+                </button>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="flex items-center gap-3">
+                <span class="text-lg font-bold text-slate-700 w-6 text-right">2.</span>
+                <div class="relative flex-1">
+                    <input type="text" id="input-2" placeholder="" class="w-full py-3 px-4 pr-10 text-lg font-medium text-slate-800 bg-white border-2 border-slate-200 rounded-xl outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all uppercase tracking-widest shadow-xs">
+                    <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-300 text-lg font-sans">↵</span>
+                </div>
+                <button onclick="speakItemSpelling(2)" class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 hover:bg-amber-100 active:bg-amber-200 flex items-center justify-center transition-colors" title="Listen to word #2">
+                    🔊
+                </button>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="flex items-center gap-3">
+                <span class="text-lg font-bold text-slate-700 w-6 text-right">3.</span>
+                <div class="relative flex-1">
+                    <input type="text" id="input-3" placeholder="" class="w-full py-3 px-4 pr-10 text-lg font-medium text-slate-800 bg-white border-2 border-slate-200 rounded-xl outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all uppercase tracking-widest shadow-xs">
+                    <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-300 text-lg font-sans">↵</span>
+                </div>
+                <button onclick="speakItemSpelling(3)" class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 hover:bg-emerald-100 active:bg-emerald-200 flex items-center justify-center transition-colors" title="Listen to word #3">
+                    🔊
+                </button>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="flex items-center gap-3">
+                <span class="text-lg font-bold text-slate-700 w-6 text-right">4.</span>
+                <div class="relative flex-1">
+                    <input type="text" id="input-4" placeholder="" class="w-full py-3 px-4 pr-10 text-lg font-medium text-slate-800 bg-white border-2 border-slate-200 rounded-xl outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all uppercase tracking-widest shadow-xs">
+                    <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-300 text-lg font-sans">↵</span>
+                </div>
+                <button onclick="speakItemSpelling(4)" class="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200 text-sky-600 hover:bg-sky-100 active:bg-sky-200 flex items-center justify-center transition-colors" title="Listen to word #4">
+                    🔊
+                </button>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="flex items-center gap-3">
+                <span class="text-lg font-bold text-slate-700 w-6 text-right">5.</span>
+                <div class="relative flex-1">
+                    <input type="text" id="input-5" placeholder="" class="w-full py-3 px-4 pr-10 text-lg font-medium text-slate-800 bg-white border-2 border-slate-200 rounded-xl outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all uppercase tracking-widest shadow-xs">
+                    <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-300 text-lg font-sans">↵</span>
+                </div>
+                <button onclick="speakItemSpelling(5)" class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-600 hover:bg-indigo-100 active:bg-indigo-200 flex items-center justify-center transition-colors" title="Listen to word #5">
+                    🔊
+                </button>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="flex items-center gap-3">
+                <span class="text-lg font-bold text-slate-700 w-6 text-right">6.</span>
+                <div class="relative flex-1">
+                    <input type="text" id="input-6" placeholder="" class="w-full py-3 px-4 pr-10 text-lg font-medium text-slate-800 bg-white border-2 border-slate-200 rounded-xl outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all uppercase tracking-widest shadow-xs">
+                    <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-300 text-lg font-sans">↵</span>
+                </div>
+                <button onclick="speakItemSpelling(6)" class="w-10 h-10 rounded-xl bg-purple-50 border border-purple-200 text-purple-600 hover:bg-purple-100 active:bg-purple-200 flex items-center justify-center transition-colors" title="Listen to word #6">
+                    🔊
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Teacher Hint / Answer Key Toggle Section (No Automated Check Button) -->
+        <footer class="mt-10 pt-6 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
+            <button onclick="toggleAnswerKey()" class="px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors inline-flex items-center gap-2">
+                <span>🔑</span> Toggle Teacher Answer Key
+            </button>
+
+            <button onclick="clearAllInputs()" class="px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
+                Clear all fields
+            </button>
+        </footer>
+
+        <!-- Hidden Teacher Key Box -->
+        <div id="answerKeyBox" class="hidden mt-4 p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl text-xs sm:text-sm text-emerald-900 space-y-2">
+            <p class="font-bold text-emerald-950 flex items-center gap-1.5">
+                <span>📋</span> Answer Key for Teacher:
+            </p>
+            <ol class="grid grid-cols-2 sm:grid-cols-3 gap-2 font-mono font-semibold text-emerald-800">
+                <li>1. SHARPENER</li>
+                <li>2. RULER</li>
+                <li>3. BOOKS</li>
+                <li>4. BAG</li>
+                <li>5. APPLE</li>
+                <li>6. SANDWICH</li>
+            </ol>
+        </div>
+
+    </main>
+
+    <script>
+        // Spelling data list based on prompt audio
+        const spellingData = [
+            { id: 1, word: "sharpener", letters: ["S", "H", "A", "R", "P", "E", "N", "E", "R"] },
+            { id: 2, word: "ruler", letters: ["R", "U", "L", "E", "R"] },
+            { id: 3, word: "books", letters: ["B", "O", "O", "K", "S"] },
+            { id: 4, word: "bag", letters: ["B", "A", "G"] },
+            { id: 5, word: "apple", letters: ["A", "P", "P", "L", "E"] },
+            { id: 6, word: "sandwich", letters: ["S", "A", "N", "D", "W", "I", "C", "H"] }
+        ];
+
+        let isPlaying = false;
+        let isMuted = false;
+        let playSpeed = 1.0;
+        let timerInterval = null;
+        let currentProgress = 0;
+        const totalDurationSeconds = 30;
+
+        // Web Speech API Voice synthesis helper
+        function speakLetters(num, onComplete = null) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+
+            const item = spellingData.find(d => d.id === num);
+            if (!item) return;
+
+            // Announce number
+            const numUtterance = new SpeechSynthesisUtterance(`${num}.`);
+            numUtterance.lang = 'en-US';
+            numUtterance.rate = playSpeed * 0.9;
+            numUtterance.volume = isMuted ? 0 : 1;
+
+            window.speechSynthesis.speak(numUtterance);
+
+            // Announce each spelled letter
+            item.letters.forEach((letter, index) => {
+                const letterUtterance = new SpeechSynthesisUtterance(letter);
+                letterUtterance.lang = 'en-US';
+                letterUtterance.rate = playSpeed * 0.8;
+                letterUtterance.volume = isMuted ? 0 : 1;
+                
+                if (index === item.letters.length - 1 && onComplete) {
+                    letterUtterance.onend = onComplete;
+                }
+
+                window.speechSynthesis.speak(letterUtterance);
+            });
+        }
+
+        // Play individual word audio
+        function speakItemSpelling(id) {
+            stopFullAudio();
+            speakLetters(id);
+        }
+
+        // Play entire sequence 1 through 6
+        function toggleFullAudio() {
+            if (isPlaying) {
+                stopFullAudio();
+            } else {
+                startFullAudioSequence();
+            }
+        }
+
+        function startFullAudioSequence() {
+            isPlaying = true;
+            document.getElementById('playIcon').textContent = '⏸';
+            document.getElementById('trackStatus').classList.remove('hidden');
+
+            let currentIndex = 0;
+
+            function playNextItem() {
+                if (!isPlaying || currentIndex >= spellingData.length) {
+                    stopFullAudio();
+                    return;
+                }
+
+                speakLetters(spellingData[currentIndex].id, () => {
+                    currentIndex++;
+                    setTimeout(() => {
+                        if (isPlaying) playNextItem();
+                    }, 800);
+                });
+            }
+
+            // Start simulated progress bar timer
+            currentProgress = 0;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                currentProgress += 1;
+                updateProgressUI(currentProgress);
+                if (currentProgress >= totalDurationSeconds) {
+                    stopFullAudio();
+                }
+            }, 1000);
+
+            playNextItem();
+        }
+
+        function stopFullAudio() {
+            isPlaying = false;
+            window.speechSynthesis.cancel();
+            clearInterval(timerInterval);
+            document.getElementById('playIcon').textContent = '▶';
+            document.getElementById('trackStatus').classList.add('hidden');
+        }
+
+        function updateProgressUI(seconds) {
+            const pct = (seconds / totalDurationSeconds) * 100;
+            document.getElementById('progressBar').value = pct;
+            document.getElementById('currentTime').textContent = formatTime(seconds);
+        }
+
+        function seekAudio(val) {
+            currentProgress = Math.floor((val / 100) * totalDurationSeconds);
+            document.getElementById('currentTime').textContent = formatTime(currentProgress);
+        }
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60).toString().padStart(2, '0');
+            const s = (sec % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            document.getElementById('volumeIcon').textContent = isMuted ? '🔇' : '🔊';
+        }
+
+        function changeSpeed() {
+            if (playSpeed === 1.0) playSpeed = 0.8;
+            else if (playSpeed === 0.8) playSpeed = 1.2;
+            else playSpeed = 1.0;
+
+            document.getElementById('speedBtn').textContent = `${playSpeed}x`;
+        }
+
+        function toggleAnswerKey() {
+            const keyBox = document.getElementById('answerKeyBox');
+            keyBox.classList.toggle('hidden');
+        }
+
+        function clearAllInputs() {
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById(`input-${i}`).value = '';
+            }
+        }
+    </script>
+</body>
+</html>
