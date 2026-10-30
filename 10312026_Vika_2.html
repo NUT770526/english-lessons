@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write about your family. Write the numbers in words.</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --accent-green: #22c55e;
+            --accent-green-hover: #16a34a;
+            --text-dark: #1e293b;
+            --border-color: #cbd5e1;
+            --correct-green: #22c55e;
+            --incorrect-red: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #0f172a;
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .example-box {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 28px;
+            font-size: 15px;
+            color: #15803d;
+            line-height: 1.5;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .score {
+            font-weight: 700;
+            font-size: 15px;
+            color: #475569;
+        }
+
+        .global-btn {
+            background-color: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .global-btn:hover {
+            background-color: var(--accent-green-hover);
+        }
+
+        .form-container {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 24px;
+            font-size: 18px;
+            line-height: 2.5;
+        }
+
+        .input-group {
+            display: inline-block;
+            margin: 4px 6px;
+            position: relative;
+        }
+
+        input[type="text"] {
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 16px;
+            font-family: inherit;
+            outline: none;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+        }
+
+        input.correct {
+            border-color: var(--correct-green) !important;
+            background-color: #f0fdf4;
+        }
+
+        input.incorrect {
+            border-color: var(--incorrect-red) !important;
+            background-color: #fef2f2;
+        }
+
+        .check-single-btn {
+            background-color: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+            transition: background 0.2s;
+            vertical-align: middle;
+        }
+
+        .check-single-btn:hover {
+            background-color: var(--accent-green-hover);
+        }
+
+        .row-block {
+            margin-bottom: 12px;
+        }
+
+        .feedback-mark {
+            font-weight: 700;
+            font-size: 14px;
+            margin-left: 6px;
+        }
+
+        .feedback-mark.correct { color: var(--correct-green); }
+        .feedback-mark.incorrect { color: var(--incorrect-red); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🦒 Write about your family. Write the numbers in words.</h1>
+
+    <div class="example-box">
+        <strong>For example:</strong> My name is Raffe. I am ten. My mother is twenty-one. My father is twenty-five[cite: 27].
+    </div>
+
+    <div class="header-bar">
+        <span class="score">Completed Fields: <span id="score">0</span> / 6</span>
+        <div>
+            <button class="global-btn" onclick="checkAll()">Check All</button>
+            <button class="global-btn" style="background-color: #94a3b8;" onclick="resetAll()">Reset</button>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <div class="row-block">
+            My name is 
+            <span class="input-group">
+                <input type="text" id="input1" data-type="text" placeholder="name" style="width: 140px;">
+            </span>. 
+            I am 
+            <span class="input-group">
+                <input type="text" id="input2" data-type="word" placeholder="age (words)" style="width: 130px;">
+            </span> 
+            years old. 
+            <button class="check-single-btn" onclick="checkField(1); checkField(2);">CHECK</button>
+            <span id="mark1" class="feedback-mark"></span>
+        </div>
+
+        <div class="row-block">
+            My mother is 
+            <span class="input-group">
+                <input type="text" id="input3" data-type="word" placeholder="age (words)" style="width: 150px;">
+            </span>, 
+            and my father is 
+            <span class="input-group">
+                <input type="text" id="input4" data-type="word" placeholder="age (words)" style="width: 150px;">
+            </span>. 
+            <button class="check-single-btn" onclick="checkField(3); checkField(4);">CHECK</button>
+        </div>
+
+        <div class="row-block">
+            My grandmother is 
+            <span class="input-group">
+                <input type="text" id="input5" data-type="word" placeholder="age (words)" style="width: 150px;">
+            </span> 
+            years old. 
+            <button class="check-single-btn" onclick="checkField(5);">CHECK</button>
+        </div>
+
+        <div class="row-block">
+            My grandfather is 
+            <span class="input-group">
+                <input type="text" id="input6" data-type="word" placeholder="age (words)" style="width: 150px;">
+            </span> 
+            years old. 
+            <button class="check-single-btn" onclick="checkField(6);">CHECK</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkField(num) {
+        const input = document.getElementById('input' + num);
+        const val = input.value.trim();
+
+        if (val === "") {
+            input.className = "";
+            updateScore();
+            return;
+        }
+
+        // Since it's a creative writing exercise about the student's own family, 
+        // field 1 checks if a name is entered, fields 2-6 check if words/numbers are entered.
+        if (val.length > 0) {
+            input.className = "correct";
+        } else {
+            input.className = "incorrect";
+        }
+        updateScore();
+    }
+
+    function checkAll() {
+        for (let i = 1; i <= 6; i++) {
+            const input = document.getElementById('input' + i);
+            if (input.value.trim() !== "") {
+                input.className = "correct";
+            } else {
+                input.className = "incorrect";
+            }
+        }
+        updateScore();
+    }
+
+    function resetAll() {
+        for (let i = 1; i <= 6; i++) {
+            const input = document.getElementById('input' + i);
+            input.value = "";
+            input.className = "";
+        }
+        updateScore();
+    }
+
+    function updateScore() {
+        let count = 0;
+        for (let i = 1; i <= 6; i++) {
+            if (document.getElementById('input' + i).classList.contains('correct')) {
+                count++;
+            }
+        }
+        document.getElementById('score').innerText = count;
+    }
+</script>
+
+</body>
+</html>
