@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select the correct words to complete these sentences</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --accent-orange: #e07a5f;
+            --accent-orange-hover: #d0694e;
+            --text-dark: #1e293b;
+            --border-color: #cbd5e1;
+            --correct-green: #22c55e;
+            --incorrect-red: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #0f172a;
+            margin-top: 0;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .score {
+            font-weight: 700;
+            font-size: 15px;
+            color: #475569;
+        }
+
+        .global-btn {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .global-btn:hover {
+            background-color: var(--accent-orange-hover);
+        }
+
+        .exercise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .item {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: box-shadow 0.2s;
+        }
+
+        .item:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .sentence-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        select {
+            padding: 6px 12px;
+            font-size: 15px;
+            font-family: inherit;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            background-color: white;
+            color: var(--text-dark);
+            cursor: pointer;
+            outline: none;
+            font-weight: 600;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: var(--accent-orange);
+        }
+
+        select.correct {
+            border-color: var(--correct-green) !important;
+            background-color: #f0fdf4;
+        }
+
+        select.incorrect {
+            border-color: var(--incorrect-red) !important;
+            background-color: #fef2f2;
+        }
+
+        .check-btn {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background 0.2s;
+            margin-left: auto;
+        }
+
+        .check-btn:hover {
+            background-color: var(--accent-orange-hover);
+        }
+
+        .feedback-mark {
+            font-weight: 700;
+            font-size: 14px;
+            margin-left: 8px;
+        }
+
+        .feedback-mark.correct { color: var(--correct-green); }
+        .feedback-mark.incorrect { color: var(--incorrect-red); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📖 Select the correct words to complete these sentences</h1>
+
+    <div class="header-bar">
+        <span class="score">Score: <span id="score">0</span> / 8</span>
+        <div>
+            <button class="global-btn" onclick="checkAll()">Check All</button>
+            <button class="global-btn" style="background-color: #94a3b8;" onclick="resetAll()">Reset</button>
+        </div>
+    </div>
+
+    <div class="exercise-list">
+        <!-- 1 -->
+        <div class="item">
+            <div class="sentence-row">
+                <span>1. Valeria was born in South</span>
+                <select id="select1" data-answer="London">
+                    <option value="">-- choose --</option>
+                    <option value="Paris">Paris</option>
+                    <option value="London">London</option>
+                </select>
+                <span>.</span>
+                <button class="check-btn" onclick="checkItem(1)">CHECK</button>
+                <span id="mark1" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="item">
+            <div class="sentence-row">
+                <span>2. Her parents had immigrated to England</span>
+                <select id="select2" data-answer="ten">
+                    <option value="">-- choose --</option>
+                    <option value="nine">nine</option>
+                    <option value="ten">ten</option>
+                </select>
+                <span>years before.</span>
+                <button class="check-btn" onclick="checkItem(2)">CHECK</button>
+                <span id="mark2" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="item">
+            <div class="sentence-row">
+                <span>3. They had created the</span>
+                <select id="select3" data-answer="life">
+                    <option value="">-- choose --</option>
+                    <option value="life">life</option>
+                    <option value="career">career</option>
+                </select>
+                <span>they had always dreamed of.</span>
+                <button class="check-btn" onclick="checkItem(3)">CHECK</button>
+                <span id="mark3" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="item">
+            <div class="sentence-row">
+                <span>4. Valeria’s father worked as a</span>
+                <select id="select4" data-answer="software">
+                    <option value="">-- choose --</option>
+                    <option value="software">software</option>
+                    <option value="hardware">hardware</option>
+                </select>
+                <span>developer and her mother as an artist.</span>
+                <button class="check-btn" onclick="checkItem(4)">CHECK</button>
+                <span id="mark4" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="item">
+            <div class="sentence-row">
+                <span>5. For</span>
+                <select id="select5" data-answer="many">
+                    <option value="">-- choose --</option>
+                    <option value="much">much</option>
+                    <option value="many">many</option>
+                </select>
+                <span>years after Valeria’s birth, they prospered and made a good living for themselves.</span>
+                <button class="check-btn" onclick="checkItem(5)">CHECK</button>
+                <span id="mark5" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="item">
+            <div class="sentence-row">
+                <span>6. One day, when Valeria was about five, an</span>
+                <select id="select6" data-answer="economic">
+                    <option value="">-- choose --</option>
+                    <option value="political">political</option>
+                    <option value="economic">economic</option>
+                </select>
+                <span>downturn caused her father to lose his job.</span>
+                <button class="check-btn" onclick="checkItem(6)">CHECK</button>
+                <span id="mark6" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 7 -->
+        <div class="item">
+            <div class="sentence-row">
+                <span>7. As Valeria grew older, she started to take after her mother and developed a love for</span>
+                <select id="select7" data-answer="painting">
+                    <option value="">-- choose --</option>
+                    <option value="drawing">drawing</option>
+                    <option value="painting">painting</option>
+                </select>
+                <span>.</span>
+                <button class="check-btn" onclick="checkItem(7)">CHECK</button>
+                <span id="mark7" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 8 -->
+        <div class="item">
+            <div class="sentence-row">
+                <span>8. Her father’s</span>
+                <select id="select8" data-answer="opinions">
+                    <option value="">-- choose --</option>
+                    <option value="opinions">opinions</option>
+                    <option value="emotions">emotions</option>
+                </select>
+                <span>made her future complicated.</span>
+                <button class="check-btn" onclick="checkItem(8)">CHECK</button>
+                <span id="mark8" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkItem(num) {
+        const select = document.getElementById('select' + num);
+        const mark = document.getElementById('mark' + num);
+        const correctAnswer = select.dataset.answer;
+        const val = select.value;
+
+        if (val === "") {
+            select.className = "";
+            mark.className = "feedback-mark";
+            mark.innerText = "[ . ]";
+            updateTotalScore();
+            return false;
+        }
+
+        if (val === correctAnswer) {
+            select.className = "correct";
+            mark.className = "feedback-mark correct";
+            mark.innerText = "[ ✓ Correct ]";
+            updateTotalScore();
+            return true;
+        } else {
+            select.className = "incorrect";
+            mark.className = "feedback-mark incorrect";
+            mark.innerText = "[ ✗ Incorrect ]";
+            updateTotalScore();
+            return false;
+        }
+    }
+
+    function checkAll() {
+        for (let i = 1; i <= 8; i++) {
+            checkItem(i);
+        }
+    }
+
+    function resetAll() {
+        for (let i = 1; i <= 8; i++) {
+            const select = document.getElementById('select' + i);
+            const mark = document.getElementById('mark' + i);
+            select.value = "";
+            select.className = "";
+            mark.className = "feedback-mark";
+            mark.innerText = "[ . ]";
+        }
+        document.getElementById('score').innerText = "0";
+    }
+
+    function updateTotalScore() {
+        let count = 0;
+        for (let i = 1; i <= 8; i++) {
+            if (document.getElementById('select' + i).classList.contains('correct')) {
+                count++;
+            }
+        }
+        document.getElementById('score').innerText = count;
+    }
+</script>
+
+</body>
+</html>
