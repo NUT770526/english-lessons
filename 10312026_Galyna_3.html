@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 3. Choose the correct expression</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --accent-purple: #7c3aed;
+            --accent-purple-hover: #6d28d9;
+            --text-dark: #1e293b;
+            --border-color: #cbd5e1;
+            --correct-green: #22c55e;
+            --incorrect-red: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #0f172a;
+            margin-top: 0;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .score {
+            font-weight: 700;
+            font-size: 15px;
+            color: #475569;
+        }
+
+        .global-btn {
+            background-color: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .global-btn:hover {
+            background-color: var(--accent-purple-hover);
+        }
+
+        .exercise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transition: box-shadow 0.2s;
+        }
+
+        .question-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 16px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-left: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            width: fit-content;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background 0.15s;
+        }
+
+        .option-label:hover {
+            background-color: #f1f5f9;
+        }
+
+        input[type="radio"] {
+            accent-color: var(--accent-purple);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        /* Tooltip style for complex words */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            color: var(--accent-purple);
+            border-bottom: 1px dashed var(--accent-purple);
+            font-weight: 700;
+        }
+
+        .tooltip-container .tooltip-text {
+            visibility: hidden;
+            width: max-content;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: left;
+            border-radius: 8px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 10;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 13px;
+            font-weight: normal;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .audio-btn {
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+
+        .audio-btn:hover {
+            background: #e2e8f0;
+            transform: scale(1.1);
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 12px;
+        }
+
+        .check-btn {
+            background-color: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .check-btn:hover {
+            background-color: var(--accent-purple-hover);
+        }
+
+        .feedback-mark {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .feedback-mark.correct { color: var(--correct-green); }
+        .feedback-mark.incorrect { color: var(--incorrect-red); }
+
+        .correct-ans {
+            background-color: #f0fdf4 !important;
+            border-color: var(--correct-green) !important;
+        }
+
+        .incorrect-ans {
+            background-color: #fef2f2 !important;
+            border-color: var(--incorrect-red) !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Exercise 3. Choose the correct expression</h1>
+    <div class="subtitle">Обери правильний варіант. Звертай увагу на значення та граматику. Наведи на складні слова, щоб побачити транскрипцію та переклад.</div>
+
+    <div class="header-bar">
+        <span class="score">Результат: <span id="score">0</span> / 6</span>
+        <div>
+            <button class="global-btn" onclick="checkAll()">Перевірити все</button>
+            <button class="global-btn" style="background-color: #94a3b8;" onclick="resetAll()">Спробувати ще раз</button>
+        </div>
+    </div>
+
+    <div class="exercise-list">
+        <!-- 1 -->
+        <div class="question-card" id="card1">
+            <div class="question-text">
+                1. I will 
+                <span style="border-bottom: 2px dashed #94a3b8; width: 40px; display: inline-block;"></span> 
+                send the 
+                <span class="tooltip-container">invoice
+                    <span class="tooltip-text">
+                        <strong>[ˈɪnvɔɪs]</strong><br>рахунок-фактура
+                    </span>
+                </span>
+                <button class="audio-btn" title="Прослухати" onclick="speakText('invoice')">🔊</button> 
+                today.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label1_0"><input type="radio" name="q1" value="certain"> certain</label>
+                <label class="option-label" id="label1_1"><input type="radio" name="q1" value="certainly"> certainly</label>
+                <label class="option-label" id="label1_2"><input type="radio" name="q1" value="certainty"> certainty</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark1" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(1, 'certainly')">CHECK</button>
+            </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="question-card" id="card2">
+            <div class="question-text">
+                2. I am 
+                <span style="border-bottom: 2px dashed #94a3b8; width: 40px; display: inline-block;"></span> 
+                that the information is 
+                <span class="tooltip-container">correct
+                    <span class="tooltip-text">
+                        <strong>[kəˈrekt]</strong><br>правильний
+                    </span>
+                </span>
+                <button class="audio-btn" title="Прослухати" onclick="speakText('correct')">🔊</button>.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label2_0"><input type="radio" name="q2" value="certainly"> certainly</label>
+                <label class="option-label" id="label2_1"><input type="radio" name="q2" value="certain"> certain</label>
+                <label class="option-label" id="label2_2"><input type="radio" name="q2" value="certainness"> certainness</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark2" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(2, 'certain')">CHECK</button>
+            </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="question-card" id="card3">
+            <div class="question-text">
+                3. She is 
+                <span class="tooltip-container">responsible
+                    <span class="tooltip-text">
+                        <strong>[rɪˈspɒnsəbl]</strong><br>відповідальний
+                    </span>
+                </span>
+                <button class="audio-btn" title="Прослухати" onclick="speakText('responsible')">🔊</button> 
+                <span style="border-bottom: 2px dashed #94a3b8; width: 40px; display: inline-block;"></span> 
+                managing the team.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label3_0"><input type="radio" name="q3" value="to"> to</label>
+                <label class="option-label" id="label3_1"><input type="radio" name="q3" value="of"> of</label>
+                <label class="option-label" id="label3_2"><input type="radio" name="q3" value="for"> for</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark3" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(3, 'for')">CHECK</button>
+            </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="question-card" id="card4">
+            <div class="question-text">
+                4. Please 
+                <span class="tooltip-container">address
+                    <span class="tooltip-text">
+                        <strong>[əˈdres]</strong><br>звертатися / розглядати
+                    </span>
+                </span>
+                <button class="audio-btn" title="Прослухати" onclick="speakText('address')">🔊</button> 
+                your 
+                <span class="tooltip-container">concerns
+                    <span class="tooltip-text">
+                        <strong>[kənˈsɜːrnz]</strong><br>побоювання / занепокоєння
+                    </span>
+                </span>
+                <button class="audio-btn" title="Прослухати" onclick="speakText('concerns')">🔊</button> 
+                <span style="border-bottom: 2px dashed #94a3b8; width: 40px; display: inline-block;"></span> 
+                вы manager.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label4_0"><input type="radio" name="q4" value="to"> to</label>
+                <label class="option-label" id="label4_1"><input type="radio" name="q4" value="for"> for</label>
+                <label class="option-label" id="label4_2"><input type="radio" name="q4" value="with"> with</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark4" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(4, 'to')">CHECK</button>
+            </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="question-card" id="card5">
+            <div class="question-text">
+                5. He always 
+                <span class="tooltip-container">listens
+                    <span class="tooltip-text">
+                        <strong>[ˈlɪsnz]</strong><br>слухає
+                    </span>
+                </span>
+                <button class="audio-btn" title="Прослухати" onclick="speakText('listens')">🔊</button> 
+                and makes good 
+                <span class="tooltip-container">decisions
+                    <span class="tooltip-text">
+                        <strong>[dɪˈsɪʒnz]</strong><br>рішення
+                    </span>
+                </span>
+                <button class="audio-btn" title="Прослухати" onclick="speakText('decisions')">🔊</button>. 
+                He is very 
+                <span style="border-bottom: 2px dashed #94a3b8; width: 40px; display: inline-block;"></span>.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label5_0"><input type="radio" name="q5" value="immature"> immature</label>
+                <label class="option-label" id="label5_1"><input type="radio" name="q5" value="mature"> mature</label>
+                <label class="option-label" id="label5_2"><input type="radio" name="q5" value="a jerk"> a jerk</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark5" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(5, 'mature')">CHECK</button>
+            </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="question-card" id="card6">
+            <div class="question-text">
+                6. He was rude to his 
+                <span class="tooltip-container">colleagues
+                    <span class="tooltip-text">
+                        <strong>[ˈkɒliːɡz]</strong><br>колеги
+                    </span>
+                </span>
+                <button class="audio-btn" title="Прослухати" onclick="speakText('colleagues')">🔊</button>. 
+                He behaved like 
+                <span style="border-bottom: 2px dashed #94a3b8; width: 40px; display: inline-block;"></span>.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label6_0"><input type="radio" name="q6" value="a jerk"> a jerk</label>
+                <label class="option-label" id="label6_1"><input type="radio" name="q6" value="rapport"> rapport</label>
+                <label class="option-label" id="label6_2"><input type="radio" name="q6" value="credibility"> credibility</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark6" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(6, 'a jerk')">CHECK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert('Ваш браузер не підтримує озвучку.');
+        }
+    }
+
+    const correctAnswers = {
+        1: 'certainly',
+        2: 'certain',
+        3: 'for',
+        4: 'to',
+        5: 'mature',
+        6: 'a jerk'
+    };
+
+    function checkItem(num, correctVal) {
+        const radios = document.getElementsByName('qq'.replace('qq', 'q' + num) || ('q' + num));
+        let selectedVal = null;
+        let selectedLabel = null;
+
+        for (const r of radios) {
+            const lbl = document.getElementById('label' + num + '_' + Array.from(r.closest('.options-group').querySelectorAll('input')).indexOf(r));
+            lbl.classList.remove('correct-ans', 'incorrect-ans');
+            if (r.checked) {
+                selectedVal = r.value;
+                selectedLabel = lbl;
+            }
+        }
+
+        const mark = document.getElementById('mark' + num);
+
+        if (!selectedVal) {
+            mark.className = "feedback-mark";
+            mark.innerText = "[ оберіть варіант ]";
+            updateTotalScore();
+            return false;
+        }
+
+        if (selectedVal === correctVal) {
+            selectedLabel.classList.add('correct-ans');
+            mark.className = "feedback-mark correct";
+            mark.innerText = "[ ✓ Вірно ]";
+            updateTotalScore();
+            return true;
+        } else {
+            selectedLabel.classList.add('incorrect-ans');
+            mark.className = "feedback-mark incorrect";
+            mark.innerText = "[ ✗ Невірно ]";
+            updateTotalScore();
+            return false;
+        }
+    }
+
+    function checkAll() {
+        for (let i = 1; i <= 6; i++) {
+            checkItem(i, correctAnswers[i]);
+        }
+    }
+
+    function resetAll() {
+        for (let i = 1; i <= 6; i++) {
+            const radios = document.getElementsByName('q' + i);
+            for (const r of radios) {
+                r.checked = false;
+                const lbl = document.getElementById('label' + i + '_' + Array.from(r.closest('.options-group').querySelectorAll('input')).indexOf(r));
+                lbl.classList.remove('correct-ans', 'incorrect-ans');
+            }
+            const mark = document.getElementById('mark' + i);
+            mark.className = "feedback-mark";
+            mark.innerText = "";
+        }
+        document.getElementById('score').innerText = "0";
+    }
+
+    function updateTotalScore() {
+        let count = 0;
+        for (let i = 1; i <= 6; i++) {
+            const radios = document.getElementsByName('q' + i);
+            for (const r of radios) {
+                if (r.checked && r.value === correctAnswers[i]) {
+                    count++;
+                }
+            }
+        }
+        document.getElementById('score').innerText = count;
+    }
+</script>
+
+</body>
+</html>
