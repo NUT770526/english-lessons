@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 1. Match the expressions</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --accent-purple: #7c3aed;
+            --accent-purple-hover: #6d28d9;
+            --text-dark: #1e293b;
+            --border-color: #cbd5e1;
+            --correct-green: #22c55e;
+            --incorrect-red: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #0f172a;
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .score {
+            font-weight: 700;
+            font-size: 15px;
+            color: #475569;
+        }
+
+        .global-btn {
+            background-color: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .global-btn:hover {
+            background-color: var(--accent-purple-hover);
+        }
+
+        .exercise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .item {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            transition: box-shadow 0.2s;
+        }
+
+        .item:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .expression-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        /* Tooltip style */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            color: #0f172a;
+            border-bottom: 1px dashed var(--accent-purple);
+        }
+
+        .tooltip-container .tooltip-text {
+            visibility: hidden;
+            width: max-content;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 6px 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 13px;
+            font-weight: normal;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .audio-btn {
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .audio-btn:hover {
+            background: #e2e8f0;
+            transform: scale(1.08);
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        select {
+            padding: 8px 12px;
+            font-size: 15px;
+            font-family: inherit;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            background-color: white;
+            color: var(--text-dark);
+            cursor: pointer;
+            outline: none;
+            font-weight: 500;
+            width: 280px;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: var(--accent-purple);
+        }
+
+        select.correct {
+            border-color: var(--correct-green) !important;
+            background-color: #f0fdf4;
+        }
+
+        select.incorrect {
+            border-color: var(--incorrect-red) !important;
+            background-color: #fef2f2;
+        }
+
+        .check-btn {
+            background-color: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .check-btn:hover {
+            background-color: var(--accent-purple-hover);
+        }
+
+        .feedback-mark {
+            font-weight: 700;
+            font-size: 14px;
+            width: 90px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .feedback-mark.correct { color: var(--correct-green); }
+        .feedback-mark.incorrect { color: var(--incorrect-red); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Exercise 1. Match the expressions with their meanings</h1>
+    <div class="subtitle">З'єднай англійські вирази з правильним українським перекладом. Наведіть на вираз, щоб побачити транскрипцію.</div>
+
+    <div class="header-bar">
+        <span class="score">Правильних: <span id="score">0</span> / 8</span>
+        <div>
+            <button class="global-btn" onclick="checkAll()">Перевірити все</button>
+            <button class="global-btn" style="background-color: #94a3b8;" onclick="resetAll()">Спробувати ще раз</button>
+        </div>
+    </div>
+
+    <div class="exercise-list">
+        <!-- 1 -->
+        <div class="item">
+            <div class="expression-wrapper">
+                <button class="audio-btn" title="Прослухати" onclick="speakText('convey a message')">🔊</button>
+                <div class="tooltip-container">
+                    1. convey a message
+                    <span class="tooltip-text">[kənˈveɪ ə ˈmesɪdʒ]</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <select id="select1" data-answer="передати повідомлення">
+                    <option value="">Оберіть переклад</option>
+                    <option value="передати повідомлення">передати повідомлення</option>
+                    <option value="встановити довірчий контакт">встановити довірчий контакт</option>
+                    <option value="конструктивний відгук">конструктивний відгук</option>
+                    <option value="створювати авторитет/репутацію">створювати авторитет/репутацію</option>
+                    <option value="тривале враження">тривале враження</option>
+                    <option value="задати тон">задати тон</option>
+                    <option value="адаптувати повідомлення">адаптувати повідомлення</option>
+                    <option value="основа бізнесу">основа бізнесу</option>
+                </select>
+                <button class="check-btn" onclick="checkItem(1)">CHECK</button>
+                <span id="mark1" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="item">
+            <div class="expression-wrapper">
+                <button class="audio-btn" title="Прослухати" onclick="speakText('establish rapport')">🔊</button>
+                <div class="tooltip-container">
+                    2. establish rapport
+                    <span class="tooltip-text">[ɪˈstæblɪʃ ræˈpɔːr]</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <select id="select2" data-answer="встановити довірчий контакт">
+                    <option value="">Оберіть переклад</option>
+                    <option value="передати повідомлення">передати повідомлення</option>
+                    <option value="встановити довірчий контакт">встановити довірчий контакт</option>
+                    <option value="конструктивний відгук">конструктивний відгук</option>
+                    <option value="створювати авторитет/репутацію">створювати авторитет/репутацію</option>
+                    <option value="тривале враження">тривале враження</option>
+                    <option value="задати тон">задати тон</option>
+                    <option value="адаптувати повідомлення">адаптувати повідомлення</option>
+                    <option value="основа бізнесу">основа бізнесу</option>
+                </select>
+                <button class="check-btn" onclick="checkItem(2)">CHECK</button>
+                <span id="mark2" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="item">
+            <div class="expression-wrapper">
+                <button class="audio-btn" title="Прослухати" onclick="speakText('constructive feedback')">🔊</button>
+                <div class="tooltip-container">
+                    3. constructive feedback
+                    <span class="tooltip-text">[kənˈstrʌktɪv ˈfiːdbæk]</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <select id="select3" data-answer="конструктивний відгук">
+                    <option value="">Оберіть переклад</option>
+                    <option value="передати повідомлення">передати повідомлення</option>
+                    <option value="встановити довірчий контакт">встановити довірчий контакт</option>
+                    <option value="конструктивний відгук">конструктивний відгук</option>
+                    <option value="створювати авторитет/репутацію">створювати авторитет/репутацію</option>
+                    <option value="тривале враження">тривале враження</option>
+                    <option value="задати тон">задати тон</option>
+                    <option value="адаптувати повідомлення">адаптувати повідомлення</option>
+                    <option value="основа бізнесу">основа бізнесу</option>
+                </select>
+                <button class="check-btn" onclick="checkItem(3)">CHECK</button>
+                <span id="mark3" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="item">
+            <div class="expression-wrapper">
+                <button class="audio-btn" title="Прослухати" onclick="speakText('build credibility')">🔊</button>
+                <div class="tooltip-container">
+                    4. build credibility
+                    <span class="tooltip-text">[bɪld ˌkredəˈbɪləti]</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <select id="select4" data-answer="створювати авторитет/репутацію">
+                    <option value="">Оберіть переклад</option>
+                    <option value="передати повідомлення">передати повідомлення</option>
+                    <option value="встановити довірчий контакт">встановити довірчий контакт</option>
+                    <option value="конструктивний відгук">конструктивний відгук</option>
+                    <option value="створювати авторитет/репутацію">створювати авторитет/репутацію</option>
+                    <option value="тривале враження">тривале враження</option>
+                    <option value="задати тон">задати тон</option>
+                    <option value="адаптувати повідомлення">адаптувати повідомлення</option>
+                    <option value="основа бізнесу">основа бізнесу</option>
+                </select>
+                <button class="check-btn" onclick="checkItem(4)">CHECK</button>
+                <span id="mark4" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="item">
+            <div class="expression-wrapper">
+                <button class="audio-btn" title="Прослухати" onclick="speakText('lasting impression')">🔊</button>
+                <div class="tooltip-container">
+                    5. lasting impression
+                    <span class="tooltip-text">[ˈlæstɪŋ ɪmˈpreʃn]</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <select id="select5" data-answer="тривале враження">
+                    <option value="">Оберіть переклад</option>
+                    <option value="передати повідомлення">передати повідомлення</option>
+                    <option value="встановити довірчий контакт">встановити довірчий контакт</option>
+                    <option value="конструктивний відгук">конструктивний відгук</option>
+                    <option value="створювати авторитет/репутацію">створювати авторитет/репутацію</option>
+                    <option value="тривале враження">тривале враження</option>
+                    <option value="задати тон">задати тон</option>
+                    <option value="адаптувати повідомлення">адаптувати повідомлення</option>
+                    <option value="основа бізнесу">основа бізнесу</option>
+                </select>
+                <button class="check-btn" onclick="checkItem(5)">CHECK</button>
+                <span id="mark5" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="item">
+            <div class="expression-wrapper">
+                <button class="audio-btn" title="Прослухати" onclick="speakText('set the tone')">🔊</button>
+                <div class="tooltip-container">
+                    6. set the tone
+                    <span class="tooltip-text">[set ðə toʊn]</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <select id="select6" data-answer="задати тон">
+                    <option value="">Оберіть переклад</option>
+                    <option value="передати повідомлення">передати повідомлення</option>
+                    <option value="встановити довірчий контакт">встановити довірчий контакт</option>
+                    <option value="конструктивний відгук">конструктивний відгук</option>
+                    <option value="створювати авторитет/репутацію">створювати авторитет/репутацію</option>
+                    <option value="тривале враження">тривале враження</option>
+                    <option value="задати тон">задати тон</option>
+                    <option value="адаптувати повідомлення">адаптувати повідомлення</option>
+                    <option value="основа бізнесу">основа бізнесу</option>
+                </select>
+                <button class="check-btn" onclick="checkItem(6)">CHECK</button>
+                <span id="mark6" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 7 -->
+        <div class="item">
+            <div class="expression-wrapper">
+                <button class="audio-btn" title="Прослухати" onclick="speakText('tailor the message')">🔊</button>
+                <div class="tooltip-container">
+                    7. tailor the message
+                    <span class="tooltip-text">[ˈteɪlər ðə ˈmesɪdʒ]</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <select id="select7" data-answer="адаптувати повідомлення">
+                    <option value="">Оберіть переклад</option>
+                    <option value="передати повідомлення">передати повідомлення</option>
+                    <option value="встановити довірчий контакт">встановити довірчий контакт</option>
+                    <option value="конструктивний відгук">конструктивний відгук</option>
+                    <option value="створювати авторитет/репутацію">створювати авторитет/репутацію</option>
+                    <option value="тривале враження">тривале враження</option>
+                    <option value="задати тон">задати тон</option>
+                    <option value="адаптувати повідомлення">адаптувати повідомлення</option>
+                    <option value="основа бізнесу">основа бізнесу</option>
+                </select>
+                <button class="check-btn" onclick="checkItem(7)">CHECK</button>
+                <span id="mark7" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+
+        <!-- 8 -->
+        <div class="item">
+            <div class="expression-wrapper">
+                <button class="audio-btn" title="Прослухати" onclick="speakText('backbone of business')">🔊</button>
+                <div class="tooltip-container">
+                    8. backbone of business
+                    <span class="tooltip-text">[ˈbækboʊn əv ˈbɪznɪs]</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <select id="select8" data-answer="основа бізнесу">
+                    <option value="">Оберіть переклад</option>
+                    <option value="передати повідомлення">передати повідомлення</option>
+                    <option value="встановити довірчий контакт">встановити довірчий контакт</option>
+                    <option value="конструктивний відгук">конструктивний відгук</option>
+                    <option value="створювати авторитет/репутацію">створювати авторитет/репутацію</option>
+                    <option value="тривале враження">тривале враження</option>
+                    <option value="задати тон">задати тон</option>
+                    <option value="адаптувати повідомлення">адаптувати повідомлення</option>
+                    <option value="основа бізнесу">основа бізнесу</option>
+                </select>
+                <button class="check-btn" onclick="checkItem(8)">CHECK</button>
+                <span id="mark8" class="feedback-mark">[ . ]</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert('Ваш браузер не підтримує озвучку.');
+        }
+    }
+
+    function checkItem(num) {
+        const select = document.getElementById('select' + num);
+        const mark = document.getElementById('mark' + num);
+        const correctAnswer = select.dataset.answer;
+        const val = select.value;
+
+        if (val === "") {
+            select.className = "";
+            mark.className = "feedback-mark";
+            mark.innerText = "[ . ]";
+            updateTotalScore();
+            return false;
+        }
+
+        if (val === correctAnswer) {
+            select.className = "correct";
+            mark.className = "feedback-mark correct";
+            mark.innerText = "[ ✓ Вірно ]";
+            updateTotalScore();
+            return true;
+        } else {
+            select.className = "incorrect";
+            mark.className = "feedback-mark incorrect";
+            mark.innerText = "[ ✗ Невірно ]";
+            updateTotalScore();
+            return false;
+        }
+    }
+
+    function checkAll() {
+        for (let i = 1; i <= 8; i++) {
+            checkItem(i);
+        }
+    }
+
+    function resetAll() {
+        for (let i = 1; i <= 8; i++) {
+            const select = document.getElementById('select' + i);
+            const mark = document.getElementById('mark' + i);
+            select.value = "";
+            select.className = "";
+            mark.className = "feedback-mark";
+            mark.innerText = "[ . ]";
+        }
+        document.getElementById('score').innerText = "0";
+    }
+
+    function updateTotalScore() {
+        let count = 0;
+        for (let i = 1; i <= 8; i++) {
+            if (document.getElementById('select' + i).classList.contains('correct')) {
+                count++;
+            }
+        }
+        document.getElementById('score').innerText = count;
+    }
+</script>
+
+</body>
+</html>
