@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Exercise: Michelle & Yuki</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --accent-purple: #7c3aed;
+            --accent-purple-hover: #6d28d9;
+            --text-dark: #1e293b;
+            --border-color: #cbd5e1;
+            --correct-green: #22c55e;
+            --incorrect-red: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 950px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #0f172a;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: #1e293b;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 8px;
+        }
+
+        /* Audio Player Box */
+        .audio-box {
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .audio-label {
+            font-weight: 600;
+            font-size: 15px;
+            color: #334155;
+        }
+
+        audio {
+            width: 100%;
+            max-width: 400px;
+            outline: none;
+        }
+
+        /* Chat Container */
+        .chat-box {
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .chat-bubble {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px 18px;
+            max-width: 80%;
+            font-size: 15px;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .chat-bubble.yuki {
+            align-self: flex-end;
+            background: #faf5ff;
+            border-color: #d8b4fe;
+        }
+
+        select {
+            padding: 4px 8px;
+            font-size: 14px;
+            font-family: inherit;
+            border-radius: 6px;
+            border: 2px solid var(--border-color);
+            background-color: white;
+            color: var(--text-dark);
+            cursor: pointer;
+            outline: none;
+            font-weight: 600;
+        }
+
+        select.correct { border-color: var(--correct-green) !important; background-color: #f0fdf4 !important; }
+        select.incorrect { border-color: var(--incorrect-red) !important; background-color: #fef2f2 !important; }
+
+        /* Questions list */
+        .exercise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 15px;
+            color: #0f172a;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 15px;
+            font-family: inherit;
+            border-radius: 10px;
+            border: 2px dashed var(--accent-purple);
+            background-color: #faf5ff;
+            color: var(--text-dark);
+            outline: none;
+            font-weight: 600;
+        }
+
+        input[type="text"]:focus {
+            border-style: solid;
+            background-color: white;
+            border-color: var(--accent-purple);
+        }
+
+        input.correct { border-style: solid; border-color: var(--correct-green) !important; background-color: #f0fdf4 !important; }
+        input.incorrect { border-style: solid; border-color: var(--incorrect-red) !important; background-color: #fef2f2 !important; }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .score {
+            font-weight: 700;
+            font-size: 15px;
+            color: #475569;
+        }
+
+        .global-btn {
+            background-color: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .global-btn:hover { background-color: var(--accent-purple-hover); }
+
+        .check-btn {
+            background-color: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .feedback-mark {
+            font-weight: 700;
+            font-size: 14px;
+            width: 80px;
+            text-align: right;
+        }
+        .feedback-mark.correct { color: var(--correct-green); }
+        .feedback-mark.incorrect { color: var(--incorrect-red); }
+
+        /* Tooltip style */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            color: var(--accent-purple);
+            border-bottom: 1px dashed var(--accent-purple);
+            font-weight: 700;
+        }
+        .tooltip-container .tooltip-text {
+            visibility: hidden;
+            width: max-content;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: left;
+            border-radius: 8px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 10;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 13px;
+            font-weight: normal;
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+
+        .audio-btn {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 9px;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎧 Listening & Chat: Michelle and Yuki</h1>
+
+    <!-- Audio Player Block -->
+    <div class="audio-box">
+        <span class="audio-label">Послушайте аудиозапись разговора:</span>
+        <audio controls preload="auto">
+            <source src="11012026_Sasha_audio_1.mp3" type="audio/mpeg">
+            Ваш браузер не поддерживает аудиоплеер.
+        </audio>
+    </div>
+
+    <div class="header-bar">
+        <span class="score">Score: <span id="score">0</span> / 9</span>
+        <div>
+            <button class="global-btn" onclick="checkAll()">Check All</button>
+            <button class="global-btn" style="background-color: #94a3b8;" onclick="resetAll()">Reset</button>
+        </div>
+    </div>
+
+    <!-- Part 1: Complete the Chat -->
+    <h2>Part 1. Complete the conversation</h2>
+    <div class="chat-box">
+        <div class="chat-bubble">
+            Hey, I solved the 
+            <span class="tooltip-container">riddle
+                <span class="tooltip-text"><strong>[ˈrɪdl]</strong><br>загадка</span>
+            </span>
+            <button class="audio-btn" onclick="speakText('riddle')">🔊</button>! You’re going to New York City 
+            <select id="sel1" data-answer="to visit">
+                <option value="">-- choose --</option>
+                <option value="to visit">to visit</option>
+                <option value="meet">meet</option>
+            </select> your aunt!
+        </div>
+
+        <div class="chat-bubble yuki">
+            Hi! You're right.
+        </div>
+
+        <div class="chat-bubble">
+            Let’s 
+            <select id="sel2" data-answer="go out">
+                <option value="">-- choose --</option>
+                <option value="go out">go out</option>
+                <option value="to show">to show</option>
+            </select> before you leave.
+        </div>
+
+        <div class="chat-bubble yuki">
+            I'm not at home now. I am in New York already. Let’s 
+            <select id="sel3" data-answer="meet">
+                <option value="">-- choose --</option>
+                <option value="meet">meet</option>
+                <option value="like">like</option>
+            </select> next week.<br>
+            I want 
+            <select id="sel4" data-answer="to show">
+                <option value="">-- choose --</option>
+                <option value="to show">to show</option>
+                <option value="go out">go out</option>
+            </select> you my photos!
+        </div>
+
+        <div class="chat-bubble">
+            Sure! What’s the 
+            <span class="tooltip-container">weather
+                <span class="tooltip-text"><strong>[ˈweðər]</strong><br>погода</span>
+            </span>
+            <button class="audio-btn" onclick="speakText('weather')">🔊</button> 
+            <select id="sel5" data-answer="like">
+                <option value="">-- choose --</option>
+                <option value="like">like</option>
+                <option value="to visit">to visit</option>
+            </select> there?
+        </div>
+    </div>
+    <div style="text-align: right; margin-bottom: 30px;">
+        <button class="check-btn" onclick="checkChat()">Check Chat</button>
+    </div>
+
+    <!-- Part 2: Answer Questions -->
+    <h2>Part 2. Answer the following questions</h2>
+    <div class="exercise-list">
+        <!-- Q1 -->
+        <div class="question-card">
+            <div class="question-text">1. Where does Yuki go?</div>
+            <div class="input-row">
+                <input type="text" id="inp1" data-answers='["yuki goes to new york city", "she goes to new york city", "new york city"]' placeholder="Type your answer...">
+                <button class="check-btn" onclick="checkQ(1)">CHECK</button>
+                <span id="mark1" class="feedback-mark"></span>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="question-card">
+            <div class="question-text">2. Why does Yuki leave?</div>
+            <div class="input-row">
+                <input type="text" id="inp2" data-answers='["she leaves to visit her aunt", "to visit her aunt", "she goes to visit her aunt"]' placeholder="Type your answer...">
+                <button class="check-btn" onclick="checkQ(2)">CHECK</button>
+                <span id="mark2" class="feedback-mark"></span>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="question-card">
+            <div class="question-text">3. What does Michelle suggest to Yuki before she leaves?</div>
+            <div class="input-row">
+                <input type="text" id="inp3" data-answers='["michelle suggests going out before she leaves", "going out", "she suggests going out"]' placeholder="Type your answer...">
+                <button class="check-btn" onclick="checkQ(3)">CHECK</button>
+                <span id="mark3" class="feedback-mark"></span>
+            </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="question-card">
+            <div class="question-text">4. What does Yuki want to show?</div>
+            <div class="input-row">
+                <input type="text" id="inp4" data-answers='["yuki wants to show her photos", "her photos", "she wants to show her photos"]' placeholder="Type your answer...">
+                <button class="check-btn" onclick="checkQ(4)">CHECK</button>
+                <span id="mark4" class="feedback-mark"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert('Ваш браузер не поддерживает озвучку.');
+        }
+    }
+
+    function cleanString(str) {
+        return str.toLowerCase().replace(/['‘’]/g, "'").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").trim();
+    }
+
+    function checkChat() {
+        for (let i = 1; i <= 5; i++) {
+            const sel = document.getElementById('sel' + i);
+            if (sel.value === sel.dataset.answer) {
+                sel.className = "correct";
+            } else {
+                sel.className = "incorrect";
+            }
+        }
+        updateTotalScore();
+    }
+
+    function checkQ(num) {
+        const input = document.getElementById('inp' + num);
+        const mark = document.getElementById('mark' + num);
+        const validAnswers = JSON.parse(input.dataset.answers);
+        const userVal = cleanString(input.value);
+
+        if (userVal === "") {
+            input.className = "";
+            mark.className = "feedback-mark";
+            mark.innerText = "";
+            updateTotalScore();
+            return;
+        }
+
+        const isMatch = validAnswers.some(ans => userVal.includes(cleanString(ans)));
+
+        if (isMatch) {
+            input.className = "correct";
+            mark.className = "feedback-mark correct";
+            mark.innerText = "✓ Верно";
+        } else {
+            input.className = "incorrect";
+            mark.className = "feedback-mark incorrect";
+            mark.innerText = "✗ Неверно";
+        }
+        updateTotalScore();
+    }
+
+    function checkAll() {
+        checkChat();
+        for (let i = 1; i <= 4; i++) {
+            checkQ(i);
+        }
+    }
+
+    function resetAll() {
+        for (let i = 1; i <= 5; i++) {
+            const sel = document.getElementById('sel' + i);
+            sel.value = "";
+            sel.className = "";
+        }
+        for (let i = 1; i <= 4; i++) {
+            const input = document.getElementById('inp' + i);
+            input.value = "";
+            input.className = "";
+            document.getElementById('mark' + i).innerText = "";
+            document.getElementById('mark' + i).className = "feedback-mark";
+        }
+        document.getElementById('score').innerText = "0";
+    }
+
+    function updateTotalScore() {
+        let count = 0;
+        for (let i = 1; i <= 5; i++) {
+            if (document.getElementById('sel' + i).classList.contains('correct')) count++;
+        }
+        for (let i = 1; i <= 4; i++) {
+            if (document.getElementById('inp' + i).classList.contains('correct')) count++;
+        }
+        document.getElementById('score').innerText = count;
+    }
+</script>
+
+</body>
+</html>
