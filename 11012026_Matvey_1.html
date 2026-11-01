@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 1. Choose the Correct Word (Lie / Lay / Lied)</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --accent-purple: #7c3aed;
+            --accent-purple-hover: #6d28d9;
+            --text-dark: #1e293b;
+            --border-color: #cbd5e1;
+            --correct-green: #22c55e;
+            --incorrect-red: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 950px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #0f172a;
+            margin-top: 0;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #64748b;
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .score {
+            font-weight: 700;
+            font-size: 15px;
+            color: #475569;
+        }
+
+        .global-btn {
+            background-color: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .global-btn:hover {
+            background-color: var(--accent-purple-hover);
+        }
+
+        .exercise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: box-shadow 0.2s;
+        }
+
+        .question-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 16px;
+            color: #0f172a;
+            line-height: 1.5;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-left: 5px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            width: fit-content;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: background 0.15s;
+        }
+
+        .option-label:hover {
+            background-color: #f1f5f9;
+        }
+
+        input[type="radio"] {
+            accent-color: var(--accent-purple);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 10px;
+        }
+
+        .check-btn {
+            background-color: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .check-btn:hover {
+            background-color: var(--accent-purple-hover);
+        }
+
+        .feedback-mark {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .feedback-mark.correct { color: var(--correct-green); }
+        .feedback-mark.incorrect { color: var(--incorrect-red); }
+
+        .correct-ans {
+            background-color: #f0fdf4 !important;
+            border-color: var(--correct-green) !important;
+        }
+
+        .incorrect-ans {
+            background-color: #fef2f2 !important;
+            border-color: var(--incorrect-red) !important;
+        }
+
+        /* Tooltip style */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            color: var(--accent-purple);
+            border-bottom: 1px dashed var(--accent-purple);
+            font-weight: 700;
+        }
+
+        .tooltip-container .tooltip-text {
+            visibility: hidden;
+            width: max-content;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: left;
+            border-radius: 8px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 10;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 13px;
+            font-weight: normal;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            line-height: 1.4;
+        }
+
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .audio-btn {
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+            transition: all 0.2s;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        .audio-btn:hover {
+            background: #e2e8f0;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Exercise 1. Choose the Correct Word</h1>
+    <div class="subtitle">Обери правильне слово. Подумай, що означає дієслово: лежати, класти чи брехати.[cite: 18]</div>
+
+    <div class="header-bar">
+        <span class="score">Score: <span id="score">0</span> / 8</span>
+        <div>
+            <button class="global-btn" onclick="checkAll()">Check All</button>
+            <button class="global-btn" style="background-color: #94a3b8;" onclick="resetAll()">Reset</button>
+        </div>
+    </div>
+
+    <div class="exercise-list">
+        <!-- 1 -->
+        <div class="question-card" id="card1">
+            <div class="question-text">
+                1. The 
+                <span class="tooltip-container">actor
+                    <span class="tooltip-text"><strong>[ˈæktər]</strong><br>актер</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('actor')">🔊</button> 
+                ___ on the 
+                <span class="tooltip-container">sofa
+                    <span class="tooltip-text"><strong>[ˈsoʊfə]</strong><br>диван</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('sofa')">🔊</button> 
+                after 
+                <span class="tooltip-container">filming
+                    <span class="tooltip-text"><strong>[ˈfɪlmɪŋ]</strong><br>съемка</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('filming')">🔊</button> a difficult 
+                <span class="tooltip-container">scene
+                    <span class="tooltip-text"><strong>[siːn]</strong><br>сцена</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('scene')">🔊</button>.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label1_0"><input type="radio" name="q1" value="lay"> lay</label>
+                <label class="option-label" id="label1_1"><input type="radio" name="q1" value="laid"> laid</label>
+                <label class="option-label" id="label1_2"><input type="radio" name="q1" value="lied"> lied</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark1" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(1, 'lay')">CHECK</button>
+            </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="question-card" id="card2">
+            <div class="question-text">
+                2. She ___ the 
+                <span class="tooltip-container">magazine
+                    <span class="tooltip-text"><strong>[ˌmæɡəˈziːn]</strong><br>журнал</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('magazine')">🔊</button> 
+                on the table 
+                <span class="tooltip-container">yesterday
+                    <span class="tooltip-text"><strong>[ˈjestərdeɪ]</strong><br>вчера</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('yesterday')">🔊</button>.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label2_0"><input type="radio" name="q2" value="lay"> lay</label>
+                <label class="option-label" id="label2_1"><input type="radio" name="q2" value="laid"> laid</label>
+                <label class="option-label" id="label2_2"><input type="radio" name="q2" value="lain"> lain</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark2" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(2, 'laid')">CHECK</button>
+            </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="question-card" id="card3">
+            <div class="question-text">
+                3. The 
+                <span class="tooltip-container">character
+                    <span class="tooltip-text"><strong>[ˈkærəktər]</strong><br>персонаж / герой</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('character')">🔊</button> 
+                ___ to his 
+                <span class="tooltip-container">friends
+                    <span class="tooltip-text"><strong>[frendz]</strong><br>друзья</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('friends')">🔊</button> about the 
+                <span class="tooltip-container">treasure
+                    <span class="tooltip-text"><strong>[ˈtreʒər]</strong><br>сокровище</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('treasure')">🔊</button>.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label3_0"><input type="radio" name="q3" value="laid"> laid</label>
+                <label class="option-label" id="label3_1"><input type="radio" name="q3" value="lied"> lied</label>
+                <label class="option-label" id="label3_2"><input type="radio" name="q3" value="lain"> lain</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark3" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(3, 'lied')">CHECK</button>
+            </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="question-card" id="card4">
+            <div class="question-text">
+                4. The 
+                <span class="tooltip-container">book
+                    <span class="tooltip-text"><strong>[bʊk]</strong><br>книга</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('book')">🔊</button> 
+                is ___ on the 
+                <span class="tooltip-container">desk
+                    <span class="tooltip-text"><strong>[desk]</strong><br>письменный стол</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('desk')">🔊</button> now.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label4_0"><input type="radio" name="q4" value="lying"> lying</label>
+                <label class="option-label" id="label4_1"><input type="radio" name="q4" value="laying"> laying</label>
+                <label class="option-label" id="label4_2"><input type="radio" name="q4" value="lied"> lied</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark4" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(4, 'lying')">CHECK</button>
+            </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="question-card" id="card5">
+            <div class="question-text">
+                5. He has ___ to his 
+                <span class="tooltip-container">parents
+                    <span class="tooltip-text"><strong>[ˈperənts]</strong><br>родители</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('parents')">🔊</button> about the film.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label5_0"><input type="radio" name="q5" value="lain"> lain</label>
+                <label class="option-label" id="label5_1"><input type="radio" name="q5" value="laid"> laid</label>
+                <label class="option-label" id="label5_2"><input type="radio" name="q5" value="lied"> lied</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark5" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(5, 'lied')">CHECK</button>
+            </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="question-card" id="card6">
+            <div class="question-text">
+                6. The 
+                <span class="tooltip-container">actress
+                    <span class="tooltip-text"><strong>[ˈæktrəs]</strong><br>актриса</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('actress')">🔊</button> 
+                has ___ on the 
+                <span class="tooltip-container">beach
+                    <span class="tooltip-text"><strong>[biːtʃ]</strong><br>пляж</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('beach')">🔊</button> for two hours.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label6_0"><input type="radio" name="q6" value="laid"> laid</label>
+                <label class="option-label" id="label6_1"><input type="radio" name="q6" value="lain"> lain</label>
+                <label class="option-label" id="label6_2"><input type="radio" name="q6" value="lied"> lied</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark6" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(6, 'lain')">CHECK</button>
+            </div>
+        </div>
+
+        <!-- 7 -->
+        <div class="question-card" id="card7">
+            <div class="question-text">
+                7. The 
+                <span class="tooltip-container">director
+                    <span class="tooltip-text"><strong>[dəˈrektər]</strong><br>режиссер</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('director')">🔊</button> 
+                ___ the 
+                <span class="tooltip-container">script
+                    <span class="tooltip-text"><strong>[skrɪpt]</strong><br>сценарий</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('script')">🔊</button> on the 
+                <span class="tooltip-container">chair
+                    <span class="tooltip-text"><strong>[tʃer]</strong><br>стул</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('chair')">🔊</button> yesterday.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label7_0"><input type="radio" name="q7" value="lay"> lay</label>
+                <label class="option-label" id="label7_1"><input type="radio" name="q7" value="laid"> laid</label>
+                <label class="option-label" id="label7_2"><input type="radio" name="q7" value="lied"> lied</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark7" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(7, 'laid')">CHECK</button>
+            </div>
+        </div>
+
+        <!-- 8 -->
+        <div class="question-card" id="card8">
+            <div class="question-text">
+                8. The boy ___ on his bed and read an engaging 
+                <span class="tooltip-container">essay
+                    <span class="tooltip-text"><strong>[ˈeseɪ]</strong><br>эссе / сочинение</span>
+                </span>
+                <button class="audio-btn" onclick="speakText('essay')">🔊</button> yesterday.
+            </div>
+            <div class="options-group">
+                <label class="option-label" id="label8_0"><input type="radio" name="q8" value="lay"> lay</label>
+                <label class="option-label" id="label8_1"><input type="radio" name="q8" value="laid"> laid</label>
+                <label class="option-label" id="label8_2"><input type="radio" name="q8" value="lied"> lied</label>
+            </div>
+            <div class="card-footer">
+                <span id="mark8" class="feedback-mark"></span>
+                <button class="check-btn" onclick="checkItem(8, 'lay')">CHECK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert('Ваш браузер не поддерживает озвучку.');
+        }
+    }
+
+    const correctAnswers = {
+        1: 'lay',
+        2: 'laid',
+        3: 'lied',
+        4: 'lying',
+        5: 'lied',
+        6: 'lain',
+        7: 'laid',
+        8: 'lay'
+    };
+
+    function checkItem(num, correctVal) {
+        const radios = document.getElementsByName('q' + num);
+        let selectedVal = null;
+        let selectedLabel = null;
+
+        for (const r of radios) {
+            const lbl = document.getElementById('label' + num + '_' + Array.from(r.closest('.options-group').querySelectorAll('input')).indexOf(r));
+            lbl.classList.remove('correct-ans', 'incorrect-ans');
+            if (r.checked) {
+                selectedVal = r.value;
+                selectedLabel = lbl;
+            }
+        }
+
+        const mark = document.getElementById('mark' + num);
+
+        if (!selectedVal) {
+            mark.className = "feedback-mark";
+            mark.innerText = "[ выберите вариант ]";
+            updateTotalScore();
+            return false;
+        }
+
+        if (selectedVal === correctVal) {
+            selectedLabel.classList.add('correct-ans');
+            mark.className = "feedback-mark correct";
+            mark.innerText = "[ ✓ Верно ]";
+            updateTotalScore();
+            return true;
+        } else {
+            selectedLabel.classList.add('incorrect-ans');
+            mark.className = "feedback-mark incorrect";
+            mark.innerText = "[ ✗ Неверно ]";
+            updateTotalScore();
+            return false;
+        }
+    }
+
+    function checkAll() {
+        for (let i = 1; i <= 8; i++) {
+            checkItem(i, correctAnswers[i]);
+        }
+    }
+
+    function resetAll() {
+        for (let i = 1; i <= 8; i++) {
+            const radios = document.getElementsByName('q' + i);
+            for (const r of radios) {
+                r.checked = false;
+                const lbl = document.getElementById('label' + i + '_' + Array.from(r.closest('.options-group').querySelectorAll('input')).indexOf(r));
+                lbl.classList.remove('correct-ans', 'incorrect-ans');
+            }
+            const mark = document.getElementById('mark' + i);
+            mark.className = "feedback-mark";
+            mark.innerText = "";
+        }
+        document.getElementById('score').innerText = "0";
+    }
+
+    function updateTotalScore() {
+        let count = 0;
+        for (let i = 1; i <= 8; i++) {
+            const radios = document.getElementsByName('q' + i);
+            for (const r of radios) {
+                if (r.checked && r.value === correctAnswers[i]) {
+                    count++;
+                }
+            }
+        }
+        document.getElementById('score').innerText = count;
+    }
+</script>
+
+</body>
+</html>
