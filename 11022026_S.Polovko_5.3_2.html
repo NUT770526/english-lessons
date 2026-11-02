@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verb Tenses Interactive Exercise</title>
+  <style>
+    :root {
+      --bg-main: #F2F9F1;
+      --bg-card: #FFFFFF;
+      --bg-accent: #FEFDF0;
+      --primary: #2D5A27;
+      --primary-light: #E2F0D9;
+      --text-main: #2C3E50;
+      --text-muted: #6C7A89;
+      --border-color: #D3E4D1;
+      --correct-bg: #E8F5E9;
+      --correct-border: #4CAF50;
+      --incorrect-bg: #FFEBEE;
+      --incorrect-border: #EF5350;
+      --tooltip-bg: #2C3E50;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-accent) 100%);
+      color: var(--text-main);
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 880px;
+      width: 100%;
+    }
+
+    .header-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 24px 32px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .task-desc {
+      font-size: 0.98rem;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .mode-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px; width: 18px;
+      left: 3px; bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    .score-badge {
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .item-card {
+      background: var(--bg-card);
+      border-radius: 14px;
+      padding: 20px 24px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+
+    .sentence {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background-color: #FAFAFA;
+      border: 2px solid var(--border-color);
+      border-radius: 50px;
+      padding: 12px 24px;
+      color: var(--text-main);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--primary);
+      background-color: #FFFFFF;
+    }
+
+    input[type="text"].correct {
+      border-color: var(--correct-border);
+      background-color: var(--correct-bg);
+      color: #1B5E20;
+    }
+
+    input[type="text"].incorrect {
+      border-color: var(--incorrect-border);
+      background-color: var(--incorrect-bg);
+      color: #B71C1C;
+    }
+
+    .feedback-msg {
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-top: 6px;
+      margin-left: 16px;
+      display: none;
+    }
+
+    .feedback-msg.correct {
+      display: block;
+      color: #2E7D32;
+    }
+
+    .feedback-msg.incorrect {
+      display: block;
+      color: #C62828;
+    }
+
+    /* Interactive Vocab Tooltips */
+    .vocab-tooltip {
+      position: relative;
+      display: inline-block;
+      border-bottom: 2px dashed #27AE60;
+      color: #1E8449;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .vocab-tooltip .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      width: 220px;
+      background-color: var(--tooltip-bg);
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 10px;
+      position: absolute;
+      z-index: 10;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: opacity 0.3s, visibility 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      font-size: 0.85rem;
+      font-weight: normal;
+    }
+
+    .vocab-tooltip .tooltip-box::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--tooltip-bg) transparent transparent transparent;
+    }
+
+    .vocab-tooltip:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .ipa-text {
+      color: #F1C40F;
+      font-family: serif;
+      margin-bottom: 2px;
+    }
+
+    .ukr-text {
+      color: #2ECC71;
+      font-weight: bold;
+    }
+
+    .audio-btn {
+      background: #34495E;
+      border: none;
+      color: #FFF;
+      border-radius: 4px;
+      padding: 3px 8px;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .audio-btn:hover {
+      background: #1ABC9C;
+    }
+
+    .controls-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .btn-action {
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-reset {
+      background-color: #E0E0E0;
+      color: #333;
+    }
+
+    .btn-reset:hover {
+      background-color: #D5D5D5;
+    }
+
+    .btn-check {
+      background-color: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .btn-check:hover {
+      background-color: #23461E;
+    }
+
+    .btn-action:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-card">
+    <div class="title">Complete the sentences with the correct verb forms</div>
+    <div class="task-desc">
+      <strong>Task:</strong> Put the verbs in brackets into the correct tense (Present Perfect, Present Perfect Continuous, Past Simple, or Past Continuous).
+    </div>
+  </div>
+
+  <div class="mode-bar">
+    <div class="toggle-container">
+      <span>Instant Feedback</span>
+      <label class="switch">
+        <input type="checkbox" id="instantToggle" onchange="resetValidationState()">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="score-badge" id="scoreDisplay">Score: 0 / 12</div>
+  </div>
+
+  <div class="exercise-list" id="exerciseList"></div>
+
+  <div class="controls-footer">
+    <button class="btn-action btn-reset" onclick="resetExercise()">Reset</button>
+    <button class="btn-action btn-check" onclick="checkAllAnswers()">Check answers</button>
+  </div>
+</div>
+
+<script>
+  // Vocabulary tooltips dictionary
+  const tooltips = {
+    "pull the plug on": { ipa: "/pʊl ðə plʌɡ ɒn/", ukr: "припинити фінансування / закрити проект" },
+    "address all the concerns": { ipa: "/əˈdres ɔːl ðə kənˈsɜːnz/", ukr: "вирішити всі занепокоєння" },
+    "pick up": { ipa: "/pɪk ʌp/", ukr: "покращуватися / зростати" },
+    "get defensive": { ipa: "/ɡet dɪˈfensɪv/", ukr: "ставати у захисну позицію" },
+    "the bigger picture": { ipa: "/ðə bɪɡər ˈpɪktʃər/", ukr: "загальна картина / перспектива" },
+    "acknowledge the problem": { ipa: "/əkˈnɒlɪdʒ ðə ˈprɒbləm/", ukr: "визнати проблему" },
+    "stand by our decision": { ipa: "/stænd baɪ ɑːr dɪˈsɪʒn/", ukr: "дотримуватися свого рішення" },
+    "stakeholders": { ipa: "/ˈsteɪkhəʊldərz/", ukr: "зацікавлені сторони / акціонери" }
+  };
+
+  const data = [
+    {
+      id: 1,
+      text: "1. Our marketing team _______ (work) on redesigning the campaign for three weeks, but we still haven't agreed on the final concept.",
+      answers: ["has been working", "has worked"]
+    },
+    {
+      id: 2,
+      text: "2. The CEO _______ (already / decide) to {pull the plug on} the project because it hasn't delivered the expected results.",
+      answers: ["has already decided"]
+    },
+    {
+      id: 3,
+      text: "3. While we _______ (discuss) the disappointing sales figures yesterday, the financial director suggested a completely different strategy.",
+      answers: ["were discussing"]
+    },
+    {
+      id: 4,
+      text: "4. We _______ (receive) a lot of challenging feedback recently, and we're still trying to {address all the concerns}.",
+      answers: ["have received", "have been receiving"]
+    },
+    {
+      id: 5,
+      text: "5. Our analysts _______ (monitor) market trends since January, and they believe sales will {pick up} soon.",
+      answers: ["have been monitoring", "have monitored"]
+    },
+    {
+      id: 6,
+      text: "6. The manager _______ (get) {get defensive} when his colleagues questioned his decision at yesterday's meeting.",
+      answers: ["got"]
+    },
+    {
+      id: 7,
+      text: "7. I _______ (try) to explain {the bigger picture} for the last twenty minutes, but you still don't seem to understand my point.",
+      answers: ["have been trying"]
+    },
+    {
+      id: 8,
+      text: "8. She _______ (already / acknowledge) the problem and promised to improve communication within the team.",
+      answers: ["has already acknowledged"]
+    },
+    {
+      id: 9,
+      text: "9. When the client called, we _______ (prepare) a presentation about the campaign's performance.",
+      answers: ["were preparing"]
+    },
+    {
+      id: 10,
+      text: "10. Our company _______ (not / achieve) the expected results so far, despite investing heavily in the project.",
+      answers: ["has not achieved", "hasn't achieved"]
+    },
+    {
+      id: 11,
+      text: "11. How long _______ (you / deal) with this client's complaints?",
+      answers: ["have you been dealing", "have you dealt"]
+    },
+    {
+      id: 12,
+      text: "12. We _______ (stand) by our decision last quarter, even though several {stakeholders} disagreed with us.",
+      answers: ["stood"]
+    }
+  ];
+
+  function formatSentence(text) {
+    // Replace {phrase} with interactive tooltip markup
+    return text.replace(/\{([^}]+)\}/g, (match, phrase) => {
+      const info = tooltips[phrase];
+      if (!info) return phrase;
+      return `
+        <span class="vocab-tooltip" onclick="speakText('${phrase}')">
+          ${phrase}
+          <span class="tooltip-box">
+            <div class="ipa-text">${info.ipa}</div>
+            <div class="ukr-text">${info.ukr}</div>
+            <button class="audio-btn">🔊 Hear Pronunciation</button>
+          </span>
+        </span>
+      `;
+    });
+  }
+
+  function init() {
+    const listEl = document.getElementById("exerciseList");
+    listEl.innerHTML = data.map(item => `
+      <div class="item-card">
+        <div class="sentence">${formatSentence(item.text)}</div>
+        <div class="input-wrapper">
+          <input type="text" id="input-${item.id}" placeholder="Write the correct verb form" oninput="handleInput(${item.id})" />
+          <div class="feedback-msg" id="feedback-${item.id}"></div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function normalize(str) {
+    return str
+      .toLowerCase()
+      .replace(/[\u2018\u2019']/g, "'")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function handleInput(id) {
+    const isInstant = document.getElementById("instantToggle").checked;
+    if (isInstant) {
+      validateItem(id);
+    }
+  }
+
+  function validateItem(id) {
+    const item = data.find(d => d.id === id);
+    const input = document.getElementById(`input-${id}`);
+    const feedback = document.getElementById(`feedback-${id}`);
+    const userVal = normalize(input.value);
+
+    input.classList.remove('correct', 'incorrect');
+    feedback.classList.remove('correct', 'incorrect');
+
+    if (userVal === "") {
+      feedback.style.display = "none";
+      return false;
+    }
+
+    const isCorrect = item.answers.some(ans => normalize(ans) === userVal);
+
+    if (isCorrect) {
+      input.classList.add('correct');
+      feedback.innerText = "✓ Correct!";
+      feedback.classList.add('correct');
+      return true;
+    } else {
+      input.classList.add('incorrect');
+      feedback.innerText = `✗ Incorrect. Answer: ${item.answers[0]}`;
+      feedback.classList.add('incorrect');
+      return false;
+    }
+  }
+
+  function checkAllAnswers() {
+    let score = 0;
+    data.forEach(item => {
+      const isCorrect = validateItem(item.id);
+      if (isCorrect) score++;
+    });
+    document.getElementById("scoreDisplay").innerText = `Score: ${score} / ${data.length}`;
+  }
+
+  function resetValidationState() {
+    data.forEach(item => {
+      const input = document.getElementById(`input-${item.id}`);
+      const feedback = document.getElementById(`feedback-${item.id}`);
+      input.classList.remove('correct', 'incorrect');
+      feedback.style.display = "none";
+    });
+  }
+
+  function resetExercise() {
+    data.forEach(item => {
+      const input = document.getElementById(`input-${item.id}`);
+      const feedback = document.getElementById(`feedback-${item.id}`);
+      input.value = "";
+      input.classList.remove('correct', 'incorrect');
+      feedback.style.display = "none";
+    });
+    document.getElementById("scoreDisplay").innerText = `Score: 0 / ${data.length}`;
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
