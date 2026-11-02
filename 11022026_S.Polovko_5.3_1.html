@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 2: Rewrite the Sentences</title>
+  <style>
+    :root {
+      --bg-main: #F2F9F1;
+      --bg-card: #FFFFFF;
+      --bg-accent: #FEFDF0;
+      --primary: #2D5A27;
+      --primary-light: #E2F0D9;
+      --text-main: #2C3E50;
+      --text-muted: #6C7A89;
+      --border-color: #D3E4D1;
+      --correct-bg: #E8F5E9;
+      --correct-border: #4CAF50;
+      --incorrect-bg: #FFEBEE;
+      --incorrect-border: #EF5350;
+      --tooltip-bg: #2C3E50;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-accent) 100%);
+      color: var(--text-main);
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .header-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 24px 32px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .task-desc {
+      font-size: 1rem;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .example-box {
+      margin-top: 16px;
+      padding: 16px;
+      background-color: var(--bg-accent);
+      border-left: 4px solid #F39C12;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    .example-title {
+      font-weight: 700;
+      color: #D35400;
+      margin-bottom: 4px;
+    }
+
+    .mode-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px; width: 18px;
+      left: 3px; bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    .score-badge {
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .item-card {
+      background: var(--bg-card);
+      border-radius: 14px;
+      padding: 20px 24px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+      transition: transform 0.2s;
+    }
+
+    .original-sentence {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .keyword-tag {
+      display: inline-block;
+      font-weight: 700;
+      color: #C0392B;
+      background: #FADBD8;
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+
+    .input-group {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 1rem;
+      color: var(--text-main);
+      background-color: #FAFAFA;
+      resize: vertical;
+      min-height: 52px;
+      outline: none;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+      background-color: #FFFFFF;
+    }
+
+    textarea.correct {
+      border-color: var(--correct-border);
+      background-color: var(--correct-bg);
+    }
+
+    textarea.incorrect {
+      border-color: var(--incorrect-border);
+      background-color: var(--incorrect-bg);
+    }
+
+    .feedback-msg {
+      font-size: 0.88rem;
+      font-weight: 600;
+      display: none;
+    }
+
+    .feedback-msg.correct {
+      display: block;
+      color: #2E7D32;
+    }
+
+    .feedback-msg.incorrect {
+      display: block;
+      color: #C62828;
+    }
+
+    .answer-hint {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #27AE60;
+      background-color: #E8F8F5;
+      padding: 8px 12px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .btn-show-hint {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .btn-show-hint:hover {
+      color: var(--primary);
+    }
+
+    /* Interactive Vocab Tooltips */
+    .vocab-tooltip {
+      position: relative;
+      display: inline-block;
+      border-bottom: 2px dashed #27AE60;
+      color: #1E8449;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .vocab-tooltip .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      width: 220px;
+      background-color: var(--tooltip-bg);
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 10px;
+      position: absolute;
+      z-index: 10;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: opacity 0.3s, visibility 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      font-size: 0.85rem;
+      font-weight: normal;
+    }
+
+    .vocab-tooltip .tooltip-box::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--tooltip-bg) transparent transparent transparent;
+    }
+
+    .vocab-tooltip:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .ipa-text {
+      color: #F1C40F;
+      font-family: serif;
+      margin-bottom: 2px;
+    }
+
+    .ukr-text {
+      color: #2ECC71;
+      font-weight: bold;
+    }
+
+    .audio-btn {
+      background: #34495E;
+      border: none;
+      color: #FFF;
+      border-radius: 4px;
+      padding: 2px 8px;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .audio-btn:hover {
+      background: #1ABC9C;
+    }
+
+    .controls-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .btn-action {
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-reset {
+      background-color: #E0E0E0;
+      color: #333;
+    }
+
+    .btn-reset:hover {
+      background-color: #D5D5D5;
+    }
+
+    .btn-check {
+      background-color: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .btn-check:hover {
+      background-color: #23461E;
+    }
+
+    .btn-action:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-card">
+    <div class="title">Exercise 2. Rewrite the sentences using the target expressions</div>
+    <div class="task-desc">
+      <strong>Task:</strong> Rewrite each sentence using the word or phrase in brackets. Keep the original meaning. You may need to change the grammatical structure.
+    </div>
+
+    <div class="example-box">
+      <div class="example-title">Example:</div>
+      <div><em>The manager became defensive when his decisions were questioned.</em></div>
+      <div style="margin-top: 4px;">
+        <strong>(GET)</strong> &rarr; 
+        <span>The manager 
+          <span class="vocab-tooltip" onclick="speakText('got defensive')">
+            got defensive
+            <span class="tooltip-box">
+              <div class="ipa-text">/ɡɒt dɪˈfensɪv/</div>
+              <div class="ukr-text">став вставати в позу захисту</div>
+              <button class="audio-btn">🔊 Hear Pronunciation</button>
+            </span>
+          </span> 
+          when his decisions were questioned.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mode-bar">
+    <div class="toggle-container">
+      <span>Instant Feedback</span>
+      <label class="switch">
+        <input type="checkbox" id="instantToggle" onchange="resetValidationState()">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="score-badge" id="scoreDisplay">Score: 0 / 10</div>
+  </div>
+
+  <div class="exercise-list" id="exerciseList"></div>
+
+  <div class="controls-footer">
+    <button class="btn-action btn-reset" onclick="resetExercise()">Reset</button>
+    <button class="btn-action btn-check" onclick="checkAllAnswers()">Check answers</button>
+  </div>
+</div>
+
+<script>
+  const data = [
+    {
+      id: 1,
+      original: "We understand your argument, but we still believe the original strategy was correct.",
+      keyword: "APPROCIATE",
+      targetExpr: "appreciate a point",
+      ipa: "/əˈpriːʃieɪt ə pɔɪnt/",
+      ukr: "визнавати / цінувати точку зору",
+      correctAnswers: [
+        "We appreciate your point, but we still believe the original strategy was correct.",
+        "We appreciate your argument, but we still believe the original strategy was correct."
+      ]
+    },
+    {
+      id: 2,
+      original: "The company decided to cancel the project because it was no longer financially viable.",
+      keyword: "PLUG",
+      targetExpr: "pull the plug on",
+      ipa: "/pʊl ðə plʌɡ ɒn/",
+      ukr: "припинити фінансування / закрити проект",
+      correctAnswers: [
+        "The company decided to pull the plug on the project because it was no longer financially viable."
+      ]
+    },
+    {
+      id: 3,
+      original: "The manager admitted that the employee's criticism was reasonable.",
+      keyword: "ACKNOWLEDGE",
+      targetExpr: "acknowledge criticism",
+      ipa: "/əkˈnɒlɪdʒ ˈkrɪtɪsɪzəm/",
+      ukr: "визнавати критику / точку зору",
+      correctAnswers: [
+        "The manager acknowledged the employee's criticism.",
+        "The manager acknowledged that the employee's criticism was reasonable.",
+        "The manager acknowledged a point made by the employee."
+      ]
+    },
+    {
+      id: 4,
+      original: "There are several aspects of our customer service that could be better.",
+      keyword: "ROOM",
+      targetExpr: "room for improvement",
+      ipa: "/ruːm fər ɪmˈpruːvmənt/",
+      ukr: "простір для вдосконалення",
+      correctAnswers: [
+        "There is room for improvement in several aspects of our customer service.",
+        "There is room for improvement in our customer service."
+      ]
+    },
+    {
+      id: 5,
+      original: "He always reacts as if criticism is a personal attack.",
+      keyword: "PERSONALLY",
+      targetExpr: "take something personally",
+      ipa: "/teɪk ˈsʌmθɪŋ ˈpɜːsənəli/",
+      ukr: "сприймати щось на свій рахунок",
+      correctAnswers: [
+        "He always takes criticism personally."
+      ]
+    },
+    {
+      id: 6,
+      original: "The director refused to change her decision despite strong opposition.",
+      keyword: "STOOD",
+      targetExpr: "stand by a decision",
+      ipa: "/stænd baɪ ə dɪˈsɪʒn/",
+      ukr: "отстоювати рішення / залишатися вірним рішенню",
+      correctAnswers: [
+        "The director stood by her decision despite strong opposition."
+      ]
+    },
+    {
+      id: 7,
+      original: "We need to solve the problems caused by poor communication between departments.",
+      keyword: "ADDRESS",
+      targetExpr: "address communication problems",
+      ipa: "/əˈdres kəˌmjuːnɪˈkeɪʃn ˈprɒbləmz/",
+      ukr: "вирішувати проблеми з комунікацією",
+      correctAnswers: [
+        "We need to address communication problems between departments.",
+        "We need to address the problems caused by poor communication between departments."
+      ]
+    },
+    {
+      id: 8,
+      original: "The team listened to the negative feedback and used it to improve the product.",
+      keyword: "BOARD",
+      targetExpr: "take feedback on board",
+      ipa: "/teɪk ˈfiːdbæk ɒn bɔːd/",
+      ukr: "враховувати відгуки / критику",
+      correctAnswers: [
+        "The team took feedback on board and used it to improve the product.",
+        "The team took the negative feedback on board and used it to improve the product."
+      ]
+    },
+    {
+      id: 9,
+      original: "Our analysts expect sales to decrease significantly next quarter.",
+      keyword: "PREDICT",
+      targetExpr: "predict a decline",
+      ipa: "/prɪˈdɪkt ə dɪˈklaɪn/",
+      ukr: "прогнозувати спад",
+      correctAnswers: [
+        "Our analysts predict a decline in sales next quarter.",
+        "Our analysts predict a significant decline in sales next quarter."
+      ]
+    },
+    {
+      id: 10,
+      original: "Managers should give employees feedback in a professional and diplomatic way.",
+      keyword: "DELIVER",
+      targetExpr: "deliver feedback",
+      ipa: "/dɪˈlɪvər ˈfiːdbæk/",
+      ukr: "надавати / висловлювати зворотний зв'язок",
+      correctAnswers: [
+        "Managers should deliver feedback to employees in a professional and diplomatic way.",
+        "Managers should deliver feedback in a professional and diplomatic way."
+      ]
+    }
+  ];
+
+  function init() {
+    const listEl = document.getElementById("exerciseList");
+    listEl.innerHTML = data.map(item => `
+      <div class="item-card">
+        <div class="original-sentence">${item.id}. ${item.original}</div>
+        <div class="keyword-tag">
+          (${item.keyword}) &rarr; Target expression: 
+          <span class="vocab-tooltip" onclick="speakText('${item.targetExpr}')">
+            ${item.targetExpr}
+            <span class="tooltip-box">
+              <div class="ipa-text">${item.ipa}</div>
+              <div class="ukr-text">${item.ukr}</div>
+              <button class="audio-btn">🔊 Hear Pronunciation</button>
+            </span>
+          </span>
+        </div>
+        <div class="input-group">
+          <textarea id="input-${item.id}" placeholder="Type your rewritten sentence here..." oninput="handleInput(${item.id})"></textarea>
+          <div class="feedback-msg" id="feedback-${item.id}"></div>
+          <div class="answer-hint" id="hint-${item.id}">
+            <strong>Model Answer:</strong> ${item.correctAnswers[0]}
+          </div>
+          <div class="action-row">
+            <button class="btn-show-hint" onclick="toggleHint(${item.id})">Show Model Answer</button>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function normalize(str) {
+    return str
+      .toLowerCase()
+      .replace(/[\u2018\u2019']/g, "'")
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function handleInput(id) {
+    const isInstant = document.getElementById("instantToggle").checked;
+    if (isInstant) {
+      validateItem(id);
+    }
+  }
+
+  function validateItem(id) {
+    const item = data.find(d => d.id === id);
+    const textarea = document.getElementById(`input-${id}`);
+    const feedback = document.getElementById(`feedback-${id}`);
+    const userVal = normalize(textarea.value);
+
+    textarea.classList.remove('correct', 'incorrect');
+    feedback.classList.remove('correct', 'incorrect');
+
+    if (userVal === "") {
+      feedback.style.display = "none";
+      return false;
+    }
+
+    const isCorrect = item.correctAnswers.some(ans => normalize(ans) === userVal);
+
+    if (isCorrect) {
+      textarea.classList.add('correct');
+      feedback.innerText = "✓ Correct!";
+      feedback.classList.add('correct');
+      return true;
+    } else {
+      textarea.classList.add('incorrect');
+      feedback.innerText = "✗ Not quite. Check the target expression or sentence structure.";
+      feedback.classList.add('incorrect');
+      return false;
+    }
+  }
+
+  function checkAllAnswers() {
+    let score = 0;
+    data.forEach(item => {
+      const isCorrect = validateItem(item.id);
+      if (isCorrect) score++;
+    });
+    document.getElementById("scoreDisplay").innerText = `Score: ${score} / ${data.length}`;
+  }
+
+  function resetValidationState() {
+    data.forEach(item => {
+      const textarea = document.getElementById(`input-${item.id}`);
+      const feedback = document.getElementById(`feedback-${item.id}`);
+      textarea.classList.remove('correct', 'incorrect');
+      feedback.style.display = "none";
+    });
+  }
+
+  function resetExercise() {
+    data.forEach(item => {
+      const textarea = document.getElementById(`input-${item.id}`);
+      const feedback = document.getElementById(`feedback-${item.id}`);
+      const hint = document.getElementById(`hint-${item.id}`);
+      textarea.value = "";
+      textarea.classList.remove('correct', 'incorrect');
+      feedback.style.display = "none";
+      hint.style.display = "none";
+    });
+    document.getElementById("scoreDisplay").innerText = `Score: 0 / ${data.length}`;
+  }
+
+  function toggleHint(id) {
+    const hint = document.getElementById(`hint-${id}`);
+    if (hint.style.display === "block") {
+      hint.style.display = "none";
+    } else {
+      hint.style.display = "block";
+    }
+  }
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
