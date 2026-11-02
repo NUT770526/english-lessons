@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 1. Complete the business situations</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #F4F9F5 0%, #FFFDF0 50%, #EEF7F2 100%);
+      color: #1e293b;
+      min-height: 100vh;
+    }
+
+    /* Soft Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Interactive Vocab/Idiom Tooltip */
+    .idiom-chip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .idiom-chip.used {
+      text-decoration: line-through;
+      opacity: 0.45;
+      background-color: #f1f5f9 !important;
+      color: #64748b !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    .tooltip-card {
+      visibility: hidden;
+      opacity: 0;
+      width: 240px;
+      background-color: #064e3b;
+      color: #ffffff;
+      text-align: left;
+      border-radius: 14px;
+      padding: 12px;
+      position: absolute;
+      z-index: 50;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+      transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+      font-size: 0.8rem;
+      font-weight: normal;
+    }
+
+    .tooltip-card::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -6px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: #064e3b transparent transparent transparent;
+    }
+
+    .idiom-chip:hover .tooltip-card,
+    .idiom-chip:focus-within .tooltip-card {
+      visibility: visible;
+      opacity: 1;
+      transform: translateX(-50%) translateY(-2px);
+    }
+
+    /* Animation effects */
+    .shake-anim {
+      animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-1px, 0, 0); }
+      20%, 80% { transform: translate3d(2px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+      40%, 60% { transform: translate3d(4px, 0, 0); }
+    }
+  </style>
+</head>
+<body class="py-8 px-4 sm:px-6 md:px-10">
+
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Header Section -->
+    <header class="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-emerald-100 shadow-sm text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">Business English Vocabulary</span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800">Exercise 1. Complete the business situations</h1>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">Complete the sentences with expressions from the box. Change grammatical forms where necessary (e.g. past tense, gerunds).</p>
+      </div>
+      <div class="bg-emerald-50 text-emerald-900 px-4 py-2.5 rounded-2xl border border-emerald-200 font-bold text-center shrink-0">
+        <span class="text-xs block text-emerald-700 font-semibold uppercase">Score</span>
+        <span id="score-display" class="text-xl font-extrabold text-emerald-600">0/10</span>
+      </div>
+    </header>
+
+    <!-- Control & Mode Bar -->
+    <div class="bg-white/90 rounded-2xl p-4 shadow-2xs border border-emerald-100 flex flex-wrap items-center justify-between gap-3 text-xs font-semibold text-slate-700">
+      <div class="flex items-center gap-2">
+        <span class="bg-amber-100 text-amber-900 px-2.5 py-1 rounded-lg font-bold">Checking Mode:</span>
+        <div class="inline-flex rounded-xl bg-slate-100 p-1 border border-slate-200">
+          <button id="mode-btn-instant" onclick="setMode('instant')" class="px-3.5 py-1.5 rounded-lg transition-all text-emerald-950 bg-white shadow-2xs font-bold">Instant</button>
+          <button id="mode-btn-submit" onclick="setMode('submit')" class="px-3.5 py-1.5 rounded-lg transition-all text-slate-500 hover:text-slate-800 font-medium">Check at End</button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="showAllHints()" class="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 px-3.5 py-1.5 rounded-xl transition-all font-bold">
+          💡 Show All Hints
+        </button>
+        <button onclick="resetExercise()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-1.5 rounded-xl transition-all font-bold">
+          🔄 Reset All
+        </button>
+      </div>
+    </div>
+
+    <!-- Word Bank Card -->
+    <div class="bg-white/95 rounded-3xl p-6 border border-emerald-100 shadow-sm space-y-3">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+        <h2 class="text-sm font-extrabold uppercase tracking-wider text-emerald-900 flex items-center gap-2">
+          <span>📦</span> Word Bank <span class="text-xs font-normal text-slate-500">(Two extra expressions included)</span>
+        </h2>
+        <span class="text-xs text-amber-800 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 font-medium">
+          💡 Hover or tap 🔊 icon for Ukrainian translation, IPA & audio pronunciation!
+        </span>
+      </div>
+
+      <!-- Word Chips -->
+      <div id="word-bank-chips" class="flex flex-wrap gap-2.5 pt-1">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- Sentences Form -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-emerald-100 shadow-sm space-y-6">
+      <div id="sentences-list" class="space-y-6">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Submit Button (shown only in Submit mode) -->
+      <div id="submit-btn-wrapper" class="hidden pt-4 text-center border-t border-slate-100">
+        <button onclick="checkAllAnswers()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-2xl shadow-sm text-sm transition-all hover:shadow-md">
+          Check All Answers
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // --- WORD BANK DATA WITH TRANSLATIONS & IPA ---
+    const wordBankData = [
+      { text: "take off", ipa: "/teɪk ɒf/", ua: "швидко зростати / мати успіх" },
+      { text: "stand by a decision", ipa: "/stænd baɪ ə dɪˈsɪʒn/", ua: "дотримуватися рішення" },
+      { text: "pull the plug on", ipa: "/pʊl ðə plʌɡ ɒn/", ua: "припинити фінансування / проект" },
+      { text: "share the blame", ipa: "/ʃeər ðə bleɪm/", ua: "поділити провину" },
+      { text: "pick up", ipa: "/pɪk ʌp/", ua: "покращуватися / зростати" },
+      { text: "get defensive", ipa: "/ɡet dɪˈfensɪv/", ua: "ставати у захисну позицію" },
+      { text: "take something personally", ipa: "/teɪk ˈsʌmθɪŋ ˈpɜːsənəli/", ua: "сприймати щось на свій рахунок" },
+      { text: "acknowledge a point", ipa: "/əkˈnɒlɪdʒ ə pɔɪnt/", ua: "визнати слушність думки" },
+      { text: "address communication problems", ipa: "/əˈdres kəˌmjuːnɪˈkeɪʃn/", ua: "вирішувати проблеми з комунікацією" },
+      { text: "predict a decline", ipa: "/prɪˈdɪkt ə dɪˈklaɪn/", ua: "прогнозувати спад" },
+      { text: "take criticism on board", ipa: "/teɪk ˈkrɪtɪsɪzəm ɒn bɔːd/", ua: "враховувати критику" },
+      { text: "focus on the big picture", ipa: "/ˈfəʊkəs ɒn ðə bɪɡ ˈpɪktʃə/", ua: "зосередитися на головному (загальному)" }
+    ];
+
+    // --- SENTENCES DATA & ACCEPTABLE GRAMMATICAL VARIATIONS ---
+    const sentencesData = [
+      {
+        id: 1,
+        part1: "1. Despite strong criticism from several shareholders, the CEO decided to ",
+        part2: " and continue investing in the project.",
+        acceptable: ["stand by his decision", "stand by a decision", "stand by the decision", "stand by decision"],
+        hint: "Form: infinitive (stand by...)"
+      },
+      {
+        id: 2,
+        part1: "2. The product launch was disappointing, and sales failed to ",
+        part2: " during the first six months.",
+        acceptable: ["take off", "pick up"],
+        hint: "Form: infinitive (take off / pick up)"
+      },
+      {
+        id: 3,
+        part1: "3. Rather than admitting that the strategy had failed, the manager immediately ",
+        part2: " and started blaming his colleagues.",
+        acceptable: ["got defensive", "became defensive"],
+        hint: "Form: past simple (got defensive)"
+      },
+      {
+        id: 4,
+        part1: "4. We can't blame the sales department alone. Marketing and customer service should also ",
+        part2: " for the disappointing results.",
+        acceptable: ["share the blame"],
+        hint: "Form: infinitive (share the blame)"
+      },
+      {
+        id: 5,
+        part1: "5. The company has invested over $2 million in the project, but management is now considering ",
+        part2: " it.",
+        acceptable: ["pulling the plug on", "pulling plug on"],
+        hint: "Form: gerund -ing after 'considering' (pulling the plug on)"
+      },
+      {
+        id: 6,
+        part1: "6. Although the employee initially disagreed with the feedback, she eventually ",
+        part2: " and improved her performance.",
+        acceptable: ["took criticism on board", "took the criticism on board"],
+        hint: "Form: past simple (took criticism on board)"
+      },
+      {
+        id: 7,
+        part1: "7. The latest market analysis suggests that demand will ",
+        part2: " over the next few months.",
+        acceptable: ["decline", "predict a decline", "drop", "fall"],
+        hint: "Form: infinitive after 'will' (decline)"
+      },
+      {
+        id: 8,
+        part1: "8. Instead of concentrating on minor mistakes, we need to ",
+        part2: " and consider our long-term business goals.",
+        acceptable: ["focus on the big picture", "focus on big picture"],
+        hint: "Form: infinitive (focus on the big picture)"
+      },
+      {
+        id: 9,
+        part1: "9. Our HR department is introducing new procedures to ",
+        part2: " between managers and their teams.",
+        acceptable: ["address communication problems"],
+        hint: "Form: infinitive (address communication problems)"
+      },
+      {
+        id: 10,
+        part1: "10. When your manager gives you constructive feedback, try not to ",
+        part2: ". Focus on what you can learn from it.",
+        acceptable: ["take it personally", "take something personally"],
+        hint: "Form: infinitive with 'it' (take it personally)"
+      }
+    ];
+
+    // --- APP STATE ---
+    let mode = 'instant';
+    let activeInputId = null;
+
+    // --- INITIALIZATION ---
+    window.addEventListener('DOMContentLoaded', () => {
+      renderWordBank();
+      renderSentences();
+    });
+
+    // --- RENDER WORD BANK CHIPS ---
+    function renderWordBank() {
+      const container = document.getElementById('word-bank-chips');
+      container.innerHTML = wordBankData.map(item => `
+        <div id="chip-${slugify(item.text)}" class="idiom-chip bg-emerald-50/90 border border-emerald-200/80 hover:border-emerald-400 text-emerald-950 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold cursor-pointer shadow-2xs">
+          <span onclick="insertWord('${item.text}')">${item.text}</span>
+          <button onclick="event.stopPropagation(); speakWord('${item.text}')" class="hover:bg-emerald-200 text-emerald-700 p-0.5 rounded-md text-xs" title="Listen pronunciation">
+            🔊
+          </button>
+          
+          <!-- Tooltip Card -->
+          <div class="tooltip-card">
+            <div class="flex items-center justify-between border-b border-emerald-700/60 pb-1 mb-1.5">
+              <strong class="text-amber-300 font-bold">${item.text}</strong>
+              <button onclick="event.stopPropagation(); speakWord('${item.text}')" class="bg-emerald-700 hover:bg-emerald-600 text-white px-2 py-0.5 rounded text-xs font-medium">🔊 Play</button>
+            </div>
+            <div class="text-emerald-200 text-xs font-mono mb-1">${item.ipa}</div>
+            <div class="text-white text-xs font-medium">🇺🇦 ${item.ua}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // --- RENDER SENTENCES ---
+    function renderSentences() {
+      const container = document.getElementById('sentences-list');
+      container.innerHTML = sentencesData.map(item => `
+        <div class="space-y-2 bg-emerald-50/40 p-4 sm:p-5 rounded-2xl border border-emerald-100/70">
+          <div class="text-sm sm:text-base text-slate-800 leading-relaxed font-medium">
+            ${item.part1}
+            <span class="inline-block min-w-[200px] font-semibold">
+              <input type="text" id="input-${item.id}" 
+                     placeholder="Type or click phrase" 
+                     onfocus="activeInputId = 'input-${item.id}'"
+                     oninput="handleInput(${item.id})"
+                     class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all shadow-2xs" />
+            </span>
+            ${item.part2}
+          </div>
+
+          <div class="flex items-center justify-between text-xs pt-1">
+            <span id="badge-${item.id}" class="hidden font-bold"></span>
+            <button onclick="toggleHint('hint-${item.id}')" class="text-emerald-700 hover:text-emerald-900 font-semibold underline decoration-dashed">
+              💡 Hint
+            </button>
+          </div>
+          <div id="hint-${item.id}" class="hidden p-2.5 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 font-medium">
+            ${item.hint} | Expected answer: <strong>${item.acceptable[0]}</strong>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // --- INTERACTION LOGIC ---
+    function insertWord(text) {
+      if (!activeInputId) {
+        // default to first empty input if none active
+        const emptyInput = sentencesData.find(s => document.getElementById(`input-${s.id}`).value === '');
+        if (emptyInput) activeInputId = `input-${emptyInput.id}`;
+      }
+
+      if (activeInputId) {
+        const input = document.getElementById(activeInputId);
+        input.value = text;
+        const item = sentencesData.find(s => `input-${s.id}` === activeInputId);
+        if (item) {
+          handleInput(item.id);
+        }
+      }
+    }
+
+    function handleInput(id) {
+      updateWordBankChips();
+      if (mode === 'instant') {
+        evaluateSentence(id);
+      }
+    }
+
+    function updateWordBankChips() {
+      const inputs = sentencesData.map(s => document.getElementById(`input-${s.id}`).value.trim().toLowerCase());
+      wordBankData.forEach(item => {
+        const chip = document.getElementById(`chip-${slugify(item.text)}`);
+        if (chip) {
+          if (inputs.includes(item.text.toLowerCase())) {
+            chip.classList.add('used');
+          } else {
+            chip.classList.remove('used');
+          }
+        }
+      });
+    }
+
+    function evaluateSentence(id) {
+      const item = sentencesData.find(s => s.id === id);
+      const input = document.getElementById(`input-${id}`);
+      const badge = document.getElementById(`badge-${id}`);
+      const val = input.value.trim().toLowerCase();
+
+      if (val === '') {
+        input.className = "w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all shadow-2xs";
+        badge.classList.add('hidden');
+      } else if (item.acceptable.some(acc => acc.toLowerCase() === val)) {
+        input.className = "w-full bg-emerald-50 border-2 border-emerald-500 rounded-xl px-3.5 py-2 text-sm text-emerald-900 font-bold focus:outline-none transition-all";
+        badge.className = "text-xs font-bold text-emerald-600 block";
+        badge.innerText = "✓ Correct";
+      } else {
+        input.className = "w-full bg-rose-50 border-2 border-rose-400 rounded-xl px-3.5 py-2 text-sm text-rose-900 font-bold focus:outline-none transition-all shake-anim";
+        badge.className = "text-xs font-bold text-rose-500 block";
+        badge.innerText = `✗ Suggestion: ${item.acceptable[0]}`;
+      }
+      updateScore();
+    }
+
+    function checkAllAnswers() {
+      sentencesData.forEach(s => evaluateSentence(s.id));
+    }
+
+    function updateScore() {
+      let score = 0;
+      sentencesData.forEach(s => {
+        const val = document.getElementById(`input-${s.id}`).value.trim().toLowerCase();
+        if (s.acceptable.some(acc => acc.toLowerCase() === val)) {
+          score++;
+        }
+      });
+      document.getElementById('score-display').innerText = `${score}/10`;
+    }
+
+    function setMode(newMode) {
+      mode = newMode;
+      const btnInst = document.getElementById('mode-btn-instant');
+      const btnSub = document.getElementById('mode-btn-submit');
+      const submitWrapper = document.getElementById('submit-btn-wrapper');
+
+      if (mode === 'instant') {
+        btnInst.className = "px-3.5 py-1.5 rounded-lg transition-all text-emerald-950 bg-white shadow-2xs font-bold";
+        btnSub.className = "px-3.5 py-1.5 rounded-lg transition-all text-slate-500 hover:text-slate-800 font-medium";
+        submitWrapper.classList.add('hidden');
+        sentencesData.forEach(s => evaluateSentence(s.id));
+      } else {
+        btnSub.className = "px-3.5 py-1.5 rounded-lg transition-all text-emerald-950 bg-white shadow-2xs font-bold";
+        btnInst.className = "px-3.5 py-1.5 rounded-lg transition-all text-slate-500 hover:text-slate-800 font-medium";
+        submitWrapper.classList.remove('hidden');
+      }
+    }
+
+    function toggleHint(id) {
+      const hintEl = document.getElementById(id);
+      hintEl.classList.toggle('hidden');
+    }
+
+    function showAllHints() {
+      sentencesData.forEach(s => {
+        document.getElementById(`hint-${s.id}`).classList.remove('hidden');
+      });
+    }
+
+    function resetExercise() {
+      sentencesData.forEach(s => {
+        const input = document.getElementById(`input-${s.id}`);
+        const badge = document.getElementById(`badge-${s.id}`);
+        const hint = document.getElementById(`hint-${s.id}`);
+        input.value = '';
+        input.className = "w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all shadow-2xs";
+        badge.classList.add('hidden');
+        hint.classList.add('hidden');
+      });
+      updateWordBankChips();
+      updateScore();
+    }
+
+    function speakWord(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function slugify(text) {
+      return text.toString().toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-');
+    }
+  </script>
+</body>
+</html>
+```
+
+### Key Highlights of the Generated File:
+1. **Light & Elegant Aesthetics**: Designed using soft green `#F4F9F4` and warm yellow `#FFFDF0` linear gradients, rounded cards (`rounded-3xl`), clean borders, and clear typography.
+2. **Interactive Word Bank**: Clickable chips that automatically insert phrases into active input fields, cross out used items, and feature interactive tooltips with **Ukrainian translations**, **IPA transcriptions**, and **audio playback**.
+3. **Smart Answer Validation**: Accepts necessary grammatical modifications (e.g. past simple `got defensive`, gerund `pulling the plug on`, infinitive `stand by his decision`, etc.).
+4. **Flexible Features**: Features live **Instant Checking** and **Submit at End** modes, score tracking, individual hints, and a global reset option.
