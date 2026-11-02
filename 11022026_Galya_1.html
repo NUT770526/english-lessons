@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vocabulary Matching Exercise</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .word-card, .def-card {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      touch-action: manipulation;
+    }
+    .matched-pulse {
+      animation: pulseMatch 0.4s ease-in-out;
+    }
+    @keyframes pulseMatch {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    .wrong-shake {
+      animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-2px, 0, 0); }
+      20%, 80% { transform: translate3d(4px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+      40%, 60% { transform: translate3d(6px, 0, 0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-brand-100">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div>
+        <h1 class="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+          <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C20.832 18.477 19.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+          Vocabulary Matching
+        </h1>
+        <p class="text-xs text-slate-500 mt-0.5">Exercise 1: Match the words (1–10) with their definitions (A–J)</p>
+      </div>
+
+      <!-- Controls & Progress -->
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+        <div class="text-sm font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full flex items-center gap-1.5">
+          <span>Score:</span>
+          <span id="score-count" class="text-brand-600 font-bold">0</span>
+          <span>/ 10</span>
+        </div>
+        <button id="reset-btn" class="px-3.5 py-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          Reset
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-5xl mx-auto px-4 py-6 sm:px-6 flex-grow w-full">
+
+    <!-- Mode Selector & Instructions -->
+    <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200 mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div class="text-sm text-slate-600">
+        <span class="font-semibold text-slate-800">Instruction:</span> Select a word on the left, then click its corresponding definition on the right.
+      </div>
+      
+      <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold self-stretch sm:self-auto justify-center">
+        <button id="mode-instant" class="px-3 py-1.5 rounded-lg transition-all text-slate-700 bg-white shadow-sm">
+          Instant Check
+        </button>
+        <button id="mode-submit" class="px-3 py-1.5 rounded-lg transition-all text-slate-500 hover:text-slate-700">
+          Check at End
+        </button>
+      </div>
+    </div>
+
+    <!-- Match Containers -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      
+      <!-- Words Column -->
+      <div class="space-y-3">
+        <h2 class="text-xs font-bold tracking-wider text-slate-400 uppercase px-1">Words</h2>
+        <div id="words-container" class="space-y-2.5"></div>
+      </div>
+
+      <!-- Definitions Column -->
+      <div class="space-y-3">
+        <h2 class="text-xs font-bold tracking-wider text-slate-400 uppercase px-1">Definitions</h2>
+        <div id="defs-container" class="space-y-2.5"></div>
+      </div>
+
+    </div>
+
+    <!-- Submit Button Bar (Visible only in 'Check at End' mode) -->
+    <div id="submit-bar" class="hidden mt-8 text-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+      <button id="check-all-btn" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm rounded-xl shadow-md hover:shadow-lg transition-all">
+        Check All Answers
+      </button>
+    </div>
+
+    <!-- Completion Modal/Banner -->
+    <div id="completion-card" class="hidden mt-8 bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center animate-fade-in">
+      <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold text-emerald-900 mb-1">Great Job!</h3>
+      <p class="text-sm text-emerald-700 mb-4" id="completion-text">You have successfully matched all vocabulary words correctly.</p>
+      <button id="try-again-btn" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl transition-colors shadow-sm">
+        Play Again
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 mt-8">
+    <div class="max-w-5xl mx-auto px-4 text-center text-xs text-slate-400">
+      Interactive English Vocabulary Practice Exercise
+    </div>
+  </footer>
+
+  <!-- Logic JavaScript -->
+  <script>
+    const vocabularyData = [
+      { id: 1, word: "database", letter: "C", def: "A collection of information stored on a computer." },
+      { id: 2, word: "software", letter: "H", def: "Programs used on computers or other devices." },
+      { id: 3, word: "research", letter: "J", def: "A careful study of a subject to discover information." },
+      { id: 4, word: "habit", letter: "E", def: "Something you do regularly, often without thinking." },
+      { id: 5, word: "to browse", letter: "F", def: "To look through websites or information on the internet." },
+      { id: 6, word: "to manage", letter: "A", def: "To control or organize people, projects, or activities." },
+      { id: 7, word: "to store", letter: "D", def: "To save information for future use." },
+      { id: 8, word: "to update", letter: "I", def: "To make something more recent or current." },
+      { id: 9, word: "caring", letter: "G", def: "Kind and concerned about other people." },
+      { id: 10, word: "careless", letter: "B", def: "Not paying enough attention and making mistakes." }
+    ];
+
+    let state = {
+      selectedWordId: null,
+      selectedDefLetter: null,
+      matches: {}, // wordId -> letter
+      verifiedMatches: {}, // wordId -> boolean (true=correct, false=incorrect)
+      mode: 'instant', // 'instant' or 'submit'
+      score: 0
+    };
+
+    const colors = [
+      { bg: 'bg-indigo-50', border: 'border-indigo-300', text: 'text-indigo-700', badge: 'bg-indigo-100 text-indigo-800' },
+      { bg: 'bg-amber-50', border: 'border-amber-300', text: 'text-amber-700', badge: 'bg-amber-100 text-amber-800' },
+      { bg: 'bg-rose-50', border: 'border-rose-300', text: 'text-rose-700', badge: 'bg-rose-100 text-rose-800' },
+      { bg: 'bg-teal-50', border: 'border-teal-300', text: 'text-teal-700', badge: 'bg-teal-100 text-teal-800' },
+      { bg: 'bg-purple-50', border: 'border-purple-300', text: 'text-purple-700', badge: 'bg-purple-100 text-purple-800' },
+      { bg: 'bg-sky-50', border: 'border-sky-300', text: 'text-sky-700', badge: 'bg-sky-100 text-sky-800' },
+      { bg: 'bg-orange-50', border: 'border-orange-300', text: 'text-orange-700', badge: 'bg-orange-100 text-orange-800' },
+      { bg: 'bg-pink-50', border: 'border-pink-300', text: 'text-pink-700', badge: 'bg-pink-100 text-pink-800' },
+      { bg: 'bg-cyan-50', border: 'border-cyan-300', text: 'text-cyan-700', badge: 'bg-cyan-100 text-cyan-800' },
+      { bg: 'bg-lime-50', border: 'border-lime-300', text: 'text-lime-700', badge: 'bg-lime-100 text-lime-800' }
+    ];
+
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    let shuffledDefs = shuffleArray(vocabularyData);
+
+    function init() {
+      state.selectedWordId = null;
+      state.selectedDefLetter = null;
+      state.matches = {};
+      state.verifiedMatches = {};
+      state.score = 0;
+      shuffledDefs = shuffleArray(vocabularyData);
+      
+      updateUI();
+    }
+
+    function updateUI() {
+      renderWords();
+      renderDefinitions();
+      renderControls();
+      updateScore();
+    }
+
+    function renderWords() {
+      const container = document.getElementById('words-container');
+      container.innerHTML = '';
+
+      vocabularyData.forEach(item => {
+        const isSelected = state.selectedWordId === item.id;
+        const matchedLetter = state.matches[item.id];
+        const isVerified = state.verifiedMatches[item.id];
+
+        const card = document.createElement('button');
+        card.className = `word-card w-full text-left p-3.5 rounded-xl border flex items-center justify-between shadow-sm cursor-pointer select-none font-medium text-sm ${getCardStyle(item.id, isSelected, matchedLetter, isVerified)}`;
+        
+        card.onclick = () => handleWordClick(item.id);
+
+        let badgeContent = matchedLetter ? `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-white border border-slate-200 shadow-2xs">${matchedLetter}</span>` : '';
+        if (isVerified === true) {
+          badgeContent = `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700 flex items-center gap-1">✓ ${matchedLetter}</span>`;
+        } else if (isVerified === false) {
+          badgeContent = `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-rose-100 text-rose-700 flex items-center gap-1">✕ ${matchedLetter}</span>`;
+        }
+
+        card.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-200">${item.id}</span>
+            <span class="text-slate-800 font-semibold">${item.word}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            ${badgeContent}
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function renderDefinitions() {
+      const container = document.getElementById('defs-container');
+      container.innerHTML = '';
+
+      shuffledDefs.forEach(item => {
+        const isSelected = state.selectedDefLetter === item.letter;
+        
+        // Find which word is currently paired with this definition
+        const matchedWordId = Object.keys(state.matches).find(id => state.matches[id] === item.letter);
+        const isVerified = matchedWordId ? state.verifiedMatches[matchedWordId] : undefined;
+
+        const card = document.createElement('button');
+        card.className = `def-card w-full text-left p-3.5 rounded-xl border flex items-start gap-3 shadow-sm cursor-pointer select-none text-sm leading-relaxed ${getCardStyle(null, isSelected, matchedWordId, isVerified, item.letter)}`;
+        
+        card.onclick = () => handleDefClick(item.letter);
+
+        let badgeContent = matchedWordId ? `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-white border border-slate-200 shadow-2xs shrink-0">${matchedWordId}.</span>` : '';
+        if (isVerified === true) {
+          badgeContent = `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700 shrink-0">✓ ${matchedWordId}.</span>`;
+        } else if (isVerified === false) {
+          badgeContent = `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-rose-100 text-rose-700 shrink-0">✕ ${matchedWordId}.</span>`;
+        }
+
+        card.innerHTML = `
+          <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-200 mt-0.5">${item.letter}</span>
+          <div class="flex-grow text-slate-700 font-normal">
+            ${item.def}
+          </div>
+          ${badgeContent}
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function getCardStyle(wordId, isSelected, matchedVal, isVerified, letterVal = null) {
+      if (isVerified === true) {
+        return 'bg-emerald-50/80 border-emerald-300 text-emerald-900';
+      }
+      if (isVerified === false) {
+        return 'bg-rose-50/80 border-rose-300 text-rose-900 wrong-shake';
+      }
+      if (isSelected) {
+        return 'bg-brand-50 border-brand-500 ring-2 ring-brand-500/20 shadow-md text-brand-900';
+      }
+      if (matchedVal) {
+        const pairIndex = (wordId || vocabularyData.find(v => v.letter === letterVal)?.id || 1) % colors.length;
+        const color = colors[pairIndex];
+        return `${color.bg} ${color.border} ${color.text}`;
+      }
+      return 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:border-slate-300';
+    }
+
+    function handleWordClick(id) {
+      if (state.verifiedMatches[id] === true) return; // Ignore completed correct ones
+
+      if (state.selectedWordId === id) {
+        state.selectedWordId = null;
+      } else {
+        state.selectedWordId = id;
+        if (state.selectedDefLetter) {
+          tryPairing(id, state.selectedDefLetter);
+        }
+      }
+      updateUI();
+    }
+
+    function handleDefClick(letter) {
+      // Find if this definition is already verified as correct
+      const existingWordId = Object.keys(state.matches).find(wId => state.matches[wId] === letter);
+      if (existingWordId && state.verifiedMatches[existingWordId] === true) return;
+
+      if (state.selectedDefLetter === letter) {
+        state.selectedDefLetter = null;
+      } else {
+        state.selectedDefLetter = letter;
+        if (state.selectedWordId) {
+          tryPairing(state.selectedWordId, letter);
+        }
+      }
+      updateUI();
+    }
+
+    function tryPairing(wordId, letter) {
+      // Remove previous match with this letter if existing
+      Object.keys(state.matches).forEach(wId => {
+        if (state.matches[wId] === letter) {
+          delete state.matches[wId];
+          delete state.verifiedMatches[wId];
+        }
+      });
+
+      state.matches[wordId] = letter;
+      delete state.verifiedMatches[wordId];
+
+      state.selectedWordId = null;
+      state.selectedDefLetter = null;
+
+      if (state.mode === 'instant') {
+        verifyPair(wordId);
+      }
+    }
+
+    function verifyPair(wordId) {
+      const item = vocabularyData.find(v => v.id === parseInt(wordId));
+      if (!item) return;
+
+      const isCorrect = state.matches[wordId] === item.letter;
+      state.verifiedMatches[wordId] = isCorrect;
+
+      if (isCorrect) {
+        state.score = Object.keys(state.verifiedMatches).filter(k => state.verifiedMatches[k] === true).length;
+      } else {
+        // Auto-clear wrong answer after brief delay in instant mode
+        setTimeout(() => {
+          if (state.verifiedMatches[wordId] === false) {
+            delete state.matches[wordId];
+            delete state.verifiedMatches[wordId];
+            updateUI();
+          }
+        }, 1200);
+      }
+    }
+
+    function checkAllAnswers() {
+      let correctCount = 0;
+      vocabularyData.forEach(item => {
+        const userLetter = state.matches[item.id];
+        if (userLetter) {
+          const isCorrect = userLetter === item.letter;
+          state.verifiedMatches[item.id] = isCorrect;
+          if (isCorrect) correctCount++;
+        }
+      });
+      state.score = correctCount;
+      updateUI();
+      checkCompletion();
+    }
+
+    function updateScore() {
+      const scoreElem = document.getElementById('score-count');
+      const correctCount = Object.keys(state.verifiedMatches).filter(k => state.verifiedMatches[k] === true).length;
+      scoreElem.textContent = correctCount;
+
+      checkCompletion();
+    }
+
+    function checkCompletion() {
+      const correctCount = Object.keys(state.verifiedMatches).filter(k => state.verifiedMatches[k] === true).length;
+      const completionCard = document.getElementById('completion-card');
+      
+      if (correctCount === 10) {
+        completionCard.classList.remove('hidden');
+      } else {
+        completionCard.classList.add('hidden');
+      }
+    }
+
+    function renderControls() {
+      const instantBtn = document.getElementById('mode-instant');
+      const submitBtn = document.getElementById('mode-submit');
+      const submitBar = document.getElementById('submit-bar');
+
+      if (state.mode === 'instant') {
+        instantBtn.className = "px-3 py-1.5 rounded-lg transition-all text-brand-700 bg-white shadow-xs font-bold";
+        submitBtn.className = "px-3 py-1.5 rounded-lg transition-all text-slate-500 hover:text-slate-700 font-medium";
+        submitBar.classList.add('hidden');
+      } else {
+        submitBtn.className = "px-3 py-1.5 rounded-lg transition-all text-brand-700 bg-white shadow-xs font-bold";
+        instantBtn.className = "px-3 py-1.5 rounded-lg transition-all text-slate-500 hover:text-slate-700 font-medium";
+        submitBar.classList.remove('hidden');
+      }
+    }
+
+    // Event Listeners
+    document.getElementById('reset-btn').onclick = () => init();
+    document.getElementById('try-again-btn').onclick = () => init();
+
+    document.getElementById('mode-instant').onclick = () => {
+      state.mode = 'instant';
+      state.verifiedMatches = {};
+      // Verify existing matches on switch
+      Object.keys(state.matches).forEach(wId => verifyPair(wId));
+      updateUI();
+    };
+
+    document.getElementById('mode-submit').onclick = () => {
+      state.mode = 'submit';
+      state.verifiedMatches = {};
+      updateUI();
+    };
+
+    document.getElementById('check-all-btn').onclick = () => {
+      checkAllAnswers();
+    };
+
+    // Initialize application
+    init();
+  </script>
+</body>
+</html>
