@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Vocabulary & Speaking Practice</title>
+  <style>
+    :root {
+      --bg-pink: #ffe6e8;
+      --bg-yellow: #fffde7;
+      --bg-green: #e8f5e9;
+      --card-pink: #fbcfe8;
+      --badge-green: #4ade80;
+      --primary-color: #334155;
+      --border-color: #cbd5e1;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8fafc;
+      color: var(--primary-color);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 850px;
+      width: 100%;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.35rem;
+      color: #1e293b;
+      margin-top: 15px;
+      margin-bottom: 20px;
+    }
+
+    .icon {
+      font-size: 1.4rem;
+    }
+
+    /* Vocabulary Table Styles */
+    .vocab-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 35px;
+      border-radius: 12px;
+      border: 1px solid #f1f5f9;
+    }
+
+    .vocab-table td {
+      padding: 18px 16px;
+      vertical-align: middle;
+      border: 1px solid #e2e8f0;
+      line-height: 1.6;
+    }
+
+    .vocab-table .col-left {
+      width: 40%;
+      background-color: var(--bg-pink);
+      font-weight: 600;
+    }
+
+    .vocab-table .col-right {
+      width: 60%;
+      background-color: #ffffff;
+    }
+
+    /* Tooltip & Audio feature */
+    .vocab-word {
+      position: relative;
+      display: inline-block;
+      border-bottom: 2px dashed #94a3b8;
+      cursor: help;
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    .vocab-word .tooltip {
+      visibility: hidden;
+      width: 210px;
+      background-color: #1e293b;
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 8px 10px;
+      position: absolute;
+      z-index: 100;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-weight: normal;
+      font-size: 0.88rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      line-height: 1.3;
+    }
+
+    /* Alternate display for first row tooltips so they won't get cut off */
+    .vocab-word.tooltip-down .tooltip {
+      bottom: auto;
+      top: 125%;
+    }
+
+    .vocab-word .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #1e293b transparent transparent transparent;
+    }
+
+    .vocab-word.tooltip-down .tooltip::after {
+      top: auto;
+      bottom: 100%;
+      border-color: transparent transparent #1e293b transparent;
+    }
+
+    .vocab-word:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .audio-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-left: 2px;
+      padding: 0 3px;
+      vertical-align: middle;
+      transition: transform 0.1s;
+    }
+
+    .audio-btn:hover {
+      transform: scale(1.2);
+    }
+
+    /* Rating System List */
+    .rating-list {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 0 0;
+    }
+
+    .rating-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      background-color: var(--badge-green);
+      color: #ffffff;
+      font-weight: bold;
+      padding: 4px 10px;
+      border-radius: 8px;
+      min-width: 45px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    /* Interactive Inputs Section */
+    .exercise-section {
+      background-color: var(--bg-yellow);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      border: 1px solid #fef08a;
+    }
+
+    .exercise-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    /* Collapsible Hints Box */
+    details.hints-box {
+      background-color: #ffffff;
+      border: 1px solid #fde047;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 15px;
+    }
+
+    details.hints-box summary {
+      font-weight: 600;
+      cursor: pointer;
+      color: #b45309;
+      outline: none;
+    }
+
+    .hints-content {
+      margin-top: 10px;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .hint-group {
+      margin-bottom: 10px;
+    }
+
+    .hint-group strong {
+      color: #92400e;
+    }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus, input[type="text"]:focus {
+      border-color: #a855f7;
+    }
+
+    .word-counter {
+      text-align: right;
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-top: 6px;
+    }
+
+    /* Questions section */
+    .questions-section {
+      background-color: var(--bg-green);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #bbf7d0;
+    }
+
+    .question-item {
+      margin-bottom: 16px;
+    }
+
+    .question-item label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- SECTION: Vocabulary Table -->
+  <h2><span class="icon">🎬</span> Read these phrases and their definitions</h2>
+  
+  <table class="vocab-table">
+    <tr>
+      <td class="col-left">What's it rated?</td>
+      <td class="col-right">
+        There is a <strong>system for 
+        <span class="vocab-word tooltip-down">rating<span class="tooltip">/ˈreɪtɪŋ/<br>оценивание / оцінювання</span></span> 
+        <button class="audio-btn" onclick="playAudio('rating')">🔊</button> movies</strong> - 
+        <span class="vocab-word tooltip-down">evaluating<span class="tooltip">/ɪˈvæljueɪtɪŋ/<br>оценивание / оцінювання</span></span>
+        <button class="audio-btn" onclick="playAudio('evaluating')">🔊</button>
+        how <span class="vocab-word tooltip-down">appropriate<span class="tooltip">/əˈprəʊpriət/<br>подходящий / відповідний</span></span> 
+        <button class="audio-btn" onclick="playAudio('appropriate')">🔊</button> 
+        the movie is for various ages. For the USA, this system is:
+        <ul class="rating-list">
+          <li><span class="badge">G</span> (General <span class="vocab-word">audience<span class="tooltip">/ˈɔːdiəns/<br>аудитория / аудиторія</span></span> <button class="audio-btn" onclick="playAudio('audience')">🔊</button>)</li>
+          <li><span class="badge">PG</span> (Parental <span class="vocab-word">guidance<span class="tooltip">/ˈɡaɪdns/<br>руководство / супровід</span></span> <button class="audio-btn" onclick="playAudio('guidance')">🔊</button> suggested)</li>
+          <li><span class="badge">PG13</span> (Parents strongly <span class="vocab-word">cautioned<span class="tooltip">/ˈkɔːʃnd/<br>предупреждены / застережені</span></span> <button class="audio-btn" onclick="playAudio('cautioned')">🔊</button>)</li>
+          <li><span class="badge">R</span> (<span class="vocab-word">Restricted<span class="tooltip">/rɪˈstrɪktɪd/<br>ограниченный / обмежений</span></span> <button class="audio-btn" onclick="playAudio('restricted')">🔊</button>)</li>
+          <li><span class="badge">NC-17</span> (Adults only)</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td class="col-left">The first film was a hit but the <span class="vocab-word">sequel<span class="tooltip">/ˈsiːkwəl/<br>сиквел (продолжение)</span></span> <button class="audio-btn" onclick="playAudio('sequel')">🔊</button> bombed.</td>
+      <td class="col-right">
+        Describing a movie as a <strong>"hit"</strong> means it's popular and successful. 
+        If you say a movie <strong>"<span class="vocab-word">bombed<span class="tooltip">/bɒmd/<br>провалился в прокате</span></span>"</strong> <button class="audio-btn" onclick="playAudio('bombed')">🔊</button>, 
+        it means it was a failure; it was not popular or successful.
+      </td>
+    </tr>
+    <tr>
+      <td class="col-left">Have you seen the <span class="vocab-word">trailer<span class="tooltip">/ˈtreɪlə/<br>трейлер</span></span>? <button class="audio-btn" onclick="playAudio('trailer')">🔊</button></td>
+      <td class="col-right">
+        A <strong>trailer</strong> is a 2-3 minute video <span class="vocab-word">summary<span class="tooltip">/ˈsʌməri/<br>краткое содержание / короткий зміст</span></span> <button class="audio-btn" onclick="playAudio('summary')">🔊</button> of a movie.
+      </td>
+    </tr>
+    <tr>
+      <td class="col-left">It's a <span class="vocab-word">feel-good<span class="tooltip">/ˈfiːlɡʊd/<br>душевный / душевний</span></span> movie! <button class="audio-btn" onclick="playAudio('feel-good')">🔊</button></td>
+      <td class="col-right">
+        A <strong>"feel-good"</strong> movie is one that makes you feel good, obviously.
+      </td>
+    </tr>
+  </table>
+
+  <!-- SECTION: Exercise 1 -->
+  <div class="exercise-section">
+    <h2><span class="icon">✏️</span> Make your own sentences using these words</h2>
+    <div class="exercise-title">a) hit/bombed; b) trailer; c) feel-good; d) rated</div>
+
+    <!-- Collapsible Hints -->
+    <details class="hints-box">
+      <summary>💡 Need ideas? Click here for hints!</summary>
+      <div class="hints-content">
+        <div class="hint-group">
+          <strong>a) hit / bombed:</strong>
+          <ul>
+            <li><em>Идея:</em> Сказать, что фильм был супер-успешным или провалился в кинотеатре.</li>
+            <li><em>Примеры:</em> "Avatar was a big hit, but the new superhero movie bombed." / "I thought the film would be a hit, but it bombed."</li>
+          </ul>
+        </div>
+        <div class="hint-group">
+          <strong>b) trailer:</strong>
+          <ul>
+            <li><em>Идея:</em> Сказать, что ты видел трейлер на YouTube или перед фильмом.</li>
+            <li><em>Примеры:</em> "I watched the trailer on YouTube yesterday." / "The trailer looked so cool and <span class="vocab-word">exciting<span class="tooltip">/ɪkˈsaɪtɪŋ/<br>захватывающий / захоплюючий</span></span> <button class="audio-btn" onclick="playAudio('exciting')">🔊</button>!"</li>
+          </ul>
+        </div>
+        <div class="hint-group">
+          <strong>c) feel-good:</strong>
+          <ul>
+            <li><em>Идея:</em> Описать добрый мультфильм или семейную комедию, которая поднимает настроение.</li>
+            <li><em>Примеры:</em> "Paddington is a perfect feel-good movie for the weekend." / "I love watching feel-good comedies when I feel tired."</li>
+          </ul>
+        </div>
+        <div class="hint-group">
+          <strong>d) rated:</strong>
+          <ul>
+            <li><em>Идея:</em> Написать возрастное ограничение твоего любимого фильма.</li>
+            <li><em>Примеры:</em> "This animated movie is rated PG." / "My favorite movie is rated PG-13 because it has some action."</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <textarea id="sentencesText" rows="5" placeholder="Type your sentences here..." oninput="updateWordCount()"></textarea>
+    <div class="word-counter" id="wordCount">0 слов</div>
+  </div>
+
+  <!-- SECTION: Exercise 2 -->
+  <div class="questions-section">
+    <h2><span class="icon">📣</span> Answer the questions!</h2>
+    
+    <div class="question-item">
+      <label for="q1">1. What type (with what rate) of movies do you usually watch?</label>
+      <input type="text" id="q1" placeholder="Type here...">
+    </div>
+
+    <div class="question-item">
+      <label for="q2">2. Do you watch movies with your parents?</label>
+      <input type="text" id="q2" placeholder="Type here...">
+    </div>
+
+    <div class="question-item">
+      <label for="q3">3. What was the last movie you watched?</label>
+      <input type="text" id="q3" placeholder="Type here...">
+    </div>
+
+    <div class="question-item">
+      <label for="q4">4. What movie are you planning to watch soon?</label>
+      <input type="text" id="q4" placeholder="Type here...">
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Text to Speech Functionality
+  function playAudio(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert("Audio synthesis is not supported in this browser.");
+    }
+  }
+
+  // Live Word Counter
+  function updateWordCount() {
+    const text = document.getElementById('sentencesText').value.trim();
+    const words = text ? text.split(/\s+/).filter(word => word.length > 0) : [];
+    document.getElementById('wordCount').innerText = words.length + " слов";
+  }
+</script>
+
+</body>
+</html>
