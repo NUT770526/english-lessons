@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose the Correct Answers - Reading & Listening</title>
+  <style>
+    :root {
+      --bg-pink: #ffe6e8;
+      --bg-yellow: #fffde7;
+      --primary-color: #334155;
+      --border-color: #cbd5e1;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8fafc;
+      color: var(--primary-color);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.35rem;
+      color: #1e293b;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    /* Reading Box */
+    .reading-section {
+      background-color: var(--bg-pink);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      border: 1px solid #fbcfe8;
+      line-height: 1.7;
+    }
+
+    .dialogue-line {
+      margin-bottom: 8px;
+    }
+
+    /* Quiz Section */
+    .quiz-section {
+      background-color: var(--bg-yellow);
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid #fef08a;
+    }
+
+    .question-block {
+      margin-bottom: 24px;
+    }
+
+    .question-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1e293b;
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #ffffff;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .option-label:hover {
+      border-color: #3b82f6;
+      background-color: #f8fafc;
+    }
+
+    .option-label input[type="radio"] {
+      accent-color: #3b82f6;
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Tooltip & Audio feature */
+    .vocab-word {
+      position: relative;
+      display: inline-block;
+      border-bottom: 2px dashed #94a3b8;
+      cursor: help;
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    .vocab-word .tooltip {
+      visibility: hidden;
+      width: 170px;
+      background-color: #1e293b;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 6px 8px;
+      position: absolute;
+      z-index: 100;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-weight: normal;
+      font-size: 0.82rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .vocab-word:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .audio-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      margin-left: 4px;
+      padding: 0 2px;
+      vertical-align: middle;
+    }
+
+    .audio-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .play-audio-bar {
+      margin-bottom: 12px;
+    }
+
+    .ctrl-btn {
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .ctrl-btn:hover {
+      background-color: #f1f5f9;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <h2>📖 Read and Choose</h2>
+
+  <!-- Reading Section -->
+  <div class="reading-section">
+    <div class="play-audio-bar">
+      <button class="ctrl-btn" onclick="playDialogue()">▶ Listen to Dialogue</button>
+    </div>
+    <div class="dialogue-line">
+      <strong>Michelle:</strong> Hi, my dear 
+      <span class="vocab-word">followers<span class="tooltip">/ˈfɒləʊəz/<br>подписчики / підписники</span></span> 
+      <button class="audio-btn" onclick="playWord('followers')">🔊</button>! Today we 
+      <span class="vocab-word">answer<span class="tooltip">/ˈɑːnsə/<br>отвечать / відповідати</span></span> 
+      <button class="audio-btn" onclick="playWord('answer')">🔊</button> your questions!
+    </div>
+    <div class="dialogue-line">
+      <strong>Amalia:</strong> Hello!
+    </div>
+    <div class="dialogue-line">
+      <strong>Michelle:</strong> Where are you from? I am from France.
+    </div>
+    <div class="dialogue-line">
+      <strong>Amalia:</strong> How 
+      <span class="vocab-word">old<span class="tooltip">/əʊld/<br>возраст / вік</span></span> 
+      <button class="audio-btn" onclick="playWord('old')">🔊</button> are you? I am 16, and she is 14.
+    </div>
+  </div>
+
+  <!-- Quiz Section -->
+  <div class="quiz-section">
+    <h2><span class="icon">❓</span> Choose the correct answers</h2>
+
+    <!-- Question 1 -->
+    <div class="question-block">
+      <div class="question-title">1. Where is Michelle from?</div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q1" value="spain"> Spain
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q1" value="france"> France
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q1" value="usa"> the USA
+        </label>
+      </div>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="question-block">
+      <div class="question-title">2. How old is Amalia?</div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q2" value="sixteen"> sixteen
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q2" value="seventeen"> seventeen
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q2" value="twenty"> twenty
+        </label>
+      </div>
+    </div>
+
+    <!-- Question 3 -->
+    <div class="question-block">
+      <div class="question-title">3. How old is Michelle?</div>
+      <div class="options-group">
+        <label class="option-label">
+          <input type="radio" name="q3" value="forty"> forty
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q3" value="fifteen"> fifteen
+        </label>
+        <label class="option-label">
+          <input type="radio" name="q3" value="fourteen"> fourteen
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function playWord(word) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  function playDialogue() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const text = "Hi, my dear followers! Today we answer your questions! Hello! Where are you from? I am from France. How old are you? I am 16, and she is 14.";
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+</script>
+
+</body>
+</html>
