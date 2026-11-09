@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 1. Match the words with their meanings</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #0d0f12;
+      color: #f1f5f9;
+    }
+    .word-hover {
+      cursor: pointer;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+    }
+    .word-hover:hover {
+      color: #38bdf8;
+    }
+    .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+      transform: translateY(6px);
+    }
+    .word-hover:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="min-h-screen py-10 px-4 font-sans antialiased">
+
+  <div class="max-w-3xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <header class="space-y-2">
+      <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+        Exercise 1. Match the words with their meanings
+      </h1>
+      <p class="text-slate-400 text-sm italic">
+        Соедини английские слова с украинским переводом.
+      </p>
+      <p class="text-xs text-sky-400 font-medium">
+        💡 Наведи на английское слово, чтобы увидеть транскрипцию и прослушать произношение!
+      </p>
+    </header>
+
+    <!-- Definitions Box (A - J) -->
+    <div class="bg-[#161a23] border border-slate-800 rounded-2xl p-6 shadow-xl">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm md:text-base font-medium text-slate-200">
+        <div><strong class="text-sky-400">A.</strong> порядок денний</div>
+        <div><strong class="text-sky-400">B.</strong> зарядний пристрій</div>
+        <div><strong class="text-sky-400">C.</strong> орієнтир, еталон</div>
+        <div><strong class="text-sky-400">D.</strong> дохід, виручка</div>
+        <div><strong class="text-sky-400">E.</strong> план поїздки</div>
+        <div><strong class="text-sky-400">F.</strong> навушники</div>
+        <div><strong class="text-sky-400">G.</strong> ділова пропозиція</div>
+        <div><strong class="text-sky-400">H.</strong> зацікавлена сторона</div>
+        <div><strong class="text-sky-400">I.</strong> накладні витрати</div>
+        <div><strong class="text-sky-400">J.</strong> валіза</div>
+      </div>
+    </div>
+
+    <!-- Questions Grid -->
+    <form id="quiz-form" onsubmit="event.preventDefault(); checkAnswers();" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      
+      <!-- 1. Revenue -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="word-hover text-lg font-bold text-white" onclick="speak('revenue')">
+            <span>1. revenue</span>
+            <i class="fa-solid fa-volume-high text-xs text-slate-500 hover:text-sky-400"></i>
+            <span class="tooltip-box absolute bottom-full left-0 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10">
+              /ˈrev.ən.juː/
+            </span>
+          </div>
+          <span id="feedback-1" class="text-sm font-bold"></span>
+        </div>
+        <select id="q1" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+          <option value="">Выбери букву</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+          <option value="J">J</option>
+        </select>
+      </div>
+
+      <!-- 2. Agenda -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="word-hover text-lg font-bold text-white" onclick="speak('agenda')">
+            <span>2. agenda</span>
+            <i class="fa-solid fa-volume-high text-xs text-slate-500 hover:text-sky-400"></i>
+            <span class="tooltip-box absolute bottom-full left-0 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10">
+              /əˈdʒen.də/
+            </span>
+          </div>
+          <span id="feedback-2" class="text-sm font-bold"></span>
+        </div>
+        <select id="q2" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+          <option value="">Выбери букву</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+          <option value="J">J</option>
+        </select>
+      </div>
+
+      <!-- 3. Suitcase -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="word-hover text-lg font-bold text-white" onclick="speak('suitcase')">
+            <span>3. suitcase</span>
+            <i class="fa-solid fa-volume-high text-xs text-slate-500 hover:text-sky-400"></i>
+            <span class="tooltip-box absolute bottom-full left-0 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10">
+              /ˈsuːt.keɪs/
+            </span>
+          </div>
+          <span id="feedback-3" class="text-sm font-bold"></span>
+        </div>
+        <select id="q3" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+          <option value="">Выбери букву</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+          <option value="J">J</option>
+        </select>
+      </div>
+
+      <!-- 4. Stakeholder -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="word-hover text-lg font-bold text-white" onclick="speak('stakeholder')">
+            <span>4. stakeholder</span>
+            <i class="fa-solid fa-volume-high text-xs text-slate-500 hover:text-sky-400"></i>
+            <span class="tooltip-box absolute bottom-full left-0 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10">
+              /ˈsteɪkˌhəʊl.də/
+            </span>
+          </div>
+          <span id="feedback-4" class="text-sm font-bold"></span>
+        </div>
+        <select id="q4" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+          <option value="">Выбери букву</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+          <option value="J">J</option>
+        </select>
+      </div>
+
+      <!-- 5. Charger -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="word-hover text-lg font-bold text-white" onclick="speak('charger')">
+            <span>5. charger</span>
+            <i class="fa-solid fa-volume-high text-xs text-slate-500 hover:text-sky-400"></i>
+            <span class="tooltip-box absolute bottom-full left-0 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10">
+              /ˈtʃɑː.dʒə/
+            </span>
+          </div>
+          <span id="feedback-5" class="text-sm font-bold"></span>
+        </div>
+        <select id="q5" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+          <option value="">Выбери букву</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+          <option value="J">J</option>
+        </select>
+      </div>
+
+      <!-- 6. Overhead -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="word-hover text-lg font-bold text-white" onclick="speak('overhead')">
+            <span>6. overhead</span>
+            <i class="fa-solid fa-volume-high text-xs text-slate-500 hover:text-sky-400"></i>
+            <span class="tooltip-box absolute bottom-full left-0 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10">
+              /ˈəʊ.və.hed/
+            </span>
+          </div>
+          <span id="feedback-6" class="text-sm font-bold"></span>
+        </div>
+        <select id="q6" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+          <option value="">Выбери букву</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+          <option value="J">J</option>
+        </select>
+      </div>
+
+      <!-- 7. Proposal -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="word-hover text-lg font-bold text-white" onclick="speak('proposal')">
+            <span>7. proposal</span>
+            <i class="fa-solid fa-volume-high text-xs text-slate-500 hover:text-sky-400"></i>
+            <span class="tooltip-box absolute bottom-full left-0 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10">
+              /prəˈpəʊ.zəl/
+            </span>
+          </div>
+          <span id="feedback-7" class="text-sm font-bold"></span>
+        </div>
+        <select id="q7" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+          <option value="">Выбери букву</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+          <option value="J">J</option>
+        </select>
+      </div>
+
+      <!-- 8. Headphones -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="word-hover text-lg font-bold text-white" onclick="speak('headphones')">
+            <span>8. headphones</span>
+            <i class="fa-solid fa-volume-high text-xs text-slate-500 hover:text-sky-400"></i>
+            <span class="tooltip-box absolute bottom-full left-0 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10">
+              /ˈhed.fəʊnz/
+            </span>
+          </div>
+          <span id="feedback-8" class="text-sm font-bold"></span>
+        </div>
+        <select id="q8" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+          <option value="">Выбери букву</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+          <option value="J">J</option>
+        </select>
+      </div>
+
+      <!-- 9. Benchmark -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="word-hover text-lg font-bold text-white" onclick="speak('benchmark')">
+            <span>9. benchmark</span>
+            <i class="fa-solid fa-volume-high text-xs text-slate-500 hover:text-sky-400"></i>
+            <span class="tooltip-box absolute bottom-full left-0 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10">
+              /ˈbentʃ.mɑːk/
+            </span>
+          </div>
+          <span id="feedback-9" class="text-sm font-bold"></span>
+        </div>
+        <select id="q9" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+          <option value="">Выбери букву</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+          <option value="J">J</option>
+        </select>
+      </div>
+
+      <!-- 10. Itinerary -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="word-hover text-lg font-bold text-white" onclick="speak('itinerary')">
+            <span>10. itinerary</span>
+            <i class="fa-solid fa-volume-high text-xs text-slate-500 hover:text-sky-400"></i>
+            <span class="tooltip-box absolute bottom-full left-0 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10">
+              /aɪˈtɪn.ər.ər.i/
+            </span>
+          </div>
+          <span id="feedback-10" class="text-sm font-bold"></span>
+        </div>
+        <select id="q10" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+          <option value="">Выбери букву</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+          <option value="J">J</option>
+        </select>
+      </div>
+
+    </form>
+
+    <!-- Action Bar -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#161a23] border border-slate-800 p-4 rounded-xl">
+      <button onclick="checkAnswers()" class="w-full sm:w-auto px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm rounded-xl transition-colors flex items-center justify-center gap-2">
+        <i class="fa-solid fa-check"></i> Проверить ответы
+      </button>
+      <div id="final-result" class="text-sm font-semibold text-slate-400"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const correctAnswers = {
+      q1: "D", // revenue -> дохід, виручка
+      q2: "A", // agenda -> порядок денний
+      q3: "J", // suitcase -> валіза
+      q4: "H", // stakeholder -> зацікавлена сторона
+      q5: "B", // charger -> зарядний пристрій
+      q6: "I", // overhead -> накладні витрати
+      q7: "G", // proposal -> ділова пропозиція
+      q8: "F", // headphones -> навушники
+      q9: "C", // benchmark -> орієнтир, еталон
+      q10: "E" // itinerary -> план поїздки
+    };
+
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function checkAnswers() {
+      let score = 0;
+      let total = Object.keys(correctAnswers).length;
+
+      for (let i = 1; i <= total; i++) {
+        const select = document.getElementById(`q${i}`);
+        const feedback = document.getElementById(`feedback-${i}`);
+        const userVal = select.value;
+
+        if (userVal === correctAnswers[`q${i}`]) {
+          score++;
+          select.className = "w-full bg-[#0d0f12] border-2 border-emerald-500 rounded-lg py-2.5 px-3 text-emerald-400 text-sm font-bold focus:outline-none";
+          feedback.className = "text-sm font-bold text-emerald-400";
+          feedback.innerText = "✓ Правильно";
+        } else if (userVal === "") {
+          select.className = "w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none";
+          feedback.innerText = "";
+        } else {
+          select.className = "w-full bg-[#0d0f12] border-2 border-rose-500 rounded-lg py-2.5 px-3 text-rose-400 text-sm font-bold focus:outline-none";
+          feedback.className = "text-sm font-bold text-rose-400";
+          feedback.innerText = "✗ Ошибка";
+        }
+      }
+
+      const resDiv = document.getElementById('final-result');
+      resDiv.innerHTML = `Результат: <span class="${score === total ? 'text-emerald-400' : 'text-sky-400'} font-bold">${score} / ${total}</span>`;
+    }
+  </script>
+</body>
+</html>
