@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 2. Make questions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #0d0f12;
+      color: #f1f5f9;
+    }
+    .word-hover {
+      cursor: pointer;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      border-bottom: 1px dashed #38bdf8;
+      transition: color 0.2s ease;
+    }
+    .word-hover:hover {
+      color: #38bdf8;
+    }
+    .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+      transform: translateY(6px);
+    }
+    .word-hover:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="min-h-screen py-10 px-4 font-sans antialiased">
+
+  <div class="max-w-3xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <header class="space-y-2">
+      <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+        Exercise 2. Make questions
+      </h1>
+      <p class="text-slate-400 text-sm italic">
+        Перетвори прості речення на загальні питання. Використовуй Do, Does, Did або Will.
+      </p>
+      <p class="text-xs text-sky-400 font-medium">
+        💡 Наведи на підкреслені слова, щоб побачити транскрипцію та прослухати вимову!
+      </p>
+    </header>
+
+    <!-- Questions Form -->
+    <form id="quiz-form" onsubmit="event.preventDefault(); checkAnswers();" class="space-y-4">
+      
+      <!-- 1 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <div>
+            1. You use a 
+            <span class="word-hover" onmouseenter="speak('laptop')">
+              laptop
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /ˈlæp.tɒp/ 🔊
+              </span>
+            </span> 
+            at work.
+          </div>
+          <span id="feedback-1" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q1" placeholder="Write a question..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 2 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <div>
+            2. Your company has 
+            <span class="word-hover" onmouseenter="speak('regular costs')">
+              regular costs
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /ˈreɡ.jə.lə kɒsts/ 🔊
+              </span>
+            </span>.
+          </div>
+          <span id="feedback-2" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q2" placeholder="Write a question..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 3 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <div>
+            3. They 
+            <span class="word-hover" onmouseenter="speak('compared')">
+              compared
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /kəmˈpeəd/ 🔊
+              </span>
+            </span> 
+            the prices yesterday.
+          </div>
+          <span id="feedback-3" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q3" placeholder="Write a question..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 4 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <div>
+            4. She prepared the 
+            <span class="word-hover" onmouseenter="speak('agenda')">
+              agenda
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /əˈdʒen.də/ 🔊
+              </span>
+            </span> 
+            last week.
+          </div>
+          <span id="feedback-4" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q4" placeholder="Write a question..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 5 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <div>
+            5. You will buy a new 
+            <span class="word-hover" onmouseenter="speak('charger')">
+              charger
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /ˈtʃɑː.dʒə/ 🔊
+              </span>
+            </span> 
+            tomorrow.
+          </div>
+          <span id="feedback-5" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q5" placeholder="Write a question..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 6 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <div>
+            6. The 
+            <span class="word-hover" onmouseenter="speak('manager')">
+              manager
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /ˈmæn.ɪ.dʒə/ 🔊
+              </span>
+            </span> 
+            will meet the 
+            <span class="word-hover" onmouseenter="speak('stakeholders')">
+              stakeholders
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /ˈsteɪkˌhəʊl.dəz/ 🔊
+              </span>
+            </span>.
+          </div>
+          <span id="feedback-6" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q6" placeholder="Write a question..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+    </form>
+
+    <!-- Controls -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#161a23] border border-slate-800 p-4 rounded-xl">
+      <button onclick="checkAnswers()" class="w-full sm:w-auto px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm rounded-xl transition-colors flex items-center justify-center gap-2">
+        <i class="fa-solid fa-check"></i> Перевірити відповіді
+      </button>
+      <div id="final-result" class="text-sm font-semibold text-slate-400"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // Target base answers for comparison
+    const targetAnswers = {
+      q1: "do you use a laptop at work",
+      q2: "does your company have regular costs",
+      q3: "did they compare the prices yesterday",
+      q4: "did she prepare the agenda last week",
+      q5: "will you buy a new charger tomorrow",
+      q6: "will the manager meet the stakeholders"
+    };
+
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function cleanString(str) {
+      return str
+        .trim()
+        .toLowerCase()
+        .replace(/\?/g, '') // remove trailing question mark for flexible comparison
+        .replace(/\s+/g, ' ');
+    }
+
+    function checkAnswers() {
+      let score = 0;
+      let total = Object.keys(targetAnswers).length;
+
+      for (let i = 1; i <= total; i++) {
+        const input = document.getElementById(`q${i}`);
+        const feedback = document.getElementById(`feedback-${i}`);
+        const userVal = cleanString(input.value);
+
+        if (userVal === targetAnswers[`q${i}`]) {
+          score++;
+          input.className = "w-full bg-[#0d0f12] border-2 border-emerald-500 rounded-lg py-2.5 px-3 text-emerald-400 text-sm font-bold focus:outline-none";
+          feedback.className = "text-sm font-bold text-emerald-400";
+          feedback.innerText = "✓ Правильно";
+        } else if (userVal === "") {
+          input.className = "w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none";
+          feedback.innerText = "";
+        } else {
+          input.className = "w-full bg-[#0d0f12] border-2 border-rose-500 rounded-lg py-2.5 px-3 text-rose-400 text-sm font-bold focus:outline-none";
+          feedback.className = "text-sm font-bold text-rose-400";
+          feedback.innerText = "✗ Помилка";
+        }
+      }
+
+      const resDiv = document.getElementById('final-result');
+      resDiv.innerHTML = `Результат: <span class="${score === total ? 'text-emerald-400' : 'text-sky-400'} font-bold">${score} / ${total}</span>`;
+    }
+  </script>
+</body>
+</html>
