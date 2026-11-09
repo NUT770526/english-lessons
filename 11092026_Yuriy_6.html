@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 3. Translate into English</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #0d0f12;
+      color: #f1f5f9;
+    }
+    .word-hover {
+      cursor: pointer;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      border-bottom: 1px dashed #38bdf8;
+      transition: color 0.2s ease;
+    }
+    .word-hover:hover {
+      color: #38bdf8;
+    }
+    .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+      transform: translateY(6px);
+    }
+    .word-hover:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="min-h-screen py-10 px-4 font-sans antialiased">
+
+  <div class="max-w-3xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <header class="space-y-2">
+      <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+        Exercise 3. Translate into English
+      </h1>
+      <p class="text-slate-400 text-sm italic">
+        Переклади речення з української на англійську. Визнач час і тип речення самостійно.
+      </p>
+      <p class="text-xs text-sky-400 font-medium">
+        💡 Наведи на підкреслені слова в підказках, щоб побачити транскрипцію та прослухати вимову!
+      </p>
+    </header>
+
+    <!-- Questions Form -->
+    <form id="quiz-form" onsubmit="event.preventDefault(); checkAnswers();" class="space-y-4">
+      
+      <!-- 1 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>1. Ми порівнюємо ціни щомісяця.</span>
+          <span id="feedback-1" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q1" placeholder="Your translation..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <span>Try it yourself first</span>
+          <button type="button" onclick="toggleAnswer(1)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors border border-slate-700">Show answer</button>
+        </div>
+        <div id="ans-1" class="hidden text-xs bg-[#0d0f12] border border-slate-800 p-3 rounded-lg text-slate-300">
+          <span class="text-sky-400 font-semibold">Answer:</span> We 
+          <span class="word-hover" onmouseenter="speak('compare')">
+            compare
+            <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">/kəmˈpeə/ 🔊</span>
+          </span> 
+          prices every month.
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>2. Я не використовую навушники на роботі.</span>
+          <span id="feedback-2" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q2" placeholder="Your translation..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <span>Try it yourself first</span>
+          <button type="button" onclick="toggleAnswer(2)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors border border-slate-700">Show answer</button>
+        </div>
+        <div id="ans-2" class="hidden text-xs bg-[#0d0f12] border border-slate-800 p-3 rounded-lg text-slate-300">
+          <span class="text-sky-400 font-semibold">Answer:</span> I don't use 
+          <span class="word-hover" onmouseenter="speak('headphones')">
+            headphones
+            <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">/ˈhed.fəʊnz/ 🔊</span>
+          </span> 
+          at work.
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>3. Ти перевірив план поїздки вчора?</span>
+          <span id="feedback-3" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q3" placeholder="Your translation..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <span>Try it yourself first</span>
+          <button type="button" onclick="toggleAnswer(3)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors border border-slate-700">Show answer</button>
+        </div>
+        <div id="ans-3" class="hidden text-xs bg-[#0d0f12] border border-slate-800 p-3 rounded-lg text-slate-300">
+          <span class="text-sky-400 font-semibold">Answer:</span> Did you check the 
+          <span class="word-hover" onmouseenter="speak('itinerary')">
+            itinerary
+            <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">/aɪˈtɪn.ər.ər.i/ 🔊</span>
+          </span> 
+          yesterday?
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>4. Ми не обговорювали пропозицію минулого тижня.</span>
+          <span id="feedback-4" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q4" placeholder="Your translation..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <span>Try it yourself first</span>
+          <button type="button" onclick="toggleAnswer(4)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors border border-slate-700">Show answer</button>
+        </div>
+        <div id="ans-4" class="hidden text-xs bg-[#0d0f12] border border-slate-800 p-3 rounded-lg text-slate-300">
+          <span class="text-sky-400 font-semibold">Answer:</span> We didn't discuss the 
+          <span class="word-hover" onmouseenter="speak('proposal')">
+            proposal
+            <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">/prəˈpəʊ.zəl/ 🔊</span>
+          </span> 
+          last week.
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>5. Компанія вимірюватиме результати наступного місяця.</span>
+          <span id="feedback-5" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q5" placeholder="Your translation..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <span>Try it yourself first</span>
+          <button type="button" onclick="toggleAnswer(5)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors border border-slate-700">Show answer</button>
+        </div>
+        <div id="ans-5" class="hidden text-xs bg-[#0d0f12] border border-slate-800 p-3 rounded-lg text-slate-300">
+          <span class="text-sky-400 font-semibold">Answer:</span> The company will 
+          <span class="word-hover" onmouseenter="speak('measure')">
+            measure
+            <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">/ˈmeʒ.ə/ 🔊</span>
+          </span> 
+          the results next month.
+        </div>
+      </div>
+
+      <!-- 6 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>6. Ти надішлеш порядок денний завтра?</span>
+          <span id="feedback-6" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q6" placeholder="Your translation..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <span>Try it yourself first</span>
+          <button type="button" onclick="toggleAnswer(6)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors border border-slate-700">Show answer</button>
+        </div>
+        <div id="ans-6" class="hidden text-xs bg-[#0d0f12] border border-slate-800 p-3 rounded-lg text-slate-300">
+          <span class="text-sky-400 font-semibold">Answer:</span> Will you send the 
+          <span class="word-hover" onmouseenter="speak('agenda')">
+            agenda
+            <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">/əˈdʒen.də/ 🔊</span>
+          </span> 
+          tomorrow?
+        </div>
+      </div>
+
+      <!-- 7 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>7. Цей годинник дорогий.</span>
+          <span id="feedback-7" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q7" placeholder="Your translation..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <span>Try it yourself first</span>
+          <button type="button" onclick="toggleAnswer(7)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors border border-slate-700">Show answer</button>
+        </div>
+        <div id="ans-7" class="hidden text-xs bg-[#0d0f12] border border-slate-800 p-3 rounded-lg text-slate-300">
+          <span class="text-sky-400 font-semibold">Answer:</span> This watch is 
+          <span class="word-hover" onmouseenter="speak('expensive')">
+            expensive
+            <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">/ɪkˈspen.sɪv/ 🔊</span>
+          </span>.
+        </div>
+      </div>
+
+      <!-- 8 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>8. Наші доходи не зросли минулого року.</span>
+          <span id="feedback-8" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q8" placeholder="Your translation..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <span>Try it yourself first</span>
+          <button type="button" onclick="toggleAnswer(8)" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors border border-slate-700">Show answer</button>
+        </div>
+        <div id="ans-8" class="hidden text-xs bg-[#0d0f12] border border-slate-800 p-3 rounded-lg text-slate-300">
+          <span class="text-sky-400 font-semibold">Answer:</span> Our 
+          <span class="word-hover" onmouseenter="speak('revenue')">
+            revenue
+            <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">/ˈrev.ən.juː/ 🔊</span>
+          </span> 
+          didn't grow last year.
+        </div>
+      </div>
+
+    </form>
+
+    <!-- Controls -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#161a23] border border-slate-800 p-4 rounded-xl">
+      <button onclick="checkAnswers()" class="w-full sm:w-auto px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm rounded-xl transition-colors flex items-center justify-center gap-2">
+        <i class="fa-solid fa-check"></i> Перевірити відповіді
+      </button>
+      <div id="final-result" class="text-sm font-semibold text-slate-400"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const validAnswers = {
+      q1: [
+        "we compare prices every month.",
+        "we compare prices every month"
+      ],
+      q2: [
+        "i don't use headphones at work.",
+        "i dont use headphones at work.",
+        "i do not use headphones at work.",
+        "i don't use headphones at work",
+        "i do not use headphones at work"
+      ],
+      q3: [
+        "did you check the itinerary yesterday?",
+        "did you check the itinerary yesterday"
+      ],
+      q4: [
+        "we didn't discuss the proposal last week.",
+        "we didnt discuss the proposal last week.",
+        "we did not discuss the proposal last week.",
+        "we didn't discuss the proposal last week",
+        "we did not discuss the proposal last week"
+      ],
+      q5: [
+        "the company will measure the results next month.",
+        "the company will measure results next month.",
+        "the company will measure its results next month.",
+        "the company will measure the results next month",
+        "the company will measure results next month"
+      ],
+      q6: [
+        "will you send the agenda tomorrow?",
+        "will you send the agenda tomorrow"
+      ],
+      q7: [
+        "this watch is expensive.",
+        "this watch is expensive"
+      ],
+      q8: [
+        "our revenue didn't grow last year.",
+        "our revenue didnt grow last year.",
+        "our revenue did not grow last year.",
+        "our revenues didn't grow last year.",
+        "our revenue didn't increase last year.",
+        "our revenue did not increase last year.",
+        "our revenue didn't grow last year"
+      ]
+    };
+
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleAnswer(id) {
+      const el = document.getElementById(`ans-${id}`);
+      el.classList.toggle('hidden');
+    }
+
+    function cleanString(str) {
+      return str
+        .trim()
+        .toLowerCase()
+        .replace(/’/g, "'")
+        .replace(/\s+/g, ' ');
+    }
+
+    function checkAnswers() {
+      let score = 0;
+      let total = Object.keys(validAnswers).length;
+
+      for (let i = 1; i <= total; i++) {
+        const input = document.getElementById(`q${i}`);
+        const feedback = document.getElementById(`feedback-${i}`);
+        const userVal = cleanString(input.value);
+
+        if (validAnswers[`q${i}`].includes(userVal)) {
+          score++;
+          input.className = "w-full bg-[#0d0f12] border-2 border-emerald-500 rounded-lg py-2.5 px-3 text-emerald-400 text-sm font-bold focus:outline-none";
+          feedback.className = "text-sm font-bold text-emerald-400";
+          feedback.innerText = "✓ Правильно";
+        } else if (userVal === "") {
+          input.className = "w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none";
+          feedback.innerText = "";
+        } else {
+          input.className = "w-full bg-[#0d0f12] border-2 border-rose-500 rounded-lg py-2.5 px-3 text-rose-400 text-sm font-bold focus:outline-none";
+          feedback.className = "text-sm font-bold text-rose-400";
+          feedback.innerText = "✗ Помилка";
+        }
+      }
+
+      const resDiv = document.getElementById('final-result');
+      resDiv.innerHTML = `Результат: <span class="${score === total ? 'text-emerald-400' : 'text-sky-400'} font-bold">${score} / ${total}</span>`;
+    }
+  </script>
+</body>
+</html>
