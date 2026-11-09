@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Privacy & Social Media - Interactive Listening Exercise</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #0d0f12;
+      color: #f1f5f9;
+    }
+    .word-hover {
+      cursor: pointer;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      border-bottom: 1.5px dashed #38bdf8;
+      color: #7dd3fc;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+    .word-hover:hover {
+      color: #38bdf8;
+      background-color: rgba(56, 189, 248, 0.1);
+    }
+    .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+      transform: translateY(6px);
+    }
+    .word-hover:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="min-h-screen py-10 px-4 font-sans antialiased">
+
+  <div class="max-w-3xl mx-auto space-y-8">
+    
+    <!-- Header -->
+    <header class="space-y-3 text-center sm:text-left border-b border-slate-800 pb-6">
+      <div class="inline-flex items-center gap-2 px-3 py-1 bg-sky-950/80 border border-sky-800/60 rounded-full text-xs font-semibold text-sky-400">
+        🎧 Listening & Comprehension Practice
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+        Data Privacy & Social Media
+      </h1>
+      <p class="text-slate-400 text-sm">
+        Прослухайте аудіозапис, ознайомтеся з транскриптом та виконайте завдання.
+      </p>
+    </header>
+
+    <!-- Audio Player Section -->
+    <section class="bg-[#161a23] border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+      <div class="flex items-center justify-between flex-wrap gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+            <i class="fa-solid fa-file-audio text-lg"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-white">Listen to the Audio</h2>
+            <p class="text-xs text-slate-400">Натисніть Play для прослуховування тексту</p>
+          </div>
+        </div>
+        
+        <button onclick="toggleTranscript()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-sky-400 hover:text-sky-300 font-semibold text-xs rounded-xl border border-slate-700 transition-all flex items-center gap-2">
+          <i class="fa-solid fa-align-left"></i>
+          <span id="transcript-btn-text">Показати транскрипт</span>
+        </button>
+      </div>
+
+      <!-- Native Audio Element -->
+      <audio controls class="w-full h-11 rounded-xl focus:outline-none">
+        <source src="audio.mp3" type="audio/mpeg">
+        Ваш браузер не підтримує аудіоелемент.
+      </audio>
+
+      <!-- Transcript Box (Hidden by default) -->
+      <div id="transcript-box" class="hidden pt-4 border-t border-slate-800 space-y-4">
+        <div class="flex items-center justify-between text-xs text-sky-400 font-medium">
+          <span>📝 Transcript</span>
+          <span>💡 Наведіть на підкреслені слова для підказки та вимови</span>
+        </div>
+        
+        <div class="bg-[#0d0f12] border border-slate-800 rounded-xl p-5 text-sm md:text-base leading-relaxed text-slate-300 space-y-4">
+          <p>
+            In today's world, we spend a lot of time online. Because of this, companies are 
+            <span class="word-hover" onmouseenter="speak('collecting')">collecting<span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap"><span class="block text-emerald-400 font-semibold">збирають</span>/kəˈlek.tɪŋ/ 🔊</span></span> 
+            a lot of 
+            <span class="word-hover" onmouseenter="speak('information')">information<span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap"><span class="block text-emerald-400 font-semibold">інформація</span>/ˌɪn.fəˈmeɪ.ʃən/ 🔊</span></span> 
+            about us.
+          </p>
+
+          <p>
+            The most common information they collect is from social media. Everything you post online, even if it's private, can be saved and looked at.
+          </p>
+
+          <p>
+            But it's not just social media. They also keep track of what you buy, what you watch, where you go, and even your personal 
+            <span class="word-hover" onmouseenter="speak('details')">details<span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap"><span class="block text-emerald-400 font-semibold">деталі / дані</span>/ˈdiː.teɪlz/ 🔊</span></span>. 
+            All this information helps companies understand us better.
+          </p>
+
+          <p>
+            They use special computer programs to send ads just for you. Some companies even try to understand your 
+            <span class="word-hover" onmouseenter="speak('personality')">personality<span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap"><span class="block text-emerald-400 font-semibold">особистість / характер</span>/ˌpɜː.sənˈæl.ə.ti/ 🔊</span></span> 
+            based on your online activity.
+          </p>
+
+          <p>
+            This collection of data is very 
+            <span class="word-hover" onmouseenter="speak('profitable')">profitable<span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap"><span class="block text-emerald-400 font-semibold">прибутковий</span>/ˈprɒf.ɪ.tə.bəl/ 🔊</span></span> 
+            for businesses. Everything you post or like can be collected. Even where you post from can be tracked. This could put your 
+            <span class="word-hover" onmouseenter="speak('privacy')">privacy<span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap"><span class="block text-emerald-400 font-semibold">конфіденційність</span>/ˈprɪv.ə.si/ 🔊</span></span> 
+            at 
+            <span class="word-hover" onmouseenter="speak('risk')">risk<span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap"><span class="block text-emerald-400 font-semibold">ризик</span>/rɪsk/ 🔊</span></span>.
+          </p>
+
+          <p>
+            If you 
+            <span class="word-hover" onmouseenter="speak('delete')">delete<span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap"><span class="block text-emerald-400 font-semibold">видаляти</span>/dɪˈliːt/ 🔊</span></span> 
+            your social media accounts, some personal information can still be found. It's important to know what happens to your data. Before you post something online, ask yourself these questions:
+          </p>
+
+          <ul class="list-disc list-inside space-y-1 text-sky-200 pl-2">
+            <li>Am I ok with this information being online forever?</li>
+            <li>Am I ok with anyone reading this?</li>
+            <li>Am I ok with this being used to understand who I am?</li>
+          </ul>
+
+          <p>
+            If you are, then feel free to share. Just remember to use social media 
+            <span class="word-hover" onmouseenter="speak('safely')">safely<span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap"><span class="block text-emerald-400 font-semibold">безпечно</span>/ˈseɪf.li/ 🔊</span></span>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Additional Exercise: Vocabulary Matching -->
+    <section class="bg-[#161a23] border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+      <div class="space-y-1">
+        <h2 class="text-xl font-bold text-white">Exercise 1. Vocabulary Matching</h2>
+        <p class="text-slate-400 text-xs italic">З'єднайте англійські терміни з їхнім перекладом згідно з текстом.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="vocab-matching-grid">
+        <!-- Item 1 -->
+        <div class="bg-[#0d0f12] border border-slate-800 p-3 rounded-xl flex items-center justify-between">
+          <span class="font-bold text-sky-300 text-sm">1. privacy</span>
+          <select id="v1" class="bg-[#161a23] border border-slate-700 rounded-lg py-1.5 px-2 text-slate-300 text-xs focus:outline-none">
+            <option value="">Виберіть...</option>
+            <option value="A">прибутковий</option>
+            <option value="B">конфіденційність</option>
+            <option value="C">ризик</option>
+            <option value="D">видаляти</option>
+          </select>
+        </div>
+        <!-- Item 2 -->
+        <div class="bg-[#0d0f12] border border-slate-800 p-3 rounded-xl flex items-center justify-between">
+          <span class="font-bold text-sky-300 text-sm">2. profitable</span>
+          <select id="v2" class="bg-[#161a23] border border-slate-700 rounded-lg py-1.5 px-2 text-slate-300 text-xs focus:outline-none">
+            <option value="">Виберіть...</option>
+            <option value="A">прибутковий</option>
+            <option value="B">конфіденційність</option>
+            <option value="C">ризик</option>
+            <option value="D">видаляти</option>
+          </select>
+        </div>
+        <!-- Item 3 -->
+        <div class="bg-[#0d0f12] border border-slate-800 p-3 rounded-xl flex items-center justify-between">
+          <span class="font-bold text-sky-300 text-sm">3. delete</span>
+          <select id="v3" class="bg-[#161a23] border border-slate-700 rounded-lg py-1.5 px-2 text-slate-300 text-xs focus:outline-none">
+            <option value="">Виберіть...</option>
+            <option value="A">прибутковий</option>
+            <option value="B">конфіденційність</option>
+            <option value="C">ризик</option>
+            <option value="D">видаляти</option>
+          </select>
+        </div>
+        <!-- Item 4 -->
+        <div class="bg-[#0d0f12] border border-slate-800 p-3 rounded-xl flex items-center justify-between">
+          <span class="font-bold text-sky-300 text-sm">4. at risk</span>
+          <select id="v4" class="bg-[#161a23] border border-slate-700 rounded-lg py-1.5 px-2 text-slate-300 text-xs focus:outline-none">
+            <option value="">Виберіть...</option>
+            <option value="A">прибутковий</option>
+            <option value="B">конфіденційність</option>
+            <option value="C">під ризиком</option>
+            <option value="D">видаляти</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Exercise: True or False (From Screenshot) -->
+    <section class="bg-[#161a23] border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-sm">
+          ✓
+        </div>
+        <h2 class="text-xl font-bold text-white">Exercise 2. Decide if the sentence are True or False</h2>
+      </div>
+
+      <form id="tf-form" class="space-y-4">
+        
+        <!-- Question 1 -->
+        <div class="bg-[#0d0f12] border border-slate-800 rounded-xl p-4 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm font-medium text-slate-200">
+            <span>1. Companies collect personal information mostly from social media.</span>
+            <select id="tf1" class="bg-[#161a23] border border-slate-700 rounded-lg py-2 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 min-w-[140px]">
+              <option value="">Select answer</option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+          </div>
+          <div id="tf1-fb" class="text-xs font-bold hidden"></div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="bg-[#0d0f12] border border-slate-800 rounded-xl p-4 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm font-medium text-slate-200">
+            <span>2. Businesses use data collection to understand customers and send personalized ads.</span>
+            <select id="tf2" class="bg-[#161a23] border border-slate-700 rounded-lg py-2 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 min-w-[140px]">
+              <option value="">Select answer</option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+          </div>
+          <div id="tf2-fb" class="text-xs font-bold hidden"></div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="bg-[#0d0f12] border border-slate-800 rounded-xl p-4 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm font-medium text-slate-200">
+            <span>3. Deleting your social media accounts ensures all personal data is completely removed.</span>
+            <select id="tf3" class="bg-[#161a23] border border-slate-700 rounded-lg py-2 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 min-w-[140px]">
+              <option value="">Select answer</option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+          </div>
+          <div id="tf3-fb" class="text-xs font-bold hidden"></div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="bg-[#0d0f12] border border-slate-800 rounded-xl p-4 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm font-medium text-slate-200">
+            <span>4. Companies never track where you post from.</span>
+            <select id="tf4" class="bg-[#161a23] border border-slate-700 rounded-lg py-2 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 min-w-[140px]">
+              <option value="">Select answer</option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+          </div>
+          <div id="tf4-fb" class="text-xs font-bold hidden"></div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="bg-[#0d0f12] border border-slate-800 rounded-xl p-4 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm font-medium text-slate-200">
+            <span>5. Some companies try to understand your personality based on your online activity.</span>
+            <select id="tf5" class="bg-[#161a23] border border-slate-700 rounded-lg py-2 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 min-w-[140px]">
+              <option value="">Select answer</option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+          </div>
+          <div id="tf5-fb" class="text-xs font-bold hidden"></div>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- Action Bar -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#161a23] border border-slate-800 p-4 rounded-xl">
+      <button onclick="checkAllAnswers()" class="w-full sm:w-auto px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm rounded-xl transition-colors flex items-center justify-center gap-2">
+        <i class="fa-solid fa-check"></i> Перевірити відповіді
+      </button>
+      <div id="final-result" class="text-sm font-semibold text-slate-400"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const correctTF = {
+      tf1: "True",  // Companies collect personal information mostly from social media.
+      tf2: "True",  // Businesses use data collection to understand customers and send personalized ads.
+      tf3: "False", // Deleting your social media accounts ensures all personal data is completely removed. (Text: "some personal information can still be found")
+      tf4: "False", // Companies never track where you post from. (Text: "Even where you post from can be tracked")
+      tf5: "True"   // Some companies try to understand your personality based on your online activity.
+    };
+
+    const correctVocab = {
+      v1: "B",
+      v2: "A",
+      v3: "D",
+      v4: "C"
+    };
+
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function toggleTranscript() {
+      const box = document.getElementById('transcript-box');
+      const btnText = document.getElementById('transcript-btn-text');
+      if (box.classList.contains('hidden')) {
+        box.classList.remove('hidden');
+        btnText.innerText = "Сховати транскрипт";
+      } else {
+        box.classList.add('hidden');
+        btnText.innerText = "Показати транскрипт";
+      }
+    }
+
+    function checkAllAnswers() {
+      let scoreTF = 0;
+      let totalTF = Object.keys(correctTF).length;
+
+      for (let i = 1; i <= totalTF; i++) {
+        const select = document.getElementById(`tf${i}`);
+        const fb = document.getElementById(`tf${i}-fb`);
+        const userVal = select.value;
+
+        fb.classList.remove('hidden');
+        if (userVal === correctTF[`tf${i}`]) {
+          scoreTF++;
+          select.className = "bg-[#0d0f12] border-2 border-emerald-500 rounded-lg py-2 px-3 text-emerald-400 text-sm font-bold focus:outline-none min-w-[140px]";
+          fb.className = "text-xs font-bold text-emerald-400";
+          fb.innerText = "✓ Правильно";
+        } else if (userVal === "") {
+          select.className = "bg-[#161a23] border border-slate-700 rounded-lg py-2 px-3 text-slate-300 text-sm focus:outline-none min-w-[140px]";
+          fb.innerText = "";
+        } else {
+          select.className = "bg-[#0d0f12] border-2 border-rose-500 rounded-lg py-2 px-3 text-rose-400 text-sm font-bold focus:outline-none min-w-[140px]";
+          fb.className = "text-xs font-bold text-rose-400";
+          fb.innerText = `✗ Помилка (Правильно: ${correctTF[`tf${i}`]})`;
+        }
+      }
+
+      // Check Vocabulary
+      for (let i = 1; i <= 4; i++) {
+        const select = document.getElementById(`v${i}`);
+        if (select.value === correctVocab[`v${i}`]) {
+          select.className = "bg-[#0d0f12] border-2 border-emerald-500 rounded-lg py-1.5 px-2 text-emerald-400 text-xs font-bold focus:outline-none";
+        } else if (select.value !== "") {
+          select.className = "bg-[#0d0f12] border-2 border-rose-500 rounded-lg py-1.5 px-2 text-rose-400 text-xs font-bold focus:outline-none";
+        }
+      }
+
+      const resDiv = document.getElementById('final-result');
+      resDiv.innerHTML = `Результат тесту: <span class="${scoreTF === totalTF ? 'text-emerald-400' : 'text-sky-400'} font-bold">${scoreTF} / ${totalTF}</span>`;
+    }
+  </script>
+</body>
+</html>
