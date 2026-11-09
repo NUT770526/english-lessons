@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 1. Make negative sentences</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #0d0f12;
+      color: #f1f5f9;
+    }
+    .word-hover {
+      cursor: pointer;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      border-bottom: 1px dashed #38bdf8;
+      transition: color 0.2s ease;
+    }
+    .word-hover:hover {
+      color: #38bdf8;
+    }
+    .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+      transform: translateY(6px);
+    }
+    .word-hover:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="min-h-screen py-10 px-4 font-sans antialiased">
+
+  <div class="max-w-3xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <header class="space-y-2">
+      <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+        Exercise 1. Make negative sentences
+      </h1>
+      <p class="text-slate-400 text-sm italic">
+        Перетвори стверджувальні речення на заперечні.
+      </p>
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-3 text-xs text-slate-300">
+        <span class="font-bold text-sky-400">Example:</span> I use my laptop every day. → <span class="text-emerald-400 font-semibold">I don't use my laptop every day.</span>
+      </div>
+      <p class="text-xs text-sky-400 font-medium">
+        💡 Наведи на підкреслені слова, щоб побачити транскрипцію та прослухати вимову!
+      </p>
+    </header>
+
+    <!-- Questions Form -->
+    <form id="quiz-form" onsubmit="event.preventDefault(); checkAnswers();" class="space-y-4">
+      
+      <!-- 1 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <div>
+            1. I 
+            <span class="word-hover" onmouseenter="speak('compare')">
+              compare
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /kəmˈpeə/ 🔊
+              </span>
+            </span> 
+            prices every month.
+          </div>
+          <span id="feedback-1" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q1" placeholder="Write a negative sentence..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 2 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <div>
+            2. She uses 
+            <span class="word-hover" onmouseenter="speak('headphones')">
+              headphones
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /ˈhed.fəʊnz/ 🔊
+              </span>
+            </span> 
+            at work.
+          </div>
+          <span id="feedback-2" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q2" placeholder="Write a negative sentence..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 3 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <div>
+            3. We discussed the 
+            <span class="word-hover" onmouseenter="speak('agenda')">
+              agenda
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /əˈdʒen.də/ 🔊
+              </span>
+            </span> 
+            yesterday.
+          </div>
+          <span id="feedback-3" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q3" placeholder="Write a negative sentence..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 4 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <div>
+            4. The company 
+            <span class="word-hover" onmouseenter="speak('measured')">
+              measured
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /ˈmeʒ.əd/ 🔊
+              </span>
+            </span> 
+            its 
+            <span class="word-hover" onmouseenter="speak('revenue')">
+              revenue
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /ˈrev.ən.juː/ 🔊
+              </span>
+            </span> 
+            last year.
+          </div>
+          <span id="feedback-4" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q4" placeholder="Write a negative sentence..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 5 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <div>
+            5. I will send the 
+            <span class="word-hover" onmouseenter="speak('proposal')">
+              proposal
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /prəˈpəʊ.zəl/ 🔊
+              </span>
+            </span> 
+            tomorrow.
+          </div>
+          <span id="feedback-5" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q5" placeholder="Write a negative sentence..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 6 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <div>
+            6. We will check the 
+            <span class="word-hover" onmouseenter="speak('itinerary')">
+              itinerary
+              <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs font-normal rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+                /aɪˈtɪn.ər.ər.i/ 🔊
+              </span>
+            </span> 
+            next week.
+          </div>
+          <span id="feedback-6" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q6" placeholder="Write a negative sentence..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+    </form>
+
+    <!-- Controls -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#161a23] border border-slate-800 p-4 rounded-xl">
+      <button onclick="checkAnswers()" class="w-full sm:w-auto px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm rounded-xl transition-colors flex items-center justify-center gap-2">
+        <i class="fa-solid fa-check"></i> Перевірити відповіді
+      </button>
+      <div id="final-result" class="text-sm font-semibold text-slate-400"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // Allowed variations for correct answers
+    const validAnswers = {
+      q1: [
+        "i don't compare prices every month.",
+        "i dont compare prices every month.",
+        "i do not compare prices every month."
+      ],
+      q2: [
+        "she doesn't use headphones at work.",
+        "she doesnt use headphones at work.",
+        "she does not use headphones at work."
+      ],
+      q3: [
+        "we didn't discuss the agenda yesterday.",
+        "we didnt discuss the agenda yesterday.",
+        "we did not discuss the agenda yesterday."
+      ],
+      q4: [
+        "the company didn't measure its revenue last year.",
+        "the company didnt measure its revenue last year.",
+        "the company did not measure its revenue last year."
+      ],
+      q5: [
+        "i won't send the proposal tomorrow.",
+        "i wont send the proposal tomorrow.",
+        "i will not send the proposal tomorrow."
+      ],
+      q6: [
+        "we won't check the itinerary next week.",
+        "we wont check the itinerary next week.",
+        "we will not check the itinerary next week."
+      ]
+    };
+
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function cleanString(str) {
+      return str
+        .trim()
+        .toLowerCase()
+        .replace(/’/g, "'")
+        .replace(/\s+/g, ' ');
+    }
+
+    function checkAnswers() {
+      let score = 0;
+      let total = Object.keys(validAnswers).length;
+
+      for (let i = 1; i <= total; i++) {
+        const input = document.getElementById(`q${i}`);
+        const feedback = document.getElementById(`feedback-${i}`);
+        const userVal = cleanString(input.value);
+
+        if (validAnswers[`q${i}`].includes(userVal)) {
+          score++;
+          input.className = "w-full bg-[#0d0f12] border-2 border-emerald-500 rounded-lg py-2.5 px-3 text-emerald-400 text-sm font-bold focus:outline-none";
+          feedback.className = "text-sm font-bold text-emerald-400";
+          feedback.innerText = "✓ Правильно";
+        } else if (userVal === "") {
+          input.className = "w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none";
+          feedback.innerText = "";
+        } else {
+          input.className = "w-full bg-[#0d0f12] border-2 border-rose-500 rounded-lg py-2.5 px-3 text-rose-400 text-sm font-bold focus:outline-none";
+          feedback.className = "text-sm font-bold text-rose-400";
+          feedback.innerText = "✗ Помилка";
+        }
+      }
+
+      const resDiv = document.getElementById('final-result');
+      resDiv.innerHTML = `Результат: <span class="${score === total ? 'text-emerald-400' : 'text-sky-400'} font-bold">${score} / ${total}</span>`;
+    }
+  </script>
+</body>
+</html>
