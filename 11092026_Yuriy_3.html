@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 2. Complete the sentences</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #0d0f12;
+      color: #f1f5f9;
+    }
+    .word-hover {
+      cursor: pointer;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.2s ease;
+    }
+    .word-hover:hover {
+      color: #38bdf8;
+    }
+    .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+      transform: translateY(6px);
+    }
+    .word-hover:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="min-h-screen py-10 px-4 font-sans antialiased">
+
+  <div class="max-w-3xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <header class="space-y-2">
+      <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+        Exercise 2. Complete the sentences
+      </h1>
+      <p class="text-slate-400 text-sm italic">
+        Встав відповідне слово. Усі слова використовуються по одному разу.
+      </p>
+      <p class="text-xs text-sky-400 font-medium">
+        💡 Наведи на слово з підказкою, щоб побачити транскрипцію та прослухати вимову!
+      </p>
+    </header>
+
+    <!-- Word Bank Box -->
+    <div class="bg-[#161a23] border border-slate-800 rounded-2xl p-5 shadow-xl space-y-3">
+      <div class="text-xs font-bold uppercase tracking-wider text-slate-400">WORD BANK</div>
+      <div class="flex flex-wrap gap-2 text-sm font-medium">
+        
+        <span class="word-hover bg-[#0d0f12] border border-slate-700 px-3 py-1.5 rounded-lg" onmouseenter="speak('wallet')">
+          <span>wallet</span>
+          <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+            /ˈwɒl.ɪt/
+          </span>
+        </span>
+
+        <span class="word-hover bg-[#0d0f12] border border-slate-700 px-3 py-1.5 rounded-lg" onmouseenter="speak('regular costs')">
+          <span>regular costs</span>
+          <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+            /ˈreɡ.jə.lə kɒsts/
+          </span>
+        </span>
+
+        <span class="word-hover bg-[#0d0f12] border border-slate-700 px-3 py-1.5 rounded-lg" onmouseenter="speak('compare')">
+          <span>compare</span>
+          <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+            /kəmˈpeə/
+          </span>
+        </span>
+
+        <span class="word-hover bg-[#0d0f12] border border-slate-700 px-3 py-1.5 rounded-lg" onmouseenter="speak('measure')">
+          <span>measure</span>
+          <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+            /ˈmeʒ.ə/
+          </span>
+        </span>
+
+        <span class="word-hover bg-[#0d0f12] border border-slate-700 px-3 py-1.5 rounded-lg" onmouseenter="speak('expensive')">
+          <span>expensive</span>
+          <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+            /ɪkˈspen.sɪv/
+          </span>
+        </span>
+
+        <span class="word-hover bg-[#0d0f12] border border-slate-700 px-3 py-1.5 rounded-lg" onmouseenter="speak('revenue')">
+          <span>revenue</span>
+          <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+            /ˈrev.ən.juː/
+          </span>
+        </span>
+
+        <span class="word-hover bg-[#0d0f12] border border-slate-700 px-3 py-1.5 rounded-lg" onmouseenter="speak('charger')">
+          <span>charger</span>
+          <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+            /ˈtʃɑː.dʒə/
+          </span>
+        </span>
+
+        <span class="word-hover bg-[#0d0f12] border border-slate-700 px-3 py-1.5 rounded-lg" onmouseenter="speak('proposal')">
+          <span>proposal</span>
+          <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+            /prəˈpəʊ.zəl/
+          </span>
+        </span>
+
+        <span class="word-hover bg-[#0d0f12] border border-slate-700 px-3 py-1.5 rounded-lg" onmouseenter="speak('itinerary')">
+          <span>itinerary</span>
+          <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+            /aɪˈtɪn.ər.ər.i/
+          </span>
+        </span>
+
+        <span class="word-hover bg-[#0d0f12] border border-slate-700 px-3 py-1.5 rounded-lg" onmouseenter="speak('headphones')">
+          <span>headphones</span>
+          <span class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-slate-900 border border-slate-700 text-sky-300 text-xs rounded-lg py-1 px-3 shadow-2xl font-mono pointer-events-none z-10 whitespace-nowrap">
+            /ˈhed.fəʊnz/
+          </span>
+        </span>
+
+      </div>
+    </div>
+
+    <!-- Questions Form -->
+    <form id="quiz-form" onsubmit="event.preventDefault(); checkAnswers();" class="space-y-4">
+      
+      <!-- 1 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>1. I keep my money in my ___.</span>
+          <span id="feedback-1" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q1" placeholder="Type the missing word..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 2 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>2. Our company has ___ every month.</span>
+          <span id="feedback-2" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q2" placeholder="Type the missing word..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 3 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>3. We ___ prices before we buy new laptops.</span>
+          <span id="feedback-3" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q3" placeholder="Type the missing word..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 4 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>4. We need to ___ our results.</span>
+          <span id="feedback-4" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q4" placeholder="Type the missing word..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 5 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>5. This watch is very ___. It costs $500.</span>
+          <span id="feedback-5" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q5" placeholder="Type the missing word..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 6 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>6. Our company's ___ increased last year.</span>
+          <span id="feedback-6" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q6" placeholder="Type the missing word..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 7 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>7. My phone battery is low. I need a ___.</span>
+          <span id="feedback-7" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q7" placeholder="Type the missing word..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 8 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>8. I will send the business ___ tomorrow.</span>
+          <span id="feedback-8" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q8" placeholder="Type the missing word..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 9 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>9. We checked our travel ___ yesterday.</span>
+          <span id="feedback-9" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q9" placeholder="Type the missing word..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+      <!-- 10 -->
+      <div class="bg-[#161a23] border border-slate-800 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between text-base font-bold text-white">
+          <span>10. I use ___ for online meetings.</span>
+          <span id="feedback-10" class="text-sm font-bold"></span>
+        </div>
+        <input type="text" id="q10" placeholder="Type the missing word..." autocomplete="off" class="w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none focus:border-sky-500 transition-colors">
+      </div>
+
+    </form>
+
+    <!-- Controls -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#161a23] border border-slate-800 p-4 rounded-xl">
+      <button onclick="checkAnswers()" class="w-full sm:w-auto px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm rounded-xl transition-colors flex items-center justify-center gap-2">
+        <i class="fa-solid fa-check"></i> Перевірити відповіді
+      </button>
+      <div id="final-result" class="text-sm font-semibold text-slate-400"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const correctAnswers = {
+      q1: "wallet",
+      q2: "regular costs",
+      q3: "compare",
+      q4: "measure",
+      q5: "expensive",
+      q6: "revenue",
+      q7: "charger",
+      q8: "proposal",
+      q9: "itinerary",
+      q10: "headphones"
+    };
+
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function checkAnswers() {
+      let score = 0;
+      let total = Object.keys(correctAnswers).length;
+
+      for (let i = 1; i <= total; i++) {
+        const input = document.getElementById(`q${i}`);
+        const feedback = document.getElementById(`feedback-${i}`);
+        const userVal = input.value.trim().toLowerCase();
+
+        if (userVal === correctAnswers[`q${i}`]) {
+          score++;
+          input.className = "w-full bg-[#0d0f12] border-2 border-emerald-500 rounded-lg py-2.5 px-3 text-emerald-400 text-sm font-bold focus:outline-none";
+          feedback.className = "text-sm font-bold text-emerald-400";
+          feedback.innerText = "✓ Правильно";
+        } else if (userVal === "") {
+          input.className = "w-full bg-[#0d0f12] border border-slate-700 rounded-lg py-2.5 px-3 text-slate-300 text-sm focus:outline-none";
+          feedback.innerText = "";
+        } else {
+          input.className = "w-full bg-[#0d0f12] border-2 border-rose-500 rounded-lg py-2.5 px-3 text-rose-400 text-sm font-bold focus:outline-none";
+          feedback.className = "text-sm font-bold text-rose-400";
+          feedback.innerText = "✗ Помилка";
+        }
+      }
+
+      const resDiv = document.getElementById('final-result');
+      resDiv.innerHTML = `Результат: <span class="${score === total ? 'text-emerald-400' : 'text-sky-400'} font-bold">${score} / ${total}</span>`;
+    }
+  </script>
+</body>
+</html>
