@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="uk" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business English: Answer About Yourself</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FEF9E7;
+        }
+        .card-mint {
+            background-color: #EAFAF1;
+        }
+        /* Smooth hover reveal for Ukrainian translation */
+        .translation-reveal .uk-text {
+            filter: blur(5px);
+            opacity: 0.45;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        .translation-reveal:hover .uk-text,
+        .translation-reveal.revealed .uk-text {
+            filter: blur(0);
+            opacity: 1;
+            user-select: text;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-full flex flex-col justify-between selection:bg-emerald-200 selection:text-emerald-950">
+
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur border-b border-amber-200/80 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="bg-emerald-600 text-white p-2.5 rounded-2xl shadow-sm font-bold text-xl flex items-center justify-center w-11 h-11">
+                    💬
+                </div>
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Speaking & Writing Practice</span>
+                    <h1 class="text-lg sm:text-xl font-bold text-slate-900">Exercise 3. Answer about yourself</h1>
+                </div>
+            </div>
+            <!-- Progress indicator -->
+            <div class="flex items-center space-x-3 bg-[#FEF9E7] px-4 py-2 rounded-2xl border border-amber-200">
+                <span class="text-xs font-medium text-slate-600">Заповнено відповідей:</span>
+                <span id="progress-counter" class="text-sm font-bold text-emerald-700">0 / 5</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8">
+
+        <!-- Friendly Instructions Banner -->
+        <section class="bg-white border border-amber-200/90 rounded-2xl p-6 shadow-sm mb-8">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <span>🎯 Як виконати цю вправу легко та із задоволенням:</span>
+                    </h2>
+                    <ul class="text-sm text-slate-600 mt-2 space-y-1.5 list-disc list-inside">
+                        <li>Дайте відповіді <b>повними реченнями</b> (Answer in full sentences) про ваш реальний робочий досвід.</li>
+                        <li>Натискайте на <b>готові фрази-підказки</b> під полем вводу, щоб швидко розпочати речення, а далі допишіть деталі.</li>
+                        <li>Прослухайте питання або власну відповідь за допомогою кнопки озвучення 🔊.</li>
+                        <li>Коли завершите — натисніть <b>«Готово / Підсумок для викладача»</b> внизу сторінки, щоб скопіювати всі відповіді одним кліком.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Questions Container -->
+        <div id="questions-list" class="space-y-6">
+            <!-- Cards rendered dynamically via JS -->
+        </div>
+
+        <!-- Bottom Action Bar -->
+        <div class="mt-10 bg-white border border-emerald-200 rounded-2xl p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-center sm:text-left">
+                <h3 class="font-bold text-slate-900 text-base">Завершили всі 5 речень?</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Сформуйте гарний список ваших відповідей для читання вголос або відправки викладачу в чат.</p>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-3 w-full sm:w-auto">
+                <button onclick="clearAllAnswers()" class="px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-600 text-sm font-medium transition">
+                    Очистити все
+                </button>
+                <button onclick="openSummaryModal()" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
+                    <span>📋 Готово / Підсумок для викладача</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Summary Modal for Teacher Review -->
+    <div id="summary-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white border border-emerald-200 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center pb-4 border-b border-slate-100">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">My Business English Answers</span>
+                    <h3 class="text-xl font-bold text-slate-900">Підсумок відповідей для викладача</h3>
+                </div>
+                <button onclick="closeSummaryModal()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold transition">
+                    ✕
+                </button>
+            </div>
+
+            <div id="summary-content" class="my-5 overflow-y-auto space-y-4 pr-1 text-sm">
+                <!-- Populated dynamically -->
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span id="copy-status" class="text-xs font-medium text-emerald-700 hidden">✅ Скопійовано в буфер обміну! Можете вставляти в чат.</span>
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-end ml-auto">
+                    <button onclick="closeSummaryModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm transition">
+                        Повернутися до редагування
+                    </button>
+                    <button onclick="copySummaryText()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-sm transition flex items-center gap-2">
+                        <span>📄 Скопіювати все для чату</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Notification Toast -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-lg text-sm font-medium transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <span id="toast-icon">🔊</span>
+        <span id="toast-message">Озвучення...</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white/70 border-t border-amber-200/60 text-center py-4 text-xs text-slate-500 mt-8">
+        <p>Business English Interactive Worksheet • Present Simple & Everyday Work Habits ✨</p>
+    </footer>
+
+    <!-- Application Logic -->
+    <script>
+        // Structured questions data based on Exercise 3
+        const questionsData = [
+            {
+                id: 1,
+                question: "Do you usually take a laptop on business trips?",
+                phonetics: "/duː juː ˈjuːʒuəli teɪk ə ˈlæptɒp ɒn ˈbɪznəs trɪps/",
+                keyVocab: "usually /ˈjuːʒuəli/ — зазвичай • business trips /ˈbɪznəs trɪps/ — відрядження",
+                translation: "Ви зазвичай берете ноутбук у робочі поїздки (відрядження)?",
+                starters: [
+                    "Yes, I usually take a laptop on business trips.",
+                    "Yes, I always take my work laptop with me.",
+                    "No, I don't take a laptop on business trips.",
+                    "No, I don't go on business trips very often."
+                ],
+                placeholder: "Наприклад: Yes, I usually take my laptop on business trips because I need to check emails..."
+            },
+            {
+                id: 2,
+                question: "Do you prefer a big suitcase or a small bag?",
+                phonetics: "/duː juː prɪˈfɜːr ə bɪɡ ˈsuːtkeɪs ɔːr ə smɔːl bæɡ/",
+                keyVocab: "prefer /prɪˈfɜːr/ — надавати перевагу • suitcase /ˈsuːtkeɪs/ — валіза",
+                translation: "Ви надаєте перевагу великій валізі чи маленькій сумці?",
+                starters: [
+                    "I prefer a small bag because it is light.",
+                    "I prefer a big suitcase for long trips.",
+                    "I usually prefer a small bag for short trips.",
+                    "It depends, but I prefer a..."
+                ],
+                placeholder: "Наприклад: I prefer a small bag for short business trips because it is very convenient..."
+            },
+            {
+                id: 3,
+                question: "Do you wear a watch at work?",
+                phonetics: "/duː juː weər ə wɒtʃ æt wɜːk/",
+                keyVocab: "wear /weər/ — носити (на собі) • watch /wɒtʃ/ — наручний годинник",
+                translation: "Ви носите годинник на роботі?",
+                starters: [
+                    "Yes, I wear a watch at work every day.",
+                    "Yes, I wear a smart watch at work.",
+                    "No, I don't wear a watch at work.",
+                    "No, I don't wear a watch; I check the time on my phone."
+                ],
+                placeholder: "Наприклад: Yes, I wear an Apple Watch at work to see notifications..."
+            },
+            {
+                id: 4,
+                question: "Does your company give employees laptops?",
+                phonetics: "/dʌz jɔː ˈkʌmpəni ɡɪv ɪmˈplɔɪiːz ˈlæptɒps/",
+                keyVocab: "company /ˈkʌmpəni/ — компанія • employees /ɪmˈplɔɪiːz/ — співробітники",
+                translation: "Ваша компанія видає співробітникам ноутбуки?",
+                starters: [
+                    "Yes, my company gives employees laptops.",
+                    "Yes, my company gives every employee a corporate laptop.",
+                    "No, my company doesn't give employees laptops.",
+                    "No, I use my personal laptop for work."
+                ],
+                placeholder: "Наприклад: Yes, my company gives employees modern laptops for office and remote work..."
+            },
+            {
+                id: 5,
+                question: "Do you use AirPods during online meetings?",
+                phonetics: "/duː juː juːz ˈeəpɒdz ˈdjʊərɪŋ ˈɒnlaɪn ˈmiːtɪŋz/",
+                keyVocab: "during /ˈdjʊərɪŋ/ — під час • online meetings /ˈɒnlaɪn ˈmiːtɪŋz/ — онлайн-зустрічі",
+                translation: "Ви використовуєте AirPods під час онлайн-зустрічей?",
+                starters: [
+                    "Yes, I use AirPods during online meetings.",
+                    "Yes, I always use AirPods because the sound is clear.",
+                    "No, I don't use AirPods during online meetings.",
+                    "No, I use regular headphones during online meetings."
+                ],
+                placeholder: "Наприклад: Yes, I use AirPods during online meetings so I can hear my colleagues clearly..."
+            }
+        ];
+
+        // Store student answers
+        let studentAnswers = {
+            1: "",
+            2: "",
+            3: "",
+            4: "",
+            5: ""
+        };
+
+        // Render all 5 question cards on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderQuestions();
+            updateProgress();
+        });
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-list');
+            container.innerHTML = '';
+
+            questionsData.forEach((item) => {
+                const card = document.createElement('div');
+                card.className = "card-mint border border-emerald-200/90 rounded-2xl p-6 sm:p-7 shadow-sm transition hover:shadow-md";
+
+                // Build starter chips HTML
+                const chipsHtml = item.starters.map((starter) => `
+                    <button 
+                        type="button"
+                        onclick="applyStarter(${item.id}, '${starter.replace(/'/g, "\\'")}')"
+                        class="text-left text-xs sm:text-sm bg-white hover:bg-emerald-600 text-emerald-900 hover:text-white border border-emerald-300/80 px-3 py-1.5 rounded-xl shadow-xs transition duration-150 font-medium cursor-pointer"
+                        title="Натисніть, щоб вставити цю фразу у поле відповіді"
+                    >
+                        + ${starter}
+                    </button>
+                `).join('');
+
+                card.innerHTML = `
+                    <!-- Card Header: Number + Question + TTS Button -->
+                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-emerald-600 text-white font-bold text-sm w-7 h-7 rounded-xl flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                                ${item.id}
+                            </span>
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-bold text-slate-900 leading-snug">
+                                    ${item.question}
+                                </h3>
+                                <p class="text-xs font-mono text-emerald-800/80 mt-1">${item.phonetics}</p>
+                            </div>
+                        </div>
+
+                        <button 
+                            type="button"
+                            onclick="speakText('${item.question.replace(/'/g, "\\'")}')"
+                            class="self-start sm:self-center shrink-0 inline-flex items-center gap-1.5 bg-white hover:bg-amber-50 text-slate-700 border border-amber-200 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xs transition cursor-pointer"
+                        >
+                            <span>🔊</span>
+                            <span>Прослухати</span>
+                        </button>
+                    </div>
+
+                    <!-- Vocabulary Hint & Hover-to-Reveal Ukrainian Translation -->
+                    <div class="bg-white/75 rounded-xl p-3.5 border border-emerald-200/60 mb-4 space-y-1.5">
+                        <div class="text-xs text-slate-600">
+                            <span class="font-semibold text-emerald-800">📖 Словничок:</span> ${item.keyVocab}
+                        </div>
+                        <div 
+                            class="translation-reveal text-xs flex flex-wrap items-center gap-2 cursor-pointer pt-1 border-t border-slate-200/60"
+                            onclick="this.classList.toggle('revealed')"
+                            title="Наведіть курсор або натисніть, щоб побачити переклад"
+                        >
+                            <span class="text-amber-700 font-semibold">🇺🇦 Наведіть, щоб побачити переклад:</span>
+                            <span class="uk-text text-slate-800 font-medium">${item.translation}</span>
+                        </div>
+                    </div>
+
+                    <!-- Sentence Starter Chips -->
+                    <div class="mb-3">
+                        <span class="text-xs font-semibold text-slate-600 block mb-2">
+                            ✨ Конструктор початку речення (натисніть, щоб підставити):
+                        </span>
+                        <div class="flex flex-wrap gap-2">
+                            ${chipsHtml}
+                        </div>
+                    </div>
+
+                    <!-- Student Full Sentence Input Area -->
+                    <div class="relative mt-3">
+                        <label for="answer-input-${item.id}" class="sr-only">Ваша відповідь англійською</label>
+                        <textarea 
+                            id="answer-input-${item.id}"
+                            rows="2"
+                            oninput="handleInput(${item.id}, this.value)"
+                            placeholder="${item.placeholder}"
+                            class="w-full rounded-xl border border-emerald-300 bg-white p-3.5 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-inner transition resize-y"
+                        >${studentAnswers[item.id]}</textarea>
+
+                        <!-- Bottom Mini Controls inside input area -->
+                        <div class="flex flex-wrap items-center justify-between gap-2 mt-2">
+                            <span id="status-badge-${item.id}" class="text-xs text-slate-500">
+                                Напишіть повне речення про себе
+                            </span>
+                            <div class="flex items-center gap-2">
+                                <button 
+                                    type="button"
+                                    onclick="speakStudentAnswer(${item.id})"
+                                    class="inline-flex items-center gap-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer"
+                                >
+                                    <span>🗣️</span>
+                                    <span>Слухати мою відповідь</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Insert or replace starter phrase in textarea
+        function applyStarter(id, starterText) {
+            const textarea = document.getElementById(`answer-input-${id}`);
+            const currentVal = textarea.value.trim();
+
+            if (!currentVal) {
+                textarea.value = starterText;
+            } else {
+                // If the user already has text, replace if it matches another starter, otherwise append smoothly
+                const isExistingStarter = questionsData.find(q => q.id === id).starters.some(s => currentVal === s);
+                if (isExistingStarter) {
+                    textarea.value = starterText;
+                } else {
+                    textarea.value = starterText + " " + currentVal;
+                }
+            }
+
+            textarea.focus();
+            handleInput(id, textarea.value);
+        }
+
+        // Update state and progress when student types
+        function handleInput(id, value) {
+            studentAnswers[id] = value;
+            const badge = document.getElementById(`status-badge-${id}`);
+            if (value.trim().length > 0) {
+                badge.innerHTML = `<span class="text-emerald-700 font-semibold">✓ Відповідь записана</span>`;
+            } else {
+                badge.innerHTML = `Напишіть повне речення про себе`;
+            }
+            updateProgress();
+        }
+
+        // Update header progress counter
+        function updateProgress() {
+            const filledCount = Object.values(studentAnswers).filter(ans => ans.trim().length > 0).length;
+            document.getElementById('progress-counter').textContent = `${filledCount} / ${questionsData.length}`;
+        }
+
+        // Web Speech API (TTS) for native English pronunciation
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) {
+                showToast("⚠️", "Ваш браузер не підтримує озвучення тексту.");
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.92; // Slightly slower for comfortable learner comprehension
+
+            // Prefer natural English voice if available
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => v.lang.includes('en-US') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha')))
+                                || voices.find(v => v.lang.startsWith('en'));
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+
+            showToast("🔊", "Озвучення англійською...");
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Speak what the student typed in their answer field
+        function speakStudentAnswer(id) {
+            const text = studentAnswers[id].trim();
+            if (!text) {
+                showToast("✍️", "Спочатку оберіть підказку або напишіть вашу відповідь.");
+                return;
+            }
+            speakText(text);
+        }
+
+        // Clear all answers
+        function clearAllAnswers() {
+            for (let i = 1; i <= 5; i++) {
+                studentAnswers[i] = "";
+            }
+            renderQuestions();
+            updateProgress();
+            showToast("🧹", "Усі поля очищено.");
+        }
+
+        // Summary Modal Functions
+        function openSummaryModal() {
+            const container = document.getElementById('summary-content');
+            document.getElementById('copy-status').classList.add('hidden');
+
+            let html = '';
+            questionsData.forEach(item => {
+                const ans = studentAnswers[item.id].trim();
+                html += `
+                    <div class="bg-[#FEF9E7] border border-amber-200/80 rounded-2xl p-4">
+                        <div class="text-xs font-bold text-emerald-800 mb-1">${item.id}. ${item.question}</div>
+                        <div class="text-sm font-medium ${ans ? 'text-slate-900' : 'text-slate-400 italic'}">
+                            ${ans ? ans : '— (Відповідь ще не заповнена)'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('summary-modal').classList.remove('hidden');
+        }
+
+        function closeSummaryModal() {
+            document.getElementById('summary-modal').classList.add('hidden');
+        }
+
+        // Copy formatted summary to clipboard using textarea fallback (reliable in iframes)
+        function copySummaryText() {
+            const lines = ["Exercise 3. Answer about yourself (My Answers):", ""];
+            questionsData.forEach(item => {
+                const ans = studentAnswers[item.id].trim() || "(no answer yet)";
+                lines.push(`${item.id}. ${item.question}`);
+                lines.push(`   → ${ans}`);
+            });
+
+            const fullText = lines.join("\n");
+            const tempTextarea = document.createElement("textarea");
+            tempTextarea.value = fullText;
+            tempTextarea.style.position = "fixed";
+            tempTextarea.style.left = "-9999px";
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+
+            try {
+                document.execCommand("copy");
+                document.getElementById('copy-status').classList.remove('hidden');
+                showToast("✅", "Відповіді скопійовано!");
+            } catch (err) {
+                showToast("⚠️", "Не вдалося скопіювати автоматично. Виділіть текст вручну.");
+            }
+
+            document.body.removeChild(tempTextarea);
+        }
+
+        // Toast helper
+        let toastTimeout;
+        function showToast(icon, message) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-icon').textContent = icon;
+            document.getElementById('toast-message').textContent = message;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2600);
+        }
+    </script>
+</body>
+</html>
