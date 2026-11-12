@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="uk" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Неправильні дієслова для бізнесу — 4 інтерактивні етапи</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FEF9E7;
+            color: #1E293B;
+        }
+        .card-mint {
+            background-color: #EAFAF1;
+        }
+        .card-blush {
+            background-color: #FDEDEC;
+        }
+        /* Smooth hover/tap reveal for Ukrainian translation */
+        .translation-reveal .uk-text {
+            filter: blur(5px);
+            opacity: 0.4;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        .translation-reveal:hover .uk-text,
+        .translation-reveal.revealed .uk-text {
+            filter: blur(0);
+            opacity: 1;
+            user-select: text;
+        }
+        /* Clean input styling */
+        .study-input {
+            border: 1.5px solid #A7F3D0;
+            background-color: #FFFFFF;
+            border-radius: 0.85rem;
+            padding: 0.6rem 0.9rem;
+            font-weight: 500;
+            color: #1E293B;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+        }
+        .study-input:focus {
+            outline: none;
+            border-color: #059669;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+        .study-input::placeholder {
+            color: #94A3B8;
+            font-weight: 400;
+        }
+        .inline-blank {
+            border: none;
+            border-bottom: 2px solid #059669;
+            background-color: #FFFFFF;
+            border-radius: 0.65rem;
+            padding: 0.35rem 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+            min-width: 115px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        .inline-blank:focus {
+            outline: none;
+            background-color: #F0FDF4;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+        /* Active tab pill */
+        .nav-pill.active {
+            background-color: #059669;
+            color: #FFFFFF;
+            border-color: #059669;
+            box-shadow: 0 4px 10px -2px rgba(5, 150, 105, 0.28);
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col justify-between selection:bg-emerald-200 selection:text-slate-900">
+
+    <!-- Sticky Header & Navigation Pills -->
+    <header class="bg-white/95 backdrop-blur border-b border-amber-200/80 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3.5 space-y-3">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-emerald-600 text-white p-2.5 rounded-2xl shadow-sm font-bold text-xl flex items-center justify-center w-11 h-11 shrink-0">
+                        🎧
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Business English • Irregular Verbs</span>
+                            <span class="text-xs text-slate-400">•</span>
+                            <span class="text-xs font-semibold text-rose-800 bg-[#FDEDEC] px-2.5 py-0.5 rounded-full border border-rose-200/80">11 дієслів + Вимова + Практика</span>
+                        </div>
+                        <h1 class="text-lg sm:text-xl font-bold text-[#1E293B]">Тренажер неправильних дієслів для бізнесу</h1>
+                    </div>
+                </div>
+
+                <!-- Controls: Speech Speed Toggle & Progress -->
+                <div class="flex flex-wrap items-center justify-center gap-2.5 shrink-0">
+                    <!-- TTS Speed Toggle -->
+                    <button
+                        type="button"
+                        id="speed-toggle-btn"
+                        onclick="toggleSpeechSpeed()"
+                        class="inline-flex items-center gap-1.5 bg-[#FDEDEC] hover:bg-rose-100 text-[#1E293B] border border-rose-200 px-3.5 py-2 rounded-2xl text-xs font-semibold transition cursor-pointer"
+                        title="Перемкнути швидкість озвучення англійською"
+                    >
+                        <span>🐢 / 🐇</span>
+                        <span id="speed-label">Звичайна (1.0x)</span>
+                    </button>
+
+                    <!-- Overall Activity Counter -->
+                    <div class="flex items-center space-x-2 bg-[#FEF9E7] px-3.5 py-2 rounded-2xl border border-amber-200">
+                        <span class="text-xs font-medium text-slate-600">Заповнено завдань:</span>
+                        <span id="progress-counter" class="text-sm font-bold text-emerald-700">0 / 25</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seamless Stage Navigation Pills -->
+            <nav aria-label="Етапи навчання" class="flex flex-wrap items-center gap-2 pt-1 border-t border-amber-100/80">
+                <button
+                    type="button"
+                    data-stage="all"
+                    onclick="switchStage('all')"
+                    class="nav-pill active px-3.5 py-1.5 rounded-xl border border-emerald-200 bg-white text-xs sm:text-sm font-semibold text-[#1E293B] hover:bg-emerald-50 transition cursor-pointer"
+                >
+                    ✨ Усі етапи разом
+                </button>
+                <button
+                    type="button"
+                    data-stage="stage-1"
+                    onclick="switchStage('stage-1')"
+                    class="nav-pill px-3.5 py-1.5 rounded-xl border border-emerald-200 bg-white text-xs sm:text-sm font-semibold text-[#1E293B] hover:bg-emerald-50 transition cursor-pointer"
+                >
+                    1. Картки та ритм (11 дієслів)
+                </button>
+                <button
+                    type="button"
+                    data-stage="stage-2"
+                    onclick="switchStage('stage-2')"
+                    class="nav-pill px-3.5 py-1.5 rounded-xl border border-emerald-200 bg-white text-xs sm:text-sm font-semibold text-[#1E293B] hover:bg-emerald-50 transition cursor-pointer"
+                >
+                    2. Аудіо-детектив 🎧
+                </button>
+                <button
+                    type="button"
+                    data-stage="stage-3"
+                    onclick="switchStage('stage-3')"
+                    class="nav-pill px-3.5 py-1.5 rounded-xl border border-emerald-200 bg-white text-xs sm:text-sm font-semibold text-[#1E293B] hover:bg-emerald-50 transition cursor-pointer"
+                >
+                    3. Ланцюжки та контекст 🔗
+                </button>
+                <button
+                    type="button"
+                    data-stage="stage-4"
+                    onclick="switchStage('stage-4')"
+                    class="nav-pill px-3.5 py-1.5 rounded-xl border border-emerald-200 bg-white text-xs sm:text-sm font-semibold text-[#1E293B] hover:bg-emerald-50 transition cursor-pointer"
+                >
+                    4. Моя бізнес-історія ✍️
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-8 space-y-10">
+
+        <!-- Intro Guide Banner -->
+        <section class="bg-white border border-amber-200/90 rounded-3xl p-6 sm:p-7 shadow-sm space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Як працювати з тренажером</span>
+                <span class="text-xs text-slate-600 bg-[#FEF9E7] px-3 py-1 rounded-xl border border-amber-200/80">
+                    🇺🇦 Наведіть для перекладу (або торкніться на смартфоні)
+                </span>
+            </div>
+            <h2 class="text-lg sm:text-xl font-bold text-[#1E293B]">Запам'ятовуємо 11 дієслів через слух, ритм та реальні робочі ситуації</h2>
+            <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+                Не потрібно зубрити суху таблицю! Спочатку послухайте, як дієслова групуються за звучанням (<b>Етап 1</b>), потім перевірте свій слух (<b>Етап 2</b>), потренуйте форми в ділових фразах (<b>Етап 3</b>) і напишіть кілька речень про свій тиждень (<b>Етап 4</b>). Наприкінці зберіть усі відповіді одним натисканням для викладача.
+            </p>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- STAGE 1: SMART CARDS & RHYTHM TRAINER                     -->
+        <!-- ========================================================= -->
+        <section id="stage-1" class="stage-section space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-amber-200 pb-3">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Етап 1 • Слухаємо та запам'ятовуємо ритм</span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-[#1E293B]">Інтерактивні картки за звуковими групами</h2>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600">
+                    Натискайте на будь-яке окреме слово або кнопку <b>«🔊 Прослухати 3 форми»</b>
+                </p>
+            </div>
+
+            <!-- Groups container rendered via JS -->
+            <div id="verb-groups-container" class="space-y-8"></div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- STAGE 2: AUDIO LISTENING CHALLENGE                        -->
+        <!-- ========================================================= -->
+        <section id="stage-2" class="stage-section space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-amber-200 pb-3">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-700">Етап 2 • Тренуємо сприйняття на слух</span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-[#1E293B]">Аудіо-детектив — Впізнай на слух</h2>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600">
+                    Послухайте запис і запишіть почуте слово або фразу
+                </p>
+            </div>
+
+            <div class="bg-white/90 border border-rose-200/80 rounded-2xl p-4 text-xs sm:text-sm text-slate-600 flex items-start gap-3">
+                <span class="text-lg shrink-0">🕵️</span>
+                <p>
+                    Натисніть <b>«🔊 Послухати форму / фразу»</b> (якщо швидко — перемкніть швидкість на <b>0.7x</b> у верхньому меню). Запишіть те, що почули, вкажіть початкову форму (Base form) та переклад українською. Якщо складно впізнати звук — наведіть курсор на фонетичну підказку IPA.
+                </p>
+            </div>
+
+            <div id="audio-detective-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- STAGE 3: THREE-FORM BUILDER & CONTEXT MATCH               -->
+        <!-- ========================================================= -->
+        <section id="stage-3" class="stage-section space-y-8">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-amber-200 pb-3">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Етап 3 • Закріплюємо правопис та контекст</span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-[#1E293B]">Ланцюжки форм та ділові ситуації</h2>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600">
+                    Частина А (3 форми за транскрипцією) + Частина Б (бізнес-контекст)
+                </p>
+            </div>
+
+            <!-- Part A: 6 Verb Chain Cards -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-2">
+                    <span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">Частина А</span>
+                    <h3 class="text-base sm:text-lg font-bold text-[#1E293B]">Відновіть ланцюжок трьох форм за фонетичною підказкою</h3>
+                </div>
+                <div id="chains-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+            </div>
+
+            <!-- Part B: 6 Business English Mini-Situations -->
+            <div class="space-y-4 pt-2">
+                <div class="flex items-center gap-2">
+                    <span class="bg-rose-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">Частина Б</span>
+                    <h3 class="text-base sm:text-lg font-bold text-[#1E293B]">Оберіть дієслово зі словничка та поставте у правильну форму</h3>
+                </div>
+
+                <!-- Clickable Word Bank (Base Forms Only) -->
+                <div class="card-blush border border-rose-200/90 rounded-3xl p-4 sm:p-5 space-y-2.5">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-rose-900">📦 Банк дієслів (Base forms — початкова форма):</span>
+                        <span class="text-xs text-rose-800">Натисніть на дієслово, щоб почути його базову форму</span>
+                    </div>
+                    <div id="word-bank-chips" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <div id="situations-container" class="space-y-4"></div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- STAGE 4: PERSONAL BUSINESS STORY CONSTRUCTOR              -->
+        <!-- ========================================================= -->
+        <section id="stage-4" class="stage-section space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-amber-200 pb-3">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Етап 4 • Жива практика про себе</span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-[#1E293B]">Моя бізнес-історія (Personal Business Story)</h2>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600">
+                    Напишіть 5 коротких правдивих речень про вашу роботу або тиждень
+                </p>
+            </div>
+
+            <div id="story-prompts-container" class="space-y-5"></div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- BOTTOM SUMMARY PANEL FOR TEACHER                          -->
+        <!-- ========================================================= -->
+        <section class="bg-white border border-amber-200/90 rounded-3xl p-6 sm:p-7 shadow-md space-y-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="text-center sm:text-left">
+                    <h3 class="font-bold text-[#1E293B] text-lg">Завершили практику? Зберіть результати для викладача!</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                        Усі ваші відповіді з Етапів 2, 3 та 4 зберуться в один охайний звіт, який можна прослухати або скопіювати в чат.
+                    </p>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-3 w-full sm:w-auto shrink-0">
+                    <button
+                        type="button"
+                        onclick="clearAllStudentInputs()"
+                        class="px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-300 text-slate-600 text-sm font-medium transition cursor-pointer"
+                    >
+                        Очистити все
+                    </button>
+                    <button
+                        type="button"
+                        onclick="openTeacherSummary()"
+                        class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-md shadow-emerald-600/20 transition flex items-center gap-2 cursor-pointer"
+                    >
+                        <span>📋 Зібрати результати для викладача</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Collapsible Summary Panel -->
+            <div id="teacher-summary-panel" class="hidden pt-6 border-t border-amber-100 space-y-5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Підсумок практики • 11 Irregular Verbs</span>
+                        <h4 class="text-base sm:text-lg font-bold text-[#1E293B]">Мої відповіді для перевірки викладачем</h4>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <button
+                            type="button"
+                            onclick="speakAllSummary()"
+                            class="px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer"
+                        >
+                            <span>🔊 Прослухати все</span>
+                        </button>
+                        <button
+                            type="button"
+                            onclick="copySummaryToClipboard()"
+                            class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                        >
+                            <span>📋 Скопіювати для викладача</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="summary-content-container" class="space-y-4"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 bg-[#1E293B] text-white px-4 py-3 rounded-2xl shadow-lg text-sm font-medium transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <span id="toast-icon">🔊</span>
+        <span id="toast-message">Озвучення...</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white/75 border-t border-amber-200/60 text-center py-4 text-xs text-slate-500 mt-8">
+        <p>Business English Interactive Practice • 11 Irregular Verbs Mastery ✨</p>
+    </footer>
+
+    <!-- Application Data & Logic -->
+    <script>
+        // =========================================================================
+        // 1. MASTER VERB DATASET (Exact 11 verbs from image with IPA & Ukrainian)
+        // =========================================================================
+        const verbsData = [
+            {
+                id: "buy",
+                group: 1,
+                base: "buy", baseIpa: "/baɪ/",
+                past: "bought", pastIpa: "/bɔːt/",
+                participle: "bought", partIpa: "/bɔːt/",
+                uk: "купувати",
+                example: "We bought new laptops for the marketing team.",
+                exampleUk: "Ми купили нові ноутбуки для команди маркетингу."
+            },
+            {
+                id: "bring",
+                group: 1,
+                base: "bring", baseIpa: "/brɪŋ/",
+                past: "brought", pastIpa: "/brɔːt/",
+                participle: "brought", partIpa: "/brɔːt/",
+                uk: "приносити",
+                example: "She brought the signed contract to the meeting.",
+                exampleUk: "Вона принесла підписаний контракт на зустріч."
+            },
+            {
+                id: "have",
+                group: 2,
+                base: "have", baseIpa: "/hæv/",
+                past: "had", pastIpa: "/hæd/",
+                participle: "had", partIpa: "/hæd/",
+                uk: "мати",
+                example: "We had a productive call with our partners yesterday.",
+                exampleUk: "Учора ми мали продуктивний дзвінок із нашими партнерами."
+            },
+            {
+                id: "make",
+                group: 2,
+                base: "make", baseIpa: "/meɪk/",
+                past: "made", pastIpa: "/meɪd/",
+                participle: "made", partIpa: "/meɪd/",
+                uk: "робити, створювати",
+                example: "He made a clear presentation for the CEO.",
+                exampleUk: "Він зробив чітку презентацію для генерального директора."
+            },
+            {
+                id: "meet",
+                group: 2,
+                base: "meet", baseIpa: "/miːt/",
+                past: "met", pastIpa: "/met/",
+                participle: "met", partIpa: "/met/",
+                uk: "зустрічати(ся)",
+                example: "I met our new client at the airport.",
+                exampleUk: "Я зустрів(ла) нашого нового клієнта в аеропорту."
+            },
+            {
+                id: "get",
+                group: 2,
+                base: "get", baseIpa: "/ɡet/",
+                past: "got", pastIpa: "/ɡɒt/",
+                participle: "got / gotten", partIpa: "/ɡɒt / ˈɡɒtn/",
+                uk: "отримувати, діставатися",
+                example: "They got an urgent email from London.",
+                exampleUk: "Вони отримали терміновий лист із Лондона."
+            },
+            {
+                id: "take",
+                group: 3,
+                base: "take", baseIpa: "/teɪk/",
+                past: "took", pastIpa: "/tʊk/",
+                participle: "taken", partIpa: "/ˈteɪkən/",
+                uk: "брати",
+                example: "I took my tablet and charger on the business trip.",
+                exampleUk: "Я взяв(ла) свій планшет і зарядний пристрій у відрядження."
+            },
+            {
+                id: "forget",
+                group: 3,
+                base: "forget", baseIpa: "/fəˈɡet/",
+                past: "forgot", pastIpa: "/fəˈɡɒt/",
+                participle: "forgotten", partIpa: "/fəˈɡɒtn/",
+                uk: "забувати",
+                example: "Sorry, I forgot my ID card at the reception.",
+                exampleUk: "Вибачте, я забув(ла) свою ID-картку на рецепції."
+            },
+            {
+                id: "go",
+                group: 3,
+                base: "go", baseIpa: "/ɡəʊ/",
+                past: "went", pastIpa: "/went/",
+                participle: "gone", partIpa: "/ɡɒn/",
+                uk: "йти, їхати",
+                example: "Our manager went to Berlin for a conference.",
+                exampleUk: "Наш менеджер поїхав до Берліна на конференцію."
+            },
+            {
+                id: "see",
+                group: 3,
+                base: "see", baseIpa: "/siː/",
+                past: "saw", pastIpa: "/sɔː/",
+                participle: "seen", partIpa: "/siːn/",
+                uk: "бачити",
+                example: "We saw the updated financial report this morning.",
+                exampleUk: "Ми бачили оновлений фінансовий звіт сьогодні вранці."
+            },
+            {
+                id: "wear",
+                group: 3,
+                base: "wear", baseIpa: "/weə/",
+                past: "wore", pastIpa: "/wɔː/",
+                participle: "worn", partIpa: "/wɔːn/",
+                uk: "носити (одяг)",
+                example: "She wore a dark blue suit to the interview.",
+                exampleUk: "Вона одягла темно-синій костюм на співбесіду."
+            }
+        ];
+
+        const verbGroupsMeta = [
+            {
+                groupId: 1,
+                title: "Група 1: однакова 2-га і 3-тя форма на -ought",
+                subtitle: "Обидва дієслова звучать зі звуком /ɔːt/ у минулому часі, але не плутайте літеру R!",
+                callout: "🔍 Зверніть увагу: buy → bought (/bɔːt/ — без «r», купував), а bring → brought (/brɔːt/ — зі звуком «r», приносив)!"
+            },
+            {
+                groupId: 2,
+                title: "Група 2: однакова 2-га і 3-тя форма (A — B — B)",
+                subtitle: "Достатньо запам'ятати лише одну зміну голосної або приголосної — 2-га і 3-тя форми збігаються.",
+                callout: null
+            },
+            {
+                groupId: 3,
+                title: "Група 3: три різні форми (A — B — C)",
+                subtitle: "Промовляйте їх як короткий вірш або ритмічну лічилку: take – took – taken, go – went – gone.",
+                callout: null
+            }
+        ];
+
+        // =========================================================================
+        // 2. STAGE 2 DATA: AUDIO DETECTIVE (8 listening cards)
+        // =========================================================================
+        const audioDetectiveItems = [
+            {
+                id: 1,
+                typeLabel: "Окреме дієслово (Past Simple)",
+                ttsText: "brought",
+                ipaHint: "/brɔːt/"
+            },
+            {
+                id: 2,
+                typeLabel: "Окреме дієслово (Past Simple)",
+                ttsText: "wore",
+                ipaHint: "/wɔː/"
+            },
+            {
+                id: 3,
+                typeLabel: "Коротка бізнес-фраза",
+                ttsText: "We met yesterday",
+                ipaHint: "/wiː met ˈjestədeɪ/"
+            },
+            {
+                id: 4,
+                typeLabel: "Окреме дієслово (Past Participle)",
+                ttsText: "forgotten",
+                ipaHint: "/fəˈɡɒtn/"
+            },
+            {
+                id: 5,
+                typeLabel: "Коротка бізнес-фраза",
+                ttsText: "She bought flight tickets",
+                ipaHint: "/ʃiː bɔːt flaɪt ˈtɪkɪts/"
+            },
+            {
+                id: 6,
+                typeLabel: "Окреме дієслово (Past Simple)",
+                ttsText: "went",
+                ipaHint: "/went/"
+            },
+            {
+                id: 7,
+                typeLabel: "Коротка бізнес-фраза",
+                ttsText: "He took the laptop",
+                ipaHint: "/hiː tʊk ðə ˈlæptɒp/"
+            },
+            {
+                id: 8,
+                typeLabel: "Коротка бізнес-фраза",
+                ttsText: "I saw the report",
+                ipaHint: "/aɪ sɔː ðə rɪˈpɔːt/"
+            }
+        ];
+
+        // =========================================================================
+        // 3. STAGE 3 DATA: PART A (6 Chains) & PART B (6 Situations)
+        // =========================================================================
+        const verbChainsData = [
+            {
+                id: 1,
+                uk: "купувати",
+                slots: [
+                    { given: "buy", ipa: "/baɪ/" },
+                    { given: null, ipa: "/bɔːt/", placeholder: "2-га форма" },
+                    { given: null, ipa: "/bɔːt/", placeholder: "3-тя форма" }
+                ]
+            },
+            {
+                id: 2,
+                uk: "йти, їхати",
+                slots: [
+                    { given: null, ipa: "/ɡəʊ/", placeholder: "1-ша форма" },
+                    { given: "went", ipa: "/went/" },
+                    { given: null, ipa: "/ɡɒn/", placeholder: "3-тя форма" }
+                ]
+            },
+            {
+                id: 3,
+                uk: "приносити",
+                slots: [
+                    { given: "bring", ipa: "/brɪŋ/" },
+                    { given: null, ipa: "/brɔːt/", placeholder: "2-га форма" },
+                    { given: "brought", ipa: "/brɔːt/" }
+                ]
+            },
+            {
+                id: 4,
+                uk: "носити (одяг)",
+                slots: [
+                    { given: "wear", ipa: "/weə/" },
+                    { given: "wore", ipa: "/wɔː/" },
+                    { given: null, ipa: "/wɔːn/", placeholder: "3-тя форма" }
+                ]
+            },
+            {
+                id: 5,
+                uk: "забувати",
+                slots: [
+                    { given: "forget", ipa: "/fəˈɡet/" },
+                    { given: null, ipa: "/fəˈɡɒt/", placeholder: "2-га форма" },
+                    { given: null, ipa: "/fəˈɡɒtn/", placeholder: "3-тя форма" }
+                ]
+            },
+            {
+                id: 6,
+                uk: "брати",
+                slots: [
+                    { given: "take", ipa: "/teɪk/" },
+                    { given: "took", ipa: "/tʊk/" },
+                    { given: null, ipa: "/ˈteɪkən/", placeholder: "3-тя форма" }
+                ]
+            }
+        ];
+
+        const businessSituationsData = [
+            {
+                id: 1,
+                before: "Yesterday, our CEO",
+                after: "a new client at the hotel lobby.",
+                uk: "Учора наш генеральний директор зустрів нового клієнта у холі готелю."
+            },
+            {
+                id: 2,
+                before: "My assistant",
+                after: "all the printed documents to the conference room.",
+                uk: "Мій асистент приніс усі роздруковані документи до конференц-зали."
+            },
+            {
+                id: 3,
+                before: "Oh no! I",
+                after: "my laptop charger at home this morning.",
+                uk: "О ні! Я забув(ла) зарядний пристрій від ноутбука вдома сьогодні вранці."
+            },
+            {
+                id: 4,
+                before: "The design team",
+                after: "a great presentation for the investors last Friday.",
+                uk: "Команда дизайнерів зробила чудову презентацію для інвесторів минулої п'ятниці."
+            },
+            {
+                id: 5,
+                before: "Our sales manager",
+                after: "a classic black suit at the summit.",
+                uk: "Наш менеджер із продажу носив класичний чорний костюм на саміті."
+            },
+            {
+                id: 6,
+                before: "We have already",
+                after: "the flight tickets to Warsaw for next week.",
+                uk: "Ми вже купили авіаквитки до Варшави на наступний тиждень."
+            }
+        ];
+
+        // =========================================================================
+        // 4. STAGE 4 DATA: PERSONAL BUSINESS STORY CONSTRUCTOR (5 Prompts)
+        // =========================================================================
+        const storyPromptsData = [
+            {
+                id: 1,
+                verbs: ["meet", "see"],
+                promptUk: "Напишіть, кого з колег, партнерів чи клієнтів ви зустріли або бачили нещодавно.",
+                starter: "Yesterday, I "
+            },
+            {
+                id: 2,
+                verbs: ["buy", "get"],
+                promptUk: "Що корисного для роботи чи офісу ви купили або отримали останнім часом?",
+                starter: "Last week, I "
+            },
+            {
+                id: 3,
+                verbs: ["make", "have"],
+                promptUk: "Яку зустріч, дзвінок чи презентацію ви провели або підготували?",
+                starter: "Two days ago, we "
+            },
+            {
+                id: 4,
+                verbs: ["bring", "take"],
+                promptUk: "Що ви взяли із собою в офіс або принесли на робочу зустріч?",
+                starter: "This morning, I "
+            },
+            {
+                id: 5,
+                verbs: ["forget", "wear"],
+                promptUk: "Що ви одягли на важливу зустріч або, можливо, випадково забули вдома?",
+                starter: "Last week, I "
+            }
+        ];
+
+        const timeChips = ["Yesterday,", "Last week,", "Two days ago,", "This morning,"];
+
+        // =========================================================================
+        // STATE MANAGEMENT
+        // =========================================================================
+        let isSlowSpeech = false;
+        const state = {
+            audioDetective: {}, // id -> { heard: "", base: "", uk: "" }
+            chains: {},         // id -> { 0: "", 1: "", 2: "" }
+            situations: {},     // id -> ""
+            stories: {}         // id -> ""
+        };
+
+        // Initialize state objects
+        audioDetectiveItems.forEach(item => {
+            state.audioDetective[item.id] = { heard: "", base: "", uk: "" };
+        });
+        verbChainsData.forEach(chain => {
+            state.chains[chain.id] = {};
+        });
+        businessSituationsData.forEach(sit => {
+            state.situations[sit.id] = "";
+        });
+        storyPromptsData.forEach(story => {
+            state.stories[story.id] = "";
+        });
+
+        // =========================================================================
+        // INITIALIZATION
+        // =========================================================================
+        window.addEventListener('DOMContentLoaded', () => {
+            renderStage1();
+            renderStage2();
+            renderStage3();
+            renderStage4();
+            updateOverallProgress();
+        });
+
+        // Stage Tab Switching
+        function switchStage(stageId) {
+            // Update active pill styling
+            document.querySelectorAll('.nav-pill').forEach(btn => {
+                if (btn.dataset.stage === stageId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Show/hide sections
+            const sections = document.querySelectorAll('.stage-section');
+            sections.forEach(sec => {
+                if (stageId === 'all' || sec.id === stageId) {
+                    sec.classList.remove('hidden');
+                } else {
+                    sec.classList.add('hidden');
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Speech Speed Toggle
+        function toggleSpeechSpeed() {
+            isSlowSpeech = !isSlowSpeech;
+            const label = document.getElementById('speed-label');
+            label.textContent = isSlowSpeech ? "Повільно (0.7x)" : "Звичайна (1.0x)";
+            showToast(isSlowSpeech ? "🐢" : "🐇", isSlowSpeech ? "Увімкнено повільну швидкість (0.7x)" : "Увімкнено звичайну швидкість (1.0x)");
+        }
+
+        // =========================================================================
+        // RENDER STAGE 1: SMART CARDS & RHYTHM TRAINER
+        // =========================================================================
+        function renderStage1() {
+            const container = document.getElementById('verb-groups-container');
+            container.innerHTML = '';
+
+            verbGroupsMeta.forEach(groupMeta => {
+                const groupVerbs = verbsData.filter(v => v.group === groupMeta.groupId);
+                const groupWrapper = document.createElement('div');
+                groupWrapper.className = "space-y-4";
+
+                const calloutHtml = groupMeta.callout ? `
+                    <div class="card-blush border border-rose-200 rounded-2xl p-4 text-xs sm:text-sm font-medium text-rose-950 shadow-2xs">
+                        ${groupMeta.callout}
+                    </div>
+                ` : '';
+
+                groupWrapper.innerHTML = `
+                    <div class="bg-white/85 border border-amber-200/80 rounded-2xl p-4 sm:p-5 space-y-2">
+                        <h3 class="text-base sm:text-lg font-bold text-[#1E293B]">${groupMeta.title}</h3>
+                        <p class="text-xs sm:text-sm text-slate-600">${groupMeta.subtitle}</p>
+                        ${calloutHtml}
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="group-grid-${groupMeta.groupId}"></div>
+                `;
+                container.appendChild(groupWrapper);
+
+                const grid = groupWrapper.querySelector(`#group-grid-${groupMeta.groupId}`);
+                groupVerbs.forEach(verb => {
+                    const card = document.createElement('div');
+                    card.className = "card-mint border border-emerald-200/90 rounded-3xl p-5 shadow-xs space-y-4 flex flex-col justify-between transition hover:border-emerald-300";
+
+                    // Clean spoken string for Participle (handle "got / gotten")
+                    const spokenParticiple = verb.participle.replace('/', ',');
+
+                    card.innerHTML = `
+                        <div class="space-y-4">
+                            <!-- Top Row: Hover Ukrainian Translation & 3-Forms Audio Button -->
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div
+                                    class="translation-reveal inline-flex items-center gap-1.5 cursor-pointer bg-[#FEF9E7] px-3 py-1.5 rounded-xl border border-amber-200/90 text-xs"
+                                    onclick="this.classList.toggle('revealed')"
+                                    title="Наведіть для перекладу"
+                                >
+                                    <span class="text-amber-800 font-semibold">🇺🇦 Наведіть для перекладу:</span>
+                                    <span class="uk-text font-bold text-[#1E293B] text-sm">${verb.uk}</span>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onclick="speakThreeForms('${verb.base}', '${verb.past}', '${spokenParticiple}')"
+                                    class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold shadow-2xs transition cursor-pointer shrink-0"
+                                >
+                                    <span>🔊</span>
+                                    <span>Прослухати 3 форми</span>
+                                </button>
+                            </div>
+
+                            <!-- 3 Forms Interactive Pills -->
+                            <div class="grid grid-cols-3 gap-2.5">
+                                <!-- Base Form -->
+                                <button
+                                    type="button"
+                                    onclick="speakText('${verb.base}')"
+                                    class="bg-white hover:bg-amber-50 border border-emerald-200 rounded-2xl p-3 text-center transition cursor-pointer group shadow-2xs"
+                                    title="Натисніть, щоб почути 1-шу форму"
+                                >
+                                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Base (V1)</span>
+                                    <span class="block text-base sm:text-lg font-extrabold text-[#1E293B] group-hover:text-emerald-700">${verb.base}</span>
+                                    <span class="block font-mono text-[11px] text-emerald-800 mt-1">${verb.baseIpa}</span>
+                                </button>
+
+                                <!-- Past Simple -->
+                                <button
+                                    type="button"
+                                    onclick="speakText('${verb.past}')"
+                                    class="bg-white hover:bg-amber-50 border border-emerald-200 rounded-2xl p-3 text-center transition cursor-pointer group shadow-2xs"
+                                    title="Натисніть, щоб почути 2-гу форму"
+                                >
+                                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Past (V2)</span>
+                                    <span class="block text-base sm:text-lg font-extrabold text-[#1E293B] group-hover:text-emerald-700">${verb.past}</span>
+                                    <span class="block font-mono text-[11px] text-emerald-800 mt-1">${verb.pastIpa}</span>
+                                </button>
+
+                                <!-- Past Participle -->
+                                <button
+                                    type="button"
+                                    onclick="speakText('${spokenParticiple}')"
+                                    class="bg-white hover:bg-amber-50 border border-emerald-200 rounded-2xl p-3 text-center transition cursor-pointer group shadow-2xs"
+                                    title="Натисніть, щоб почути 3-тю форму"
+                                >
+                                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Participle (V3)</span>
+                                    <span class="block text-sm sm:text-base font-extrabold text-[#1E293B] group-hover:text-emerald-700 leading-tight py-0.5">${verb.participle}</span>
+                                    <span class="block font-mono text-[11px] text-emerald-800 mt-1">${verb.partIpa}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Business Context Example with TTS & Hover Translation -->
+                        <div class="bg-white/85 border border-emerald-200/80 rounded-2xl p-3.5 space-y-2">
+                            <div class="flex items-start justify-between gap-2">
+                                <p class="text-xs sm:text-sm font-medium text-[#1E293B] leading-snug">
+                                    💼 <span class="italic">«${verb.example}»</span>
+                                </p>
+                                <button
+                                    type="button"
+                                    onclick="speakText('${verb.example.replace(/'/g, "\\'")}')"
+                                    class="bg-[#FEF9E7] hover:bg-amber-100 border border-amber-200 rounded-xl px-2.5 py-1 text-xs font-semibold text-[#1E293B] transition cursor-pointer shrink-0"
+                                    title="Послухати бізнес-приклад"
+                                >
+                                    🔊
+                                </button>
+                            </div>
+                            <div
+                                class="translation-reveal inline-flex items-center gap-1.5 cursor-pointer text-[11px] text-slate-500"
+                                onclick="this.classList.toggle('revealed')"
+                            >
+                                <span class="text-amber-700 font-semibold">Наведіть для перекладу прикладу:</span>
+                                <span class="uk-text text-slate-700">${verb.exampleUk}</span>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            });
+        }
+
+        // Speak all 3 forms with natural pauses
+        function speakThreeForms(v1, v2, v3) {
+            speakText(`${v1} ... ${v2} ... ${v3}`);
+        }
+
+        // =========================================================================
+        // RENDER STAGE 2: AUDIO DETECTIVE
+        // =========================================================================
+        function renderStage2() {
+            const container = document.getElementById('audio-detective-container');
+            container.innerHTML = '';
+
+            audioDetectiveItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "card-mint border border-emerald-200/90 rounded-3xl p-5 shadow-xs space-y-4";
+
+                const val = state.audioDetective[item.id];
+
+                card.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-2.5">
+                            <span class="bg-rose-600 text-white font-bold text-xs w-7 h-7 rounded-xl flex items-center justify-center shadow-2xs">
+                                ${item.id}
+                            </span>
+                            <span class="text-xs font-semibold text-slate-600">${item.typeLabel}</span>
+                        </div>
+
+                        <button
+                            type="button"
+                            onclick="speakText('${item.ttsText.replace(/'/g, "\\'")}')"
+                            class="inline-flex items-center gap-1.5 bg-rose-600 hover:bg-rose-700 text-white px-3.5 py-2 rounded-xl text-xs font-semibold shadow-2xs transition cursor-pointer"
+                        >
+                            <span>🔊</span>
+                            <span>Послухати форму / фразу</span>
+                        </button>
+                    </div>
+
+                    <!-- Optional Phonetic Clue (Blurred until hover/tap) -->
+                    <div class="flex items-center justify-between bg-white/75 border border-emerald-200/70 rounded-xl px-3 py-2 text-xs">
+                        <span class="text-slate-500 font-medium">Підказка транскрипцією (наведіть, якщо важко):</span>
+                        <div
+                            class="translation-reveal cursor-pointer font-mono font-semibold text-emerald-900 bg-[#FEF9E7] px-2.5 py-0.5 rounded-lg border border-amber-200"
+                            onclick="this.classList.toggle('revealed')"
+                        >
+                            <span class="uk-text">${item.ipaHint}</span>
+                        </div>
+                    </div>
+
+                    <!-- Student Inputs -->
+                    <div class="space-y-2.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Що ви почули англійською?</label>
+                            <input
+                                type="text"
+                                value="${escapeHtml(val.heard)}"
+                                oninput="updateAudioDetective(${item.id}, 'heard', this.value)"
+                                placeholder="Запишіть почуте слово або фразу..."
+                                autocomplete="off"
+                                spellcheck="false"
+                                class="study-input w-full text-sm"
+                            />
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Початкова форма (Base form):</label>
+                                <input
+                                    type="text"
+                                    value="${escapeHtml(val.base)}"
+                                    oninput="updateAudioDetective(${item.id}, 'base', this.value)"
+                                    placeholder="Напр.: bring"
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                    class="study-input w-full text-sm"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Переклад українською:</label>
+                                <input
+                                    type="text"
+                                    value="${escapeHtml(val.uk)}"
+                                    oninput="updateAudioDetective(${item.id}, 'uk', this.value)"
+                                    placeholder="Напр.: приносити"
+                                    autocomplete="off"
+                                    class="study-input w-full text-sm"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateAudioDetective(id, field, value) {
+            state.audioDetective[id][field] = value;
+            updateOverallProgress();
+            refreshSummaryIfOpen();
+        }
+
+        // =========================================================================
+        // RENDER STAGE 3: PART A (CHAINS) & PART B (SITUATIONS)
+        // =========================================================================
+        function renderStage3() {
+            // Part A: Chains
+            const chainsContainer = document.getElementById('chains-container');
+            chainsContainer.innerHTML = '';
+
+            verbChainsData.forEach(chain => {
+                const card = document.createElement('div');
+                card.className = "card-mint border border-emerald-200/90 rounded-3xl p-5 shadow-xs space-y-4";
+
+                const slotsHtml = chain.slots.map((slot, idx) => {
+                    if (slot.given) {
+                        return `
+                            <div class="bg-white/90 border border-emerald-200 rounded-2xl p-2.5 text-center flex flex-col justify-center">
+                                <span class="text-[10px] font-bold uppercase text-slate-400">Форма ${idx + 1}</span>
+                                <span class="text-base font-extrabold text-[#1E293B] my-1">${slot.given}</span>
+                                <span class="font-mono text-[11px] text-emerald-800">${slot.ipa}</span>
+                            </div>
+                        `;
+                    } else {
+                        const savedVal = state.chains[chain.id][idx] || "";
+                        return `
+                            <div class="bg-white border border-emerald-300 rounded-2xl p-2 text-center flex flex-col justify-center shadow-2xs">
+                                <span class="text-[10px] font-bold uppercase text-emerald-700 mb-1">Форма ${idx + 1}</span>
+                                <input
+                                    type="text"
+                                    value="${escapeHtml(savedVal)}"
+                                    oninput="updateChainSlot(${chain.id}, ${idx}, this.value)"
+                                    placeholder="..."
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                    class="w-full text-center font-bold text-sm sm:text-base text-[#1E293B] bg-[#FEF9E7]/60 border border-amber-200 rounded-xl py-1 px-1.5 focus:outline-none focus:border-emerald-600"
+                                />
+                                <span class="font-mono text-[11px] text-rose-800 font-semibold mt-1">${slot.ipa}</span>
+                            </div>
+                        `;
+                    }
+                }).join('');
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-emerald-600 text-white font-bold text-xs w-6 h-6 rounded-lg flex items-center justify-center">${chain.id}</span>
+                            <div
+                                class="translation-reveal inline-flex items-center gap-1.5 cursor-pointer bg-[#FEF9E7] px-2.5 py-1 rounded-xl border border-amber-200 text-xs"
+                                onclick="this.classList.toggle('revealed')"
+                            >
+                                <span class="text-amber-800 font-semibold">🇺🇦 Наведіть для перекладу:</span>
+                                <span class="uk-text font-bold text-[#1E293B]">${chain.uk}</span>
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            onclick="speakCompletedChain(${chain.id})"
+                            class="bg-white hover:bg-amber-50 border border-amber-200 rounded-xl px-3 py-1.5 text-xs font-semibold text-[#1E293B] transition cursor-pointer"
+                            title="Послухати ваш заповнений ланцюжок"
+                        >
+                            🔊 Послухати
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2.5">
+                        ${slotsHtml}
+                    </div>
+                `;
+                chainsContainer.appendChild(card);
+            });
+
+            // Part B: Word Bank Chips (Base forms only)
+            const wordBank = document.getElementById('word-bank-chips');
+            wordBank.innerHTML = '';
+            verbsData.forEach(v => {
+                const chip = document.createElement('button');
+                chip.type = "button";
+                chip.onclick = () => speakText(v.base);
+                chip.className = "bg-white hover:bg-amber-50 border border-rose-200 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-[#1E293B] shadow-2xs transition cursor-pointer inline-flex items-center gap-1.5";
+                chip.innerHTML = `<span>${v.base}</span><span class="font-mono text-[11px] font-normal text-slate-500">${v.baseIpa}</span>`;
+                wordBank.appendChild(chip);
+            });
+
+            // Part B: 6 Business Situations
+            const situationsContainer = document.getElementById('situations-container');
+            situationsContainer.innerHTML = '';
+
+            businessSituationsData.forEach(sit => {
+                const card = document.createElement('div');
+                card.className = "card-mint border border-emerald-200/90 rounded-3xl p-5 shadow-xs space-y-3";
+
+                const savedWord = state.situations[sit.id] || "";
+
+                card.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-rose-600 text-white font-bold text-xs w-7 h-7 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                                ${sit.id}
+                            </span>
+                            <div class="text-sm sm:text-base font-medium text-[#1E293B] leading-relaxed">
+                                <span>${sit.before}</span>
+                                <input
+                                    type="text"
+                                    value="${escapeHtml(savedWord)}"
+                                    oninput="updateSituationInput(${sit.id}, this.value)"
+                                    placeholder="дієслово..."
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                    class="inline-blank mx-1.5"
+                                />
+                                <span>${sit.after}</span>
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            onclick="speakSituationSentence(${sit.id})"
+                            class="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-amber-50 text-[#1E293B] border border-amber-200 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-2xs transition cursor-pointer shrink-0"
+                            title="Послухати речення з вашим словом"
+                        >
+                            <span>🔊</span>
+                            <span>Послухати речення</span>
+                        </button>
+                    </div>
+
+                    <div class="pl-10">
+                        <div
+                            class="translation-reveal inline-flex items-center gap-1.5 cursor-pointer bg-[#FEF9E7] px-3 py-1 rounded-xl border border-amber-200/80 text-xs"
+                            onclick="this.classList.toggle('revealed')"
+                        >
+                            <span class="text-amber-800 font-semibold">🇺🇦 Наведіть для перекладу:</span>
+                            <span class="uk-text text-[#1E293B] font-medium">${sit.uk}</span>
+                        </div>
+                    </div>
+                `;
+                situationsContainer.appendChild(card);
+            });
+        }
+
+        function updateChainSlot(chainId, slotIndex, value) {
+            state.chains[chainId][slotIndex] = value;
+            updateOverallProgress();
+            refreshSummaryIfOpen();
+        }
+
+        function speakCompletedChain(chainId) {
+            const chain = verbChainsData.find(c => c.id === chainId);
+            if (!chain) return;
+            const words = chain.slots.map((slot, idx) => {
+                if (slot.given) return slot.given;
+                const typed = (state.chains[chainId][idx] || "").trim();
+                return typed || "blank";
+            });
+            speakText(words.join(" ... "));
+        }
+
+        function updateSituationInput(sitId, value) {
+            state.situations[sitId] = value;
+            updateOverallProgress();
+            refreshSummaryIfOpen();
+        }
+
+        function speakSituationSentence(sitId) {
+            const sit = businessSituationsData.find(s => s.id === sitId);
+            if (!sit) return;
+            const word = (state.situations[sitId] || "").trim();
+            if (!word) {
+                showToast("✍️", "Впишіть форму дієслова у пропуск, щоб послухати речення.");
+                return;
+            }
+            speakText(`${sit.before} ${word} ${sit.after}`);
+        }
+
+        // =========================================================================
+        // RENDER STAGE 4: PERSONAL BUSINESS STORY CONSTRUCTOR
+        // =========================================================================
+        function renderStage4() {
+            const container = document.getElementById('story-prompts-container');
+            container.innerHTML = '';
+
+            storyPromptsData.forEach(story => {
+                const card = document.createElement('div');
+                card.className = "card-mint border border-emerald-200/90 rounded-3xl p-5 sm:p-6 shadow-xs space-y-3.5";
+
+                const savedText = state.stories[story.id] || "";
+                const verbBadges = story.verbs.map(v => `
+                    <span class="bg-white border border-emerald-300 text-emerald-900 font-bold text-xs px-2.5 py-1 rounded-lg shadow-2xs">
+                        ${v}
+                    </span>
+                `).join('');
+
+                const chipsHtml = timeChips.map(chip => `
+                    <button
+                        type="button"
+                        onclick="applyStoryStarter(${story.id}, '${chip}')"
+                        class="bg-white hover:bg-amber-50 border border-amber-200 text-xs font-semibold text-[#1E293B] px-2.5 py-1 rounded-xl transition cursor-pointer"
+                    >
+                        + ${chip}
+                    </button>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-2.5">
+                            <span class="bg-amber-500 text-white font-bold text-xs w-7 h-7 rounded-xl flex items-center justify-center shadow-2xs">
+                                ${story.id}
+                            </span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-600">Рекомендовані дієслова:</span>
+                            <div class="flex items-center gap-1.5">${verbBadges}</div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            ${chipsHtml}
+                        </div>
+                    </div>
+
+                    <p class="text-sm sm:text-base font-semibold text-[#1E293B]">
+                        ${story.promptUk}
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                        <input
+                            type="text"
+                            id="story-input-${story.id}"
+                            value="${escapeHtml(savedText)}"
+                            oninput="updateStoryInput(${story.id}, this.value)"
+                            placeholder="Наприклад: ${story.starter}..."
+                            autocomplete="off"
+                            class="study-input flex-grow text-sm sm:text-base"
+                        />
+                        <button
+                            type="button"
+                            onclick="speakStorySentence(${story.id})"
+                            class="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-amber-50 text-[#1E293B] border border-amber-200 px-4 py-2.5 rounded-xl text-xs font-semibold shadow-2xs transition cursor-pointer shrink-0"
+                        >
+                            <span>🔊</span>
+                            <span>Послухати моє речення</span>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function applyStoryStarter(storyId, starterText) {
+            const input = document.getElementById(`story-input-${storyId}`);
+            if (!input) return;
+            const current = input.value.trim();
+            input.value = current ? `${starterText} ${current}` : `${starterText} `;
+            state.stories[storyId] = input.value;
+            input.focus();
+            updateOverallProgress();
+            refreshSummaryIfOpen();
+        }
+
+        function updateStoryInput(storyId, value) {
+            state.stories[storyId] = value;
+            updateOverallProgress();
+            refreshSummaryIfOpen();
+        }
+
+        function speakStorySentence(storyId) {
+            const text = (state.stories[storyId] || "").trim();
+            if (!text) {
+                showToast("✍️", "Напишіть своє речення, щоб прослухати його вимову.");
+                return;
+            }
+            speakText(text);
+        }
+
+        // =========================================================================
+        // PROGRESS & TEACHER SUMMARY PANEL
+        // =========================================================================
+        function updateOverallProgress() {
+            // Total tasks: 8 (Stage 2) + 6 (Stage 3A) + 6 (Stage 3B) + 5 (Stage 4) = 25
+            let doneCount = 0;
+
+            audioDetectiveItems.forEach(item => {
+                if ((state.audioDetective[item.id].heard || "").trim().length > 0) doneCount++;
+            });
+
+            verbChainsData.forEach(chain => {
+                const missingIndices = chain.slots.map((s, idx) => s.given ? null : idx).filter(i => i !== null);
+                const allFilled = missingIndices.every(idx => (state.chains[chain.id][idx] || "").trim().length > 0);
+                if (allFilled) doneCount++;
+            });
+
+            businessSituationsData.forEach(sit => {
+                if ((state.situations[sit.id] || "").trim().length > 0) doneCount++;
+            });
+
+            storyPromptsData.forEach(story => {
+                if ((state.stories[story.id] || "").trim().length > 0) doneCount++;
+            });
+
+            document.getElementById('progress-counter').textContent = `${doneCount} / 25`;
+        }
+
+        function openTeacherSummary() {
+            const panel = document.getElementById('teacher-summary-panel');
+            panel.classList.remove('hidden');
+            renderSummaryContent();
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function refreshSummaryIfOpen() {
+            const panel = document.getElementById('teacher-summary-panel');
+            if (panel && !panel.classList.contains('hidden')) {
+                renderSummaryContent();
+            }
+        }
+
+        function renderSummaryContent() {
+            const container = document.getElementById('summary-content-container');
+            container.innerHTML = '';
+
+            // 1. Stage 2 Summary
+            const s2Html = audioDetectiveItems.map(item => {
+                const d = state.audioDetective[item.id];
+                const heard = d.heard.trim() || "—";
+                const base = d.base.trim() || "—";
+                const uk = d.uk.trim() || "—";
+                return `<div class="text-xs sm:text-sm py-1 border-b border-emerald-100 last:border-none">
+                    <b>${item.id}.</b> Почуто: <span class="font-semibold text-emerald-900">${escapeHtml(heard)}</span> | Base: <b>${escapeHtml(base)}</b> | Переклад: ${escapeHtml(uk)}
+                </div>`;
+            }).join('');
+
+            // 2. Stage 3A Summary
+            const s3aHtml = verbChainsData.map(chain => {
+                const forms = chain.slots.map((slot, idx) => {
+                    return slot.given ? slot.given : ((state.chains[chain.id][idx] || "").trim() || "___");
+                }).join(" — ");
+                return `<div class="text-xs sm:text-sm py-1 border-b border-emerald-100 last:border-none">
+                    <b>${chain.id}.</b> ${escapeHtml(forms)} <span class="text-slate-500">(${chain.uk})</span>
+                </div>`;
+            }).join('');
+
+            // 3. Stage 3B Summary
+            const s3bHtml = businessSituationsData.map(sit => {
+                const w = (state.situations[sit.id] || "").trim() || "______";
+                return `<div class="text-xs sm:text-sm py-1 border-b border-emerald-100 last:border-none">
+                    <b>${sit.id}.</b> ${sit.before} <b class="text-emerald-800 underline">${escapeHtml(w)}</b> ${sit.after}
+                </div>`;
+            }).join('');
+
+            // 4. Stage 4 Summary
+            const s4Html = storyPromptsData.map(story => {
+                const txt = (state.stories[story.id] || "").trim() || "не заповнено";
+                return `<div class="text-xs sm:text-sm py-1 border-b border-emerald-100 last:border-none">
+                    <b>${story.id}.</b> ${escapeHtml(txt)}
+                </div>`;
+            }).join('');
+
+            container.innerHTML = `
+                <div class="card-mint border border-emerald-200 rounded-2xl p-4 space-y-1.5">
+                    <h5 class="text-xs font-bold uppercase tracking-wider text-rose-800">Етап 2. Аудіо-детектив</h5>
+                    ${s2Html}
+                </div>
+                <div class="card-mint border border-emerald-200 rounded-2xl p-4 space-y-1.5">
+                    <h5 class="text-xs font-bold uppercase tracking-wider text-emerald-800">Етап 3А. Ланцюжки трьох форм</h5>
+                    ${s3aHtml}
+                </div>
+                <div class="card-mint border border-emerald-200 rounded-2xl p-4 space-y-1.5">
+                    <h5 class="text-xs font-bold uppercase tracking-wider text-emerald-800">Етап 3Б. Ділові ситуації</h5>
+                    ${s3bHtml}
+                </div>
+                <div class="card-mint border border-emerald-200 rounded-2xl p-4 space-y-1.5">
+                    <h5 class="text-xs font-bold uppercase tracking-wider text-amber-800">Етап 4. Моя бізнес-історія</h5>
+                    ${s4Html}
+                </div>
+            `;
+        }
+
+        function speakAllSummary() {
+            const spokenLines = [];
+
+            businessSituationsData.forEach(sit => {
+                const w = (state.situations[sit.id] || "").trim();
+                if (w) spokenLines.push(`${sit.before} ${w} ${sit.after}`);
+            });
+
+            storyPromptsData.forEach(story => {
+                const txt = (state.stories[story.id] || "").trim();
+                if (txt) spokenLines.push(txt);
+            });
+
+            if (spokenLines.length === 0) {
+                showToast("✍️", "Заповніть хоча б кілька речень у Етапах 3Б або 4 для озвучення.");
+                return;
+            }
+
+            speakText(spokenLines.join(" ... "));
+        }
+
+        function copySummaryToClipboard() {
+            const lines = ["📊 Результати практики: 11 Irregular Verbs (Business English)", ""];
+
+            lines.push("🎧 Етап 2. Аудіо-детектив:");
+            audioDetectiveItems.forEach(item => {
+                const d = state.audioDetective[item.id];
+                lines.push(`${item.id}. Почуто: ${d.heard.trim() || "—"} | Base: ${d.base.trim() || "—"} | Переклад: ${d.uk.trim() || "—"}`);
+            });
+
+            lines.push("", "🔗 Етап 3А. Ланцюжки форм:");
+            verbChainsData.forEach(chain => {
+                const forms = chain.slots.map((slot, idx) => slot.given || (state.chains[chain.id][idx] || "").trim() || "___").join(" — ");
+                lines.push(`${chain.id}. ${forms}`);
+            });
+
+            lines.push("", "💼 Етап 3Б. Ділові ситуації:");
+            businessSituationsData.forEach(sit => {
+                const w = (state.situations[sit.id] || "").trim() || "______";
+                lines.push(`${sit.id}. ${sit.before} ${w} ${sit.after}`);
+            });
+
+            lines.push("", "✍️ Етап 4. Моя бізнес-історія:");
+            storyPromptsData.forEach(story => {
+                const txt = (state.stories[story.id] || "").trim() || "—";
+                lines.push(`${story.id}. ${txt}`);
+            });
+
+            const fullText = lines.join("\n");
+            const tempArea = document.createElement("textarea");
+            tempArea.value = fullText;
+            tempArea.style.position = "fixed";
+            tempArea.style.left = "-9999px";
+            document.body.appendChild(tempArea);
+            tempArea.select();
+
+            try {
+                document.execCommand("copy");
+                showToast("✅", "Скопійовано! Можете надіслати викладачу");
+            } catch (e) {
+                showToast("⚠️", "Не вдалося скопіювати автоматично.");
+            }
+            document.body.removeChild(tempArea);
+        }
+
+        function clearAllStudentInputs() {
+            audioDetectiveItems.forEach(item => {
+                state.audioDetective[item.id] = { heard: "", base: "", uk: "" };
+            });
+            verbChainsData.forEach(chain => {
+                state.chains[chain.id] = {};
+            });
+            businessSituationsData.forEach(sit => {
+                state.situations[sit.id] = "";
+            });
+            storyPromptsData.forEach(story => {
+                state.stories[story.id] = "";
+            });
+
+            renderStage2();
+            renderStage3();
+            renderStage4();
+            updateOverallProgress();
+            document.getElementById('teacher-summary-panel').classList.add('hidden');
+            showToast("🧹", "Усі поля очищено.");
+        }
+
+        // =========================================================================
+        // WEB SPEECH API (TTS) & HELPERS
+        // =========================================================================
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) {
+                showToast("⚠️", "Ваш браузер не підтримує озвучення тексту.");
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = isSlowSpeech ? 0.7 : 1.0;
+
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => (v.lang.includes('en-US') || v.lang.includes('en-GB')) && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha')))
+                                || voices.find(v => v.lang.startsWith('en'));
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+
+            showToast("🔊", `Озвучення: «${text.replace(/\.\.\./g, ' ')}»`);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        let toastTimeout;
+        function showToast(icon, message) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-icon').textContent = icon;
+            document.getElementById('toast-message').textContent = message;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2600);
+        }
+    </script>
+</body>
+</html>
