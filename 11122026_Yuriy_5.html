@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="uk" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 5. Change the sentences — Past Simple</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FEF9E7;
+            color: #1E293B;
+        }
+        .card-mint {
+            background-color: #EAFAF1;
+        }
+        .card-blush {
+            background-color: #FDEDEC;
+        }
+        /* Smooth hover/tap reveal for Ukrainian translation */
+        .translation-reveal .uk-text {
+            filter: blur(5px);
+            opacity: 0.45;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        .translation-reveal:hover .uk-text,
+        .translation-reveal.revealed .uk-text {
+            filter: blur(0);
+            opacity: 1;
+            user-select: text;
+        }
+        /* Clean input styling */
+        .transform-input {
+            border: 1.5px solid #A7F3D0;
+            background-color: #FFFFFF;
+            border-radius: 0.9rem;
+            padding: 0.65rem 0.95rem;
+            font-weight: 500;
+            color: #1E293B;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+        }
+        .transform-input:focus {
+            outline: none;
+            border-color: #059669;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+        .transform-input::placeholder {
+            color: #94A3B8;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col justify-between selection:bg-emerald-200 selection:text-slate-900">
+
+    <!-- Sticky Header -->
+    <header class="bg-white/90 backdrop-blur border-b border-amber-200/80 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="bg-emerald-600 text-white p-2.5 rounded-2xl shadow-sm font-bold text-xl flex items-center justify-center w-11 h-11 shrink-0">
+                    🔄
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Business English • Grammar Practice</span>
+                        <span class="text-xs text-slate-400">•</span>
+                        <span class="text-xs font-semibold text-rose-800 bg-[#FDEDEC] px-2.5 py-0.5 rounded-full border border-rose-200/80">Past Simple: Заперечення (–) та Питання (?)</span>
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-bold text-[#1E293B]">Exercise 5. Change the sentences</h1>
+                </div>
+            </div>
+
+            <!-- Controls: Speech Speed Toggle & Progress -->
+            <div class="flex flex-wrap items-center justify-center gap-2.5 shrink-0">
+                <!-- TTS Speed Toggle -->
+                <button
+                    type="button"
+                    id="speed-toggle-btn"
+                    onclick="toggleSpeechSpeed()"
+                    class="inline-flex items-center gap-1.5 bg-[#FDEDEC] hover:bg-rose-100 text-[#1E293B] border border-rose-200 px-3.5 py-2 rounded-2xl text-xs font-semibold transition cursor-pointer"
+                    title="Перемкнути швидкість озвучення англійською"
+                >
+                    <span>🐢 / 🐇</span>
+                    <span id="speed-label">Швидкість: 1.0x (Звичайна)</span>
+                </button>
+
+                <!-- Progress Counter -->
+                <div class="flex items-center space-x-2 bg-[#FEF9E7] px-3.5 py-2 rounded-2xl border border-amber-200">
+                    <span class="text-xs font-medium text-slate-600">Виконано:</span>
+                    <span id="progress-counter" class="text-sm font-bold text-emerald-700">0 / 5</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 space-y-8">
+
+        <!-- SECTION 1: Ukrainian Instructions -->
+        <section class="bg-white border border-amber-200/90 rounded-3xl p-6 sm:p-7 shadow-sm space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Інструкція до вправи</span>
+                <span class="text-xs text-slate-500 bg-[#FEF9E7] px-3 py-1 rounded-xl border border-amber-200/70">
+                    🇺🇦 Наведіть курсор (або натисніть на смартфоні) на блок перекладу, щоб відкрити його
+                </span>
+            </div>
+            <h2 class="text-lg sm:text-xl font-bold text-[#1E293B]">Трансформація речень у минулому часі</h2>
+            <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+                Перетворіть кожне стверджувальне речення в <b>Past Simple</b> на <b>заперечне (–)</b> та <b>питальне (?)</b>. Натискайте на іконку динаміка, щоб послухати вимову, а щоб побачити український переклад — наведіть курсор на блок перекладу.
+            </p>
+        </section>
+
+        <!-- SECTION 2: Interactive Example Card (Blush-Pink #FDEDEC) -->
+        <section aria-label="Зразок виконання" class="card-blush border border-rose-200/90 rounded-3xl p-6 sm:p-7 shadow-sm space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="bg-rose-600 text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-xl shadow-2xs">
+                        Зразок (Example)
+                    </span>
+                    <span class="text-xs font-medium text-rose-900">Подивіться, як змінюється речення:</span>
+                </div>
+            </div>
+
+            <!-- 3 Example Rows: (+), (-), (?) -->
+            <div class="space-y-3" id="example-rows-container">
+                <!-- Populated via JS -->
+            </div>
+
+            <!-- Helpful Structural Formula Badge -->
+            <div class="bg-white/85 border border-rose-200 rounded-2xl p-4 flex items-start gap-3">
+                <span class="text-lg shrink-0 mt-0.5">💡</span>
+                <p class="text-xs sm:text-sm text-[#1E293B] leading-relaxed">
+                    <span class="font-bold text-rose-900">Підказка щодо структури:</span> у запереченні використовуємо <code class="bg-rose-100/80 text-rose-950 font-bold px-1.5 py-0.5 rounded-md">didn't</code> + початкова форма дієслова, а у питанні виносимо <code class="bg-rose-100/80 text-rose-950 font-bold px-1.5 py-0.5 rounded-md">Did</code> на початок + початкова форма дієслова.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: 5 Interactive Sentence Transformation Cards (Mint-Green #EAFAF1) -->
+        <section aria-label="Речення для перетворення" class="space-y-6" id="sentences-container">
+            <!-- Rendered dynamically via JS -->
+        </section>
+
+        <!-- SECTION 4: Teacher Review Summary Trigger & Inline Summary Card -->
+        <section class="bg-white border border-amber-200/90 rounded-3xl p-6 sm:p-7 shadow-md space-y-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="text-center sm:text-left">
+                    <h3 class="font-bold text-[#1E293B] text-lg">Готові поділитися роботою з викладачем?</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                        Натисніть кнопку нижче, щоб зібрати всі 5 речень із вашими запереченнями та питаннями в охайний список.
+                    </p>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-3 w-full sm:w-auto shrink-0">
+                    <button
+                        type="button"
+                        onclick="clearAllFields()"
+                        class="px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-300 text-slate-600 text-sm font-medium transition cursor-pointer"
+                    >
+                        Очистити поля
+                    </button>
+                    <button
+                        type="button"
+                        onclick="generateTeacherSummary()"
+                        class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-md shadow-emerald-600/20 transition flex items-center gap-2 cursor-pointer"
+                    >
+                        <span>📋 Зібрати відповіді для викладача</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Collapsible Neat Summary Card -->
+            <div id="teacher-summary-card" class="hidden pt-6 border-t border-amber-100 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Звіт студента • Exercise 5</span>
+                        <h4 class="text-base sm:text-lg font-bold text-[#1E293B]">Мої перетворені речення для перевірки</h4>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <button
+                            type="button"
+                            onclick="listenToAllSummary()"
+                            class="px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer"
+                        >
+                            <span>🔊 Прослухати все</span>
+                        </button>
+                        <button
+                            type="button"
+                            onclick="copySummaryForChat()"
+                            class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                        >
+                            <span>📋 Скопіювати для чату</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Items Container -->
+                <div id="summary-list" class="space-y-3">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Custom Notification Toast -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 bg-[#1E293B] text-white px-4 py-3 rounded-2xl shadow-lg text-sm font-medium transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <span id="toast-icon">🔊</span>
+        <span id="toast-message">Озвучення...</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white/75 border-t border-amber-200/60 text-center py-4 text-xs text-slate-500 mt-8">
+        <p>Business English Interactive Practice • Exercise 5. Change the sentences (Past Simple) ✨</p>
+    </footer>
+
+    <!-- Application Data & Logic -->
+    <script>
+        // 1. Example Data from Screenshot
+        const exampleData = [
+            {
+                badge: "Ствердження (+)",
+                badgeClass: "bg-slate-100 text-slate-800 border-slate-200",
+                text: "I bought this bag yesterday.",
+                ipa: "/aɪ bɔːt ðɪs bæɡ ˈjestədeɪ/",
+                uk: "Я купив(ла) цю сумку вчора."
+            },
+            {
+                badge: "Заперечення (–)",
+                badgeClass: "bg-rose-100 text-rose-900 border-rose-200",
+                text: "I didn't buy this bag yesterday.",
+                ipa: "/aɪ ˈdɪdnt baɪ ðɪs bæɡ ˈjestədeɪ/",
+                uk: "Я не купував(ла) цю сумку вчора."
+            },
+            {
+                badge: "Питання (?)",
+                badgeClass: "bg-amber-100 text-amber-900 border-amber-200",
+                text: "Did you buy this bag yesterday?",
+                ipa: "/dɪd juː baɪ ðɪs bæɡ ˈjestədeɪ/",
+                uk: "Ти купив(ла) цю сумку вчора?"
+            }
+        ];
+
+        // 2. Exact 5 Sentences from Screenshot
+        const exerciseSentences = [
+            {
+                id: 1,
+                affirmative: "She took that suitcase to London.",
+                ipa: "/ʃiː tʊk ðæt ˈsuːtkeɪs tə ˈlʌndən/",
+                uk: "Вона взяла ту валізу до Лондона."
+            },
+            {
+                id: 2,
+                affirmative: "They used these laptops at the conference.",
+                ipa: "/ðeɪ juːzd ðiːz ˈlæptɒps æt ðə ˈkɒnfərəns/",
+                uk: "Вони використовували ці ноутбуки на конференції."
+            },
+            {
+                id: 3,
+                affirmative: "He bought those expensive shoes.",
+                ipa: "/hiː bɔːt ðəʊz ɪkˈspensɪv ʃuːz/",
+                uk: "Він купив ті дорогі туфлі."
+            },
+            {
+                id: 4,
+                affirmative: "We had a good meeting yesterday.",
+                ipa: "/wiː hæd ə ɡʊd ˈmiːtɪŋ ˈjestədeɪ/",
+                uk: "У нас вчора була гарна зустріч."
+            },
+            {
+                id: 5,
+                affirmative: "My colleague wore this beautiful coat.",
+                ipa: "/maɪ ˈkɒliːɡ wɔː ðɪs ˈbjuːtɪfl kəʊt/",
+                uk: "Мій колега носив / моя колега носила це гарне пальто."
+            }
+        ];
+
+        // Neutral structural chips (no base verb spoilers)
+        const grammarChips = ["didn't", "Did", "?", "."];
+
+        // State for student inputs: { 1: { neg: "", ques: "" }, ... }
+        const studentAnswers = {};
+        let isSlowSpeech = false;
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            exerciseSentences.forEach(s => {
+                studentAnswers[s.id] = { neg: "", ques: "" };
+            });
+            renderExampleCard();
+            renderSentenceCards();
+            updateProgressCounter();
+        });
+
+        // Toggle Speech Speed (1.0x Normal vs 0.7x Slow)
+        function toggleSpeechSpeed() {
+            isSlowSpeech = !isSlowSpeech;
+            const label = document.getElementById('speed-label');
+            label.textContent = isSlowSpeech ? "Швидкість: 0.7x (Повільна)" : "Швидкість: 1.0x (Звичайна)";
+            showToast(isSlowSpeech ? "🐢" : "🐇", isSlowSpeech ? "Увімкнено повільну вимову (0.7x)" : "Увімкнено звичайну швидкість (1.0x)");
+        }
+
+        // Render Example Card Rows
+        function renderExampleCard() {
+            const container = document.getElementById('example-rows-container');
+            container.innerHTML = '';
+
+            exampleData.forEach(row => {
+                const div = document.createElement('div');
+                div.className = "bg-white/85 border border-rose-200/80 rounded-2xl p-4 flex flex-col gap-2.5 shadow-2xs";
+
+                div.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex flex-wrap items-center gap-2.5">
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-lg border ${row.badgeClass}">
+                                ${row.badge}
+                            </span>
+                            <span class="text-base sm:text-lg font-bold text-[#1E293B]">${row.text}</span>
+                        </div>
+                        <button
+                            type="button"
+                            onclick="speakText('${row.text.replace(/'/g, "\\'")}')"
+                            class="inline-flex items-center gap-1.5 bg-[#FEF9E7] hover:bg-amber-100 text-[#1E293B] border border-amber-200 px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer shrink-0"
+                            title="Послухати речення-зразок"
+                        >
+                            <span>🔊</span>
+                            <span>Послухати</span>
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                        <span class="font-mono text-rose-900/80 bg-rose-50/70 px-2.5 py-1 rounded-lg border border-rose-100">
+                            🗣️ ${row.ipa}
+                        </span>
+                        <div
+                            class="translation-reveal inline-flex items-center gap-1.5 cursor-pointer bg-[#FEF9E7] px-3 py-1 rounded-xl border border-amber-200/80"
+                            onclick="this.classList.toggle('revealed')"
+                            title="Наведіть курсор або натисніть, щоб побачити переклад"
+                        >
+                            <span class="text-amber-800 font-semibold">🇺🇦 Переклад:</span>
+                            <span class="uk-text text-[#1E293B] font-medium">${row.uk}</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Render 5 Interactive Sentence Transformation Cards
+        function renderSentenceCards() {
+            const container = document.getElementById('sentences-container');
+            container.innerHTML = '';
+
+            exerciseSentences.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "card-mint border border-emerald-200/90 rounded-3xl p-5 sm:p-6 shadow-xs space-y-5 transition hover:border-emerald-300";
+
+                // Generate neutral structural chips for Negative and Question inputs
+                const negChipsHtml = grammarChips.map(chip => `
+                    <button
+                        type="button"
+                        onmousedown="event.preventDefault(); insertTokenIntoInput('input-neg-${item.id}', '${chip.replace(/'/g, "\\'")}')"
+                        class="px-2.5 py-1 rounded-lg bg-white hover:bg-rose-50 border border-emerald-200 text-xs font-semibold text-[#1E293B] shadow-2xs transition cursor-pointer"
+                        title="Вставити «${chip}» у поле заперечення"
+                    >
+                        + ${chip}
+                    </button>
+                `).join('');
+
+                const quesChipsHtml = grammarChips.map(chip => `
+                    <button
+                        type="button"
+                        onmousedown="event.preventDefault(); insertTokenIntoInput('input-ques-${item.id}', '${chip.replace(/'/g, "\\'")}')"
+                        class="px-2.5 py-1 rounded-lg bg-white hover:bg-amber-50 border border-emerald-200 text-xs font-semibold text-[#1E293B] shadow-2xs transition cursor-pointer"
+                        title="Вставити «${chip}» у поле питання"
+                    >
+                        + ${chip}
+                    </button>
+                `).join('');
+
+                card.innerHTML = `
+                    <!-- Original Affirmative Sentence Header -->
+                    <div class="bg-white/85 border border-emerald-200/80 rounded-2xl p-4 sm:p-5 space-y-3">
+                        <div class="flex flex-wrap items-start justify-between gap-3">
+                            <div class="flex items-start gap-3">
+                                <span class="bg-emerald-600 text-white font-bold text-xs w-7 h-7 rounded-xl flex items-center justify-center shadow-2xs shrink-0 mt-0.5">
+                                    ${item.id}
+                                </span>
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Ствердження (+)</span>
+                                        <span id="badge-done-${item.id}" class="text-xs font-semibold text-emerald-700"></span>
+                                    </div>
+                                    <p class="text-base sm:text-lg font-bold text-[#1E293B] leading-snug">
+                                        ${item.affirmative}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                onclick="speakText('${item.affirmative.replace(/'/g, "\\'")}')"
+                                class="inline-flex items-center gap-1.5 bg-[#FEF9E7] hover:bg-amber-100 text-[#1E293B] border border-amber-200 px-3.5 py-1.5 rounded-xl text-xs font-semibold shadow-2xs transition cursor-pointer shrink-0"
+                                title="Послухати початкове речення"
+                            >
+                                <span>🔊</span>
+                                <span>Послухати</span>
+                            </button>
+                        </div>
+
+                        <!-- IPA & Hidden Ukrainian Translation -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-xs">
+                            <span class="font-mono text-emerald-900/80 bg-[#EAFAF1]/70 px-3 py-1 rounded-xl border border-emerald-200/60">
+                                🗣️ ${item.ipa}
+                            </span>
+
+                            <div
+                                class="translation-reveal inline-flex items-center gap-1.5 cursor-pointer bg-[#FEF9E7] px-3.5 py-1.5 rounded-xl border border-amber-200/80"
+                                onclick="this.classList.toggle('revealed')"
+                                title="Наведіть курсор або натисніть, щоб побачити переклад"
+                            >
+                                <span class="text-amber-800 font-semibold">🇺🇦 Переклад:</span>
+                                <span class="uk-text text-[#1E293B] font-medium">${item.uk}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Two Transformation Input Blocks: Negative (-) and Question (?) -->
+                    <div class="grid grid-cols-1 gap-4">
+                        <!-- Negative (-) Input Box -->
+                        <div class="bg-white/60 border border-emerald-200/70 rounded-2xl p-4 space-y-2.5">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <label for="input-neg-${item.id}" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-rose-900">
+                                    <span class="w-6 h-6 rounded-lg bg-[#FDEDEC] border border-rose-200 text-rose-800 flex items-center justify-center font-extrabold">–</span>
+                                    <span>Заперечення (Negative)</span>
+                                </label>
+                                <div class="flex items-center gap-1.5">
+                                    ${negChipsHtml}
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                                <input
+                                    type="text"
+                                    id="input-neg-${item.id}"
+                                    value="${escapeHtml(studentAnswers[item.id].neg)}"
+                                    oninput="handleAnswerInput(${item.id}, 'neg', this.value)"
+                                    placeholder="Напишіть заперечне речення (–)..."
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                    class="transform-input flex-grow text-sm sm:text-base"
+                                />
+                                <button
+                                    type="button"
+                                    onclick="speakStudentInput(${item.id}, 'neg')"
+                                    class="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-amber-50 text-[#1E293B] border border-amber-200 px-3.5 py-2.5 rounded-xl text-xs font-semibold shadow-2xs transition cursor-pointer shrink-0"
+                                    title="Послухати ваше заперечне речення"
+                                >
+                                    <span>🔊</span>
+                                    <span>Послухати</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Question (?) Input Box -->
+                        <div class="bg-white/60 border border-emerald-200/70 rounded-2xl p-4 space-y-2.5">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <label for="input-ques-${item.id}" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-amber-900">
+                                    <span class="w-6 h-6 rounded-lg bg-[#FEF9E7] border border-amber-200 text-amber-800 flex items-center justify-center font-extrabold">?</span>
+                                    <span>Питання (Question)</span>
+                                </label>
+                                <div class="flex items-center gap-1.5">
+                                    ${quesChipsHtml}
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                                <input
+                                    type="text"
+                                    id="input-ques-${item.id}"
+                                    value="${escapeHtml(studentAnswers[item.id].ques)}"
+                                    oninput="handleAnswerInput(${item.id}, 'ques', this.value)"
+                                    placeholder="Напишіть питальне речення (?)..."
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                    class="transform-input flex-grow text-sm sm:text-base"
+                                />
+                                <button
+                                    type="button"
+                                    onclick="speakStudentInput(${item.id}, 'ques')"
+                                    class="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-amber-50 text-[#1E293B] border border-amber-200 px-3.5 py-2.5 rounded-xl text-xs font-semibold shadow-2xs transition cursor-pointer shrink-0"
+                                    title="Послухати ваше питальне речення"
+                                >
+                                    <span>🔊</span>
+                                    <span>Послухати</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Insert grammar building token into input at cursor position
+        function insertTokenIntoInput(inputId, token) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            input.focus();
+            const start = input.selectionStart ?? input.value.length;
+            const end = input.selectionEnd ?? input.value.length;
+            const before = input.value.substring(0, start);
+            const after = input.value.substring(end);
+
+            // Smart spacing around punctuation vs words
+            const isPunctuation = token === "?" || token === ".";
+            const needLeadingSpace = !isPunctuation && before.length > 0 && !before.endsWith(" ");
+            const needTrailingSpace = !isPunctuation && (after.length === 0 || !after.startsWith(" "));
+
+            const inserted = `${needLeadingSpace ? " " : ""}${token}${needTrailingSpace ? " " : ""}`;
+            input.value = before + inserted + after;
+
+            const newPos = before.length + inserted.length;
+            input.setSelectionRange(newPos, newPos);
+
+            // Trigger input state sync
+            input.dispatchEvent(new Event('input'));
+        }
+
+        // Handle student typing in (-) or (?) inputs
+        function handleAnswerInput(sentenceId, type, value) {
+            studentAnswers[sentenceId][type] = value;
+
+            const isBothFilled = studentAnswers[sentenceId].neg.trim().length > 0 &&
+                                 studentAnswers[sentenceId].ques.trim().length > 0;
+            const badge = document.getElementById(`badge-done-${sentenceId}`);
+            if (badge) {
+                badge.textContent = isBothFilled ? "✓ Обидві форми записано" : "";
+            }
+
+            updateProgressCounter();
+
+            // Live-update summary card if already open
+            const summaryCard = document.getElementById('teacher-summary-card');
+            if (summaryCard && !summaryCard.classList.contains('hidden')) {
+                renderSummaryItems();
+            }
+        }
+
+        // Update header completion counter
+        function updateProgressCounter() {
+            const completed = exerciseSentences.filter(s =>
+                studentAnswers[s.id].neg.trim().length > 0 &&
+                studentAnswers[s.id].ques.trim().length > 0
+            ).length;
+            document.getElementById('progress-counter').textContent = `${completed} / ${exerciseSentences.length}`;
+        }
+
+        // Speak whatever the student typed in (-) or (?)
+        function speakStudentInput(sentenceId, type) {
+            const text = (studentAnswers[sentenceId][type] || "").trim();
+            if (!text) {
+                showToast("✍️", "Спочатку введіть речення у поле, щоб його прослухати.");
+                const targetInput = document.getElementById(`input-${type}-${sentenceId}`);
+                if (targetInput) targetInput.focus();
+                return;
+            }
+            speakText(text);
+        }
+
+        // Web Speech API TTS helper
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) {
+                showToast("⚠️", "Ваш браузер не підтримує озвучення тексту.");
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = isSlowSpeech ? 0.7 : 1.0;
+
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => (v.lang.includes('en-US') || v.lang.includes('en-GB')) && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha')))
+                                || voices.find(v => v.lang.startsWith('en'));
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+
+            showToast("🔊", `Озвучення: «${text}»`);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Clear all fields
+        function clearAllFields() {
+            exerciseSentences.forEach(s => {
+                studentAnswers[s.id] = { neg: "", ques: "" };
+            });
+            renderSentenceCards();
+            updateProgressCounter();
+            document.getElementById('teacher-summary-card').classList.add('hidden');
+            showToast("🧹", "Усі поля очищено.");
+        }
+
+        // Generate & reveal the Teacher Summary Card
+        function generateTeacherSummary() {
+            const summaryCard = document.getElementById('teacher-summary-card');
+            summaryCard.classList.remove('hidden');
+            renderSummaryItems();
+            summaryCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Render items inside Teacher Summary Card
+        function renderSummaryItems() {
+            const list = document.getElementById('summary-list');
+            list.innerHTML = '';
+
+            exerciseSentences.forEach(item => {
+                const negVal = studentAnswers[item.id].neg.trim();
+                const quesVal = studentAnswers[item.id].ques.trim();
+
+                const row = document.createElement('div');
+                row.className = "card-mint border border-emerald-200/85 rounded-2xl p-4 space-y-2 text-sm";
+
+                row.innerHTML = `
+                    <div class="font-bold text-[#1E293B] flex items-center justify-between gap-2">
+                        <span>${item.id}. (+) ${escapeHtml(item.affirmative)}</span>
+                        <button
+                            type="button"
+                            onclick="speakSingleSummaryGroup(${item.id})"
+                            class="bg-white hover:bg-amber-50 border border-amber-200 rounded-xl px-2.5 py-1 text-xs font-semibold text-[#1E293B] transition cursor-pointer shrink-0"
+                            title="Послухати всі 3 форми цього речення"
+                        >
+                            🔊 Послухати блок
+                        </button>
+                    </div>
+                    <div class="pl-4 space-y-1">
+                        <div class="${negVal ? 'text-[#1E293B] font-medium' : 'text-slate-400 italic'}">
+                            <span class="font-bold text-rose-800 mr-1">(–)</span>
+                            <span>${negVal ? escapeHtml(negVal) : 'не заповнено'}</span>
+                        </div>
+                        <div class="${quesVal ? 'text-[#1E293B] font-medium' : 'text-slate-400 italic'}">
+                            <span class="font-bold text-amber-800 mr-1">(?)</span>
+                            <span>${quesVal ? escapeHtml(quesVal) : 'не заповнено'}</span>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        // Speak (+), (-), and (?) for one sentence block
+        function speakSingleSummaryGroup(sentenceId) {
+            const item = exerciseSentences.find(s => s.id === sentenceId);
+            if (!item) return;
+            const negVal = studentAnswers[sentenceId].neg.trim();
+            const quesVal = studentAnswers[sentenceId].ques.trim();
+
+            const parts = [item.affirmative];
+            if (negVal) parts.push(negVal);
+            if (quesVal) parts.push(quesVal);
+
+            speakText(parts.join(" ... "));
+        }
+
+        // Listen to all original & typed sentences sequentially
+        function listenToAllSummary() {
+            const allParts = [];
+            exerciseSentences.forEach(item => {
+                allParts.push(item.affirmative);
+                const negVal = studentAnswers[item.id].neg.trim();
+                const quesVal = studentAnswers[item.id].ques.trim();
+                if (negVal) allParts.push(negVal);
+                if (quesVal) allParts.push(quesVal);
+            });
+            speakText(allParts.join(" ... "));
+        }
+
+        // Copy formatted summary to clipboard for chat
+        function copySummaryForChat() {
+            const lines = [
+                "Exercise 5. Change the sentences (Past Simple):",
+                ""
+            ];
+
+            exerciseSentences.forEach(item => {
+                const negVal = studentAnswers[item.id].neg.trim() || "______";
+                const quesVal = studentAnswers[item.id].ques.trim() || "______";
+                lines.push(`${item.id}. (+) ${item.affirmative}`);
+                lines.push(`   (–) ${negVal}`);
+                lines.push(`   (?) ${quesVal}`);
+                lines.push("");
+            });
+
+            const fullText = lines.join("\n").trim();
+            const tempTextarea = document.createElement("textarea");
+            tempTextarea.value = fullText;
+            tempTextarea.style.position = "fixed";
+            tempTextarea.style.left = "-9999px";
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+
+            try {
+                document.execCommand("copy");
+                showToast("✅", "Скопійовано! Можете надіслати викладачу");
+            } catch (err) {
+                showToast("⚠️", "Не вдалося скопіювати автоматично. Виділіть текст вручну.");
+            }
+
+            document.body.removeChild(tempTextarea);
+        }
+
+        // HTML Escaping utility
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        // Toast Notification helper
+        let toastTimeout;
+        function showToast(icon, message) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-icon').textContent = icon;
+            document.getElementById('toast-message').textContent = message;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2600);
+        }
+    </script>
+</body>
+</html>
