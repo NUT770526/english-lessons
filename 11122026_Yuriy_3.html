@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="uk" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part 3. Past Simple — My Last Business Trip</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FEF9E7;
+            color: #2C3E50;
+        }
+        .card-mint {
+            background-color: #EAFAF1;
+        }
+        .card-blush {
+            background-color: #FDEDEC;
+        }
+        /* Smooth hover/tap reveal for Ukrainian translation */
+        .translation-reveal .uk-text {
+            filter: blur(5px);
+            opacity: 0.45;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        .translation-reveal:hover .uk-text,
+        .translation-reveal.revealed .uk-text {
+            filter: blur(0);
+            opacity: 1;
+            user-select: text;
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col justify-between selection:bg-emerald-200 selection:text-slate-900">
+
+    <!-- Sticky Header -->
+    <header class="bg-white/90 backdrop-blur border-b border-amber-200/80 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="bg-emerald-600 text-white p-2.5 rounded-2xl shadow-sm font-bold text-xl flex items-center justify-center w-11 h-11 shrink-0">
+                    ✈️
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Part 3 • 12 minutes</span>
+                        <span class="text-xs text-slate-400">•</span>
+                        <span class="text-xs font-medium text-rose-700 bg-[#FDEDEC] px-2.5 py-0.5 rounded-full border border-rose-200/80">What happened yesterday?</span>
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-bold text-[#2C3E50]">Past Simple — My Last Business Trip</h1>
+                </div>
+            </div>
+
+            <!-- Progress Counter -->
+            <div class="flex items-center space-x-3 bg-[#FEF9E7] px-4 py-2 rounded-2xl border border-amber-200 shrink-0">
+                <span class="text-xs font-medium text-slate-600">Виконано кроків:</span>
+                <span id="progress-counter" class="text-sm font-bold text-emerald-700">0 / 10</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 space-y-10">
+
+        <!-- SECTION 1: Warm-up & Context Card -->
+        <section class="bg-white border border-amber-200/90 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-100 pb-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Крок 1 • Перехід від звичок до минулого досвіду</span>
+                    <h2 class="text-xl font-bold text-[#2C3E50] mt-0.5">Вступ та правило нагадування</h2>
+                </div>
+                <span class="text-xs text-slate-500 bg-[#FEF9E7] px-3 py-1.5 rounded-xl border border-amber-200/70 self-start sm:self-center">
+                    🇺🇦 Наведіть або натисніть на переклад, щоб відкрити його
+                </span>
+            </div>
+
+            <!-- Teacher's Transition Prompt -->
+            <div class="card-blush border border-rose-200/90 rounded-2xl p-5 sm:p-6 shadow-xs">
+                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                    <div class="space-y-2">
+                        <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-rose-800 bg-white/80 px-3 py-1 rounded-full border border-rose-200">
+                            👩‍🏫 Запитання викладача (Teacher's Prompt)
+                        </span>
+                        <p class="text-lg sm:text-xl font-bold text-[#2C3E50] leading-snug pt-1">
+                            “We know what you usually take on business trips. But what did you take on your last trip?”
+                        </p>
+                        <p class="text-xs font-mono text-rose-900/75">
+                            /wiː nəʊ wɒt juː ˈjuːʒuəli teɪk ɒn ˈbɪznəs trɪps | bʌt wɒt dɪd juː teɪk ɒn jɔː lɑːst trɪp/
+                        </p>
+                        <div 
+                            class="translation-reveal text-xs sm:text-sm flex flex-wrap items-center gap-2 cursor-pointer pt-2 border-t border-rose-200/60"
+                            onclick="this.classList.toggle('revealed')"
+                        >
+                            <span class="text-rose-800 font-semibold">🇺🇦 Переклад:</span>
+                            <span class="uk-text text-[#2C3E50] font-medium">Ми знаємо, що ви зазвичай берете у відрядження. А що ви взяли у свою останню поїздку?</span>
+                        </div>
+                    </div>
+
+                    <button 
+                        type="button"
+                        onclick="speakText('We know what you usually take on business trips. But what did you take on your last trip?')"
+                        class="self-start shrink-0 inline-flex items-center gap-2 bg-white hover:bg-rose-50 text-[#2C3E50] border border-rose-200 px-4 py-2.5 rounded-xl text-xs font-semibold shadow-xs transition cursor-pointer"
+                    >
+                        <span>🔊</span>
+                        <span>Прослухати</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Present Simple vs Past Simple Comparison Cards -->
+            <div class="space-y-3">
+                <h3 class="text-sm font-bold text-[#2C3E50] flex items-center gap-2">
+                    <span>🔄 Порівняй: Як звучать звички (Present Simple) та події в минулому (Past Simple)</span>
+                </h3>
+                <div id="comparison-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Rendered dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Highlighted Remember Box -->
+            <div class="bg-[#FEF9E7] border-2 border-amber-300 rounded-2xl p-4 sm:p-5 flex items-start gap-3.5 shadow-xs">
+                <div class="bg-amber-400 text-slate-900 font-bold w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-base shadow-xs">
+                    💡
+                </div>
+                <div class="text-sm text-[#2C3E50] leading-relaxed">
+                    <span class="font-bold text-amber-900 uppercase tracking-wide text-xs block mb-0.5">Remember • Важливе правило:</span>
+                    <p class="font-medium">
+                        Пам'ятай: після <span class="font-bold bg-white px-2 py-0.5 rounded-lg border border-amber-300 text-rose-800">did</span> / <span class="font-bold bg-white px-2 py-0.5 rounded-lg border border-amber-300 text-rose-800">didn't</span> основне дієслово стоїть у початковій формі (V1)!
+                    </p>
+                    <p class="text-xs text-slate-600 mt-1">
+                        Наприклад: <i>I <b>took</b></i> (ствердження) → <i>I <b>didn't take</b></i> (заперечення) → <i><b>Did</b> you <b>take</b>?</i> (питання).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: Interactive Activity 1 — Time Machine Transformation -->
+        <section class="bg-white border border-emerald-200/90 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+            <div class="border-b border-emerald-100 pb-4">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Крок 2 • Практика трансформації</span>
+                <h2 class="text-xl font-bold text-[#2C3E50] mt-0.5">⏳ Машина часу: з Present Simple у Past Simple</h2>
+                <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+                    Перетворіть речення про щоденні звички на розповідь про минуле відрядження або вчорашній день. Використовуйте маркери часу (<span class="font-semibold text-emerald-800">yesterday</span>, <span class="font-semibold text-emerald-800">last week</span>, <span class="font-semibold text-emerald-800">on my last trip</span>) та змініть форму дієслова.
+                </p>
+            </div>
+
+            <div id="time-machine-list" class="space-y-5">
+                <!-- Rendered dynamically via JS -->
+            </div>
+        </section>
+
+        <!-- SECTION 3: Interactive Activity 2 — "My Last Business Trip" Story Builder -->
+        <section class="bg-white border border-rose-200/90 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+            <div class="border-b border-rose-100 pb-4">
+                <span class="text-xs font-bold uppercase tracking-wider text-rose-700">Крок 3 • Вільна практика та діалог</span>
+                <h2 class="text-xl font-bold text-[#2C3E50] mt-0.5">🧳 Моя історія відрядження (My Last Business Trip)</h2>
+                <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+                    Розкажіть про вашу реальну або уявну останню робочу поїздку. Натискайте на фрази-підказки для швидкого старту, дописуйте власні деталі, а в останньому пункті сформулюйте запитання для викладача!
+                </p>
+            </div>
+
+            <div id="story-builder-list" class="space-y-5">
+                <!-- Rendered dynamically via JS -->
+            </div>
+        </section>
+
+        <!-- SECTION 4: Bottom Action Bar & Teacher Review Summary Trigger -->
+        <section class="card-mint border border-emerald-300/80 rounded-3xl p-6 sm:p-7 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-center sm:text-left">
+                <h3 class="font-bold text-[#2C3E50] text-lg">Готові обговорити результати з викладачем?</h3>
+                <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                    Зберіть усі ваші речення в один охайний звіт, щоб прочитати їх уголос або надіслати викладачу в чат.
+                </p>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-3 w-full sm:w-auto shrink-0">
+                <button 
+                    type="button"
+                    onclick="clearAllInputs()" 
+                    class="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 text-sm font-medium transition cursor-pointer"
+                >
+                    Очистити все
+                </button>
+                <button 
+                    type="button"
+                    onclick="openSummaryModal()" 
+                    class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-md shadow-emerald-600/20 transition flex items-center gap-2 cursor-pointer"
+                >
+                    <span>📋 Сформувати звіт для викладача</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Teacher Review Summary Modal -->
+    <div id="summary-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white border border-emerald-200 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-start pb-4 border-b border-slate-100 gap-3">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Part 3 • Past Simple Summary</span>
+                    <h3 class="text-xl font-bold text-[#2C3E50]">Звіт для викладача (My Last Business Trip)</h3>
+                </div>
+                <button 
+                    type="button"
+                    onclick="closeSummaryModal()" 
+                    class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold transition shrink-0 cursor-pointer"
+                >
+                    ✕
+                </button>
+            </div>
+
+            <!-- Compiled Student Sentences -->
+            <div id="summary-content" class="my-5 overflow-y-auto space-y-4 pr-1 text-sm">
+                <!-- Populated dynamically -->
+            </div>
+
+            <!-- Modal Footer Controls -->
+            <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span id="copy-status" class="text-xs font-semibold text-emerald-700 hidden">✅ Текст скопійовано! Можете вставити в чат.</span>
+                <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto justify-end ml-auto">
+                    <button 
+                        type="button"
+                        onclick="readAllSummaryAloud()" 
+                        class="px-4 py-2.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 font-semibold text-sm transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                        <span>🔊 Прослухати все</span>
+                    </button>
+                    <button 
+                        type="button"
+                        onclick="copySummaryText()" 
+                        class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                        <span>📄 Скопіювати текст</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Notification Toast -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 bg-[#2C3E50] text-white px-4 py-3 rounded-2xl shadow-lg text-sm font-medium transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <span id="toast-icon">🔊</span>
+        <span id="toast-message">Озвучення...</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white/75 border-t border-amber-200/60 text-center py-4 text-xs text-slate-500 mt-8">
+        <p>Business English Interactive Practice • Part 3. Past Simple — My Last Business Trip ✨</p>
+    </footer>
+
+    <!-- Application Data & Logic -->
+    <script>
+        // 1. Comparison Pairs Data (from screenshot)
+        const comparisonPairs = [
+            {
+                id: "pair-1",
+                present: "I take this laptop.",
+                past: "I took this laptop yesterday.",
+                phonetics: "/aɪ tʊk ðɪs ˈlæptɒp ˈjestədeɪ/",
+                verbNote: "take → took",
+                translation: "Я беру цей ноутбук. → Я взяв цей ноутбук учора."
+            },
+            {
+                id: "pair-2",
+                present: "She buys expensive shoes.",
+                past: "She bought expensive shoes last week.",
+                phonetics: "/ʃiː bɔːt ɪkˈspensɪv ʃuːz lɑːst wiːk/",
+                verbNote: "buy → bought",
+                translation: "Вона купує дороге взуття. → Вона купила дороге взуття минулого тижня."
+            },
+            {
+                id: "pair-3",
+                present: "He doesn't use that camera.",
+                past: "He didn't use that camera yesterday.",
+                phonetics: "/hiː ˈdɪdnt juːz ðæt ˈkæmrə ˈjestədeɪ/",
+                verbNote: "doesn't use → didn't use",
+                translation: "Він не користується тією камерою. → Він не користувався тією камерою вчора."
+            },
+            {
+                id: "pair-4",
+                present: "Do you take this bag?",
+                past: "Did you take this bag?",
+                phonetics: "/dɪd juː teɪk ðɪs bæɡ/",
+                verbNote: "Do you take → Did you take",
+                translation: "Ти береш цю сумку? → Ти взяв цю сумку?"
+            }
+        ];
+
+        // 2. Activity 1: Time Machine Transformation Items (verbs: wear, have, need, use, buy, take)
+        const timeMachineItems = [
+            {
+                id: "tm-1",
+                typeLabel: "Ствердження (+)",
+                presentSentence: "I wear a smart watch at work.",
+                translation: "Я ношу смарт-годинник на роботі.",
+                wordChips: ["yesterday", "on my last trip", "wore", "I"],
+                placeholder: "Напишіть речення у Past Simple (наприклад, про вчорашній день або останню поїздку)..."
+            },
+            {
+                id: "tm-2",
+                typeLabel: "Ствердження (+)",
+                presentSentence: "We have an important meeting.",
+                translation: "У нас важлива зустріч.",
+                wordChips: ["yesterday", "last week", "had", "We"],
+                placeholder: "Перетворіть речення у минулий час..."
+            },
+            {
+                id: "tm-3",
+                typeLabel: "Заперечення (–)",
+                presentSentence: "She doesn't need a big suitcase.",
+                translation: "Їй не потрібна велика валіза.",
+                wordChips: ["on her last trip", "yesterday", "didn't need", "She"],
+                placeholder: "Запишіть заперечення у Past Simple..."
+            },
+            {
+                id: "tm-4",
+                typeLabel: "Заперечення (–)",
+                presentSentence: "I don't buy coffee at the airport.",
+                translation: "Я не купую каву в аеропорту.",
+                wordChips: ["yesterday", "on my last business trip", "didn't buy", "I"],
+                placeholder: "Запишіть заперечення у Past Simple..."
+            },
+            {
+                id: "tm-5",
+                typeLabel: "Питання (?)",
+                presentSentence: "Do you use AirPods during meetings?",
+                translation: "Ви використовуєте AirPods під час зустрічей?",
+                wordChips: ["yesterday", "on your last trip", "Did you use"],
+                placeholder: "Поставте запитання у Past Simple..."
+            }
+        ];
+
+        // 3. Activity 2: "My Last Business Trip" Story Builder Prompts
+        const storyBuilderItems = [
+            {
+                id: "sb-1",
+                badge: "1. Багаж та техніка",
+                promptEn: "What did you take in your bag or suitcase on your last trip?",
+                promptUk: "Що ви взяли у свою сумку чи валізу в останню поїздку?",
+                starters: [
+                    "On my last trip, I took my laptop and...",
+                    "I took a small bag and...",
+                    "I took my AirPods and charger..."
+                ],
+                placeholder: "Напишіть 1–2 речення про речі, які ви взяли з собою..."
+            },
+            {
+                id: "sb-2",
+                badge: "2. Робота під час поїздки",
+                promptEn: "Did you use your laptop or AirPods during the trip?",
+                promptUk: "Чи користувалися ви ноутбуком або навушниками AirPods під час поїздки?",
+                starters: [
+                    "Yes, I used my laptop at the hotel...",
+                    "Yes, I used AirPods for online meetings...",
+                    "No, I didn't use my laptop much..."
+                ],
+                placeholder: "Опишіть, як ви користувалися гаджетами у відрядженні..."
+            },
+            {
+                id: "sb-3",
+                badge: "3. Покупки в дорозі",
+                promptEn: "Did you buy anything during your last business trip?",
+                promptUk: "Чи купили ви щось під час вашого останнього відрядження (каву, сувеніри, квитки)?",
+                starters: [
+                    "Yes, I bought...",
+                    "I bought coffee and snacks at the airport...",
+                    "No, I didn't buy anything..."
+                ],
+                placeholder: "Напишіть про ваші покупки або про те, що ви нічого не купували..."
+            },
+            {
+                id: "sb-4",
+                badge: "4. Що залишилося вдома",
+                promptEn: "What didn't you take or didn't you need on that trip?",
+                promptUk: "Чого ви НЕ взяли або що вам НЕ знадобилося в тій поїздці?",
+                starters: [
+                    "I didn't take a big suitcase because...",
+                    "I didn't need my camera...",
+                    "I didn't take warm clothes..."
+                ],
+                placeholder: "Використайте конструкцію «I didn't + дієслово (V1)»..."
+            },
+            {
+                id: "sb-5",
+                badge: "5. Запитання для викладача 👩‍🏫",
+                promptEn: "Ask your teacher 1–2 questions about their last trip!",
+                promptUk: "Поставте викладачу 1–2 запитання про його/її останню поїздку (починайте з Did you... або What did you...):",
+                starters: [
+                    "Did you take a laptop on your last trip?",
+                    "Did you buy anything interesting?",
+                    "What did you take in your bag?"
+                ],
+                placeholder: "Напишіть ваше запитання для викладача англійською..."
+            }
+        ];
+
+        // Student Answers State
+        const studentResponses = {};
+
+        // Initialize Page
+        window.addEventListener('DOMContentLoaded', () => {
+            renderComparisonCards();
+            renderTimeMachine();
+            renderStoryBuilder();
+            updateProgressCounter();
+        });
+
+        // Render Section 1: Comparison Cards
+        function renderComparisonCards() {
+            const grid = document.getElementById('comparison-grid');
+            grid.innerHTML = '';
+
+            comparisonPairs.forEach(pair => {
+                const card = document.createElement('div');
+                card.className = "card-mint border border-emerald-200/90 rounded-2xl p-4 sm:p-5 flex flex-col justify-between gap-3 shadow-xs";
+
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs font-semibold text-slate-500 bg-white/80 px-2.5 py-0.5 rounded-lg border border-emerald-200/70">
+                                Present → Past (${pair.verbNote})
+                            </span>
+                            <button 
+                                type="button"
+                                onclick="speakText('${pair.present.replace(/'/g, "\\'")} ${pair.past.replace(/'/g, "\\'")}')"
+                                class="inline-flex items-center gap-1 bg-white hover:bg-amber-50 text-[#2C3E50] border border-amber-200 px-2.5 py-1 rounded-xl text-xs font-semibold shadow-2xs transition cursor-pointer"
+                                title="Прослухати обидва речення"
+                            >
+                                <span>🔊</span>
+                                <span>Слухати</span>
+                            </button>
+                        </div>
+
+                        <div class="pt-1 space-y-1">
+                            <p class="text-xs sm:text-sm text-slate-500 line-through decoration-slate-300">
+                                ${pair.present}
+                            </p>
+                            <p class="text-base sm:text-lg font-bold text-[#2C3E50]">
+                                ${pair.past}
+                            </p>
+                            <p class="text-xs font-mono text-emerald-800/80">
+                                ${pair.phonetics}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div 
+                        class="translation-reveal text-xs flex flex-wrap items-center gap-1.5 cursor-pointer pt-2 border-t border-emerald-200/70"
+                        onclick="this.classList.toggle('revealed')"
+                    >
+                        <span class="text-amber-800 font-semibold">🇺🇦 Переклад:</span>
+                        <span class="uk-text text-[#2C3E50] font-medium">${pair.translation}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Render Section 2: Time Machine Transformation
+        function renderTimeMachine() {
+            const container = document.getElementById('time-machine-list');
+            container.innerHTML = '';
+
+            timeMachineItems.forEach((item, index) => {
+                if (!(item.id in studentResponses)) studentResponses[item.id] = "";
+
+                const chipsHtml = item.wordChips.map(chip => `
+                    <button 
+                        type="button"
+                        onclick="appendWordChip('${item.id}', '${chip.replace(/'/g, "\\'")}')"
+                        class="text-xs bg-white hover:bg-emerald-600 text-emerald-900 hover:text-white border border-emerald-300/80 px-3 py-1.5 rounded-xl font-medium shadow-2xs transition cursor-pointer"
+                    >
+                        + ${chip}
+                    </button>
+                `).join('');
+
+                const card = document.createElement('div');
+                card.className = "card-mint border border-emerald-200/90 rounded-2xl p-5 sm:p-6 shadow-xs space-y-3.5";
+
+                card.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="flex items-center gap-2.5">
+                            <span class="bg-emerald-600 text-white font-bold text-xs w-6 h-6 rounded-lg flex items-center justify-center shrink-0">
+                                ${index + 1}
+                            </span>
+                            <span class="text-xs font-semibold text-emerald-800 bg-white/80 px-2.5 py-0.5 rounded-lg border border-emerald-200">
+                                ${item.typeLabel}
+                            </span>
+                        </div>
+                        <button 
+                            type="button"
+                            onclick="speakText('${item.presentSentence.replace(/'/g, "\\'")}')"
+                            class="self-start sm:self-center inline-flex items-center gap-1.5 bg-white hover:bg-amber-50 text-[#2C3E50] border border-amber-200 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-2xs transition cursor-pointer"
+                        >
+                            <span>🔊</span>
+                            <span>Слухати зразок (Present)</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-white/80 rounded-xl p-3.5 border border-emerald-200/60 space-y-1.5">
+                        <p class="text-base sm:text-lg font-bold text-[#2C3E50]">
+                            ${item.presentSentence}
+                        </p>
+                        <div 
+                            class="translation-reveal text-xs flex flex-wrap items-center gap-1.5 cursor-pointer pt-1 border-t border-slate-200/60"
+                            onclick="this.classList.toggle('revealed')"
+                        >
+                            <span class="text-amber-700 font-semibold">🇺🇦 Переклад:</span>
+                            <span class="uk-text text-slate-700 font-medium">${item.translation}</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="text-xs font-medium text-slate-600 block mb-1.5">
+                            🧩 Корисні слова та маркери часу (натисніть, щоб додати у поле):
+                        </span>
+                        <div class="flex flex-wrap gap-2">
+                            ${chipsHtml}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="input-${item.id}" class="sr-only">Ваше речення у Past Simple</label>
+                        <input 
+                            id="input-${item.id}"
+                            type="text"
+                            value="${escapeHtml(studentResponses[item.id])}"
+                            oninput="handleTextUpdate('${item.id}', this.value)"
+                            placeholder="${item.placeholder}"
+                            class="w-full rounded-xl border border-emerald-300 bg-white px-4 py-3 text-sm sm:text-base text-[#2C3E50] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-inner transition"
+                        />
+                        <div class="flex flex-wrap items-center justify-between gap-2 mt-2">
+                            <span id="badge-${item.id}" class="text-xs text-slate-500">
+                                Запишіть речення у Past Simple
+                            </span>
+                            <button 
+                                type="button"
+                                onclick="speakStudentField('${item.id}')"
+                                class="inline-flex items-center gap-1.5 bg-amber-100 hover:bg-amber-200 text-amber-950 px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer"
+                            >
+                                <span>🗣️</span>
+                                <span>Прослухати моє речення</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Render Section 3: Story Builder
+        function renderStoryBuilder() {
+            const container = document.getElementById('story-builder-list');
+            container.innerHTML = '';
+
+            storyBuilderItems.forEach((item) => {
+                if (!(item.id in studentResponses)) studentResponses[item.id] = "";
+
+                const startersHtml = item.starters.map(starter => `
+                    <button 
+                        type="button"
+                        onclick="applyStarterPhrase('${item.id}', '${starter.replace(/'/g, "\\'")}')"
+                        class="text-left text-xs bg-white hover:bg-rose-600 text-rose-950 hover:text-white border border-rose-300/80 px-3 py-1.5 rounded-xl font-medium shadow-2xs transition cursor-pointer"
+                    >
+                        + ${starter}
+                    </button>
+                `).join('');
+
+                const card = document.createElement('div');
+                card.className = "card-blush border border-rose-200/90 rounded-2xl p-5 sm:p-6 shadow-xs space-y-3.5";
+
+                card.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                        <div class="space-y-1">
+                            <span class="inline-block text-xs font-bold text-rose-800 bg-white/85 px-2.5 py-0.5 rounded-lg border border-rose-200">
+                                ${item.badge}
+                            </span>
+                            <h3 class="text-base sm:text-lg font-bold text-[#2C3E50] pt-1">
+                                ${item.promptEn}
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-600">
+                                🇺🇦 ${item.promptUk}
+                            </p>
+                        </div>
+                        <button 
+                            type="button"
+                            onclick="speakText('${item.promptEn.replace(/'/g, "\\'")}')"
+                            class="self-start shrink-0 inline-flex items-center gap-1.5 bg-white hover:bg-amber-50 text-[#2C3E50] border border-amber-200 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-2xs transition cursor-pointer"
+                        >
+                            <span>🔊</span>
+                            <span>Слухати питання</span>
+                        </button>
+                    </div>
+
+                    <div>
+                        <span class="text-xs font-medium text-slate-600 block mb-1.5">
+                            ✨ Фрази для швидкого початку (натисніть, щоб підставити):
+                        </span>
+                        <div class="flex flex-wrap gap-2">
+                            ${startersHtml}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="input-${item.id}" class="sr-only">Ваша відповідь</label>
+                        <textarea 
+                            id="input-${item.id}"
+                            rows="2"
+                            oninput="handleTextUpdate('${item.id}', this.value)"
+                            placeholder="${item.placeholder}"
+                            class="w-full rounded-xl border border-rose-300 bg-white px-4 py-3 text-sm sm:text-base text-[#2C3E50] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-rose-400 shadow-inner transition resize-y"
+                        >${escapeHtml(studentResponses[item.id])}</textarea>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mt-2">
+                            <span id="badge-${item.id}" class="text-xs text-slate-500">
+                                Напишіть повне речення
+                            </span>
+                            <button 
+                                type="button"
+                                onclick="speakStudentField('${item.id}')"
+                                class="inline-flex items-center gap-1.5 bg-amber-100 hover:bg-amber-200 text-amber-950 px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer"
+                            >
+                                <span>🗣️</span>
+                                <span>Прослухати моє речення</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Append word chip smoothly into Time Machine input
+        function appendWordChip(fieldId, word) {
+            const input = document.getElementById(`input-${fieldId}`);
+            const current = input.value.trim();
+            input.value = current ? `${current} ${word}` : word;
+            input.focus();
+            handleTextUpdate(fieldId, input.value);
+        }
+
+        // Insert or replace starter phrase in Story Builder textarea
+        function applyStarterPhrase(fieldId, starter) {
+            const textarea = document.getElementById(`input-${fieldId}`);
+            const current = textarea.value.trim();
+            const item = storyBuilderItems.find(i => i.id === fieldId);
+
+            if (!current) {
+                textarea.value = starter;
+            } else if (item && item.starters.includes(current)) {
+                textarea.value = starter;
+            } else {
+                textarea.value = `${starter} ${current}`;
+            }
+            textarea.focus();
+            handleTextUpdate(fieldId, textarea.value);
+        }
+
+        // Track text updates & progress
+        function handleTextUpdate(fieldId, value) {
+            studentResponses[fieldId] = value;
+            const badge = document.getElementById(`badge-${fieldId}`);
+            if (badge) {
+                if (value.trim().length > 0) {
+                    badge.innerHTML = `<span class="text-emerald-700 font-semibold">✓ Речення збережено</span>`;
+                } else {
+                    badge.textContent = fieldId.startsWith('tm-') ? 'Запишіть речення у Past Simple' : 'Напишіть повне речення';
+                }
+            }
+            updateProgressCounter();
+        }
+
+        // Update top header progress counter
+        function updateProgressCounter() {
+            const totalFields = timeMachineItems.length + storyBuilderItems.length;
+            const completed = Object.values(studentResponses).filter(val => val.trim().length > 0).length;
+            document.getElementById('progress-counter').textContent = `${completed} / ${totalFields}`;
+        }
+
+        // Web Speech API (TTS) pronunciation helper
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) {
+                showToast("⚠️", "Ваш браузер не підтримує озвучення тексту.");
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.92;
+
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => v.lang.includes('en-US') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha')))
+                                || voices.find(v => v.lang.startsWith('en'));
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+
+            showToast("🔊", "Озвучення англійською...");
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Speak whatever the student typed in a specific field
+        function speakStudentField(fieldId) {
+            const text = (studentResponses[fieldId] || "").trim();
+            if (!text) {
+                showToast("✍️", "Спочатку напишіть або оберіть речення у цьому полі.");
+                return;
+            }
+            speakText(text);
+        }
+
+        // Clear all fields
+        function clearAllInputs() {
+            Object.keys(studentResponses).forEach(key => {
+                studentResponses[key] = "";
+            });
+            renderTimeMachine();
+            renderStoryBuilder();
+            updateProgressCounter();
+            showToast("🧹", "Усі поля очищено.");
+        }
+
+        // Open Teacher Review Summary Modal
+        function openSummaryModal() {
+            const container = document.getElementById('summary-content');
+            document.getElementById('copy-status').classList.add('hidden');
+
+            let html = `
+                <div class="space-y-3">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-800">1. Машина часу (Present Simple → Past Simple)</h4>
+            `;
+
+            timeMachineItems.forEach((item, idx) => {
+                const ans = (studentResponses[item.id] || "").trim();
+                html += `
+                    <div class="card-mint border border-emerald-200/80 rounded-2xl p-3.5">
+                        <div class="text-xs text-slate-500 mb-1">${idx + 1}. ${item.presentSentence}</div>
+                        <div class="text-sm font-semibold ${ans ? 'text-[#2C3E50]' : 'text-slate-400 italic font-normal'}">
+                            → ${ans || '(Ще не заповнено)'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+                <div class="space-y-3 pt-2">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-rose-800">2. Моя історія відрядження (My Last Business Trip)</h4>
+            `;
+
+            storyBuilderItems.forEach((item) => {
+                const ans = (studentResponses[item.id] || "").trim();
+                html += `
+                    <div class="card-blush border border-rose-200/80 rounded-2xl p-3.5">
+                        <div class="text-xs font-semibold text-rose-900 mb-1">${item.badge}: ${item.promptEn}</div>
+                        <div class="text-sm font-semibold ${ans ? 'text-[#2C3E50]' : 'text-slate-400 italic font-normal'}">
+                            → ${ans || '(Ще не заповнено)'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+            document.getElementById('summary-modal').classList.remove('hidden');
+        }
+
+        function closeSummaryModal() {
+            document.getElementById('summary-modal').classList.add('hidden');
+        }
+
+        // Read all filled student sentences aloud in sequence
+        function readAllSummaryAloud() {
+            const allSentences = [
+                ...timeMachineItems.map(i => (studentResponses[i.id] || "").trim()),
+                ...storyBuilderItems.map(i => (studentResponses[i.id] || "").trim())
+            ].filter(Boolean);
+
+            if (allSentences.length === 0) {
+                showToast("✍️", "Ви ще не заповнили жодного речення для озвучення.");
+                return;
+            }
+
+            speakText(allSentences.join(". "));
+        }
+
+        // Copy formatted summary to clipboard using textarea fallback (reliable in iframes)
+        function copySummaryText() {
+            const lines = [
+                "Part 3. Past Simple — My Last Business Trip (My Work):",
+                "",
+                "--- 1. Time Machine (Present -> Past Simple) ---"
+            ];
+
+            timeMachineItems.forEach((item, idx) => {
+                const ans = (studentResponses[item.id] || "").trim() || "(not completed yet)";
+                lines.push(`${idx + 1}. ${item.presentSentence}`);
+                lines.push(`   -> ${ans}`);
+            });
+
+            lines.push("", "--- 2. My Last Business Trip Story ---");
+
+            storyBuilderItems.forEach((item) => {
+                const ans = (studentResponses[item.id] || "").trim() || "(not completed yet)";
+                lines.push(`${item.badge}: ${item.promptEn}`);
+                lines.push(`   -> ${ans}`);
+            });
+
+            const fullText = lines.join("\n");
+            const tempTextarea = document.createElement("textarea");
+            tempTextarea.value = fullText;
+            tempTextarea.style.position = "fixed";
+            tempTextarea.style.left = "-9999px";
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+
+            try {
+                document.execCommand("copy");
+                document.getElementById('copy-status').classList.remove('hidden');
+                showToast("✅", "Звіт скопійовано у буфер обміну!");
+            } catch (err) {
+                showToast("⚠️", "Не вдалося скопіювати автоматично. Виділіть текст вручну.");
+            }
+
+            document.body.removeChild(tempTextarea);
+        }
+
+        // Escape HTML helper for safe rendering
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        // Toast notification helper
+        let toastTimeout;
+        function showToast(icon, message) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-icon').textContent = icon;
+            document.getElementById('toast-message').textContent = message;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2600);
+        }
+    </script>
+</body>
+</html>
