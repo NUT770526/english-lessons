@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive English Lesson: Stan's Wild Trip</title>
+    <style>
+        :root {
+            --bg-color: #fefbe8; /* Мягкий светло-желтый фон */
+            --card-bg: #ffffff;
+            --primary: #4a6fa5;
+            --amalia-bg: #fff1f0;
+            --amalia-border: #ffa39e;
+            --stan-bg: #e6f7ff;
+            --stan-border: #91d5ff;
+            --text-main: #2c3e50;
+            --vocab-highlight: #d4380d;
+            --vocab-bg: #fff2e8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0ebd8;
+        }
+
+        h1, h2 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+        }
+
+        /* Аудио плеер (TTS) */
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            background: #f4f7f6;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: background 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        button:hover {
+            background-color: #385682;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button.secondary {
+            background-color: #6c757d;
+        }
+
+        button.secondary:hover {
+            background-color: #545b62;
+        }
+
+        button.toggle-btn {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        button.toggle-btn:hover {
+            background-color: #c8e6c9;
+        }
+
+        /* Транскрипт и чат */
+        #transcript-box {
+            display: none;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px dashed #e0e0e0;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            position: relative;
+            font-size: 16px;
+        }
+
+        .amalia {
+            align-self: flex-start;
+            background-color: var(--amalia-bg);
+            border: 1px solid var(--amalia-border);
+            border-bottom-left-radius: 2px;
+        }
+
+        .stan {
+            align-self: flex-end;
+            background-color: var(--stan-bg);
+            border: 1px solid var(--stan-border);
+            border-bottom-right-radius: 2px;
+        }
+
+        .speaker-name {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0.8;
+        }
+
+        .mini-play {
+            background: none;
+            color: var(--primary);
+            padding: 2px 6px;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+
+        .mini-play:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        /* Интерактивные слова (Tooltip) */
+        .vocab {
+            color: var(--vocab-highlight);
+            background-color: var(--vocab-bg);
+            border-bottom: 2px dotted var(--vocab-highlight);
+            padding: 0 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+
+        #vocab-tooltip {
+            position: fixed;
+            background: #2c3e50;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            z-index: 1000;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            display: none;
+            max-width: 260px;
+            pointer-events: auto;
+        }
+
+        #vocab-tooltip .tt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 4px;
+        }
+
+        #vocab-tooltip .tt-word {
+            font-weight: bold;
+            color: #ffd666;
+            font-size: 15px;
+        }
+
+        #vocab-tooltip .tt-transc {
+            color: #a3d8f4;
+            font-family: 'Lucida Sans Unicode', 'Arial Unicode MS', sans-serif;
+            font-size: 13px;
+        }
+
+        #vocab-tooltip .tt-speak {
+            background: #4a6fa5;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            padding: 0;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Упражнение 1: Places */
+        .places-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .place-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 2px solid #d9d9d9;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .place-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Упражнение 2: Word Bank & Gaps */
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 10px;
+            z-index: 10;
+        }
+
+        .word-chip {
+            background: #ffffff;
+            border: 1.5px solid #adb5bd;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .word-chip:hover {
+            border-color: var(--primary);
+            background: #eef4fb;
+        }
+
+        .word-chip.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .word-chip.used {
+            opacity: 0.45;
+            text-decoration: line-through;
+        }
+
+        .gap-input {
+            display: inline-block;
+            width: 135px;
+            padding: 4px 8px;
+            margin: 2px 4px;
+            border: 2px solid #91d5ff;
+            border-radius: 6px;
+            background: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1d39c4;
+            text-align: center;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .amalia .gap-input {
+            border-color: #ffa39e;
+            color: #a8071a;
+        }
+
+        .gap-input:focus {
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
+        }
+
+        /* Упражнение 3: Discussion */
+        .question-item {
+            margin-bottom: 18px;
+        }
+
+        .question-item label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .question-item textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 14px;
+            border: 1.5px solid #d9d9d9;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 15px;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .question-item textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .hint-text {
+            font-size: 13.5px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>✈️ Stan's Wild Holiday Adventure</h1>
+
+    <!-- Блок 1: Аудирование и Транскрипт -->
+    <div class="card">
+        <h2>🎧 1. Listen to the dialogue</h2>
+        <p class="hint-text">Прослушайте диалог между Амалией и Стэном. Если нужно, откройте транскрипт — наведите курсор (или нажмите) на выделенные слова, чтобы увидеть перевод, транскрипцию и послушать произношение.</p>
+        
+        <div class="audio-controls">
+            <button id="play-all-btn" onclick="playFullDialogue()">▶️ Слушать весь диалог</button>
+            <button class="secondary" onclick="stopSpeech()">⏹️ Стоп</button>
+            <select id="rate-select" style="padding: 9px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;">
+                <option value="0.85">Скорость: 0.85x (Медленнее)</option>
+                <option value="1.0" selected>Скорость: 1.0x (Обычная)</option>
+                <option value="1.15">Скорость: 1.15x (Быстрее)</option>
+            </select>
+            <button class="toggle-btn" onclick="toggleTranscript()">📜 Показать / Скрыть транскрипт</button>
+        </div>
+
+        <div id="transcript-box">
+            <div class="chat-container" id="transcript-content"></div>
+        </div>
+    </div>
+
+    <!-- Блок 2: Места, которые посетил Стэн -->
+    <div class="card">
+        <h2>🌍 2. Write places that Stan has visited</h2>
+        <p class="hint-text">Впишите 5 географических названий (стран или городов), в которых побывал Стэн во время этой поездки (исключая места, которые он только планировал посетить, но не попал).</p>
+        <div class="places-grid">
+            <input type="text" class="place-input" placeholder="1...">
+            <input type="text" class="place-input" placeholder="2...">
+            <input type="text" class="place-input" placeholder="3...">
+            <input type="text" class="place-input" placeholder="4...">
+            <input type="text" class="place-input" placeholder="5...">
+        </div>
+    </div>
+
+    <!-- Блок 3: Заполните пропуски -->
+    <div class="card">
+        <h2>🧩 3. Complete the dialogue</h2>
+        <p class="hint-text">Нажмите на слово в рамке сверху, а затем нажмите на нужный пропуск в диалоге (или впишите слово вручную).</p>
+        
+        <div class="word-bank" id="word-bank"></div>
+        <div class="chat-container" id="gap-dialogue-content"></div>
+    </div>
+
+    <!-- Блок 4: Вопросы для обсуждения -->
+    <div class="card">
+        <h2>💬 4. Answer the questions</h2>
+        <p class="hint-text">Ответьте на вопросы письменно для проверки преподавателем или подготовьте устный ответ.</p>
+        
+        <div class="question-item">
+            <label>1. What are the best and worst things about travelling by plane?</label>
+            <textarea placeholder="Write your answer here..."></textarea>
+        </div>
+        <div class="question-item">
+            <label>2. What is the longest flight you have taken?</label>
+            <textarea placeholder="Write your answer here..."></textarea>
+        </div>
+        <div class="question-item">
+            <label>3. Did you enjoy it?</label>
+            <textarea placeholder="Write your answer here..."></textarea>
+        </div>
+        <div class="question-item">
+            <label>4. What is your opinion of the meals you are served on board?</label>
+            <textarea placeholder="Write your answer here..."></textarea>
+        </div>
+        <div class="question-item">
+            <label>5. What sort of things do you do to pass the time while flying?</label>
+            <textarea placeholder="Write your answer here..."></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- Всплывающая подсказка для слов -->
+<div id="vocab-tooltip">
+    <div class="tt-header">
+        <div>
+            <span class="tt-word" id="tt-word"></span>
+            <span class="tt-transc" id="tt-transc"></span>
+        </div>
+        <button class="tt-speak" id="tt-speak-btn" title="Прослушать слово">🔊</button>
+    </div>
+    <div id="tt-trans"></div>
+</div>
+
+<script>
+    // Словарь сложных слов с транскрипцией и переводом
+    const dictionary = {
+        "returned": { transc: "[rɪˈtɜːnd]", trans: "вернулся" },
+        "wondering": { transc: "[ˈwʌndərɪŋ]", trans: "интересовалась / гадала" },
+        "quite wild": { transc: "[kwaɪt waɪld]", trans: "довольно безумным / диким" },
+        "discovered": { transc: "[dɪˈskʌvəd]", trans: "обнаружили, узнали" },
+        "cancelled": { transc: "[ˈkænsəld]", trans: "отменён" },
+        "tour agency": { transc: "[tʊər ˈeɪdʒənsi]", trans: "туристическое агентство" },
+        "closed down": { transc: "[kləʊzd daʊn]", trans: "закрылось (обанкротилось)" },
+        "figured": { transc: "[ˈfɪɡəd]", trans: "прикинули, подумали" },
+        "ferry": { transc: "[ˈferi]", trans: "паром" },
+        "lorry": { transc: "[ˈlɒri]", trans: "грузовик (брит.)" },
+        "van": { transc: "[væn]", trans: "фургон, микроавтобус" },
+        "scammers": { transc: "[ˈskæməz]", trans: "мошенники, аферисты" },
+        "trick": { transc: "[trɪk]", trans: "обмануть, провести" },
+        "hovercraft": { transc: "[ˈhɒvəkrɑːft]", trans: "судно на воздушной подушке" },
+        "commuters": { transc: "[kəˈmjuːtəz]", trans: "люди, ежедневно ездящие на работу" },
+        "cyclists": { transc: "[ˈsaɪklɪsts]", trans: "велосипедисты" },
+        "pedestrians": { transc: "[pɪˈdestriənz]", trans: "пешеходы" },
+        "passengers": { transc: "[ˈpæsɪndʒəz]", trans: "пассажиры" },
+        "give us a ride": { transc: "[ɡɪv ʌs ə raɪd]", trans: "подвезти нас" },
+        "countryside": { transc: "[ˈkʌntrisaɪd]", trans: "сельская местность, природа" }
+    };
+
+    // Реплики диалога
+    const dialogueData = [
+        { speaker: "Amalia", cls: "amalia", text: "Hey Stan, what’s up?" },
+        { speaker: "Stan", cls: "stan", text: "Yo, Amalia! I’ve just returned from my holiday!" },
+        { speaker: "Amalia", cls: "amalia", text: "Really? I was wondering where you had been. I haven’t seen you for weeks. How was it?" },
+        { speaker: "Stan", cls: "stan", text: "Honestly, it was quite wild. We planned a trip to Scotland, but when we arrived at the airport, we discovered our trip had been cancelled." },
+        { speaker: "Amalia", cls: "amalia", text: "What do you mean?" },
+        { speaker: "Stan", cls: "stan", text: "Well, we booked a tour around Scotland. First Aberdeen then Edinburgh then Glasgow, of course with many stops in between. The tour agency had closed down, and they only called us when we got to the airport." },
+        { speaker: "Amalia", cls: "amalia", text: "No big deal, you could’ve still flown to Scotland." },
+        { speaker: "Stan", cls: "stan", text: "No, our flight had also been cancelled. Plus, there were no more flights to Scotland." },
+        { speaker: "Amalia", cls: "amalia", text: "That’s horrible. So, what did you do?" },
+        { speaker: "Stan", cls: "stan", text: "Well, we still wanted to go to Scotland, so we flew to Norway." },
+        { speaker: "Amalia", cls: "amalia", text: "Why Norway?" },
+        { speaker: "Stan", cls: "stan", text: "It’s right across from Scotland, so we figured that we could take a ferry, but that wasn’t a good idea." },
+        { speaker: "Amalia", cls: "amalia", text: "I think I know why. The only ferry from Norway to the UK is from Brevik, in Norway, to Immingham, in the UK." },
+        { speaker: "Stan", cls: "stan", text: "You’re right. So we went by plane to Norway, then we went by bus to Brevik and then jumped on the ferry. We got to Immingham, but it is very far away from Aberdeen Scotland." },
+        { speaker: "Amalia", cls: "amalia", text: "So, you didn’t go?" },
+        { speaker: "Stan", cls: "stan", text: "We went, of course!" },
+        { speaker: "Amalia", cls: "amalia", text: "But how? You were so far away?" },
+        { speaker: "Stan", cls: "stan", text: "We got to Immingham, but then we needed to find some transport to Aberdeen. We spoke to a few people, and they tried to help us out. One guy offered to go in his lorry. Another person said to go in his van. Some scammers tried to trick us to pay and go in a helicopter or hovercraft!" },
+        { speaker: "Amalia", cls: "amalia", text: "Helicopter?! Hovercraft?! Are you kidding me?" },
+        { speaker: "Stan", cls: "stan", text: "I’m serious, I think those scammers wanted to take our money and run. There were a lot of commuters, cyclists and pedestrians around us, so when we said no then they just walked away." },
+        { speaker: "Amalia", cls: "amalia", text: "Alright, but how did you get to Aberdeen?" },
+        { speaker: "Stan", cls: "stan", text: "Well, it was good luck. One older couple, they saw how lost we were, and they decided to drive us. They had gone for a drive in the country with their new car and wanted to continue driving all over the country, so they offered us to be their passengers and give us a ride." },
+        { speaker: "Amalia", cls: "amalia", text: "Wow, that was good luck!" },
+        { speaker: "Stan", cls: "stan", text: "Oh yeah! We got to see a lot of the Scottish countryside along the way. It was so beautiful!" }
+    ];
+
+    // Текст для упражнения 3 с пропусками {{word}}
+    const gapDialogueData = [
+        { speaker: "Amalia", cls: "amalia", text: "Hey Stan, what’s up?" },
+        { speaker: "Stan", cls: "stan", text: "Yo, Amalia! I’ve just returned from my {{holiday}}!" },
+        { speaker: "Amalia", cls: "amalia", text: "Really? I was wondering where you had been. I haven’t seen you for {{weeks}}. How was it?" },
+        { speaker: "Stan", cls: "stan", text: "Honestly, it was quite wild. We planned a {{trip}} to Scotland, but when we arrived at the airport, we discovered our trip had been cancelled." },
+        { speaker: "Amalia", cls: "amalia", text: "What do you mean?" },
+        { speaker: "Stan", cls: "stan", text: "Well, we booked a tour around Scotland. First Aberdeen then Edinburgh then Glasgow, of course with many stops in between. The {{tour agency}} had closed down, and they only called us when we got to the airport." },
+        { speaker: "Amalia", cls: "amalia", text: "No big deal, you could’ve still flown to Scotland." },
+        { speaker: "Stan", cls: "stan", text: "No, our {{flight}} had also been cancelled. Plus, there were no more flights to Scotland." },
+        { speaker: "Amalia", cls: "amalia", text: "That’s horrible. So, what did you do?" },
+        { speaker: "Stan", cls: "stan", text: "Well, we still wanted to go to Scotland, so we flew to Norway." },
+        { speaker: "Amalia", cls: "amalia", text: "Why Norway?" },
+        { speaker: "Stan", cls: "stan", text: "It’s right across from Scotland, so we figured that we could take a ferry, but that wasn’t a {{good idea}}." },
+        { speaker: "Amalia", cls: "amalia", text: "I think I know why. The only ferry from Norway to the UK is from Brevik, in Norway, to Immingham, in the UK." },
+        { speaker: "Stan", cls: "stan", text: "You’re right. So we went by plane to Norway, then we went by bus to Brevik and then jumped on the {{ferry}}. We got to Immingham, but it is very far away from Aberdeen Scotland." },
+        { speaker: "Amalia", cls: "amalia", text: "So, you didn’t go?" },
+        { speaker: "Stan", cls: "stan", text: "We went, of course!" },
+        { speaker: "Amalia", cls: "amalia", text: "But how? You were so far away?" },
+        { speaker: "Stan", cls: "stan", text: "We got to Immingham, but then we needed to find some transport to Aberdeen. We spoke to a few people, and they tried to help us out. One guy offered to go in his lorry. Another person said to go in his {{van}}. Some scammers tried to trick us to pay and go in a helicopter or hovercraft!" },
+        { speaker: "Amalia", cls: "amalia", text: "Helicopter?! Hovercraft?! Are you kidding me?" },
+        { speaker: "Stan", cls: "stan", text: "I’m serious, I think those scammers wanted to take our money and run. There were a lot of commuters, {{cyclists}} and pedestrians around us, so when we said no then they just walked away." },
+        { speaker: "Amalia", cls: "amalia", text: "Alright, but how did you get to Aberdeen?" },
+        { speaker: "Stan", cls: "stan", text: "Well, it was good luck. One older couple, they saw how lost we were, and they decided to drive us. They had gone for a drive in the country with their new car and wanted to continue driving all over the country, so they offered us to be their {{passengers}} and give us a ride." },
+        { speaker: "Amalia", cls: "amalia", text: "Wow, that was {{good luck}}!" },
+        { speaker: "Stan", cls: "stan", text: "Oh yeah! We got to see a lot of the Scottish countryside along the way. It was so beautiful!" }
+    ];
+
+    const wordBankList = [
+        "holiday", "passengers", "weeks", "trip", "van", 
+        "tour agency", "ferry", "cyclists", "good idea", "flight", "good luck"
+    ];
+
+    // Отрисовка транскрипта с подсветкой слов
+    function renderTranscript() {
+        const container = document.getElementById('transcript-content');
+        const keys = Object.keys(dictionary).sort((a, b) => b.length - a.length);
+        const regex = new RegExp(`\\b(${keys.join('|')})\\b`, 'gi');
+
+        dialogueData.forEach((line, index) => {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${line.cls}`;
+
+            const highlightedText = line.text.replace(regex, (match) => {
+                const key = match.toLowerCase();
+                return `<span class="vocab" data-word="${key}" onmouseenter="showTooltip(event, '${key}')" onclick="showTooltip(event, '${key}')">${match}</span>`;
+            });
+
+            msgDiv.innerHTML = `
+                <div class="speaker-name">
+                    <span>${line.speaker}</span>
+                    <button class="mini-play" onclick="speakLine(${index})" title="Прослушать реплику">🔊</button>
+                </div>
+                <div>${highlightedText}</div>
+            `;
+            container.appendChild(msgDiv);
+        });
+    }
+
+    // Отрисовка упражнения с пропусками
+    let selectedChip = null;
+
+    function renderGapExercise() {
+        const bankContainer = document.getElementById('word-bank');
+        wordBankList.forEach(word => {
+            const chip = document.createElement('div');
+            chip.className = 'word-chip';
+            chip.textContent = word;
+            chip.onclick = () => {
+                if (selectedChip === chip) {
+                    chip.classList.remove('selected');
+                    selectedChip = null;
+                } else {
+                    document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected'));
+                    chip.classList.add('selected');
+                    selectedChip = chip;
+                }
+            };
+            bankContainer.appendChild(chip);
+        });
+
+        const dialogueContainer = document.getElementById('gap-dialogue-content');
+        gapDialogueData.forEach(line => {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${line.cls}`;
+
+            const htmlText = line.text.replace(/\{\{(.*?)\}\}/g, () => {
+                return `<input type="text" class="gap-input" placeholder="..." onclick="fillGap(this)" oninput="updateWordBankStatus()">`;
+            });
+
+            msgDiv.innerHTML = `
+                <div class="speaker-name"><span>${line.speaker}</span></div>
+                <div>${htmlText}</div>
+            `;
+            dialogueContainer.appendChild(msgDiv);
+        });
+    }
+
+    function fillGap(inputEl) {
+        if (selectedChip) {
+            inputEl.value = selectedChip.textContent;
+            selectedChip.classList.remove('selected');
+            selectedChip = null;
+            updateWordBankStatus();
+        }
+    }
+
+    function updateWordBankStatus() {
+        const inputs = Array.from(document.querySelectorAll('.gap-input')).map(i => i.value.trim().toLowerCase());
+        document.querySelectorAll('.word-chip').forEach(chip => {
+            const word = chip.textContent.toLowerCase();
+            if (inputs.includes(word)) {
+                chip.classList.add('used');
+            } else {
+                chip.classList.remove('used');
+            }
+        });
+    }
+
+    // Логика всплывающей подсказки (Tooltip)
+    const tooltip = document.getElementById('vocab-tooltip');
+    let hideTimeout;
+
+    function showTooltip(event, key) {
+        clearTimeout(hideTimeout);
+        const entry = dictionary[key];
+        if (!entry) return;
+
+        document.getElementById('tt-word').textContent = key;
+        document.getElementById('tt-transc').textContent = entry.transc;
+        document.getElementById('tt-trans').textContent = entry.trans;
+        document.getElementById('tt-speak-btn').onclick = () => speakText(key, 'Female');
+
+        tooltip.style.display = 'block';
+        const rect = event.target.getBoundingClientRect();
+        let top = rect.top - tooltip.offsetHeight - 8;
+        let left = rect.left;
+
+        if (top < 10) top = rect.bottom + 8;
+        if (left + tooltip.offsetWidth > window.innerWidth - 15) {
+            left = window.innerWidth - tooltip.offsetWidth - 15;
+        }
+
+        tooltip.style.top = `${top}px`;
+        tooltip.style.left = `${left}px`;
+    }
+
+    tooltip.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+    tooltip.addEventListener('mouseleave', () => {
+        hideTimeout = setTimeout(() => { tooltip.style.display = 'none'; }, 250);
+    });
+
+    document.addEventListener('mouseover', (e) => {
+        if (!e.target.classList.contains('vocab') && !tooltip.contains(e.target)) {
+            hideTimeout = setTimeout(() => { tooltip.style.display = 'none'; }, 300);
+        }
+    });
+
+    function toggleTranscript() {
+        const box = document.getElementById('transcript-box');
+        box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+    }
+
+    // Озвучка (Web Speech API с разделением голосов для Амалии и Стэна)
+    let voices = [];
+    function loadVoices() {
+        voices = window.speechSynthesis.getVoices();
+    }
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+
+    function getVoice(gender) {
+        const enVoices = voices.filter(v => v.lang.startsWith('en'));
+        if (enVoices.length === 0) return null;
+
+        if (gender === 'Female') {
+            return enVoices.find(v => /female|zira|hazel|samantha|victoria|google uk english female/i.test(v.name)) || enVoices[0];
+        } else {
+            return enVoices.find(v => /male|david|george|daniel|alex|google uk english male/i.test(v.name) && !/female/i.test(v.name)) || enVoices[1] || enVoices[0];
+        }
+    }
+
+    function speakText(text, gender = 'Female', onEndCallback = null) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-GB';
+        utterance.rate = parseFloat(document.getElementById('rate-select').value);
+        
+        const voice = getVoice(gender);
+        if (voice) utterance.voice = voice;
+        utterance.pitch = (gender === 'Female') ? 1.15 : 0.9;
+
+        if (onEndCallback) {
+            utterance.onend = onEndCallback;
+        }
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function speakLine(index) {
+        const line = dialogueData[index];
+        const gender = line.speaker === 'Amalia' ? 'Female' : 'Male';
+        speakText(line.text, gender);
+    }
+
+    let isPlayingAll = false;
+    function playFullDialogue() {
+        isPlayingAll = true;
+        let currentIndex = 0;
+
+        function nextLine() {
+            if (!isPlayingAll || currentIndex >= dialogueData.length) {
+                isPlayingAll = false;
+                return;
+            }
+            const line = dialogueData[currentIndex];
+            const gender = line.speaker === 'Amalia' ? 'Female' : 'Male';
+            currentIndex++;
+            speakText(line.text, gender, () => {
+                if (isPlayingAll) setTimeout(nextLine, 350);
+            });
+        }
+        nextLine();
+    }
+
+    function stopSpeech() {
+        isPlayingAll = false;
+        window.speechSynthesis.cancel();
+    }
+
+    // Инициализация
+    renderTranscript();
+    renderGapExercise();
+</script>
+
+</body>
+</html>
