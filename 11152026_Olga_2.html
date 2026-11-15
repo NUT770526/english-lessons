@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 2. Complete the sentences</title>
+    <style>
+        :root {
+            --bg-color: #fcf8ee;
+            --card-bg: #ffffff;
+            --primary: #2c5282;
+            --text-main: #1a202c;
+            --border-color: #cbd5e0;
+            --accent: #3182ce;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 820px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2d9c2;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.8em;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #4a5568;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 12px;
+        }
+
+        .hint-box {
+            background: #ebf8ff;
+            border: 1px solid #90cdf4;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 25px;
+            color: #2b6cb0;
+        }
+
+        .question-block {
+            margin-bottom: 24px;
+            background: #fafaf9;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Интерактивная зона с подсказкой при наведении */
+        .hover-area {
+            border-bottom: 2px dashed #3182ce;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+        .hover-area:hover {
+            background-color: #ebf8ff;
+        }
+
+        .speak-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 0 4px;
+            border-radius: 50%;
+            transition: transform 0.1s;
+        }
+        .speak-btn:hover {
+            transform: scale(1.2);
+        }
+
+        /* Поле ввода (пропуск) */
+        .gap-input {
+            font-size: 18px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border: 2px solid #a0aec0;
+            border-radius: 8px;
+            width: 170px;
+            text-align: center;
+            outline: none;
+            background: #ffffff;
+            color: #2c5282;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .gap-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+        }
+
+        .gap-input.correct-input {
+            border-color: #38a169;
+            background-color: #f0fff4;
+            color: #22543d;
+        }
+
+        .gap-input.incorrect-input {
+            border-color: #e53e3e;
+            background-color: #fff5f5;
+            color: #742a2a;
+        }
+
+        /* Блок вариантов для подсказки */
+        .options-hint {
+            margin-top: 10px;
+            font-size: 15px;
+            color: #718096;
+        }
+
+        .check-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn-check {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-check:hover {
+            background-color: #1a365d;
+            transform: translateY(-1px);
+        }
+
+        .result-message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 28px;
+            text-align: center;
+        }
+
+        /* Всплывающая подсказка */
+        #vocab-tooltip {
+            position: fixed;
+            background: #2d3748;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            display: none;
+            pointer-events: none;
+            max-width: 340px;
+        }
+        #vocab-tooltip .tip-transc {
+            color: #90cdf4;
+            font-family: monospace;
+            margin-bottom: 4px;
+        }
+        #vocab-tooltip .tip-ru {
+            color: #f7fafc;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h1>Exercise 2. Complete the sentences</h1>
+        <div class="subtitle">Впишите правильные слова или выражения в пропуски (8 предложений).</div>
+        
+        <div class="hint-box">
+            💡 <strong>Подсказка:</strong> Наведите курсор на предложение, чтобы увидеть транскрипцию и перевод. Нажмите 🔊 для прослушивания.
+        </div>
+
+        <div id="quiz-container"></div>
+
+        <div class="check-container">
+            <button class="btn-check" onclick="checkAnswers()">Проверить ответы</button>
+            <div class="result-message" id="result-msg"></div>
+        </div>
+    </div>
+</div>
+
+<div id="vocab-tooltip">
+    <div class="tip-transc" id="tip-transc"></div>
+    <div class="tip-ru" id="tip-ru"></div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            id: 1,
+            before: "He ",
+            after: " in 1960.",
+            correct: "was born",
+            options: "Варианты: was born / got married / died of",
+            transc: "[hiː wɒz bɔːn ɪn ˈnaɪnˈtiːn ˈsɪksti]",
+            translation: "Он родился в 1960 году.",
+            fullText: "He was born in 1960."
+        },
+        {
+            id: 2,
+            before: "Anna ",
+            after: " yesterday. The baby is a girl.",
+            correct: "had a baby",
+            options: "Варианты: was divorced / had a baby / was widowed",
+            transc: "[ˈænə hæd ə ˈbeɪbi ˈjestədeɪ]",
+            translation: "У Анны вчера родился ребёнок. Ребёнок — девочка.",
+            fullText: "Anna had a baby yesterday. The baby is a girl."
+        },
+        {
+            id: 3,
+            before: "The baby ",
+            after: " 3 kilograms.",
+            correct: "weighed",
+            options: "Варианты: weighed / married / died",
+            transc: "[ðə ˈbeɪbi weɪd θriː ˈkɪləɡræmz]",
+            translation: "Ребёнок весил 3 килограмма.",
+            fullText: "The baby weighed 3 kilograms."
+        },
+        {
+            id: 4,
+            before: "They ",
+            after: " in 2001.",
+            correct: "got married",
+            options: "Варианты: were born / got married / had a funeral",
+            transc: "[ðeɪ ɡɒt ˈmærid ɪn ˈtuː ˈwʌʊzənd ənd wʌn]",
+            translation: "Они поженились в 2001 году.",
+            fullText: "They got married in 2001."
+        },
+        {
+            id: 5,
+            before: "She is married ",
+            after: " John.",
+            correct: "to",
+            options: "Варианты: with / for / to",
+            transc: "[ʃiː ɪz ˈmærid tuː ʤɒn]",
+            translation: "Она замужем за Джоном.",
+            fullText: "She is married to John."
+        },
+        {
+            id: 6,
+            before: "They went ",
+            after: " their honeymoon to Italy.",
+            correct: "on",
+            options: "Варианты: on / in / at",
+            transc: "[ðeɪ went ɒn ðeə ˈhʌnimuːn tuː ˈɪtəli]",
+            translation: "Они отправились в свадебное путешествие в Италию.",
+            fullText: "They went on their honeymoon to Italy."
+        },
+        {
+            id: 7,
+            before: "Her husband died. She is ",
+            after: ".",
+            correct: "widowed",
+            options: "Варианты: single / widowed / married",
+            transc: "[hɜː ˈhʌzbənd daɪd. ʃiː ɪz ˈwɪdəd]",
+            translation: "Ее муж умер. Она овдовела.",
+            fullText: "Her husband died. She is widowed."
+        },
+        {
+            id: 8,
+            before: "He died ",
+            after: " a heart attack.",
+            correct: "of",
+            options: "Варианты: of / on / to",
+            transc: "[hiː daɪd ɒv ə hɑːt əˈtæk]",
+            translation: "Он умер от сердечного приступа.",
+            fullText: "He died of a heart attack."
+        }
+    ];
+
+    function speakText(text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-GB';
+        utterance.rate = 0.85; // Спокойный, комфортный темп
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function renderQuiz() {
+        const container = document.getElementById('quiz-container');
+
+        quizData.forEach((item, index) => {
+            const block = document.createElement('div');
+            block.className = 'question-block';
+
+            const qText = document.createElement('div');
+            qText.className = 'question-text';
+
+            const num = document.createElement('span');
+            num.textContent = `${index + 1}. `;
+
+            // Интерактивная фраза для подсказки и озвучки
+            const hoverArea = document.createElement('span');
+            hoverArea.className = 'hover-area';
+            hoverArea.innerHTML = `${item.before} [ ... ] ${item.after}`;
+            hoverArea.onmouseenter = (e) => showTooltip(e, item.transc, item.translation);
+            hoverArea.onmouseleave = hideTooltip;
+
+            const speakBtn = document.createElement('button');
+            speakBtn.className = 'speak-btn';
+            speakBtn.textContent = '🔊';
+            speakBtn.title = 'Прослушать предложение';
+            speakBtn.onclick = () => speakText(item.fullText);
+
+            qText.appendChild(num);
+            qText.appendChild(hoverArea);
+            qText.appendChild(speakBtn);
+
+            // Поле ввода для ответа
+            const inputContainer = document.createElement('div');
+            inputContainer.style.marginTop = '12px';
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'gap-input';
+            input.id = `input-${index}`;
+            input.placeholder = 'впишите ответ';
+
+            const hint = document.createElement('div');
+            hint.className = 'options-hint';
+            hint.textContent = item.options;
+
+            inputContainer.appendChild(input);
+            inputContainer.appendChild(hint);
+
+            block.appendChild(qText);
+            block.appendChild(inputContainer);
+            container.appendChild(block);
+        });
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        quizData.forEach((item, index) => {
+            const input = document.getElementById(`input-${index}`);
+            const userVal = input.value.trim().toLowerCase();
+            const correctVal = item.correct.toLowerCase();
+
+            input.classList.remove('correct-input', 'incorrect-input');
+
+            if (userVal === correctVal) {
+                input.classList.add('correct-input');
+                correctCount++;
+            } else {
+                input.classList.add('incorrect-input');
+            }
+        });
+
+        const msg = document.getElementById('result-msg');
+        if (correctCount === quizData.length) {
+            msg.style.color = '#276749';
+            msg.textContent = '🎉 Великолепно! Все ответы правильные!';
+        } else {
+            msg.style.color = '#9b2c2c';
+            msg.textContent = `Правильных ответов: ${correctCount} из ${quizData.length}. Попробуйте исправить ошибки!`;
+        }
+    }
+
+    const tooltip = document.getElementById('vocab-tooltip');
+    const tipTransc = document.getElementById('tip-transc');
+    const tipRu = document.getElementById('tip-ru');
+
+    function showTooltip(event, transc, translation) {
+        tipTransc.textContent = transc;
+        tipRu.textContent = translation;
+        tooltip.style.display = 'block';
+        const rect = event.target.getBoundingClientRect();
+        tooltip.style.top = `${rect.top - 65}px`;
+        tooltip.style.left = `${rect.left}px`;
+    }
+
+    function hideTooltip() {
+        tooltip.style.display = 'none';
+    }
+
+    renderQuiz();
+</script>
+
+</body>
+</html>
