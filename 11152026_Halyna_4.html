@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Listening & Reading Lesson</title>
+    <style>
+        :root {
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --primary: #2b6cb0;
+            --text-main: #2d3748;
+            --border-color: #e2e8f0;
+            --accent: #3182ce;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #edf2f7;
+            margin-bottom: 25px;
+        }
+
+        h1, h2 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        h1 { font-size: 1.6em; text-align: center; margin-bottom: 20px; }
+        h2 { font-size: 1.3em; border-bottom: 2px solid #edf2f7; padding-bottom: 8px; margin-bottom: 20px; }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            background: #ebf8ff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #90cdf4;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background-color: #1a365d; }
+        .btn-secondary { background-color: #718096; }
+        .btn-secondary:hover { background-color: #4a5568; }
+
+        #transcript-box {
+            display: none;
+            margin-top: 15px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px dashed #cbd5e0;
+            font-size: 17px;
+        }
+
+        .vocab-word {
+            color: #9b2c2c;
+            border-bottom: 2px dashed #9b2c2c;
+            cursor: pointer;
+            position: relative;
+            font-weight: 600;
+        }
+        .vocab-word:hover { background-color: #fff5f5; }
+
+        .question-block {
+            background: #f8fafc;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .select-box {
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            outline: none;
+            background: white;
+            cursor: pointer;
+        }
+        .select-box:focus { border-color: var(--accent); }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .radio-label:hover { background: #edf2f7; }
+        .radio-label input { transform: scale(1.2); cursor: pointer; }
+
+        .feedback {
+            margin-top: 8px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .correct { color: #276749; }
+        .incorrect { color: #c53030; }
+
+        .center-btn { text-align: center; margin-top: 25px; }
+
+        #vocab-tooltip {
+            position: fixed;
+            background: #2d3748;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            display: none;
+            pointer-events: none;
+            max-width: 280px;
+        }
+        .tip-transc { color: #90cdf4; font-family: monospace; margin-bottom: 4px; }
+        .tip-ru { color: #f7fafc; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎧 Interactive Listening & Reading Lesson</h1>
+
+    <!-- Блок 1: Аудио та Транскрипт -->
+    <div class="card">
+        <h2>1. Listen & Read (Transcript)</h2>
+        <div class="audio-controls">
+            <button class="btn" onclick="playAudioText()">▶️ Прослухати текст</button>
+            <button class="btn btn-secondary" onclick="stopAudioText()">⏹️ Зупинити</button>
+            <button class="btn" style="background-color: #319795;" onclick="toggleTranscript()">📜 Відкрити / Сховати Transcript</button>
+        </div>
+
+        <div id="transcript-box">
+            <p>
+                Statistics all across the world say that people who use the internet are becoming much more 
+                <span class="vocab-word" onclick="speakWord('suspicious')" onmouseenter="showTooltip(event, '[səˈspɪʃəs]', 'підозрілий')" onmouseleave="hideTooltip()">suspicious</span> 
+                of <span class="vocab-word" onclick="speakWord('surveillance')" onmouseenter="showTooltip(event, '[sɜːˈveɪləns]', 'стеження, нагляд')" onmouseleave="hideTooltip()">surveillance</span> 
+                by internet technology (IT) companies and the government. 
+                Some internet users believe that IT companies and the government are recording their video calls. 
+                Others even believe that IT companies can read the emails that we 
+                <span class="vocab-word" onclick="speakWord('exchange')" onmouseenter="showTooltip(event, '[ɪksˈtʃeɪndʒ]', 'обмінюватися')" onmouseleave="hideTooltip()">exchange</span> 
+                with our colleagues, friends, and family.
+            </p>
+            <p>
+                A <span class="vocab-word" onclick="speakWord('tiny')" onmouseenter="showTooltip(event, '[ˈtaɪni]', 'крихітний, дуже малий')" onmouseleave="hideTooltip()">tiny</span> 
+                amount of people think that the smartphones we buy have surveillance 
+                <span class="vocab-word" onclick="speakWord('equipment')" onmouseenter="showTooltip(event, '[ɪˈkwɪpmənt]', 'обладнання')" onmouseleave="hideTooltip()">equipment</span>, 
+                that the government uses to 
+                <span class="vocab-word" onclick="speakWord('spy on')" onmouseenter="showTooltip(event, '[spaɪ ɒn]', 'шпигувати за')" onmouseleave="hideTooltip()">spy on</span> us for national security reasons, inside of them. 
+                People who believe this may be a little 
+                <span class="vocab-word" onclick="speakWord('paranoid')" onmouseenter="showTooltip(event, '[ˈpærənɔɪd]', 'параноїдальний')" onmouseleave="hideTooltip()">paranoid</span>.
+            </p>
+            <p>
+                If you go to your search engine and research this topic, you can find many websites that talk about this topic. 
+                What you will learn is that most of the information collected through websites and social media is used for 
+                <span class="vocab-word" onclick="speakWord('advertising')" onmouseenter="showTooltip(event, '[ˈædvətaɪzɪŋ]', 'реклама')" onmouseleave="hideTooltip()">advertising</span>. 
+                Special settings in your browser, called 
+                <span class="vocab-word" onclick="speakWord('cookies')" onmouseenter="showTooltip(event, '[ˈkʊkiːz]', 'куки, файли cookie')" onmouseleave="hideTooltip()">cookies</span>, 
+                allow websites to collect data about you and help advertising companies sell you products they think you may like. 
+                Most websites ask what cookies you want to accept. You can 
+                <span class="vocab-word" onclick="speakWord('protect')" onmouseenter="showTooltip(event, '[prəˈtekt]', 'захищати')" onmouseleave="hideTooltip()">protect</span> 
+                your <span class="vocab-word" onclick="speakWord('privacy')" onmouseenter="showTooltip(event, '[ˈprɪvəsi]', 'приватність, конфіденційність')" onmouseleave="hideTooltip()">privacy</span> by not accepting all the cookies, but if you don't accept any cookies, the website may not work.
+            </p>
+            <p>
+                So, the next time you go to a website and 
+                <span class="vocab-word" onclick="speakWord('browse')" onmouseenter="showTooltip(event, '[braʊz]', 'переглядати, гортати')" onmouseleave="hideTooltip()">browse</span> 
+                smartphones, sports equipment, or something else you like, don't be 
+                <span class="vocab-word" onclick="speakWord('surprised')" onmouseenter="showTooltip(event, '[səˈpraɪzd]', 'здивований')" onmouseleave="hideTooltip()">surprised</span> 
+                if you see a pop-up, or a banner, at the top of your screen that says "Buy it now! Great smartphones at a 
+                <span class="vocab-word" onclick="speakWord('discount')" onmouseenter="showTooltip(event, '[ˈdɪskaʊnt]', 'знижка')" onmouseleave="hideTooltip()">discount</span>!"
+            </p>
+            <div style="font-size: 13px; color: #718096; margin-top: 10px;">
+                💡 Наведіть курсор на виділене слово, щоб побачити транскрипцію та переклад, або натисніть на нього, щоб прослухати.
+            </div>
+        </div>
+    </div>
+
+    <!-- Блок 2: Завдання 1 -->
+    <div class="card">
+        <h2>2. Choose the correct option</h2>
+        <div id="quiz-options"></div>
+    </div>
+
+    <!-- Блок 3: Завдання 2 -->
+    <div class="card">
+        <h2>3. Choose the best option</h2>
+        <div class="question-block">
+            <div class="question-text">1. Choose the sentence which best summarizes the main idea:</div>
+            <label class="radio-label"><input type="radio" name="main-idea" value="0"> New technology is helping to find internet criminals.</label>
+            <label class="radio-label"><input type="radio" name="main-idea" value="1"> It is difficult to record a lot of data.</label>
+            <label class="radio-label"><input type="radio" name="main-idea" value="2"> Modern life is not very private.</label>
+            <div class="feedback" id="feedback-main"></div>
+        </div>
+        <div class="center-btn">
+            <button class="btn" onclick="checkAllExercises()">Перевірити всі відповіді</button>
+        </div>
+    </div>
+</div>
+
+<!-- Тултип -->
+<div id="vocab-tooltip">
+    <div class="tip-transc" id="tip-transc"></div>
+    <div class="tip-ru" id="tip-ru"></div>
+</div>
+
+<script>
+    const fullTextToRead = `Statistics all across the world say that people who use the internet are becoming much more suspicious of surveillance by internet technology companies and the government. Some internet users believe that IT companies and the government are recording their video calls. Others even believe that IT companies can read the emails that we exchange with our colleagues, friends, and family. A tiny amount of people think that the smartphones we buy have surveillance equipment, that the government uses to spy on us for national security reasons, inside of them. People who believe this may be a little paranoid. If you go to your search engine and research this topic, you can find many websites that talk about this topic. What you will learn is that most of the information collected through websites and social media is used for advertising. Special settings in your browser, called cookies, allow websites to collect data about you and help advertising companies sell you products they think you may like. Most websites ask what cookies you want to accept. You can protect your privacy by not accepting all the cookies, but if you don't accept any cookies, the website may not work. So, the next time you go to a website and browse smartphones, sports equipment, or something else you like, don't be surprised if you see a pop-up, or a banner, at the top of your screen that says "Buy it now! Great smartphones at a discount!"`;
+
+    function playAudioText() {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(fullTextToRead);
+        utterance.lang = 'en-GB';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function speakWord(word) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = 'en-GB';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function stopAudioText() {
+        window.speechSynthesis.cancel();
+    }
+
+    function toggleTranscript() {
+        const box = document.getElementById('transcript-box');
+        box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+    }
+
+    const quizData = [
+        {
+            q: "1. More and more people trust internet technology today.",
+            options: ["True", "False", "Not Stated"],
+            correct: 1
+        },
+        {
+            q: "2. Most people think that the smartphones we buy have surveillance equipment.",
+            options: ["True", "False", "Not Stated"],
+            correct: 1
+        },
+        {
+            q: "3. The government uses smartphones to spy on us for national security reasons.",
+            options: ["True", "False", "Not Stated"],
+            correct: 2
+        },
+        {
+            q: "4. Not many websites can tell you about this topic.",
+            options: ["True", "False", "Not Stated"],
+            correct: 1
+        },
+        {
+            q: "5. Most of the information collected about us is used for advertising.",
+            options: ["True", "False", "Not Stated"],
+            correct: 0
+        }
+    ];
+
+    function renderQuiz() {
+        const container = document.getElementById('quiz-options');
+        quizData.forEach((item, index) => {
+            const block = document.createElement('div');
+            block.className = 'question-block';
+
+            const text = document.createElement('div');
+            text.className = 'question-text';
+            text.textContent = item.q;
+
+            const select = document.createElement('select');
+            select.className = 'select-box';
+            select.id = `q-select-${index}`;
+
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = "";
+            defaultOpt.textContent = "— Виберіть варіант —";
+            select.appendChild(defaultOpt);
+
+            item.options.forEach((opt, oIdx) => {
+                const option = document.createElement('option');
+                option.value = oIdx;
+                option.textContent = opt;
+                select.appendChild(option);
+            });
+
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback';
+            feedback.id = `feedback-q-${index}`;
+
+            block.appendChild(text);
+            block.appendChild(select);
+            block.appendChild(feedback);
+            container.appendChild(block);
+        });
+    }
+
+    function checkAllExercises() {
+        quizData.forEach((item, index) => {
+            const select = document.getElementById(`q-select-${index}`);
+            const feedback = document.getElementById(`feedback-q-${index}`);
+            const val = parseInt(select.value);
+
+            if (val === item.correct) {
+                feedback.textContent = "✓ Правильно!";
+                feedback.className = "feedback correct";
+            } else {
+                feedback.textContent = "✕ Помилка. Спробуйте ще раз.";
+                feedback.className = "feedback incorrect";
+            }
+        });
+
+        const radios = document.getElementsByName("main-idea");
+        const feedbackMain = document.getElementById("feedback-main");
+        let selectedMain = -1;
+        radios.forEach((r, idx) => { if (r.checked) selectedMain = idx; });
+
+        if (selectedMain === 2) {
+            feedbackMain.textContent = "✓ Правильно! Сучасне життя залишає мало приватності через збір даних.";
+            feedbackMain.className = "feedback correct";
+        } else {
+            feedbackMain.textContent = "✕ Неправильно. Подумайте, про що загалом текст (реклама, куки, стеження).";
+            feedbackMain.className = "feedback incorrect";
+        }
+    }
+
+    const tooltip = document.getElementById('vocab-tooltip');
+    const tipTransc = document.getElementById('tip-transc');
+    const tipRu = document.getElementById('tip-ru');
+
+    function showTooltip(event, transc, translation) {
+        tipTransc.textContent = transc;
+        tipRu.textContent = translation;
+        tooltip.style.display = 'block';
+        const rect = event.target.getBoundingClientRect();
+        tooltip.style.top = `${rect.top - 55}px`;
+        tooltip.style.left = `${rect.left}px`;
+    }
+
+    function hideTooltip() {
+        tooltip.style.display = 'none';
+    }
+
+    renderQuiz();
+</script>
+
+</body>
+</html>
