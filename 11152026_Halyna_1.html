@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 1. Match the Words with Their Meanings</title>
+    <style>
+        :root {
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --primary: #2b6cb0;
+            --text-main: #2d3748;
+            --border-color: #e2e8f0;
+            --accent: #3182ce;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #edf2f7;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.6em;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #4a5568;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 12px;
+        }
+
+        .task-instruction {
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 17px;
+            color: #1a202c;
+        }
+
+        .match-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .word-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 220px;
+        }
+
+        .word-num {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Інтерактивне слово з транскрипцією */
+        .vocab-word {
+            color: #9b2c2c;
+            border-bottom: 2px dashed #9b2c2c;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 17px;
+            position: relative;
+        }
+        .vocab-word:hover {
+            background-color: #fff5f5;
+        }
+
+        .speak-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 2px 6px;
+            border-radius: 50%;
+            transition: transform 0.1s;
+        }
+        .speak-btn:hover {
+            transform: scale(1.2);
+            background: rgba(0,0,0,0.05);
+        }
+
+        .meaning-select {
+            flex: 1;
+            min-width: 280px;
+            padding: 10px 14px;
+            font-size: 16px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #2d3748;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .meaning-select:focus {
+            border-color: var(--accent);
+        }
+
+        .btn-container {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 17px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background-color: #1a365d;
+        }
+        .btn-reset {
+            background-color: #718096;
+        }
+        .btn-reset:hover {
+            background-color: #4a5568;
+        }
+
+        .result-msg {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 30px;
+        }
+
+        /* Всплывающая подсказка с транскрипцией */
+        #vocab-tooltip {
+            position: fixed;
+            background: #2d3748;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 15px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            display: none;
+            pointer-events: none;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h1>Exercise 1. Match the Words with Their Meanings</h1>
+        <div class="subtitle">Мета: узнавание слов и закрепление их значений[cite: 20].</div>
+        
+        <div class="task-instruction">Match the English words with their Ukrainian meanings[cite: 20]. <br>
+        <small style="color: #718096; font-weight: normal;">💡 Наведіть курсор на англійське слово, щоб побачити транскрипцію. Натисніть 🔊 для прослуховування.</small></div>
+
+        <div id="exercise-list"></div>
+
+        <div class="btn-container">
+            <button class="btn" onclick="checkAnswers()">Перевірити відповіді</button>
+            <button class="btn btn-reset" onclick="resetExercise()">Скинути</button>
+        </div>
+
+        <div class="result-msg" id="result-msg"></div>
+    </div>
+</div>
+
+<div id="vocab-tooltip"></div>
+
+<script>
+    const data = [
+        { id: 1, word: "surveillance", transc: "[sɜːˈveɪləns]", meaning: "стеження, нагляд" },
+        { id: 2, word: "suspicious", transc: "[səˈspɪʃəs]", meaning: "підозрілий" },
+        { id: 3, word: "equipment", transc: "[ɪˈkwɪpmənt]", meaning: "обладнання, спорядження" },
+        { id: 4, word: "substantial", transc: "[səbˈstænʃl]", meaning: "суттєвий, значний" },
+        { id: 5, word: "tiny", transc: "[ˈtaɪni]", meaning: "крихітний" },
+        { id: 6, word: "prevent", transc: "[prɪˈvent]", meaning: "запобігати, перешкоджати" },
+        { id: 7, word: "security", transc: "[sɪˈkjʊrəti]", meaning: "безпека, охорона" },
+        { id: 8, word: "statistics", transc: "[stəˈtɪstɪks]", meaning: "статистика" },
+        { id: 9, word: "paranoid", transc: "[ˈpærənɔɪd]", meaning: "параноїдальний" },
+        { id: 10, word: "wide", transc: "[waɪd]", meaning: "широкий" }
+    ];
+
+    // Перемішуємо варіанти для випадаючого списку, щоб студенту було цікавіше обирати
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex != 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+    function speakText(text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-GB';
+        utterance.rate = 0.85; // Спокійний темп для зручності
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function renderExercise() {
+        const container = document.getElementById('exercise-list');
+        container.innerHTML = '';
+
+        // Одержуємо список усіх можливих значень для селектів
+        const allMeanings = data.map(item => item.meaning);
+
+        data.forEach((item, index) => {
+            const row = document.createElement('div');
+            row.className = 'match-row';
+
+            // Ліва частина: номер, слово (з тултипом транскрипції) та кнопка озвучки
+            const wordDiv = document.createElement('div');
+            wordDiv.className = 'word-container';
+
+            const numSpan = document.createElement('span');
+            numSpan.className = 'word-num';
+            numSpan.textContent = `${index + 1}.`;
+
+            const wordSpan = document.createElement('span');
+            wordSpan.className = 'vocab-word';
+            wordSpan.textContent = item.word;
+            wordSpan.onmouseenter = (e) => showTooltip(e, item.transc);
+            wordSpan.onmouseleave = hideTooltip;
+
+            const speakBtn = document.createElement('button');
+            speakBtn.className = 'speak-btn';
+            speakBtn.textContent = '🔊';
+            speakBtn.title = 'Прослухати вимову';
+            speakBtn.onclick = () => speakText(item.word);
+
+            wordDiv.appendChild(numSpan);
+            wordDiv.appendChild(wordSpan);
+            wordDiv.appendChild(speakBtn);
+
+            // Права частина: випадаючий список (select) зі значень
+            const select = document.createElement('select');
+            select.className = 'meaning-select';
+            select.id = `select-${index}`;
+            select.dataset.correct = item.meaning;
+
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = "";
+            defaultOpt.textContent = "Choose meaning";
+            select.appendChild(defaultOpt);
+
+            // Створюємо перемішану копію значень для цього селекту
+            const shuffledMeanings = shuffle([...allMeanings]);
+            shuffledMeanings.forEach(meaning => {
+                const opt = document.createElement('option');
+                opt.value = meaning;
+                opt.textContent = meaning;
+                select.appendChild(opt);
+            });
+
+            row.appendChild(wordDiv);
+            row.appendChild(select);
+            container.appendChild(row);
+        });
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+        data.forEach((item, index) => {
+            const select = document.getElementById(`select-${index}`);
+            const userVal = select.value;
+            
+            if (userVal === item.correct) {
+                select.style.borderColor = '#38a169';
+                select.style.backgroundColor = '#f0fff4';
+                correctCount++;
+            } else {
+                select.style.borderColor = '#e53e3e';
+                select.style.backgroundColor = '#fff5f5';
+            }
+        });
+
+        const msg = document.getElementById('result-msg');
+        if (correctCount === data.length) {
+            msg.style.color = '#276749';
+            msg.textContent = '🎉 Чудово! Усі відповіді правильні!';
+        } else {
+            msg.style.color = '#c53030';
+            msg.textContent = `Правильних відповідей: ${correctCount} з ${data.length}. Спробуйте ще раз виправити помилки.`;
+        }
+    }
+
+    function resetExercise() {
+        renderExercise();
+        document.getElementById('result-msg').textContent = '';
+    }
+
+    const tooltip = document.getElementById('vocab-tooltip');
+
+    function showTooltip(event, transcText) {
+        tooltip.textContent = transcText;
+        tooltip.style.display = 'block';
+        const rect = event.target.getBoundingClientRect();
+        tooltip.style.top = `${rect.top - 40}px`;
+        tooltip.style.left = `${rect.left}px`;
+    }
+
+    function hideTooltip() {
+        tooltip.style.display = 'none';
+    }
+
+    // Ініціалізація при завантаженні
+    renderExercise();
+</script>
+
+</body>
+</html>
