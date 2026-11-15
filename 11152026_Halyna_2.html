@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 2. Choose and Write the Correct Word</title>
+    <style>
+        :root {
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --primary: #2b6cb0;
+            --text-main: #2d3748;
+            --border-color: #e2e8f0;
+            --accent: #3182ce;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #edf2f7;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.6em;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #4a5568;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 12px;
+        }
+
+        .task-instruction {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 17px;
+            color: #1a202c;
+        }
+
+        /* Банк слів (список) */
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: #ebf8ff;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #90cdf4;
+            margin-bottom: 25px;
+            align-items: center;
+        }
+
+        .bank-title {
+            width: 100%;
+            font-weight: bold;
+            color: #2b6cb0;
+            margin-bottom: -2px;
+        }
+
+        /* Чіпси слів у списку з можливістю наведення та озвучки */
+        .word-chip {
+            background: #ffffff;
+            border: 1.5px solid #3182ce;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #2b6cb0;
+            font-size: 15px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .word-chip:hover {
+            background: #bee3f8;
+        }
+
+        .question-block {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .question-text {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Поле для введення */
+        .gap-input {
+            font-size: 16px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            width: 170px;
+            text-align: center;
+            outline: none;
+            background: #ffffff;
+            color: var(--primary);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .gap-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+        }
+
+        .gap-input.correct-input {
+            border-color: #38a169;
+            background-color: #f0fff4;
+            color: #22543d;
+        }
+
+        .gap-input.incorrect-input {
+            border-color: #e53e3e;
+            background-color: #fff5f5;
+            color: #742a2a;
+        }
+
+        .speak-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 2px;
+            border-radius: 50%;
+        }
+        .speak-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .feedback {
+            margin-top: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            min-height: 20px;
+        }
+        .correct { color: #276749; }
+        .incorrect { color: #9b2c2c; }
+
+        .btn-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 17px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background-color: #1a365d;
+        }
+
+        .result-msg {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 30px;
+        }
+
+        /* Спливаюча підказка (транскрипція та переклад) */
+        #vocab-tooltip {
+            position: fixed;
+            background: #2d3748;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            display: none;
+            pointer-events: none;
+            max-width: 280px;
+        }
+        .tip-transc { color: #90cdf4; font-family: monospace; margin-bottom: 4px; }
+        .tip-ru { color: #f7fafc; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h1>Exercise 2. Choose the Correct Word</h1>
+        <div class="subtitle">Мета: обрати правильне слово зі списку та вписати його в пропуск[cite: 21].</div>
+        
+        <div class="task-instruction">Виберіть потрібне слово зі списку нижче та впишіть у пропуск.<br>
+        <small style="color: #718096; font-weight: normal;">💡 Наведіть курсор на будь-яке слово у списку, щоб побачити транскрипцію та переклад. Натисніть 🔊, щоб почути вимову.</small></div>
+
+        <!-- Список слів (банк слів) -->
+        <div class="word-bank" id="word-bank">
+            <div class="bank-title">Список слів:</div>
+            <!-- Сюди за допомогою JavaScript завантажуються слова з озвучкою та тултипом -->
+        </div>
+
+        <div id="quiz-container"></div>
+
+        <div class="btn-container">
+            <button class="btn" onclick="checkAnswers()">Перевірити відповіді</button>
+        </div>
+
+        <div class="result-msg" id="result-msg"></div>
+    </div>
+</div>
+
+<div id="vocab-tooltip">
+    <div class="tip-transc" id="tip-transc"></div>
+    <div class="tip-ru" id="tip-ru"></div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            id: 1,
+            textBefore: "1. We need to ",
+            targetWord: "protect",
+            targetTransc: "[prəˈtekt]",
+            targetRu: "захищати",
+            textAfter: " customer information from hackers."
+        },
+        {
+            id: 2,
+            textBefore: "2. The company uses video ",
+            targetWord: "surveillance",
+            targetTransc: "[sɜːˈveɪləns]",
+            targetRu: "стеження, нагляд",
+            textAfter: " in its offices."
+        },
+        {
+            id: 3,
+            textBefore: "3. I received a ",
+            targetWord: "suspicious",
+            targetTransc: "[səˈspɪʃəs]",
+            targetRu: "підозрілий",
+            textAfter: " email asking for my password."
+        },
+        {
+            id: 4,
+            textBefore: "4. The new software ",
+            targetWord: "allows",
+            targetTransc: "[əˈlaʊz]",
+            targetRu: "дозволяє",
+            textAfter: " employees to work remotely."
+        },
+        {
+            id: 5,
+            textBefore: "5. We made a ",
+            targetWord: "substantial",
+            targetTransc: "[sbˈstænʃl]",
+            targetRu: "суттєвий, значний",
+            textAfter: " investment in cybersecurity."
+        },
+        {
+            id: 6,
+            textBefore: "6. Our manager wants to ",
+            targetWord: "record",
+            targetTransc: "[rɪˈkɔːd]",
+            targetRu: "записувати",
+            textAfter: " the meeting."
+        },
+        {
+            id: 7,
+            textBefore: "7. The company uses a ",
+            targetWord: "wide",
+            targetTransc: "[waɪd]",
+            targetRu: "широкий",
+            textAfter: " range of communication tools."
+        },
+        {
+            id: 8,
+            textBefore: "8. Strong passwords help ",
+            targetWord: "prevent",
+            targetTransc: "[prɪˈvent]",
+            targetRu: "запобігати",
+            textAfter: " data breaches."
+        }
+    ];
+
+    function speakText(text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-GB';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // Рендеримо список слів у верхній панелі (банк слів)
+    function renderWordBank() {
+        const bankContainer = document.getElementById('word-bank');
+        // Перемішуємо слова, щоб не йшли за порядком речень
+        const shuffledWords = [...quizData].sort(() => Math.random() - 0.5);
+
+        shuffledWords.forEach(item => {
+            const chip = document.createElement('div');
+            chip.className = 'word-chip';
+            
+            const textSpan = document.createElement('span');
+            textSpan.textContent = item.targetWord;
+            // Подія наведення для транскрипції та перекладу
+            chip.onmouseenter = (e) => showTooltip(e, item.targetTransc, item.targetRu);
+            chip.onmouseleave = hideTooltip;
+
+            const speakBtn = document.createElement('button');
+            speakBtn.className = 'speak-btn';
+            speakBtn.textContent = '🔊';
+            speakBtn.title = 'Прослухати';
+            speakBtn.onclick = (e) => {
+                e.stopPropagation();
+                speakText(item.targetWord);
+            };
+
+            chip.appendChild(textSpan);
+            chip.appendChild(speakBtn);
+            bankContainer.appendChild(chip);
+        });
+    }
+
+    function renderQuiz() {
+        const container = document.getElementById('quiz-container');
+
+        quizData.forEach((item, qIndex) => {
+            const block = document.createElement('div');
+            block.className = 'question-block';
+
+            const qText = document.createElement('div');
+            qText.className = 'question-text';
+
+            const beforeSpan = document.createElement('span');
+            beforeSpan.textContent = item.textBefore;
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'gap-input';
+            input.id = `input-${qIndex}`;
+            input.placeholder = 'виберіть зі списку';
+
+            const afterSpan = document.createElement('span');
+            afterSpan.textContent = item.textAfter;
+
+            qText.appendChild(beforeSpan);
+            qText.appendChild(input);
+            qText.appendChild(afterSpan);
+
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback';
+            feedback.id = `feedback-${qIndex}`;
+
+            block.appendChild(qText);
+            block.appendChild(feedback);
+            container.appendChild(block);
+        });
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+
+        quizData.forEach((item, qIndex) => {
+            const input = document.getElementById(`input-${qIndex}`);
+            const feedback = document.getElementById(`feedback-${qIndex}`);
+            const userVal = input.value.trim().toLowerCase();
+
+            input.classList.remove('correct-input', 'incorrect-input');
+
+            if (userVal === item.targetWord.toLowerCase()) {
+                input.classList.add('correct-input');
+                feedback.textContent = '✓ Правильно!';
+                feedback.className = 'feedback correct';
+                correctCount++;
+            } else {
+                input.classList.add('incorrect-input');
+                feedback.textContent = `✕ Неправильно. Спробуйте ще раз.`;
+                feedback.className = 'feedback incorrect';
+            }
+        });
+
+        const msg = document.getElementById('result-msg');
+        if (correctCount === quizData.length) {
+            msg.style.color = '#276749';
+            msg.textContent = '🎉 Чудово! Усі слова підібрано правильно!';
+        } else {
+            msg.style.color = '#c53030';
+            msg.textContent = `Правильних відповідей: ${correctCount} з ${quizData.length}. Виправте помилки.`;
+        }
+    }
+
+    const tooltip = document.getElementById('vocab-tooltip');
+    const tipTransc = document.getElementById('tip-transc');
+    const tipRu = document.getElementById('tip-ru');
+
+    function showTooltip(event, transc, translation) {
+        tipTransc.textContent = transc;
+        tipRu.textContent = translation;
+        tooltip.style.display = 'block';
+        const rect = event.target.getBoundingClientRect();
+        tooltip.style.top = `${rect.top - 55}px`;
+        tooltip.style.left = `${rect.left}px`;
+    }
+
+    function hideTooltip() {
+        tooltip.style.display = 'none';
+    }
+
+    renderWordBank();
+    renderQuiz();
+</script>
+
+</body>
+</html>
