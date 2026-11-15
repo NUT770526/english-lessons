@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 3. Translate into English</title>
+    <style>
+        :root {
+            --bg-color: #fcf8ee;
+            --card-bg: #ffffff;
+            --primary: #2c5282;
+            --text-main: #1a202c;
+            --border-color: #cbd5e0;
+            --accent: #3182ce;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 820px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2d9c2;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.8em;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #4a5568;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 12px;
+        }
+
+        .question-block {
+            margin-bottom: 25px;
+            background: #fafaf9;
+            padding: 22px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .question-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .translate-input {
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 18px;
+            padding: 10px 14px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            outline: none;
+            background: #ffffff;
+            color: #2c5282;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .translate-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+        }
+
+        .translate-input.correct-input {
+            border-color: #38a169;
+            background-color: #f0fff4;
+        }
+
+        .translate-input.incorrect-input {
+            border-color: #e53e3e;
+            background-color: #fff5f5;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background-color: #edf2f7;
+            border: 1px solid #cbd5e0;
+            color: #2d3748;
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: #e2e8f0;
+        }
+
+        .speak-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 0 4px;
+        }
+        .speak-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .hint-display, .answer-display {
+            margin-top: 8px;
+            font-size: 15px;
+            display: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        .hint-display {
+            background: #ebf8ff;
+            color: #2b6cb0;
+            border: 1px solid #90cdf4;
+        }
+
+        .answer-display {
+            background: #f0fff4;
+            color: #276749;
+            border: 1px solid #9ae6b4;
+            font-weight: 600;
+        }
+
+        .check-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn-check {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: background 0.2s;
+        }
+
+        .btn-check:hover {
+            background-color: #1a365d;
+        }
+
+        .result-message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 28px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h1>Exercise 3. Translate into English</h1>
+        <div class="subtitle">Самостоятельно переведи предложения. Если трудно, нажимай «Подсказка» или «Показать ответ». (8 предложений)</div>
+
+        <div id="quiz-container"></div>
+
+        <div class="check-container">
+            <button class="btn-check" onclick="checkAllAnswers()">Проверить мои ответы</button>
+            <div class="result-message" id="result-msg"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const exerciseData = [
+        {
+            id: 1,
+            ru: "1. Я родился в 1960 году.",
+            en: "I was born in 1960.",
+            hint: "Подсказка: Начинается с 'I was...'"
+        },
+        {
+            id: 2,
+            ru: "2. Они поженились в 2001 году.",
+            en: "They got married in 2001.",
+            hint: "Подсказка: Используйте выражение 'got married'."
+        },
+        {
+            id: 3,
+            ru: "3. Она замужем за Джоном.",
+            en: "She is married to John.",
+            hint: "Подсказка: Обратите внимание на предлог после married ('to')."
+        },
+        {
+            id: 4,
+            ru: "4. Они были женаты 3 лет.",
+            en: "They were married for 3 years.",
+            hint: "Подсказка: Используйте предлог 'for' для указания периода времени."
+        },
+        {
+            id: 5,
+            ru: "5. Они отправились в свадебное путешествие.",
+            en: "They went on their honeymoon.",
+            hint: "Подсказка: Фраза 'went on their honeymoon'."
+        },
+        {
+            id: 6,
+            ru: "6. Он заболел в прошлом году.",
+            en: "He fell ill last year.",
+            hint: "Подсказка: 'fell ill' или 'got sick'."
+        },
+        {
+            id: 7,
+            ru: "7. Она вдова.",
+            en: "She is widowed.",
+            hint: "Подсказка: Используйте слово 'widowed'."
+        },
+        {
+            id: 8,
+            ru: "8. Похороны были в понедельник.",
+            en: "The funeral was on Monday.",
+            hint: "Подсказка: 'The funeral was on...'"
+        }
+    ];
+
+    function speakText(text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-GB';
+        utterance.rate = 0.85; // Спокойный темп
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function renderExercise() {
+        const container = document.getElementById('quiz-container');
+
+        exerciseData.forEach((item, index) => {
+            const block = document.createElement('div');
+            block.className = 'question-block';
+
+            const title = document.createElement('div');
+            title.className = 'question-title';
+            
+            const textSpan = document.createElement('span');
+            textSpan.textContent = item.ru;
+            title.appendChild(textSpan);
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'translate-input';
+            input.id = `input-${index}`;
+            input.placeholder = 'Write in English...';
+
+            // Кнопки управления
+            const btnGroup = document.createElement('div');
+            btnGroup.className = 'btn-group';
+
+            const hintBtn = document.createElement('button');
+            hintBtn.className = 'action-btn';
+            hintBtn.textContent = '💡 Подсказка';
+            hintBtn.onclick = () => {
+                const hDiv = document.getElementById(`hint-${index}`);
+                hDiv.style.display = hDiv.style.display === 'block' ? 'none' : 'block';
+            };
+
+            const answerBtn = document.createElement('button');
+            answerBtn.className = 'action-btn';
+            answerBtn.textContent = '👁️ Показать ответ';
+            answerBtn.onclick = () => {
+                const aDiv = document.getElementById(`answer-${index}`);
+                aDiv.style.display = aDiv.style.display === 'block' ? 'none' : 'block';
+            };
+
+            btnGroup.appendChild(hintBtn);
+            btnGroup.appendChild(answerBtn);
+
+            // Блоки для подсказки и ответа с озвучкой
+            const hintDiv = document.createElement('div');
+            hintDiv.className = 'hint-display';
+            hintDiv.id = `hint-${index}`;
+            hintDiv.textContent = item.hint;
+
+            const answerDiv = document.createElement('div');
+            answerDiv.className = 'answer-display';
+            answerDiv.id = `answer-${index}`;
+            
+            const ansText = document.createElement('span');
+            ansText.textContent = `Правильный ответ: ${item.en} `;
+            
+            const speakBtn = document.createElement('button');
+            speakBtn.className = 'speak-btn';
+            speakBtn.textContent = '🔊';
+            speakBtn.title = 'Прослушать';
+            speakBtn.onclick = () => speakText(item.en);
+
+            answerDiv.appendChild(ansText);
+            answerDiv.appendChild(speakBtn);
+
+            block.appendChild(title);
+            block.appendChild(input);
+            block.appendChild(btnGroup);
+            block.appendChild(hintDiv);
+            block.appendChild(answerDiv);
+
+            container.appendChild(block);
+        });
+    }
+
+    function checkAllAnswers() {
+        let correctCount = 0;
+
+        exerciseData.forEach((item, index) => {
+            const input = document.getElementById(`input-${index}`);
+            const userVal = input.value.trim().toLowerCase().replace(/[.,!?-]/g, '');
+            const correctVal = item.en.toLowerCase().replace(/[.,!?-]/g, '');
+
+            input.classList.remove('correct-input', 'incorrect-input');
+
+            if (userVal === correctVal) {
+                input.classList.add('correct-input');
+                correctCount++;
+            } else {
+                input.classList.add('incorrect-input');
+            }
+        });
+
+        const msg = document.getElementById('result-msg');
+        if (correctCount === exerciseData.length) {
+            msg.style.color = '#276749';
+            msg.textContent = '🎉 Ура! Все предложения переведены абсолютно верно!';
+        } else {
+            msg.style.color = '#2c5282';
+            msg.textContent = 'Проверка завершена. Обратите внимание на выделенные поля (зеленые — верно, красные — можно улучшить).';
+        }
+    }
+
+    renderExercise();
+</script>
+
+</body>
+</html>
