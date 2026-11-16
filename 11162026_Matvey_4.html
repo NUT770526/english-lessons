@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Listening Worksheet: How I Spend My Leisure Time</title>
+  <style>
+    :root {
+      --bg-color: #fdf2f8;
+      --card-bg: #ffffff;
+      --primary: #be185d;
+      --primary-light: #fce7f3;
+      --primary-border: #f9a8d4;
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --vocab-bg: #fef9c3;
+      --vocab-border: #eab308;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.65;
+      padding: 24px 16px 70px;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 22px 28px;
+      margin-bottom: 20px;
+      border: 1px solid var(--primary-border);
+      box-shadow: 0 4px 14px rgba(190, 24, 93, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-title h1 {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .student-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .student-info input {
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .student-info input:focus {
+      border-color: var(--primary);
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--primary-border);
+      background: var(--card-bg);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: #9d174d;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--primary-border);
+      box-shadow: 0 4px 12px rgba(190, 24, 93, 0.05);
+    }
+
+    .card-header {
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-header h2 {
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+
+    .card-subtitle {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    /* Media Player Box */
+    .player-wrapper {
+      background: #fff5f7;
+      border: 1px solid var(--primary-border);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .gdrive-frame {
+      width: 100%;
+      max-width: 640px;
+      height: 110px;
+      border: none;
+      border-radius: 8px;
+      background: #000;
+    }
+
+    .player-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Transcript Section */
+    .transcript-box {
+      display: none;
+      margin-top: 16px;
+      padding: 20px 22px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 12px;
+      font-size: 1.03rem;
+      line-height: 1.85;
+      color: #1f2937;
+    }
+
+    .transcript-box.open {
+      display: block;
+    }
+
+    .transcript-hint {
+      font-size: 0.88rem;
+      color: #92400e;
+      background: #fef3c7;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      display: inline-block;
+    }
+
+    .vocab-word {
+      background-color: var(--vocab-bg);
+      border-bottom: 2px dashed var(--vocab-border);
+      padding: 1px 4px;
+      border-radius: 4px;
+      cursor: help;
+      font-weight: 600;
+      color: #854d0e;
+      transition: background 0.15s;
+    }
+
+    .vocab-word:hover, .vocab-word.active {
+      background-color: #fde047;
+      color: #422006;
+    }
+
+    /* Floating Tooltip for Vocab */
+    #vocabTooltip {
+      position: fixed;
+      z-index: 9999;
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 12px 14px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      min-width: 210px;
+      max-width: 280px;
+      display: none;
+      pointer-events: auto;
+      border: 1px solid #475569;
+    }
+
+    .tt-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .tt-word {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #fde047;
+    }
+
+    .tt-speak-btn {
+      background: #334155;
+      border: 1px solid #64748b;
+      color: #fff;
+      border-radius: 6px;
+      padding: 4px 9px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+
+    .tt-speak-btn:hover {
+      background: #be185d;
+      border-color: #f472b6;
+    }
+
+    .tt-ipa {
+      font-family: 'Lucida Sans Unicode', 'DejaVu Sans', sans-serif;
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+
+    .tt-ru {
+      font-size: 0.96rem;
+      color: #ffffff;
+      border-top: 1px solid #334155;
+      padding-top: 6px;
+    }
+
+    /* Exercise 1: Blanks */
+    .blank-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .blank-item {
+      background: #fdf8fa;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid #fce7f3;
+      font-size: 1rem;
+    }
+
+    .blank-input {
+      border: none;
+      border-bottom: 2px solid var(--primary);
+      background: #fff;
+      padding: 3px 8px;
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--primary);
+      width: 165px;
+      text-align: center;
+      border-radius: 4px 4px 0 0;
+      outline: none;
+      margin: 0 4px;
+    }
+
+    /* Exercise 2: Open Questions */
+    .question-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .question-item {
+      background: #fdf8fa;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid #fce7f3;
+    }
+
+    .question-text {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .question-item textarea {
+      width: 100%;
+      min-height: 54px;
+      padding: 8px 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      resize: vertical;
+      outline: none;
+    }
+
+    .question-item textarea:focus {
+      border-color: var(--primary);
+    }
+
+    /* Exercise 3: True / False / Not Stated */
+    .tf-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.96rem;
+    }
+
+    .tf-table th, .tf-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #fce7f3;
+      text-align: left;
+    }
+
+    .tf-table th {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .tf-table td.center, .tf-table th.center {
+      text-align: center;
+      width: 90px;
+    }
+
+    .tf-table input[type="radio"] {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Exercise 4: Collocations / Grammar */
+    .match-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 680px) {
+      .match-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .match-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #fdf8fa;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #fce7f3;
+    }
+
+    .match-row select {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1.5px solid var(--primary-border);
+      background: #fff;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.92rem;
+      cursor: pointer;
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .toolbar, .player-wrapper, #vocabTooltip { display: none !important; }
+      .card, header { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-title">
+        <h1>How I Spend My Leisure Time</h1>
+        <p>Interactive Listening &amp; Reading Comprehension (Grade 6)</p>
+      </div>
+      <div class="student-info">
+        <input type="text" id="studentName" placeholder="Student Name" />
+        <input type="date" id="lessonDate" />
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <button class="btn" onclick="window.print()">Print / Save PDF</button>
+      <button class="btn" onclick="clearWorksheet()">Clear Answers</button>
+    </div>
+
+    <!-- STEP 1: LISTEN & TRANSCRIPT -->
+    <section class="card">
+      <div class="card-header">
+        <h2>Step 1. Listen to Crystal's Story</h2>
+        <button class="btn btn-primary" id="toggleTranscriptBtn" onclick="toggleTranscript()">
+          Show Transcript
+        </button>
+      </div>
+      <p class="card-subtitle">
+        Listen carefully to the recording first. If you need help, open the transcript below.
+      </p>
+
+      <div class="player-wrapper">
+        <iframe
+          class="gdrive-frame"
+          src="https://drive.google.com/file/d/1j6vLRH7Fctbil88vW43oDq-oQLfZi_vj/preview"
+          allow="autoplay">
+        </iframe>
+        <div class="player-note">
+          If the embedded player does not load in your browser,
+          <a href="https://drive.google.com/file/d/1j6vLRH7Fctbil88vW43oDq-oQLfZi_vj/view?usp=sharing" target="_blank" rel="noopener">open the recording in a new tab</a>.
+        </div>
+      </div>
+
+      <div class="transcript-box" id="transcriptBox">
+        <div class="transcript-hint">
+          Hover over (or tap) any highlighted word to see its transcription, Russian translation, and listen to its pronunciation.
+        </div>
+        <p>
+          How I spend my <span class="vocab-word" data-ipa="/ˈleʒ.ə taɪm/" data-ru="свободное время, досуг">leisure time</span>.
+          My name is Crystal, I'm a student of primary five at the Woodridge Girls' Primary School.
+          I have <span class="vocab-word" data-ipa="/ˈsev.ər.əl/" data-ru="несколько">several</span> hobbies, and I'd like to have more time to spend on them,
+          but I get a lot of homework that <span class="vocab-word" data-ipa="/teɪks ʌp/" data-ru="занимает (время)">takes up</span> a lot of time.
+          My favorite sport used to be swimming. I used to spend a lot of time at the local swimming pool at weekends,
+          and on <span class="vocab-word" data-ipa="/ˌpʌb.lɪk ˈhɒl.ə.deɪz/" data-ru="государственные праздники, официальные выходные">public holidays</span>
+          I also learned to <span class="vocab-word" data-ipa="/daɪv/" data-ru="нырять">dive</span> there.
+          My friend Phoebe used to come along with me, and we would race on who could do the maximum number of
+          <span class="vocab-word" data-ipa="/læps/" data-ru="круги / дорожки (в бассейне)">laps</span> in the swimming pool.
+          I do not go swimming so often now. I like hiking. My father has always been a
+          <span class="vocab-word" data-ipa="/kiːn ˈhaɪ.kər/" data-ru="увлечённый любитель пеших походов">keen hiker</span>.
+          Last year he began to take me with him sometimes; he bought me a pair of hiking shoes and a
+          <span class="vocab-word" data-ipa="/ˈbæk.pæk/" data-ru="рюкзак">backpack</span>.
+          At first, I found it difficult to <span class="vocab-word" data-ipa="/kiːp ʌp wɪð/" data-ru="не отставать от, поспевать за">keep up with</span> dad;
+          he kept on having to wait for me to <span class="vocab-word" data-ipa="/kætʃ ʌp wɪð/" data-ru="догнать кого-либо">catch up with</span> him.
+          Now that I've had quite a lot of practice, I can go much faster. I love hiking on new
+          <span class="vocab-word" data-ipa="/treɪlz/" data-ru="тропы, маршруты">trails</span>.
+          Sometimes dad and I also take our bikes and ride them on the trails. Mom, dad and I have been to many trails in Hong Kong,
+          for example the Peak Trail, the Tai Tam Trail, the Tung Chung Trail, just to name a few.
+          We always stop for a while to <span class="vocab-word" data-ipa="/ədˈmaɪər ðə vjuː/" data-ru="любоваться видом">admire the view</span> if it is a clear day.
+          I am really glad that I <span class="vocab-word" data-ipa="/tʊk ʌp/" data-ru="увлёкся, занялся (новым хобби)">took up</span> hiking.
+          Next I would like to try <span class="vocab-word" data-ipa="/ˈrɒk ˌklaɪ.mɪŋ/" data-ru="скалолазание">rock-climbing</span>.
+          Dad says that it is much more difficult and more <span class="vocab-word" data-ipa="/ˈdeɪn.dʒər.əs/" data-ru="опасный">dangerous</span>;
+          he says that I cannot try it until I'm older.
+        </p>
+        <p style="margin-top: 12px; color: #4b5563; font-size: 0.96rem;">
+          <em>Speaker's task:</em> All right, now moving on, we're going to have a couple of questions about this passage.
+          Now, if you can just fill in the blanks with what you think would be the most
+          <span class="vocab-word" data-ipa="/əˈprəʊ.pri.ət/" data-ru="подходящий">appropriate</span> word...
+        </p>
+      </div>
+    </section>
+
+    <!-- EXERCISE 1: FILL IN THE BLANKS FROM THE AUDIO -->
+    <section class="card">
+      <div class="card-header">
+        <h2>1. Listen and fill in the blanks</h2>
+      </div>
+      <p class="card-subtitle">
+        Complete the 5 sentences mentioned by the speaker at the end of the recording (1 word in each gap).
+      </p>
+
+      <div class="blank-list">
+        <div class="blank-item">
+          1. Crystal loves to go <input type="text" class="blank-input" placeholder="..." /> on her new trails in her free time.
+        </div>
+        <div class="blank-item">
+          2. The next activity which Crystal would like to try is rock-<input type="text" class="blank-input" placeholder="..." />.
+        </div>
+        <div class="blank-item">
+          3. Crystal's favorite sport used to be <input type="text" class="blank-input" placeholder="..." />.
+        </div>
+        <div class="blank-item">
+          4. Phoebe and Crystal used to race on who could do the <input type="text" class="blank-input" placeholder="..." /> number of laps in the swimming pool.
+        </div>
+        <div class="blank-item">
+          5. Crystal's dad bought her a pair of hiking shoes and a <input type="text" class="blank-input" placeholder="..." />.
+        </div>
+      </div>
+    </section>
+
+    <!-- EXERCISE 2: ANSWER THE QUESTIONS -->
+    <section class="card">
+      <div class="card-header">
+        <h2>2. Answer the questions! =)</h2>
+      </div>
+      <p class="card-subtitle">
+        Write full answers based on what you heard in the story.
+      </p>
+
+      <div class="question-list">
+        <div class="question-item">
+          <div class="question-text">1. Who is Crystal?</div>
+          <textarea placeholder="Write your answer here..."></textarea>
+        </div>
+        <div class="question-item">
+          <div class="question-text">2. What is Crystal's favorite sport?</div>
+          <textarea placeholder="Write your answer here..."></textarea>
+        </div>
+        <div class="question-item">
+          <div class="question-text">3. Does Crystal like hiking? Why?</div>
+          <textarea placeholder="Write your answer here..."></textarea>
+        </div>
+        <div class="question-item">
+          <div class="question-text">4. Where had Crystal's family been?</div>
+          <textarea placeholder="Write your answer here..."></textarea>
+        </div>
+        <div class="question-item">
+          <div class="question-text">5. What did Crystal's dad say?</div>
+          <textarea placeholder="Write your answer here..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXERCISE 3: TRUE / FALSE / NOT STATED -->
+    <section class="card">
+      <div class="card-header">
+        <h2>3. True, False, or Not Stated?</h2>
+      </div>
+      <p class="card-subtitle">
+        Read the statements carefully and choose the correct option.
+      </p>
+
+      <table class="tf-table">
+        <thead>
+          <tr>
+            <th>Statement</th>
+            <th class="center">True</th>
+            <th class="center">False</th>
+            <th class="center">Not Stated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1. Crystal has enough free time for all her hobbies every day.</td>
+            <td class="center"><input type="radio" name="tf1" /></td>
+            <td class="center"><input type="radio" name="tf1" /></td>
+            <td class="center"><input type="radio" name="tf1" /></td>
+          </tr>
+          <tr>
+            <td>2. Phoebe taught Crystal how to dive at the local swimming pool.</td>
+            <td class="center"><input type="radio" name="tf2" /></td>
+            <td class="center"><input type="radio" name="tf2" /></td>
+            <td class="center"><input type="radio" name="tf2" /></td>
+          </tr>
+          <tr>
+            <td>3. At the beginning, Crystal walked more slowly than her father.</td>
+            <td class="center"><input type="radio" name="tf3" /></td>
+            <td class="center"><input type="radio" name="tf3" /></td>
+            <td class="center"><input type="radio" name="tf3" /></td>
+          </tr>
+          <tr>
+            <td>4. Crystal and her dad never ride bicycles on the trails.</td>
+            <td class="center"><input type="radio" name="tf4" /></td>
+            <td class="center"><input type="radio" name="tf4" /></td>
+            <td class="center"><input type="radio" name="tf4" /></td>
+          </tr>
+          <tr>
+            <td>5. Crystal's mother is afraid of rock-climbing.</td>
+            <td class="center"><input type="radio" name="tf5" /></td>
+            <td class="center"><input type="radio" name="tf5" /></td>
+            <td class="center"><input type="radio" name="tf5" /></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- EXERCISE 4: VOCABULARY & PHRASAL VERBS -->
+    <section class="card">
+      <div class="card-header">
+        <h2>4. Vocabulary &amp; Phrasal Verbs Check</h2>
+      </div>
+      <p class="card-subtitle">
+        Choose the correct word or particle from the text to complete each phrase.
+      </p>
+
+      <div class="match-grid">
+        <div class="match-row">
+          <span>1. Homework takes ______ a lot of time.</span>
+          <select>
+            <option value="">---</option>
+            <option value="up">up</option>
+            <option value="on">on</option>
+            <option value="off">off</option>
+          </select>
+        </div>
+
+        <div class="match-row">
+          <span>2. It was hard to keep ______ with dad.</span>
+          <select>
+            <option value="">---</option>
+            <option value="in">in</option>
+            <option value="up">up</option>
+            <option value="out">out</option>
+          </select>
+        </div>
+
+        <div class="match-row">
+          <span>3. Stop for a while to ______ the view.</span>
+          <select>
+            <option value="">---</option>
+            <option value="admire">admire</option>
+            <option value="race">race</option>
+            <option value="dive">dive</option>
+          </select>
+        </div>
+
+        <div class="match-row">
+          <span>4. I'm glad that I took ______ hiking.</span>
+          <select>
+            <option value="">---</option>
+            <option value="at">at</option>
+            <option value="up">up</option>
+            <option value="for">for</option>
+          </select>
+        </div>
+
+        <div class="match-row">
+          <span>5. My father has always been a ______ hiker.</span>
+          <select>
+            <option value="">---</option>
+            <option value="keen">keen</option>
+            <option value="local">local</option>
+            <option value="public">public</option>
+          </select>
+        </div>
+
+        <div class="match-row">
+          <span>6. Swimming ______ to be my favorite sport.</span>
+          <select>
+            <option value="">---</option>
+            <option value="use">use</option>
+            <option value="used">used</option>
+            <option value="using">using</option>
+          </select>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- FLOATING TOOLTIP -->
+  <div id="vocabTooltip">
+    <div class="tt-top">
+      <span class="tt-word" id="ttWord"></span>
+      <button class="tt-speak-btn" id="ttSpeakBtn" type="button" title="Listen to pronunciation">
+        &#128266; Listen
+      </button>
+    </div>
+    <div class="tt-ipa" id="ttIpa"></div>
+    <div class="tt-ru" id="ttRu"></div>
+  </div>
+
+  <script>
+    // Toggle Transcript
+    function toggleTranscript() {
+      const box = document.getElementById('transcriptBox');
+      const btn = document.getElementById('toggleTranscriptBtn');
+      const isOpen = box.classList.toggle('open');
+      btn.textContent = isOpen ? 'Hide Transcript' : 'Show Transcript';
+      if (!isOpen) hideTooltip();
+    }
+
+    // Tooltip & Text-to-Speech Logic
+    const tooltip = document.getElementById('vocabTooltip');
+    const ttWord = document.getElementById('ttWord');
+    const ttIpa = document.getElementById('ttIpa');
+    const ttRu = document.getElementById('ttRu');
+    const ttSpeakBtn = document.getElementById('ttSpeakBtn');
+
+    let currentPhrase = '';
+    let hideTimeout = null;
+    let activeSpan = null;
+
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) {
+        alert('Sorry, your browser does not support text-to-speech.');
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-GB';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    ttSpeakBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (currentPhrase) speakText(currentPhrase);
+    });
+
+    function showTooltip(span) {
+      clearTimeout(hideTimeout);
+      if (activeSpan) activeSpan.classList.remove('active');
+      activeSpan = span;
+      activeSpan.classList.add('active');
+
+      currentPhrase = span.textContent.trim();
+      ttWord.textContent = currentPhrase;
+      ttIpa.textContent = span.dataset.ipa || '';
+      ttRu.textContent = span.dataset.ru || '';
+
+      tooltip.style.display = 'block';
+
+      const rect = span.getBoundingClientRect();
+      const ttRect = tooltip.getBoundingClientRect();
+
+      let left = rect.left + (rect.width / 2) - (ttRect.width / 2);
+      if (left < 12) left = 12;
+      if (left + ttRect.width > window.innerWidth - 12) {
+        left = window.innerWidth - ttRect.width - 12;
+      }
+
+      let top = rect.top - ttRect.height - 10;
+      if (top < 12) {
+        top = rect.bottom + 10;
+      }
+
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+    }
+
+    function scheduleHideTooltip() {
+      hideTimeout = setTimeout(() => {
+        hideTooltip();
+      }, 260);
+    }
+
+    function hideTooltip() {
+      tooltip.style.display = 'none';
+      if (activeSpan) {
+        activeSpan.classList.remove('active');
+        activeSpan = null;
+      }
+    }
+
+    document.querySelectorAll('.vocab-word').forEach(span => {
+      span.addEventListener('mouseenter', () => showTooltip(span));
+      span.addEventListener('mouseleave', scheduleHideTooltip);
+      span.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showTooltip(span);
+      });
+    });
+
+    tooltip.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+    tooltip.addEventListener('mouseleave', scheduleHideTooltip);
+    document.addEventListener('click', (e) => {
+      if (!tooltip.contains(e.target) && !e.target.classList.contains('vocab-word')) {
+        hideTooltip();
+      }
+    });
+
+    // Clear all inputs
+    function clearWorksheet() {
+      document.querySelectorAll('.blank-input').forEach(inp => inp.value = '');
+      document.querySelectorAll('textarea').forEach(ta => ta.value = '');
+      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      document.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+    }
+  </script>
+</body>
+</html>
