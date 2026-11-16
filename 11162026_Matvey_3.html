@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grammar Worksheet: Neither / Neither of / Neither ... nor</title>
+  <style>
+    :root {
+      --bg-color: #f0f9f1;
+      --card-bg: #ffffff;
+      --primary: #2e7d32;
+      --primary-light: #e8f5e9;
+      --primary-border: #a5d6a7;
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --accent-1: #e0f2fe;
+      --accent-1-border: #38bdf8;
+      --accent-2: #fef3c7;
+      --accent-2-border: #f59e0b;
+      --accent-3: #f3e8ff;
+      --accent-3-border: #a855f7;
+      --accent-4: #ffe4e6;
+      --accent-4-border: #f43f5e;
+      --accent-5: #dcfce7;
+      --accent-5-border: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 16px 60px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--primary-border);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-title h1 {
+      font-size: 1.55rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .student-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .student-info input {
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fafafa;
+    }
+
+    .student-info input:focus {
+      border-color: var(--primary);
+      background: #fff;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--primary-border);
+      background: var(--card-bg);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-reset {
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    .btn-reset:hover {
+      background: #fef2f2;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--primary-border);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.05);
+    }
+
+    .card-header {
+      margin-bottom: 18px;
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 10px;
+    }
+
+    .card-header h2 {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .card-header p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    /* Task 1: 3-Column Builder */
+    .builder-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 720px) {
+      .builder-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .builder-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .col-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .tile {
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 2px solid #e2e8f0;
+      background: #f8fafc;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.15s ease;
+      user-select: none;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+    }
+
+    .tile:hover {
+      border-color: #94a3b8;
+      background: #f1f5f9;
+    }
+
+    .tile.selected-slot {
+      outline: 3px solid var(--primary);
+      background: #fff;
+    }
+
+    .pair-1 { background: var(--accent-1) !important; border-color: var(--accent-1-border) !important; }
+    .pair-2 { background: var(--accent-2) !important; border-color: var(--accent-2-border) !important; }
+    .pair-3 { background: var(--accent-3) !important; border-color: var(--accent-3-border) !important; }
+    .pair-4 { background: var(--accent-4) !important; border-color: var(--accent-4-border) !important; }
+    .pair-5 { background: var(--accent-5) !important; border-color: var(--accent-5-border) !important; }
+
+    .assembled-list {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 14px 18px;
+      border: 1px dashed #cbd5e1;
+    }
+
+    .assembled-list h4 {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .assembled-item {
+      font-size: 0.96rem;
+      padding: 6px 10px;
+      margin-bottom: 6px;
+      border-radius: 6px;
+      background: #fff;
+      border-left: 4px solid #cbd5e1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .clear-pair-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0 4px;
+    }
+
+    .clear-pair-btn:hover {
+      color: #ef4444;
+    }
+
+    /* Task 2: Dropdowns */
+    .gap-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .gap-item {
+      font-size: 1rem;
+      padding: 10px 14px;
+      background: #f9fafb;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .gap-item select {
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1.5px solid var(--primary-border);
+      background: #fff;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin: 0 4px;
+      cursor: pointer;
+    }
+
+    /* Task 3: Combine sentences */
+    .combine-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .combine-item {
+      padding: 14px 16px;
+      background: #f9fafb;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .combine-prompt {
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .combine-input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-answer {
+      background: #3b82f6;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .combine-input-row input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.96rem;
+      outline: none;
+    }
+
+    .combine-input-row input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Task 4: Scrambled sentences */
+    .scramble-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .scramble-item {
+      padding: 14px 16px;
+      background: #f9fafb;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .answer-dropzone {
+      min-height: 44px;
+      background: #fff;
+      border: 1.5px dashed var(--primary-border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .word-chip {
+      padding: 5px 11px;
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      color: #1b5e20;
+      border-radius: 6px;
+      font-size: 0.92rem;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s;
+    }
+
+    .word-chip:hover {
+      transform: translateY(-1px);
+      background: #dcfce7;
+    }
+
+    .answer-dropzone .word-chip {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+      .toolbar, .clear-pair-btn {
+        display: none !important;
+      }
+      .card, header {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-title">
+        <h1>Neither / Neither of / Neither ... nor ...</h1>
+        <p>Interactive Grammar &amp; Vocabulary Practice</p>
+      </div>
+      <div class="student-info">
+        <input type="text" id="studentName" placeholder="Student Name" />
+        <input type="date" id="lessonDate" />
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <button class="btn" onclick="window.print()">Print / Save PDF</button>
+      <button class="btn btn-reset" onclick="resetAll()">Clear All</button>
+    </div>
+
+    <!-- EXERCISE 1 -->
+    <section class="card">
+      <div class="card-header">
+        <h2>1. Match the phrases to complete the sentences</h2>
+        <p>Click one block in Column 1, one in Column 2, and one in Column 3 to build a complete sentence.</p>
+      </div>
+
+      <div class="builder-grid" id="builderGrid">
+        <div class="builder-col" data-col="0">
+          <div class="col-label">Part 1</div>
+          <div class="tile" data-id="c0-0">Neither of my travel companions</div>
+          <div class="tile" data-id="c0-1">Neither hotel in</div>
+          <div class="tile" data-id="c0-2">Neither of the</div>
+          <div class="tile" data-id="c0-3">Neither of us</div>
+          <div class="tile" data-id="c0-4">Neither guide</div>
+        </div>
+        <div class="builder-col" data-col="1">
+          <div class="col-label">Part 2</div>
+          <div class="tile" data-id="c1-0">had a record of</div>
+          <div class="tile" data-id="c1-1">was interested in</div>
+          <div class="tile" data-id="c1-2">showed up</div>
+          <div class="tile" data-id="c1-3">winter coats was</div>
+          <div class="tile" data-id="c1-4">the northernmost town</div>
+        </div>
+        <div class="builder-col" data-col="2">
+          <div class="col-label">Part 3</div>
+          <div class="tile" data-id="c2-0">suitable for freezing slush.</div>
+          <div class="tile" data-id="c2-1">at the station on time.</div>
+          <div class="tile" data-id="c2-2">dragging heavy bags through the snow.</div>
+          <div class="tile" data-id="c2-3">our reservation.</div>
+          <div class="tile" data-id="c2-4">persuading the driver to go further.</div>
+        </div>
+      </div>
+
+      <div class="assembled-list">
+        <h4>Your completed sentences:</h4>
+        <div id="assembledContainer">
+          <p style="color:#94a3b8; font-size:0.9rem;">Select three matching parts above to form sentences...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXERCISE 2 -->
+    <section class="card">
+      <div class="card-header">
+        <h2>2. Choose the correct option</h2>
+        <p>Select the grammatically correct word to complete each sentence.</p>
+      </div>
+
+      <div class="gap-list">
+        <div class="gap-item">
+          1. Neither of my friends
+          <select>
+            <option value="">---</option>
+            <option value="was">was</option>
+            <option value="were">were</option>
+          </select>
+          able to grasp the main idea of the story.
+        </div>
+
+        <div class="gap-item">
+          2. Neither
+          <select>
+            <option value="">---</option>
+            <option value="road">road</option>
+            <option value="roads">roads</option>
+          </select>
+          was clear — both were covered in deep slush.
+        </div>
+
+        <div class="gap-item">
+          3. We overslept, so neither of
+          <select>
+            <option value="">---</option>
+            <option value="we">we</option>
+            <option value="us">us</option>
+          </select>
+          had time to pack properly.
+        </div>
+
+        <div class="gap-item">
+          4. Neither the tall pine trees nor the old cabin
+          <select>
+            <option value="">---</option>
+            <option value="cast">cast</option>
+            <option value="casts">casts</option>
+          </select>
+          a shadow under the grey winter sky.
+        </div>
+
+        <div class="gap-item">
+          5. Neither of the receptionists
+          <select>
+            <option value="">---</option>
+            <option value="have">have</option>
+            <option value="has">has</option>
+          </select>
+          any record of our reservation.
+        </div>
+
+        <div class="gap-item">
+          6. Neither of the two expeditions
+          <select>
+            <option value="">---</option>
+            <option value="is">is</option>
+            <option value="are">are</option>
+          </select>
+          suitable for beginners.
+        </div>
+      </div>
+    </section>
+
+    <!-- EXERCISE 3 -->
+    <section class="card">
+      <div class="card-header">
+        <h2>3. Combine the following sentences using "neither ... nor"</h2>
+        <p>Rewrite each pair as one natural sentence without double negatives.</p>
+      </div>
+
+      <div class="combine-list">
+        <div class="combine-item">
+          <div class="combine-prompt">1. The town is not warm. It is not easy to reach either.</div>
+          <div class="combine-input-row">
+            <span class="badge-answer">Your answer :</span>
+            <input type="text" placeholder="The northernmost town is..." />
+          </div>
+        </div>
+
+        <div class="combine-item">
+          <div class="combine-prompt">2. Mark did not oversleep. Leo did not oversleep either.</div>
+          <div class="combine-input-row">
+            <span class="badge-answer">Your answer :</span>
+            <input type="text" placeholder="Neither..." />
+          </div>
+        </div>
+
+        <div class="combine-item">
+          <div class="combine-prompt">3. He did not leap into his clothes. He did not drag his bag to the door either.</div>
+          <div class="combine-input-row">
+            <span class="badge-answer">Your answer :</span>
+            <input type="text" placeholder="He neither..." />
+          </div>
+        </div>
+
+        <div class="combine-item">
+          <div class="combine-prompt">4. The manager could not persuade the guests. The receptionist could not persuade them either.</div>
+          <div class="combine-input-row">
+            <span class="badge-answer">Your answer :</span>
+            <input type="text" placeholder="Neither..." />
+          </div>
+        </div>
+
+        <div class="combine-item">
+          <div class="combine-prompt">5. This route is not suitable for heavy trucks. It is not suitable for small cars either.</div>
+          <div class="combine-input-row">
+            <span class="badge-answer">Your answer :</span>
+            <input type="text" placeholder="This route is suitable..." />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXERCISE 4 -->
+    <section class="card">
+      <div class="card-header">
+        <h2>4. Put the words in the correct order</h2>
+        <p>Click the words in the bank to build each sentence. Click a word in the box to return it.</p>
+      </div>
+
+      <div class="scramble-list" id="scrambleContainer"></div>
+    </section>
+  </div>
+
+  <script>
+    // --- EXERCISE 1 LOGIC ---
+    const currentSelection = [null, null, null];
+    const completedGroups = []; // array of { col0, col1, col2, colorIndex }
+    const maxColors = 5;
+
+    document.querySelectorAll('#builderGrid .tile').forEach(tile => {
+      tile.addEventListener('click', () => {
+        const col = parseInt(tile.parentElement.dataset.col, 10);
+
+        // Ignore if already part of a completed group
+        if (tile.dataset.group !== undefined) return;
+
+        // Deselect if clicking the same active tile
+        if (currentSelection[col] === tile) {
+          tile.classList.remove('selected-slot');
+          currentSelection[col] = null;
+          return;
+        }
+
+        // Switch selection in this column
+        if (currentSelection[col]) {
+          currentSelection[col].classList.remove('selected-slot');
+        }
+        tile.classList.add('selected-slot');
+        currentSelection[col] = tile;
+
+        // Check if all 3 columns have a selection
+        if (currentSelection[0] && currentSelection[1] && currentSelection[2]) {
+          const usedColors = completedGroups.map(g => g.colorIndex);
+          let colorIdx = 1;
+          while (usedColors.includes(colorIdx) && colorIdx <= maxColors) {
+            colorIdx++;
+          }
+
+          const groupIdx = completedGroups.length;
+          currentSelection.forEach(t => {
+            t.classList.remove('selected-slot');
+            t.classList.add(`pair-${colorIdx}`);
+            t.dataset.group = groupIdx;
+          });
+
+          completedGroups.push({
+            tiles: [...currentSelection],
+            text: `${currentSelection[0].textContent} ${currentSelection[1].textContent} ${currentSelection[2].textContent}`,
+            colorIndex: colorIdx
+          });
+
+          currentSelection[0] = null;
+          currentSelection[1] = null;
+          currentSelection[2] = null;
+          renderAssembled();
+        }
+      });
+    });
+
+    function removeGroup(idx) {
+      const group = completedGroups[idx];
+      if (!group) return;
+      group.tiles.forEach(t => {
+        t.classList.remove(`pair-${group.colorIndex}`);
+        delete t.dataset.group;
+      });
+      completedGroups.splice(idx, 1);
+      // Re-index remaining groups
+      completedGroups.forEach((g, newIdx) => {
+        g.tiles.forEach(t => t.dataset.group = newIdx);
+      });
+      renderAssembled();
+    }
+
+    function renderAssembled() {
+      const container = document.getElementById('assembledContainer');
+      if (completedGroups.length === 0) {
+        container.innerHTML = '<p style="color:#94a3b8; font-size:0.9rem;">Select three matching parts above to form sentences...</p>';
+        return;
+      }
+
+      const borderColors = ['#38bdf8', '#f59e0b', '#a855f7', '#f43f5e', '#22c55e'];
+      container.innerHTML = completedGroups.map((g, i) => `
+        <div class="assembled-item" style="border-left-color: ${borderColors[g.colorIndex - 1]};">
+          <span><strong>${i + 1}.</strong> ${g.text}</span>
+          <button class="clear-pair-btn" title="Remove match" onclick="removeGroup(${i})">&times;</button>
+        </div>
+      `).join('');
+    }
+
+    // --- EXERCISE 4 LOGIC ---
+    const scrambleSentences = [
+      ["Neither", "of", "us", "had", "difficulty", "grasping", "the", "local", "map."],
+      ["Neither", "the", "guide", "nor", "the", "driver", "showed", "up", "at", "the", "edge", "of", "the", "world."],
+      ["Neither", "of", "the", "tourists", "was", "interested", "in", "walking", "through", "the", "slush."],
+      ["She", "had", "huge", "difficulty", "persuading", "neither", "the", "clerk", "nor", "the", "manager."]
+    ];
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function initScramble() {
+      const container = document.getElementById('scrambleContainer');
+      container.innerHTML = '';
+
+      scrambleSentences.forEach((words, idx) => {
+        const item = document.createElement('div');
+        item.className = 'scramble-item';
+
+        const dropzone = document.createElement('div');
+        dropzone.className = 'answer-dropzone';
+
+        const bank = document.createElement('div');
+        bank.className = 'word-bank';
+
+        const shuffled = shuffleArray(words);
+        shuffled.forEach(word => {
+          const chip = document.createElement('span');
+          chip.className = 'word-chip';
+          chip.textContent = word;
+          chip.addEventListener('click', () => {
+            if (chip.parentElement === bank) {
+              dropzone.appendChild(chip);
+            } else {
+              bank.appendChild(chip);
+            }
+          });
+          bank.appendChild(chip);
+        });
+
+        item.appendChild(dropzone);
+        item.appendChild(bank);
+        container.appendChild(item);
+      });
+    }
+
+    function resetAll() {
+      // Clear Task 1
+      while (completedGroups.length > 0) {
+        removeGroup(0);
+      }
+      currentSelection.forEach((t, i) => {
+        if (t) {
+          t.classList.remove('selected-slot');
+          currentSelection[i] = null;
+        }
+      });
+
+      // Clear Task 2
+      document.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+
+      // Clear Task 3
+      document.querySelectorAll('.combine-input-row input').forEach(inp => inp.value = '');
+
+      // Clear Task 4
+      initScramble();
+    }
+
+    initScramble();
+  </script>
+</body>
+</html>
