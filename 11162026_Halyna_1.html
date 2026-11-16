@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business English: Etiquette &amp; Communication</title>
+  <style>
+    :root {
+      --bg-color: #f0f9f1;
+      --card-bg: #ffffff;
+      --primary: #2e7d32;
+      --primary-light: #e8f5e9;
+      --primary-border: #a5d6a7;
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --vocab-bg: #fef9c3;
+      --vocab-border: #eab308;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 16px 70px;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--primary-border);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-title h1 {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .student-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .student-info input {
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fafafa;
+    }
+
+    .student-info input:focus {
+      border-color: var(--primary);
+      background: #fff;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--primary-border);
+      background: var(--card-bg);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-reset {
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    .btn-reset:hover {
+      background: #fef2f2;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--primary-border);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.05);
+    }
+
+    .card-header {
+      margin-bottom: 18px;
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 10px;
+    }
+
+    .card-header h2 {
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .card-header p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    /* Vocab Interactive Styling */
+    .vocab-word {
+      background-color: var(--vocab-bg);
+      border-bottom: 2px dashed var(--vocab-border);
+      padding: 1px 4px;
+      border-radius: 4px;
+      cursor: help;
+      font-weight: 600;
+      color: #713f12;
+      transition: background 0.15s;
+    }
+
+    .vocab-word:hover, .vocab-word.active {
+      background-color: #fde047;
+      color: #422006;
+    }
+
+    /* Floating Tooltip */
+    #vocabTooltip {
+      position: fixed;
+      z-index: 9999;
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 12px 14px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      min-width: 220px;
+      max-width: 300px;
+      display: none;
+      pointer-events: auto;
+      border: 1px solid #475569;
+    }
+
+    .tt-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .tt-word {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #fde047;
+    }
+
+    .tt-speak-btn {
+      background: #334155;
+      border: 1px solid #64748b;
+      color: #fff;
+      border-radius: 6px;
+      padding: 4px 9px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+
+    .tt-speak-btn:hover {
+      background: #2e7d32;
+      border-color: #81c784;
+    }
+
+    .tt-ipa {
+      font-family: 'Lucida Sans Unicode', 'DejaVu Sans', sans-serif;
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+
+    .tt-ua {
+      font-size: 0.96rem;
+      color: #ffffff;
+      border-top: 1px solid #334155;
+      padding-top: 6px;
+    }
+
+    /* Word Bank */
+    .word-bank-box {
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+    }
+
+    .word-bank-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .word-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      background: #ffffff;
+      border: 1px solid var(--primary-border);
+      color: #1b5e20;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    /* Sentences list */
+    .sentence-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .sentence-item {
+      font-size: 1rem;
+      padding: 12px 16px;
+      background: #f9fafb;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .sentence-number {
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 24px;
+    }
+
+    .sentence-input {
+      border: none;
+      border-bottom: 2px solid var(--primary);
+      background: #ffffff;
+      padding: 4px 10px;
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--primary);
+      width: 210px;
+      border-radius: 4px 4px 0 0;
+      outline: none;
+    }
+
+    .sentence-input:focus {
+      background: #f0fdf4;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+      .toolbar, #vocabTooltip {
+        display: none !important;
+      }
+      .card, header {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-title">
+        <h1>Business English Practice</h1>
+        <p>Etiquette &amp; Workplace Communication</p>
+      </div>
+      <div class="student-info">
+        <input type="text" id="studentName" placeholder="Student Name" />
+        <input type="date" id="lessonDate" />
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <button class="btn" onclick="window.print()">Print / Save PDF</button>
+      <button class="btn btn-reset" onclick="clearWorksheet()">Clear All</button>
+    </div>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Exercise 1. Complete the sentences</h2>
+        <p>Choose the correct word or phrase from the word bank below. Hover over any highlighted word to see its transcription, listen to pronunciation, and view the Ukrainian translation.</p>
+      </div>
+
+      <div class="word-bank-box">
+        <div class="word-bank-title">Word Bank (Наведіть на слова для перекладу та озвучки)</div>
+        <div class="word-chips">
+          <span class="chip"><span class="vocab-word" data-ipa="/ˈet.ɪ.ket/" data-ua="етикет">etiquette</span></span>
+          <span class="chip"><span class="vocab-word" data-ipa="/ruːd/" data-ua="грубий, неввічливий">rude</span></span>
+          <span class="chip"><span class="vocab-word" data-ipa="/ədˈvaɪs/" data-ua="порада">advice</span></span>
+          <span class="chip"><span class="vocab-word" data-ipa="/ˈpeɪ.ʃənt/" data-ua="терплячий">patient</span></span>
+          <span class="chip"><span class="vocab-word" data-ipa="/ˈwɜːkɪŋ ɪnˈvaɪ.rən.mənt/" data-ua="робоче середовище">working environment</span></span>
+          <span class="chip"><span class="vocab-word" data-ipa="/ɪɡˈnɔːr/" data-ua="ігнорувати">ignore</span></span>
+          <span class="chip"><span class="vocab-word" data-ipa="/bɪld rɪˈleɪ.ʃən.ʃɪps/" data-ua="будувати / налагоджувати стосунки">build relationships</span></span>
+          <span class="chip"><span class="vocab-word" data-ipa="/əˈraɪv leɪt/" data-ua="запізнюватися">arrive late</span></span>
+          <span class="chip"><span class="vocab-word" data-ipa="/kəmˈpet.ɪ.tɪv ˈpraɪ.sɪz/" data-ua="конкурентні ціни">competitive prices</span></span>
+          <span class="chip"><span class="vocab-word" data-ipa="/bɪˈheɪv/" data-ua="поводитися">behave</span></span>
+        </div>
+      </div>
+
+      <div class="sentence-list">
+        <div class="sentence-item">
+          <span class="sentence-number">1.</span>
+          Good business <input type="text" class="sentence-input" placeholder="..." /> is important when you communicate with international clients.
+        </div>
+
+        <div class="sentence-item">
+          <span class="sentence-number">2.</span>
+          Please don't <input type="text" class="sentence-input" placeholder="..." /> customer emails. Always reply to them.
+        </div>
+
+        <div class="sentence-item">
+          <span class="sentence-number">3.</span>
+          Our company offers a wide range of products at <input type="text" class="sentence-input" placeholder="..." />.
+        </div>
+
+        <div class="sentence-item">
+          <span class="sentence-number">4.</span>
+          It's important to <input type="text" class="sentence-input" placeholder="..." /> with your colleagues and customers.
+        </div>
+
+        <div class="sentence-item">
+          <span class="sentence-number">5.</span>
+          Don't <input type="text" class="sentence-input" placeholder="..." /> for business meetings. Try to be on time.
+        </div>
+
+        <div class="sentence-item">
+          <span class="sentence-number">6.</span>
+          You should be <input type="text" class="sentence-input" placeholder="..." /> when you explain something to a new employee.
+        </div>
+
+        <div class="sentence-item">
+          <span class="sentence-number">7.</span>
+          My manager always gives me useful <input type="text" class="sentence-input" placeholder="..." />.
+        </div>
+
+        <div class="sentence-item">
+          <span class="sentence-number">8.</span>
+          It's <input type="text" class="sentence-input" placeholder="..." /> to interrupt people when they are speaking.
+        </div>
+
+        <div class="sentence-item">
+          <span class="sentence-number">9.</span>
+          A friendly <input type="text" class="sentence-input" placeholder="..." /> helps employees work better.
+        </div>
+
+        <div class="sentence-item">
+          <span class="sentence-number">10.</span>
+          Employees should <input type="text" class="sentence-input" placeholder="..." /> professionally at work.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- FLOATING TOOLTIP -->
+  <div id="vocabTooltip">
+    <div class="tt-top">
+      <span class="tt-word" id="ttWord"></span>
+      <button class="tt-speak-btn" id="ttSpeakBtn" type="button" title="Listen to pronunciation">
+        &#128266; Listen
+      </button>
+    </div>
+    <div class="tt-ipa" id="ttIpa"></div>
+    <div class="tt-ua" id="ttUa"></div>
+  </div>
+
+  <script>
+    // Tooltip & Text-to-Speech Logic
+    const tooltip = document.getElementById('vocabTooltip');
+    const ttWord = document.getElementById('ttWord');
+    const ttIpa = document.getElementById('ttIpa');
+    const ttUa = document.getElementById('ttUa');
+    const ttSpeakBtn = document.getElementById('ttSpeakBtn');
+
+    let currentPhrase = '';
+    let hideTimeout = null;
+    let activeSpan = null;
+
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) {
+        alert('Sorry, your browser does not support text-to-speech.');
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-GB';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    ttSpeakBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (currentPhrase) speakText(currentPhrase);
+    });
+
+    function showTooltip(span) {
+      clearTimeout(hideTimeout);
+      if (activeSpan) activeSpan.classList.remove('active');
+      activeSpan = span;
+      activeSpan.classList.add('active');
+
+      currentPhrase = span.textContent.trim();
+      ttWord.textContent = currentPhrase;
+      ttIpa.textContent = span.dataset.ipa || '';
+      ttUa.textContent = span.dataset.ua || '';
+
+      tooltip.style.display = 'block';
+
+      const rect = span.getBoundingClientRect();
+      const ttRect = tooltip.getBoundingClientRect();
+
+      let left = rect.left + (rect.width / 2) - (ttRect.width / 2);
+      if (left < 12) left = 12;
+      if (left + ttRect.width > window.innerWidth - 12) {
+        left = window.innerWidth - ttRect.width - 12;
+      }
+
+      let top = rect.top - ttRect.height - 10;
+      if (top < 12) {
+        top = rect.bottom + 10;
+      }
+
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+    }
+
+    function scheduleHideTooltip() {
+      hideTimeout = setTimeout(() => {
+        hideTooltip();
+      }, 260);
+    }
+
+    function hideTooltip() {
+      tooltip.style.display = 'none';
+      if (activeSpan) {
+        activeSpan.classList.remove('active');
+        activeSpan = null;
+      }
+    }
+
+    document.querySelectorAll('.vocab-word').forEach(span => {
+      span.addEventListener('mouseenter', () => showTooltip(span));
+      span.addEventListener('mouseleave', scheduleHideTooltip);
+      span.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showTooltip(span);
+      });
+    });
+
+    tooltip.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+    tooltip.addEventListener('mouseleave', scheduleHideTooltip);
+    document.addEventListener('click', (e) => {
+      if (!tooltip.contains(e.target) && !e.target.classList.contains('vocab-word')) {
+        hideTooltip();
+      }
+    });
+
+    function clearWorksheet() {
+      document.querySelectorAll('.sentence-input').forEach(input => input.value = '');
+      document.getElementById('studentName').value = '';
+      document.getElementById('lessonDate').value = '';
+    }
+  </script>
+</body>
+</html>
