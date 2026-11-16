@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise 2. Offers or Requests?</title>
+  <style>
+    :root {
+      --bg-color: #f0f9f1;
+      --card-bg: #ffffff;
+      --primary: #2e7d32;
+      --primary-light: #e8f5e9;
+      --primary-border: #a5d6a7;
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --accent-box-bg: #f5fef6;
+      --accent-box-border: #c6e7c7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 16px 60px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--primary-border);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-title h1 {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .student-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .student-info input {
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fafafa;
+    }
+
+    .student-info input:focus {
+      border-color: var(--primary);
+      background: #fff;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--primary-border);
+      background: var(--card-bg);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-reset {
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    .btn-reset:hover {
+      background: #fef2f2;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--primary-border);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.05);
+    }
+
+    .card-header {
+      margin-bottom: 18px;
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 10px;
+    }
+
+    .card-header h2 {
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .card-header p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    /* Reminder Box */
+    .reminder-box {
+      background: var(--accent-box-bg);
+      border: 1px solid var(--accent-box-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+    }
+
+    .reminder-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .reminder-list {
+      list-style-type: disc;
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.96rem;
+      color: var(--text-main);
+    }
+
+    .reminder-list li strong {
+      color: var(--primary);
+    }
+
+    /* Questions List */
+    .questions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .question-card {
+      background: #f9fafb;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      padding: 16px 20px;
+      transition: border-color 0.2s;
+    }
+
+    .question-card:hover {
+      border-color: var(--primary-border);
+    }
+
+    .situation-text {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .prompt-sentence {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 14px;
+    }
+
+    .options-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .option-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.96rem;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .option-label:hover {
+      background: var(--primary-light);
+      border-color: var(--primary-border);
+      color: var(--primary);
+    }
+
+    .option-label input[type="radio"] {
+      accent-color: var(--primary);
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
+    }
+
+    /* Print optimization */
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+      .toolbar {
+        display: none !important;
+      }
+      .card, header {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+      }
+      .question-card {
+        background: #fff;
+        border: 1px solid #ddd;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-title">
+        <h1>Exercise 2. Offers or Requests?</h1>
+        <p>Business English Practice: Can I / Shall I / Could you / Would you</p>
+      </div>
+      <div class="student-info">
+        <input type="text" id="studentName" placeholder="Student Name" />
+        <input type="date" id="lessonDate" />
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <button class="btn" onclick="window.print()">Print / Save PDF</button>
+      <button class="btn btn-reset" onclick="clearWorksheet()">Clear All</button>
+    </div>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Choose the correct option</h2>
+        <p>Select the most suitable expression for each situation below.</p>
+      </div>
+
+      <div class="reminder-box">
+        <div class="reminder-title">Remember:</div>
+        <ul class="reminder-list">
+          <li><strong>Offers</strong> — ви пропонуєте свою допомогу.</li>
+          <li><strong>Requests</strong> — ви просите когось щось зробити.</li>
+        </ul>
+      </div>
+
+      <div class="questions-list">
+        <!-- Q1 -->
+        <div class="question-card">
+          <div class="situation-text">1. You see your colleague carrying heavy boxes.</div>
+          <div class="prompt-sentence">___ help you with those boxes?</div>
+          <div class="options-group">
+            <label class="option-label">
+              <input type="radio" name="q1" value="Can I" /> Can I
+            </label>
+            <label class="option-label">
+              <input type="radio" name="q1" value="Could you" /> Could you
+            </label>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="question-card">
+          <div class="situation-text">2. You need your colleague to send you a document politely.</div>
+          <div class="prompt-sentence">___ send me the document, please?</div>
+          <div class="options-group">
+            <label class="option-label">
+              <input type="radio" name="q2" value="Shall I" /> Shall I
+            </label>
+            <label class="option-label">
+              <input type="radio" name="q2" value="Could you" /> Could you
+            </label>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="question-card">
+          <div class="situation-text">3. You want to offer to call a client.</div>
+          <div class="prompt-sentence">___ call the client for you?</div>
+          <div class="options-group">
+            <label class="option-label">
+              <input type="radio" name="q3" value="Shall I" /> Shall I
+            </label>
+            <label class="option-label">
+              <input type="radio" name="q3" value="Would you" /> Would you
+            </label>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="question-card">
+          <div class="situation-text">4. You politely ask a colleague to wait.</div>
+          <div class="prompt-sentence">___ wait a moment, please?</div>
+          <div class="options-group">
+            <label class="option-label">
+              <input type="radio" name="q4" value="Would you" /> Would you
+            </label>
+            <label class="option-label">
+              <input type="radio" name="q4" value="Can I" /> Can I
+            </label>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="question-card">
+          <div class="situation-text">5. Your colleague looks confused. You offer assistance.</div>
+          <div class="prompt-sentence">___ explain the rules to you?</div>
+          <div class="options-group">
+            <label class="option-label">
+              <input type="radio" name="q5" value="Can I" /> Can I
+            </label>
+            <label class="option-label">
+              <input type="radio" name="q5" value="Could you" /> Could you
+            </label>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="question-card">
+          <div class="situation-text">6. You need someone to check the prices.</div>
+          <div class="prompt-sentence">___ check the prices for me, please?</div>
+          <div class="options-group">
+            <label class="option-label">
+              <input type="radio" name="q6" value="Shall I" /> Shall I
+            </label>
+            <label class="option-label">
+              <input type="radio" name="q6" value="Could you" /> Could you
+            </label>
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="question-card">
+          <div class="situation-text">7. You offer to send a report.</div>
+          <div class="prompt-sentence">___ send you the report after the meeting?</div>
+          <div class="options-group">
+            <label class="option-label">
+              <input type="radio" name="q7" value="Shall I" /> Shall I
+            </label>
+            <label class="option-label">
+              <input type="radio" name="q7" value="Would you" /> Would you
+            </label>
+          </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="question-card">
+          <div class="situation-text">8. You ask a colleague to speak politely to customers.</div>
+          <div class="prompt-sentence">___ be more polite to our customers, please?</div>
+          <div class="options-group">
+            <label class="option-label">
+              <input type="radio" name="q8" value="Would you" /> Would you
+            </label>
+            <label class="option-label">
+              <input type="radio" name="q8" value="Can I" /> Can I
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function clearWorksheet() {
+      document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+      document.getElementById('studentName').value = '';
+      document.getElementById('lessonDate').value = '';
+    }
+  </script>
+</body>
+</html>
