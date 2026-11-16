@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business English: Business Situations — What Would You Say?</title>
+  <style>
+    :root {
+      --bg-color: #f0f9f1;
+      --card-bg: #ffffff;
+      --primary: #2e7d32;
+      --primary-light: #e8f5e9;
+      --primary-border: #a5d6a7;
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 16px 70px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--primary-border);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-title h1 {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .student-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .student-info input {
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fafafa;
+    }
+
+    .student-info input:focus {
+      border-color: var(--primary);
+      background: #fff;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--primary-border);
+      background: var(--card-bg);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-reset {
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    .btn-reset:hover {
+      background: #fef2f2;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--primary-border);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.05);
+    }
+
+    .card-header {
+      margin-bottom: 18px;
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 10px;
+    }
+
+    .card-header h2 {
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .card-header p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    .language-box {
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .language-box strong {
+      color: var(--primary);
+    }
+
+    .situation-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .situation-item {
+      background: #f9fafb;
+      padding: 14px 18px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .situation-text {
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 10px;
+      font-size: 0.98rem;
+    }
+
+    .situation-input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-label {
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .situation-input-row input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fff;
+    }
+
+    .situation-input-row input:focus {
+      border-color: var(--primary);
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+      .toolbar {
+        display: none !important;
+      }
+      .card, header {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-title">
+        <h1>Business Situations</h1>
+        <p>What Would You Say? (Offers &amp; Requests)</p>
+      </div>
+      <div class="student-info">
+        <input type="text" id="studentName" placeholder="Student Name" />
+        <input type="date" id="lessonDate" />
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <button class="btn" onclick="window.print()">Print / Save PDF</button>
+      <button class="btn btn-reset" onclick="clearWorksheet()">Clear All</button>
+    </div>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Exercise 3. Business Situations — What Would You Say?</h2>
+        <p>Read the situations. Make polite offers or requests using the expressions below.</p>
+      </div>
+
+      <div class="language-box">
+        <strong>Useful Language:</strong> Can I ...? / Shall I ...? / Could you ...? / Would you ...?
+      </div>
+
+      <div class="situation-list">
+        <div class="situation-item">
+          <div class="situation-text">1. Your colleague is new to the company. You want to offer to explain the company rules.</div>
+          <div class="situation-input-row">
+            <span class="badge-label">Your sentence:</span>
+            <input type="text" placeholder="Type your offer here..." />
+          </div>
+        </div>
+
+        <div class="situation-item">
+          <div class="situation-text">2. A customer is interested in your products. You want to offer to send a price list.</div>
+          <div class="situation-input-row">
+            <span class="badge-label">Your sentence:</span>
+            <input type="text" placeholder="Type your offer here..." />
+          </div>
+        </div>
+
+        <div class="situation-item">
+          <div class="situation-text">3. Your colleague often arrives late for meetings. Politely ask them to be on time.</div>
+          <div class="situation-input-row">
+            <span class="badge-label">Your sentence:</span>
+            <input type="text" placeholder="Type your request here..." />
+          </div>
+        </div>
+
+        <div class="situation-item">
+          <div class="situation-text">4. You need advice about a difficult customer. Politely ask your manager for help.</div>
+          <div class="situation-input-row">
+            <span class="badge-label">Your sentence:</span>
+            <input type="text" placeholder="Type your request here..." />
+          </div>
+        </div>
+
+        <div class="situation-item">
+          <div class="situation-text">5. Your colleague is rude to customers. Politely ask them to behave more professionally.</div>
+          <div class="situation-input-row">
+            <span class="badge-label">Your sentence:</span>
+            <input type="text" placeholder="Type your request here..." />
+          </div>
+        </div>
+
+        <div class="situation-item">
+          <div class="situation-text">6. Your business partner wants to know more about your products. Offer to explain your wide range of products.</div>
+          <div class="situation-input-row">
+            <span class="badge-label">Your sentence:</span>
+            <input type="text" placeholder="Type your offer here..." />
+          </div>
+        </div>
+
+        <div class="situation-item">
+          <div class="situation-text">7. You want to build better relationships with your clients. Ask your colleague to help you organize a meeting.</div>
+          <div class="situation-input-row">
+            <span class="badge-label">Your sentence:</span>
+            <input type="text" placeholder="Type your request here..." />
+          </div>
+        </div>
+
+        <div class="situation-item">
+          <div class="situation-text">8. Your colleague has a problem with a report. Offer to check it.</div>
+          <div class="situation-input-row">
+            <span class="badge-label">Your sentence:</span>
+            <input type="text" placeholder="Type your offer here..." />
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function clearWorksheet() {
+      document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+      document.getElementById('lessonDate').value = '';
+    }
+  </script>
+</body>
+</html>
