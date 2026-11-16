@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Worksheet: Neither, Neither of, Neither ... nor ...</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F9F4; /* Soft light pastel green */
+            color: #1F2937;
+        }
+
+        /* Custom subtle scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F3F9F4;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        /* Smooth transitions for interactive tiles */
+        .tile-btn {
+            transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tile-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Custom select styling */
+        select.inline-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234B5563'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.6rem center;
+            background-size: 1rem;
+            padding-right: 2.1rem;
+        }
+
+        /* Print optimization */
+        @media print {
+            body {
+                background-color: #FFFFFF;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .card-shadow {
+                box-shadow: none !important;
+                border: 1px solid #D1D5DB !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+
+    <div class="max-w-4xl mx-auto space-y-8">
+
+        <!-- Header Card -->
+        <header class="bg-white rounded-2xl border border-emerald-100 shadow-sm p-6 sm:p-8 card-shadow">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-100 pb-5">
+                <div>
+                    <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider uppercase rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 mb-2">
+                        English Grammar Practice
+                    </span>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+                        Neither, Neither of &amp; Neither ... nor ...
+                    </h1>
+                </div>
+                <div class="flex flex-col sm:items-end gap-2 text-sm text-gray-500">
+                    <div class="flex items-center gap-2">
+                        <label for="studentName" class="font-medium text-gray-600">Name:</label>
+                        <input type="text" id="studentName" placeholder="Enter your name"
+                            class="border-b border-gray-300 focus:border-emerald-500 focus:outline-none px-2 py-1 text-gray-800 bg-transparent w-44 text-sm">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label for="worksheetDate" class="font-medium text-gray-600">Date:</label>
+                        <input type="text" id="worksheetDate" placeholder="DD / MM / YYYY"
+                            class="border-b border-gray-300 focus:border-emerald-500 focus:outline-none px-2 py-1 text-gray-800 bg-transparent w-44 text-sm">
+                    </div>
+                </div>
+            </div>
+            <p class="mt-4 text-gray-600 text-sm sm:text-base leading-relaxed">
+                Complete all four exercises below carefully. When you finish, review your completed worksheet together with your teacher.
+            </p>
+        </header>
+
+        <!-- ===================================================================== -->
+        <!-- EXERCISE 1: 3-Part Sentence Builder                                   -->
+        <!-- ===================================================================== -->
+        <section class="bg-white rounded-2xl border border-emerald-100 shadow-sm p-6 sm:p-8 card-shadow" id="exercise-1">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-emerald-600 text-white font-bold text-sm shrink-0">
+                        1
+                    </span>
+                    <h2 class="text-xl font-bold text-gray-900">
+                        3-Part Sentence Builder
+                    </h2>
+                </div>
+                <span class="text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full self-start sm:self-auto">
+                    5 Sentences
+                </span>
+            </div>
+            <p class="text-gray-600 text-sm sm:text-base mb-5">
+                Click one phrase from <span class="font-semibold text-gray-800">Beginning</span>, one from <span class="font-semibold text-gray-800">Middle</span>, and one from <span class="font-semibold text-gray-800">Ending</span> to link them into a complete sentence. Click a linked tile again to unlink it.
+            </p>
+
+            <!-- Active Selection Helper Bar -->
+            <div id="ex1-status-bar" class="mb-5 px-4 py-2.5 rounded-xl bg-amber-50/80 border border-amber-200/80 text-sm text-amber-900 flex flex-wrap items-center justify-between gap-2">
+                <span id="ex1-status-text">Select a phrase from any column to start building a sentence.</span>
+                <button type="button" id="ex1-cancel-draft" class="hidden text-xs font-semibold text-amber-800 underline hover:text-amber-950">
+                    Cancel current selection
+                </button>
+            </div>
+
+            <!-- 3 Columns Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="ex1-grid">
+                <!-- Column 1: Beginning -->
+                <div class="space-y-2.5">
+                    <div class="text-xs font-bold uppercase tracking-wider text-gray-400 px-1">Beginning</div>
+                    <div id="ex1-col-0" class="space-y-2.5"></div>
+                </div>
+                <!-- Column 2: Middle -->
+                <div class="space-y-2.5">
+                    <div class="text-xs font-bold uppercase tracking-wider text-gray-400 px-1">Middle</div>
+                    <div id="ex1-col-1" class="space-y-2.5"></div>
+                </div>
+                <!-- Column 3: Ending -->
+                <div class="space-y-2.5">
+                    <div class="text-xs font-bold uppercase tracking-wider text-gray-400 px-1">Ending</div>
+                    <div id="ex1-col-2" class="space-y-2.5"></div>
+                </div>
+            </div>
+
+            <!-- Built Sentences Preview List -->
+            <div class="mt-6 pt-5 border-t border-gray-100">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Your Linked Sentences</h3>
+                <div id="ex1-summary" class="space-y-2">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- EXERCISE 2: Dropdown Selection (Grammar & Agreement)                  -->
+        <!-- ===================================================================== -->
+        <section class="bg-white rounded-2xl border border-emerald-100 shadow-sm p-6 sm:p-8 card-shadow" id="exercise-2">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-emerald-600 text-white font-bold text-sm shrink-0">
+                        2
+                    </span>
+                    <h2 class="text-xl font-bold text-gray-900">
+                        Grammar &amp; Agreement
+                    </h2>
+                </div>
+                <span class="text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full self-start sm:self-auto">
+                    6 Items
+                </span>
+            </div>
+            <p class="text-gray-600 text-sm sm:text-base mb-6">
+                Choose the grammatically correct word or verb form from each dropdown menu to complete the sentences.
+            </p>
+
+            <div class="space-y-4" id="ex2-list">
+                <!-- Item 1 -->
+                <div class="p-4 rounded-xl bg-gray-50/80 border border-gray-200/80 text-gray-800 text-base leading-relaxed flex flex-wrap items-center gap-y-2">
+                    <span class="font-semibold text-emerald-700 mr-2.5">1.</span>
+                    <span>Neither of my friends</span>
+                    <select aria-label="Sentence 1 choice" class="inline-select mx-2 px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-900 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer">
+                        <option value="" selected>— choose —</option>
+                        <option value="want">want</option>
+                        <option value="wants">wants</option>
+                    </select>
+                    <span>to travel to the edge of the world in winter.</span>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="p-4 rounded-xl bg-gray-50/80 border border-gray-200/80 text-gray-800 text-base leading-relaxed flex flex-wrap items-center gap-y-2">
+                    <span class="font-semibold text-emerald-700 mr-2.5">2.</span>
+                    <span>Neither</span>
+                    <select aria-label="Sentence 2 choice" class="inline-select mx-2 px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-900 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer">
+                        <option value="" selected>— choose —</option>
+                        <option value="coat">coat</option>
+                        <option value="coats">coats</option>
+                    </select>
+                    <span>is suitable for such freezing weather and slush.</span>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="p-4 rounded-xl bg-gray-50/80 border border-gray-200/80 text-gray-800 text-base leading-relaxed flex flex-wrap items-center gap-y-2">
+                    <span class="font-semibold text-emerald-700 mr-2.5">3.</span>
+                    <span>Neither the receptionist nor the manager</span>
+                    <select aria-label="Sentence 3 choice" class="inline-select mx-2 px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-900 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer">
+                        <option value="" selected>— choose —</option>
+                        <option value="has">has</option>
+                        <option value="have">have</option>
+                    </select>
+                    <span>any record of our reservation.</span>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="p-4 rounded-xl bg-gray-50/80 border border-gray-200/80 text-gray-800 text-base leading-relaxed flex flex-wrap items-center gap-y-2">
+                    <span class="font-semibold text-emerald-700 mr-2.5">4.</span>
+                    <span>She tried to persuade both of them, but neither of</span>
+                    <select aria-label="Sentence 4 choice" class="inline-select mx-2 px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-900 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer">
+                        <option value="" selected>— choose —</option>
+                        <option value="they">they</option>
+                        <option value="them">them</option>
+                    </select>
+                    <span>agreed to show up early.</span>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="p-4 rounded-xl bg-gray-50/80 border border-gray-200/80 text-gray-800 text-base leading-relaxed flex flex-wrap items-center gap-y-2">
+                    <span class="font-semibold text-emerald-700 mr-2.5">5.</span>
+                    <span>Neither of the passengers</span>
+                    <select aria-label="Sentence 5 choice" class="inline-select mx-2 px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-900 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer">
+                        <option value="" selected>— choose —</option>
+                        <option value="was">was</option>
+                        <option value="were">were</option>
+                    </select>
+                    <span>able to drag the heavy bag through the snow.</span>
+                </div>
+
+                <!-- Item 6 -->
+                <div class="p-4 rounded-xl bg-gray-50/80 border border-gray-200/80 text-gray-800 text-base leading-relaxed flex flex-wrap items-center gap-y-2">
+                    <span class="font-semibold text-emerald-700 mr-2.5">6.</span>
+                    <span>Neither Alex nor his colleagues</span>
+                    <select aria-label="Sentence 6 choice" class="inline-select mx-2 px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-900 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer">
+                        <option value="" selected>— choose —</option>
+                        <option value="is">is</option>
+                        <option value="are">are</option>
+                    </select>
+                    <span>interested in working at the edge of the world.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- EXERCISE 3: Sentence Transformation                                   -->
+        <!-- ===================================================================== -->
+        <section class="bg-white rounded-2xl border border-emerald-100 shadow-sm p-6 sm:p-8 card-shadow" id="exercise-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-emerald-600 text-white font-bold text-sm shrink-0">
+                        3
+                    </span>
+                    <h2 class="text-xl font-bold text-gray-900">
+                        Sentence Transformation
+                    </h2>
+                </div>
+                <span class="text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full self-start sm:self-auto">
+                    5 Transformations
+                </span>
+            </div>
+            <p class="text-gray-600 text-sm sm:text-base mb-6">
+                Combine each pair of negative ideas into one single sentence using the prompt in brackets. Remember to use an affirmative verb!
+            </p>
+
+            <div class="space-y-5" id="ex3-list">
+                <!-- Prompt 1 -->
+                <div class="p-4 sm:p-5 rounded-xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                    <div class="flex items-start gap-2.5">
+                        <span class="font-semibold text-emerald-700 mt-0.5">1.</span>
+                        <p class="text-gray-800 font-medium">
+                            Mark didn't oversleep. Sarah didn't oversleep either. <span class="text-emerald-700 font-semibold">(Use: Neither ... nor ...)</span>
+                        </p>
+                    </div>
+                    <div class="pl-6">
+                        <input type="text" placeholder="Type your combined sentence here..."
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <!-- Prompt 2 -->
+                <div class="p-4 sm:p-5 rounded-xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                    <div class="flex items-start gap-2.5">
+                        <span class="font-semibold text-emerald-700 mt-0.5">2.</span>
+                        <p class="text-gray-800 font-medium">
+                            The first hotel didn't have a record of my reservation. The second hotel didn't have one either. <span class="text-emerald-700 font-semibold">(Use: Neither of ...)</span>
+                        </p>
+                    </div>
+                    <div class="pl-6">
+                        <input type="text" placeholder="Type your combined sentence here..."
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <!-- Prompt 3 -->
+                <div class="p-4 sm:p-5 rounded-xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                    <div class="flex items-start gap-2.5">
+                        <span class="font-semibold text-emerald-700 mt-0.5">3.</span>
+                        <p class="text-gray-800 font-medium">
+                            He couldn't persuade the guide. He couldn't persuade the driver either. <span class="text-emerald-700 font-semibold">(Use: He could persuade neither ... nor ...)</span>
+                        </p>
+                    </div>
+                    <div class="pl-6">
+                        <input type="text" placeholder="Type your combined sentence here..."
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <!-- Prompt 4 -->
+                <div class="p-4 sm:p-5 rounded-xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                    <div class="flex items-start gap-2.5">
+                        <span class="font-semibold text-emerald-700 mt-0.5">4.</span>
+                        <p class="text-gray-800 font-medium">
+                            This jacket isn't suitable for slush. These shoes aren't suitable for slush either. <span class="text-emerald-700 font-semibold">(Use: Neither ... nor ...)</span>
+                        </p>
+                    </div>
+                    <div class="pl-6">
+                        <input type="text" placeholder="Type your combined sentence here..."
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <!-- Prompt 5 -->
+                <div class="p-4 sm:p-5 rounded-xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                    <div class="flex items-start gap-2.5">
+                        <span class="font-semibold text-emerald-700 mt-0.5">5.</span>
+                        <p class="text-gray-800 font-medium">
+                            Anna didn't leap into her clothes quickly. Kate didn't leap into her clothes quickly either. <span class="text-emerald-700 font-semibold">(Use: Neither of ...)</span>
+                        </p>
+                    </div>
+                    <div class="pl-6">
+                        <input type="text" placeholder="Type your combined sentence here..."
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- EXERCISE 4: Word Order (Click-to-Order Tiles)                         -->
+        <!-- ===================================================================== -->
+        <section class="bg-white rounded-2xl border border-emerald-100 shadow-sm p-6 sm:p-8 card-shadow" id="exercise-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-emerald-600 text-white font-bold text-sm shrink-0">
+                        4
+                    </span>
+                    <h2 class="text-xl font-bold text-gray-900">
+                        Scrambled Sentences
+                    </h2>
+                </div>
+                <span class="text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full self-start sm:self-auto">
+                    5 Sentences
+                </span>
+            </div>
+            <p class="text-gray-600 text-sm sm:text-base mb-6">
+                Combine each pair of negative sentences into one single sentence using <span class="font-semibold text-gray-800">neither ... nor ...</span> or <span class="font-semibold text-gray-800">neither of</span>. Remember to use an affirmative verb!
+            </p>
+
+            <div class="space-y-5" id="ex3-list">
+                <!-- Prompt 1 -->
+                <div class="p-4 sm:p-5 rounded-xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                    <div class="flex items-start gap-2.5">
+                        <span class="font-semibold text-emerald-700 mt-0.5">1.</span>
+                        <p class="text-gray-800 font-medium">
+                            Tom doesn't drink coffee. Anna doesn't drink coffee.
+                        </p>
+                    </div>
+                    <div class="pl-6">
+                        <input type="text" placeholder="Type your combined sentence here..."
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <!-- Prompt 2 -->
+                <div class="p-4 sm:p-5 rounded-xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                    <div class="flex items-start gap-2.5">
+                        <span class="font-semibold text-emerald-700 mt-0.5">2.</span>
+                        <p class="text-gray-800 font-medium">
+                            The first hotel wasn't clean. The second hotel wasn't clean.
+                        </p>
+                    </div>
+                    <div class="pl-6">
+                        <input type="text" placeholder="Type your combined sentence here..."
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <!-- Prompt 3 -->
+                <div class="p-4 sm:p-5 rounded-xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                    <div class="flex items-start gap-2.5">
+                        <span class="font-semibold text-emerald-700 mt-0.5">3.</span>
+                        <p class="text-gray-800 font-medium">
+                            I didn't watch the news yesterday. My sister didn't watch the news yesterday.
+                        </p>
+                    </div>
+                    <div class="pl-6">
+                        <input type="text" placeholder="Type your combined sentence here..."
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <!-- Prompt 4 -->
+                <div class="p-4 sm:p-5 rounded-xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                    <div class="flex items-start gap-2.5">
+                        <span class="font-semibold text-emerald-700 mt-0.5">4.</span>
+                        <p class="text-gray-800 font-medium">
+                            Both of my cousins live abroad. They don't visit our hometown often.
+                        </p>
+                    </div>
+                    <div class="pl-6">
+                        <input type="text" placeholder="Type your combined sentence here..."
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <!-- Prompt 5 -->
+                <div class="p-4 sm:p-5 rounded-xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                    <div class="flex items-start gap-2.5">
+                        <span class="font-semibold text-emerald-700 mt-0.5">5.</span>
+                        <p class="text-gray-800 font-medium">
+                            She can't swim. She can't ride a bicycle.
+                        </p>
+                    </div>
+                    <div class="pl-6">
+                        <input type="text" placeholder="Type your combined sentence here..."
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- EXERCISE 4: Word Order (Click-to-Order Tiles)                         -->
+        <!-- ===================================================================== -->
+        <section class="bg-white rounded-2xl border border-emerald-100 shadow-sm p-6 sm:p-8 card-shadow" id="exercise-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-emerald-600 text-white font-bold text-sm shrink-0">
+                        4
+                    </span>
+                    <h2 class="text-xl font-bold text-gray-900">
+                        Scrambled Sentences
+                    </h2>
+                </div>
+                <span class="text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full self-start sm:self-auto">
+                    4 Sentences
+                </span>
+            </div>
+            <p class="text-gray-600 text-sm sm:text-base mb-6">
+                Click the word tiles in the word bank to arrange them into a grammatically correct sentence. Click any placed word in the answer box to send it back.
+            </p>
+
+            <div class="space-y-6" id="ex4-container">
+                <!-- Rendered via JS -->
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- Footer / Reset Action                                                 -->
+        <!-- ===================================================================== -->
+        <footer class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-8 pt-2 no-print">
+            <p class="text-xs sm:text-sm text-gray-500">
+                Tip: You can print this page or save it as a PDF once completed to share with your teacher.
+            </p>
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="window.print()"
+                    class="px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 font-medium text-sm shadow-sm transition cursor-pointer">
+                    Print / Save PDF
+                </button>
+                <button type="button" id="reset-all-btn"
+                    class="px-5 py-2.5 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 font-semibold text-sm transition cursor-pointer">
+                    Reset / Clear All
+                </button>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Custom Confirmation Modal (No browser confirm() used) -->
+    <div id="reset-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900/40 backdrop-blur-xs p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-gray-100 space-y-4">
+            <h3 class="text-lg font-bold text-gray-900">Clear all answers?</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">
+                This will reset all four exercises and clear your typed answers. Are you sure you want to start over?
+            </p>
+            <div class="flex justify-end gap-2.5 pt-2">
+                <button type="button" id="modal-cancel-btn"
+                    class="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 text-sm font-medium cursor-pointer">
+                    Cancel
+                </button>
+                <button type="button" id="modal-confirm-btn"
+                    class="px-4 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 text-sm font-semibold cursor-pointer">
+                    Yes, Clear All
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // =========================================================================
+            // EXERCISE 1: 3-Part Sentence Builder Logic
+            // =========================================================================
+            const ex1Data = {
+                columns: [
+                    // Column 0: Beginning
+                    [
+                        { id: 'b1', text: 'Neither of the hotels' },
+                        { id: 'b2', text: 'Neither of the travelers' },
+                        { id: 'b3', text: 'Neither of the boots' },
+                        { id: 'b4', text: 'Neither Tom nor his brother' },
+                        { id: 'b5', text: 'Neither of us' }
+                    ],
+                    // Column 1: Middle (shuffled order)
+                    [
+                        { id: 'm1', text: 'was suitable for' },
+                        { id: 'm2', text: 'had difficulty' },
+                        { id: 'm3', text: 'had any record' },
+                        { id: 'm4', text: 'showed up' },
+                        { id: 'm5', text: 'was interested in' }
+                    ],
+                    // Column 2: Ending (shuffled order)
+                    [
+                        { id: 'e1', text: 'because they both overslept.' },
+                        { id: 'e2', text: 'of our reservation.' },
+                        { id: 'e3', text: 'grasping the main idea.' },
+                        { id: 'e4', text: 'visiting the northernmost town.' },
+                        { id: 'e5', text: 'walking through deep slush.' }
+                    ]
+                ],
+                // Color palettes for completed/in-progress groups (1 to 5)
+                groupStyles: [
+                    {
+                        badgeBg: 'bg-emerald-600',
+                        tileBg: 'bg-emerald-50/90',
+                        tileBorder: 'border-emerald-400',
+                        tileText: 'text-emerald-950',
+                        ring: 'ring-emerald-200'
+                    },
+                    {
+                        badgeBg: 'bg-sky-600',
+                        tileBg: 'bg-sky-50/90',
+                        tileBorder: 'border-sky-400',
+                        tileText: 'text-sky-950',
+                        ring: 'ring-sky-200'
+                    },
+                    {
+                        badgeBg: 'bg-amber-500',
+                        tileBg: 'bg-amber-50/90',
+                        tileBorder: 'border-amber-400',
+                        tileText: 'text-amber-950',
+                        ring: 'ring-amber-200'
+                    },
+                    {
+                        badgeBg: 'bg-purple-600',
+                        tileBg: 'bg-purple-50/90',
+                        tileBorder: 'border-purple-400',
+                        tileText: 'text-purple-950',
+                        ring: 'ring-purple-200'
+                    },
+                    {
+                        badgeBg: 'bg-rose-600',
+                        tileBg: 'bg-rose-50/90',
+                        tileBorder: 'border-rose-400',
+                        tileText: 'text-rose-950',
+                        ring: 'ring-rose-200'
+                    }
+                ]
+            };
+
+            // State for Exercise 1:
+            // groups: array of 5 objects { col0: tileId|null, col1: tileId|null, col2: tileId|null }
+            let ex1Groups = Array.from({ length: 5 }, () => ({ 0: null, 1: null, 2: null }));
+            let activeGroupIndex = null; // 0..4 when actively building a sentence
+
+            function findTileGroup(colIndex, tileId) {
+                for (let g = 0; g < ex1Groups.length; g++) {
+                    if (ex1Groups[g][colIndex] === tileId) return g;
+                }
+                return -1;
+            }
+
+            function isGroupComplete(groupObj) {
+                return groupObj[0] !== null && groupObj[1] !== null && groupObj[2] !== null;
+            }
+
+            function isGroupEmpty(groupObj) {
+                return groupObj[0] === null && groupObj[1] === null && groupObj[2] === null;
+            }
+
+            function getFirstAvailableGroupIndex() {
+                // First look for an incomplete non-empty group
+                for (let g = 0; g < ex1Groups.length; g++) {
+                    if (!isGroupEmpty(ex1Groups[g]) && !isGroupComplete(ex1Groups[g])) {
+                        return g;
+                    }
+                }
+                // Otherwise find the first completely empty slot
+                for (let g = 0; g < ex1Groups.length; g++) {
+                    if (isGroupEmpty(ex1Groups[g])) {
+                        return g;
+                    }
+                }
+                return null;
+            }
+
+            function handleEx1TileClick(colIndex, tileId) {
+                const existingGroup = findTileGroup(colIndex, tileId);
+
+                // Case 1: Clicked a tile that is already assigned to a group -> unlink it
+                if (existingGroup !== -1) {
+                    ex1Groups[existingGroup][colIndex] = null;
+                    // Make this group active so the user can easily pick a replacement in that column
+                    if (!isGroupEmpty(ex1Groups[existingGroup])) {
+                        activeGroupIndex = existingGroup;
+                    } else if (activeGroupIndex === existingGroup) {
+                        activeGroupIndex = getFirstAvailableGroupIndex();
+                    }
+                    renderEx1();
+                    return;
+                }
+
+                // Case 2: Determine which group we are adding to
+                let targetGroup = activeGroupIndex;
+                if (targetGroup === null || isGroupComplete(ex1Groups[targetGroup])) {
+                    targetGroup = getFirstAvailableGroupIndex();
+                }
+
+                // If all 5 groups are completely full, do nothing until user unlinks something
+                if (targetGroup === null) {
+                    return;
+                }
+
+                // Assign tile to targetGroup in colIndex (replaces any prior tile in that same column for this group)
+                ex1Groups[targetGroup][colIndex] = tileId;
+
+                // If this group is now complete, move activeGroupIndex to next available slot
+                if (isGroupComplete(ex1Groups[targetGroup])) {
+                    activeGroupIndex = getFirstAvailableGroupIndex();
+                } else {
+                    activeGroupIndex = targetGroup;
+                }
+
+                renderEx1();
+            }
+
+            function getTileTextById(colIndex, tileId) {
+                const found = ex1Data.columns[colIndex].find(item => item.id === tileId);
+                return found ? found.text : '';
+            }
+
+            function renderEx1() {
+                // Render 3 columns
+                for (let col = 0; col < 3; col++) {
+                    const colContainer = document.getElementById(`ex1-col-${col}`);
+                    colContainer.innerHTML = '';
+
+                    ex1Data.columns[col].forEach(tile => {
+                        const groupIdx = findTileGroup(col, tile.id);
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+
+                        if (groupIdx !== -1) {
+                            const style = ex1Data.groupStyles[groupIdx];
+                            const isDraft = !isGroupComplete(ex1Groups[groupIdx]);
+                            btn.className = `tile-btn w-full text-left px-3.5 py-3 rounded-xl border-2 ${style.tileBorder} ${style.tileBg} ${style.tileText} font-medium text-sm flex items-center justify-between gap-2 shadow-xs cursor-pointer ${isDraft ? 'ring-2 ' + style.ring : ''}`;
+                            btn.innerHTML = `
+                                <span>${tile.text}</span>
+                                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full ${style.badgeBg} text-white text-xs font-bold shrink-0">
+                                    ${groupIdx + 1}
+                                </span>
+                            `;
+                        } else {
+                            btn.className = `tile-btn w-full text-left px-3.5 py-3 rounded-xl border border-gray-200 bg-gray-50/70 hover:bg-white hover:border-emerald-300 text-gray-800 font-medium text-sm flex items-center justify-between gap-2 cursor-pointer`;
+                            btn.innerHTML = `
+                                <span>${tile.text}</span>
+                                <span class="w-6 h-6 rounded-full border border-dashed border-gray-300 shrink-0"></span>
+                            `;
+                        }
+
+                        btn.addEventListener('click', () => handleEx1TileClick(col, tile.id));
+                        colContainer.appendChild(btn);
+                    });
+                }
+
+                // Update Status Helper Bar
+                const statusText = document.getElementById('ex1-status-text');
+                const cancelDraftBtn = document.getElementById('ex1-cancel-draft');
+                const completedCount = ex1Groups.filter(isGroupComplete).length;
+
+                if (activeGroupIndex !== null && !isGroupEmpty(ex1Groups[activeGroupIndex]) && !isGroupComplete(ex1Groups[activeGroupIndex])) {
+                    const missingCols = [];
+                    if (!ex1Groups[activeGroupIndex][0]) missingCols.push('Beginning');
+                    if (!ex1Groups[activeGroupIndex][1]) missingCols.push('Middle');
+                    if (!ex1Groups[activeGroupIndex][2]) missingCols.push('Ending');
+
+                    statusText.innerHTML = `Building <strong>Sentence #${activeGroupIndex + 1}</strong> — select a phrase from: <strong>${missingCols.join(' & ')}</strong>.`;
+                    cancelDraftBtn.classList.remove('hidden');
+                } else if (completedCount === 5) {
+                    statusText.textContent = 'All 5 sentences linked! Click any colored tile to unlink and adjust if needed.';
+                    cancelDraftBtn.classList.add('hidden');
+                } else {
+                    statusText.textContent = 'Select a phrase from any column to start building a sentence.';
+                    cancelDraftBtn.classList.add('hidden');
+                }
+
+                // Render Summary of Linked Sentences
+                const summaryContainer = document.getElementById('ex1-summary');
+                summaryContainer.innerHTML = '';
+
+                ex1Groups.forEach((group, idx) => {
+                    const style = ex1Data.groupStyles[idx];
+                    const row = document.createElement('div');
+                    const part0 = group[0] ? getTileTextById(0, group[0]) : '___________';
+                    const part1 = group[1] ? getTileTextById(1, group[1]) : '___________';
+                    const part2 = group[2] ? getTileTextById(2, group[2]) : '___________';
+                    const empty = isGroupEmpty(group);
+
+                    row.className = `flex items-center gap-3 px-3.5 py-2.5 rounded-xl border text-sm ${
+                        empty
+                            ? 'border-dashed border-gray-200 bg-gray-50/40 text-gray-400'
+                            : 'border-gray-200 bg-white text-gray-800'
+                    }`;
+
+                    row.innerHTML = `
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full ${empty ? 'bg-gray-200 text-gray-500' : style.badgeBg + ' text-white'} text-xs font-bold shrink-0">
+                            ${idx + 1}
+                        </span>
+                        <div class="flex-1 leading-relaxed">
+                            <span class="${group[0] ? 'font-medium text-gray-900' : 'text-gray-400'}">${part0}</span>
+                            <span class="${group[1] ? 'font-medium text-gray-900' : 'text-gray-400'}"> ${part1}</span>
+                            <span class="${group[2] ? 'font-medium text-gray-900' : 'text-gray-400'}"> ${part2}</span>
+                        </div>
+                        ${!empty ? `<button type="button" data-clear-group="${idx}" class="text-xs text-gray-400 hover:text-rose-600 font-medium px-2 py-1 rounded-lg hover:bg-rose-50 transition cursor-pointer">Clear</button>` : ''}
+                    `;
+
+                    summaryContainer.appendChild(row);
+                });
+
+                // Attach clear handlers to summary rows
+                summaryContainer.querySelectorAll('[data-clear-group]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const gIdx = parseInt(e.currentTarget.getAttribute('data-clear-group'), 10);
+                        ex1Groups[gIdx] = { 0: null, 1: null, 2: null };
+                        activeGroupIndex = getFirstAvailableGroupIndex();
+                        renderEx1();
+                    });
+                });
+            }
+
+            document.getElementById('ex1-cancel-draft').addEventListener('click', () => {
+                if (activeGroupIndex !== null && !isGroupComplete(ex1Groups[activeGroupIndex])) {
+                    ex1Groups[activeGroupIndex] = { 0: null, 1: null, 2: null };
+                    activeGroupIndex = getFirstAvailableGroupIndex();
+                    renderEx1();
+                }
+            });
+
+            // =========================================================================
+            // EXERCISE 4: Scrambled Sentences (Click-to-Order Tiles)
+            // =========================================================================
+            const ex4InitialData = [
+                {
+                    id: 1,
+                    words: ['heavy', 'Neither', 'through', 'had', 'of', 'the', 'difficulty', 'us', 'slush.', 'dragging', 'the', 'bag']
+                },
+                {
+                    id: 2,
+                    words: ['shadow', 'the', 'Neither', 'in', 'building', 'nor', 'the', 'cast', 'tree', 'northernmost', 'a', 'the', 'town.']
+                },
+                {
+                    id: 3,
+                    words: ['yet', 'leaped', 'his', 'neither', 'He', 'into', 'showed', 'clothes,', 'of', 'up.', 'his', 'friends']
+                },
+                {
+                    id: 4,
+                    words: ['felt', 'Neither', 'the', 'grasp', 'of', 'the', 'could', 'why', 'tourists', 'place', 'world.', 'like', 'edge', 'the', 'of', 'the']
+                },
+                {
+                    id: 5,
+                    words: ['persuading', 'I', 'and', 'had', 'them,', 'huge', 'neither', 'difficulty', 'showed', 'of', 'up.', 'them']
+                }
+            ];
+
+            // State for Exercise 4: each item has bank: [{uid, word}], placed: [{uid, word}]
+            let ex4State = [];
+
+            function initEx4State() {
+                ex4State = ex4InitialData.map(item => ({
+                    id: item.id,
+                    bank: item.words.map((w, idx) => ({ uid: `${item.id}-${idx}`, word: w })),
+                    placed: []
+                }));
+            }
+
+            function renderEx4() {
+                const container = document.getElementById('ex4-container');
+                container.innerHTML = '';
+
+                ex4State.forEach((item, itemIdx) => {
+                    const card = document.createElement('div');
+                    card.className = 'p-4 sm:p-5 rounded-xl bg-gray-50/80 border border-gray-200/80 space-y-3.5';
+
+                    // Header row with number & reset link for this sentence
+                    const header = document.createElement('div');
+                    header.className = 'flex items-center justify-between';
+                    header.innerHTML = `
+                        <span class="text-sm font-bold text-emerald-700">Sentence ${item.id}</span>
+                        ${item.placed.length > 0 ? `<button type="button" data-reset-ex4="${itemIdx}" class="text-xs font-medium text-gray-500 hover:text-rose-600 underline cursor-pointer">Clear sentence</button>` : ''}
+                    `;
+                    card.appendChild(header);
+
+                    // Target Answer Drop Box
+                    const targetBox = document.createElement('div');
+                    targetBox.className = 'min-h-[54px] p-2.5 rounded-xl bg-white border-2 border-dashed border-emerald-200 flex flex-wrap items-center gap-2 transition';
+
+                    if (item.placed.length === 0) {
+                        const placeholder = document.createElement('span');
+                        placeholder.className = 'text-xs sm:text-sm text-gray-400 px-1.5 select-none';
+                        placeholder.textContent = 'Click words below to build the sentence here...';
+                        targetBox.appendChild(placeholder);
+                    } else {
+                        item.placed.forEach((token, tokenIdx) => {
+                            const chip = document.createElement('button');
+                            chip.type = 'button';
+                            chip.className = 'tile-btn px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-medium text-sm shadow-xs hover:bg-emerald-700 cursor-pointer';
+                            chip.textContent = token.word;
+                            chip.title = 'Click to remove';
+                            chip.addEventListener('click', () => {
+                                // Move back from placed to bank
+                                const [removed] = ex4State[itemIdx].placed.splice(tokenIdx, 1);
+                                ex4State[itemIdx].bank.push(removed);
+                                renderEx4();
+                            });
+                            targetBox.appendChild(chip);
+                        });
+                    }
+                    card.appendChild(targetBox);
+
+                    // Word Bank Box
+                    const bankBox = document.createElement('div');
+                    bankBox.className = 'flex flex-wrap items-center gap-2 pt-1';
+
+                    item.bank.forEach((token, bankIdx) => {
+                        const chip = document.createElement('button');
+                        chip.type = 'button';
+                        chip.className = 'tile-btn px-3 py-1.5 rounded-lg bg-white border border-gray-300 text-gray-800 font-medium text-sm shadow-2xs hover:border-emerald-400 hover:bg-emerald-50/50 cursor-pointer';
+                        chip.textContent = token.word;
+                        chip.addEventListener('click', () => {
+                            // Move from bank to placed
+                            const [moved] = ex4State[itemIdx].bank.splice(bankIdx, 1);
+                            ex4State[itemIdx].placed.push(moved);
+                            renderEx4();
+                        });
+                        bankBox.appendChild(chip);
+                    });
+
+                    card.appendChild(bankBox);
+                    container.appendChild(card);
+                });
+
+                // Attach per-sentence clear listeners
+                container.querySelectorAll('[data-reset-ex4]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const idx = parseInt(e.currentTarget.getAttribute('data-reset-ex4'), 10);
+                        const orig = ex4InitialData[idx];
+                        ex4State[idx] = {
+                            id: orig.id,
+                            bank: orig.words.map((w, wIdx) => ({ uid: `${orig.id}-${wIdx}`, word: w })),
+                            placed: []
+                        };
+                        renderEx4();
+                    });
+                });
+            }
+
+            // =========================================================================
+            // Global Reset Modal & Initialization
+            // =========================================================================
+            const resetModal = document.getElementById('reset-modal');
+            const resetAllBtn = document.getElementById('reset-all-btn');
+            const modalCancelBtn = document.getElementById('modal-cancel-btn');
+            const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+
+            resetAllBtn.addEventListener('click', () => {
+                resetModal.classList.remove('hidden');
+                resetModal.classList.add('flex');
+            });
+
+            modalCancelBtn.addEventListener('click', () => {
+                resetModal.classList.add('hidden');
+                resetModal.classList.remove('flex');
+            });
+
+            resetModal.addEventListener('click', (e) => {
+                if (e.target === resetModal) {
+                    resetModal.classList.add('hidden');
+                    resetModal.classList.remove('flex');
+                }
+            });
+
+            modalConfirmBtn.addEventListener('click', () => {
+                // Reset Exercise 1
+                ex1Groups = Array.from({ length: 5 }, () => ({ 0: null, 1: null, 2: null }));
+                activeGroupIndex = null;
+                renderEx1();
+
+                // Reset Exercise 2 dropdowns
+                document.querySelectorAll('#exercise-2 select').forEach(sel => {
+                    sel.selectedIndex = 0;
+                });
+
+                // Reset Exercise 3 text inputs
+                document.querySelectorAll('#exercise-3 input[type="text"]').forEach(inp => {
+                    inp.value = '';
+                });
+
+                // Reset Exercise 4
+                initEx4State();
+                renderEx4();
+
+                // Close modal
+                resetModal.classList.add('hidden');
+                resetModal.classList.remove('flex');
+            });
+
+            // Initial render
+            renderEx1();
+            initEx4State();
+            renderEx4();
+        });
+    </script>
+</body>
+</html>
