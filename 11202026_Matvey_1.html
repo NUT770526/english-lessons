@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complete the Dialogue! — Интерактивное упражнение (Аудирование + Лексика)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Custom subtle animations and scrollbar styling */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.7; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.7; }
+    }
+    .speaking-bubble {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+      transform: translateY(-1px);
+    }
+    .speaking-bubble-billy {
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.35);
+      transform: translateY(-1px);
+    }
+    .vocab-word {
+      position: relative;
+      display: inline;
+      background-color: rgba(250, 204, 21, 0.22);
+      border-bottom: 2px dotted #d97706;
+      border-radius: 4px;
+      padding: 0 3px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-weight: 500;
+      color: #78350f;
+    }
+    .vocab-word:hover, .vocab-word.active-vocab {
+      background-color: rgba(250, 204, 21, 0.45);
+      border-bottom-style: solid;
+      color: #451a03;
+    }
+    .gap-input {
+      transition: all 0.2s ease;
+    }
+    .gap-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- Top Header & Audio Player Bar -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 py-3 sm:py-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <!-- Title & Subtitle -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-500 text-white flex items-center justify-center shadow-md shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+              <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-lg sm:text-xl font-bold text-slate-900 leading-tight">
+              Complete the dialogue!
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500">
+              Прослушай диалог Yuki и Billy и впиши пропущенные слова
+            </p>
+          </div>
+        </div>
+
+        <!-- Audio Controls -->
+        <div class="flex flex-wrap items-center gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
+          <button id="playPauseBtn" type="button"
+            class="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold text-sm shadow-sm transition cursor-pointer">
+            <span id="playIcon">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </span>
+            <span id="playBtnText">Слушать диалог</span>
+          </button>
+
+          <button id="restartBtn" type="button" title="Начать сначала"
+            class="p-2 rounded-xl bg-white hover:bg-slate-200/70 text-slate-700 border border-slate-200 transition cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+          </button>
+
+          <!-- Speed Selector -->
+          <div class="flex items-center bg-white rounded-xl border border-slate-200 p-0.5 text-xs font-semibold">
+            <button type="button" data-speed="0.8" class="speed-btn px-2 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition cursor-pointer">0.8x</button>
+            <button type="button" data-speed="1.0" class="speed-btn px-2 py-1.5 rounded-lg bg-indigo-100 text-indigo-700 transition cursor-pointer">1.0x</button>
+            <button type="button" data-speed="1.2" class="speed-btn px-2 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition cursor-pointer">1.2x</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress / Active Line Indicator -->
+      <div id="audioStatusBar" class="hidden mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <span id="nowSpeakingLabel" class="font-medium">Сейчас говорит: Yuki</span>
+        </div>
+        <span id="lineCounterLabel" class="font-mono text-slate-400">Реплика 1 / 25</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-6 space-y-6">
+
+    <!-- Instructions Banner -->
+    <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/80 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+      <div class="flex items-start gap-3">
+        <span class="text-xl mt-0.5">💡</span>
+        <div class="text-sm text-amber-950 space-y-1">
+          <p class="font-semibold">Подсказка для ученика:</p>
+          <p class="text-amber-900/90 leading-relaxed">
+            Наведи курсор (или нажми) на <span class="vocab-word">выделенные слова</span> в тексте или слова в банке слов, чтобы увидеть <strong>транскрипцию</strong>, <strong>перевод</strong> и послушать их <strong>произношение</strong>.
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-500 text-white shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-white"></span> Yuki
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-orange-500 text-white shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-white"></span> Billy
+        </span>
+      </div>
+    </div>
+
+    <!-- Word Bank Section -->
+    <section aria-label="Word Bank" class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+          </svg>
+          Банк слов (Word Bank)
+        </h2>
+        <span class="text-xs text-slate-400">Можно вписать вручную или нажать на слово</span>
+      </div>
+      <div id="wordBankContainer" class="flex flex-wrap gap-2">
+        <!-- Word chips injected by JS -->
+      </div>
+    </section>
+
+    <!-- Chat Dialogue Container -->
+    <section id="dialogueContainer" class="space-y-4 pb-6">
+      <!-- Chat bubbles injected by JS -->
+    </section>
+
+    <!-- Bottom Action Bar & Score Card -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-md space-y-4">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <button id="checkAnswersBtn" type="button"
+            class="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-sm shadow-sm transition cursor-pointer flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Проверить ответы
+          </button>
+
+          <button id="showAnswersBtn" type="button"
+            class="flex-1 sm:flex-none px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-semibold text-sm border border-slate-200 transition cursor-pointer">
+            Показать ответы
+          </button>
+
+          <button id="resetExerciseBtn" type="button"
+            class="flex-1 sm:flex-none px-4 py-3 rounded-xl bg-white hover:bg-rose-50 active:scale-95 text-rose-600 font-semibold text-sm border border-rose-200 transition cursor-pointer">
+            Сбросить
+          </button>
+        </div>
+
+        <!-- Live Progress Counter -->
+        <div class="text-right text-xs text-slate-500 font-medium">
+          Заполнено пропусков: <span id="filledCountLabel" class="font-bold text-slate-800">0</span> из <span id="totalGapsLabel" class="font-bold text-slate-800">17</span>
+        </div>
+      </div>
+
+      <!-- Result Feedback Box -->
+      <div id="resultBanner" class="hidden rounded-xl p-4 border transition-all">
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div id="resultEmoji" class="text-3xl">🎉</div>
+            <div>
+              <h3 id="resultTitle" class="font-bold text-base">Отличный результат!</h3>
+              <p id="resultSubtitle" class="text-sm opacity-90">Ты правильно заполнил все пропуски.</p>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <div class="text-xs uppercase tracking-wider font-semibold opacity-75">Результат</div>
+            <div id="resultScore" class="text-2xl font-extrabold font-mono">17 / 17</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating Vocabulary Tooltip Card -->
+  <div id="vocabTooltip"
+    class="fixed z-50 hidden w-72 max-w-[90vw] bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 p-4 transition-opacity duration-150">
+    <div class="flex items-start justify-between gap-2 mb-1.5">
+      <div>
+        <div id="tooltipWord" class="text-base font-bold text-amber-300 leading-snug">flight attendant</div>
+        <div id="tooltipIpa" class="text-xs font-mono text-slate-400 mt-0.5">/ˈflaɪt əˌten.dənt/</div>
+      </div>
+      <button id="tooltipSpeakBtn" type="button"
+        class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-xs font-semibold shadow-sm transition cursor-pointer"
+        title="Прослушать произношение">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+        </svg>
+        Озвучить
+      </button>
+    </div>
+    <div class="pt-2 border-t border-slate-800 text-sm text-slate-100 leading-snug" id="tooltipTranslation">
+      бортпроводник, стюардесса
+    </div>
+  </div>
+
+  <!-- Confirmation Modal (Custom replacement for confirm()) -->
+  <div id="confirmModal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-200 space-y-4">
+      <h3 class="text-lg font-bold text-slate-900" id="modalTitle">Подтверждение</h3>
+      <p class="text-sm text-slate-600" id="modalMessage">Вы уверены, что хотите выполнить это действие?</p>
+      <div class="flex justify-end gap-2 pt-2">
+        <button id="modalCancelBtn" type="button" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition cursor-pointer">
+          Отмена
+        </button>
+        <button id="modalConfirmBtn" type="button" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm transition cursor-pointer">
+          Да, продолжить
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * 1. VOCABULARY DICTIONARY (Challenging words/phrases for a 14-year-old student)
+     * Includes IPA transcription and clear Russian translation.
+     */
+    const VOCABULARY = {
+      "to be specific": {
+        ipa: "/tə biː spəˈsɪf.ɪk/",
+        ru: "если быть точным, точнее говоря"
+      },
+      "frightened": {
+        ipa: "/ˈfraɪ.tənd/",
+        ru: "испуганный, напуганный"
+      },
+      "experiment": {
+        ipa: "/ɪkˈsper.ɪ.mənt/",
+        ru: "экспериментировать, пробовать новое"
+      },
+      "safest": {
+        ipa: "/ˈseɪ.fɪst/",
+        ru: "самый безопасный"
+      },
+      "car sharing": {
+        ipa: "/ˈkɑːr ˌʃeə.rɪŋ/",
+        ru: "каршеринг (совместное использование или краткосрочная аренда авто)"
+      },
+      "a bunch of": {
+        ipa: "/ə bʌntʃ əv/",
+        ru: "куча, множество (разговорное)"
+      },
+      "forms of transport": {
+        ipa: "/fɔːmz əv ˈtræn.spɔːt/",
+        ru: "виды транспорта"
+      },
+      "honestly": {
+        ipa: "/ˈɒn.ɪst.li/",
+        ru: "честно говоря"
+      },
+      "fear of flying": {
+        ipa: "/fɪər əv ˈflaɪ.ɪŋ/",
+        ru: "боязнь полётов (аэрофобия)"
+      },
+      "overcome": {
+        ipa: "/ˌəʊ.vəˈkʌm/",
+        ru: "преодолеть, побороть (страх)"
+      },
+      "not exactly": {
+        ipa: "/nɒt ɪɡˈzækt.li/",
+        ru: "не совсем так"
+      },
+      "instructor": {
+        ipa: "/ɪnˈstrʌk.tər/",
+        ru: "инструктор, преподаватель"
+      },
+      "aisle": {
+        ipa: "/aɪl/",
+        ru: "проход (между рядами кресел в самолёте)"
+      },
+      "flight attendant": {
+        ipa: "/ˈflaɪt əˌten.dənt/",
+        ru: "бортпроводник, стюардесса"
+      },
+      "emergency exit": {
+        ipa: "/ɪˈmɜː.dʒən.si ˈek.sɪt/",
+        ru: "аварийный выход"
+      },
+      "oxygen mask": {
+        ipa: "/ˈɒk.sɪ.dʒən mɑːsk/",
+        ru: "кислородная маска"
+      },
+      "seat belt": {
+        ipa: "/ˈsiːt belt/",
+        ru: "ремень безопасности"
+      },
+      "food tray": {
+        ipa: "/ˈfuːd treɪ/",
+        ru: "откидной столик для еды (в кресле)"
+      },
+      "overhead locker": {
+        ipa: "/ˌəʊ.vəˈhed ˈlɒk.ər/",
+        ru: "верхняя багажная полка (в салоне самолёта)"
+      },
+      "various": {
+        ipa: "/ˈveə.ri.əs/",
+        ru: "различный, разнообразный"
+      },
+      "introduction": {
+        ipa: "/ˌɪn.trəˈdʌk.ʃən/",
+        ru: "введение, ознакомление, вводный инструктаж"
+      },
+      "professional": {
+        ipa: "/prəˈfeʃ.ən.əl/",
+        ru: "профессиональный, опытный"
+      },
+      "afterwards": {
+        ipa: "/ˈɑːf.tə.wədz/",
+        ru: "после этого, впоследствии"
+      },
+      "comfortable": {
+        ipa: "/ˈkʌmf.tə.bəl/",
+        ru: "комфортно, спокойно, уютно"
+      },
+      "this and that": {
+        ipa: "/ðɪs ənd ðæt/",
+        ru: "то да сё, всякое понемногу (идиома)"
+      },
+      "take a break": {
+        ipa: "/teɪk ə breɪk/",
+        ru: "сделать перерыв, отдохнуть"
+      },
+      "used to": {
+        ipa: "/ˈjuːst tuː/",
+        ru: "раньше обычно (делали что-то в прошлом)"
+      },
+      "alone": {
+        ipa: "/əˈləʊn/",
+        ru: "в одиночку, один"
+      },
+      "unless": {
+        ipa: "/ənˈles/",
+        ru: "если не, пока не"
+      },
+      "I got you": {
+        ipa: "/aɪ ɡɒt juː/",
+        ru: "Понял тебя! Ясно! (разговорное)"
+      },
+      // Word Bank items extra definitions
+      "beach": { ipa: "/biːtʃ/", ru: "пляж" },
+      "boring": { ipa: "/ˈbɔː.rɪŋ/", ru: "скучный" },
+      "been looking": { ipa: "/biːn ˈlʊk.ɪŋ/", ru: "искали (Present Perfect Continuous)" },
+      "interesting": { ipa: "/ˈɪn.trəs.tɪŋ/", ru: "интересный" },
+      "plane": { ipa: "/pleɪn/", ru: "самолёт" },
+      "help": { ipa: "/help/", ru: "помогать" },
+      "drives": { ipa: "/draɪvz/", ru: "водит машину" },
+      "going on": { ipa: "/ˈɡəʊ.ɪŋ ɒn/", ru: "происходит" },
+      "bus": { ipa: "/bʌs/", ru: "автобус" },
+      "preparing": { ipa: "/prɪˈpeə.rɪŋ/", ru: "готовясь, подготавливаясь" },
+      "have been planning": { ipa: "/həv biːn ˈplæn.ɪŋ/", ru: "планируем (уже некоторое время)" },
+      "do you mean": { ipa: "/duː juː miːn/", ru: "ты имеешь в виду" },
+      "trip": { ipa: "/trɪp/", ru: "поездка, путешествие" },
+      "climbing": { ipa: "/ˈklaɪ.mɪŋ/", ru: "скалолазание, подъём в горы" }
+    };
+
+    /**
+     * 2. WORD BANK ITEMS (Exact 18 chips from the worksheet)
+     */
+    const WORD_BANK = [
+      "beach", "frightened", "boring", "been looking", "interesting", "instructor", "plane", "help",
+      "drives", "going on", "bus", "preparing", "professional", "have been planning", "do you mean",
+      "trip", "climbing", "experiment"
+    ];
+
+    /**
+     * 3. DIALOGUE DATA
+     * Each line has:
+     * - speaker: 'Yuki' | 'Billy'
+     * - segments: Array of strings and { gap: "answer" } objects
+     * - fullText: Clean text for Web Speech API synthesis
+     */
+    const DIALOGUE_LINES = [
+      {
+        speaker: "Yuki",
+        segments: ["Hey Billy! What’s new?"],
+        fullText: "Hey Billy! What's new?"
+      },
+      {
+        speaker: "Billy",
+        segments: ["You know, just this and that."],
+        fullText: "You know, just this and that."
+      },
+      {
+        speaker: "Yuki",
+        segments: ["‘This and that.’ What ", { gap: "do you mean" }, " ?"],
+        fullText: "This and that. What do you mean?"
+      },
+      {
+        speaker: "Billy",
+        segments: ["Well, my girlfriend and I ", { gap: "have been planning" }, " a holiday trip. We work so much, so we want to take a break."],
+        fullText: "Well, my girlfriend and I have been planning a holiday trip. We work so much, so we want to take a break."
+      },
+      {
+        speaker: "Yuki",
+        segments: ["That’s not really ‘this or that.’ Your trip sounds like cool news. Tell me what’s ", { gap: "going on" }, " ."],
+        fullText: "That's not really this or that. Your trip sounds like cool news. Tell me what's going on."
+      },
+      {
+        speaker: "Billy",
+        segments: ["Sure. My girlfriend and I, we used to always travel — always fly to be specific. The funny thing is, in the last few years she’s been getting more and more ", { gap: "frightened" }, " about flying."],
+        fullText: "Sure. My girlfriend and I, we used to always travel — always fly to be specific. The funny thing is, in the last few years, she's been getting more and more frightened about flying."
+      },
+      {
+        speaker: "Yuki",
+        segments: ["That’s ", { gap: "interesting" }, " , maybe you don’t need to fly. You know, you could just take a car trip somewhere."],
+        fullText: "That's interesting, maybe you don't need to fly. You know, you could just take a car trip somewhere."
+      },
+      {
+        speaker: "Billy",
+        segments: ["We tried that, but I found it ", { gap: "boring" }, " . I’ve flown a couple of times without her, and she drove, but she found it boring to drive alone."],
+        fullText: "We tried that, but I found it boring. I've flown a couple of times without her, and she drove, but she found it boring to drive alone."
+      },
+      {
+        speaker: "Yuki",
+        segments: ["Yeah, that does sound super boring. One person ", { gap: "drives" }, " and another flies. Not the best idea."],
+        fullText: "Yeah, that does sound super boring. One person drives and another flies. Not the best idea."
+      },
+      {
+        speaker: "Billy",
+        segments: ["Well, at least we tried it."],
+        fullText: "Well, at least we tried it."
+      },
+      {
+        speaker: "Yuki",
+        segments: ["I guess you never know if it is boring unless you try and ", { gap: "experiment" }, " . So, what’s next, then?"],
+        fullText: "I guess you never know if it is boring unless you try and experiment. So, what's next, then?"
+      },
+      {
+        speaker: "Billy",
+        segments: ["During the last few months we’ve ", { gap: "been looking" }, " for the safest way to travel. We checked out trains, buses, car sharing, and a bunch of other forms of transport."],
+        fullText: "During the last few months we've been looking for the safest way to travel. We checked out trains, buses, car sharing, and a bunch of other forms of transport."
+      },
+      {
+        speaker: "Yuki",
+        segments: ["So, how have you chosen to travel?"],
+        fullText: "So, how have you chosen to travel?"
+      },
+      {
+        speaker: "Billy",
+        segments: ["Honestly, we haven’t chosen anything. Even if we take a ", { gap: "bus" }, " , train, or even a horse, my girlfriend will still have a fear of flying."],
+        fullText: "Honestly, we haven't chosen anything. Even if we take a bus, train, or even a horse, my girlfriend will still have a fear of flying."
+      },
+      {
+        speaker: "Yuki",
+        segments: ["What do you mean?"],
+        fullText: "What do you mean?"
+      },
+      {
+        speaker: "Billy",
+        segments: ["We’ve decided not to go on a ", { gap: "trip" }, " and travel to another country or city. We’ve chosen to take a class together on how to overcome the fear of flying."],
+        fullText: "We've decided not to go on a trip and travel to another country or city. We've chosen to take a class together on how to overcome the fear of flying."
+      },
+      {
+        speaker: "Yuki",
+        segments: ["Wait, what? Instead of going to the beaches and ", { gap: "climbing" }, " in the mountains, you are going to a classroom?"],
+        fullText: "Wait, what? Instead of going to the beaches and climbing in the mountains, you are going to a classroom?"
+      },
+      {
+        speaker: "Billy",
+        segments: ["Not exactly! This class is inside of a real plane. The ", { gap: "instructor" }, " was a pilot, and he teaches you about how the plane works."],
+        fullText: "Not exactly! This class is inside of a real plane. The instructor was a pilot, and he teaches you about how the plane works."
+      },
+      {
+        speaker: "Yuki",
+        segments: ["And the plane is flying?"],
+        fullText: "And the plane is flying?"
+      },
+      {
+        speaker: "Billy",
+        segments: ["Of course not. But, you get on the plane as if you were ", { gap: "preparing" }, " to fly. You walk down the aisle, the teacher and flight attendant shows you the emergency exit, how to use the oxygen mask, seat belt, food tray, overhead locker, and various other stuff."],
+        fullText: "Of course not. But, you get on the plane as if you were preparing to fly. You walk down the aisle, the teacher and flight attendant shows you the emergency exit, how to use the oxygen mask, seat belt, food tray, overhead locker, and various other stuff."
+      },
+      {
+        speaker: "Yuki",
+        segments: ["How does this ", { gap: "help" }, " with the fear of flying?"],
+        fullText: "How does this help with the fear of flying?"
+      },
+      {
+        speaker: "Billy",
+        segments: ["The idea is that after this basic introduction you feel like you are on a real plane. The teacher then explains how the plane works, how safe it is, and how ", { gap: "professional" }, " the pilot is."],
+        fullText: "The idea is that after this basic introduction you feel like you are on a real plane. The teacher then explains how the plane works, how safe it is, and how professional the pilot is."
+      },
+      {
+        speaker: "Yuki",
+        segments: ["I got you! Then afterwards, you feel comfortable being in a real ", { gap: "plane" }, " ."],
+        fullText: "I got you! Then afterwards, you feel comfortable being in a real plane."
+      },
+      {
+        speaker: "Billy",
+        segments: ["Exactly!"],
+        fullText: "Exactly!"
+      },
+      {
+        speaker: "Yuki",
+        segments: ["I still think going to the ", { gap: "beach" }, " is a better idea!"],
+        fullText: "I still think going to the beach is a better idea!"
+      }
+    ];
+
+    /**
+     * STATE VARIABLES
+     */
+    let activeInputEl = null;
+    let speechRate = 1.0;
+    let isPlayingAll = false;
+    let currentLineIdx = 0;
+    let voices = [];
+    let yukiVoice = null;
+    let billyVoice = null;
+    let tooltipHideTimeout = null;
+    let currentTooltipWord = "";
+
+    /**
+     * INITIALIZE VOICES FOR WEB SPEECH API
+     */
+    function loadVoices() {
+      if (!('speechSynthesis' in window)) return;
+      voices = window.speechSynthesis.getVoices();
+      const enVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith('en'));
+
+      // Try picking distinct female (Yuki) and male (Billy) voices
+      yukiVoice =
+        enVoices.find(v => /female|samantha|victoria|zira|aria|jenny|google us english/i.test(v.name)) ||
+        enVoices[0] ||
+        null;
+
+      billyVoice =
+        enVoices.find(v => /male|daniel|david|alex|guy|christopher|google uk english male/i.test(v.name) && v !== yukiVoice) ||
+        enVoices.find(v => v !== yukiVoice) ||
+        yukiVoice;
+    }
+
+    if ('speechSynthesis' in window) {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    /**
+     * HELPER: HIGHLIGHT VOCABULARY WORDS INSIDE PLAIN TEXT SEGMENTS
+     */
+    function formatTextWithVocab(text) {
+      // Sort keys longest-first so multi-word phrases ("flight attendant", "fear of flying") match before single words
+      const keys = Object.keys(VOCABULARY)
+        .filter(k => !WORD_BANK.includes(k) || ["frightened", "experiment", "instructor", "professional"].includes(k))
+        .sort((a, b) => b.length - a.length);
+
+      // Build regex matching whole words/phrases case-insensitively
+      const escaped = keys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+      const regex = new RegExp(`\\b(${escaped.join('|')})\\b`, 'gi');
+
+      return text.replace(regex, (match) => {
+        const canonicalKey = keys.find(k => k.toLowerCase() === match.toLowerCase()) || match.toLowerCase();
+        return `<span class="vocab-word" data-vocab="${canonicalKey}">${match}</span>`;
+      });
+    }
+
+    /**
+     * RENDER WORD BANK
+     */
+    function renderWordBank() {
+      const container = document.getElementById('wordBankContainer');
+      container.innerHTML = '';
+
+      WORD_BANK.forEach((word) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.dataset.bankWord = word;
+        btn.dataset.vocab = word;
+        btn.className =
+          'word-chip vocab-chip px-3 py-1.5 rounded-xl border border-slate-300 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-300 text-slate-800 font-medium text-sm shadow-2xs transition cursor-pointer select-none';
+        btn.textContent = word;
+
+        // Clicking inserts word into currently focused (or first empty) gap input
+        btn.addEventListener('click', () => {
+          let target = activeInputEl;
+          if (!target) {
+            const allInputs = Array.from(document.querySelectorAll('.gap-input'));
+            target = allInputs.find(inp => inp.value.trim() === '') || allInputs[0];
+          }
+          if (target) {
+            target.value = word;
+            target.dispatchEvent(new Event('input'));
+            // Move focus to next empty input
+            const allInputs = Array.from(document.querySelectorAll('.gap-input'));
+            const nextEmpty = allInputs.find(inp => inp.value.trim() === '');
+            if (nextEmpty) {
+              nextEmpty.focus();
+            } else {
+              target.focus();
+            }
+          }
+        });
+
+        container.appendChild(btn);
+      });
+    }
+
+    /**
+     * RENDER DIALOGUE BUBBLES
+     */
+    function renderDialogue() {
+      const container = document.getElementById('dialogueContainer');
+      container.innerHTML = '';
+      let gapIndex = 0;
+
+      DIALOGUE_LINES.forEach((line, idx) => {
+        const isYuki = line.speaker === 'Yuki';
+        const row = document.createElement('div');
+        row.className = `flex items-start gap-2.5 sm:gap-3 ${isYuki ? 'justify-start' : 'justify-end'}`;
+        row.id = `dialogue-row-${idx}`;
+
+        // Avatar badge
+        const avatar = document.createElement('div');
+        avatar.className = `w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm text-white shrink-0 mt-1 shadow-xs ${
+          isYuki ? 'bg-sky-500 order-1' : 'bg-orange-500 order-2'
+        }`;
+        avatar.textContent = isYuki ? 'Y' : 'B';
+        avatar.title = line.speaker;
+
+        // Bubble card
+        const bubble = document.createElement('div');
+        bubble.id = `bubble-${idx}`;
+        bubble.className = `relative max-w-[86%] sm:max-w-[78%] rounded-2xl px-4 py-3 sm:px-5 sm:py-3.5 border-2 bg-white shadow-xs transition-all duration-200 ${
+          isYuki
+            ? 'border-sky-400/80 rounded-tl-sm order-2'
+            : 'border-orange-400/80 rounded-tr-sm order-1'
+        }`;
+
+        // Top mini-bar inside bubble: Speaker name + individual play line button
+        const headerRow = document.createElement('div');
+        headerRow.className = 'flex items-center justify-between gap-4 mb-1';
+
+        const speakerTag = document.createElement('span');
+        speakerTag.className = `text-[11px] font-bold uppercase tracking-wider ${
+          isYuki ? 'text-sky-600' : 'text-orange-600'
+        }`;
+        speakerTag.textContent = line.speaker;
+
+        const speakLineBtn = document.createElement('button');
+        speakLineBtn.type = 'button';
+        speakLineBtn.className =
+          'inline-flex items-center gap-1 text-xs text-slate-400 hover:text-indigo-600 transition cursor-pointer px-1.5 py-0.5 rounded-md hover:bg-slate-100';
+        speakLineBtn.title = 'Прослушать эту реплику';
+        speakLineBtn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <span class="hidden sm:inline text-[11px]">Озвучить</span>
+        `;
+        speakLineBtn.addEventListener('click', () => {
+          stopAllSpeech();
+          speakSingleLine(idx, false);
+        });
+
+        headerRow.appendChild(speakerTag);
+        headerRow.appendChild(speakLineBtn);
+        bubble.appendChild(headerRow);
+
+        // Content paragraph with inline inputs and highlighted vocabulary
+        const contentP = document.createElement('div');
+        contentP.className = 'text-[15px] sm:text-base leading-loose text-slate-800';
+
+        line.segments.forEach((seg) => {
+          if (typeof seg === 'string') {
+            const span = document.createElement('span');
+            span.innerHTML = formatTextWithVocab(seg);
+            contentP.appendChild(span);
+          } else if (seg.gap) {
+            const currentGapNum = gapIndex++;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.autocomplete = 'off';
+            input.spellcheck = false;
+            input.dataset.answer = seg.gap.toLowerCase();
+            input.dataset.gapId = currentGapNum;
+            input.setAttribute('aria-label', `Пропуск ${currentGapNum + 1}`);
+
+            // Dynamic width based on answer length
+            const charWidth = Math.max(seg.gap.length + 3, 10);
+            input.style.width = `${charWidth}ch`;
+            input.className =
+              'gap-input inline-block mx-1 my-0.5 px-2.5 py-0.5 text-center font-semibold text-indigo-950 bg-slate-100 border border-slate-300 rounded-lg text-sm sm:text-[15px] align-baseline';
+
+            input.addEventListener('focus', () => {
+              activeInputEl = input;
+            });
+
+            input.addEventListener('input', () => {
+              // Reset validation styling when user edits
+              input.classList.remove(
+                'bg-emerald-50', 'border-emerald-500', 'text-emerald-800',
+                'bg-rose-50', 'border-rose-500', 'text-rose-800'
+              );
+              input.classList.add('bg-slate-100', 'border-slate-300', 'text-indigo-950');
+              updateWordBankAndCounts();
+            });
+
+            contentP.appendChild(input);
+          }
+        });
+
+        bubble.appendChild(contentP);
+        row.appendChild(avatar);
+        row.appendChild(bubble);
+        container.appendChild(row);
+      });
+
+      document.getElementById('totalGapsLabel').textContent = gapIndex;
+    }
+
+    /**
+     * UPDATE WORD BANK USED STATE & FILLED GAP COUNTER
+     */
+    function updateWordBankAndCounts() {
+      const inputs = Array.from(document.querySelectorAll('.gap-input'));
+      const typedValues = inputs.map(i => i.value.trim().toLowerCase()).filter(Boolean);
+      document.getElementById('filledCountLabel').textContent = typedValues.length;
+
+      // Count occurrences of each typed value so duplicate words (if any) handle cleanly
+      const usageCount = {};
+      typedValues.forEach(val => {
+        usageCount[val] = (usageCount[val] || 0) + 1;
+      });
+
+      document.querySelectorAll('.word-chip').forEach(chip => {
+        const w = chip.dataset.bankWord.toLowerCase();
+        if (usageCount[w] && usageCount[w] > 0) {
+          usageCount[w]--;
+          chip.classList.add('opacity-40', 'line-through', 'bg-slate-200');
+        } else {
+          chip.classList.remove('opacity-40', 'line-through', 'bg-slate-200');
+        }
+      });
+    }
+
+    /**
+     * SPEECH SYNTHESIS ENGINE (DIALOGUE & SINGLE WORDS)
+     */
+    function clearSpeakingHighlights() {
+      document.querySelectorAll('[id^="bubble-"]').forEach(b => {
+        b.classList.remove('speaking-bubble', 'speaking-bubble-billy');
+      });
+    }
+
+    function stopAllSpeech() {
+      isPlayingAll = false;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      clearSpeakingHighlights();
+      updatePlayButtonUI(false);
+      document.getElementById('audioStatusBar').classList.add('hidden');
+    }
+
+    function updatePlayButtonUI(playing) {
+      const playIcon = document.getElementById('playIcon');
+      const playBtnText = document.getElementById('playBtnText');
+      if (playing) {
+        playIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+        playBtnText.textContent = 'Пауза';
+      } else {
+        playIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+        playBtnText.textContent = currentLineIdx > 0 && currentLineIdx < DIALOGUE_LINES.length ? 'Продолжить' : 'Слушать диалог';
+      }
+    }
+
+    function speakSingleLine(index, continueSequence = false) {
+      if (!('speechSynthesis' in window)) {
+        showToast('Ваш браузер не поддерживает озвучивание текста.');
+        return;
+      }
+
+      if (index >= DIALOGUE_LINES.length) {
+        currentLineIdx = 0;
+        stopAllSpeech();
+        return;
+      }
+
+      const line = DIALOGUE_LINES[index];
+      const utterance = new SpeechSynthesisUtterance(line.fullText);
+      utterance.lang = 'en-US';
+      utterance.rate = speechRate;
+
+      if (line.speaker === 'Yuki') {
+        if (yukiVoice) utterance.voice = yukiVoice;
+        utterance.pitch = 1.12;
+      } else {
+        if (billyVoice) utterance.voice = billyVoice;
+        utterance.pitch = 0.92;
+      }
+
+      clearSpeakingHighlights();
+      const bubble = document.getElementById(`bubble-${index}`);
+      if (bubble) {
+        bubble.classList.add(line.speaker === 'Yuki' ? 'speaking-bubble' : 'speaking-bubble-billy');
+        if (continueSequence) {
+          bubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+
+      if (continueSequence) {
+        const statusBar = document.getElementById('audioStatusBar');
+        statusBar.classList.remove('hidden');
+        document.getElementById('nowSpeakingLabel').textContent = `Сейчас говорит: ${line.speaker}`;
+        document.getElementById('lineCounterLabel').textContent = `Реплика ${index + 1} / ${DIALOGUE_LINES.length}`;
+      }
+
+      utterance.onend = () => {
+        clearSpeakingHighlights();
+        if (continueSequence && isPlayingAll) {
+          currentLineIdx = index + 1;
+          setTimeout(() => {
+            if (isPlayingAll) {
+              speakSingleLine(currentLineIdx, true);
+            }
+          }, 260);
+        }
+      };
+
+      utterance.onerror = () => {
+        clearSpeakingHighlights();
+        if (continueSequence) {
+          stopAllSpeech();
+        }
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function speakWord(word) {
+      if (!('speechSynthesis' in window)) return;
+      // Pause dialogue playback if active so word pronunciation is clear
+      if (isPlayingAll) {
+        stopAllSpeech();
+      } else {
+        window.speechSynthesis.cancel();
+      }
+
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      if (yukiVoice) utterance.voice = yukiVoice;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    /**
+     * FLOATING VOCABULARY TOOLTIP LOGIC
+     */
+    const tooltipEl = document.getElementById('vocabTooltip');
+
+    function showVocabTooltip(targetEl, wordKey) {
+      clearTimeout(tooltipHideTimeout);
+      const entry = VOCABULARY[wordKey] || VOCABULARY[wordKey.toLowerCase()];
+      if (!entry) return;
+
+      currentTooltipWord = wordKey;
+      document.getElementById('tooltipWord').textContent = wordKey;
+      document.getElementById('tooltipIpa').textContent = entry.ipa;
+      document.getElementById('tooltipTranslation').textContent = entry.ru;
+
+      tooltipEl.classList.remove('hidden');
+
+      // Position tooltip smartly near target element
+      const rect = targetEl.getBoundingClientRect();
+      const tooltipRect = tooltipEl.getBoundingClientRect();
+
+      let top = rect.top - tooltipRect.height - 10;
+      if (top < 12) {
+        top = rect.bottom + 10;
+      }
+
+      let left = rect.left + rect.width / 2 - tooltipRect.width / 2;
+      left = Math.max(12, Math.min(left, window.innerWidth - tooltipRect.width - 12));
+
+      tooltipEl.style.top = `${top}px`;
+      tooltipEl.style.left = `${left}px`;
+    }
+
+    function scheduleHideTooltip() {
+      tooltipHideTimeout = setTimeout(() => {
+        tooltipEl.classList.add('hidden');
+      }, 220);
+    }
+
+    // Delegate hover/click events for highlighted words and word bank chips
+    document.addEventListener('mouseover', (e) => {
+      const vocabTarget = e.target.closest('[data-vocab]');
+      if (vocabTarget) {
+        showVocabTooltip(vocabTarget, vocabTarget.dataset.vocab);
+      }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+      const vocabTarget = e.target.closest('[data-vocab]');
+      if (vocabTarget) {
+        scheduleHideTooltip();
+      }
+    });
+
+    // Clicking a highlighted word pronounces it immediately and shows tooltip (great for mobile touch!)
+    document.addEventListener('click', (e) => {
+      const vocabWordEl = e.target.closest('.vocab-word');
+      if (vocabWordEl) {
+        const w = vocabWordEl.dataset.vocab;
+        showVocabTooltip(vocabWordEl, w);
+        speakWord(w);
+        return;
+      }
+
+      // Close tooltip if clicking outside tooltip and outside vocab elements
+      if (!e.target.closest('#vocabTooltip') && !e.target.closest('[data-vocab]')) {
+        tooltipEl.classList.add('hidden');
+      }
+    });
+
+    // Keep tooltip open when user moves mouse onto the tooltip card itself
+    tooltipEl.addEventListener('mouseenter', () => {
+      clearTimeout(tooltipHideTimeout);
+    });
+
+    tooltipEl.addEventListener('mouseleave', () => {
+      scheduleHideTooltip();
+    });
+
+    document.getElementById('tooltipSpeakBtn').addEventListener('click', () => {
+      if (currentTooltipWord) {
+        speakWord(currentTooltipWord);
+      }
+    });
+
+    /**
+     * AUDIO PLAYER CONTROLS
+     */
+    document.getElementById('playPauseBtn').addEventListener('click', () => {
+      if (isPlayingAll) {
+        stopAllSpeech();
+      } else {
+        isPlayingAll = true;
+        updatePlayButtonUI(true);
+        speakSingleLine(currentLineIdx, true);
+      }
+    });
+
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      stopAllSpeech();
+      currentLineIdx = 0;
+      isPlayingAll = true;
+      updatePlayButtonUI(true);
+      speakSingleLine(0, true);
+    });
+
+    document.querySelectorAll('.speed-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        speechRate = parseFloat(btn.dataset.speed);
+        document.querySelectorAll('.speed-btn').forEach(b => {
+          b.classList.remove('bg-indigo-100', 'text-indigo-700');
+          b.classList.add('text-slate-600');
+        });
+        btn.classList.remove('text-slate-600');
+        btn.classList.add('bg-indigo-100', 'text-indigo-700');
+
+        // Restart current line at new speed if currently playing
+        if (isPlayingAll) {
+          window.speechSynthesis.cancel();
+          speakSingleLine(currentLineIdx, true);
+        }
+      });
+    });
+
+    /**
+     * EXERCISE CHECKING, SHOW ANSWERS, & RESET LOGIC
+     */
+    function normalizeAnswer(str) {
+      return str.trim().toLowerCase().replace(/\s+/g, ' ');
+    }
+
+    document.getElementById('checkAnswersBtn').addEventListener('click', () => {
+      const inputs = Array.from(document.querySelectorAll('.gap-input'));
+      let correctCount = 0;
+
+      inputs.forEach(input => {
+        const userVal = normalizeAnswer(input.value);
+        const expected = normalizeAnswer(input.dataset.answer);
+
+        input.classList.remove(
+          'bg-slate-100', 'border-slate-300', 'text-indigo-950',
+          'bg-emerald-50', 'border-emerald-500', 'text-emerald-800',
+          'bg-rose-50', 'border-rose-500', 'text-rose-800'
+        );
+
+        if (userVal === expected) {
+          correctCount++;
+          input.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-800');
+        } else {
+          input.classList.add('bg-rose-50', 'border-rose-500', 'text-rose-800');
+        }
+      });
+
+      const total = inputs.length;
+      const banner = document.getElementById('resultBanner');
+      const emoji = document.getElementById('resultEmoji');
+      const title = document.getElementById('resultTitle');
+      const subtitle = document.getElementById('resultSubtitle');
+      const score = document.getElementById('resultScore');
+
+      banner.classList.remove(
+        'hidden',
+        'bg-emerald-50', 'border-emerald-200', 'text-emerald-900',
+        'bg-amber-50', 'border-amber-200', 'text-amber-900',
+        'bg-rose-50', 'border-rose-200', 'text-rose-900'
+      );
+
+      score.textContent = `${correctCount} / ${total}`;
+
+      if (correctCount === total) {
+        banner.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
+        emoji.textContent = '🏆';
+        title.textContent = 'Превосходно! Все ответы верны!';
+        subtitle.textContent = 'Ты отлично справился с аудированием и заполнил все пропуски без ошибок.';
+      } else if (correctCount >= Math.ceil(total * 0.7)) {
+        banner.classList.add('bg-amber-50', 'border-amber-200', 'text-amber-900');
+        emoji.textContent = '👍';
+        title.textContent = 'Хорошая работа!';
+        subtitle.textContent = 'Почти всё правильно! Обрати внимание на слова, выделенные красным, и послушай диалог ещё раз.';
+      } else {
+        banner.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-900');
+        emoji.textContent = '🎧';
+        title.textContent = 'Попробуй ещё раз!';
+        subtitle.textContent = 'Прослушай диалог внимательно (можно на скорости 0.8x) и исправь выделенные красным слова.';
+      }
+
+      banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    // Custom confirmation modal helper (never uses window.confirm)
+    function openConfirmModal(title, message, onConfirm) {
+      const modal = document.getElementById('confirmModal');
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalMessage').textContent = message;
+      modal.classList.remove('hidden');
+
+      const cancelBtn = document.getElementById('modalCancelBtn');
+      const confirmBtn = document.getElementById('modalConfirmBtn');
+
+      const cleanup = () => {
+        modal.classList.add('hidden');
+        cancelBtn.onclick = null;
+        confirmBtn.onclick = null;
+      };
+
+      cancelBtn.onclick = cleanup;
+      confirmBtn.onclick = () => {
+        cleanup();
+        onConfirm();
+      };
+    }
+
+    document.getElementById('showAnswersBtn').addEventListener('click', () => {
+      openConfirmModal(
+        'Показать правильные ответы?',
+        'Все пропуски в диалоге будут заполнены правильными словами.',
+        () => {
+          const inputs = Array.from(document.querySelectorAll('.gap-input'));
+          inputs.forEach(input => {
+            input.value = input.dataset.answer;
+            input.classList.remove('bg-slate-100', 'border-slate-300', 'text-indigo-950', 'bg-rose-50', 'border-rose-500', 'text-rose-800');
+            input.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-800');
+          });
+          updateWordBankAndCounts();
+          document.getElementById('resultBanner').classList.add('hidden');
+        }
+      );
+    });
+
+    document.getElementById('resetExerciseBtn').addEventListener('click', () => {
+      openConfirmModal(
+        'Сбросить упражнение?',
+        'Все введённые ответы будут очищены, и ты сможешь пройти упражнение заново.',
+        () => {
+          stopAllSpeech();
+          currentLineIdx = 0;
+          const inputs = Array.from(document.querySelectorAll('.gap-input'));
+          inputs.forEach(input => {
+            input.value = '';
+            input.classList.remove('bg-emerald-50', 'border-emerald-500', 'text-emerald-800', 'bg-rose-50', 'border-rose-500', 'text-rose-800');
+            input.classList.add('bg-slate-100', 'border-slate-300', 'text-indigo-950');
+          });
+          updateWordBankAndCounts();
+          document.getElementById('resultBanner').classList.add('hidden');
+        }
+      );
+    });
+
+    // Initialize UI on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderWordBank();
+      renderDialogue();
+      updateWordBankAndCounts();
+    });
+  </script>
+</body>
+</html>
