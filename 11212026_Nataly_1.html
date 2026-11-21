@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise 1. Missing Letters — Інтерактивна вправа</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      background-color: #fefce8;
+    }
+
+    /* Subtle soundwave bar animation when speaking */
+    @keyframes eq-bounce {
+      0%, 100% { height: 4px; }
+      50% { height: 14px; }
+    }
+    .sound-bar {
+      width: 3px;
+      height: 4px;
+      border-radius: 9999px;
+      background-color: #d97706;
+      transition: height 0.15s ease;
+    }
+    .is-speaking .sound-bar:nth-child(1) { animation: eq-bounce 0.55s infinite ease-in-out 0.0s; }
+    .is-speaking .sound-bar:nth-child(2) { animation: eq-bounce 0.55s infinite ease-in-out 0.15s; }
+    .is-speaking .sound-bar:nth-child(3) { animation: eq-bounce 0.55s infinite ease-in-out 0.3s; }
+
+    /* Highlighted underscore styling so missing letter slots are crisp and readable */
+    .missing-underscore {
+      display: inline-block;
+      color: #d97706;
+      font-weight: 800;
+      padding: 0 1px;
+      letter-spacing: 0.04em;
+    }
+
+    .word-trigger {
+      transition: all 0.18s ease;
+    }
+    .word-trigger:hover, .word-trigger.active-word {
+      background-color: #fef3c7;
+      border-color: #fcd34d;
+      transform: translateY(-1px);
+    }
+
+    .answer-input {
+      transition: all 0.2s ease;
+    }
+    .answer-input:focus {
+      outline: none;
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 font-sans antialiased py-6 px-3 sm:py-10 sm:px-6 flex flex-col items-center">
+
+  <!-- Main Exercise Card -->
+  <main class="w-full max-w-3xl bg-white rounded-3xl shadow-sm border border-amber-200/80 p-5 sm:p-8 space-y-6">
+
+    <!-- Header Section -->
+    <header class="border-b border-slate-100 pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div class="space-y-1.5">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-800 text-xs font-semibold">
+          <span>6 клас • Spelling, Pronunciation & Vocabulary</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Exercise 1. Missing Letters
+        </h1>
+        <p class="text-sm sm:text-base text-slate-600">
+          <strong class="font-bold text-slate-800">Встав пропущені літери.</strong> Не підглядай у підручник!
+        </p>
+      </div>
+
+      <!-- Helper Hint Pill -->
+      <div class="bg-[#fefce8] border border-amber-200/90 rounded-2xl px-4 py-3 text-xs text-amber-950 max-w-xs shrink-0 flex items-start gap-2.5">
+        <span class="text-base leading-none mt-0.5">🎧</span>
+        <p class="leading-relaxed">
+          Наведи курсор на слово (або натисни на нього), щоб почути вимову, побачити транскрипцію та переклад.
+        </p>
+      </div>
+    </header>
+
+    <!-- Words List Container -->
+    <section aria-label="Missing letters list" id="exerciseRows" class="space-y-2.5">
+      <!-- Rows rendered by JavaScript -->
+    </section>
+
+    <!-- Action Buttons & Score Feedback -->
+    <footer class="pt-4 border-t border-slate-100 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-3">
+          <button id="checkBtn" type="button"
+            class="px-7 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-sm sm:text-base shadow-sm transition cursor-pointer flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Перевірити
+          </button>
+
+          <button id="resetBtn" type="button"
+            class="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200/80 active:scale-95 text-slate-700 font-semibold text-sm sm:text-base transition cursor-pointer">
+            Очистити
+          </button>
+        </div>
+
+        <div class="text-xs sm:text-sm text-slate-500 font-medium">
+          Заповнено: <span id="filledCounter" class="font-bold text-slate-800">0</span> / 12
+        </div>
+      </div>
+
+      <!-- Result Feedback Banner (hidden until checked) -->
+      <div id="feedbackBanner" class="hidden rounded-2xl p-4 border transition-all">
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span id="feedbackEmoji" class="text-2xl sm:text-3xl">🌟</span>
+            <div>
+              <h2 id="feedbackTitle" class="font-bold text-sm sm:text-base">Результат перевірки</h2>
+              <p id="feedbackSubtitle" class="text-xs sm:text-sm opacity-90">Перевір виділені слова та спробуй ще раз.</p>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <div class="text-[11px] uppercase tracking-wider font-semibold opacity-75">Правильно</div>
+            <div id="feedbackScore" class="text-xl sm:text-2xl font-extrabold font-mono">0 / 12</div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Floating IPA, Ukrainian Translation & Audio Tooltip -->
+  <div id="ipaTooltip"
+    class="fixed z-50 hidden bg-slate-900 text-white rounded-2xl shadow-xl border border-slate-700/90 px-4 py-3.5 max-w-[90vw] transition-opacity duration-150">
+    <div class="flex items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] uppercase tracking-wider text-amber-400 font-semibold">Transcription</span>
+          <span id="tooltipIpaText" class="text-sm sm:text-base font-mono font-semibold text-slate-200 tracking-wide">
+            /bɪˈheɪvjər/
+          </span>
+        </div>
+        <div id="tooltipUkText" class="text-base sm:text-lg font-bold text-white leading-snug">
+          поведінка
+        </div>
+      </div>
+
+      <button id="tooltipReplayBtn" type="button"
+        class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 text-xs font-bold shadow-xs transition cursor-pointer shrink-0"
+        title="Повторити озвучення">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+        </svg>
+        <span>Озвучити</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * 1. EXERCISE DATA (12 items with IPA transcription and Ukrainian translation)
+     */
+    const EXERCISE_ITEMS = [
+      {
+        id: 1,
+        prompt: "beh_v_our",
+        answers: ["behaviour", "behavior"],
+        speakWord: "behaviour",
+        ipa: "/bɪˈheɪvjər/",
+        uk: "поведінка"
+      },
+      {
+        id: 2,
+        prompt: "d_ff_r_nce",
+        answers: ["difference"],
+        speakWord: "difference",
+        ipa: "/ˈdɪfrəns/",
+        uk: "різниця, відмінність"
+      },
+      {
+        id: 3,
+        prompt: "fri_ndsh_p",
+        answers: ["friendship"],
+        speakWord: "friendship",
+        ipa: "/ˈfrendʃɪp/",
+        uk: "дружба"
+      },
+      {
+        id: 4,
+        prompt: "ind_vid_al",
+        answers: ["individual"],
+        speakWord: "individual",
+        ipa: "/ˌɪndɪˈvɪdʒuəl/",
+        uk: "індивідуальний, окремий"
+      },
+      {
+        id: 5,
+        prompt: "sk_t_ng r_nk",
+        answers: ["skating rink"],
+        speakWord: "skating rink",
+        ipa: "/ˈskeɪtɪŋ rɪŋk/",
+        uk: "ковзанка"
+      },
+      {
+        id: 6,
+        prompt: "v_r_ous",
+        answers: ["various"],
+        speakWord: "various",
+        ipa: "/ˈveəriəs/",
+        uk: "різноманітний, різний"
+      },
+      {
+        id: 7,
+        prompt: "def_n_tely",
+        answers: ["definitely"],
+        speakWord: "definitely",
+        ipa: "/ˈdefɪnətli/",
+        uk: "безумовно, точно"
+      },
+      {
+        id: 8,
+        prompt: "inst_ad",
+        answers: ["instead"],
+        speakWord: "instead",
+        ipa: "/ɪnˈsted/",
+        uk: "замість (того)"
+      },
+      {
+        id: 9,
+        prompt: "d_ng_rous",
+        answers: ["dangerous"],
+        speakWord: "dangerous",
+        ipa: "/ˈdeɪndʒərəs/",
+        uk: "небезпечний"
+      },
+      {
+        id: 10,
+        prompt: "d_wnl_ad",
+        answers: ["download"],
+        speakWord: "download",
+        ipa: "/ˌdaʊnˈləʊd/",
+        uk: "завантажувати"
+      },
+      {
+        id: 11,
+        prompt: "sh_uld_r-l_ngth",
+        answers: ["shoulder-length", "shoulder length"],
+        speakWord: "shoulder-length",
+        ipa: "/ˈʃəʊldər leŋθ/",
+        uk: "до плечей (про волосся)"
+      },
+      {
+        id: 12,
+        prompt: "en_rg_tic",
+        answers: ["energetic"],
+        speakWord: "energetic",
+        ipa: "/ˌenərˈdʒetɪk/",
+        uk: "енергійний"
+      }
+    ];
+
+    /**
+     * 2. SPEECH SYNTHESIS SETUP
+     */
+    let selectedVoice = null;
+    let currentTooltipItem = null;
+    let hideTooltipTimer = null;
+    let hoverSpeakDebounceTimer = null;
+    let lastHoveredId = null;
+
+    function initEnglishVoice() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      const enVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith('en'));
+      // Prefer clear UK/US English voice
+      selectedVoice =
+        enVoices.find(v => /daniel|google uk english|samantha|google us english|serena|aria/i.test(v.name)) ||
+        enVoices[0] ||
+        null;
+    }
+
+    if ('speechSynthesis' in window) {
+      initEnglishVoice();
+      window.speechSynthesis.onvoiceschanged = initEnglishVoice;
+    }
+
+    function clearSpeakingIndicators() {
+      document.querySelectorAll('.word-trigger').forEach(el => {
+        el.classList.remove('is-speaking', 'active-word');
+      });
+    }
+
+    function pronounceWord(item) {
+      if (!('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(item.speakWord);
+        utterance.lang = 'en-GB';
+        utterance.rate = 0.88; // Clear, student-friendly speed for 6th graders
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+        }
+
+        const triggerEl = document.getElementById(`word-trigger-${item.id}`);
+        clearSpeakingIndicators();
+        if (triggerEl) {
+          triggerEl.classList.add('is-speaking', 'active-word');
+        }
+
+        utterance.onend = () => {
+          if (triggerEl) {
+            triggerEl.classList.remove('is-speaking', 'active-word');
+          }
+        };
+
+        utterance.onerror = () => {
+          if (triggerEl) {
+            triggerEl.classList.remove('is-speaking', 'active-word');
+          }
+        };
+
+        window.speechSynthesis.speak(utterance);
+      } catch (err) {
+        // Gracefully ignore browser autoplay restrictions until first click
+      }
+    }
+
+    /**
+     * 3. FLOATING TOOLTIP LOGIC
+     */
+    const tooltipEl = document.getElementById('ipaTooltip');
+    const tooltipIpaText = document.getElementById('tooltipIpaText');
+    const tooltipUkText = document.getElementById('tooltipUkText');
+    const tooltipReplayBtn = document.getElementById('tooltipReplayBtn');
+
+    function showTooltip(targetEl, item, speakMode = 'hover') {
+      clearTimeout(hideTooltipTimer);
+      clearTimeout(hoverSpeakDebounceTimer);
+
+      currentTooltipItem = item;
+      tooltipIpaText.textContent = item.ipa;
+      tooltipUkText.textContent = item.uk;
+      tooltipEl.classList.remove('hidden');
+
+      const rect = targetEl.getBoundingClientRect();
+      const tipRect = tooltipEl.getBoundingClientRect();
+
+      let top = rect.top - tipRect.height - 8;
+      if (top < 10) {
+        top = rect.bottom + 8;
+      }
+
+      let left = rect.left + rect.width / 2 - tipRect.width / 2;
+      left = Math.max(12, Math.min(left, window.innerWidth - tipRect.width - 12));
+
+      tooltipEl.style.top = `${top}px`;
+      tooltipEl.style.left = `${left}px`;
+
+      if (speakMode === 'immediate') {
+        pronounceWord(item);
+      } else if (speakMode === 'hover') {
+        // Short debounce prevents audio spam if student sweeps cursor rapidly across rows
+        hoverSpeakDebounceTimer = setTimeout(() => {
+          pronounceWord(item);
+        }, 160);
+      }
+    }
+
+    function scheduleHideTooltip() {
+      clearTimeout(hoverSpeakDebounceTimer);
+      hideTooltipTimer = setTimeout(() => {
+        tooltipEl.classList.add('hidden');
+        lastHoveredId = null;
+      }, 220);
+    }
+
+    tooltipEl.addEventListener('mouseenter', () => {
+      clearTimeout(hideTooltipTimer);
+    });
+
+    tooltipEl.addEventListener('mouseleave', () => {
+      scheduleHideTooltip();
+    });
+
+    tooltipReplayBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (currentTooltipItem) {
+        pronounceWord(currentTooltipItem);
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#ipaTooltip') && !e.target.closest('.word-trigger')) {
+        tooltipEl.classList.add('hidden');
+        lastHoveredId = null;
+      }
+    });
+
+    /**
+     * 4. RENDER EXERCISE ROWS
+     */
+    function formatPromptHtml(prompt) {
+      return prompt.replace(/_/g, '<span class="missing-underscore">_</span>');
+    }
+
+    function renderExercise() {
+      const container = document.getElementById('exerciseRows');
+      container.innerHTML = '';
+
+      EXERCISE_ITEMS.forEach((item) => {
+        const row = document.createElement('div');
+        row.className =
+          'flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3 sm:px-4 sm:py-2.5 rounded-2xl bg-amber-50/40 hover:bg-amber-50/90 border border-amber-200/60 transition';
+
+        // Left side: Number + Interactive Word Prompt + Speaker Icon
+        const leftGroup = document.createElement('div');
+        leftGroup.className = 'flex items-center gap-3 min-w-0';
+
+        const numBadge = document.createElement('span');
+        numBadge.className =
+          'w-7 h-7 rounded-xl bg-white border border-amber-200 text-amber-800 font-mono text-xs font-bold flex items-center justify-center shrink-0 shadow-2xs';
+        numBadge.textContent = `${item.id}.`;
+
+        const wordTrigger = document.createElement('button');
+        wordTrigger.type = 'button';
+        wordTrigger.id = `word-trigger-${item.id}`;
+        wordTrigger.className =
+          'word-trigger group inline-flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-amber-200/90 shadow-2xs cursor-pointer text-left';
+        wordTrigger.setAttribute('aria-label', `Слово ${item.id}: натисни або наведи курсор, щоб почути вимову, побачити транскрипцію та переклад`);
+
+        wordTrigger.innerHTML = `
+          <span class="font-mono text-base sm:text-[17px] font-bold text-slate-800 tracking-wide">
+            ${formatPromptHtml(item.prompt)}
+          </span>
+          <span class="inline-flex items-center gap-1.5 text-amber-600 group-hover:text-amber-700 pl-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+            <span class="inline-flex items-end gap-0.5 h-3.5" aria-hidden="true">
+              <span class="sound-bar"></span>
+              <span class="sound-bar"></span>
+              <span class="sound-bar"></span>
+            </span>
+          </span>
+        `;
+
+        // Hover triggers tooltip + debounced automatic audio playback
+        wordTrigger.addEventListener('mouseenter', () => {
+          const isNewHover = lastHoveredId !== item.id;
+          lastHoveredId = item.id;
+          showTooltip(wordTrigger, item, isNewHover ? 'hover' : 'none');
+        });
+
+        wordTrigger.addEventListener('mouseleave', () => {
+          scheduleHideTooltip();
+        });
+
+        // Click/Tap triggers tooltip + immediate audio playback
+        wordTrigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          lastHoveredId = item.id;
+          showTooltip(wordTrigger, item, 'immediate');
+        });
+
+        leftGroup.appendChild(numBadge);
+        leftGroup.appendChild(wordTrigger);
+
+        // Right side: Input box + Status icon
+        const rightGroup = document.createElement('div');
+        rightGroup.className = 'flex items-center gap-2 w-full sm:w-72 md:w-80 shrink-0';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = `input-${item.id}`;
+        input.dataset.itemId = item.id;
+        input.placeholder = 'Write the word';
+        input.autocomplete = 'off';
+        input.spellcheck = false;
+        input.className =
+          'answer-input w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 font-medium text-sm sm:text-base placeholder:text-slate-400 shadow-2xs';
+
+        const statusIcon = document.createElement('span');
+        statusIcon.id = `status-${item.id}`;
+        statusIcon.className = 'w-6 text-center text-base font-bold select-none shrink-0';
+
+        input.addEventListener('input', () => {
+          // Reset validation colors when student edits their answer
+          input.classList.remove(
+            'bg-emerald-50', 'border-emerald-500', 'text-emerald-900',
+            'bg-rose-50', 'border-rose-400', 'text-rose-900'
+          );
+          input.classList.add('bg-white', 'border-slate-300', 'text-slate-900');
+          statusIcon.textContent = '';
+          updateFilledCounter();
+        });
+
+        // Pressing Enter moves to next input or checks answers on the last one
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const nextInput = document.getElementById(`input-${item.id + 1}`);
+            if (nextInput) {
+              nextInput.focus();
+            } else {
+              document.getElementById('checkBtn').click();
+            }
+          }
+        });
+
+        rightGroup.appendChild(input);
+        rightGroup.appendChild(statusIcon);
+
+        row.appendChild(leftGroup);
+        row.appendChild(rightGroup);
+        container.appendChild(row);
+      });
+    }
+
+    /**
+     * 5. PROGRESS COUNTER & CHECKING LOGIC
+     */
+    function updateFilledCounter() {
+      const inputs = Array.from(document.querySelectorAll('.answer-input'));
+      const filled = inputs.filter(inp => inp.value.trim().length > 0).length;
+      document.getElementById('filledCounter').textContent = filled;
+    }
+
+    function normalizeText(str) {
+      return str.trim().toLowerCase().replace(/\s+/g, ' ');
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      let correctCount = 0;
+
+      EXERCISE_ITEMS.forEach((item) => {
+        const input = document.getElementById(`input-${item.id}`);
+        const statusIcon = document.getElementById(`status-${item.id}`);
+        const userAnswer = normalizeText(input.value);
+        const isCorrect = item.answers.some(ans => normalizeText(ans) === userAnswer);
+
+        input.classList.remove(
+          'bg-white', 'border-slate-300', 'text-slate-900',
+          'bg-emerald-50', 'border-emerald-500', 'text-emerald-900',
+          'bg-rose-50', 'border-rose-400', 'text-rose-900'
+        );
+
+        if (isCorrect) {
+          correctCount++;
+          input.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-900');
+          statusIcon.textContent = '✓';
+          statusIcon.className = 'w-6 text-center text-base font-extrabold text-emerald-600 select-none shrink-0';
+        } else {
+          input.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+          statusIcon.textContent = '✗';
+          statusIcon.className = 'w-6 text-center text-base font-extrabold text-rose-500 select-none shrink-0';
+        }
+      });
+
+      const banner = document.getElementById('feedbackBanner');
+      const emoji = document.getElementById('feedbackEmoji');
+      const title = document.getElementById('feedbackTitle');
+      const subtitle = document.getElementById('feedbackSubtitle');
+      const score = document.getElementById('feedbackScore');
+
+      banner.classList.remove(
+        'hidden',
+        'bg-emerald-50', 'border-emerald-200', 'text-emerald-900',
+        'bg-amber-50', 'border-amber-200', 'text-amber-900',
+        'bg-rose-50', 'border-rose-200', 'text-rose-900'
+      );
+
+      score.textContent = `${correctCount} / ${EXERCISE_ITEMS.length}`;
+
+      if (correctCount === EXERCISE_ITEMS.length) {
+        banner.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
+        emoji.textContent = '🏆';
+        title.textContent = 'Супер! Усі слова написано правильно!';
+        subtitle.textContent = 'Чудова робота! Ти бездоганно впорався із завданням.';
+      } else if (correctCount >= 8) {
+        banner.classList.add('bg-amber-50', 'border-amber-200', 'text-amber-900');
+        emoji.textContent = '👏';
+        title.textContent = 'Дуже добре!';
+        subtitle.textContent = 'Майже все правильно. Послухай вимову слів, виділених червоним, і виправ помилки.';
+      } else {
+        banner.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-900');
+        emoji.textContent = '🎧';
+        title.textContent = 'Спробуй ще раз!';
+        subtitle.textContent = 'Наводь курсор на слова, щоб почути звуки та побачити транскрипцію — це допоможе вписати правильні літери.';
+      }
+
+      banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      clearSpeakingIndicators();
+      tooltipEl.classList.add('hidden');
+
+      EXERCISE_ITEMS.forEach((item) => {
+        const input = document.getElementById(`input-${item.id}`);
+        const statusIcon = document.getElementById(`status-${item.id}`);
+        input.value = '';
+        input.classList.remove(
+          'bg-emerald-50', 'border-emerald-500', 'text-emerald-900',
+          'bg-rose-50', 'border-rose-400', 'text-rose-900'
+        );
+        input.classList.add('bg-white', 'border-slate-300', 'text-slate-900');
+        statusIcon.textContent = '';
+      });
+
+      updateFilledCounter();
+      document.getElementById('feedbackBanner').classList.add('hidden');
+    });
+
+    // Initialize exercise on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderExercise();
+      updateFilledCounter();
+    });
+  </script>
+</body>
+</html>
