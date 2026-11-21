@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise 3. Translate into English — Інтерактивна вправа</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Lora:ital,wght@0,500;0,600;1,400&family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-page: #fdfbf3;
+      --bg-card: #ffffff;
+      --bg-accent: #f8f4e6;
+      --border-subtle: #eadfb8;
+      --border-strong: #dccb98;
+      --text-primary: #1e1c1a;
+      --text-secondary: #5c564d;
+      --text-muted: #8a8173;
+      --amber-accent: #b45309;
+      --focus-ring: rgba(180, 83, 9, 0.2);
+      --radius-lg: 24px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: 28px 16px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 820px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 30px -10px rgba(30, 28, 26, 0.06);
+      padding: 28px 22px;
+    }
+
+    @media (min-width: 640px) {
+      body {
+        padding: 44px 24px 64px;
+      }
+      .container {
+        padding: 40px 44px;
+      }
+    }
+
+    /* Header */
+    .header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 22px;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--bg-accent);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+
+    @media (min-width: 640px) {
+      h1 {
+        font-size: 34px;
+      }
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .subtitle strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    /* Exercise Rows */
+    .rows-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .exercise-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px 14px;
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      transition: background-color 0.18s ease, border-color 0.18s ease;
+    }
+
+    .exercise-row:hover {
+      background-color: var(--bg-accent);
+      border-color: var(--border-strong);
+    }
+
+    @media (min-width: 640px) {
+      .exercise-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 16px;
+        gap: 16px;
+      }
+    }
+
+    .prompt-side {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .row-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      min-width: 26px;
+      flex-shrink: 0;
+    }
+
+    .prompt-text {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    /* Input Field */
+    .input-side {
+      width: 100%;
+    }
+
+    @media (min-width: 640px) {
+      .input-side {
+        width: 290px;
+        flex-shrink: 0;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .input-side {
+        width: 330px;
+      }
+    }
+
+    .english-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+    }
+
+    .english-input::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .english-input:focus {
+      outline: none;
+      border-color: var(--amber-accent);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+      background-color: #fffdf9;
+    }
+
+    .english-input.has-value {
+      border-color: #cbb579;
+      background-color: #fffdf8;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 26px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .counter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-accent);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 9px 15px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .counter-pill strong {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .clear-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .clear-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 9px 16px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .clear-btn:hover {
+      background-color: var(--bg-accent);
+      color: var(--text-primary);
+    }
+
+    .clear-btn.confirm-state {
+      background-color: #fef2f2;
+      border-color: #fecaca;
+      color: #b91c1c;
+    }
+
+    .clear-btn:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="badge">6 клас • Vocabulary &amp; Spelling Practice</div>
+      <h1>Exercise 3. Translate into English</h1>
+      <p class="subtitle">
+        <strong>Переклади слова українською → англійською.</strong> Запиши повне слово або словосполучення.
+      </p>
+    </header>
+
+    <!-- 15 Translation Items -->
+    <section class="rows-list" id="exerciseList" aria-label="Список слів для перекладу">
+      <!-- Rendered via JS -->
+    </section>
+
+    <!-- Footer: Progress counter & Clear button -->
+    <footer class="footer">
+      <div class="counter-pill">
+        <span>Заповнено:</span>
+        <strong id="filledCounter">0 / 15</strong>
+      </div>
+
+      <div class="clear-controls">
+        <button type="button" class="clear-btn" id="clearFieldsBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+          </svg>
+          <span id="clearBtnLabel">Очистити поля</span>
+        </button>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    /**
+     * 15 Ukrainian prompts for memory-based English translation & spelling practice
+     */
+    const TRANSLATION_ITEMS = [
+      { id: 1,  uk: "поведінка" },
+      { id: 2,  uk: "відрізнятися" },
+      { id: 3,  uk: "ковзанка" },
+      { id: 4,  uk: "глядач" },
+      { id: 5,  uk: "завантажувати" },
+      { id: 6,  uk: "проводити час" },
+      { id: 7,  uk: "ізолювати" },
+      { id: 8,  uk: "спілкуватися, проводити час разом" },
+      { id: 9,  uk: "турботливий" },
+      { id: 10, uk: "надійний, гідний довіри" },
+      { id: 11, uk: "неуважний, недбалий" },
+      { id: 12, uk: "добре організований" },
+      { id: 13, uk: "веснянки" },
+      { id: 14, uk: "статура" },
+      { id: 15, uk: "зріст" }
+    ];
+
+    let confirmResetTimeout = null;
+    let isConfirmingReset = false;
+
+    function updateFilledCounter() {
+      const inputs = Array.from(document.querySelectorAll('.english-input'));
+      const filled = inputs.filter(inp => inp.value.trim().length > 0).length;
+      document.getElementById('filledCounter').textContent = `${filled} / ${TRANSLATION_ITEMS.length}`;
+    }
+
+    function renderExerciseList() {
+      const listEl = document.getElementById('exerciseList');
+      listEl.innerHTML = '';
+
+      TRANSLATION_ITEMS.forEach((item, index) => {
+        const row = document.createElement('div');
+        row.className = 'exercise-row';
+
+        // Left side: Number + Plain Ukrainian prompt
+        const promptSide = document.createElement('div');
+        promptSide.className = 'prompt-side';
+
+        const numSpan = document.createElement('span');
+        numSpan.className = 'row-number';
+        numSpan.textContent = `${item.id}.`;
+
+        const labelEl = document.createElement('label');
+        labelEl.className = 'prompt-text';
+        labelEl.htmlFor = `answer-input-${item.id}`;
+        labelEl.textContent = item.uk;
+
+        promptSide.appendChild(numSpan);
+        promptSide.appendChild(labelEl);
+
+        // Right side: Typing input field
+        const inputSide = document.createElement('div');
+        inputSide.className = 'input-side';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = `answer-input-${item.id}`;
+        input.className = 'english-input';
+        input.placeholder = 'English';
+        input.setAttribute('autocomplete', 'off');
+        input.setAttribute('autocorrect', 'off');
+        input.setAttribute('autocapitalize', 'off');
+        input.setAttribute('spellcheck', 'false');
+
+        input.addEventListener('input', () => {
+          if (input.value.trim().length > 0) {
+            input.classList.add('has-value');
+          } else {
+            input.classList.remove('has-value');
+          }
+          updateFilledCounter();
+        });
+
+        // Pressing Enter moves focus cleanly to the next input field
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const nextItem = TRANSLATION_ITEMS[index + 1];
+            if (nextItem) {
+              const nextInput = document.getElementById(`answer-input-${nextItem.id}`);
+              if (nextInput) nextInput.focus();
+            } else {
+              input.blur();
+            }
+          }
+        });
+
+        inputSide.appendChild(input);
+
+        row.appendChild(promptSide);
+        row.appendChild(inputSide);
+        listEl.appendChild(row);
+      });
+    }
+
+    // Two-step inline confirmation for clearing fields (no browser alert/confirm)
+    const clearBtn = document.getElementById('clearFieldsBtn');
+    const clearBtnLabel = document.getElementById('clearBtnLabel');
+
+    function resetClearButtonState() {
+      isConfirmingReset = false;
+      clearBtn.classList.remove('confirm-state');
+      clearBtnLabel.textContent = 'Очистити поля';
+    }
+
+    clearBtn.addEventListener('click', () => {
+      const hasAnyValue = Array.from(document.querySelectorAll('.english-input')).some(
+        inp => inp.value.trim().length > 0
+      );
+
+      if (!hasAnyValue) return;
+
+      if (!isConfirmingReset) {
+        isConfirmingReset = true;
+        clearBtn.classList.add('confirm-state');
+        clearBtnLabel.textContent = 'Точно очистити?';
+        clearTimeout(confirmResetTimeout);
+        confirmResetTimeout = setTimeout(resetClearButtonState, 3000);
+        return;
+      }
+
+      clearTimeout(confirmResetTimeout);
+      document.querySelectorAll('.english-input').forEach(inp => {
+        inp.value = '';
+        inp.classList.remove('has-value');
+      });
+      updateFilledCounter();
+      resetClearButtonState();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderExerciseList();
+      updateFilledCounter();
+    });
+  </script>
+</body>
+</html>
