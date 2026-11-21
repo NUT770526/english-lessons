@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise 2. Choose the Correct Spelling — Інтерактивна вправа</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      background-color: #fdfbf2;
+      background-image: radial-gradient(circle at top center, #fefce8 0%, #f7f3e3 100%);
+    }
+
+    /* Animated equalizer bars when audio plays */
+    @keyframes eq-bounce {
+      0%, 100% { height: 4px; }
+      50% { height: 14px; }
+    }
+    .sound-bar {
+      width: 3px;
+      height: 4px;
+      border-radius: 9999px;
+      background-color: #d97706;
+      transition: height 0.15s ease;
+    }
+    .is-speaking .sound-bar:nth-child(1) { animation: eq-bounce 0.55s infinite ease-in-out 0.0s; }
+    .is-speaking .sound-bar:nth-child(2) { animation: eq-bounce 0.55s infinite ease-in-out 0.15s; }
+    .is-speaking .sound-bar:nth-child(3) { animation: eq-bounce 0.55s infinite ease-in-out 0.3s; }
+
+    .prompt-trigger {
+      transition: all 0.18s ease;
+    }
+    .prompt-trigger:hover, .prompt-trigger.active-prompt {
+      background-color: #fef3c7;
+      border-color: #fcd34d;
+      transform: translateY(-1px);
+    }
+
+    .option-label {
+      transition: all 0.18s ease;
+    }
+    .option-label:hover {
+      background-color: #fffbeb;
+      border-color: #fcd34d;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 font-sans antialiased py-6 px-3 sm:py-10 sm:px-6 flex flex-col items-center">
+
+  <!-- Main Exercise Card -->
+  <main class="w-full max-w-3xl bg-white/95 rounded-3xl shadow-sm border border-amber-200/80 p-5 sm:p-8 space-y-6">
+
+    <!-- Header Section -->
+    <header class="border-b border-amber-100 pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div class="space-y-1.5">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-800 text-xs font-semibold">
+          <span>6 клас • Spelling & Pronunciation</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Exercise 2. Choose the Correct Spelling
+        </h1>
+        <p class="text-sm sm:text-base text-slate-600">
+          <strong class="font-bold text-slate-800">Обери правильно написане слово.</strong> У кожному рядку лише один правильний варіант.
+        </p>
+      </div>
+
+      <!-- Helper Hint Pill -->
+      <div class="bg-[#fdfbf2] border border-amber-200/90 rounded-2xl px-4 py-3 text-xs text-amber-950 max-w-xs shrink-0 flex items-start gap-2.5">
+        <span class="text-base leading-none mt-0.5">🎧</span>
+        <p class="leading-relaxed">
+          Наведи курсор на українське слово (або натисни на нього), щоб почути вимову та побачити транскрипцію.
+        </p>
+      </div>
+    </header>
+
+    <!-- Questions List Container -->
+    <section aria-label="Choose the correct spelling questions" id="questionsContainer" class="space-y-4">
+      <!-- Question cards rendered by JavaScript -->
+    </section>
+
+    <!-- Footer Controls & Feedback -->
+    <footer class="pt-4 border-t border-amber-100 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-3">
+          <button id="checkBtn" type="button"
+            class="px-7 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-sm sm:text-base shadow-sm transition cursor-pointer flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Перевірити
+          </button>
+
+          <button id="resetBtn" type="button"
+            class="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200/80 active:scale-95 text-slate-700 font-semibold text-sm sm:text-base transition cursor-pointer">
+            Скинути
+          </button>
+        </div>
+
+        <div class="text-xs sm:text-sm text-slate-500 font-medium">
+          Обрано відповідей: <span id="answeredCounter" class="font-bold text-slate-800">0</span> / 8
+        </div>
+      </div>
+
+      <!-- Result Feedback Banner (hidden until checked) -->
+      <div id="feedbackBanner" class="hidden rounded-2xl p-4 border transition-all">
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span id="feedbackEmoji" class="text-2xl sm:text-3xl">🌟</span>
+            <div>
+              <h2 id="feedbackTitle" class="font-bold text-sm sm:text-base">Результат перевірки</h2>
+              <p id="feedbackSubtitle" class="text-xs sm:text-sm opacity-90">Перевір виділені варіанти та спробуй ще раз.</p>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <div class="text-[11px] uppercase tracking-wider font-semibold opacity-75">Правильно</div>
+            <div id="feedbackScore" class="text-xl sm:text-2xl font-extrabold font-mono">0 / 8</div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Floating IPA Transcription & Audio Tooltip (NO spelling revealed!) -->
+  <div id="ipaTooltip"
+    class="fixed z-50 hidden bg-slate-900 text-white rounded-2xl shadow-xl border border-slate-700/90 px-4 py-3 max-w-[90vw] transition-opacity duration-150">
+    <div class="flex items-center justify-between gap-4">
+      <div>
+        <div class="text-[10px] uppercase tracking-wider text-amber-400 font-semibold">Transcription</div>
+        <div id="tooltipIpaText" class="text-base sm:text-lg font-mono font-bold text-white tracking-wide mt-0.5">
+          /ˈfrendʃɪp/
+        </div>
+      </div>
+
+      <button id="tooltipReplayBtn" type="button"
+        class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 text-xs font-bold shadow-xs transition cursor-pointer shrink-0"
+        title="Повторити озвучення">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+        </svg>
+        <span>Озвучити</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * 1. EXERCISE DATA (All 8 questions from the worksheet)
+     */
+    const SPELLING_QUESTIONS = [
+      {
+        id: 1,
+        ukPrompt: "дружба",
+        options: ["friendship", "freindship", "frendship"],
+        correctOption: "friendship",
+        ipa: "/ˈfrendʃɪp/"
+      },
+      {
+        id: 2,
+        ukPrompt: "безумовно",
+        options: ["definately", "definitely", "definetely"],
+        correctOption: "definitely",
+        ipa: "/ˈdefɪnətli/"
+      },
+      {
+        id: 3,
+        ukPrompt: "небезпечний",
+        options: ["dangeros", "dangerous", "dangereous"],
+        correctOption: "dangerous",
+        ipa: "/ˈdeɪndʒərəs/"
+      },
+      {
+        id: 4,
+        ukPrompt: "відповідальний",
+        options: ["responsable", "responsibel", "responsible"],
+        correctOption: "responsible",
+        ipa: "/rɪˈspɒnsəbl/"
+      },
+      {
+        id: 5,
+        ukPrompt: "товариський",
+        options: ["outgoing", "outgoeing", "outgouing"],
+        correctOption: "outgoing",
+        ipa: "/ˈaʊtɡəʊɪŋ/"
+      },
+      {
+        id: 6,
+        ukPrompt: "сором'язливий",
+        options: ["shy", "shie", "shyi"],
+        correctOption: "shy",
+        ipa: "/ʃaɪ/"
+      },
+      {
+        id: 7,
+        ukPrompt: "різноманітний",
+        options: ["varios", "various", "varrious"],
+        correctOption: "various",
+        ipa: "/ˈveəriəs/"
+      },
+      {
+        id: 8,
+        ukPrompt: "зріст",
+        options: ["hight", "heigth", "height"],
+        correctOption: "height",
+        ipa: "/haɪt/"
+      }
+    ];
+
+    /**
+     * 2. WEB SPEECH API SETUP
+     */
+    let selectedVoice = null;
+    let currentTooltipItem = null;
+    let hideTooltipTimer = null;
+    let hoverSpeakDebounceTimer = null;
+    let lastHoveredId = null;
+
+    function initEnglishVoice() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      const enVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith('en'));
+      selectedVoice =
+        enVoices.find(v => /daniel|google uk english|samantha|google us english|serena|aria/i.test(v.name)) ||
+        enVoices[0] ||
+        null;
+    }
+
+    if ('speechSynthesis' in window) {
+      initEnglishVoice();
+      window.speechSynthesis.onvoiceschanged = initEnglishVoice;
+    }
+
+    function clearSpeakingIndicators() {
+      document.querySelectorAll('.prompt-trigger').forEach(el => {
+        el.classList.remove('is-speaking', 'active-prompt');
+      });
+    }
+
+    function pronounceWord(item) {
+      if (!('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        // Speak the canonical English word aloud (spelling is never displayed in tooltip)
+        const utterance = new SpeechSynthesisUtterance(item.correctOption);
+        utterance.lang = 'en-GB';
+        utterance.rate = 0.88;
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+        }
+
+        const triggerEl = document.getElementById(`prompt-trigger-${item.id}`);
+        clearSpeakingIndicators();
+        if (triggerEl) {
+          triggerEl.classList.add('is-speaking', 'active-prompt');
+        }
+
+        utterance.onend = () => {
+          if (triggerEl) {
+            triggerEl.classList.remove('is-speaking', 'active-prompt');
+          }
+        };
+
+        utterance.onerror = () => {
+          if (triggerEl) {
+            triggerEl.classList.remove('is-speaking', 'active-prompt');
+          }
+        };
+
+        window.speechSynthesis.speak(utterance);
+      } catch (err) {
+        // Ignore browser autoplay block prior to first click
+      }
+    }
+
+    /**
+     * 3. FLOATING TOOLTIP LOGIC (Shows ONLY IPA transcription + Audio button)
+     */
+    const tooltipEl = document.getElementById('ipaTooltip');
+    const tooltipIpaText = document.getElementById('tooltipIpaText');
+    const tooltipReplayBtn = document.getElementById('tooltipReplayBtn');
+
+    function showTooltip(targetEl, item, speakMode = 'hover') {
+      clearTimeout(hideTooltipTimer);
+      clearTimeout(hoverSpeakDebounceTimer);
+
+      currentTooltipItem = item;
+      tooltipIpaText.textContent = item.ipa;
+      tooltipEl.classList.remove('hidden');
+
+      const rect = targetEl.getBoundingClientRect();
+      const tipRect = tooltipEl.getBoundingClientRect();
+
+      let top = rect.top - tipRect.height - 8;
+      if (top < 10) {
+        top = rect.bottom + 8;
+      }
+
+      let left = rect.left + rect.width / 2 - tipRect.width / 2;
+      left = Math.max(12, Math.min(left, window.innerWidth - tipRect.width - 12));
+
+      tooltipEl.style.top = `${top}px`;
+      tooltipEl.style.left = `${left}px`;
+
+      if (speakMode === 'immediate') {
+        pronounceWord(item);
+      } else if (speakMode === 'hover') {
+        hoverSpeakDebounceTimer = setTimeout(() => {
+          pronounceWord(item);
+        }, 160);
+      }
+    }
+
+    function scheduleHideTooltip() {
+      clearTimeout(hoverSpeakDebounceTimer);
+      hideTooltipTimer = setTimeout(() => {
+        tooltipEl.classList.add('hidden');
+        lastHoveredId = null;
+      }, 220);
+    }
+
+    tooltipEl.addEventListener('mouseenter', () => {
+      clearTimeout(hideTooltipTimer);
+    });
+
+    tooltipEl.addEventListener('mouseleave', () => {
+      scheduleHideTooltip();
+    });
+
+    tooltipReplayBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (currentTooltipItem) {
+        pronounceWord(currentTooltipItem);
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#ipaTooltip') && !e.target.closest('.prompt-trigger')) {
+        tooltipEl.classList.add('hidden');
+        lastHoveredId = null;
+      }
+    });
+
+    /**
+     * 4. RENDER QUESTIONS & RADIO OPTIONS
+     */
+    function renderQuestions() {
+      const container = document.getElementById('questionsContainer');
+      container.innerHTML = '';
+
+      SPELLING_QUESTIONS.forEach((q) => {
+        const card = document.createElement('div');
+        card.id = `question-card-${q.id}`;
+        card.className =
+          'rounded-2xl bg-[#fdfbf2]/90 border border-amber-200/75 p-4 sm:p-5 space-y-3 transition-all';
+
+        // Question Header: Number + Ukrainian Prompt Button (with IPA & Sound on hover/tap)
+        const headerRow = document.createElement('div');
+        headerRow.className = 'flex items-center justify-between gap-3';
+
+        const promptTrigger = document.createElement('button');
+        promptTrigger.type = 'button';
+        promptTrigger.id = `prompt-trigger-${q.id}`;
+        promptTrigger.className =
+          'prompt-trigger group inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-white border border-amber-200/90 shadow-2xs cursor-pointer text-left';
+        promptTrigger.setAttribute('aria-label', `${q.id}. ${q.ukPrompt} — наведи курсор або натисни, щоб почути слово і побачити транскрипцію`);
+
+        promptTrigger.innerHTML = `
+          <span class="font-bold text-slate-900 text-base sm:text-[17px]">
+            ${q.id}. ${q.ukPrompt}
+          </span>
+          <span class="inline-flex items-center gap-1.5 text-amber-600 group-hover:text-amber-700 pl-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+            <span class="inline-flex items-end gap-0.5 h-3.5" aria-hidden="true">
+              <span class="sound-bar"></span>
+              <span class="sound-bar"></span>
+              <span class="sound-bar"></span>
+            </span>
+          </span>
+        `;
+
+        promptTrigger.addEventListener('mouseenter', () => {
+          const isNewHover = lastHoveredId !== q.id;
+          lastHoveredId = q.id;
+          showTooltip(promptTrigger, q, isNewHover ? 'hover' : 'none');
+        });
+
+        promptTrigger.addEventListener('mouseleave', () => {
+          scheduleHideTooltip();
+        });
+
+        promptTrigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          lastHoveredId = q.id;
+          showTooltip(promptTrigger, q, 'immediate');
+        });
+
+        const statusBadge = document.createElement('span');
+        statusBadge.id = `q-status-${q.id}`;
+        statusBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-full hidden';
+
+        headerRow.appendChild(promptTrigger);
+        headerRow.appendChild(statusBadge);
+        card.appendChild(headerRow);
+
+        // Options List (3 radio buttons per question)
+        const optionsGrid = document.createElement('div');
+        optionsGrid.className = 'grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1';
+
+        q.options.forEach((optText, optIndex) => {
+          const optionId = `q-${q.id}-opt-${optIndex}`;
+          const label = document.createElement('label');
+          label.htmlFor = optionId;
+          label.id = `label-${optionId}`;
+          label.className =
+            'option-label flex items-center gap-3 px-4 py-3 rounded-xl bg-white border border-slate-200/90 cursor-pointer select-none shadow-2xs';
+
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.id = optionId;
+          radio.name = `question_${q.id}`;
+          radio.value = optText;
+          radio.className = 'w-4 h-4 accent-amber-600 cursor-pointer shrink-0';
+
+          const wordSpan = document.createElement('span');
+          wordSpan.className = 'font-medium text-slate-800 text-base tracking-wide';
+          wordSpan.textContent = optText;
+
+          const markSpan = document.createElement('span');
+          markSpan.id = `mark-${optionId}`;
+          markSpan.className = 'ml-auto font-extrabold text-sm';
+
+          radio.addEventListener('change', () => {
+            resetQuestionValidation(q.id);
+            updateAnsweredCounter();
+          });
+
+          label.appendChild(radio);
+          label.appendChild(wordSpan);
+          label.appendChild(markSpan);
+          optionsGrid.appendChild(label);
+        });
+
+        card.appendChild(optionsGrid);
+        container.appendChild(card);
+      });
+    }
+
+    /**
+     * 5. VALIDATION & PROGRESS LOGIC
+     */
+    function resetQuestionValidation(qId) {
+      const q = SPELLING_QUESTIONS.find(item => item.id === qId);
+      if (!q) return;
+
+      const statusBadge = document.getElementById(`q-status-${q.id}`);
+      statusBadge.classList.add('hidden');
+
+      q.options.forEach((_, idx) => {
+        const optionId = `q-${q.id}-opt-${idx}`;
+        const label = document.getElementById(`label-${optionId}`);
+        const mark = document.getElementById(`mark-${optionId}`);
+
+        label.classList.remove(
+          'bg-emerald-50', 'border-emerald-500', 'text-emerald-900',
+          'bg-rose-50', 'border-rose-400', 'text-rose-900'
+        );
+        label.classList.add('bg-white', 'border-slate-200/90');
+        mark.textContent = '';
+      });
+    }
+
+    function updateAnsweredCounter() {
+      let count = 0;
+      SPELLING_QUESTIONS.forEach((q) => {
+        const checked = document.querySelector(`input[name="question_${q.id}"]:checked`);
+        if (checked) count++;
+      });
+      document.getElementById('answeredCounter').textContent = count;
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      let correctCount = 0;
+
+      SPELLING_QUESTIONS.forEach((q) => {
+        resetQuestionValidation(q.id);
+        const checkedRadio = document.querySelector(`input[name="question_${q.id}"]:checked`);
+        const statusBadge = document.getElementById(`q-status-${q.id}`);
+
+        if (!checkedRadio) {
+          statusBadge.textContent = 'Не обрано';
+          statusBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800';
+          return;
+        }
+
+        const label = document.getElementById(`label-${checkedRadio.id}`);
+        const mark = document.getElementById(`mark-${checkedRadio.id}`);
+        const isCorrect = checkedRadio.value === q.correctOption;
+
+        label.classList.remove('bg-white', 'border-slate-200/90');
+
+        if (isCorrect) {
+          correctCount++;
+          label.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-900');
+          mark.textContent = '✓';
+          mark.className = 'ml-auto font-extrabold text-base text-emerald-600';
+          statusBadge.textContent = 'Правильно';
+          statusBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800';
+        } else {
+          // Highlight ONLY the chosen wrong option in soft red without revealing the right answer
+          label.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+          mark.textContent = '✗';
+          mark.className = 'ml-auto font-extrabold text-base text-rose-500';
+          statusBadge.textContent = 'Спробуй ще';
+          statusBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-rose-100 text-rose-800';
+        }
+      });
+
+      const banner = document.getElementById('feedbackBanner');
+      const emoji = document.getElementById('feedbackEmoji');
+      const title = document.getElementById('feedbackTitle');
+      const subtitle = document.getElementById('feedbackSubtitle');
+      const score = document.getElementById('feedbackScore');
+
+      banner.classList.remove(
+        'hidden',
+        'bg-emerald-50', 'border-emerald-200', 'text-emerald-900',
+        'bg-amber-50', 'border-amber-200', 'text-amber-900',
+        'bg-rose-50', 'border-rose-200', 'text-rose-900'
+      );
+
+      score.textContent = `${correctCount} / ${SPELLING_QUESTIONS.length}`;
+
+      if (correctCount === SPELLING_QUESTIONS.length) {
+        banner.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
+        emoji.textContent = '🏆';
+        title.textContent = 'Супер! Усі 8 слів обрано правильно!';
+        subtitle.textContent = 'Чудова робота! Ти бездоганно знаєш правопис цих слів.';
+      } else if (correctCount >= 5) {
+        banner.classList.add('bg-amber-50', 'border-amber-200', 'text-amber-900');
+        emoji.textContent = '👏';
+        title.textContent = 'Дуже добре!';
+        subtitle.textContent = 'Майже все правильно. Послухай вимову слів, виділених червоним, та обери інший варіант.';
+      } else {
+        banner.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-900');
+        emoji.textContent = '🎧';
+        title.textContent = 'Спробуй ще раз!';
+        subtitle.textContent = 'Наводь курсор на українські слова, щоб почути їх звучання та побачити транскрипцію.';
+      }
+
+      banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      clearSpeakingIndicators();
+      tooltipEl.classList.add('hidden');
+
+      SPELLING_QUESTIONS.forEach((q) => {
+        const radios = document.querySelectorAll(`input[name="question_${q.id}"]`);
+        radios.forEach(r => { r.checked = false; });
+        resetQuestionValidation(q.id);
+      });
+
+      updateAnsweredCounter();
+      document.getElementById('feedbackBanner').classList.add('hidden');
+    });
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderQuestions();
+      updateAnsweredCounter();
+    });
+  </script>
+</body>
+</html>
