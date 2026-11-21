@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise 5. Find and Correct the Mistakes — Інтерактивна вправа</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Lora:ital,wght@0,500;0,600;1,400&family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-page: #fdfbf3;
+      --bg-card: #fffdf7;
+      --bg-surface: #ffffff;
+      --bg-accent: #f8f3e2;
+      --bg-highlight: #fef3c7;
+      --border-subtle: #eadfb8;
+      --border-strong: #d9c793;
+      --text-primary: #1f2933;
+      --text-secondary: #52606d;
+      --text-muted: #7b8794;
+      --amber-accent: #b45309;
+      --amber-soft: #fef3c7;
+      --focus-ring: rgba(180, 83, 9, 0.22);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.55;
+      min-height: 100vh;
+      padding: 24px 14px 52px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 860px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 12px 32px -12px rgba(31, 41, 51, 0.08);
+      padding: 24px 18px;
+    }
+
+    @media (min-width: 640px) {
+      body {
+        padding: 40px 24px 64px;
+      }
+      .container {
+        padding: 36px 40px;
+      }
+    }
+
+    /* Header */
+    .header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 20px;
+      margin-bottom: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    @media (min-width: 640px) {
+      .header {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--bg-accent);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+
+    @media (min-width: 640px) {
+      h1 {
+        font-size: 32px;
+      }
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .subtitle strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .hint-box {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      max-width: 300px;
+      line-height: 1.45;
+      flex-shrink: 0;
+    }
+
+    /* Sentence Rows */
+    .sentences-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sentence-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+    }
+
+    .sentence-card:hover {
+      border-color: var(--border-strong);
+      background-color: #fffef9;
+    }
+
+    .sentence-card.has-answer {
+      border-color: #d5c085;
+    }
+
+    @media (min-width: 680px) {
+      .sentence-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 14px 18px;
+      }
+    }
+
+    .sentence-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    @media (min-width: 680px) {
+      .sentence-left {
+        align-items: center;
+      }
+    }
+
+    .sentence-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--amber-accent);
+      background-color: var(--amber-soft);
+      border: 1px solid #f4d78a;
+      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    @media (min-width: 680px) {
+      .sentence-num {
+        margin-top: 0;
+      }
+    }
+
+    .sentence-text {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    /* Input Side */
+    .input-wrap {
+      width: 100%;
+    }
+
+    @media (min-width: 680px) {
+      .input-wrap {
+        width: 245px;
+        flex-shrink: 0;
+      }
+    }
+
+    .spelling-input {
+      width: 100%;
+      background-color: var(--bg-page);
+      border: 1.5px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 9px 13px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+    }
+
+    .spelling-input::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .spelling-input:focus {
+      outline: none;
+      background-color: var(--bg-surface);
+      border-color: var(--amber-accent);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    .spelling-input.filled {
+      background-color: #fffef8;
+      border-color: #c8af68;
+    }
+
+    /* Floating Popup Card for IPA, Ukrainian Translation & Audio */
+    .vocab-popup {
+      position: fixed;
+      z-index: 1200;
+      width: 296px;
+      max-width: calc(100vw - 24px);
+      background-color: #1f2933;
+      color: #f8fafc;
+      border: 1px solid #3e4c59;
+      border-radius: 16px;
+      padding: 13px 15px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.24);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(4px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .vocab-popup.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .popup-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .popup-word {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fcd34d;
+      line-height: 1.25;
+    }
+
+    .popup-ipa {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      color: #cbd2d9;
+      margin-top: 3px;
+    }
+
+    .popup-speak-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background-color: #d97706;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color 0.15s ease, transform 0.12s ease;
+    }
+
+    .popup-speak-btn:hover {
+      background-color: #f59e0b;
+    }
+
+    .popup-speak-btn:active {
+      transform: scale(0.96);
+    }
+
+    .popup-translation {
+      border-top: 1px solid #323f4b;
+      padding-top: 8px;
+      font-size: 13.5px;
+      color: #f1f5f9;
+      line-height: 1.4;
+    }
+
+    .popup-translation-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #9aa5b1;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 26px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .counter-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-accent);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 9px 15px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .counter-badge strong {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .clear-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 9px 16px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .clear-btn:hover {
+      background-color: var(--bg-accent);
+      color: var(--text-primary);
+    }
+
+    .clear-btn.confirm-state {
+      background-color: #fef2f2;
+      border-color: #fecaca;
+      color: #b91c1c;
+    }
+
+    .clear-btn:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container">
+    <!-- Header -->
+    <header class="header">
+      <div>
+        <div class="badge">6 клас • Spelling &amp; Error Correction</div>
+        <h1>Exercise 5. Find and Correct the Mistakes</h1>
+        <p class="subtitle">
+          <strong>У кожному реченні є одна орфографічна помилка.</strong> Знайди її та запиши слово правильно.
+        </p>
+      </div>
+      <div class="hint-box">
+        Уважно прочитай кожне речення, знайди орфографічну помилку та впиши правильне слово.
+      </div>
+    </header>
+
+    <!-- 10 Sentences List -->
+    <section class="sentences-list" id="sentencesContainer" aria-label="Речення для виправлення орфографічних помилок">
+      <!-- Rendered via JavaScript -->
+    </section>
+
+    <!-- Footer: Progress Counter & Clear Fields Button -->
+    <footer class="footer">
+      <div class="counter-badge">
+        <span>Заповнено полів:</span>
+        <strong id="filledCount">0 / 10</strong>
+      </div>
+
+      <button type="button" class="clear-btn" id="clearFieldsBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+        </svg>
+        <span id="clearBtnText">Очистити поля</span>
+      </button>
+    </footer>
+  </main>
+
+  <script>
+    /**
+     * 10 sentences from Exercise 5 for independent error finding and spelling practice.
+     */
+    const SENTENCE_ITEMS = [
+      { id: 1,  text: "My best friend is very helpfull." },
+      { id: 2,  text: "She has long curley hair." },
+      { id: 3,  text: "He is a very responsibile student." },
+      { id: 4,  text: "My sister is quite energatic." },
+      { id: 5,  text: "This website is dangarous." },
+      { id: 6,  text: "We spend an houer together." },
+      { id: 7,  text: "My brother is very chattie." },
+      { id: 8,  text: "They like to hang aut after school." },
+      { id: 9,  text: "I have a differant opinion." },
+      { id: 10, text: "She is very well-organized." }
+    ];
+
+    /**
+     * Progress Counter & Input Rendering
+     */
+    function updateFilledCounter() {
+      const inputs = Array.from(document.querySelectorAll(".spelling-input"));
+      const count = inputs.filter(inp => inp.value.trim().length > 0).length;
+      document.getElementById("filledCount").textContent = `${count} / ${SENTENCE_ITEMS.length}`;
+    }
+
+    function renderSentences() {
+      const container = document.getElementById("sentencesContainer");
+      container.innerHTML = "";
+
+      SENTENCE_ITEMS.forEach((item, idx) => {
+        const card = document.createElement("article");
+        card.className = "sentence-card";
+        card.id = `sentence-card-${item.id}`;
+
+        // Left: number + plain sentence text without hints
+        const leftDiv = document.createElement("div");
+        leftDiv.className = "sentence-left";
+
+        const numSpan = document.createElement("span");
+        numSpan.className = "sentence-num";
+        numSpan.textContent = `${item.id}.`;
+
+        const textDiv = document.createElement("div");
+        textDiv.className = "sentence-text";
+        textDiv.textContent = item.text;
+
+        leftDiv.appendChild(numSpan);
+        leftDiv.appendChild(textDiv);
+
+        // Right: typing input for corrected spelling
+        const inputWrap = document.createElement("div");
+        inputWrap.className = "input-wrap";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = `spelling-input-${item.id}`;
+        input.className = "spelling-input";
+        input.placeholder = "Correct spelling";
+        input.setAttribute("aria-label", `Правильне написання для речення ${item.id}`);
+        input.setAttribute("autocomplete", "off");
+        input.setAttribute("autocorrect", "off");
+        input.setAttribute("autocapitalize", "off");
+        input.setAttribute("spellcheck", "false");
+
+        input.addEventListener("input", () => {
+          const hasText = input.value.trim().length > 0;
+          input.classList.toggle("filled", hasText);
+          card.classList.toggle("has-answer", hasText);
+          updateFilledCounter();
+        });
+
+        // Pressing Enter moves focus to the next input field
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const nextItem = SENTENCE_ITEMS[idx + 1];
+            if (nextItem) {
+              const nextInput = document.getElementById(`spelling-input-${nextItem.id}`);
+              if (nextInput) nextInput.focus();
+            } else {
+              input.blur();
+            }
+          }
+        });
+
+        inputWrap.appendChild(input);
+
+        card.appendChild(leftDiv);
+        card.appendChild(inputWrap);
+        container.appendChild(card);
+      });
+    }
+
+    /**
+     * Two-step inline confirmation for clearing fields (no browser alert/confirm)
+     */
+    const clearBtn = document.getElementById("clearFieldsBtn");
+    const clearBtnText = document.getElementById("clearBtnText");
+    let isConfirmingClear = false;
+    let confirmClearTimer = null;
+
+    function resetClearButton() {
+      isConfirmingClear = false;
+      clearBtn.classList.remove("confirm-state");
+      clearBtnText.textContent = "Очистити поля";
+    }
+
+    clearBtn.addEventListener("click", () => {
+      const hasAnyInput = Array.from(document.querySelectorAll(".spelling-input")).some(
+        inp => inp.value.trim().length > 0
+      );
+      if (!hasAnyInput) return;
+
+      if (!isConfirmingClear) {
+        isConfirmingClear = true;
+        clearBtn.classList.add("confirm-state");
+        clearBtnText.textContent = "Точно очистити?";
+        clearTimeout(confirmClearTimer);
+        confirmClearTimer = setTimeout(resetClearButton, 3000);
+        return;
+      }
+
+      clearTimeout(confirmClearTimer);
+      SENTENCE_ITEMS.forEach(item => {
+        const input = document.getElementById(`spelling-input-${item.id}`);
+        const card = document.getElementById(`sentence-card-${item.id}`);
+        if (input) {
+          input.value = "";
+          input.classList.remove("filled");
+        }
+        if (card) {
+          card.classList.remove("has-answer");
+        }
+      });
+
+      updateFilledCounter();
+      resetClearButton();
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderSentences();
+      updateFilledCounter();
+    });
+  </script>
+</body>
+</html>
