@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vocabulary Test — 35 words · English spelling</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Lora:ital,wght@0,500;0,600;1,400&family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-page: #fdfbf3;
+      --bg-card: #ffffff;
+      --bg-row: #fffdf8;
+      --bg-row-hover: #faf5e4;
+      --bg-pill: #f8f3e2;
+      --border-subtle: #eadfb8;
+      --border-strong: #d8c691;
+      --text-primary: #1e1e1e;
+      --text-secondary: #6e6657;
+      --text-muted: #938976;
+      --accent-warm: #b45309;
+      --focus-ring: rgba(180, 83, 9, 0.2);
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+      --danger-text: #b91c1c;
+      --radius-lg: 24px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: 24px 14px 52px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .test-card {
+      width: 100%;
+      max-width: 860px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 12px 32px -12px rgba(43, 38, 29, 0.08);
+      padding: 24px 18px;
+    }
+
+    @media (min-width: 640px) {
+      body {
+        padding: 40px 24px 64px;
+      }
+      .test-card {
+        padding: 36px 40px;
+      }
+    }
+
+    /* Sticky / Top Header */
+    .test-header {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      background-color: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 16px 20px;
+      margin-bottom: 22px;
+      box-shadow: 0 6px 20px -8px rgba(43, 38, 29, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    @media (min-width: 640px) {
+      .test-header {
+        padding: 18px 24px;
+      }
+    }
+
+    .header-titles h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    @media (min-width: 640px) {
+      .header-titles h1 {
+        font-size: 28px;
+      }
+    }
+
+    .header-subtitle {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin-top: 3px;
+    }
+
+    .progress-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      background-color: var(--bg-pill);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 8px 13px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    @media (min-width: 640px) {
+      .progress-counter {
+        font-size: 14px;
+        padding: 9px 16px;
+      }
+    }
+
+    /* Word Rows */
+    .words-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .word-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 11px 14px;
+      background-color: var(--bg-row);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      transition: background-color 0.16s ease, border-color 0.16s ease;
+    }
+
+    .word-row:hover {
+      background-color: var(--bg-row-hover);
+      border-color: var(--border-strong);
+    }
+
+    .word-row.is-filled {
+      border-color: #d2be84;
+    }
+
+    @media (min-width: 640px) {
+      .word-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 10px 16px;
+      }
+    }
+
+    .prompt-col {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .item-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      min-width: 28px;
+      flex-shrink: 0;
+    }
+
+    .uk-prompt {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+      cursor: pointer;
+    }
+
+    .input-col {
+      width: 100%;
+    }
+
+    @media (min-width: 640px) {
+      .input-col {
+        width: 270px;
+        flex-shrink: 0;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .input-col {
+        width: 310px;
+      }
+    }
+
+    .spelling-field {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 9px 13px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+    }
+
+    .spelling-field::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .spelling-field:focus {
+      outline: none;
+      border-color: var(--accent-warm);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+      background-color: #fffefa;
+    }
+
+    .spelling-field.filled {
+      border-color: #c6ae68;
+      background-color: #fffdf6;
+    }
+
+    /* Footer */
+    .test-footer {
+      margin-top: 26px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .footer-note {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .clear-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 9px 16px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.16s ease;
+      flex-shrink: 0;
+    }
+
+    .clear-btn:hover {
+      background-color: var(--bg-pill);
+      color: var(--text-primary);
+    }
+
+    .clear-btn.confirm-armed {
+      background-color: var(--danger-bg);
+      border-color: var(--danger-border);
+      color: var(--danger-text);
+    }
+
+    .clear-btn:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+
+  <main class="test-card">
+    <!-- Top Header with Title, Subtitle & Live Counter -->
+    <header class="test-header">
+      <div class="header-titles">
+        <h1>Vocabulary Test</h1>
+        <p class="header-subtitle">35 words · English spelling</p>
+      </div>
+
+      <div class="progress-counter" id="progressCounter" aria-live="polite">
+        0/35 заповнено
+      </div>
+    </header>
+
+    <!-- All 35 Vocabulary Items -->
+    <section class="words-list" id="vocabularyList" aria-label="Vocabulary Test — 35 words">
+      <!-- Rendered via JavaScript -->
+    </section>
+
+    <!-- Bottom Footer with Subtle Two-Step Clear Button -->
+    <footer class="test-footer">
+      <p class="footer-note">Натисни Enter, щоб перейти до наступного слова</p>
+
+      <button type="button" class="clear-btn" id="clearBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+        </svg>
+        <span id="clearBtnLabel">Очистити поля</span>
+      </button>
+    </footer>
+  </main>
+
+  <script>
+    /**
+     * Exact 35 numbered vocabulary items in order for memory spelling practice.
+     */
+    const VOCABULARY_ITEMS = [
+      { id: 1,  uk: "дружба" },
+      { id: 2,  uk: "поведінка" },
+      { id: 3,  uk: "різниця" },
+      { id: 4,  uk: "особистий, індивідуальний" },
+      { id: 5,  uk: "різноманітний" },
+      { id: 6,  uk: "безумовно" },
+      { id: 7,  uk: "замість цього" },
+      { id: 8,  uk: "ковзанка" },
+      { id: 9,  uk: "відрізнятися" },
+      { id: 10, uk: "зріст" },
+      { id: 11, uk: "статура" },
+      { id: 12, uk: "середній на зріст" },
+      { id: 13, uk: "стрункий" },
+      { id: 14, uk: "волосся до плечей" },
+      { id: 15, uk: "веснянки" },
+      { id: 16, uk: "товариський" },
+      { id: 17, uk: "відповідальний" },
+      { id: 18, uk: "добре організований" },
+      { id: 19, uk: "надійний" },
+      { id: 20, uk: "турботливий" },
+      { id: 21, uk: "неуважний" },
+      { id: 22, uk: "енергійний" },
+      { id: 23, uk: "сором'язливий" },
+      { id: 24, uk: "балакучий" },
+      { id: 25, uk: "чесний" },
+      { id: 26, uk: "спокійний" },
+      { id: 27, uk: "корисний, готовий допомогти" },
+      { id: 28, uk: "година" },
+      { id: 29, uk: "соціальна мережа" },
+      { id: 30, uk: "глядач" },
+      { id: 31, uk: "небезпечний" },
+      { id: 32, uk: "завантажувати" },
+      { id: 33, uk: "проводити час разом" },
+      { id: 34, uk: "ізолювати" },
+      { id: 35, uk: "проводити (час), витрачати" }
+    ];
+
+    /**
+     * Active shuffled order of the 35 items for the current session.
+     */
+    let activeVocabularyOrder = [];
+
+    /**
+     * Fisher-Yates shuffle returning a new randomly ordered array without mutating the source.
+     */
+    function shuffleVocabularyItems(items) {
+      const shuffled = items.slice();
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = shuffled[i];
+        shuffled[i] = shuffled[j];
+        shuffled[j] = temp;
+      }
+      return shuffled;
+    }
+
+    /**
+     * Update live progress counter in header ("X/35 заповнено")
+     */
+    function updateCounter() {
+      const inputs = Array.from(document.querySelectorAll(".spelling-field"));
+      const filledCount = inputs.filter(inp => inp.value.trim().length > 0).length;
+      document.getElementById("progressCounter").textContent = `${filledCount}/${activeVocabularyOrder.length} заповнено`;
+    }
+
+    /**
+     * Render all 35 rows in the current shuffled order
+     */
+    function renderVocabularyList() {
+      const container = document.getElementById("vocabularyList");
+      container.innerHTML = "";
+
+      activeVocabularyOrder.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "word-row";
+        row.id = `vocab-row-${item.id}`;
+
+        // Left side: display position number + Ukrainian prompt
+        const promptCol = document.createElement("div");
+        promptCol.className = "prompt-col";
+
+        const numSpan = document.createElement("span");
+        numSpan.className = "item-number";
+        numSpan.textContent = `${index + 1}.`;
+
+        const label = document.createElement("label");
+        label.className = "uk-prompt";
+        label.htmlFor = `vocab-input-${item.id}`;
+        label.textContent = item.uk;
+
+        promptCol.appendChild(numSpan);
+        promptCol.appendChild(label);
+
+        // Right side: input field with spellcheck & autocomplete disabled
+        const inputCol = document.createElement("div");
+        inputCol.className = "input-col";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = `vocab-input-${item.id}`;
+        input.className = "spelling-field";
+        input.placeholder = "English word";
+        input.setAttribute("aria-label", `${index + 1}. ${item.uk}`);
+        input.setAttribute("spellcheck", "false");
+        input.setAttribute("autocomplete", "off");
+        input.setAttribute("autocapitalize", "off");
+        input.setAttribute("autocorrect", "off");
+
+        input.addEventListener("input", () => {
+          const hasVal = input.value.trim().length > 0;
+          input.classList.toggle("filled", hasVal);
+          row.classList.toggle("is-filled", hasVal);
+          updateCounter();
+        });
+
+        // Pressing Enter moves focus smoothly to the next input field in the current order
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const nextItem = activeVocabularyOrder[index + 1];
+            if (nextItem) {
+              const nextInput = document.getElementById(`vocab-input-${nextItem.id}`);
+              if (nextInput) nextInput.focus();
+            } else {
+              input.blur();
+            }
+          }
+        });
+
+        inputCol.appendChild(input);
+
+        row.appendChild(promptCol);
+        row.appendChild(inputCol);
+        container.appendChild(row);
+      });
+    }
+
+    /**
+     * Two-step inline confirmation for "Очистити поля" (clears inputs and reshuffles order)
+     */
+    const clearBtn = document.getElementById("clearBtn");
+    const clearBtnLabel = document.getElementById("clearBtnLabel");
+    let isClearArmed = false;
+    let clearResetTimer = null;
+
+    function resetClearState() {
+      isClearArmed = false;
+      clearBtn.classList.remove("confirm-armed");
+      clearBtnLabel.textContent = "Очистити поля";
+    }
+
+    clearBtn.addEventListener("click", () => {
+      const hasAnyInput = Array.from(document.querySelectorAll(".spelling-field")).some(
+        inp => inp.value.trim().length > 0
+      );
+
+      if (!isClearArmed) {
+        if (!hasAnyInput) {
+          // Reshuffle immediately if no fields are filled yet
+          activeVocabularyOrder = shuffleVocabularyItems(VOCABULARY_ITEMS);
+          renderVocabularyList();
+          updateCounter();
+          return;
+        }
+        isClearArmed = true;
+        clearBtn.classList.add("confirm-armed");
+        clearBtnLabel.textContent = "Точно очистити?";
+        clearTimeout(clearResetTimer);
+        clearResetTimer = setTimeout(resetClearState, 3000);
+        return;
+      }
+
+      clearTimeout(clearResetTimer);
+      activeVocabularyOrder = shuffleVocabularyItems(VOCABULARY_ITEMS);
+      renderVocabularyList();
+      updateCounter();
+      resetClearState();
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      activeVocabularyOrder = shuffleVocabularyItems(VOCABULARY_ITEMS);
+      renderVocabularyList();
+      updateCounter();
+    });
+  </script>
+</body>
+</html>
