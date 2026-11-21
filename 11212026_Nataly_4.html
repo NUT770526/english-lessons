@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise 4. Unscramble the Words — Інтерактивна вправа</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700&family=Lora:ital,wght@0,500;0,600;1,400&family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-page: #fdfbf3;
+      --bg-card: #ffffff;
+      --bg-accent: #f8f4e6;
+      --bg-slot: #fcf9ee;
+      --border-subtle: #eadfb8;
+      --border-strong: #dccb98;
+      --text-primary: #1e1c1a;
+      --text-secondary: #5c564d;
+      --text-muted: #8a8173;
+      --amber-accent: #b45309;
+      --amber-soft: #fef3c7;
+      --focus-ring: rgba(180, 83, 9, 0.22);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: 24px 14px 52px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 880px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 30px -10px rgba(30, 28, 26, 0.06);
+      padding: 24px 18px;
+    }
+
+    @media (min-width: 640px) {
+      body {
+        padding: 40px 24px 64px;
+      }
+      .container {
+        padding: 36px 40px;
+      }
+    }
+
+    /* Header */
+    .header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 20px;
+      margin-bottom: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    @media (min-width: 640px) {
+      .header {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--bg-accent);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+
+    @media (min-width: 640px) {
+      h1 {
+        font-size: 32px;
+      }
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .subtitle strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .hint-note {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      max-width: 280px;
+      line-height: 1.45;
+      flex-shrink: 0;
+    }
+
+    /* Exercise Rows */
+    .rows-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .exercise-row {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .exercise-row.is-complete {
+      border-color: #d3bd82;
+      background-color: #fcf9ef;
+    }
+
+    .row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .row-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .row-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--amber-accent);
+      background-color: var(--amber-soft);
+      border: 1px solid #f5d88c;
+      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .scrambled-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .scrambled-preview {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      padding: 2px 8px;
+      border-radius: 7px;
+      letter-spacing: 0.04em;
+    }
+
+    .clear-row-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 6px 11px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.16s ease;
+      flex-shrink: 0;
+    }
+
+    .clear-row-btn:hover:not(:disabled) {
+      background-color: var(--bg-accent);
+      color: var(--text-primary);
+      border-color: var(--amber-accent);
+    }
+
+    .clear-row-btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    /* Workspace layout: Pool on left/top, Answer slots on right/bottom */
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 720px) {
+      .workspace {
+        grid-template-columns: minmax(200px, 1fr) auto;
+        align-items: center;
+        gap: 16px;
+      }
+    }
+
+    .zone-box {
+      background-color: var(--bg-card);
+      border: 1px dashed var(--border-strong);
+      border-radius: 14px;
+      padding: 10px 12px;
+      min-height: 58px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    .zone-box.zone-drop-hover {
+      border-color: var(--amber-accent);
+      border-style: solid;
+      background-color: #fffbeb;
+    }
+
+    .pool-zone {
+      justify-content: flex-start;
+    }
+
+    .answer-zone {
+      justify-content: flex-start;
+      border-style: solid;
+      border-color: var(--border-subtle);
+      background-color: var(--bg-slot);
+    }
+
+    /* Word Group for 2-word phrases (e.g., social network) */
+    .word-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .word-space-divider {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 36px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .word-space-divider::after {
+      content: "";
+      width: 2px;
+      height: 22px;
+      border-radius: 9999px;
+      background-color: var(--border-strong);
+    }
+
+    /* Letter Tiles & Answer Slots */
+    .letter-tile {
+      width: 36px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #ffffff 0%, #fef9e7 100%);
+      border: 1.5px solid #d7c082;
+      box-shadow: 0 2px 0 #d7c082, 0 3px 6px rgba(30, 28, 26, 0.06);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease, background-color 0.14s ease;
+    }
+
+    .letter-tile:hover {
+      transform: translateY(-2px);
+      border-color: var(--amber-accent);
+      box-shadow: 0 4px 0 #c69f48, 0 6px 12px rgba(180, 83, 9, 0.12);
+    }
+
+    .letter-tile:active {
+      cursor: grabbing;
+    }
+
+    .letter-tile.is-placed {
+      background: linear-gradient(180deg, #fffdf7 0%, #fef3c7 100%);
+      border-color: var(--amber-accent);
+      box-shadow: 0 2px 0 #b45309, 0 3px 6px rgba(180, 83, 9, 0.1);
+    }
+
+    .letter-tile.is-dragging-source {
+      opacity: 0.25;
+      transform: scale(0.92);
+    }
+
+    .answer-slot {
+      width: 36px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1.5px dashed #d5c38e;
+      background-color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .answer-slot.slot-drag-over {
+      border-style: solid;
+      border-color: var(--amber-accent);
+      background-color: #fef3c7;
+      transform: scale(1.06);
+    }
+
+    .pool-empty-placeholder {
+      font-size: 12px;
+      font-style: italic;
+      color: var(--text-muted);
+      padding: 0 6px;
+    }
+
+    /* Floating Pointer Drag Ghost */
+    .drag-ghost {
+      position: fixed;
+      z-index: 1000;
+      pointer-events: none;
+      width: 42px;
+      height: 46px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #ffffff 0%, #fef3c7 100%);
+      border: 2px solid var(--amber-accent);
+      box-shadow: 0 12px 24px rgba(30, 28, 26, 0.22);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translate(-50%, -50%) scale(1.08) rotate(-2deg);
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 26px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .progress-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-accent);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 9px 15px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .progress-pill strong {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .reset-all-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 9px 16px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .reset-all-btn:hover {
+      background-color: var(--bg-accent);
+      color: var(--text-primary);
+    }
+
+    .reset-all-btn.confirm-mode {
+      background-color: #fef2f2;
+      border-color: #fecaca;
+      color: #b91c1c;
+    }
+
+    .reset-all-btn:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container">
+    <!-- Header -->
+    <header class="header">
+      <div>
+        <div class="badge">6 клас • Spelling &amp; Word Building</div>
+        <h1>Exercise 4. Unscramble the Words</h1>
+        <p class="subtitle">
+          <strong>Постав літери в правильному порядку.</strong> Перетягуй літери або натискай на них.
+        </p>
+      </div>
+      <div class="hint-note">
+        Натисни на літеру, щоб перемістити її, або перетягни мишкою / пальцем у потрібну клітинку.
+      </div>
+    </header>
+
+    <!-- 10 Unscramble Rows -->
+    <section class="rows-list" id="exerciseList" aria-label="Вправи на складання слів із літер">
+      <!-- Populated by JS -->
+    </section>
+
+    <!-- Footer: Completed Rows Indicator & Reset All -->
+    <footer class="footer">
+      <div class="progress-pill">
+        <span>Заповнено рядків:</span>
+        <strong id="completedRowsCount">0 / 10</strong>
+      </div>
+
+      <button type="button" class="reset-all-btn" id="resetAllBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+        </svg>
+        <span id="resetAllLabel">Скинути все</span>
+      </button>
+    </footer>
+  </main>
+
+  <script>
+    /**
+     * 10 items from the worksheet.
+     * For single-word items, `words` has 1 array of scrambled letters.
+     * For item 8 ("laicos krowten"), `words` has 2 arrays corresponding to each word's scrambled letters.
+     */
+    const UNSCRAMBLE_ITEMS = [
+      { id: 1,  scrambledDisplay: "tsenid",          words: [["t", "s", "e", "n", "i", "d"]] },
+      { id: 2,  scrambledDisplay: "mlac",            words: [["m", "l", "a", "c"]] },
+      { id: 3,  scrambledDisplay: "nohtes",          words: [["n", "o", "h", "t", "e", "s"]] },
+      { id: 4,  scrambledDisplay: "ysh",             words: [["y", "s", "h"]] },
+      { id: 5,  scrambledDisplay: "reivew",          words: [["r", "e", "i", "v", "e", "w"]] },
+      { id: 6,  scrambledDisplay: "dlubi",           words: [["d", "l", "u", "b", "i"]] },
+      { id: 7,  scrambledDisplay: "yrracel",         words: [["y", "r", "r", "a", "c", "e", "l"]] },
+      { id: 8,  scrambledDisplay: "laicos krowten",  words: [["l", "a", "i", "c", "o", "s"], ["k", "r", "o", "w", "t", "e", "n"]] },
+      { id: 9,  scrambledDisplay: "nith",            words: [["n", "i", "t", "h"]] },
+      { id: 10, scrambledDisplay: "dneirfship",      words: [["d", "n", "e", "i", "r", "f", "s", "h", "i", "p"]] }
+    ];
+
+    /**
+     * State per row:
+     * tiles: array of { tileId, letter, wordGroupIndex, slotIndex (null if in pool, or global slot index 0..total-1) }
+     */
+    const rowStates = new Map();
+
+    // Pointer drag state
+    let dragSession = null;
+    let isConfirmingResetAll = false;
+    let confirmResetAllTimer = null;
+
+    function initRowStates() {
+      rowStates.clear();
+      UNSCRAMBLE_ITEMS.forEach((item) => {
+        const tiles = [];
+        let globalIdx = 0;
+        item.words.forEach((wordLetters, wIdx) => {
+          wordLetters.forEach((ch, lIdx) => {
+            tiles.push({
+              tileId: `row-${item.id}-t-${globalIdx}`,
+              letter: ch,
+              wordGroupIndex: wIdx,
+              orderInGroup: lIdx,
+              slotIndex: null
+            });
+            globalIdx++;
+          });
+        });
+        rowStates.set(item.id, {
+          totalSlots: globalIdx,
+          tiles
+        });
+      });
+    }
+
+    function clearRow(rowId) {
+      const state = rowStates.get(rowId);
+      if (!state) return;
+      state.tiles.forEach(t => {
+        t.slotIndex = null;
+      });
+      renderRow(rowId);
+      updateCompletedCounter();
+    }
+
+    function updateCompletedCounter() {
+      let completed = 0;
+      UNSCRAMBLE_ITEMS.forEach((item) => {
+        const state = rowStates.get(item.id);
+        if (!state) return;
+        const filledSlots = state.tiles.filter(t => t.slotIndex !== null).length;
+        const isRowDone = filledSlots === state.totalSlots;
+        completed += isRowDone ? 1 : 0;
+
+        const rowEl = document.getElementById(`exercise-row-${item.id}`);
+        if (rowEl) {
+          rowEl.classList.toggle('is-complete', isRowDone);
+        }
+        const clearBtn = document.getElementById(`clear-row-${item.id}`);
+        if (clearBtn) {
+          clearBtn.disabled = filledSlots === 0;
+        }
+      });
+
+      document.getElementById('completedRowsCount').textContent = `${completed} / ${UNSCRAMBLE_ITEMS.length}`;
+    }
+
+    /**
+     * Move a tile into a specific target slot index within the same row.
+     * If targetSlotIndex is already occupied by another tile, swap or shift appropriately.
+     */
+    function placeTileInSlot(rowId, tileId, targetSlotIndex) {
+      const state = rowStates.get(rowId);
+      if (!state) return;
+
+      const movingTile = state.tiles.find(t => t.tileId === tileId);
+      if (!movingTile) return;
+
+      const previousSlot = movingTile.slotIndex;
+      const occupantTile = state.tiles.find(t => t.tileId !== tileId && t.slotIndex === targetSlotIndex);
+
+      if (occupantTile) {
+        // Swap positions if moving from another slot, or return occupant to pool if moving from pool
+        occupantTile.slotIndex = previousSlot !== null ? previousSlot : null;
+      }
+      movingTile.slotIndex = targetSlotIndex;
+
+      renderRow(rowId);
+      updateCompletedCounter();
+    }
+
+    /**
+     * Click/Tap handler:
+     * - If tile is in pool -> place in next available slot (preferring its own word group first if applicable)
+     * - If tile is in an answer slot -> return it to the pool
+     */
+    function handleTileTap(rowId, tileId) {
+      const state = rowStates.get(rowId);
+      if (!state) return;
+
+      const tile = state.tiles.find(t => t.tileId === tileId);
+      if (!tile) return;
+
+      if (tile.slotIndex !== null) {
+        // Return placed tile to pool
+        tile.slotIndex = null;
+        renderRow(rowId);
+        updateCompletedCounter();
+        return;
+      }
+
+      // Compute slot ranges per word group
+      const item = UNSCRAMBLE_ITEMS.find(i => i.id === rowId);
+      const groupRanges = [];
+      let cursor = 0;
+      item.words.forEach((wArr) => {
+        groupRanges.push({ start: cursor, end: cursor + wArr.length });
+        cursor += wArr.length;
+      });
+
+      const preferredRange = groupRanges[tile.wordGroupIndex];
+      let chosenSlot = null;
+
+      // 1. Check empty slots inside the tile's own word group first
+      for (let s = preferredRange.start; s < preferredRange.end; s++) {
+        const occupied = state.tiles.some(t => t.slotIndex === s);
+        if (!occupied) {
+          chosenSlot = s;
+          break;
+        }
+      }
+
+      // 2. If own group is full, find any empty slot in the row
+      if (chosenSlot === null) {
+        for (let s = 0; s < state.totalSlots; s++) {
+          const occupied = state.tiles.some(t => t.slotIndex === s);
+          if (!occupied) {
+            chosenSlot = s;
+            break;
+          }
+        }
+      }
+
+      if (chosenSlot !== null) {
+        tile.slotIndex = chosenSlot;
+        renderRow(rowId);
+        updateCompletedCounter();
+      }
+    }
+
+    /**
+     * Pointer-based Drag & Drop supporting both mouse and touch smoothly
+     */
+    function createDragGhost(letter, x, y) {
+      const ghost = document.createElement('div');
+      ghost.className = 'drag-ghost';
+      ghost.textContent = letter;
+      ghost.style.left = `${x}px`;
+      ghost.style.top = `${y}px`;
+      document.body.appendChild(ghost);
+      return ghost;
+    }
+
+    function clearDragHighlights() {
+      document.querySelectorAll('.slot-drag-over').forEach(el => el.classList.remove('slot-drag-over'));
+      document.querySelectorAll('.zone-drop-hover').forEach(el => el.classList.remove('zone-drop-hover'));
+      document.querySelectorAll('.is-dragging-source').forEach(el => el.classList.remove('is-dragging-source'));
+    }
+
+    function attachPointerDrag(tileEl, rowId, tileId) {
+      tileEl.addEventListener('pointerdown', (e) => {
+        // Only primary button or touch
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+        const state = rowStates.get(rowId);
+        const tileObj = state && state.tiles.find(t => t.tileId === tileId);
+        if (!tileObj) return;
+
+        dragSession = {
+          rowId,
+          tileId,
+          letter: tileObj.letter,
+          startX: e.clientX,
+          startY: e.clientY,
+          hasMoved: false,
+          ghost: null,
+          sourceEl: tileEl,
+          hoveredSlot: null,
+          hoveredPool: null
+        };
+
+        tileEl.setPointerCapture(e.pointerId);
+      });
+
+      tileEl.addEventListener('pointermove', (e) => {
+        if (!dragSession || dragSession.tileId !== tileId) return;
+
+        const dx = e.clientX - dragSession.startX;
+        const dy = e.clientY - dragSession.startY;
+        const distance = Math.hypot(dx, dy);
+
+        if (!dragSession.hasMoved && distance > 6) {
+          dragSession.hasMoved = true;
+          dragSession.ghost = createDragGhost(dragSession.letter, e.clientX, e.clientY);
+          tileEl.classList.add('is-dragging-source');
+        }
+
+        if (!dragSession.hasMoved) return;
+
+        if (dragSession.ghost) {
+          dragSession.ghost.style.left = `${e.clientX}px`;
+          dragSession.ghost.style.top = `${e.clientY}px`;
+        }
+
+        // Detect slot or pool underneath pointer (temporarily hide ghost via pointer-events: none)
+        const targetUnder = document.elementFromPoint(e.clientX, e.clientY);
+        const slotEl = targetUnder && targetUnder.closest(`.answer-slot[data-row-id="${rowId}"]`);
+        const poolEl = !slotEl && targetUnder && targetUnder.closest(`.pool-zone[data-row-id="${rowId}"]`);
+
+        document.querySelectorAll(`.answer-slot[data-row-id="${rowId}"]`).forEach(s => {
+          s.classList.toggle('slot-drag-over', s === slotEl);
+        });
+        document.querySelectorAll(`.pool-zone[data-row-id="${rowId}"]`).forEach(p => {
+          p.classList.toggle('zone-drop-hover', Boolean(poolEl));
+        });
+
+        dragSession.hoveredSlot = slotEl ? parseInt(slotEl.dataset.slotIndex, 10) : null;
+        dragSession.hoveredPool = Boolean(poolEl);
+      });
+
+      const finishPointerAction = (e) => {
+        if (!dragSession || dragSession.tileId !== tileId) return;
+
+        const session = dragSession;
+        dragSession = null;
+
+        if (session.ghost && session.ghost.parentNode) {
+          session.ghost.parentNode.removeChild(session.ghost);
+        }
+        clearDragHighlights();
+
+        if (!session.hasMoved) {
+          // Treat as a clean click/tap
+          handleTileTap(session.rowId, session.tileId);
+          return;
+        }
+
+        // Dropped over a specific answer slot
+        if (session.hoveredSlot !== null && !Number.isNaN(session.hoveredSlot)) {
+          placeTileInSlot(session.rowId, session.tileId, session.hoveredSlot);
+          return;
+        }
+
+        // Dropped back onto the scrambled letter pool
+        if (session.hoveredPool) {
+          const st = rowStates.get(session.rowId);
+          const tObj = st && st.tiles.find(t => t.tileId === session.tileId);
+          if (tObj && tObj.slotIndex !== null) {
+            tObj.slotIndex = null;
+            renderRow(session.rowId);
+            updateCompletedCounter();
+          }
+        }
+      };
+
+      tileEl.addEventListener('pointerup', finishPointerAction);
+      tileEl.addEventListener('pointercancel', finishPointerAction);
+    }
+
+    /**
+     * Render a single row's scrambled letter pool and answer slots
+     */
+    function renderRow(rowId) {
+      const item = UNSCRAMBLE_ITEMS.find(i => i.id === rowId);
+      const state = rowStates.get(rowId);
+      if (!item || !state) return;
+
+      const poolZone = document.getElementById(`pool-zone-${rowId}`);
+      const answerZone = document.getElementById(`answer-zone-${rowId}`);
+      if (!poolZone || !answerZone) return;
+
+      // 1. Render unplaced tiles in the pool
+      poolZone.innerHTML = '';
+      const unplacedTiles = state.tiles.filter(t => t.slotIndex === null);
+
+      if (unplacedTiles.length === 0) {
+        const emptyMsg = document.createElement('span');
+        emptyMsg.className = 'pool-empty-placeholder';
+        emptyMsg.textContent = 'Усі літери використано';
+        poolZone.appendChild(emptyMsg);
+      } else {
+        // Group unplaced tiles by wordGroupIndex with a visual divider for multi-word items
+        item.words.forEach((_, wIdx) => {
+          const groupTiles = unplacedTiles.filter(t => t.wordGroupIndex === wIdx);
+          if (groupTiles.length === 0) return;
+
+          if (wIdx > 0 && poolZone.children.length > 0) {
+            const sep = document.createElement('span');
+            sep.className = 'word-space-divider';
+            sep.setAttribute('aria-hidden', 'true');
+            poolZone.appendChild(sep);
+          }
+
+          const groupWrap = document.createElement('div');
+          groupWrap.className = 'word-group';
+
+          groupTiles.forEach((tObj) => {
+            const tileBtn = document.createElement('button');
+            tileBtn.type = 'button';
+            tileBtn.className = 'letter-tile';
+            tileBtn.textContent = tObj.letter;
+            tileBtn.setAttribute('aria-label', `Літера ${tObj.letter}, рядок ${rowId}`);
+            attachPointerDrag(tileBtn, rowId, tObj.tileId);
+            groupWrap.appendChild(tileBtn);
+          });
+
+          poolZone.appendChild(groupWrap);
+        });
+      }
+
+      // 2. Render answer slots (grouped by word with visual space divider for item 8)
+      answerZone.innerHTML = '';
+      let slotCursor = 0;
+
+      item.words.forEach((wordLetters, wIdx) => {
+        if (wIdx > 0) {
+          const divider = document.createElement('span');
+          divider.className = 'word-space-divider';
+          divider.title = 'Пробіл між словами';
+          divider.setAttribute('aria-label', 'Пробіл між словами');
+          answerZone.appendChild(divider);
+        }
+
+        const groupContainer = document.createElement('div');
+        groupContainer.className = 'word-group';
+
+        for (let l = 0; l < wordLetters.length; l++) {
+          const currentSlotIdx = slotCursor++;
+          const slotEl = document.createElement('div');
+          slotEl.className = 'answer-slot';
+          slotEl.dataset.rowId = rowId;
+          slotEl.dataset.slotIndex = currentSlotIdx;
+          slotEl.setAttribute('aria-label', `Клітинка ${currentSlotIdx + 1}`);
+
+          const placedTile = state.tiles.find(t => t.slotIndex === currentSlotIdx);
+          if (placedTile) {
+            const tileBtn = document.createElement('button');
+            tileBtn.type = 'button';
+            tileBtn.className = 'letter-tile is-placed';
+            tileBtn.textContent = placedTile.letter;
+            tileBtn.setAttribute('aria-label', `Поставлена літера ${placedTile.letter}, натисни щоб повернути`);
+            attachPointerDrag(tileBtn, rowId, placedTile.tileId);
+            slotEl.appendChild(tileBtn);
+          }
+
+          groupContainer.appendChild(slotEl);
+        }
+
+        answerZone.appendChild(groupContainer);
+      });
+    }
+
+    /**
+     * Build all 10 exercise rows
+     */
+    function renderAllRows() {
+      const listEl = document.getElementById('exerciseList');
+      listEl.innerHTML = '';
+
+      UNSCRAMBLE_ITEMS.forEach((item) => {
+        const rowEl = document.createElement('article');
+        rowEl.className = 'exercise-row';
+        rowEl.id = `exercise-row-${item.id}`;
+
+        const topBar = document.createElement('div');
+        topBar.className = 'row-top';
+
+        const titleWrap = document.createElement('div');
+        titleWrap.className = 'row-title-wrap';
+
+        const numBadge = document.createElement('span');
+        numBadge.className = 'row-number';
+        numBadge.textContent = `${item.id}`;
+
+        const label = document.createElement('span');
+        label.className = 'scrambled-label';
+        label.textContent = 'Літери:';
+
+        const preview = document.createElement('span');
+        preview.className = 'scrambled-preview';
+        preview.textContent = item.scrambledDisplay;
+
+        titleWrap.appendChild(numBadge);
+        titleWrap.appendChild(label);
+        titleWrap.appendChild(preview);
+
+        const clearRowBtn = document.createElement('button');
+        clearRowBtn.type = 'button';
+        clearRowBtn.className = 'clear-row-btn';
+        clearRowBtn.id = `clear-row-${item.id}`;
+        clearRowBtn.innerHTML = `
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+          </svg>
+          <span>Очистити рядок</span>
+        `;
+        clearRowBtn.addEventListener('click', () => clearRow(item.id));
+
+        topBar.appendChild(titleWrap);
+        topBar.appendChild(clearRowBtn);
+
+        const workspace = document.createElement('div');
+        workspace.className = 'workspace';
+
+        const poolZone = document.createElement('div');
+        poolZone.className = 'zone-box pool-zone';
+        poolZone.id = `pool-zone-${item.id}`;
+        poolZone.dataset.rowId = item.id;
+
+        const answerZone = document.createElement('div');
+        answerZone.className = 'zone-box answer-zone';
+        answerZone.id = `answer-zone-${item.id}`;
+        answerZone.dataset.rowId = item.id;
+
+        workspace.appendChild(poolZone);
+        workspace.appendChild(answerZone);
+
+        rowEl.appendChild(topBar);
+        rowEl.appendChild(workspace);
+        listEl.appendChild(rowEl);
+
+        renderRow(item.id);
+      });
+    }
+
+    /**
+     * Bottom "Скинути все" button with two-step inline confirmation (no browser confirm())
+     */
+    const resetAllBtn = document.getElementById('resetAllBtn');
+    const resetAllLabel = document.getElementById('resetAllLabel');
+
+    function resetConfirmButtonState() {
+      isConfirmingResetAll = false;
+      resetAllBtn.classList.remove('confirm-mode');
+      resetAllLabel.textContent = 'Скинути все';
+    }
+
+    resetAllBtn.addEventListener('click', () => {
+      const hasAnyPlacedTile = Array.from(rowStates.values()).some(
+        st => st.tiles.some(t => t.slotIndex !== null)
+      );
+
+      if (!hasAnyPlacedTile) return;
+
+      if (!isConfirmingResetAll) {
+        isConfirmingResetAll = true;
+        resetAllBtn.classList.add('confirm-mode');
+        resetAllLabel.textContent = 'Точно скинути все?';
+        clearTimeout(confirmResetAllTimer);
+        confirmResetAllTimer = setTimeout(resetConfirmButtonState, 3000);
+        return;
+      }
+
+      clearTimeout(confirmResetAllTimer);
+      initRowStates();
+      UNSCRAMBLE_ITEMS.forEach(item => renderRow(item.id));
+      updateCompletedCounter();
+      resetConfirmButtonState();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initRowStates();
+      renderAllRows();
+      updateCompletedCounter();
+    });
+  </script>
+</body>
+</html>
