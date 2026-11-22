@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise 1. Choose the correct answer</title>
+  <style>
+    :root {
+      --bg-page: #fdfbf3;
+      --bg-card: #fffdf7;
+      --bg-option: #fbf7e9;
+      --bg-option-hover: #f5eed8;
+      --bg-option-selected: #eaf2f7;
+      --border-subtle: #eadfb8;
+      --border-strong: #d5c48e;
+      --text-primary: #1f2933;
+      --text-secondary: #52606d;
+      --accent-blue: #3b6e8c;
+      --accent-blue-dark: #2c556e;
+      --accent-green: #2d6a4f;
+      --correct-bg: #e7f5ee;
+      --correct-border: #52b788;
+      --correct-text: #1b4332;
+      --incorrect-bg: #fdecec;
+      --incorrect-border: #e57373;
+      --incorrect-text: #8b1e1e;
+      --focus-ring: rgba(59, 110, 140, 0.24);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.55;
+      min-height: 100vh;
+      padding: 24px 14px 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .worksheet-container {
+      width: 100%;
+      max-width: 780px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 12px 32px -14px rgba(31, 41, 51, 0.08);
+      padding: 24px 18px;
+    }
+
+    @media (min-width: 640px) {
+      body {
+        padding: 40px 24px 68px;
+      }
+      .worksheet-container {
+        padding: 36px 40px;
+      }
+    }
+
+    /* Header */
+    .worksheet-header {
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    @media (min-width: 600px) {
+      .worksheet-header {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+    }
+
+    .worksheet-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+
+    @media (min-width: 640px) {
+      .worksheet-title {
+        font-size: 26px;
+      }
+    }
+
+    .worksheet-instruction {
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .selection-badge {
+      align-self: flex-start;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-blue-dark);
+      background-color: var(--bg-option);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 6px 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    @media (min-width: 600px) {
+      .selection-badge {
+        align-self: center;
+      }
+    }
+
+    /* Questions List */
+    .questions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .question-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    @media (min-width: 640px) {
+      .question-card {
+        padding: 18px 20px;
+      }
+    }
+
+    .question-card.state-correct {
+      border-color: var(--correct-border);
+      background-color: #f7fcf9;
+    }
+
+    .question-card.state-incorrect {
+      border-color: var(--incorrect-border);
+      background-color: #fff9f9;
+    }
+
+    .question-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .question-prompt {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.45;
+      flex: 1;
+    }
+
+    @media (min-width: 640px) {
+      .question-prompt {
+        font-size: 17px;
+      }
+    }
+
+    .blank-slot {
+      display: inline-block;
+      min-width: 76px;
+      padding: 0 8px;
+      border-bottom: 2px solid var(--accent-blue);
+      color: var(--accent-blue-dark);
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .speak-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background-color: var(--bg-option);
+      color: var(--accent-blue-dark);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+    }
+
+    .speak-btn:hover {
+      background-color: var(--bg-option-selected);
+      border-color: var(--accent-blue);
+    }
+
+    .speak-btn:active {
+      transform: scale(0.95);
+    }
+
+    .speak-btn.is-speaking {
+      background-color: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: #ffffff;
+    }
+
+    /* Options Group */
+    .options-group {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    @media (min-width: 560px) {
+      .options-group {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+    }
+
+    .option-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      background-color: var(--bg-option);
+      border: 1.5px solid var(--border-subtle);
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .option-card:hover {
+      background-color: var(--bg-option-hover);
+      border-color: var(--border-strong);
+    }
+
+    .option-card.is-selected {
+      background-color: var(--bg-option-selected);
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .option-card.eval-correct {
+      background-color: var(--correct-bg);
+      border-color: var(--correct-border);
+      color: var(--correct-text);
+      box-shadow: none;
+    }
+
+    .option-card.eval-incorrect {
+      background-color: var(--incorrect-bg);
+      border-color: var(--incorrect-border);
+      color: var(--incorrect-text);
+      box-shadow: none;
+    }
+
+    .option-radio {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      border-radius: 9999px;
+      border: 2px solid var(--border-strong);
+      background-color: #ffffff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .option-radio::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background-color: transparent;
+      transition: background-color 0.15s ease;
+    }
+
+    .option-card.is-selected .option-radio {
+      border-color: var(--accent-blue);
+    }
+
+    .option-card.is-selected .option-radio::before {
+      background-color: var(--accent-blue);
+    }
+
+    .option-card.eval-correct .option-radio {
+      border-color: var(--accent-green);
+    }
+
+    .option-card.eval-correct .option-radio::before {
+      background-color: var(--accent-green);
+    }
+
+    .option-card.eval-incorrect .option-radio {
+      border-color: var(--incorrect-text);
+    }
+
+    .option-card.eval-incorrect .option-radio::before {
+      background-color: var(--incorrect-text);
+    }
+
+    .option-label-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: inherit;
+      flex: 1;
+    }
+
+    .eval-tag {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      flex-shrink: 0;
+    }
+
+    .eval-tag.correct-tag {
+      background-color: rgba(45, 106, 79, 0.14);
+      color: var(--correct-text);
+    }
+
+    .eval-tag.incorrect-tag {
+      background-color: rgba(139, 30, 30, 0.12);
+      color: var(--incorrect-text);
+    }
+
+    /* Score Summary Banner */
+    .score-summary {
+      margin-top: 22px;
+      padding: 16px 18px;
+      border-radius: var(--radius-lg);
+      background-color: var(--bg-option);
+      border: 1.5px solid var(--border-strong);
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .score-summary.is-visible {
+      display: flex;
+    }
+
+    .score-summary-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .score-summary-detail {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Action Buttons Footer */
+    .actions-bar {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .primary-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-check {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      border: 1px solid var(--accent-blue-dark);
+      border-radius: var(--radius-md);
+      padding: 11px 22px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px -4px rgba(59, 110, 140, 0.35);
+      transition: background-color 0.15s ease, transform 0.12s ease;
+    }
+
+    .btn-check:hover {
+      background-color: var(--accent-blue-dark);
+    }
+
+    .btn-check:active {
+      transform: scale(0.98);
+    }
+
+    .btn-reset {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      background-color: #ffffff;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 11px 18px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+    }
+
+    .btn-reset:hover {
+      background-color: var(--bg-option);
+      color: var(--text-primary);
+    }
+
+    .btn-reset:active {
+      transform: scale(0.98);
+    }
+
+    .validation-note {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <main class="worksheet-container" aria-labelledby="exerciseHeading">
+    <header class="worksheet-header">
+      <div>
+        <h1 id="exerciseHeading" class="worksheet-title">Exercise 1. Choose the correct answer</h1>
+        <p class="worksheet-instruction">Choose the correct option for each sentence.</p>
+      </div>
+      <div id="selectionCounter" class="selection-badge" aria-live="polite">0 / 6 selected</div>
+    </header>
+
+    <section id="questionsContainer" class="questions-list" aria-label="Multiple choice questions">
+      <!-- Populated by JavaScript -->
+    </section>
+
+    <div id="scoreSummary" class="score-summary" role="status" aria-live="polite">
+      <div id="scoreTitle" class="score-summary-title"></div>
+      <div id="scoreDetail" class="score-summary-detail"></div>
+    </div>
+
+    <footer class="actions-bar">
+      <div class="primary-actions">
+        <button type="button" id="checkAnswersBtn" class="btn-check">Check answers</button>
+        <button type="button" id="resetBtn" class="btn-reset">Reset</button>
+      </div>
+      <p id="statusHint" class="validation-note">Select an option for each sentence and click Check answers.</p>
+    </footer>
+  </main>
+
+  <script>
+    /**
+     * Exact 6 questions and options from the reference image in order.
+     */
+    const EXERCISE_QUESTIONS = [
+      {
+        id: 1,
+        before: "My brother",
+        after: "computer games every evening.",
+        options: ["don't play", "doesn't play", "didn't played"],
+        correct: "doesn't play"
+      },
+      {
+        id: 2,
+        before: "",
+        after: "you download this song yesterday?",
+        options: ["Do", "Does", "Did"],
+        correct: "Did"
+      },
+      {
+        id: 3,
+        before: "Anna",
+        after: "photos on social networks.",
+        options: ["don't post", "doesn't post", "didn't posts"],
+        correct: "doesn't post"
+      },
+      {
+        id: 4,
+        before: "",
+        after: "your friends usually hang out after school?",
+        options: ["Do", "Does", "Did"],
+        correct: "Do"
+      },
+      {
+        id: 5,
+        before: "We",
+        after: "much time online last weekend.",
+        options: ["don't spend", "doesn't spend", "didn't spend"],
+        correct: "didn't spend"
+      },
+      {
+        id: 6,
+        before: "",
+        after: "Kate join the school club every year?",
+        options: ["Do", "Does", "Did"],
+        correct: "Does"
+      }
+    ];
+
+    /**
+     * Stores selected answer per question ID: { [questionId]: string }
+     */
+    const selectedAnswers = {};
+    let hasChecked = false;
+    let activeSpeakButton = null;
+
+    /**
+     * Build the full English sentence using the chosen option or a natural spoken fill-in.
+     */
+    function buildSpokenSentence(question) {
+      const chosen = selectedAnswers[question.id] || question.options[0];
+      const raw = question.before
+        ? `${question.before} ${chosen} ${question.after}`
+        : `${chosen} ${question.after}`;
+      return raw.replace(/\s+/g, " ").trim();
+    }
+
+    /**
+     * Speak a sentence cleanly via Web Speech API if available.
+     */
+    function speakSentence(question, buttonEl) {
+      if (!("speechSynthesis" in window)) return;
+
+      try {
+        window.speechSynthesis.cancel();
+
+        if (activeSpeakButton) {
+          activeSpeakButton.classList.remove("is-speaking");
+        }
+
+        const text = buildSpokenSentence(question);
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-US";
+        utterance.rate = 0.94;
+
+        const voices = window.speechSynthesis.getVoices();
+        const enVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+        if (enVoice) {
+          utterance.voice = enVoice;
+        }
+
+        activeSpeakButton = buttonEl;
+        buttonEl.classList.add("is-speaking");
+
+        utterance.onend = () => {
+          buttonEl.classList.remove("is-speaking");
+          if (activeSpeakButton === buttonEl) {
+            activeSpeakButton = null;
+          }
+        };
+
+        utterance.onerror = () => {
+          buttonEl.classList.remove("is-speaking");
+          if (activeSpeakButton === buttonEl) {
+            activeSpeakButton = null;
+          }
+        };
+
+        window.speechSynthesis.speak(utterance);
+      } catch (error) {
+        if (buttonEl) {
+          buttonEl.classList.remove("is-speaking");
+        }
+      }
+    }
+
+    /**
+     * Update the top selection counter badge ("X / 6 selected").
+     */
+    function updateSelectionCounter() {
+      const count = Object.keys(selectedAnswers).filter(k => Boolean(selectedAnswers[k])).length;
+      document.getElementById("selectionCounter").textContent = `${count} / ${EXERCISE_QUESTIONS.length} selected`;
+    }
+
+    /**
+     * Clear evaluation styling from all question cards and options.
+     */
+    function clearEvaluationStyles() {
+      hasChecked = false;
+      document.querySelectorAll(".question-card").forEach(card => {
+        card.classList.remove("state-correct", "state-incorrect");
+      });
+      document.querySelectorAll(".option-card").forEach(opt => {
+        opt.classList.remove("eval-correct", "eval-incorrect");
+        const tag = opt.querySelector(".eval-tag");
+        if (tag) tag.remove();
+      });
+      const summary = document.getElementById("scoreSummary");
+      summary.classList.remove("is-visible");
+      document.getElementById("statusHint").textContent = "Select an option for each sentence and click Check answers.";
+    }
+
+    /**
+     * Render all 6 questions and their interactive radio/card options.
+     */
+    function renderQuestions() {
+      const container = document.getElementById("questionsContainer");
+      container.innerHTML = "";
+
+      EXERCISE_QUESTIONS.forEach((question) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+        card.id = `question-card-${question.id}`;
+
+        // Top row: numbered sentence + optional speaker button
+        const topRow = document.createElement("div");
+        topRow.className = "question-top";
+
+        const prompt = document.createElement("div");
+        prompt.className = "question-prompt";
+
+        const numPrefix = document.createElement("span");
+        numPrefix.textContent = `${question.id}. `;
+
+        const blankSpan = document.createElement("span");
+        blankSpan.className = "blank-slot";
+        blankSpan.id = `blank-slot-${question.id}`;
+        blankSpan.textContent = "___";
+
+        if (question.before) {
+          prompt.appendChild(numPrefix);
+          prompt.appendChild(document.createTextNode(`${question.before} `));
+          prompt.appendChild(blankSpan);
+          prompt.appendChild(document.createTextNode(` ${question.after}`));
+        } else {
+          prompt.appendChild(numPrefix);
+          prompt.appendChild(blankSpan);
+          prompt.appendChild(document.createTextNode(` ${question.after}`));
+        }
+
+        const speakBtn = document.createElement("button");
+        speakBtn.type = "button";
+        speakBtn.className = "speak-btn";
+        speakBtn.title = "Listen to sentence";
+        speakBtn.setAttribute("aria-label", `Listen to sentence ${question.id}`);
+        speakBtn.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        `;
+        speakBtn.addEventListener("click", () => speakSentence(question, speakBtn));
+
+        topRow.appendChild(prompt);
+        topRow.appendChild(speakBtn);
+        card.appendChild(topRow);
+
+        // Options row
+        const optionsGroup = document.createElement("div");
+        optionsGroup.className = "options-group";
+        optionsGroup.setAttribute("role", "radiogroup");
+        optionsGroup.setAttribute("aria-label", `Options for question ${question.id}`);
+
+        question.options.forEach((optionText, optIndex) => {
+          const inputId = `q${question.id}_opt${optIndex}`;
+
+          const optionCard = document.createElement("label");
+          optionCard.className = "option-card";
+          optionCard.htmlFor = inputId;
+          optionCard.dataset.questionId = String(question.id);
+          optionCard.dataset.optionValue = optionText;
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.className = "option-radio";
+          radio.id = inputId;
+          radio.name = `question_${question.id}`;
+          radio.value = optionText;
+
+          const labelSpan = document.createElement("span");
+          labelSpan.className = "option-label-text";
+          labelSpan.textContent = optionText;
+
+          radio.addEventListener("change", () => {
+            if (!radio.checked) return;
+
+            selectedAnswers[question.id] = optionText;
+
+            // Update selected state within this question's options
+            optionsGroup.querySelectorAll(".option-card").forEach(oc => {
+              oc.classList.remove("is-selected");
+            });
+            optionCard.classList.add("is-selected");
+
+            // Update inline blank preview
+            blankSpan.textContent = optionText;
+
+            if (hasChecked) {
+              clearEvaluationStyles();
+            }
+
+            updateSelectionCounter();
+          });
+
+          optionCard.appendChild(radio);
+          optionCard.appendChild(labelSpan);
+          optionsGroup.appendChild(optionCard);
+        });
+
+        card.appendChild(optionsGroup);
+        container.appendChild(card);
+      });
+    }
+
+    /**
+     * Evaluate all questions when 'Check answers' is clicked.
+     * Highlights the chosen answer in soft green (if correct) or soft red (if incorrect)
+     * without revealing the unchosen correct answer automatically when wrong.
+     */
+    function checkAnswers() {
+      const answeredCount = Object.keys(selectedAnswers).filter(k => Boolean(selectedAnswers[k])).length;
+
+      if (answeredCount < EXERCISE_QUESTIONS.length) {
+        const summary = document.getElementById("scoreSummary");
+        summary.classList.add("is-visible");
+        document.getElementById("scoreTitle").textContent = "Incomplete selection";
+        document.getElementById("scoreDetail").textContent =
+          `You have answered ${answeredCount} out of ${EXERCISE_QUESTIONS.length} questions. Please choose an option for every item first.`;
+        return;
+      }
+
+      hasChecked = true;
+      let correctCount = 0;
+
+      EXERCISE_QUESTIONS.forEach((question) => {
+        const chosen = selectedAnswers[question.id];
+        const isCorrect = chosen === question.correct;
+        if (isCorrect) correctCount++;
+
+        const card = document.getElementById(`question-card-${question.id}`);
+        card.classList.remove("state-correct", "state-incorrect");
+        card.classList.add(isCorrect ? "state-correct" : "state-incorrect");
+
+        const optionCards = card.querySelectorAll(".option-card");
+        optionCards.forEach(optCard => {
+          optCard.classList.remove("eval-correct", "eval-incorrect");
+          const existingTag = optCard.querySelector(".eval-tag");
+          if (existingTag) existingTag.remove();
+
+          if (optCard.dataset.optionValue === chosen) {
+            if (isCorrect) {
+              optCard.classList.add("eval-correct");
+              const tag = document.createElement("span");
+              tag.className = "eval-tag correct-tag";
+              tag.textContent = "Correct";
+              optCard.appendChild(tag);
+            } else {
+              optCard.classList.add("eval-incorrect");
+              const tag = document.createElement("span");
+              tag.className = "eval-tag incorrect-tag";
+              tag.textContent = "Try again";
+              optCard.appendChild(tag);
+            }
+          }
+        });
+      });
+
+      const summary = document.getElementById("scoreSummary");
+      summary.classList.add("is-visible");
+
+      const scoreTitle = document.getElementById("scoreTitle");
+      const scoreDetail = document.getElementById("scoreDetail");
+
+      scoreTitle.textContent = `Score: ${correctCount} / ${EXERCISE_QUESTIONS.length}`;
+      if (correctCount === EXERCISE_QUESTIONS.length) {
+        scoreDetail.textContent = "Great job! Every verb form and auxiliary matches the sentence context.";
+      } else {
+        scoreDetail.textContent =
+          "Items marked in red need another look. Check the time marker (every evening, yesterday, usually, last weekend) and subject.";
+      }
+
+      document.getElementById("statusHint").textContent =
+        "Change any red option to clear the check state and try again, or click Reset.";
+    }
+
+    /**
+     * Reset all selections, blanks, and check feedback.
+     */
+    function resetExercise() {
+      if ("speechSynthesis" in window) {
+        try {
+          window.speechSynthesis.cancel();
+        } catch (e) {
+          // Ignore speech reset error
+        }
+      }
+
+      if (activeSpeakButton) {
+        activeSpeakButton.classList.remove("is-speaking");
+        activeSpeakButton = null;
+      }
+
+      Object.keys(selectedAnswers).forEach(key => {
+        delete selectedAnswers[key];
+      });
+
+      document.querySelectorAll(".option-radio").forEach(radio => {
+        radio.checked = false;
+      });
+
+      document.querySelectorAll(".option-card").forEach(optCard => {
+        optCard.classList.remove("is-selected", "eval-correct", "eval-incorrect");
+        const tag = optCard.querySelector(".eval-tag");
+        if (tag) tag.remove();
+      });
+
+      document.querySelectorAll(".blank-slot").forEach(slot => {
+        slot.textContent = "___";
+      });
+
+      clearEvaluationStyles();
+      updateSelectionCounter();
+    }
+
+    document.getElementById("checkAnswersBtn").addEventListener("click", checkAnswers);
+    document.getElementById("resetBtn").addEventListener("click", resetExercise);
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.getVoices();
+      }
+      renderQuestions();
+      updateSelectionCounter();
+    });
+  </script>
+</body>
+</html>
