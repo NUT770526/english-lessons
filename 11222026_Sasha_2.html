@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zero Plural Nouns — Group 2: No Change</title>
+  <style>
+    :root {
+      --bg-page: #fdfbf3;
+      --bg-card: #fffef9;
+      --bg-soft: #f7f2e3;
+      --bg-item: #fcf9ef;
+      --border-warm: #eadfb8;
+      --border-strong: #d6c48c;
+      --text-main: #2b2a27;
+      --text-secondary: #5c584e;
+      --text-muted: #868072;
+      --accent-amber: #d97706;
+      --accent-amber-dark: #b45309;
+      --accent-gold: #f59e0b;
+      --accent-amber-soft: #fef3c7;
+      --accent-amber-tint: #fffbeb;
+      --focus-ring: rgba(217, 119, 6, 0.22);
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+      --danger-text: #b91c1c;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.55;
+      min-height: 100vh;
+      padding: 24px 14px 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 920px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    /* Main Card */
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 30px -14px rgba(43, 42, 39, 0.08);
+      padding: 22px 18px;
+    }
+
+    @media (min-width: 640px) {
+      body {
+        padding: 38px 24px 72px;
+      }
+      .card {
+        padding: 32px 36px;
+      }
+    }
+
+    /* Header */
+    .worksheet-header {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    @media (min-width: 680px) {
+      .worksheet-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--accent-amber-soft);
+      border: 1px solid var(--border-warm);
+      color: var(--accent-amber-dark);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+      margin-bottom: 6px;
+    }
+
+    @media (min-width: 640px) {
+      h1 {
+        font-size: 29px;
+      }
+    }
+
+    .header-subtitle {
+      font-size: 14.5px;
+      color: var(--text-secondary);
+    }
+
+    .progress-pill {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-soft);
+      border: 1px solid var(--border-warm);
+      border-radius: 14px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    @media (min-width: 680px) {
+      .progress-pill {
+        align-self: center;
+      }
+    }
+
+    .progress-pill strong {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--accent-amber-dark);
+    }
+
+    /* Section Header */
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-warm);
+      margin-bottom: 18px;
+    }
+
+    .section-title-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .section-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background-color: var(--accent-amber-soft);
+      border: 1px solid var(--border-warm);
+      color: var(--accent-amber-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+
+    @media (min-width: 640px) {
+      .section-header h2 {
+        font-size: 20px;
+      }
+    }
+
+    .section-desc {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .toggle-ref-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background-color: var(--bg-soft);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--accent-amber-dark);
+      cursor: pointer;
+      transition: background-color 0.16s ease, transform 0.12s ease;
+    }
+
+    .toggle-ref-btn:hover {
+      background-color: var(--accent-amber-soft);
+    }
+
+    .toggle-ref-btn:active {
+      transform: scale(0.98);
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
+    /* Section 1: Vocabulary Reference Cards */
+    .ref-helper-note {
+      background-color: var(--accent-amber-tint);
+      border: 1px solid var(--border-warm);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--accent-amber-dark);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ref-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .ref-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+
+    .ref-card {
+      background-color: var(--bg-item);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    .ref-card:hover {
+      border-color: var(--border-strong);
+      background-color: #f8f2df;
+    }
+
+    .ref-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .ref-num {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 22px;
+      flex-shrink: 0;
+    }
+
+    .vocab-trigger-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 5px 10px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .vocab-trigger-btn:hover {
+      background-color: var(--accent-amber-soft);
+      border-color: var(--accent-amber);
+      transform: translateY(-1px);
+    }
+
+    .vocab-trigger-btn .plural-echo {
+      font-weight: 500;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .vocab-trigger-btn svg {
+      width: 14px;
+      height: 14px;
+      color: var(--accent-amber);
+      flex-shrink: 0;
+    }
+
+    .ref-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+      gap: 2px;
+    }
+
+    .ref-ipa {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--accent-amber-dark);
+    }
+
+    .ref-ru {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.3;
+    }
+
+    /* Task 1: Sorting (Zero Plural vs Regular -s/-es) */
+    .word-bank-box {
+      background-color: var(--bg-soft);
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .word-bank-label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .word-bank-tiles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 40px;
+    }
+
+    .sort-tile {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--bg-card);
+      border: 1.5px solid var(--border-strong);
+      border-radius: 11px;
+      padding: 6px 11px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 6px rgba(43, 42, 39, 0.04);
+    }
+
+    .sort-tile:hover {
+      border-color: var(--accent-amber);
+      background-color: var(--accent-amber-tint);
+      transform: translateY(-1px);
+    }
+
+    .sort-tile.is-selected {
+      border-color: var(--accent-amber);
+      background-color: var(--accent-amber-soft);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+      color: var(--accent-amber-dark);
+    }
+
+    .sort-tile .tile-sound-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      background-color: var(--bg-soft);
+      color: var(--accent-amber-dark);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background-color 0.14s ease;
+    }
+
+    .sort-tile .tile-sound-btn:hover {
+      background-color: var(--accent-amber-soft);
+    }
+
+    .sort-columns {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 640px) {
+      .sort-columns {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .drop-column {
+      background-color: var(--bg-item);
+      border: 2px dashed var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      min-height: 155px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      cursor: pointer;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    .drop-column:hover,
+    .drop-column.drag-over {
+      border-color: var(--accent-amber);
+      background-color: var(--accent-amber-tint);
+    }
+
+    .drop-column-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-warm);
+    }
+
+    .drop-column-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .drop-column-count {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-warm);
+      color: var(--accent-amber-dark);
+      padding: 2px 8px;
+      border-radius: 9999px;
+    }
+
+    .drop-column-body {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-content: flex-start;
+      flex: 1;
+    }
+
+    .drop-placeholder {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Task 2: Choose the Correct Form in Context */
+    .context-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .context-row {
+      background-color: var(--bg-item);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 13px 16px;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    .context-row.has-value {
+      border-color: var(--accent-gold);
+      background-color: var(--accent-amber-tint);
+    }
+
+    .item-idx {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 22px;
+      flex-shrink: 0;
+    }
+
+    .context-sentence {
+      font-size: 15.5px;
+      color: var(--text-main);
+      line-height: 1.85;
+      flex: 1;
+    }
+
+    .context-select {
+      appearance: none;
+      background-color: var(--bg-card);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23b45309' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 4px 32px 4px 12px;
+      margin: 0 4px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .context-select:focus {
+      outline: none;
+      border-color: var(--accent-amber);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    /* Task 3: Find and Fix the Mistake */
+    .mistake-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .mistake-row {
+      background-color: var(--bg-item);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 13px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    @media (min-width: 680px) {
+      .mistake-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+    }
+
+    .mistake-row.has-value {
+      border-color: var(--accent-gold);
+      background-color: var(--accent-amber-tint);
+    }
+
+    .mistake-left {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .mistake-sentence {
+      font-size: 15.5px;
+      color: var(--text-main);
+    }
+
+    .mistake-highlight {
+      background-color: #fee2e2;
+      color: #991b1b;
+      padding: 1px 6px;
+      border-radius: 6px;
+      font-weight: 700;
+      text-decoration: underline wavy #dc2626 1.5px;
+    }
+
+    .fix-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    @media (min-width: 680px) {
+      .fix-input {
+        width: 175px;
+        flex-shrink: 0;
+      }
+    }
+
+    .fix-input::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+      font-size: 13.5px;
+    }
+
+    .fix-input:focus {
+      outline: none;
+      border-color: var(--accent-amber);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    /* Task 4: Translate into English */
+    .translate-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 680px) {
+      .translate-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+
+    .translate-row {
+      background-color: var(--bg-item);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    @media (min-width: 480px) {
+      .translate-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+    }
+
+    .translate-row.has-value {
+      border-color: var(--accent-gold);
+      background-color: var(--accent-amber-tint);
+    }
+
+    .translate-prompt {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .ru-phrase {
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .translate-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    @media (min-width: 480px) {
+      .translate-input {
+        width: 185px;
+        flex-shrink: 0;
+      }
+    }
+
+    .translate-input::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+      font-size: 13.5px;
+    }
+
+    .translate-input:focus {
+      outline: none;
+      border-color: var(--accent-amber);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    /* Footer */
+    .worksheet-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .footer-progress-inline {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .footer-progress-inline span {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--accent-amber-dark);
+    }
+
+    .footer-hint {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .reset-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .reset-btn:hover {
+      background-color: var(--bg-soft);
+      color: var(--text-main);
+    }
+
+    .reset-btn.confirm-armed {
+      background-color: var(--danger-bg);
+      border-color: var(--danger-border);
+      color: var(--danger-text);
+    }
+
+    .reset-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Floating IPA & Audio Tooltip */
+    .ipa-tooltip {
+      position: fixed;
+      z-index: 1000;
+      width: 285px;
+      max-width: calc(100vw - 24px);
+      background-color: #2b2a27;
+      color: #fdfbf3;
+      border: 1px solid #4a473f;
+      border-radius: 16px;
+      padding: 13px 15px;
+      box-shadow: 0 16px 34px rgba(25, 24, 20, 0.28);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(4px);
+      transition: opacity 0.14s ease, transform 0.14s ease;
+    }
+
+    .ipa-tooltip.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .tooltip-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .tooltip-word {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fbbf24;
+      line-height: 1.25;
+    }
+
+    .tooltip-ipa {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      color: #e5dec9;
+      margin-top: 2px;
+    }
+
+    .tooltip-audio-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background-color: #d97706;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color 0.15s ease, transform 0.12s ease;
+    }
+
+    .tooltip-audio-btn:hover {
+      background-color: #f59e0b;
+    }
+
+    .tooltip-audio-btn:active {
+      transform: scale(0.96);
+    }
+
+    .tooltip-ru {
+      border-top: 1px solid #423f38;
+      padding-top: 8px;
+      font-size: 13.5px;
+      color: #f7f2e3;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="page-wrapper">
+
+    <!-- Header & Live Progress Counter -->
+    <header class="card worksheet-header">
+      <div>
+        <div class="badge">English Grammar • Zero Plural Nouns</div>
+        <h1>Group 2 — No Change (Одинаковая форма ед. и мн. числа)</h1>
+        <p class="header-subtitle">
+          Изучи слова-исключения с транскрипцией и озвучкой, а затем выполни 4 разноплановых упражнения.
+        </p>
+      </div>
+
+      <div class="progress-pill" aria-live="polite">
+        <span>Выполнено:</span>
+        <strong id="headerProgressCounter">0 / 30</strong>
+      </div>
+    </header>
+
+    <!-- SECTION 1: COLLAPSIBLE INTERACTIVE VOCABULARY REFERENCE -->
+    <section class="card" aria-labelledby="refHeading">
+      <div class="section-header">
+        <div class="section-title-group">
+          <div class="section-icon" aria-hidden="true">📖</div>
+          <div>
+            <h2 id="refHeading">Словарь-памятка — Group 2: No Change</h2>
+            <p class="section-desc">У этих существительных форма единственного и множественного числа полностью совпадает (без окончания -s).</p>
+          </div>
+        </div>
+
+        <button type="button" class="toggle-ref-btn" id="toggleRefBtn" aria-expanded="true">
+          <span id="toggleRefLabel">Свернуть памятку</span>
+        </button>
+      </div>
+
+      <div id="refCollapsibleBody">
+        <div class="ref-helper-note">
+          <span aria-hidden="true">🔊</span>
+          <span>Наведи курсор или нажми на любое слово, чтобы увидеть транскрипцию, перевод и послушать британское/американское произношение.</span>
+        </div>
+
+        <div class="ref-grid" id="referenceGrid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: DIVERSE INTERACTIVE EXERCISES -->
+
+    <!-- Task 1: Sorting -->
+    <section class="card" aria-labelledby="task1Heading">
+      <div class="section-header">
+        <div class="section-title-group">
+          <div class="section-icon" aria-hidden="true">🗂️</div>
+          <div>
+            <h2 id="task1Heading">Task 1. Sorting: Zero Plural vs. Regular -s / -es</h2>
+            <p class="section-desc">Распредели 10 слов по двум колонкам: перетащи карточку мышкой или нажми на слово, а затем на нужную колонку.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Word Bank -->
+      <div class="word-bank-box">
+        <div class="word-bank-label">
+          <span>Банк слов (наведи курсор для подсказки или нажми 🔊 для озвучки):</span>
+          <span id="bankRemainingLabel">Осталось: 10</span>
+        </div>
+        <div class="word-bank-tiles" id="sortWordBank">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Two Target Columns -->
+      <div class="sort-columns">
+        <div class="drop-column" id="colZeroPlural" data-target="zero" tabindex="0" role="region" aria-label="Не меняются (Zero Plural)">
+          <div class="drop-column-header">
+            <span class="drop-column-title">Не меняются (Zero Plural)</span>
+            <span class="drop-column-count" id="countZeroCol">0</span>
+          </div>
+          <div class="drop-column-body" id="bodyZeroCol">
+            <span class="drop-placeholder">Перетащите слова сюда или нажмите после выбора слова...</span>
+          </div>
+        </div>
+
+        <div class="drop-column" id="colRegularPlural" data-target="regular" tabindex="0" role="region" aria-label="Окончание -s / -es (Regular)">
+          <div class="drop-column-header">
+            <span class="drop-column-title">Окончание -s / -es (Regular)</span>
+            <span class="drop-column-count" id="countRegularCol">0</span>
+          </div>
+          <div class="drop-column-body" id="bodyRegularCol">
+            <span class="drop-placeholder">Перетащите слова сюда или нажмите после выбора слова...</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Task 2: Choose the Correct Form in Context -->
+    <section class="card" aria-labelledby="task2Heading">
+      <div class="section-header">
+        <div class="section-title-group">
+          <div class="section-icon" aria-hidden="true">🎯</div>
+          <div>
+            <h2 id="task2Heading">Task 2. Choose the Correct Form in Context</h2>
+            <p class="section-desc">Выбери правильную форму существительного в каждом предложении, обращая внимание на числительные и глаголы.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="context-list" id="task2Container">
+        <!-- Populated by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Task 3: Find and Fix the Mistake -->
+    <section class="card" aria-labelledby="task3Heading">
+      <div class="section-header">
+        <div class="section-title-group">
+          <div class="section-icon" aria-hidden="true">🛠️</div>
+          <div>
+            <h2 id="task3Heading">Task 3. Find and Fix the Mistake</h2>
+            <p class="section-desc">В каждом предложении допущена ошибка в форме множественного числа. Впиши исправленное слово в поле справа.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mistake-list" id="task3Container">
+        <!-- Populated by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Task 4: Translate into English -->
+    <section class="card" aria-labelledby="task4Heading">
+      <div class="section-header">
+        <div class="section-title-group">
+          <div class="section-icon" aria-hidden="true">✍️</div>
+          <div>
+            <h2 id="task4Heading">Task 4. Translate into English</h2>
+            <p class="section-desc">Переведи словосочетания на английский язык, соблюдая форму единственного или множественного числа. Нажми Enter для перехода дальше.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="translate-grid" id="task4Container">
+        <!-- Populated by JavaScript -->
+      </div>
+    </section>
+
+    <!-- FOOTER CONTROLS -->
+    <footer class="card worksheet-footer">
+      <div class="footer-left">
+        <div class="footer-progress-inline">
+          Общий прогресс по всем заданиям: <span id="footerProgressCounter">Выполнено: 0 / 30</span>
+        </div>
+        <p class="footer-hint">
+          После выполнения всех 30 пунктов покажи страницу преподавателю для проверки.
+        </p>
+      </div>
+
+      <button type="button" class="reset-btn" id="resetAllBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+        </svg>
+        <span id="resetAllLabel">Очистить все поля</span>
+      </button>
+    </footer>
+
+  </main>
+
+  <!-- Floating IPA & Audio Tooltip -->
+  <div id="ipaTooltip" class="ipa-tooltip" role="tooltip">
+    <div class="tooltip-top">
+      <div>
+        <div class="tooltip-word" id="tooltipWord">deer</div>
+        <div class="tooltip-ipa" id="tooltipIpa">/dɪə/</div>
+      </div>
+      <button type="button" class="tooltip-audio-btn" id="tooltipPlayBtn" title="Озвучить слово">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <span>Звук</span>
+      </button>
+    </div>
+    <div class="tooltip-ru" id="tooltipRu">олень — олени</div>
+  </div>
+
+  <script>
+    /**
+     * 1. REFERENCE DATA: Group 2 — No Change (10 exact items with IPA & Russian translation)
+     */
+    const ZERO_PLURAL_ITEMS = [
+      { id: 1,  word: "deer",      ipa: "/dɪə/",       ru: "олень — олени" },
+      { id: 2,  word: "fish",      ipa: "/fɪʃ/",       ru: "рыба — рыбы" },
+      { id: 3,  word: "moose",     ipa: "/muːs/",      ru: "лось — лоси" },
+      { id: 4,  word: "offspring", ipa: "/ˈɒfsprɪŋ/",  ru: "потомок — потомки" },
+      { id: 5,  word: "series",    ipa: "/ˈsɪəriːz/",  ru: "серия — серии" },
+      { id: 6,  word: "sheep",     ipa: "/ʃiːp/",      ru: "овца — овцы" },
+      { id: 7,  word: "species",   ipa: "/ˈspiːʃiːz/", ru: "вид — виды" },
+      { id: 8,  word: "bison",     ipa: "/ˈbaɪsən/",   ru: "бизон — бизоны" },
+      { id: 9,  word: "swine",     ipa: "/swaɪn/",     ru: "свинья — свиньи" },
+      { id: 10, word: "aircraft",  ipa: "/ˈeəkrɑːft/", ru: "воздушное судно — воздушные суда" }
+    ];
+
+    /**
+     * 2. TASK 1 DATA: 10 Mixed Words for Sorting (with IPA & Russian meaning for hover tooltip)
+     */
+    const SORTING_WORDS = [
+      { id: "s1",  word: "deer",     ipa: "/dɪə/",       ru: "олень — олени" },
+      { id: "s2",  word: "horse",    ipa: "/hɔːs/",      ru: "лошадь — лошади (horses)" },
+      { id: "s3",  word: "sheep",    ipa: "/ʃiːp/",      ru: "овца — овцы" },
+      { id: "s4",  word: "plane",    ipa: "/pleɪn/",     ru: "самолёт — самолёты (planes)" },
+      { id: "s5",  word: "aircraft", ipa: "/ˈeəkrɑːft/", ru: "воздушное судно — воздушные суда" },
+      { id: "s6",  word: "wolf",     ipa: "/wʊlf/",      ru: "волк — волки (wolves)" },
+      { id: "s7",  word: "species",  ipa: "/ˈspiːʃiːz/", ru: "вид — виды" },
+      { id: "s8",  word: "forest",   ipa: "/ˈfɒrɪst/",   ru: "лес — леса (forests)" },
+      { id: "s9",  word: "bison",    ipa: "/ˈbaɪsən/",   ru: "бизон — бизоны" },
+      { id: "s10", word: "series",   ipa: "/ˈsɪəriːz/",  ru: "серия — серии" }
+    ];
+
+    /**
+     * 3. TASK 2 DATA: 6 Context Dropdown Sentences
+     */
+    const CONTEXT_QUESTIONS = [
+      {
+        id: 1,
+        before: "Three",
+        options: ["deer", "deers"],
+        after: "were standing near the road."
+      },
+      {
+        id: 2,
+        before: "That TV",
+        options: ["series", "serieses"],
+        after: "is really exciting."
+      },
+      {
+        id: 3,
+        before: "Several rare",
+        options: ["species", "specieses"],
+        after: "live in this national park."
+      },
+      {
+        id: 4,
+        before: "The farmer has fifty",
+        options: ["sheep", "sheeps"],
+        after: "on his farm."
+      },
+      {
+        id: 5,
+        before: "Two military",
+        options: ["aircraft", "aircrafts"],
+        after: "landed at the airport."
+      },
+      {
+        id: 6,
+        before: "A wild",
+        options: ["bison", "bisons"],
+        after: "is a huge, powerful animal."
+      }
+    ];
+
+    /**
+     * 4. TASK 3 DATA: 6 Find and Fix the Mistake Sentences
+     */
+    const MISTAKE_ITEMS = [
+      {
+        id: 1,
+        before: "We saw two huge",
+        wrong: "mooses",
+        after: "crossing the river in Canada."
+      },
+      {
+        id: 2,
+        before: "My grandfather caught five big",
+        wrong: "fishes",
+        after: "in the lake this morning."
+      },
+      {
+        id: 3,
+        before: "Mother bears always protect their",
+        wrong: "offsprings",
+        after: "from danger."
+      },
+      {
+        id: 4,
+        before: "A herd of wild",
+        wrong: "swines",
+        after: "was looking for acorns in the woods."
+      },
+      {
+        id: 5,
+        before: "A hundred white",
+        wrong: "sheeps",
+        after: "were grazing on the green hill."
+      },
+      {
+        id: 6,
+        before: "Three passenger",
+        wrong: "aircrafts",
+        after: "are waiting for takeoff on the runway."
+      }
+    ];
+
+    /**
+     * 5. TASK 4 DATA: 8 Russian-to-English Translation Prompts
+     */
+    const TRANSLATION_PROMPTS = [
+      { id: 1, ru: "три оленя" },
+      { id: 2, ru: "много овец" },
+      { id: 3, ru: "два воздушных судна" },
+      { id: 4, ru: "редкие виды" },
+      { id: 5, ru: "новая серия" },
+      { id: 6, ru: "дикие бизоны" },
+      { id: 7, ru: "сильный лось" },
+      { id: 8, ru: "потомки животных" }
+    ];
+
+    /**
+     * STATE & WEB SPEECH API (en-GB primary, en-US fallback)
+     */
+    let preferredVoice = null;
+    let currentTooltipWord = "";
+    let tooltipHideTimer = null;
+
+    // Sorting state: map of wordId -> "bank" | "zero" | "regular"
+    const sortingPlacement = {};
+    SORTING_WORDS.forEach(item => {
+      sortingPlacement[item.id] = "bank";
+    });
+    let selectedTileId = null;
+
+    function initSpeechVoices() {
+      if (!("speechSynthesis" in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      const gbVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith("en-gb"));
+      const enVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+
+      preferredVoice =
+        gbVoices.find(v => /daniel|google uk|serena|kate|martha/i.test(v.name)) ||
+        gbVoices[0] ||
+        enVoices[0] ||
+        null;
+    }
+
+    if ("speechSynthesis" in window) {
+      initSpeechVoices();
+      window.speechSynthesis.onvoiceschanged = initSpeechVoices;
+    }
+
+    function speakWord(text) {
+      if (!("speechSynthesis" in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = preferredVoice && preferredVoice.lang ? preferredVoice.lang : "en-GB";
+        utterance.rate = 0.88;
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+        window.speechSynthesis.speak(utterance);
+      } catch (err) {
+        // Ignore browser autoplay limitations
+      }
+    }
+
+    /**
+     * FLOATING IPA & AUDIO TOOLTIP
+     */
+    const tooltipEl = document.getElementById("ipaTooltip");
+    const tooltipWordEl = document.getElementById("tooltipWord");
+    const tooltipIpaEl = document.getElementById("tooltipIpa");
+    const tooltipRuEl = document.getElementById("tooltipRu");
+    const tooltipPlayBtn = document.getElementById("tooltipPlayBtn");
+
+    function showTooltip(targetEl, word, ipa, ru) {
+      clearTimeout(tooltipHideTimer);
+      currentTooltipWord = word;
+      tooltipWordEl.textContent = word;
+      tooltipIpaEl.textContent = ipa;
+      tooltipRuEl.textContent = ru;
+
+      tooltipEl.classList.add("is-visible");
+
+      const rect = targetEl.getBoundingClientRect();
+      const tipRect = tooltipEl.getBoundingClientRect();
+
+      let top = rect.top - tipRect.height - 8;
+      if (top < 10) {
+        top = rect.bottom + 8;
+      }
+
+      let left = rect.left + rect.width / 2 - tipRect.width / 2;
+      left = Math.max(12, Math.min(left, window.innerWidth - tipRect.width - 12));
+
+      tooltipEl.style.top = `${top}px`;
+      tooltipEl.style.left = `${left}px`;
+    }
+
+    function scheduleHideTooltip() {
+      tooltipHideTimer = setTimeout(() => {
+        tooltipEl.classList.remove("is-visible");
+      }, 220);
+    }
+
+    tooltipEl.addEventListener("mouseenter", () => clearTimeout(tooltipHideTimer));
+    tooltipEl.addEventListener("mouseleave", scheduleHideTooltip);
+
+    tooltipPlayBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (currentTooltipWord) {
+        speakWord(currentTooltipWord);
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("#ipaTooltip") && !e.target.closest(".vocab-trigger-btn") && !e.target.closest(".sort-tile")) {
+        tooltipEl.classList.remove("is-visible");
+      }
+    });
+
+    function speakerIconSvg() {
+      return `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+      `;
+    }
+
+    /**
+     * SECTION 1: RENDER VOCABULARY REFERENCE CARDS
+     */
+    function renderReferenceCards() {
+      const grid = document.getElementById("referenceGrid");
+      grid.innerHTML = "";
+
+      ZERO_PLURAL_ITEMS.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = "ref-card";
+
+        const left = document.createElement("div");
+        left.className = "ref-left";
+
+        const num = document.createElement("span");
+        num.className = "ref-num";
+        num.textContent = `${item.id}.`;
+
+        const wordBtn = document.createElement("button");
+        wordBtn.type = "button";
+        wordBtn.className = "vocab-trigger-btn";
+        wordBtn.innerHTML = `
+          <span>${item.word}</span>
+          <span class="plural-echo">— ${item.word}</span>
+          ${speakerIconSvg()}
+        `;
+        wordBtn.setAttribute("aria-label", `${item.word} (${item.ipa}) — ${item.ru}`);
+
+        wordBtn.addEventListener("mouseenter", () => {
+          showTooltip(wordBtn, item.word, item.ipa, item.ru);
+        });
+        wordBtn.addEventListener("mouseleave", scheduleHideTooltip);
+        wordBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          showTooltip(wordBtn, item.word, item.ipa, item.ru);
+          speakWord(item.word);
+        });
+
+        left.appendChild(num);
+        left.appendChild(wordBtn);
+
+        const meta = document.createElement("div");
+        meta.className = "ref-meta";
+
+        const ipaSpan = document.createElement("span");
+        ipaSpan.className = "ref-ipa";
+        ipaSpan.textContent = item.ipa;
+
+        const ruSpan = document.createElement("span");
+        ruSpan.className = "ref-ru";
+        ruSpan.textContent = item.ru;
+
+        meta.appendChild(ipaSpan);
+        meta.appendChild(ruSpan);
+
+        card.appendChild(left);
+        card.appendChild(meta);
+        grid.appendChild(card);
+      });
+    }
+
+    // Toggle Reference Collapsible
+    const toggleRefBtn = document.getElementById("toggleRefBtn");
+    const toggleRefLabel = document.getElementById("toggleRefLabel");
+    const refCollapsibleBody = document.getElementById("refCollapsibleBody");
+
+    toggleRefBtn.addEventListener("click", () => {
+      const expanded = toggleRefBtn.getAttribute("aria-expanded") === "true";
+      if (expanded) {
+        refCollapsibleBody.classList.add("is-hidden");
+        toggleRefBtn.setAttribute("aria-expanded", "false");
+        toggleRefLabel.textContent = "Показать памятку";
+        tooltipEl.classList.remove("is-visible");
+      } else {
+        refCollapsibleBody.classList.remove("is-hidden");
+        toggleRefBtn.setAttribute("aria-expanded", "true");
+        toggleRefLabel.textContent = "Свернуть памятку";
+      }
+    });
+
+    /**
+     * TASK 1: INTERACTIVE SORTING (Click-to-Assign & Drag-and-Drop)
+     */
+    function createSortTileElement(item) {
+      const tile = document.createElement("div");
+      tile.className = "sort-tile";
+      if (selectedTileId === item.id) {
+        tile.classList.add("is-selected");
+      }
+      tile.draggable = true;
+      tile.dataset.id = item.id;
+
+      const textSpan = document.createElement("span");
+      textSpan.textContent = item.word;
+
+      const audioBtn = document.createElement("button");
+      audioBtn.type = "button";
+      audioBtn.className = "tile-sound-btn";
+      audioBtn.title = "Озвучить слово";
+      audioBtn.innerHTML = speakerIconSvg();
+      audioBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showTooltip(tile, item.word, item.ipa, item.ru);
+        speakWord(item.word);
+      });
+
+      tile.appendChild(textSpan);
+      tile.appendChild(audioBtn);
+
+      // Hover IPA & Russian tooltip
+      tile.addEventListener("mouseenter", () => {
+        showTooltip(tile, item.word, item.ipa, item.ru);
+      });
+      tile.addEventListener("mouseleave", scheduleHideTooltip);
+
+      // Click-to-select or return to bank
+      tile.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showTooltip(tile, item.word, item.ipa, item.ru);
+        if (sortingPlacement[item.id] !== "bank") {
+          // Clicking an already placed tile moves it back to the bank
+          sortingPlacement[item.id] = "bank";
+          selectedTileId = null;
+          renderSortingBoard();
+          updateTotalProgress();
+          return;
+        }
+        selectedTileId = selectedTileId === item.id ? null : item.id;
+        renderSortingBoard();
+      });
+
+      // Drag events
+      tile.addEventListener("dragstart", (e) => {
+        selectedTileId = item.id;
+        e.dataTransfer.setData("text/plain", item.id);
+        e.dataTransfer.effectAllowed = "move";
+      });
+
+      return tile;
+    }
+
+    function renderSortingBoard() {
+      const bankContainer = document.getElementById("sortWordBank");
+      const zeroBody = document.getElementById("bodyZeroCol");
+      const regularBody = document.getElementById("bodyRegularCol");
+
+      bankContainer.innerHTML = "";
+      zeroBody.innerHTML = "";
+      regularBody.innerHTML = "";
+
+      let bankCount = 0;
+      let zeroCount = 0;
+      let regularCount = 0;
+
+      SORTING_WORDS.forEach((item) => {
+        const place = sortingPlacement[item.id];
+        const tile = createSortTileElement(item);
+        if (place === "bank") {
+          bankContainer.appendChild(tile);
+          bankCount++;
+        } else if (place === "zero") {
+          zeroBody.appendChild(tile);
+          zeroCount++;
+        } else if (place === "regular") {
+          regularBody.appendChild(tile);
+          regularCount++;
+        }
+      });
+
+      if (bankCount === 0) {
+        const doneMsg = document.createElement("span");
+        doneMsg.className = "drop-placeholder";
+        doneMsg.textContent = "Все слова распределены по колонкам! Нажмите на любое слово в колонке, чтобы вернуть его обратно.";
+        bankContainer.appendChild(doneMsg);
+      }
+
+      if (zeroCount === 0) {
+        const ph = document.createElement("span");
+        ph.className = "drop-placeholder";
+        ph.textContent = "Перетащите слова сюда или нажмите после выбора слова...";
+        zeroBody.appendChild(ph);
+      }
+
+      if (regularCount === 0) {
+        const ph = document.createElement("span");
+        ph.className = "drop-placeholder";
+        ph.textContent = "Перетащите слова сюда или нажмите после выбора слова...";
+        regularBody.appendChild(ph);
+      }
+
+      document.getElementById("bankRemainingLabel").textContent = `Осталось: ${bankCount}`;
+      document.getElementById("countZeroCol").textContent = String(zeroCount);
+      document.getElementById("countRegularCol").textContent = String(regularCount);
+    }
+
+    function setupDropZone(columnEl, targetZone) {
+      columnEl.addEventListener("click", () => {
+        if (selectedTileId && sortingPlacement[selectedTileId] !== undefined) {
+          sortingPlacement[selectedTileId] = targetZone;
+          selectedTileId = null;
+          renderSortingBoard();
+          updateTotalProgress();
+        }
+      });
+
+      columnEl.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        columnEl.classList.add("drag-over");
+      });
+
+      columnEl.addEventListener("dragleave", () => {
+        columnEl.classList.remove("drag-over");
+      });
+
+      columnEl.addEventListener("drop", (e) => {
+        e.preventDefault();
+        columnEl.classList.remove("drag-over");
+        const droppedId = e.dataTransfer.getData("text/plain") || selectedTileId;
+        if (droppedId && sortingPlacement[droppedId] !== undefined) {
+          sortingPlacement[droppedId] = targetZone;
+          selectedTileId = null;
+          renderSortingBoard();
+          updateTotalProgress();
+        }
+      });
+    }
+
+    /**
+     * TASK 2: RENDER CONTEXT DROPDOWNS (6 ITEMS)
+     */
+    function renderTask2() {
+      const container = document.getElementById("task2Container");
+      container.innerHTML = "";
+
+      CONTEXT_QUESTIONS.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "context-row";
+
+        const idx = document.createElement("span");
+        idx.className = "item-idx";
+        idx.textContent = `${item.id}.`;
+
+        const sentence = document.createElement("div");
+        sentence.className = "context-sentence";
+
+        const beforeSpan = document.createElement("span");
+        beforeSpan.textContent = item.before + " ";
+
+        const select = document.createElement("select");
+        select.id = `task2-select-${item.id}`;
+        select.className = "context-select";
+        select.setAttribute("aria-label", `Предложение ${item.id}`);
+
+        const defaultOpt = document.createElement("option");
+        defaultOpt.value = "";
+        defaultOpt.textContent = "— выбери —";
+        select.appendChild(defaultOpt);
+
+        item.options.forEach((optText) => {
+          const opt = document.createElement("option");
+          opt.value = optText;
+          opt.textContent = optText;
+          select.appendChild(opt);
+        });
+
+        select.addEventListener("change", () => {
+          row.classList.toggle("has-value", select.value !== "");
+          updateTotalProgress();
+        });
+
+        const afterSpan = document.createElement("span");
+        afterSpan.textContent = " " + item.after;
+
+        sentence.appendChild(beforeSpan);
+        sentence.appendChild(select);
+        sentence.appendChild(afterSpan);
+
+        row.appendChild(idx);
+        row.appendChild(sentence);
+        container.appendChild(row);
+      });
+    }
+
+    /**
+     * TASK 3: RENDER FIND AND FIX THE MISTAKE (6 ITEMS)
+     */
+    function renderTask3() {
+      const container = document.getElementById("task3Container");
+      container.innerHTML = "";
+
+      MISTAKE_ITEMS.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "mistake-row";
+
+        const left = document.createElement("div");
+        left.className = "mistake-left";
+
+        const idx = document.createElement("span");
+        idx.className = "item-idx";
+        idx.textContent = `${item.id}.`;
+
+        const sentence = document.createElement("div");
+        sentence.className = "mistake-sentence";
+        sentence.innerHTML = `${item.before} <span class="mistake-highlight">${item.wrong}</span> ${item.after}`;
+
+        left.appendChild(idx);
+        left.appendChild(sentence);
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = `task3-input-${item.id}`;
+        input.className = "fix-input";
+        input.placeholder = "Исправь слово...";
+        input.setAttribute("aria-label", `Исправленное слово для предложения ${item.id}`);
+        input.setAttribute("autocomplete", "off");
+        input.setAttribute("autocorrect", "off");
+        input.setAttribute("autocapitalize", "off");
+        input.setAttribute("spellcheck", "false");
+
+        input.addEventListener("input", () => {
+          row.classList.toggle("has-value", input.value.trim().length > 0);
+          updateTotalProgress();
+        });
+
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const nextInput = document.getElementById(`task3-input-${item.id + 1}`);
+            if (nextInput) {
+              nextInput.focus();
+            } else {
+              const firstTask4 = document.getElementById("task4-input-1");
+              if (firstTask4) firstTask4.focus();
+            }
+          }
+        });
+
+        row.appendChild(left);
+        row.appendChild(input);
+        container.appendChild(row);
+      });
+    }
+
+    /**
+     * TASK 4: RENDER TRANSLATE INTO ENGLISH (8 ITEMS)
+     */
+    function renderTask4() {
+      const container = document.getElementById("task4Container");
+      container.innerHTML = "";
+
+      TRANSLATION_PROMPTS.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "translate-row";
+
+        const prompt = document.createElement("div");
+        prompt.className = "translate-prompt";
+
+        const idx = document.createElement("span");
+        idx.className = "item-idx";
+        idx.textContent = `${item.id}.`;
+
+        const label = document.createElement("label");
+        label.htmlFor = `task4-input-${item.id}`;
+        label.className = "ru-phrase";
+        label.textContent = item.ru;
+
+        prompt.appendChild(idx);
+        prompt.appendChild(label);
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = `task4-input-${item.id}`;
+        input.className = "translate-input";
+        input.placeholder = "English translation...";
+        input.setAttribute("aria-label", `Перевод: ${item.ru}`);
+        input.setAttribute("autocomplete", "off");
+        input.setAttribute("autocorrect", "off");
+        input.setAttribute("autocapitalize", "off");
+        input.setAttribute("spellcheck", "false");
+
+        input.addEventListener("input", () => {
+          row.classList.toggle("has-value", input.value.trim().length > 0);
+          updateTotalProgress();
+        });
+
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const nextInput = document.getElementById(`task4-input-${item.id + 1}`);
+            if (nextInput) {
+              nextInput.focus();
+            } else {
+              input.blur();
+            }
+          }
+        });
+
+        row.appendChild(prompt);
+        row.appendChild(input);
+        container.appendChild(row);
+      });
+    }
+
+    /**
+     * LIVE PROGRESS COUNTER ACROSS ALL 4 TASKS (Total: 10 + 6 + 6 + 8 = 30)
+     */
+    function updateTotalProgress() {
+      const sortedDone = Object.values(sortingPlacement).filter(v => v !== "bank").length;
+      const selectsDone = Array.from(document.querySelectorAll(".context-select")).filter(s => s.value !== "").length;
+      const fixDone = Array.from(document.querySelectorAll(".fix-input")).filter(i => i.value.trim().length > 0).length;
+      const transDone = Array.from(document.querySelectorAll(".translate-input")).filter(i => i.value.trim().length > 0).length;
+
+      const totalCompleted = sortedDone + selectsDone + fixDone + transDone;
+      const totalItems = SORTING_WORDS.length + CONTEXT_QUESTIONS.length + MISTAKE_ITEMS.length + TRANSLATION_PROMPTS.length;
+
+      document.getElementById("headerProgressCounter").textContent = `${totalCompleted} / ${totalItems}`;
+      document.getElementById("footerProgressCounter").textContent = `Выполнено: ${totalCompleted} / ${totalItems}`;
+    }
+
+    /**
+     * TWO-STEP CONFIRMATION RESET BUTTON (No browser confirm() / alert())
+     */
+    const resetAllBtn = document.getElementById("resetAllBtn");
+    const resetAllLabel = document.getElementById("resetAllLabel");
+    let isResetArmed = false;
+    let resetArmedTimeout = null;
+
+    function disarmResetBtn() {
+      isResetArmed = false;
+      resetAllBtn.classList.remove("confirm-armed");
+      resetAllLabel.textContent = "Очистить все поля";
+    }
+
+    resetAllBtn.addEventListener("click", () => {
+      const sortedDone = Object.values(sortingPlacement).some(v => v !== "bank");
+      const selectsDone = Array.from(document.querySelectorAll(".context-select")).some(s => s.value !== "");
+      const inputsDone = Array.from(document.querySelectorAll(".fix-input, .translate-input")).some(i => i.value.trim().length > 0);
+
+      if (!sortedDone && !selectsDone && !inputsDone) return;
+
+      if (!isResetArmed) {
+        isResetArmed = true;
+        resetAllBtn.classList.add("confirm-armed");
+        resetAllLabel.textContent = "Вы уверены? Нажмите ещё раз";
+        clearTimeout(resetArmedTimeout);
+        resetArmedTimeout = setTimeout(disarmResetBtn, 3200);
+        return;
+      }
+
+      clearTimeout(resetArmedTimeout);
+
+      // Reset sorting placements
+      SORTING_WORDS.forEach(item => {
+        sortingPlacement[item.id] = "bank";
+      });
+      selectedTileId = null;
+      renderSortingBoard();
+
+      // Reset dropdowns
+      document.querySelectorAll(".context-select").forEach(sel => {
+        sel.value = "";
+      });
+
+      // Reset text inputs
+      document.querySelectorAll(".fix-input, .translate-input").forEach(inp => {
+        inp.value = "";
+      });
+
+      // Clear row highlight classes
+      document.querySelectorAll(".context-row, .mistake-row, .translate-row").forEach(row => {
+        row.classList.remove("has-value");
+      });
+
+      updateTotalProgress();
+      disarmResetBtn();
+    });
+
+    // Initialize Entire Worksheet
+    window.addEventListener("DOMContentLoaded", () => {
+      renderReferenceCards();
+      renderSortingBoard();
+      setupDropZone(document.getElementById("colZeroPlural"), "zero");
+      setupDropZone(document.getElementById("colRegularPlural"), "regular");
+      renderTask2();
+      renderTask3();
+      renderTask4();
+      updateTotalProgress();
+    });
+  </script>
+</body>
+</html>
