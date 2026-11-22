@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Irregular Plural Nouns — Group 1: Change</title>
+  <style>
+    :root {
+      --bg-page: #f4f9f4;
+      --bg-card: #ffffff;
+      --bg-soft: #ebf3eb;
+      --bg-warm-tint: #fdfbf3;
+      --border-subtle: #d4e4d4;
+      --border-strong: #b6ceb6;
+      --text-primary: #1c2820;
+      --text-secondary: #4e6154;
+      --text-muted: #768a7c;
+      --accent-green: #2d6a4f;
+      --accent-green-hover: #1b4332;
+      --accent-soft: #e3f1e6;
+      --accent-amber-bg: #fef7e0;
+      --accent-amber-border: #ead596;
+      --accent-amber-text: #7c5808;
+      --focus-ring: rgba(45, 106, 79, 0.22);
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+      --danger-text: #b91c1c;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.55;
+      min-height: 100vh;
+      padding: 24px 14px 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 880px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    /* Card Container */
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 28px -12px rgba(28, 40, 32, 0.08);
+      padding: 22px 18px;
+    }
+
+    @media (min-width: 640px) {
+      body {
+        padding: 38px 24px 68px;
+      }
+      .card {
+        padding: 32px 36px;
+      }
+    }
+
+    /* Header Section */
+    .worksheet-header {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    @media (min-width: 680px) {
+      .worksheet-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--accent-soft);
+      border: 1px solid var(--border-subtle);
+      color: var(--accent-green);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+      margin-bottom: 6px;
+    }
+
+    @media (min-width: 640px) {
+      h1 {
+        font-size: 29px;
+      }
+    }
+
+    .header-subtitle {
+      font-size: 14.5px;
+      color: var(--text-secondary);
+    }
+
+    .progress-pill {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-soft);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    @media (min-width: 680px) {
+      .progress-pill {
+        align-self: center;
+      }
+    }
+
+    .progress-pill strong {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent-green);
+    }
+
+    /* Section Title Bar */
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 18px;
+    }
+
+    .section-title-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .section-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background-color: var(--accent-soft);
+      border: 1px solid var(--border-subtle);
+      color: var(--accent-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    @media (min-width: 640px) {
+      .section-header h2 {
+        font-size: 20px;
+      }
+    }
+
+    .section-desc {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .toggle-ref-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background-color: var(--bg-soft);
+      hover: background-color: var(--accent-soft);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--accent-green);
+      cursor: pointer;
+      transition: background-color 0.16s ease, transform 0.12s ease;
+    }
+
+    .toggle-ref-btn:hover {
+      background-color: var(--accent-soft);
+    }
+
+    .toggle-ref-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Reference Cards Grid */
+    .ref-helper-note {
+      background-color: var(--accent-amber-bg);
+      border: 1px solid var(--accent-amber-border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--accent-amber-text);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ref-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .ref-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+
+    .ref-pair-card {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    .ref-pair-card:hover {
+      border-color: var(--border-strong);
+      background-color: #eef6ee;
+    }
+
+    .ref-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ref-num {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 22px;
+    }
+
+    .word-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 9px;
+      padding: 4px 9px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .word-chip.is-plural {
+      font-weight: 800;
+      color: var(--accent-green);
+      border-color: #9ec2aa;
+      background-color: #f7fcf8;
+    }
+
+    .word-chip:hover,
+    .word-chip.is-active {
+      background-color: var(--accent-soft);
+      border-color: var(--accent-green);
+      transform: translateY(-1px);
+    }
+
+    .word-chip svg {
+      width: 13px;
+      height: 13px;
+      color: var(--accent-green);
+      flex-shrink: 0;
+    }
+
+    .ref-arrow {
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .ref-ru {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-align: right;
+      line-height: 1.3;
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
+    /* Task 1: Form the Plural */
+    .task1-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 680px) {
+      .task1-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+
+    .task1-row {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    .task1-row.has-value {
+      border-color: #9ec2aa;
+      background-color: #f8fcf8;
+    }
+
+    .task1-prompt {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .item-idx {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 22px;
+      flex-shrink: 0;
+    }
+
+    .singular-word {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .singular-hint {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .plural-input {
+      width: 145px;
+      flex-shrink: 0;
+      background-color: var(--bg-card);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .plural-input::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+      font-size: 13.5px;
+    }
+
+    .plural-input:focus {
+      outline: none;
+      border-color: var(--accent-green);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    /* Task 2: Complete the Sentences */
+    .sentences-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .sentence-row {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 13px 16px;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    .sentence-row.has-value {
+      border-color: #9ec2aa;
+      background-color: #f8fcf8;
+    }
+
+    .sentence-body {
+      font-size: 15.5px;
+      color: var(--text-primary);
+      line-height: 1.9;
+      flex: 1;
+    }
+
+    .cue-word {
+      display: inline-block;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--accent-green);
+      background-color: var(--accent-soft);
+      border: 1px solid var(--border-subtle);
+      border-radius: 7px;
+      padding: 0 7px;
+      line-height: 1.5;
+      margin: 0 2px;
+    }
+
+    .gap-input {
+      display: inline-block;
+      width: 126px;
+      background-color: var(--bg-card);
+      border: 1.5px solid var(--border-strong);
+      border-radius: 9px;
+      padding: 3px 10px;
+      margin: 0 4px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: center;
+      vertical-align: baseline;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .gap-input::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .gap-input:focus {
+      outline: none;
+      border-color: var(--accent-green);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    /* Footer Controls */
+    .worksheet-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .footer-hint {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+    }
+
+    .reset-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .reset-btn:hover {
+      background-color: var(--bg-soft);
+      color: var(--text-primary);
+    }
+
+    .reset-btn.confirm-armed {
+      background-color: var(--danger-bg);
+      border-color: var(--danger-border);
+      color: var(--danger-text);
+    }
+
+    .reset-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Floating Pronunciation & IPA Tooltip */
+    .ipa-tooltip {
+      position: fixed;
+      z-index: 1000;
+      width: 280px;
+      max-width: calc(100vw - 24px);
+      background-color: #1c2820;
+      color: #f4f9f4;
+      border: 1px solid #384e3f;
+      border-radius: 16px;
+      padding: 13px 15px;
+      box-shadow: 0 16px 34px rgba(15, 25, 18, 0.25);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(4px);
+      transition: opacity 0.14s ease, transform 0.14s ease;
+    }
+
+    .ipa-tooltip.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .tooltip-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .tooltip-word {
+      font-size: 16px;
+      font-weight: 800;
+      color: #95d5b2;
+      line-height: 1.25;
+    }
+
+    .tooltip-ipa {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      color: #d8e6dc;
+      margin-top: 2px;
+    }
+
+    .tooltip-audio-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background-color: #40916c;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color 0.15s ease, transform 0.12s ease;
+    }
+
+    .tooltip-audio-btn:hover {
+      background-color: #52b788;
+    }
+
+    .tooltip-audio-btn:active {
+      transform: scale(0.96);
+    }
+
+    .tooltip-ru {
+      border-top: 1px solid #2f4236;
+      padding-top: 8px;
+      font-size: 13.5px;
+      color: #e8f1eb;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="page-wrapper">
+
+    <!-- Top Title & Live Progress Counter Card -->
+    <header class="card worksheet-header">
+      <div>
+        <div class="badge">English Grammar • Irregular Plural Nouns</div>
+        <h1>Group 1 — Change (Исключения множественного числа)</h1>
+        <p class="header-subtitle">
+          Изучи памятку с произношением и выполни два упражнения на образование и употребление форм множественного числа.
+        </p>
+      </div>
+
+      <div class="progress-pill" aria-live="polite">
+        <span>Заполнено:</span>
+        <strong id="filledCounter">0 / 22</strong>
+      </div>
+    </header>
+
+    <!-- 1. INTERACTIVE REFERENCE CARDS SECTION -->
+    <section class="card" aria-labelledby="refSectionHeading">
+      <div class="section-header">
+        <div class="section-title-group">
+          <div class="section-icon" aria-hidden="true">📖</div>
+          <div>
+            <h2 id="refSectionHeading">Словарь-памятка — Group 1: Change</h2>
+            <p class="section-desc">Некоторые существительные образуют множественное число путём изменения корня или особого окончания.</p>
+          </div>
+        </div>
+
+        <button type="button" class="toggle-ref-btn" id="toggleRefBtn" aria-expanded="true">
+          <span id="toggleRefLabel">Свернуть памятку</span>
+        </button>
+      </div>
+
+      <div id="refCollapsibleBody">
+        <div class="ref-helper-note">
+          <span aria-hidden="true">🔊</span>
+          <span>Наведи курсор или нажми на любое английское слово (единственное или множественное число), чтобы увидеть транскрипцию, перевод и послушать произношение.</span>
+        </div>
+
+        <div class="ref-grid" id="referenceGrid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. TASK 1: FORM THE PLURAL (10 ITEMS) -->
+    <section class="card" aria-labelledby="task1Heading">
+      <div class="section-header">
+        <div class="section-title-group">
+          <div class="section-icon" aria-hidden="true">✍️</div>
+          <div>
+            <h2 id="task1Heading">Task 1. Form the Plural</h2>
+            <p class="section-desc">Образуй форму множественного числа для каждого существительного. Нажми Enter для перехода к следующему полю.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="task1-list" id="task1Container">
+        <!-- Populated by JavaScript -->
+      </div>
+    </section>
+
+    <!-- 3. TASK 2: COMPLETE THE SENTENCES (12 ITEMS) -->
+    <section class="card" aria-labelledby="task2Heading">
+      <div class="section-header">
+        <div class="section-title-group">
+          <div class="section-icon" aria-hidden="true">📝</div>
+          <div>
+            <h2 id="task2Heading">Task 2. Complete the Sentences</h2>
+            <p class="section-desc">Вставь слово из скобок в правильной форме — единственного или множественного числа по смыслу предложения.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sentences-list" id="task2Container">
+        <!-- Populated by JavaScript -->
+      </div>
+    </section>
+
+    <!-- 4. FOOTER: MANUAL GRADING NOTE & TWO-STEP RESET BUTTON -->
+    <footer class="card worksheet-footer">
+      <p class="footer-hint">
+        После заполнения всех 22 полей покажи выполненную работу преподавателю для проверки.
+      </p>
+
+      <button type="button" class="reset-btn" id="resetAllBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+        </svg>
+        <span id="resetAllLabel">Очистить все поля</span>
+      </button>
+    </footer>
+
+  </main>
+
+  <!-- Floating IPA & Audio Tooltip -->
+  <div id="ipaTooltip" class="ipa-tooltip" role="tooltip">
+    <div class="tooltip-top">
+      <div>
+        <div class="tooltip-word" id="tooltipWord">foot</div>
+        <div class="tooltip-ipa" id="tooltipIpa">/fʊt/</div>
+      </div>
+      <button type="button" class="tooltip-audio-btn" id="tooltipPlayBtn" title="Озвучить слово">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <span>Звук</span>
+      </button>
+    </div>
+    <div class="tooltip-ru" id="tooltipRu">ступня (ед. ч.)</div>
+  </div>
+
+  <script>
+    /**
+     * 1. REFERENCE DATA: Group 1 — Change (All 10 singular/plural pairs)
+     */
+    const IRREGULAR_PAIRS = [
+      {
+        id: 1,
+        singular: "foot",
+        singularIpa: "/fʊt/",
+        singularRu: "ступня (ед. ч.)",
+        plural: "feet",
+        pluralIpa: "/fiːt/",
+        pluralRu: "ступни (мн. ч.)",
+        pairRu: "ступня — ступни"
+      },
+      {
+        id: 2,
+        singular: "goose",
+        singularIpa: "/ɡuːs/",
+        singularRu: "гусь (ед. ч.)",
+        plural: "geese",
+        pluralIpa: "/ɡiːs/",
+        pluralRu: "гуси (мн. ч.)",
+        pairRu: "гусь — гуси"
+      },
+      {
+        id: 3,
+        singular: "man",
+        singularIpa: "/mæn/",
+        singularRu: "мужчина (ед. ч.)",
+        plural: "men",
+        pluralIpa: "/men/",
+        pluralRu: "мужчины (мн. ч.)",
+        pairRu: "мужчина — мужчины"
+      },
+      {
+        id: 4,
+        singular: "tooth",
+        singularIpa: "/tuːθ/",
+        singularRu: "зуб (ед. ч.)",
+        plural: "teeth",
+        pluralIpa: "/tiːθ/",
+        pluralRu: "зубы (мн. ч.)",
+        pairRu: "зуб — зубы"
+      },
+      {
+        id: 5,
+        singular: "woman",
+        singularIpa: "/ˈwʊmən/",
+        singularRu: "женщина (ед. ч.)",
+        plural: "women",
+        pluralIpa: "/ˈwɪmɪn/",
+        pluralRu: "женщины (мн. ч.)",
+        pairRu: "женщина — женщины"
+      },
+      {
+        id: 6,
+        singular: "mouse",
+        singularIpa: "/maʊs/",
+        singularRu: "мышь (ед. ч.)",
+        plural: "mice",
+        pluralIpa: "/maɪs/",
+        pluralRu: "мыши (мн. ч.)",
+        pairRu: "мышь — мыши"
+      },
+      {
+        id: 7,
+        singular: "die",
+        singularIpa: "/daɪ/",
+        singularRu: "игральная кость (ед. ч.)",
+        plural: "dice",
+        pluralIpa: "/daɪs/",
+        pluralRu: "игральные кости (мн. ч.)",
+        pairRu: "игральная кость — игральные кости"
+      },
+      {
+        id: 8,
+        singular: "child",
+        singularIpa: "/tʃaɪld/",
+        singularRu: "ребёнок (ед. ч.)",
+        plural: "children",
+        pluralIpa: "/ˈtʃɪldrən/",
+        pluralRu: "дети (мн. ч.)",
+        pairRu: "ребёнок — дети"
+      },
+      {
+        id: 9,
+        singular: "ox",
+        singularIpa: "/ɒks/",
+        singularRu: "вол (ед. ч.)",
+        plural: "oxen",
+        pluralIpa: "/ˈɒksən/",
+        pluralRu: "волы (мн. ч.)",
+        pairRu: "вол — волы"
+      },
+      {
+        id: 10,
+        singular: "person",
+        singularIpa: "/ˈpɜːsən/",
+        singularRu: "человек (ед. ч.)",
+        plural: "people",
+        pluralIpa: "/ˈpiːpəl/",
+        pluralRu: "люди (мн. ч.)",
+        pairRu: "человек — люди"
+      }
+    ];
+
+    /**
+     * 2. TASK 1 DATA: Mixed order of all 10 singular nouns
+     */
+    const TASK1_ITEMS = [
+      { id: 1,  singular: "child",  ruHint: "ребёнок" },
+      { id: 2,  singular: "tooth",  ruHint: "зуб" },
+      { id: 3,  singular: "mouse",  ruHint: "мышь" },
+      { id: 4,  singular: "woman",  ruHint: "женщина" },
+      { id: 5,  singular: "foot",   ruHint: "ступня" },
+      { id: 6,  singular: "person", ruHint: "человек" },
+      { id: 7,  singular: "goose",  ruHint: "гусь" },
+      { id: 8,  singular: "man",    ruHint: "мужчина" },
+      { id: 9,  singular: "ox",     ruHint: "вол" },
+      { id: 10, singular: "die",    ruHint: "игральная кость" }
+    ];
+
+    /**
+     * 3. TASK 2 DATA: 12 gap-fill sentences covering singular & plural forms
+     */
+    const TASK2_SENTENCES = [
+      { id: 1,  before: "Two",           cue: "mouse",  after: "ran across the kitchen floor." },
+      { id: 2,  before: "Brush your",    cue: "tooth",  after: "twice a day." },
+      { id: 3,  before: "There is one",  cue: "person", after: "waiting outside." },
+      { id: 4,  before: "Roll the",      cue: "die",    after: "to start the board game." },
+      { id: 5,  before: "Three",         cue: "woman",  after: "are talking near the school." },
+      { id: 6,  before: "My left",       cue: "foot",   after: "hurts after running." },
+      { id: 7,  before: "Many",          cue: "child",  after: "love playing in the park." },
+      { id: 8,  before: "Look at those white", cue: "goose", after: "by the lake!" },
+      { id: 9,  before: "Two strong",    cue: "ox",     after: "pulled the heavy wooden cart." },
+      { id: 10, before: "That tall",     cue: "man",    after: "is our new English teacher." },
+      { id: 11, before: "Five",          cue: "man",    after: "were fixing the bridge yesterday." },
+      { id: 12, before: "One",           cue: "child",  after: "is sleeping in the bedroom." }
+    ];
+
+    /**
+     * 4. WEB SPEECH API AUDIO PRONUNCIATION
+     */
+    let englishVoice = null;
+    let currentTooltipWord = "";
+    let tooltipHideTimer = null;
+
+    function loadEnglishVoice() {
+      if (!("speechSynthesis" in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      const enVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+      englishVoice =
+        enVoices.find(v => /daniel|google uk english|samantha|google us english|aria|serena/i.test(v.name)) ||
+        enVoices[0] ||
+        null;
+    }
+
+    if ("speechSynthesis" in window) {
+      loadEnglishVoice();
+      window.speechSynthesis.onvoiceschanged = loadEnglishVoice;
+    }
+
+    function speakWord(word) {
+      if (!("speechSynthesis" in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = "en-US";
+        utterance.rate = 0.88;
+        if (englishVoice) {
+          utterance.voice = englishVoice;
+        }
+        window.speechSynthesis.speak(utterance);
+      } catch (err) {
+        // Ignore browser autoplay restrictions prior to interaction
+      }
+    }
+
+    /**
+     * 5. FLOATING TOOLTIP FOR REFERENCE WORDS
+     */
+    const tooltipEl = document.getElementById("ipaTooltip");
+    const tooltipWordEl = document.getElementById("tooltipWord");
+    const tooltipIpaEl = document.getElementById("tooltipIpa");
+    const tooltipRuEl = document.getElementById("tooltipRu");
+    const tooltipPlayBtn = document.getElementById("tooltipPlayBtn");
+
+    function showWordTooltip(targetEl, word, ipa, ru) {
+      clearTimeout(tooltipHideTimer);
+      currentTooltipWord = word;
+      tooltipWordEl.textContent = word;
+      tooltipIpaEl.textContent = ipa;
+      tooltipRuEl.textContent = ru;
+
+      tooltipEl.classList.add("is-visible");
+
+      const rect = targetEl.getBoundingClientRect();
+      const tipRect = tooltipEl.getBoundingClientRect();
+
+      let top = rect.top - tipRect.height - 8;
+      if (top < 10) {
+        top = rect.bottom + 8;
+      }
+
+      let left = rect.left + rect.width / 2 - tipRect.width / 2;
+      left = Math.max(12, Math.min(left, window.innerWidth - tipRect.width - 12));
+
+      tooltipEl.style.top = `${top}px`;
+      tooltipEl.style.left = `${left}px`;
+    }
+
+    function scheduleHideTooltip() {
+      tooltipHideTimer = setTimeout(() => {
+        tooltipEl.classList.remove("is-visible");
+      }, 220);
+    }
+
+    tooltipEl.addEventListener("mouseenter", () => {
+      clearTimeout(tooltipHideTimer);
+    });
+
+    tooltipEl.addEventListener("mouseleave", () => {
+      scheduleHideTooltip();
+    });
+
+    tooltipPlayBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (currentTooltipWord) {
+        speakWord(currentTooltipWord);
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("#ipaTooltip") && !e.target.closest(".word-chip")) {
+        tooltipEl.classList.remove("is-visible");
+      }
+    });
+
+    /**
+     * 6. RENDER REFERENCE CARDS
+     */
+    function createSpeakerSvg() {
+      return `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+      `;
+    }
+
+    function renderReferenceCards() {
+      const grid = document.getElementById("referenceGrid");
+      grid.innerHTML = "";
+
+      IRREGULAR_PAIRS.forEach((pair) => {
+        const card = document.createElement("div");
+        card.className = "ref-pair-card";
+
+        const left = document.createElement("div");
+        left.className = "ref-left";
+
+        const num = document.createElement("span");
+        num.className = "ref-num";
+        num.textContent = `${pair.id}.`;
+
+        // Singular button
+        const singBtn = document.createElement("button");
+        singBtn.type = "button";
+        singBtn.className = "word-chip";
+        singBtn.innerHTML = `<span>${pair.singular}</span>${createSpeakerSvg()}`;
+        singBtn.setAttribute("aria-label", `${pair.singular} (${pair.singularIpa}) — ${pair.singularRu}`);
+
+        singBtn.addEventListener("mouseenter", () => {
+          showWordTooltip(singBtn, pair.singular, pair.singularIpa, pair.singularRu);
+        });
+        singBtn.addEventListener("mouseleave", scheduleHideTooltip);
+        singBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          showWordTooltip(singBtn, pair.singular, pair.singularIpa, pair.singularRu);
+          speakWord(pair.singular);
+        });
+
+        const arrow = document.createElement("span");
+        arrow.className = "ref-arrow";
+        arrow.textContent = "—";
+
+        // Plural button
+        const plurBtn = document.createElement("button");
+        plurBtn.type = "button";
+        plurBtn.className = "word-chip is-plural";
+        plurBtn.innerHTML = `<span>${pair.plural}</span>${createSpeakerSvg()}`;
+        plurBtn.setAttribute("aria-label", `${pair.plural} (${pair.pluralIpa}) — ${pair.pluralRu}`);
+
+        plurBtn.addEventListener("mouseenter", () => {
+          showWordTooltip(plurBtn, pair.plural, pair.pluralIpa, pair.pluralRu);
+        });
+        plurBtn.addEventListener("mouseleave", scheduleHideTooltip);
+        plurBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          showWordTooltip(plurBtn, pair.plural, pair.pluralIpa, pair.pluralRu);
+          speakWord(pair.plural);
+        });
+
+        left.appendChild(num);
+        left.appendChild(singBtn);
+        left.appendChild(arrow);
+        left.appendChild(plurBtn);
+
+        const ruSpan = document.createElement("span");
+        ruSpan.className = "ref-ru";
+        ruSpan.textContent = pair.pairRu;
+
+        card.appendChild(left);
+        card.appendChild(ruSpan);
+        grid.appendChild(card);
+      });
+    }
+
+    // Collapsible Reference Toggle
+    const toggleRefBtn = document.getElementById("toggleRefBtn");
+    const toggleRefLabel = document.getElementById("toggleRefLabel");
+    const refCollapsibleBody = document.getElementById("refCollapsibleBody");
+
+    toggleRefBtn.addEventListener("click", () => {
+      const isExpanded = toggleRefBtn.getAttribute("aria-expanded") === "true";
+      if (isExpanded) {
+        refCollapsibleBody.classList.add("is-hidden");
+        toggleRefBtn.setAttribute("aria-expanded", "false");
+        toggleRefLabel.textContent = "Показать памятку";
+        tooltipEl.classList.remove("is-visible");
+      } else {
+        refCollapsibleBody.classList.remove("is-hidden");
+        toggleRefBtn.setAttribute("aria-expanded", "true");
+        toggleRefLabel.textContent = "Свернуть памятку";
+      }
+    });
+
+    /**
+     * 7. RENDER TASK 1 (Form the Plural) & TASK 2 (Complete the Sentences)
+     */
+    function updateFilledCounter() {
+      const allInputs = Array.from(document.querySelectorAll(".worksheet-input"));
+      const filled = allInputs.filter(inp => inp.value.trim().length > 0).length;
+      document.getElementById("filledCounter").textContent = `${filled} / ${allInputs.length}`;
+    }
+
+    function renderTask1() {
+      const container = document.getElementById("task1Container");
+      container.innerHTML = "";
+
+      TASK1_ITEMS.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "task1-row";
+
+        const prompt = document.createElement("div");
+        prompt.className = "task1-prompt";
+
+        const idxSpan = document.createElement("span");
+        idxSpan.className = "item-idx";
+        idxSpan.textContent = `${item.id}.`;
+
+        const label = document.createElement("label");
+        label.htmlFor = `task1-input-${item.id}`;
+        label.innerHTML = `<span class="singular-word">${item.singular}</span> <span class="singular-hint">(${item.ruHint})</span>`;
+
+        prompt.appendChild(idxSpan);
+        prompt.appendChild(label);
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = `task1-input-${item.id}`;
+        input.className = "plural-input worksheet-input";
+        input.placeholder = "Plural form";
+        input.setAttribute("aria-label", `Множественное число для ${item.singular}`);
+        input.setAttribute("autocomplete", "off");
+        input.setAttribute("autocorrect", "off");
+        input.setAttribute("autocapitalize", "off");
+        input.setAttribute("spellcheck", "false");
+
+        input.addEventListener("input", () => {
+          row.classList.toggle("has-value", input.value.trim().length > 0);
+          updateFilledCounter();
+        });
+
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const nextTask1 = document.getElementById(`task1-input-${item.id + 1}`);
+            if (nextTask1) {
+              nextTask1.focus();
+            } else {
+              const firstTask2 = document.getElementById("task2-input-1");
+              if (firstTask2) firstTask2.focus();
+            }
+          }
+        });
+
+        row.appendChild(prompt);
+        row.appendChild(input);
+        container.appendChild(row);
+      });
+    }
+
+    function renderTask2() {
+      const container = document.getElementById("task2Container");
+      container.innerHTML = "";
+
+      TASK2_SENTENCES.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "sentence-row";
+
+        const idxSpan = document.createElement("span");
+        idxSpan.className = "item-idx";
+        idxSpan.textContent = `${item.id}.`;
+
+        const body = document.createElement("div");
+        body.className = "sentence-body";
+
+        const beforeSpan = document.createElement("span");
+        beforeSpan.textContent = item.before + " ";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = `task2-input-${item.id}`;
+        input.className = "gap-input worksheet-input";
+        input.placeholder = "...";
+        input.setAttribute("aria-label", `Предложение ${item.id}, слово ${item.cue}`);
+        input.setAttribute("autocomplete", "off");
+        input.setAttribute("autocorrect", "off");
+        input.setAttribute("autocapitalize", "off");
+        input.setAttribute("spellcheck", "false");
+
+        const cueSpan = document.createElement("span");
+        cueSpan.className = "cue-word";
+        cueSpan.textContent = `(${item.cue})`;
+
+        const afterSpan = document.createElement("span");
+        afterSpan.textContent = " " + item.after;
+
+        input.addEventListener("input", () => {
+          row.classList.toggle("has-value", input.value.trim().length > 0);
+          updateFilledCounter();
+        });
+
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const nextTask2 = document.getElementById(`task2-input-${item.id + 1}`);
+            if (nextTask2) {
+              nextTask2.focus();
+            } else {
+              input.blur();
+            }
+          }
+        });
+
+        body.appendChild(beforeSpan);
+        body.appendChild(input);
+        body.appendChild(cueSpan);
+        body.appendChild(afterSpan);
+
+        row.appendChild(idxSpan);
+        row.appendChild(body);
+        container.appendChild(row);
+      });
+    }
+
+    /**
+     * 8. TWO-STEP CONFIRMATION RESET BUTTON (No browser confirm() / alert())
+     */
+    const resetAllBtn = document.getElementById("resetAllBtn");
+    const resetAllLabel = document.getElementById("resetAllLabel");
+    let isResetArmed = false;
+    let resetArmedTimer = null;
+
+    function disarmResetButton() {
+      isResetArmed = false;
+      resetAllBtn.classList.remove("confirm-armed");
+      resetAllLabel.textContent = "Очистить все поля";
+    }
+
+    resetAllBtn.addEventListener("click", () => {
+      const allInputs = Array.from(document.querySelectorAll(".worksheet-input"));
+      const hasAnyValue = allInputs.some(inp => inp.value.trim().length > 0);
+      if (!hasAnyValue) return;
+
+      if (!isResetArmed) {
+        isResetArmed = true;
+        resetAllBtn.classList.add("confirm-armed");
+        resetAllLabel.textContent = "Точно очистить всё?";
+        clearTimeout(resetArmedTimer);
+        resetArmedTimer = setTimeout(disarmResetButton, 3000);
+        return;
+      }
+
+      clearTimeout(resetArmedTimer);
+      allInputs.forEach(inp => {
+        inp.value = "";
+      });
+      document.querySelectorAll(".task1-row, .sentence-row").forEach(row => {
+        row.classList.remove("has-value");
+      });
+      updateFilledCounter();
+      disarmResetButton();
+    });
+
+    // Initialize Worksheet
+    window.addEventListener("DOMContentLoaded", () => {
+      renderReferenceCards();
+      renderTask1();
+      renderTask2();
+      updateFilledCounter();
+    });
+  </script>
+</body>
+</html>
