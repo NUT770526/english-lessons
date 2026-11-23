@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mary's Family &amp; Friends — Reading &amp; Grammar Practice</title>
+  <style>
+    :root {
+      --bg-page: #fdfbf3;
+      --bg-card: #ffffff;
+      --bg-soft: #f8f3e3;
+      --bg-item: #fdfcf7;
+      --border-warm: #eadfb8;
+      --border-strong: #d5c38b;
+      --text-ink: #292524;
+      --text-muted: #57534e;
+      --amber-deep: #b45309;
+      --amber-accent: #d97706;
+      --amber-pill: #fef3c7;
+      --green-deep: #1b4332;
+      --green-accent: #2d6a4f;
+      --green-soft: #e9f5ee;
+      --green-border: #95d5b2;
+      --focus-ring: rgba(45, 106, 79, 0.2);
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+      --danger-text: #b91c1c;
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.58;
+      min-height: 100vh;
+      padding: 20px 14px 64px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .worksheet-wrapper {
+      width: 100%;
+      max-width: 880px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Card Containers */
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 8px 24px -12px rgba(41, 37, 36, 0.08);
+      padding: 22px 18px;
+      width: 100%;
+    }
+
+    @media (min-width: 640px) {
+      body {
+        padding: 36px 24px 72px;
+      }
+      .card {
+        padding: 30px 36px;
+      }
+    }
+
+    /* Top Sticky Header */
+    .sticky-header-card {
+      position: sticky;
+      top: 12px;
+      z-index: 30;
+      background-color: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .header-top-row {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    @media (min-width: 720px) {
+      .header-top-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .title-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .title-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
+      background-color: var(--green-soft);
+      border: 1px solid var(--green-border);
+      color: var(--green-deep);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .level-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--green-deep);
+      background-color: var(--green-soft);
+      border: 1px solid var(--green-border);
+      padding: 2px 10px;
+      border-radius: 9999px;
+      margin-bottom: 5px;
+    }
+
+    h1 {
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--text-ink);
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+    }
+
+    @media (min-width: 640px) {
+      h1 {
+        font-size: 25px;
+      }
+    }
+
+    .header-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .progress-badge {
+      align-self: flex-start;
+      background-color: var(--green-soft);
+      border: 1px solid var(--green-border);
+      border-radius: 14px;
+      padding: 9px 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--green-deep);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    @media (min-width: 720px) {
+      .progress-badge {
+        align-self: center;
+      }
+    }
+
+    /* Audio Control Bar */
+    .audio-bar {
+      background-color: var(--bg-soft);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-lg);
+      padding: 12px 15px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .audio-primary-btns {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary-audio {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--green-accent);
+      color: #ffffff;
+      border: 1px solid var(--green-deep);
+      border-radius: var(--radius-md);
+      padding: 9px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.15s ease, transform 0.12s ease;
+    }
+
+    .btn-primary-audio:hover {
+      background-color: var(--green-deep);
+    }
+
+    .btn-primary-audio:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary-audio {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: #ffffff;
+      color: var(--text-ink);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 9px 13px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s ease, transform 0.12s ease;
+    }
+
+    .btn-secondary-audio:hover {
+      background-color: var(--amber-pill);
+    }
+
+    .btn-secondary-audio:active {
+      transform: scale(0.98);
+    }
+
+    .speed-group {
+      display: inline-flex;
+      align-items: center;
+      background-color: #ffffff;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 2px;
+    }
+
+    .speed-btn {
+      background: transparent;
+      border: none;
+      border-radius: 9px;
+      padding: 6px 10px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .speed-btn:hover {
+      background-color: var(--bg-soft);
+    }
+
+    .speed-btn.is-active {
+      background-color: var(--green-soft);
+      color: var(--green-deep);
+    }
+
+    .audio-hint-text {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Section Headings */
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-warm);
+      margin-bottom: 20px;
+    }
+
+    .task-number-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      background-color: var(--amber-pill);
+      border: 1px solid var(--border-warm);
+      color: var(--amber-deep);
+      font-size: 17px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 18.5px;
+      font-weight: 800;
+      color: var(--text-ink);
+      line-height: 1.3;
+    }
+
+    @media (min-width: 640px) {
+      .section-header h2 {
+        font-size: 21px;
+      }
+    }
+
+    .section-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* Reading Passage Notebook Card */
+    .reading-tip {
+      background-color: var(--green-soft);
+      border: 1px solid var(--green-border);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 13.5px;
+      color: var(--green-deep);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .notebook-box {
+      background-color: #fffef9;
+      background-image:
+        linear-gradient(to right, rgba(147, 197, 253, 0.25) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(147, 197, 253, 0.25) 1px, transparent 1px);
+      background-size: 24px 24px;
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .notebook-box {
+        padding: 24px 26px;
+      }
+    }
+
+    .reading-para-row {
+      background-color: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .reading-para-row.is-speaking {
+      border-color: var(--green-accent);
+      background-color: #f4fbf7;
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    .reading-para-text {
+      font-size: 16.5px;
+      line-height: 1.85;
+      color: var(--text-ink);
+      flex: 1;
+    }
+
+    @media (min-width: 640px) {
+      .reading-para-text {
+        font-size: 17.5px;
+      }
+    }
+
+    .para-speak-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background-color: var(--bg-soft);
+      border: 1px solid var(--border-strong);
+      color: var(--amber-deep);
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: background-color 0.15s ease, transform 0.12s ease;
+    }
+
+    .para-speak-btn:hover {
+      background-color: var(--amber-pill);
+    }
+
+    .para-speak-btn:active {
+      transform: scale(0.95);
+    }
+
+    .para-speak-btn.is-active {
+      background-color: var(--green-accent);
+      border-color: var(--green-deep);
+      color: #ffffff;
+    }
+
+    /* Interactive Vocabulary Highlighted Words */
+    .vocab-term {
+      display: inline;
+      background-color: rgba(217, 119, 6, 0.14);
+      border-bottom: 2px dotted var(--amber-accent);
+      border-radius: 5px;
+      padding: 1px 4px;
+      color: #78350f;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .vocab-term:hover,
+    .vocab-term:focus {
+      background-color: rgba(217, 119, 6, 0.28);
+      border-bottom-style: solid;
+      color: #451a03;
+      outline: none;
+    }
+
+    /* EXERCISE 1: Multiple Choice Cards */
+    .mc-questions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .mc-question-card {
+      background-color: var(--bg-item);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    .mc-question-card.is-filled {
+      border-color: var(--green-border);
+      background-color: #f9fdfb;
+    }
+
+    .mc-question-title {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-ink);
+      margin-bottom: 12px;
+    }
+
+    .item-num {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--amber-deep);
+      min-width: 22px;
+      flex-shrink: 0;
+    }
+
+    .mc-options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    @media (min-width: 560px) {
+      .mc-options-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+    }
+
+    .mc-option-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: #ffffff;
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 10px 13px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-ink);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+
+    .mc-option-label:hover {
+      background-color: var(--bg-soft);
+      border-color: var(--amber-accent);
+    }
+
+    .mc-option-label input[type="radio"] {
+      accent-color: var(--green-accent);
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .mc-option-label:has(input[type="radio"]:checked) {
+      background-color: var(--green-soft);
+      border-color: var(--green-accent);
+      color: var(--green-deep);
+      font-weight: 700;
+      box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    /* EXERCISE 2: True or False */
+    .tf-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .tf-row {
+      background-color: var(--bg-item);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    @media (min-width: 640px) {
+      .tf-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+    }
+
+    .tf-row.is-filled {
+      border-color: var(--green-border);
+      background-color: #f9fdfb;
+    }
+
+    .tf-statement {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-size: 15.5px;
+      color: var(--text-ink);
+      flex: 1;
+    }
+
+    .tf-options {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .tf-radio-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background-color: #ffffff;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 7px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-ink);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+
+    .tf-radio-label:hover {
+      background-color: var(--bg-soft);
+      border-color: var(--amber-accent);
+    }
+
+    .tf-radio-label input[type="radio"] {
+      accent-color: var(--green-accent);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .tf-radio-label:has(input[type="radio"]:checked) {
+      background-color: var(--green-soft);
+      border-color: var(--green-accent);
+      color: var(--green-deep);
+      box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    /* EXERCISE 3: Possessive Adjectives Reference Strip + Dropdowns */
+    .pronoun-ref-strip {
+      background-color: var(--bg-soft);
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 13px 15px;
+      margin-bottom: 18px;
+    }
+
+    .pronoun-ref-title {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--amber-deep);
+      margin-bottom: 9px;
+    }
+
+    .pronoun-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pronoun-pill {
+      background-color: #ffffff;
+      border: 1px solid var(--border-warm);
+      border-radius: 10px;
+      padding: 5px 11px;
+      font-size: 13.5px;
+      color: var(--text-ink);
+    }
+
+    .pronoun-pill strong {
+      color: var(--green-deep);
+      font-weight: 800;
+    }
+
+    .grammar-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .grammar-row {
+      background-color: var(--bg-item);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 13px 16px;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    .grammar-row.is-filled {
+      border-color: var(--green-border);
+      background-color: #f9fdfb;
+    }
+
+    .grammar-sentence {
+      font-size: 15.5px;
+      color: var(--text-ink);
+      line-height: 1.9;
+      flex: 1;
+    }
+
+    .pronoun-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: #ffffff;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232d6a4f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 9px;
+      padding: 4px 32px 4px 11px;
+      margin: 0 5px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--green-deep);
+      cursor: pointer;
+      vertical-align: baseline;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .pronoun-select:focus {
+      outline: none;
+      border-color: var(--green-accent);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    /* EXERCISE 4: Open-Ended Questions */
+    .open-questions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .open-question-card {
+      background-color: var(--bg-item);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    .open-question-card.is-filled {
+      border-color: var(--green-border);
+      background-color: #f9fdfb;
+    }
+
+    .open-question-label {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--text-ink);
+      line-height: 1.45;
+    }
+
+    .open-answer-textarea {
+      width: 100%;
+      min-height: 76px;
+      background-color: #ffffff;
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text-ink);
+      resize: vertical;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .open-answer-textarea::placeholder {
+      color: #a8a29e;
+    }
+
+    .open-answer-textarea:focus {
+      outline: none;
+      border-color: var(--green-accent);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    /* Footer Summary & Two-Step Reset */
+    .footer-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    @media (min-width: 640px) {
+      .footer-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .footer-summary-title {
+      font-size: 15.5px;
+      font-weight: 800;
+      color: var(--text-ink);
+    }
+
+    .footer-summary-sub {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .btn-clear-all {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #ffffff;
+      color: var(--text-muted);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 10px 18px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    @media (min-width: 640px) {
+      .btn-clear-all {
+        align-self: center;
+      }
+    }
+
+    .btn-clear-all:hover {
+      background-color: var(--bg-soft);
+      color: var(--text-ink);
+    }
+
+    .btn-clear-all.is-armed {
+      background-color: var(--danger-bg);
+      border-color: var(--danger-border);
+      color: var(--danger-text);
+    }
+
+    .btn-clear-all:active {
+      transform: scale(0.98);
+    }
+
+    /* Floating Vocabulary Tooltip Card */
+    .vocab-tooltip {
+      position: fixed;
+      z-index: 9999;
+      width: 310px;
+      max-width: calc(100vw - 24px);
+      background-color: #292524;
+      color: #fdfbf3;
+      border: 1px solid #57534e;
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow: 0 18px 36px rgba(28, 25, 23, 0.34);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(4px);
+      transition: opacity 0.14s ease, transform 0.14s ease;
+    }
+
+    .vocab-tooltip.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .tooltip-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .tooltip-word {
+      font-size: 16.5px;
+      font-weight: 800;
+      color: #fcd34d;
+      line-height: 1.25;
+    }
+
+    .tooltip-phonetics {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12.5px;
+      color: #e7e5e4;
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    .tooltip-uk-phon {
+      color: #86efac;
+      font-weight: 700;
+    }
+
+    .tooltip-speak-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background-color: var(--green-accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 6px 11px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color 0.15s ease, transform 0.12s ease;
+    }
+
+    .tooltip-speak-btn:hover {
+      background-color: #40916c;
+    }
+
+    .tooltip-speak-btn:active {
+      transform: scale(0.96);
+    }
+
+    .tooltip-uk-translation {
+      border-top: 1px solid #44403c;
+      padding-top: 8px;
+      font-size: 14.5px;
+      color: #fef3c7;
+      line-height: 1.35;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="worksheet-wrapper">
+
+    <!-- 1. STICKY HEADER & FULL-PASSAGE AUDIO PLAYER -->
+    <header class="card sticky-header-card">
+      <div class="header-top-row">
+        <div class="title-block">
+          <div class="title-icon" aria-hidden="true">📖</div>
+          <div>
+            <span class="level-badge">English • A2 / Teen Practice</span>
+            <h1>Reading &amp; Practice: Mary's Family and Friends</h1>
+            <p class="header-subtitle">Прочитай текст (або прослухай його) та виконай завдання нижче.</p>
+          </div>
+        </div>
+
+        <div class="progress-badge" id="topProgressBadge" aria-live="polite">
+          Виконано: 0 / 19
+        </div>
+      </div>
+
+      <!-- Audio Controls Bar -->
+      <div class="audio-bar">
+        <div class="audio-primary-btns">
+          <button type="button" id="playPauseBtn" class="btn-primary-audio">
+            <span id="playPauseIcon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </span>
+            <span id="playPauseLabel">Слухати текст</span>
+          </button>
+
+          <button type="button" id="restartBtn" class="btn-secondary-audio" title="Почати спочатку">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            <span>Спочатку</span>
+          </button>
+
+          <div class="speed-group" role="group" aria-label="Швидкість читання">
+            <button type="button" class="speed-btn" data-speed="0.8">0.8x</button>
+            <button type="button" class="speed-btn is-active" data-speed="1.0">1.0x</button>
+            <button type="button" class="speed-btn" data-speed="1.15">1.15x</button>
+          </div>
+        </div>
+
+        <span class="audio-hint-text">Також можна прослухати кожен абзац окремо 🔊</span>
+      </div>
+    </header>
+
+    <!-- 2. READING PASSAGE WITH INTERACTIVE VOCABULARY TOOLTIPS -->
+    <section class="card" aria-labelledby="readingHeading">
+      <div class="section-header">
+        <div class="task-number-badge" aria-hidden="true">✍️</div>
+        <div>
+          <h2 id="readingHeading">Text: Mary's Family and Friends</h2>
+          <p class="section-desc">Уважно прочитай розповідь Мері про її сім'ю, кота та шкільних друзів.</p>
+        </div>
+      </div>
+
+      <div class="reading-tip">
+        <span>💡</span>
+        <span>Наведи мишку (або натисни на телефоні) на будь-яке <strong>виділене слово</strong>, щоб побачити транскрипцію, переклад українською та послухати вимову.</span>
+      </div>
+
+      <div class="notebook-box">
+        <!-- Paragraph 1 -->
+        <div class="reading-para-row" id="para-row-0">
+          <p class="reading-para-text" id="para-text-0">
+            Hello! My name is Mary and I <span class="vocab-term" tabindex="0" data-term="live">live</span> in <span class="vocab-term" tabindex="0" data-term="England">England</span>. This is my family. My <span class="vocab-term" tabindex="0" data-term="father's">father's</span> name is George. My mum is <span class="vocab-term" tabindex="0" data-term="fantastic">fantastic</span>, <span class="vocab-term" tabindex="0" data-term="her">her</span> name is Natalie. I have a <span class="vocab-term" tabindex="0" data-term="brother">brother</span>, <span class="vocab-term" tabindex="0" data-term="his">his</span> name is Mark. We love <span class="vocab-term" tabindex="0" data-term="playing together">playing together</span>.
+          </p>
+          <button type="button" class="para-speak-btn" data-para-idx="0" title="Прослухати 1-й абзац" aria-label="Прослухати перший абзац">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Paragraph 2 -->
+        <div class="reading-para-row" id="para-row-1">
+          <p class="reading-para-text" id="para-text-1">
+            I <span class="vocab-term" tabindex="0" data-term="also">also</span> have a cat, <span class="vocab-term" tabindex="0" data-term="its">its</span> name is Dino. <span class="vocab-term" tabindex="0" data-term="Our">Our</span> cat is nice! I have many <span class="vocab-term" tabindex="0" data-term="friends">friends</span> at school, <span class="vocab-term" tabindex="0" data-term="their">their</span> names are David, Laura, and Margarita.
+          </p>
+          <button type="button" class="para-speak-btn" data-para-idx="1" title="Прослухати 2-й абзац" aria-label="Прослухати другий абзац">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. EXERCISE 1. CHOOSE THE CORRECT ANSWER (Original 4 Questions) -->
+    <section class="card" aria-labelledby="ex1Title">
+      <div class="section-header">
+        <div class="task-number-badge" aria-hidden="true">1</div>
+        <div>
+          <h2 id="ex1Title">Exercise 1. Choose the correct answer</h2>
+          <p class="section-desc">Обери правильний варіант відповіді.</p>
+        </div>
+      </div>
+
+      <div class="mc-questions-list">
+        <!-- Question 1 -->
+        <div class="mc-question-card" id="ex1-card-1">
+          <div class="mc-question-title">
+            <span class="item-num">1.</span>
+            <span><span class="vocab-term" tabindex="0" data-term="Where is ... from?">Where is</span> Mary <span class="vocab-term" tabindex="0" data-term="Where is ... from?">from</span>?</span>
+          </div>
+          <div class="mc-options-grid" role="radiogroup" aria-label="1. Where is Mary from?">
+            <label class="mc-option-label"><input type="radio" name="ex1_q1" value="the USA" class="ex1-radio" /> <span>the USA</span></label>
+            <label class="mc-option-label"><input type="radio" name="ex1_q1" value="England" class="ex1-radio" /> <span>England</span></label>
+            <label class="mc-option-label"><input type="radio" name="ex1_q1" value="Spain" class="ex1-radio" /> <span>Spain</span></label>
+          </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="mc-question-card" id="ex1-card-2">
+          <div class="mc-question-title">
+            <span class="item-num">2.</span>
+            <span>What’s <span class="vocab-term" tabindex="0" data-term="her">her</span> <span class="vocab-term" tabindex="0" data-term="father's">father’s</span> name?</span>
+          </div>
+          <div class="mc-options-grid" role="radiogroup" aria-label="2. What’s her father’s name?">
+            <label class="mc-option-label"><input type="radio" name="ex1_q2" value="David" class="ex1-radio" /> <span>David</span></label>
+            <label class="mc-option-label"><input type="radio" name="ex1_q2" value="George" class="ex1-radio" /> <span>George</span></label>
+            <label class="mc-option-label"><input type="radio" name="ex1_q2" value="Mike" class="ex1-radio" /> <span>Mike</span></label>
+          </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="mc-question-card" id="ex1-card-3">
+          <div class="mc-question-title">
+            <span class="item-num">3.</span>
+            <span><span class="vocab-term" tabindex="0" data-term="How many">How many</span> <span class="vocab-term" tabindex="0" data-term="brother">brothers</span> does Mary have?</span>
+          </div>
+          <div class="mc-options-grid" role="radiogroup" aria-label="3. How many brothers does Mary have?">
+            <label class="mc-option-label"><input type="radio" name="ex1_q3" value="one" class="ex1-radio" /> <span>one</span></label>
+            <label class="mc-option-label"><input type="radio" name="ex1_q3" value="three" class="ex1-radio" /> <span>three</span></label>
+            <label class="mc-option-label"><input type="radio" name="ex1_q3" value="two" class="ex1-radio" /> <span>two</span></label>
+          </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="mc-question-card" id="ex1-card-4">
+          <div class="mc-question-title">
+            <span class="item-num">4.</span>
+            <span>What are <span class="vocab-term" tabindex="0" data-term="her">her</span> <span class="vocab-term" tabindex="0" data-term="friends">friends’</span> names?</span>
+          </div>
+          <div class="mc-options-grid" role="radiogroup" aria-label="4. What are her friends’ names?">
+            <label class="mc-option-label"><input type="radio" name="ex1_q4" value="Dina, Stella, Bob" class="ex1-radio" /> <span>Dina, Stella, Bob</span></label>
+            <label class="mc-option-label"><input type="radio" name="ex1_q4" value="Lucy, Kate, Sharon" class="ex1-radio" /> <span>Lucy, Kate, Sharon</span></label>
+            <label class="mc-option-label"><input type="radio" name="ex1_q4" value="David, Laura, Margarita" class="ex1-radio" /> <span>David, Laura, Margarita</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. EXERCISE 2. TRUE OR FALSE -->
+    <section class="card" aria-labelledby="ex2Title">
+      <div class="section-header">
+        <div class="task-number-badge" aria-hidden="true">2</div>
+        <div>
+          <h2 id="ex2Title">Exercise 2. True or False</h2>
+          <p class="section-desc">Чи правдиве твердження? Прочитай речення та вибери <strong>True</strong> (правда) або <strong>False</strong> (неправда).</p>
+        </div>
+      </div>
+
+      <div class="tf-list">
+        <div class="tf-row" id="ex2-row-1">
+          <div class="tf-statement">
+            <span class="item-num">1.</span>
+            <span>Mary <span class="vocab-term" tabindex="0" data-term="live">lives</span> in Spain.</span>
+          </div>
+          <div class="tf-options" role="radiogroup" aria-label="1. Mary lives in Spain.">
+            <label class="tf-radio-label"><input type="radio" name="ex2_tf1" value="True" class="ex2-radio" /> True</label>
+            <label class="tf-radio-label"><input type="radio" name="ex2_tf1" value="False" class="ex2-radio" /> False</label>
+          </div>
+        </div>
+
+        <div class="tf-row" id="ex2-row-2">
+          <div class="tf-statement">
+            <span class="item-num">2.</span>
+            <span>Mary’s mother is called Natalie.</span>
+          </div>
+          <div class="tf-options" role="radiogroup" aria-label="2. Mary’s mother is called Natalie.">
+            <label class="tf-radio-label"><input type="radio" name="ex2_tf2" value="True" class="ex2-radio" /> True</label>
+            <label class="tf-radio-label"><input type="radio" name="ex2_tf2" value="False" class="ex2-radio" /> False</label>
+          </div>
+        </div>
+
+        <div class="tf-row" id="ex2-row-3">
+          <div class="tf-statement">
+            <span class="item-num">3.</span>
+            <span>Mary and Mark hate <span class="vocab-term" tabindex="0" data-term="playing together">playing together</span>.</span>
+          </div>
+          <div class="tf-options" role="radiogroup" aria-label="3. Mary and Mark hate playing together.">
+            <label class="tf-radio-label"><input type="radio" name="ex2_tf3" value="True" class="ex2-radio" /> True</label>
+            <label class="tf-radio-label"><input type="radio" name="ex2_tf3" value="False" class="ex2-radio" /> False</label>
+          </div>
+        </div>
+
+        <div class="tf-row" id="ex2-row-4">
+          <div class="tf-statement">
+            <span class="item-num">4.</span>
+            <span>Dino is the name of Mary’s dog.</span>
+          </div>
+          <div class="tf-options" role="radiogroup" aria-label="4. Dino is the name of Mary’s dog.">
+            <label class="tf-radio-label"><input type="radio" name="ex2_tf4" value="True" class="ex2-radio" /> True</label>
+            <label class="tf-radio-label"><input type="radio" name="ex2_tf4" value="False" class="ex2-radio" /> False</label>
+          </div>
+        </div>
+
+        <div class="tf-row" id="ex2-row-5">
+          <div class="tf-statement">
+            <span class="item-num">5.</span>
+            <span>Mary has three <span class="vocab-term" tabindex="0" data-term="friends">friends</span> at school: David, Laura, and Margarita.</span>
+          </div>
+          <div class="tf-options" role="radiogroup" aria-label="5. Mary has three friends at school: David, Laura, and Margarita.">
+            <label class="tf-radio-label"><input type="radio" name="ex2_tf5" value="True" class="ex2-radio" /> True</label>
+            <label class="tf-radio-label"><input type="radio" name="ex2_tf5" value="False" class="ex2-radio" /> False</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. EXERCISE 3. POSSESSIVE ADJECTIVES PRACTICE -->
+    <section class="card" aria-labelledby="ex3Title">
+      <div class="section-header">
+        <div class="task-number-badge" aria-hidden="true">3</div>
+        <div>
+          <h2 id="ex3Title">Exercise 3. Possessive Adjectives Practice</h2>
+          <p class="section-desc">Присвійні займенники (<strong>my, his, her, its, our, their</strong>). Обери правильний займенник зі списку для кожного речення.</p>
+        </div>
+      </div>
+
+      <!-- Mini-Reference Pill Strip -->
+      <div class="pronoun-ref-strip">
+        <div class="pronoun-ref-title">Підказка • Присвійні займенники:</div>
+        <div class="pronoun-pills">
+          <span class="pronoun-pill"><strong>my</strong> — мій / моя</span>
+          <span class="pronoun-pill"><strong>his</strong> — його</span>
+          <span class="pronoun-pill"><strong>her</strong> — її</span>
+          <span class="pronoun-pill"><strong>its</strong> — його / її (про тварин)</span>
+          <span class="pronoun-pill"><strong>our</strong> — наш / наша</span>
+          <span class="pronoun-pill"><strong>their</strong> — їхній</span>
+        </div>
+      </div>
+
+      <div class="grammar-list">
+        <div class="grammar-row" id="ex3-row-1">
+          <span class="item-num">1.</span>
+          <div class="grammar-sentence">
+            <label for="ex3-sel-1">I have a <span class="vocab-term" tabindex="0" data-term="brother">brother</span>.</label>
+            <select id="ex3-sel-1" class="pronoun-select" aria-label="Sentence 1 possessive adjective">
+              <option value="">Обери займенник...</option>
+              <option value="my">My</option>
+              <option value="his">His</option>
+              <option value="her">Her</option>
+              <option value="its">Its</option>
+              <option value="our">Our</option>
+              <option value="their">Their</option>
+            </select>
+            <span>name is Mark.</span>
+          </div>
+        </div>
+
+        <div class="grammar-row" id="ex3-row-2">
+          <span class="item-num">2.</span>
+          <div class="grammar-sentence">
+            <label for="ex3-sel-2">My mum is <span class="vocab-term" tabindex="0" data-term="fantastic">fantastic</span>.</label>
+            <select id="ex3-sel-2" class="pronoun-select" aria-label="Sentence 2 possessive adjective">
+              <option value="">Обери займенник...</option>
+              <option value="my">My</option>
+              <option value="his">His</option>
+              <option value="her">Her</option>
+              <option value="its">Its</option>
+              <option value="our">Our</option>
+              <option value="their">Their</option>
+            </select>
+            <span>name is Natalie.</span>
+          </div>
+        </div>
+
+        <div class="grammar-row" id="ex3-row-3">
+          <span class="item-num">3.</span>
+          <div class="grammar-sentence">
+            <label for="ex3-sel-3">We have a nice cat.</label>
+            <select id="ex3-sel-3" class="pronoun-select" aria-label="Sentence 3 possessive adjective">
+              <option value="">Обери займенник...</option>
+              <option value="my">My</option>
+              <option value="his">His</option>
+              <option value="her">Her</option>
+              <option value="its">Its</option>
+              <option value="our">Our</option>
+              <option value="their">Their</option>
+            </select>
+            <span>cat is very friendly.</span>
+          </div>
+        </div>
+
+        <div class="grammar-row" id="ex3-row-4">
+          <span class="item-num">4.</span>
+          <div class="grammar-sentence">
+            <label for="ex3-sel-4">I have a cat, and</label>
+            <select id="ex3-sel-4" class="pronoun-select" aria-label="Sentence 4 possessive adjective">
+              <option value="">Обери займенник...</option>
+              <option value="my">my</option>
+              <option value="his">his</option>
+              <option value="her">her</option>
+              <option value="its">its</option>
+              <option value="our">our</option>
+              <option value="their">their</option>
+            </select>
+            <span>name is Dino.</span>
+          </div>
+        </div>
+
+        <div class="grammar-row" id="ex3-row-5">
+          <span class="item-num">5.</span>
+          <div class="grammar-sentence">
+            <label for="ex3-sel-5">I have many <span class="vocab-term" tabindex="0" data-term="friends">friends</span> at school.</label>
+            <select id="ex3-sel-5" class="pronoun-select" aria-label="Sentence 5 possessive adjective">
+              <option value="">Обери займенник...</option>
+              <option value="my">My</option>
+              <option value="his">His</option>
+              <option value="her">Her</option>
+              <option value="its">Its</option>
+              <option value="our">Our</option>
+              <option value="their">Their</option>
+            </select>
+            <span>names are David, Laura, and Margarita.</span>
+          </div>
+        </div>
+
+        <div class="grammar-row" id="ex3-row-6">
+          <span class="item-num">6.</span>
+          <div class="grammar-sentence">
+            <label for="ex3-sel-6">Hello!</label>
+            <select id="ex3-sel-6" class="pronoun-select" aria-label="Sentence 6 possessive adjective">
+              <option value="">Обери займенник...</option>
+              <option value="my">My</option>
+              <option value="his">His</option>
+              <option value="her">Her</option>
+              <option value="its">Its</option>
+              <option value="our">Our</option>
+              <option value="their">Their</option>
+            </select>
+            <span>name is Mary and I <span class="vocab-term" tabindex="0" data-term="live">live</span> in <span class="vocab-term" tabindex="0" data-term="England">England</span>.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. EXERCISE 4. ANSWER THE QUESTIONS & WRITE ABOUT YOURSELF -->
+    <section class="card" aria-labelledby="ex4Title">
+      <div class="section-header">
+        <div class="task-number-badge" aria-hidden="true">4</div>
+        <div>
+          <h2 id="ex4Title">Exercise 4. Answer the Questions &amp; Write About Yourself</h2>
+          <p class="section-desc">Дай повні відповіді на запитання англійською мовою (перші 2 — за текстом, наступні 2 — про тебе).</p>
+        </div>
+      </div>
+
+      <div class="open-questions-list">
+        <div class="open-question-card" id="ex4-card-1">
+          <label for="ex4-ta-1" class="open-question-label">
+            <span class="item-num">1.</span>
+            <span>Who is George, and what is Mary's mum's name?</span>
+          </label>
+          <textarea id="ex4-ta-1" class="open-answer-textarea" rows="3" placeholder="Write your answer in English (e.g., George is Mary's...)..."></textarea>
+        </div>
+
+        <div class="open-question-card" id="ex4-card-2">
+          <label for="ex4-ta-2" class="open-question-label">
+            <span class="item-num">2.</span>
+            <span>What do Mary and <span class="vocab-term" tabindex="0" data-term="her">her</span> <span class="vocab-term" tabindex="0" data-term="brother">brother</span> love doing together?</span>
+          </label>
+          <textarea id="ex4-ta-2" class="open-answer-textarea" rows="3" placeholder="Write your answer in English..."></textarea>
+        </div>
+
+        <div class="open-question-card" id="ex4-card-3">
+          <label for="ex4-ta-3" class="open-question-label">
+            <span class="item-num">3.</span>
+            <span>Where do you <span class="vocab-term" tabindex="0" data-term="live">live</span>, and what are your parents' or siblings' names?</span>
+          </label>
+          <textarea id="ex4-ta-3" class="open-answer-textarea" rows="3" placeholder="Write about yourself (e.g., I live in Ukraine. My mum's name is...)..."></textarea>
+        </div>
+
+        <div class="open-question-card" id="ex4-card-4">
+          <label for="ex4-ta-4" class="open-question-label">
+            <span class="item-num">4.</span>
+            <span>Do you have a pet or best <span class="vocab-term" tabindex="0" data-term="friends">friends</span> at school? Write 2–3 sentences about them.</span>
+          </label>
+          <textarea id="ex4-ta-4" class="open-answer-textarea" rows="3" placeholder="Write 2–3 sentences in English..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. FOOTER SUMMARY & TWO-STEP RESET BUTTON -->
+    <footer class="card footer-card">
+      <div>
+        <div class="footer-summary-title" id="footerSummaryTitle">Виконано завдань: 0 / 19</div>
+        <p class="footer-summary-sub">Після виконання всіх 4 вправ покажи або надішли роботу вчителю для перевірки.</p>
+      </div>
+
+      <button type="button" id="clearAllBtn" class="btn-clear-all">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+        </svg>
+        <span id="clearAllLabel">Очистити всі відповіді</span>
+      </button>
+    </footer>
+
+  </main>
+
+  <!-- Floating Vocabulary Tooltip Card -->
+  <div id="vocabTooltip" class="vocab-tooltip" role="tooltip">
+    <div class="tooltip-header">
+      <div>
+        <div class="tooltip-word" id="tooltipWord">fantastic</div>
+        <div class="tooltip-phonetics">
+          <span id="tooltipIpa">/fænˈtæstɪk/</span> — <span class="tooltip-uk-phon" id="tooltipUkPhon">[фенте́стік]</span>
+        </div>
+      </div>
+      <button type="button" id="tooltipSpeakBtn" class="tooltip-speak-btn" title="Озвучити слово">
+        <span>🔊 Озвучити</span>
+      </button>
+    </div>
+    <div class="tooltip-uk-translation" id="tooltipUkTranslation">фантастична, чудова</div>
+  </div>
+
+  <script>
+    /**
+     * 1. VOCABULARY DICTIONARY (IPA + Ukrainian phonetic transcription + Ukrainian translation)
+     */
+    const VOCABULARY_DATA = {
+      "live": {
+        speak: "live",
+        ipa: "/lɪv/",
+        ukPhon: "[лів]",
+        uk: "жити, мешкати"
+      },
+      "England": {
+        speak: "England",
+        ipa: "/ˈɪŋɡlənd/",
+        ukPhon: "[і́нґленд]",
+        uk: "Англія"
+      },
+      "father's": {
+        speak: "father's",
+        ipa: "/ˈfɑːðəz/",
+        ukPhon: "[фа́зез]",
+        uk: "батьків, татів (чий?)"
+      },
+      "fantastic": {
+        speak: "fantastic",
+        ipa: "/fænˈtæstɪk/",
+        ukPhon: "[фенте́стік]",
+        uk: "фантастична, чудова"
+      },
+      "her": {
+        speak: "her",
+        ipa: "/hɜː(r)/",
+        ukPhon: "[хьо]",
+        uk: "її (присвійний займенник)"
+      },
+      "brother": {
+        speak: "brother",
+        ipa: "/ˈbrʌðə(r)/",
+        ukPhon: "[бра́зе]",
+        uk: "брат"
+      },
+      "his": {
+        speak: "his",
+        ipa: "/hɪz/",
+        ukPhon: "[хіз]",
+        uk: "його (присвійний займенник)"
+      },
+      "playing together": {
+        speak: "playing together",
+        ipa: "/ˈpleɪɪŋ təˈɡeðə(r)/",
+        ukPhon: "[пле́їнґ туґе́зе]",
+        uk: "гратися разом"
+      },
+      "also": {
+        speak: "also",
+        ipa: "/ˈɔːlsəʊ/",
+        ukPhon: "[о́лсоу]",
+        uk: "також"
+      },
+      "its": {
+        speak: "its",
+        ipa: "/ɪts/",
+        ukPhon: "[ітс]",
+        uk: "його / її (про тварину чи предмет)"
+      },
+      "Our": {
+        speak: "Our",
+        ipa: "/ˈaʊə(r)/",
+        ukPhon: "[а́уе]",
+        uk: "наш, наша"
+      },
+      "friends": {
+        speak: "friends",
+        ipa: "/frendz/",
+        ukPhon: "[френдз]",
+        uk: "друзі"
+      },
+      "their": {
+        speak: "their",
+        ipa: "/ðeə(r)/",
+        ukPhon: "[зее]",
+        uk: "їхній, їхні"
+      },
+      "Where is ... from?": {
+        speak: "Where is Mary from?",
+        ipa: "/weər ɪz ... frɒm/",
+        ukPhon: "[веер із ... фром]",
+        uk: "Звідки ... родом?"
+      },
+      "How many": {
+        speak: "How many",
+        ipa: "/haʊ ˈmeni/",
+        ukPhon: "[ха́у ме́ні]",
+        uk: "Скільки (для злічуваних іменників)"
+      }
+    };
+
+    /**
+     * 2. AUDIO NARRATION STATE (Web Speech API)
+     */
+    const PARAGRAPH_TEXTS = [
+      "Hello! My name is Mary and I live in England. This is my family. My father's name is George. My mum is fantastic, her name is Natalie. I have a brother, his name is Mark. We love playing together.",
+      "I also have a cat, its name is Dino. Our cat is nice! I have many friends at school, their names are David, Laura, and Margarita."
+    ];
+
+    let speechRate = 1.0;
+    let isPlayingFull = false;
+    let currentParaIdx = 0;
+    let preferredFemaleVoice = null;
+    let currentTooltipKey = "";
+    let hideTooltipTimer = null;
+    let isClearArmed = false;
+    let clearArmedTimer = null;
+
+    function loadFemaleEnglishVoice() {
+      if (!("speechSynthesis" in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      const enVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+      preferredFemaleVoice =
+        enVoices.find(v => /google uk english female|samantha|victoria|kate|serena|hazel|libby|sonia|zira|female/i.test(v.name)) ||
+        enVoices[0] ||
+        null;
+    }
+
+    if ("speechSynthesis" in window) {
+      loadFemaleEnglishVoice();
+      window.speechSynthesis.onvoiceschanged = loadFemaleEnglishVoice;
+    }
+
+    function updatePlayBtnUi(playing) {
+      const icon = document.getElementById("playPauseIcon");
+      const label = document.getElementById("playPauseLabel");
+      if (playing) {
+        icon.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+        label.textContent = "Пауза";
+      } else {
+        icon.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+        label.textContent = "Слухати текст";
+      }
+    }
+
+    function clearParagraphHighlights() {
+      document.querySelectorAll(".reading-para-row").forEach(r => r.classList.remove("is-speaking"));
+      document.querySelectorAll(".para-speak-btn").forEach(b => b.classList.remove("is-active"));
+    }
+
+    function stopAllSpeech(resetIndex = false) {
+      isPlayingFull = false;
+      if ("speechSynthesis" in window) {
+        try {
+          window.speechSynthesis.cancel();
+        } catch (e) {}
+      }
+      if (resetIndex) currentParaIdx = 0;
+      clearParagraphHighlights();
+      updatePlayBtnUi(false);
+    }
+
+    function speakParagraph(index, continueToNext = false) {
+      if (!("speechSynthesis" in window)) return;
+      if (index >= PARAGRAPH_TEXTS.length) {
+        stopAllSpeech(true);
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+      clearParagraphHighlights();
+
+      const row = document.getElementById(`para-row-${index}`);
+      const btn = document.querySelector(`.para-speak-btn[data-para-idx="${index}"]`);
+      if (row) row.classList.add("is-speaking");
+      if (btn) btn.classList.add("is-active");
+
+      const utter = new SpeechSynthesisUtterance(PARAGRAPH_TEXTS[index]);
+      utter.lang = "en-GB";
+      utter.rate = speechRate;
+      if (preferredFemaleVoice) utter.voice = preferredFemaleVoice;
+
+      utter.onend = () => {
+        clearParagraphHighlights();
+        if (continueToNext && isPlayingFull) {
+          currentParaIdx = index + 1;
+          if (currentParaIdx < PARAGRAPH_TEXTS.length) {
+            setTimeout(() => {
+              if (isPlayingFull) speakParagraph(currentParaIdx, true);
+            }, 260);
+          } else {
+            stopAllSpeech(true);
+          }
+        }
+      };
+
+      utter.onerror = () => {
+        clearParagraphHighlights();
+        stopAllSpeech(false);
+      };
+
+      window.speechSynthesis.speak(utter);
+    }
+
+    document.getElementById("playPauseBtn").addEventListener("click", () => {
+      if (isPlayingFull) {
+        stopAllSpeech(false);
+      } else {
+        isPlayingFull = true;
+        updatePlayBtnUi(true);
+        speakParagraph(currentParaIdx, true);
+      }
+    });
+
+    document.getElementById("restartBtn").addEventListener("click", () => {
+      stopAllSpeech(true);
+      isPlayingFull = true;
+      updatePlayBtnUi(true);
+      speakParagraph(0, true);
+    });
+
+    document.querySelectorAll(".speed-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        speechRate = parseFloat(btn.dataset.speed);
+        document.querySelectorAll(".speed-btn").forEach(b => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        if (isPlayingFull) {
+          speakParagraph(currentParaIdx, true);
+        }
+      });
+    });
+
+    document.querySelectorAll(".para-speak-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const idx = parseInt(btn.dataset.paraIdx, 10);
+        const wasActive = btn.classList.contains("is-active") && !isPlayingFull;
+        stopAllSpeech(false);
+        if (!wasActive) {
+          speakParagraph(idx, false);
+        }
+      });
+    });
+
+    /**
+     * 3. FLOATING VOCABULARY TOOLTIP & WORD PRONUNCIATION
+     */
+    const tooltipEl = document.getElementById("vocabTooltip");
+    const tooltipWordEl = document.getElementById("tooltipWord");
+    const tooltipIpaEl = document.getElementById("tooltipIpa");
+    const tooltipUkPhonEl = document.getElementById("tooltipUkPhon");
+    const tooltipUkTranslationEl = document.getElementById("tooltipUkTranslation");
+    const tooltipSpeakBtn = document.getElementById("tooltipSpeakBtn");
+
+    function speakWord(text) {
+      if (!("speechSynthesis" in window)) return;
+      try {
+        stopAllSpeech(false);
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "en-GB";
+        utter.rate = 0.88;
+        if (preferredFemaleVoice) utter.voice = preferredFemaleVoice;
+        window.speechSynthesis.speak(utter);
+      } catch (e) {}
+    }
+
+    function openVocabTooltip(targetEl, termKey) {
+      clearTimeout(hideTooltipTimer);
+      const entry = VOCABULARY_DATA[termKey];
+      if (!entry) return;
+
+      currentTooltipKey = termKey;
+      tooltipWordEl.textContent = termKey;
+      tooltipIpaEl.textContent = entry.ipa;
+      tooltipUkPhonEl.textContent = entry.ukPhon;
+      tooltipUkTranslationEl.textContent = entry.uk;
+
+      tooltipEl.classList.add("is-visible");
+
+      const rect = targetEl.getBoundingClientRect();
+      const tipRect = tooltipEl.getBoundingClientRect();
+
+      let top = rect.top - tipRect.height - 8;
+      if (top < 12) {
+        top = rect.bottom + 8;
+      }
+
+      let left = rect.left + rect.width / 2 - tipRect.width / 2;
+      left = Math.max(12, Math.min(left, window.innerWidth - tipRect.width - 12));
+
+      tooltipEl.style.top = `${top}px`;
+      tooltipEl.style.left = `${left}px`;
+    }
+
+    function scheduleHideTooltip() {
+      hideTooltipTimer = setTimeout(() => {
+        tooltipEl.classList.remove("is-visible");
+      }, 240);
+    }
+
+    document.querySelectorAll(".vocab-term").forEach(termEl => {
+      const key = termEl.dataset.term;
+      termEl.addEventListener("mouseenter", () => openVocabTooltip(termEl, key));
+      termEl.addEventListener("mouseleave", scheduleHideTooltip);
+      termEl.addEventListener("focus", () => openVocabTooltip(termEl, key));
+      termEl.addEventListener("blur", scheduleHideTooltip);
+      termEl.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openVocabTooltip(termEl, key);
+        const entry = VOCABULARY_DATA[key];
+        if (entry) speakWord(entry.speak);
+      });
+    });
+
+    tooltipEl.addEventListener("mouseenter", () => clearTimeout(hideTooltipTimer));
+    tooltipEl.addEventListener("mouseleave", scheduleHideTooltip);
+
+    tooltipSpeakBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const entry = VOCABULARY_DATA[currentTooltipKey];
+      if (entry) speakWord(entry.speak);
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("#vocabTooltip") && !e.target.closest(".vocab-term")) {
+        tooltipEl.classList.remove("is-visible");
+      }
+    });
+
+    /**
+     * 4. LIVE COMPLETION COUNTER (4 + 5 + 6 + 4 = 19 ITEMS)
+     */
+    function updateAllProgress() {
+      let ex1Count = 0;
+      for (let i = 1; i <= 4; i++) {
+        const checked = document.querySelector(`input[name="ex1_q${i}"]:checked`);
+        const card = document.getElementById(`ex1-card-${i}`);
+        const filled = Boolean(checked);
+        if (filled) ex1Count++;
+        if (card) card.classList.toggle("is-filled", filled);
+      }
+
+      let ex2Count = 0;
+      for (let i = 1; i <= 5; i++) {
+        const checked = document.querySelector(`input[name="ex2_tf${i}"]:checked`);
+        const row = document.getElementById(`ex2-row-${i}`);
+        const filled = Boolean(checked);
+        if (filled) ex2Count++;
+        if (row) row.classList.toggle("is-filled", filled);
+      }
+
+      let ex3Count = 0;
+      for (let i = 1; i <= 6; i++) {
+        const sel = document.getElementById(`ex3-sel-${i}`);
+        const row = document.getElementById(`ex3-row-${i}`);
+        const filled = Boolean(sel && sel.value !== "");
+        if (filled) ex3Count++;
+        if (row) row.classList.toggle("is-filled", filled);
+      }
+
+      let ex4Count = 0;
+      for (let i = 1; i <= 4; i++) {
+        const ta = document.getElementById(`ex4-ta-${i}`);
+        const card = document.getElementById(`ex4-card-${i}`);
+        const filled = Boolean(ta && ta.value.trim().length > 0);
+        if (filled) ex4Count++;
+        if (card) card.classList.toggle("is-filled", filled);
+      }
+
+      const totalDone = ex1Count + ex2Count + ex3Count + ex4Count;
+      document.getElementById("topProgressBadge").textContent = `Виконано: ${totalDone} / 19`;
+      document.getElementById("footerSummaryTitle").textContent = `Виконано завдань: ${totalDone} / 19`;
+    }
+
+    document.querySelectorAll(".ex1-radio, .ex2-radio").forEach(radio => {
+      radio.addEventListener("change", updateAllProgress);
+    });
+
+    document.querySelectorAll(".pronoun-select").forEach(sel => {
+      sel.addEventListener("change", updateAllProgress);
+    });
+
+    document.querySelectorAll(".open-answer-textarea").forEach(ta => {
+      ta.addEventListener("input", updateAllProgress);
+    });
+
+    /**
+     * 5. TWO-STEP CONFIRMATION RESET BUTTON (No alert() / confirm())
+     */
+    const clearAllBtn = document.getElementById("clearAllBtn");
+    const clearAllLabel = document.getElementById("clearAllLabel");
+
+    function resetClearBtnState() {
+      isClearArmed = false;
+      clearAllBtn.classList.remove("is-armed");
+      clearAllLabel.textContent = "Очистити всі відповіді";
+    }
+
+    clearAllBtn.addEventListener("click", () => {
+      const hasAnyInput =
+        Boolean(document.querySelector(".ex1-radio:checked")) ||
+        Boolean(document.querySelector(".ex2-radio:checked")) ||
+        Array.from(document.querySelectorAll(".pronoun-select")).some(s => s.value !== "") ||
+        Array.from(document.querySelectorAll(".open-answer-textarea")).some(t => t.value.trim() !== "");
+
+      if (!hasAnyInput) return;
+
+      if (!isClearArmed) {
+        isClearArmed = true;
+        clearAllBtn.classList.add("is-armed");
+        clearAllLabel.textContent = "Підтвердити очищення?";
+        clearTimeout(clearArmedTimer);
+        clearArmedTimer = setTimeout(resetClearBtnState, 3200);
+        return;
+      }
+
+      clearTimeout(clearArmedTimer);
+
+      document.querySelectorAll(".ex1-radio, .ex2-radio").forEach(radio => {
+        radio.checked = false;
+      });
+      document.querySelectorAll(".pronoun-select").forEach(sel => {
+        sel.value = "";
+      });
+      document.querySelectorAll(".open-answer-textarea").forEach(ta => {
+        ta.value = "";
+      });
+
+      updateAllProgress();
+      resetClearBtnState();
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      updateAllProgress();
+    });
+  </script>
+</body>
+</html>
