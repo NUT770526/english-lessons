@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Game — Good habit or bad habit?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfcf7;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        /* Custom subtle scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        /* Hoverable interactive word styling */
+        .vocab-word {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            border-bottom: 1.5px dashed #7dd3fc;
+            transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+            border-radius: 5px;
+            padding: 0 2px;
+        }
+        .vocab-word:hover, .vocab-word.active-tooltip {
+            color: #0369a1;
+            border-bottom-color: #0284c7;
+            background-color: #e0f2fe;
+        }
+        /* Subtle styling for words inside headings or buttons */
+        h1 .vocab-word, h2 .vocab-word {
+            border-bottom-color: #bae6fd;
+        }
+        button .vocab-word {
+            border-bottom: none;
+            padding: 0;
+        }
+        button .vocab-word:hover {
+            background-color: transparent;
+            color: inherit;
+        }
+
+        /* Habit Choice Buttons */
+        .habit-btn {
+            background-color: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            color: #334155;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .habit-btn:hover:not(.locked) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
+        }
+        .habit-btn.good-btn:hover:not(.locked) {
+            background-color: #f0f9ff;
+            border-color: #7dd3fc;
+            color: #0369a1;
+        }
+        .habit-btn.bad-btn:hover:not(.locked) {
+            background-color: #fefce8;
+            border-color: #fde047;
+            color: #854d0e;
+        }
+
+        /* Selected / Feedback states for Habit Buttons */
+        .habit-btn.selected-good-correct {
+            background-color: #e0f2fe;
+            border-color: #0284c7;
+            color: #0c4a6e;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+        }
+        .habit-btn.selected-bad-correct {
+            background-color: #fef9c3;
+            border-color: #eab308;
+            color: #713f12;
+            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.28);
+        }
+        .habit-btn.selected-wrong {
+            background-color: #fef2f2;
+            border-color: #f87171;
+            color: #b91c1c;
+        }
+
+        /* Word bank pill styling - Soft Pastel Yellow */
+        .word-chip {
+            user-select: none;
+            background-color: #fef9c3;
+            border: 1.5px solid #fde047;
+            color: #1e293b;
+            box-shadow: 0 2px 5px rgba(234, 179, 8, 0.08);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .word-chip:hover:not(.used) {
+            background-color: #fef08a;
+            border-color: #facc15;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(234, 179, 8, 0.18);
+        }
+        .word-chip.selected {
+            border-color: #0284c7;
+            background-color: #bae6fd;
+            color: #0c4a6e;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+        }
+        .word-chip.used {
+            opacity: 0.45;
+            text-decoration: line-through;
+            cursor: default;
+            box-shadow: none;
+        }
+
+        /* Input slot states */
+        .phrase-input {
+            background-color: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            color: #0f172a;
+            transition: all 0.2s ease;
+        }
+        .phrase-input:hover:not(.correct):not(.incorrect) {
+            border-color: #7dd3fc;
+            background-color: #f0f9ff;
+        }
+        .phrase-input:focus {
+            outline: none;
+            border-color: #38bdf8;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22);
+        }
+        .phrase-input.drag-over {
+            border-color: #0284c7;
+            background-color: #e0f2fe;
+            transform: scale(1.01);
+        }
+        .phrase-input.correct {
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+            color: #15803d;
+        }
+        .phrase-input.incorrect {
+            border-color: #f87171;
+            background-color: #fef2f2;
+            color: #b91c1c;
+        }
+
+        /* Floating Tooltip */
+        #vocab-tooltip {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: auto;
+            opacity: 0;
+            transform: translateY(6px) scale(0.97);
+            transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+            visibility: hidden;
+            box-shadow: 0 12px 30px -4px rgba(15, 23, 42, 0.14), 0 4px 10px -2px rgba(15, 23, 42, 0.06);
+        }
+        #vocab-tooltip.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-6 px-4 sm:px-6 md:px-10">
+
+    <!-- Main Container -->
+    <main class="w-full max-w-4xl space-y-8">
+        
+        <!-- Sticky Top Control Bar -->
+        <header class="sticky top-3 z-40 bg-white/95 backdrop-blur-md border border-[#bae6fd] rounded-2xl p-3.5 sm:px-5 sm:py-3.5 shadow-sm flex flex-wrap items-center justify-between gap-3">
+            <!-- Student Helper Hint -->
+            <!-- Helper Hint -->
+            <div class="flex items-center gap-2 text-xs sm:text-sm text-slate-600">
+                <span class="flex items-center justify-center w-7 h-7 rounded-full bg-[#fef9c3] border border-[#fde047] text-sm shrink-0">💡</span>
+                <span>Hover over <span class="text-sky-700 font-semibold underline decoration-dashed decoration-sky-400">any word</span> for Ukrainian translation, transcription &amp; audio</span>
+            </div>
+
+            <!-- Controls: Timer, Global Score, Accent -->
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3 ml-auto">
+                <!-- 4-Minute Game Timer -->
+                <div class="flex items-center gap-1.5 bg-[#f0f7ff] border border-[#bae6fd] rounded-full px-3 py-1 text-xs sm:text-sm">
+                    <span class="text-sky-700 font-semibold font-mono" id="timer-display">04:00</span>
+                    <button id="timer-toggle-btn" onclick="toggleTimer()" class="px-2.5 py-0.5 rounded-full bg-[#fef9c3] hover:bg-[#fef08a] text-slate-800 border border-[#fde047] font-semibold text-xs transition cursor-pointer">
+                        Start
+                    </button>
+                    <button onclick="resetTimer()" title="Reset timer" class="p-1 text-sky-700 hover:text-sky-900 transition cursor-pointer">
+                        ↺
+                    </button>
+                </div>
+
+                <!-- Global Score -->
+                <div class="bg-[#fefce8] border border-[#fde047] rounded-full px-3.5 py-1 text-xs sm:text-sm font-semibold text-slate-800">
+                    Score: <span id="global-score" class="text-sky-700 font-bold">0</span> / <span id="global-total">24</span>
+                </div>
+
+                <!-- Accent Toggle -->
+                <div class="flex items-center gap-1 bg-[#eff6ff] border border-sky-200 rounded-full p-1 text-xs">
+                    <button id="accent-uk" onclick="setAccent('en-GB')" class="px-2.5 py-0.5 rounded-full font-semibold transition bg-[#fef9c3] text-slate-800 border border-[#fde047] shadow-2xs cursor-pointer">
+                        🇬🇧 UK
+                    </button>
+                    <button id="accent-us" onclick="setAccent('en-US')" class="px-2.5 py-0.5 rounded-full font-medium transition text-sky-700 hover:bg-sky-100/70 cursor-pointer">
+                        🇺🇸 US
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- ========================================================= -->
+        <!-- LISTENING STUDIO: Article Text Hidden by Default          -->
+        <!-- ========================================================= -->
+        <section class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-8" style="box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);">
+            <div class="flex flex-wrap items-start justify-between gap-4 mb-5">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e0f2fe] text-[#0369a1] text-xs font-semibold mb-2">
+                        <span id="listen-tag"></span>
+                    </div>
+                    <h1 id="listen-title" class="text-xl sm:text-2xl font-bold tracking-tight text-slate-800"></h1>
+                    <p id="listen-instruction" class="text-sm text-slate-600 mt-1 leading-relaxed"></p>
+                </div>
+
+                <!-- Optional Show/Hide Reading Text Toggle -->
+                <button
+                    type="button"
+                    id="toggle-text-btn"
+                    onclick="toggleArticleText()"
+                    class="px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-[#f0f7ff] hover:bg-[#e0f2fe] text-[#0369a1] border border-[#7dd3fc] transition cursor-pointer inline-flex items-center gap-1.5 shrink-0"
+                >
+                    <span>👁️</span>
+                    <span id="toggle-text-label"></span>
+                </button>
+            </div>
+
+            <!-- Main Audio Controls & Paragraph Selector -->
+            <div class="bg-[#f0f7ff] border border-[#bae6fd] rounded-2xl p-4 sm:p-5 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button
+                            type="button"
+                            onclick="playFullArticle()"
+                            class="px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-[#fef9c3] hover:bg-[#fef08a] active:scale-95 text-slate-800 border border-[#fde047] transition cursor-pointer inline-flex items-center gap-1.5 shadow-2xs"
+                        >
+                            <span>▶</span>
+                            <span id="play-all-label"></span>
+                        </button>
+
+                        <button
+                            type="button"
+                            onclick="stopAudio()"
+                            class="px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white hover:bg-slate-50 active:scale-95 text-slate-700 border border-slate-200 transition cursor-pointer inline-flex items-center gap-1.5"
+                        >
+                            <span>⏹</span>
+                            <span id="stop-audio-label"></span>
+                        </button>
+                    </div>
+
+                    <!-- Speed & Status Indicator -->
+                    <div class="flex flex-wrap items-center gap-2 text-xs">
+                        <span id="audio-status" class="px-3 py-1 rounded-full bg-white text-sky-800 border border-[#bae6fd] font-medium">
+                            Ready to listen
+                        </span>
+
+                        <div class="flex items-center gap-1 bg-white border border-[#bae6fd] rounded-full p-0.5">
+                            <button type="button" id="speed-08" onclick="setAudioSpeed(0.8)" class="px-2 py-0.5 rounded-full font-medium text-sky-700 hover:bg-sky-50 cursor-pointer">0.8x</button>
+                            <button type="button" id="speed-095" onclick="setAudioSpeed(0.95)" class="px-2 py-0.5 rounded-full font-semibold bg-[#fef9c3] text-slate-800 border border-[#fde047] cursor-pointer">1.0x</button>
+                            <button type="button" id="speed-11" onclick="setAudioSpeed(1.1)" class="px-2 py-0.5 rounded-full font-medium text-sky-700 hover:bg-sky-50 cursor-pointer">1.1x</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Individual Paragraph Audio Buttons (1 to 4) -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                    <button type="button" id="para-btn-1" onclick="playParagraph(1)" class="px-3 py-2 rounded-xl bg-white hover:bg-[#fefce8] text-slate-700 border border-[#bae6fd] hover:border-[#fde047] text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5">
+                        <span>🔊</span>
+                        <span id="para-btn-1-label"></span>
+                    </button>
+                    <button type="button" id="para-btn-2" onclick="playParagraph(2)" class="px-3 py-2 rounded-xl bg-white hover:bg-[#fefce8] text-slate-700 border border-[#bae6fd] hover:border-[#fde047] text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5">
+                        <span>🔊</span>
+                        <span id="para-btn-2-label"></span>
+                    </button>
+                    <button type="button" id="para-btn-3" onclick="playParagraph(3)" class="px-3 py-2 rounded-xl bg-white hover:bg-[#fefce8] text-slate-700 border border-[#bae6fd] hover:border-[#fde047] text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5">
+                        <span>🔊</span>
+                        <span id="para-btn-3-label"></span>
+                    </button>
+                    <button type="button" id="para-btn-4" onclick="playParagraph(4)" class="px-3 py-2 rounded-xl bg-white hover:bg-[#fefce8] text-slate-700 border border-[#bae6fd] hover:border-[#fde047] text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5">
+                        <span>🔊</span>
+                        <span id="para-btn-4-label"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Optional Revealed Article Text (Hidden by Default) -->
+            <div id="article-text-panel" class="hidden mt-5 p-4 sm:p-6 rounded-2xl bg-[#fdfcf7] border border-[#fde047] space-y-4">
+                <div class="flex items-center justify-between gap-2 pb-2 border-b border-amber-200/70">
+                    <span id="revealed-text-heading" class="text-xs uppercase tracking-wider font-bold text-amber-800"></span>
+                    <span class="text-xs text-slate-500">Hover any word for translation &amp; audio</span>
+                </div>
+                <div id="article-paragraphs-container" class="space-y-3.5 text-sm sm:text-base text-slate-700 leading-relaxed">
+                    <!-- Populated dynamically by JS only when toggled visible -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- EXERCISE A: Paragraph Matching (1-8 -> P1, P2, P3, P4)    -->
+        <!-- ========================================================= -->
+        <section class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-8" style="box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);">
+            <div class="mb-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e0f2fe] text-[#0369a1] text-xs font-semibold mb-2">
+                    <span id="exa-tag"></span>
+                </div>
+                <h2 id="exa-title" class="text-lg sm:text-xl font-bold tracking-tight text-slate-800"></h2>
+                <p id="exa-instruction" class="text-sm text-slate-600 mt-1 leading-relaxed"></p>
+            </div>
+
+            <div id="exa-list" class="space-y-3">
+                <!-- Populated by JS -->
+            </div>
+
+            <div class="mt-7 pt-5 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
+                <span class="text-sm font-medium text-slate-600">
+                    Correct: <span id="exa-score" class="text-slate-900 font-bold">0</span> / 8
+                </span>
+                <button onclick="resetExA()" class="px-5 py-2 rounded-full text-sm font-semibold bg-[#e0f2fe] hover:bg-[#bae6fd] active:scale-95 text-[#0369a1] border border-[#7dd3fc] transition shadow-2xs cursor-pointer">
+                    Try again
+                </button>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- EXERCISE B: True or False (Based on the 4 Paragraphs)     -->
+        <!-- ========================================================= -->
+        <section class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-8" style="box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);">
+            <div class="mb-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#fef9c3] text-amber-900 border border-[#fde047] text-xs font-semibold mb-2">
+                    <span id="exb-tag"></span>
+                </div>
+                <h2 id="exb-title" class="text-lg sm:text-xl font-bold tracking-tight text-slate-800"></h2>
+                <p id="exb-instruction" class="text-sm text-slate-600 mt-1 leading-relaxed"></p>
+            </div>
+
+            <div id="exb-list" class="space-y-3">
+                <!-- Populated by JS -->
+            </div>
+
+            <div class="mt-7 pt-5 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
+                <span class="text-sm font-medium text-slate-600">
+                    Correct: <span id="exb-score" class="text-slate-900 font-bold">0</span> / 8
+                </span>
+                <button onclick="resetExB()" class="px-5 py-2 rounded-full text-sm font-semibold bg-[#e0f2fe] hover:bg-[#bae6fd] active:scale-95 text-[#0369a1] border border-[#7dd3fc] transition shadow-2xs cursor-pointer">
+                    Try again
+                </button>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- EXERCISE C: Complete the Sentences (Key Article Words)    -->
+        <!-- ========================================================= -->
+        <section class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-8" style="box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);">
+            <div class="mb-5">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e0f2fe] text-[#0369a1] text-xs font-semibold mb-2">
+                    <span id="exc-tag"></span>
+                </div>
+                <h2 id="exc-title" class="text-lg sm:text-xl font-bold tracking-tight text-slate-800"></h2>
+                <p id="exc-instruction" class="text-sm text-slate-600 mt-1 leading-relaxed"></p>
+            </div>
+
+            <!-- Pastel Blue Container with Pastel Yellow Word Bank Chips -->
+            <div class="bg-[#f0f7ff] border border-[#bae6fd] rounded-2xl p-4 mb-6">
+                <div id="exc-bank-label" class="text-[11px] uppercase tracking-wider text-sky-700/80 font-semibold mb-2.5 text-center"></div>
+                <div id="exc-word-bank" class="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <div id="exc-list" class="space-y-3">
+                <!-- Populated by JS -->
+            </div>
+
+            <div class="mt-7 pt-5 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
+                <span class="text-sm font-medium text-slate-600">
+                    Correct: <span id="exc-score" class="text-slate-900 font-bold">0</span> / 8
+                </span>
+
+                <div class="flex items-center gap-2.5 ml-auto">
+                    <button onclick="checkExCAll()" class="px-5 py-2 rounded-full text-sm font-semibold bg-[#fef9c3] hover:bg-[#fef08a] active:scale-95 text-slate-800 border border-[#fde047] transition shadow-2xs cursor-pointer">
+                        Check answers
+                    </button>
+                    <button onclick="resetExC()" class="px-5 py-2 rounded-full text-sm font-semibold bg-[#e0f2fe] hover:bg-[#bae6fd] active:scale-95 text-[#0369a1] border border-[#7dd3fc] transition shadow-2xs cursor-pointer">
+                        Try again
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Reset All Bar -->
+        <div class="flex justify-center pb-4">
+            <button onclick="resetAll()" class="px-6 py-2.5 rounded-full text-sm font-semibold bg-[#fef9c3] hover:bg-[#fef08a] active:scale-95 text-slate-800 border border-[#fde047] transition shadow-sm cursor-pointer">
+                🔄 Reset All
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Floating Dictionary & TTS Tooltip -->
+    <div id="vocab-tooltip" role="tooltip" class="w-64 sm:w-72 bg-white border-2 border-[#bae6fd] rounded-2xl p-4 text-left">
+        <div class="flex items-start justify-between gap-2">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span id="tt-word" class="text-lg font-bold text-slate-800 tracking-tight">habit</span>
+                    <span id="tt-pos" class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-[#fefce8] text-amber-800 border border-[#fde047]">noun</span>
+                </div>
+                <div id="tt-ipa" class="inline-block text-xs sm:text-sm font-mono font-medium bg-[#e0f2fe] text-[#0369a1] px-2 py-0.5 rounded-md mt-1.5">/ˈhæbɪt/</div>
+            </div>
+            
+            <!-- Audio Button in Pastel Yellow -->
+            <button id="tt-speak-btn" type="button" title="Listen to pronunciation" class="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#fef9c3] hover:bg-[#fef08a] active:scale-95 text-slate-800 border border-[#fde047] transition shrink-0 cursor-pointer shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="mt-3 pt-2.5 border-t border-slate-100">
+            <div class="text-[11px] uppercase tracking-wider text-sky-600 font-semibold">Переклад</div>
+            <div id="tt-translation" class="text-sm sm:text-base font-bold text-slate-800 mt-0.5">
+                звичка
+            </div>
+            <div id="tt-context" class="text-xs text-slate-500 mt-1 italic hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        // =====================================================================
+        // COMPREHENSIVE DICTIONARY (Every English word on the page is covered)
+        // =====================================================================
+        const dictionary = {
+            // Core target phrases vocabulary
+            "go": { ipaUK: "/ɡəʊ/", ipaUS: "/ɡoʊ/", pos: "verb", ua: "йти, ходити", context: "go to bed — лягати спати" },
+            "to": { ipaUK: "/tuː/", ipaUS: "/tuː/", pos: "prep", ua: "до, у, щоб" },
+            "bed": { ipaUK: "/bed/", ipaUS: "/bed/", pos: "noun", ua: "ліжко", context: "make your bed — застеляти ліжко" },
+            "early": { ipaUK: "/ˈɜːli/", ipaUS: "/ˈɜːrli/", pos: "adv/adj", ua: "рано; ранній" },
+            "skip": { ipaUK: "/skɪp/", ipaUS: "/skɪp/", pos: "verb", ua: "пропускати", context: "skip breakfast — пропускати сніданок" },
+            "breakfast": { ipaUK: "/ˈbrekfəst/", ipaUS: "/ˈbrekfəst/", pos: "noun", ua: "сніданок" },
+            "prepare": { ipaUK: "/prɪˈpeə(r)/", ipaUS: "/prɪˈper/", pos: "verb", ua: "готувати, збирати" },
+            "your": { ipaUK: "/jɔː(r)/", ipaUS: "/jʊr/", pos: "pron", ua: "твій, ваш, свій" },
+            "school": { ipaUK: "/skuːl/", ipaUS: "/skuːl/", pos: "noun", ua: "школа; шкільний" },
+            "bag": { ipaUK: "/bæɡ/", ipaUS: "/bæɡ/", pos: "noun", ua: "сумка, рюкзак, портфель" },
+            "play": { ipaUK: "/pleɪ/", ipaUS: "/pleɪ/", pos: "verb", ua: "грати" },
+            "video": { ipaUK: "/ˈvɪdiəʊ/", ipaUS: "/ˈvɪdioʊ/", pos: "noun", ua: "відео" },
+            "games": { ipaUK: "/ɡeɪmz/", ipaUS: "/ɡeɪmz/", pos: "noun (pl)", ua: "ігри" },
+            "all": { ipaUK: "/ɔːl/", ipaUS: "/ɔːl/", pos: "det", ua: "весь, цілий" },
+            "night": { ipaUK: "/naɪt/", ipaUS: "/naɪt/", pos: "noun", ua: "ніч", context: "all night — всю ніч" },
+            "help": { ipaUK: "/help/", ipaUS: "/help/", pos: "verb", ua: "допомагати" },
+            "each": { ipaUK: "/iːtʃ/", ipaUS: "/iːtʃ/", pos: "pron", ua: "кожний", context: "each other — один одному" },
+            "other": { ipaUK: "/ˈʌðə(r)/", ipaUS: "/ˈʌðər/", pos: "pron", ua: "інший" },
+            "sleep": { ipaUK: "/sliːp/", ipaUS: "/sliːp/", pos: "verb/noun", ua: "спати; сон" },
+            "for": { ipaUK: "/fɔː(r)/", ipaUS: "/fɔːr/", pos: "prep", ua: "протягом; для" },
+            "only": { ipaUK: "/ˈəʊnli/", ipaUS: "/ˈoʊnli/", pos: "adv", ua: "тільки, лише" },
+            "four": { ipaUK: "/fɔː(r)/", ipaUS: "/fɔːr/", pos: "num", ua: "чотири" },
+            "hours": { ipaUK: "/ˈaʊəz/", ipaUS: "/ˈaʊərz/", pos: "noun (pl)", ua: "години" },
+            "make": { ipaUK: "/meɪk/", ipaUS: "/meɪk/", pos: "verb", ua: "робити; застеляти (ліжко)" },
+            "use": { ipaUK: "/juːz/", ipaUS: "/juːz/", pos: "verb", ua: "використовувати, користуватися" },
+            "phone": { ipaUK: "/fəʊn/", ipaUS: "/foʊn/", pos: "noun", ua: "телефон" },
+
+            // Article & Exercises Vocabulary
+            "successful": { ipaUK: "/səkˈsesfl/", ipaUS: "/səkˈsesfl/", pos: "adj", ua: "успішний" },
+            "students": { ipaUK: "/ˈstjuːdnts/", ipaUS: "/ˈstuːdnts/", pos: "noun (pl)", ua: "учні, студенти" },
+            "create": { ipaUK: "/kriˈeɪt/", ipaUS: "/kriˈeɪt/", pos: "verb", ua: "створювати, складати" },
+            "schedule": { ipaUK: "/ˈʃedjuːl/", ipaUS: "/ˈskedʒuːl/", pos: "noun", ua: "розклад, графік" },
+            "day": { ipaUK: "/deɪ/", ipaUS: "/deɪ/", pos: "noun", ua: "день" },
+            "week": { ipaUK: "/wiːk/", ipaUS: "/wiːk/", pos: "noun", ua: "тиждень" },
+            "month": { ipaUK: "/mʌnθ/", ipaUS: "/mʌnθ/", pos: "noun", ua: "місяць" },
+            "even": { ipaUK: "/ˈiːvn/", ipaUS: "/ˈiːvn/", pos: "adv", ua: "навіть" },
+            "year": { ipaUK: "/jɪə(r)/", ipaUS: "/jɪr/", pos: "noun", ua: "рік" },
+            "they": { ipaUK: "/ðeɪ/", ipaUS: "/ðeɪ/", pos: "pron", ua: "вони" },
+            "have": { ipaUK: "/hæv/", ipaUS: "/hæv/", pos: "verb", ua: "мати; їсти (сніданок)" },
+            "plan": { ipaUK: "/plæn/", ipaUS: "/plæn/", pos: "noun", ua: "план" },
+            "their": { ipaUK: "/ðeə(r)/", ipaUS: "/ðer/", pos: "pron", ua: "їхній" },
+            "free": { ipaUK: "/friː/", ipaUS: "/friː/", pos: "adj", ua: "вільний" },
+            "say": { ipaUK: "/seɪ/", ipaUS: "/seɪ/", pos: "verb", ua: "казати, говорити" },
+            "life": { ipaUK: "/laɪf/", ipaUS: "/laɪf/", pos: "noun", ua: "життя" },
+            "easy": { ipaUK: "/ˈiːzi/", ipaUS: "/ˈiːzi/", pos: "adj", ua: "легкий, простий" },
+            "helps": { ipaUK: "/helps/", ipaUS: "/helps/", pos: "verb", ua: "допомагає" },
+            "them": { ipaUK: "/ðem/", ipaUS: "/ðem/", pos: "pron", ua: "їм, їх" },
+            "happy": { ipaUK: "/ˈhæpi/", ipaUS: "/ˈhæpi/", pos: "adj", ua: "щасливий, задоволений" },
+            "how": { ipaUK: "/haʊ/", ipaUS: "/haʊ/", pos: "adv", ua: "як" },
+            "start": { ipaUK: "/stɑːt/", ipaUS: "/stɑːrt/", pos: "verb", ua: "починати" },
+            "on": { ipaUK: "/ɒn/", ipaUS: "/ɑːn/", pos: "prep", ua: "у (дні тижня), на" },
+            "days": { ipaUK: "/deɪz/", ipaUS: "/deɪz/", pos: "noun (pl)", ua: "дні" },
+            "get": { ipaUK: "/ɡet/", ipaUS: "/ɡet/", pos: "verb", ua: "ставати; збиратися" },
+            "up": { ipaUK: "/ʌp/", ipaUS: "/ʌp/", pos: "adv/prep", ua: "вгору; прокидатися" },
+            "tidy": { ipaUK: "/ˈtaɪdi/", ipaUS: "/ˈtaɪdi/", pos: "adj", ua: "охайний, прибраний" },
+            "room": { ipaUK: "/ruːm/", ipaUS: "/ruːm/", pos: "noun", ua: "кімната" },
+            "find": { ipaUK: "/faɪnd/", ipaUS: "/faɪnd/", pos: "verb", ua: "знаходити" },
+            "things": { ipaUK: "/θɪŋz/", ipaUS: "/θɪŋz/", pos: "noun (pl)", ua: "речі" },
+            "brush": { ipaUK: "/brʌʃ/", ipaUS: "/brʌʃ/", pos: "verb", ua: "чистити (зуби, волосся)" },
+            "teeth": { ipaUK: "/tiːθ/", ipaUS: "/tiːθ/", pos: "noun (pl)", ua: "зуби" },
+            "ready": { ipaUK: "/ˈredi/", ipaUS: "/ˈredi/", pos: "adj", ua: "готовий" },
+            "forget": { ipaUK: "/fəˈɡet/", ipaUS: "/fərˈɡet/", pos: "verb", ua: "забувати" },
+            "always": { ipaUK: "/ˈɔːlweɪz/", ipaUS: "/ˈɔːlweɪz/", pos: "adv", ua: "завжди" },
+            "food": { ipaUK: "/fuːd/", ipaUS: "/fuːd/", pos: "noun", ua: "їжа" },
+            "important": { ipaUK: "/ɪmˈpɔːtnt/", ipaUS: "/ɪmˈpɔːrtnt/", pos: "adj", ua: "важливий" },
+            "body": { ipaUK: "/ˈbɒdi/", ipaUS: "/ˈbɑːdi/", pos: "noun", ua: "тіло" },
+            "brain": { ipaUK: "/breɪn/", ipaUS: "/breɪn/", pos: "noun", ua: "мозок" },
+            "before": { ipaUK: "/bɪˈfɔː(r)/", ipaUS: "/bɪˈfɔːr/", pos: "prep/conj", ua: "до, перед тим як" },
+            "add": { ipaUK: "/æd/", ipaUS: "/æd/", pos: "verb", ua: "додавати, покласти" },
+            "lunch": { ipaUK: "/lʌntʃ/", ipaUS: "/lʌntʃ/", pos: "noun", ua: "ланч, обід (з собою)" },
+            "snack": { ipaUK: "/snæk/", ipaUS: "/snæk/", pos: "noun", ua: "перекус" },
+            "leave": { ipaUK: "/liːv/", ipaUS: "/liːv/", pos: "verb", ua: "виходити, залишати" },
+            "home": { ipaUK: "/həʊm/", ipaUS: "/hoʊm/", pos: "noun/adv", ua: "дім, додому" },
+            "now": { ipaUK: "/naʊ/", ipaUS: "/naʊ/", pos: "adv", ua: "зараз, тепер" },
+            "classes": { ipaUK: "/ˈklɑːsɪz/", ipaUS: "/ˈklæsɪz/", pos: "noun (pl)", ua: "уроки, заняття" },
+            "chat": { ipaUK: "/tʃæt/", ipaUS: "/tʃæt/", pos: "verb/noun", ua: "базікати, спілкуватися" },
+            "with": { ipaUK: "/wɪð/", ipaUS: "/wɪð/", pos: "prep", ua: "з, разом з" },
+            "friends": { ipaUK: "/frendz/", ipaUS: "/frendz/", pos: "noun (pl)", ua: "друзі" },
+            "about": { ipaUK: "/əˈbaʊt/", ipaUS: "/əˈbaʊt/", pos: "prep", ua: "про, щодо" },
+            "plans": { ipaUK: "/plænz/", ipaUS: "/plænz/", pos: "noun (pl)", ua: "плани" },
+            "weekend": { ipaUK: "/ˌwiːkˈend/", ipaUS: "/ˈwiːkend/", pos: "noun", ua: "вихідні" },
+            "choose": { ipaUK: "/tʃuːz/", ipaUS: "/tʃuːz/", pos: "verb", ua: "обирати" },
+            "meet": { ipaUK: "/miːt/", ipaUS: "/miːt/", pos: "verb", ua: "зустрічатися" },
+            "sport": { ipaUK: "/spɔːt/", ipaUS: "/spɔːrt/", pos: "noun", ua: "спорт" },
+            "watch": { ipaUK: "/wɒtʃ/", ipaUS: "/wɑːtʃ/", pos: "verb", ua: "дивитися (фільм, ТБ)" },
+            "film": { ipaUK: "/fɪlm/", ipaUS: "/fɪlm/", pos: "noun", ua: "фільм" },
+            "ask": { ipaUK: "/ɑːsk/", ipaUS: "/æsk/", pos: "verb", ua: "просити, питати" },
+            "study": { ipaUK: "/ˈstʌdi/", ipaUS: "/ˈstʌdi/", pos: "verb", ua: "вчитися, займатися" },
+            "after": { ipaUK: "/ˈɑːftə(r)/", ipaUS: "/ˈæftər/", pos: "prep/conj", ua: "після" },
+            "sometimes": { ipaUK: "/ˈsʌmtaɪmz/", ipaUS: "/ˈsʌmtaɪmz/", pos: "adv", ua: "іноді" },
+            "homework": { ipaUK: "/ˈhəʊmwɜːk/", ipaUS: "/ˈhoʊmwɜːrk/", pos: "noun", ua: "домашнє завдання" },
+            "difficult": { ipaUK: "/ˈdɪfɪkəlt/", ipaUS: "/ˈdɪfɪkəlt/", pos: "adj", ua: "складний, важкий" },
+            "nice": { ipaUK: "/naɪs/", ipaUS: "/naɪs/", pos: "adj", ua: "приємно, добре" },
+            "work": { ipaUK: "/wɜːk/", ipaUS: "/wɜːrk/", pos: "verb", ua: "працювати, займатися" },
+            "each": { ipaUK: "/iːtʃ/", ipaUS: "/iːtʃ/", pos: "pron/det", ua: "кожний" },
+            "other": { ipaUK: "/ˈʌðə(r)/", ipaUS: "/ˈʌðər/", pos: "pron", ua: "інший" },
+            "sure": { ipaUK: "/ʃɔː(r)/", ipaUS: "/ʃʊr/", pos: "adj", ua: "впевнений" },
+            "need": { ipaUK: "/niːd/", ipaUS: "/niːd/", pos: "verb", ua: "потрібно, мати потребу" },
+            "eight": { ipaUK: "/eɪt/", ipaUS: "/eɪt/", pos: "num", ua: "вісім" },
+            "ten": { ipaUK: "/ten/", ipaUS: "/ten/", pos: "num", ua: "десять" },
+            "hours": { ipaUK: "/ˈaʊəz/", ipaUS: "/ˈaʊərz/", pos: "noun (pl)", ua: "години" },
+            "every": { ipaUK: "/ˈevri/", ipaUS: "/ˈevri/", pos: "det", ua: "кожний" },
+            "night": { ipaUK: "/naɪt/", ipaUS: "/naɪt/", pos: "noun", ua: "ніч" },
+            "this": { ipaUK: "/ðɪs/", ipaUS: "/ðɪs/", pos: "pron/det", ua: "це, цей" },
+            "wake": { ipaUK: "/weɪk/", ipaUS: "/weɪk/", pos: "verb", ua: "прокидатися" },
+            "feel": { ipaUK: "/fiːl/", ipaUS: "/fiːl/", pos: "verb", ua: "почуватися" },
+            "next": { ipaUK: "/nekst/", ipaUS: "/nekst/", pos: "adj", ua: "наступний" },
+            "relax": { ipaUK: "/rɪˈlæks/", ipaUS: "/rɪˈlæks/", pos: "verb", ua: "розслаблятися, відпочивати" },
+            "book": { ipaUK: "/bʊk/", ipaUS: "/bʊk/", pos: "noun", ua: "книга" },
+            "write": { ipaUK: "/raɪt/", ipaUS: "/raɪt/", pos: "verb", ua: "писати" },
+            "diary": { ipaUK: "/ˈdaɪəri/", ipaUS: "/ˈdaɪəri/", pos: "noun", ua: "щоденник, особистий щоденник" },
+            "tablet": { ipaUK: "/ˈtæblət/", ipaUS: "/ˈtæblət/", pos: "noun", ua: "планшет" },
+            "doesnt": { ipaUK: "/ˈdʌznt/", ipaUS: "/ˈdʌznt/", pos: "verb", ua: "не (заперечення)" },
+            "true": { ipaUK: "/truː/", ipaUS: "/truː/", pos: "adj", ua: "правда, вірно" },
+            "false": { ipaUK: "/fɔːls/", ipaUS: "/fɔːls/", pos: "adj", ua: "неправда, хибно" },
+            "paragraph": { ipaUK: "/ˈpærəɡrɑːf/", ipaUS: "/ˈpærəɡræf/", pos: "noun", ua: "абзац" },
+            "paragraphs": { ipaUK: "/ˈpærəɡrɑːfs/", ipaUS: "/ˈpærəɡræfs/", pos: "noun (pl)", ua: "абзаци" },
+            "listen": { ipaUK: "/ˈlɪsn/", ipaUS: "/ˈlɪsn/", pos: "verb", ua: "слухати" },
+            "article": { ipaUK: "/ˈɑːtɪkl/", ipaUS: "/ˈɑːrtɪkl/", pos: "noun", ua: "стаття, текст" },
+            "match": { ipaUK: "/mætʃ/", ipaUS: "/mætʃ/", pos: "verb", ua: "співвідносити, поєднувати" },
+            "statement": { ipaUK: "/ˈsteɪtmənt/", ipaUS: "/ˈsteɪtmənt/", pos: "noun", ua: "твердження, речення" },
+            "statements": { ipaUK: "/ˈsteɪtmənts/", ipaUS: "/ˈsteɪtmənts/", pos: "noun (pl)", ua: "твердження, речення" },
+            "show": { ipaUK: "/ʃəʊ/", ipaUS: "/ʃoʊ/", pos: "verb", ua: "показати, відкрити" },
+            "hide": { ipaUK: "/haɪd/", ipaUS: "/haɪd/", pos: "verb", ua: "сховати, приховати" },
+            "text": { ipaUK: "/tekst/", ipaUS: "/tekst/", pos: "noun", ua: "текст" },
+            "play": { ipaUK: "/pleɪ/", ipaUS: "/pleɪ/", pos: "verb", ua: "відтворювати, грати" },
+            "stop": { ipaUK: "/stɒp/", ipaUS: "/stɑːp/", pos: "verb", ua: "зупинити" },
+            "full": { ipaUK: "/fʊl/", ipaUS: "/fʊl/", pos: "adj", ua: "повний, увесь" },
+            "evening": { ipaUK: "/ˈiːvnɪŋ/", ipaUS: "/ˈiːvnɪŋ/", pos: "noun", ua: "вечір" },
+
+            // UI, Titles & Instructions
+            "hover": { ipaUK: "/ˈhɒvə(r)/", ipaUS: "/ˈhɑːvər/", pos: "verb", ua: "наводити курсор" },
+            "over": { ipaUK: "/ˈəʊvə(r)/", ipaUS: "/ˈoʊvər/", pos: "prep", ua: "на, над" },
+            "any": { ipaUK: "/ˈeni/", ipaUS: "/ˈeni/", pos: "det", ua: "будь-який" },
+            "word": { ipaUK: "/wɜːd/", ipaUS: "/wɜːrd/", pos: "noun", ua: "слово" },
+            "its": { ipaUK: "/ɪts/", ipaUS: "/ɪts/", pos: "pron", ua: "його, її (про неістоту)" },
+            "ukrainian": { ipaUK: "/juːˈkreɪniən/", ipaUS: "/juːˈkreɪniən/", pos: "adj", ua: "український" },
+            "translation": { ipaUK: "/trænsˈleɪʃn/", ipaUS: "/trænsˈleɪʃn/", pos: "noun", ua: "переклад" },
+            "transcription": { ipaUK: "/trænˈskrɪpʃn/", ipaUS: "/trænˈskrɪpʃn/", pos: "noun", ua: "транскрипція" },
+            "and": { ipaUK: "/ænd/", ipaUS: "/ænd/", pos: "conj", ua: "і, та, й" },
+            "audio": { ipaUK: "/ˈɔːdiəʊ/", ipaUS: "/ˈɔːdioʊ/", pos: "noun", ua: "аудіо, озвучення" },
+            "score": { ipaUK: "/skɔː(r)/", ipaUS: "/skɔːr/", pos: "noun", ua: "рахунок, бали" },
+            "exercise": { ipaUK: "/ˈeksəsaɪz/", ipaUS: "/ˈeksərsaɪz/", pos: "noun", ua: "вправа" },
+            "vocabulary": { ipaUK: "/vəˈkæbjələri/", ipaUS: "/vəˈkæbjəleri/", pos: "noun", ua: "словниковий запас, лексика" },
+            "speaking": { ipaUK: "/ˈspiːkɪŋ/", ipaUS: "/ˈspiːkɪŋ/", pos: "noun", ua: "говоріння, мовлення" },
+            "good": { ipaUK: "/ɡʊd/", ipaUS: "/ɡʊd/", pos: "adj", ua: "хороший, корисний" },
+            "or": { ipaUK: "/ɔː(r)/", ipaUS: "/ɔːr/", pos: "conj", ua: "або, чи" },
+            "bad": { ipaUK: "/bæd/", ipaUS: "/bæd/", pos: "adj", ua: "поганий, шкідливий" },
+            "habit": { ipaUK: "/ˈhæbɪt/", ipaUS: "/ˈhæbɪt/", pos: "noun", ua: "звичка" },
+            "read": { ipaUK: "/riːd/", ipaUS: "/riːd/", pos: "verb", ua: "читати" },
+            "action": { ipaUK: "/ˈækʃn/", ipaUS: "/ˈækʃn/", pos: "noun", ua: "дія" },
+            "click": { ipaUK: "/klɪk/", ipaUS: "/klɪk/", pos: "verb", ua: "натискати, клікати" },
+            "whether": { ipaUK: "/ˈweðə(r)/", ipaUS: "/ˈweðər/", pos: "conj", ua: "чи" },
+            "it": { ipaUK: "/ɪt/", ipaUS: "/ɪt/", pos: "pron", ua: "це, воно" },
+            "is": { ipaUK: "/ɪz/", ipaUS: "/ɪz/", pos: "verb", ua: "є (форма дієслова be)" },
+            "a": { ipaUK: "/ə/", ipaUS: "/ə/", pos: "article", ua: "невизначений артикль" },
+            "then": { ipaUK: "/ðen/", ipaUS: "/ðen/", pos: "adv", ua: "потім, тоді" },
+            "explain": { ipaUK: "/ɪkˈspleɪn/", ipaUS: "/ɪkˈspleɪn/", pos: "verb", ua: "пояснювати" },
+            "why": { ipaUK: "/waɪ/", ipaUS: "/waɪ/", pos: "adv", ua: "чому" },
+            "need": { ipaUK: "/niːd/", ipaUS: "/niːd/", pos: "verb", ua: "потребувати" },
+            "an": { ipaUK: "/æn/", ipaUS: "/æn/", pos: "article", ua: "невизначений артикль" },
+            "idea": { ipaUK: "/aɪˈdɪə/", ipaUS: "/aɪˈdiːə/", pos: "noun", ua: "ідея, підказка" },
+            "sample": { ipaUK: "/ˈsɑːmpl/", ipaUS: "/ˈsæmpl/", pos: "adj/noun", ua: "приклад, зразок" },
+            "answer": { ipaUK: "/ˈɑːnsə(r)/", ipaUS: "/ˈænsər/", pos: "noun", ua: "відповідь" },
+            "correct": { ipaUK: "/kəˈrekt/", ipaUS: "/kəˈrekt/", pos: "adj", ua: "правильно, вірно" },
+            "awesome": { ipaUK: "/ˈɔːsəm/", ipaUS: "/ˈɑːsəm/", pos: "adj", ua: "чудово, приголомшливо" },
+            "you": { ipaUK: "/juː/", ipaUS: "/juː/", pos: "pron", ua: "ти, ви" },
+            "got": { ipaUK: "/ɡɒt/", ipaUS: "/ɡɑːt/", pos: "verb", ua: "отримав, зробив" },
+            "habits": { ipaUK: "/ˈhæbɪts/", ipaUS: "/ˈhæbɪts/", pos: "noun (pl)", ua: "звички" },
+            "right": { ipaUK: "/raɪt/", ipaUS: "/raɪt/", pos: "adj/adv", ua: "правильний, вірно" },
+            "try": { ipaUK: "/traɪ/", ipaUS: "/traɪ/", pos: "verb", ua: "спробувати" },
+            "again": { ipaUK: "/əˈɡen/", ipaUS: "/əˈɡen/", pos: "adv", ua: "знову" },
+            "builder": { ipaUK: "/ˈbɪldə(r)/", ipaUS: "/ˈbɪldər/", pos: "noun", ua: "конструктор" },
+            "complete": { ipaUK: "/kəmˈpliːt/", ipaUS: "/kəmˈpliːt/", pos: "verb", ua: "заповнити, доповнити" },
+            "the": { ipaUK: "/ðə/", ipaUS: "/ðə/", pos: "article", ua: "означений артикль" },
+            "phrases": { ipaUK: "/ˈfreɪzɪz/", ipaUS: "/ˈfreɪzɪz/", pos: "noun (pl)", ua: "фрази, вирази" },
+            "drag": { ipaUK: "/dræɡ/", ipaUS: "/dræɡ/", pos: "verb", ua: "перетягувати" },
+            "type": { ipaUK: "/taɪp/", ipaUS: "/taɪp/", pos: "verb", ua: "друкувати, вводити" },
+            "missing": { ipaUK: "/ˈmɪsɪŋ/", ipaUS: "/ˈmɪsɪŋ/", pos: "adj", ua: "пропущений" },
+            "bank": { ipaUK: "/bæŋk/", ipaUS: "/bæŋk/", pos: "noun", ua: "банк, набір" },
+            "great": { ipaUK: "/ɡreɪt/", ipaUS: "/ɡreɪt/", pos: "adj", ua: "чудовий, відмінний" },
+            "job": { ipaUK: "/dʒɒb/", ipaUS: "/dʒɑːb/", pos: "noun", ua: "робота" },
+            "every": { ipaUK: "/ˈevri/", ipaUS: "/ˈevri/", pos: "det", ua: "кожний" },
+            "phrase": { ipaUK: "/freɪz/", ipaUS: "/freɪz/", pos: "noun", ua: "фраза" },
+            "check": { ipaUK: "/tʃek/", ipaUS: "/tʃek/", pos: "verb", ua: "перевірити" },
+            "answers": { ipaUK: "/ˈɑːnsəz/", ipaUS: "/ˈænsərz/", pos: "noun (pl)", ua: "відповіді" },
+            "real-life": { ipaUK: "/ˌrɪəl ˈlaɪf/", ipaUS: "/ˌriːəl ˈlaɪf/", pos: "adj", ua: "життєвий" },
+            "advice": { ipaUK: "/ədˈvaɪs/", ipaUS: "/ədˈvaɪs/", pos: "noun", ua: "порада" },
+            "what": { ipaUK: "/wɒt/", ipaUS: "/wɑːt/", pos: "pron", ua: "що" },
+            "should": { ipaUK: "/ʃʊd/", ipaUS: "/ʃʊd/", pos: "modal verb", ua: "слід, варто (порада)" },
+            "shouldnt": { ipaUK: "/ˈʃʊdnt/", ipaUS: "/ˈʃʊdnt/", pos: "modal verb", ua: "не слід, не варто" },
+            "shouldn't": { ipaUK: "/ˈʃʊdnt/", ipaUS: "/ˈʃʊdnt/", pos: "modal verb", ua: "не слід, не варто" },
+            "do": { ipaUK: "/duː/", ipaUS: "/duː/", pos: "verb", ua: "робити" },
+            "situation": { ipaUK: "/ˌsɪtʃuˈeɪʃn/", ipaUS: "/ˌsɪtʃuˈeɪʃn/", pos: "noun", ua: "ситуація" },
+            "choose": { ipaUK: "/tʃuːz/", ipaUS: "/tʃuːz/", pos: "verb", ua: "вибирати" },
+            "best": { ipaUK: "/best/", ipaUS: "/best/", pos: "adj", ua: "найкращий" },
+            "fantastic": { ipaUK: "/fænˈtæstɪk/", ipaUS: "/fænˈtæstɪk/", pos: "adj", ua: "фантастичний" },
+            "are": { ipaUK: "/ɑː(r)/", ipaUS: "/ɑːr/", pos: "verb", ua: "є (форма дієслова be)" },
+            "expert": { ipaUK: "/ˈekspɜːt/", ipaUS: "/ˈekspɜːrt/", pos: "noun", ua: "експерт, знавець" },
+            "want": { ipaUK: "/wɒnt/", ipaUS: "/wɑːnt/", pos: "verb", ua: "хотіти" },
+            "practice": { ipaUK: "/ˈpræktɪs/", ipaUS: "/ˈpræktɪs/", pos: "verb/noun", ua: "практикувати; практика" },
+            "everything": { ipaUK: "/ˈevriθɪŋ/", ipaUS: "/ˈevriθɪŋ/", pos: "pron", ua: "все" },
+            "from": { ipaUK: "/frɒm/", ipaUS: "/frʌm/", pos: "prep", ua: "з, від" },
+            "beginning": { ipaUK: "/bɪˈɡɪnɪŋ/", ipaUS: "/bɪˈɡɪnɪŋ/", pos: "noun", ua: "початок" },
+            "reset": { ipaUK: "/ˌriːˈset/", ipaUS: "/ˌriːˈset/", pos: "verb", ua: "скинути, почати спочатку" }
+        };
+
+        // =====================================================================
+        // ARTICLE DATA (Hidden on page load; playable via audio & toggleable)
+        // =====================================================================
+        const articleParagraphs = [
+            {
+                num: 1,
+                text: "Successful students create a schedule for the day, the week, the month or even the year! They have a plan for their school time and their free time. They say it makes their life easy and helps them to feel happy."
+            },
+            {
+                num: 2,
+                text: "How do you start your day? On school days, get up and make your bed. A tidy room makes it easy to find your things. Brush your teeth and get ready for school. Don't forget to have breakfast! Good students always have breakfast. Food is important for your body and your brain. It's a good idea to prepare your bag the night before. Add your lunch or a snack in the morning, before you leave home."
+            },
+            {
+                num: 3,
+                text: "Now it's time to go to school. Before classes start, chat with friends about their plans for the week and the weekend. Choose a time to meet up with them to do sport or watch a film – or ask them to study with you after school. Sometimes homework is difficult, so it's nice to work with friends to help each other."
+            },
+            {
+                num: 4,
+                text: "Make sure you go to bed early. You need to sleep for 8–10 hours every night. This helps you to wake up and feel good the next day. Before you go to bed, relax. Read a book or write in your diary. But don't use your phone or tablet! This doesn't help you to go to sleep."
+            }
+        ];
+
+        // =====================================================================
+        // EXERCISE DATA (Based on the 4 Paragraphs)
+        // =====================================================================
+        const exAData = [
+            { id: 1, prompt: "Planning school time and free time", correct: 1 },
+            { id: 2, prompt: "Packing your bag the night before and adding a snack", correct: 2 },
+            { id: 3, prompt: "Talking with friends about plans before classes", correct: 3 },
+            { id: 4, prompt: "Reading a book or writing in a diary before sleep", correct: 4 },
+            { id: 5, prompt: "Keeping your room tidy to find things easily", correct: 2 },
+            { id: 6, prompt: "Working together on difficult homework", correct: 3 },
+            { id: 7, prompt: "Sleeping for eight to ten hours every night", correct: 4 },
+            { id: 8, prompt: "Making a schedule for a day, week, month, or year", correct: 1 }
+        ];
+
+        const exBData = [
+            { id: 1, statement: "A schedule makes students' life easy and helps them feel happy.", correct: true },
+            { id: 2, statement: "Good students sometimes skip breakfast because food is not important.", correct: false },
+            { id: 3, statement: "It is a good idea to prepare your school bag the night before.", correct: true },
+            { id: 4, statement: "You add your lunch or snack in the morning before leaving home.", correct: true },
+            { id: 5, statement: "Students never ask friends to study with them after school.", correct: false },
+            { id: 6, statement: "Working with friends can help when homework is difficult.", correct: true },
+            { id: 7, statement: "You only need to sleep for four hours every night.", correct: false },
+            { id: 8, statement: "Using your phone or tablet before bed helps you go to sleep.", correct: false }
+        ];
+
+        const exCWordBank = ["schedule", "tidy", "brain", "prepare", "chat", "homework", "relax", "diary"];
+        const exCData = [
+            { id: 1, prefix: "Successful students create a", answer: "schedule", suffix: "for the day or week." },
+            { id: 2, prefix: "A", answer: "tidy", suffix: "room makes it easy to find things." },
+            { id: 3, prefix: "Breakfast is important for your body and your", answer: "brain", suffix: "." },
+            { id: 4, prefix: "It is a good idea to", answer: "prepare", suffix: "your bag the night before." },
+            { id: 5, prefix: "Before classes start,", answer: "chat", suffix: "with friends about plans." },
+            { id: 6, prefix: "It is nice to work with friends when", answer: "homework", suffix: "is difficult." },
+            { id: 7, prefix: "Before you go to bed,", answer: "relax", suffix: "and don't use your phone." },
+            { id: 8, prefix: "Read a book or write in your", answer: "diary", suffix: "before sleep." }
+        ];
+
+        // =====================================================================
+        // STATE
+        // =====================================================================
+        let currentAccent = 'en-GB';
+        let audioRate = 0.95;
+        let isTextRevealed = false;
+        let activeAudioQueue = [];
+        let isPlayingArticle = false;
+
+        let exAAnswers = {}; // { id: 1 | 2 | 3 | 4 }
+        let exBAnswers = {}; // { id: true | false }
+        let selectedBankWord = null;
+
+        // Timer state (4 minutes = 240 seconds)
+        let timerSeconds = 240;
+        let timerInterval = null;
+        let timerRunning = false;
+
+        // Tooltip state
+        let hideTooltipTimer = null;
+        let activeWordElement = null;
+        let currentTooltipWord = '';
+
+        // DOM References
+        const tooltip = document.getElementById('vocab-tooltip');
+        const ttWord = document.getElementById('tt-word');
+        const ttPos = document.getElementById('tt-pos');
+        const ttIpa = document.getElementById('tt-ipa');
+        const ttTranslation = document.getElementById('tt-translation');
+        const ttContext = document.getElementById('tt-context');
+        const ttSpeakBtn = document.getElementById('tt-speak-btn');
+
+        // =====================================================================
+        // INITIALIZATION & RENDERING
+        // =====================================================================
+        function initApp() {
+            renderStaticHeaders();
+            renderExA();
+            renderExB();
+            renderExCWordBank();
+            renderExCList();
+            setupTooltipEvents();
+            updateGlobalScore();
+        }
+
+        function wrapWords(text) {
+            if (!text) return '';
+            return text.split(' ').map(token => {
+                const clean = token.toLowerCase().replace(/[^a-z']/g, '');
+                if (!clean) return token;
+                return `<span class="vocab-word" data-word="${clean}">${token}</span>`;
+            }).join(' ');
+        }
+
+        function renderStaticHeaders() {
+            document.getElementById('listen-tag').innerHTML = wrapWords("Listening & Reading • Daily Routines");
+            document.getElementById('listen-title').innerHTML = wrapWords("Listen to the article about student habits");
+            document.getElementById('listen-instruction').innerHTML = wrapWords("Listen to the full text or each paragraph first. You can also open the text if you want to read along.");
+
+            document.getElementById('toggle-text-label').innerHTML = wrapWords("Show Text");
+            document.getElementById('play-all-label').innerHTML = wrapWords("Listen to Full Article");
+            document.getElementById('stop-audio-label').innerHTML = wrapWords("Stop");
+            document.getElementById('para-btn-1-label').innerHTML = `${wrapWords("Paragraph")} 1`;
+            document.getElementById('para-btn-2-label').innerHTML = `${wrapWords("Paragraph")} 2`;
+            document.getElementById('para-btn-3-label').innerHTML = `${wrapWords("Paragraph")} 3`;
+            document.getElementById('para-btn-4-label').innerHTML = `${wrapWords("Paragraph")} 4`;
+            document.getElementById('revealed-text-heading').innerHTML = wrapWords("Article Text (4 Paragraphs)");
+
+            document.getElementById('exa-tag').innerHTML = wrapWords("Exercise 1 • Paragraph Matching");
+            document.getElementById('exa-title').innerHTML = wrapWords("Which paragraph mentions each idea?");
+            document.getElementById('exa-instruction').innerHTML = wrapWords("Choose Paragraph 1, 2, 3, or 4 for each idea from the listening text.");
+
+            document.getElementById('exb-tag').innerHTML = wrapWords("Exercise 2 • True or False");
+            document.getElementById('exb-title').innerHTML = wrapWords("Are these statements True or False?");
+            document.getElementById('exb-instruction').innerHTML = wrapWords("Decide whether each sentence is true or false according to the article.");
+
+            document.getElementById('exc-tag').innerHTML = wrapWords("Exercise 3 • Vocabulary Completion");
+            document.getElementById('exc-title').innerHTML = wrapWords("Complete the sentences with words from the article");
+            document.getElementById('exc-instruction').innerHTML = wrapWords("Drag a word from the bank, tap it, or type it into each blank.");
+            document.getElementById('exc-bank-label').innerHTML = wrapWords("Article Word Bank");
+        }
+
+        // =====================================================================
+        // ARTICLE AUDIO & OPTIONAL TEXT TOGGLE (Text hidden by default)
+        // =====================================================================
+        function toggleArticleText() {
+            isTextRevealed = !isTextRevealed;
+            const panel = document.getElementById('article-text-panel');
+            const label = document.getElementById('toggle-text-label');
+
+            if (isTextRevealed) {
+                const container = document.getElementById('article-paragraphs-container');
+                container.innerHTML = articleParagraphs.map(p => `
+                    <div id="revealed-p-${p.num}" class="p-3.5 rounded-xl bg-white border border-slate-200/80 transition">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <span class="text-xs font-bold text-sky-700">${wrapWords("Paragraph")} ${p.num}</span>
+                            <button type="button" onclick="playParagraph(${p.num})" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#e0f2fe] hover:bg-[#bae6fd] text-[#0369a1] cursor-pointer">
+                                ▶ ${wrapWords("Listen")}
+                            </button>
+                        </div>
+                        <p class="text-slate-700 leading-relaxed">${wrapWords(p.text)}</p>
+                    </div>
+                `).join('');
+                panel.classList.remove('hidden');
+                label.innerHTML = wrapWords("Hide Text");
+            } else {
+                panel.classList.add('hidden');
+                label.innerHTML = wrapWords("Show Text");
+            }
+        }
+
+        function highlightActiveParagraphButton(paraNum) {
+            [1, 2, 3, 4].forEach(n => {
+                const btn = document.getElementById(`para-btn-${n}`);
+                if (!btn) return;
+                if (n === paraNum) {
+                    btn.className = "px-3 py-2 rounded-xl bg-[#fef9c3] text-slate-900 border-2 border-[#eab308] text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs";
+                } else {
+                    btn.className = "px-3 py-2 rounded-xl bg-white hover:bg-[#fefce8] text-slate-700 border border-[#bae6fd] hover:border-[#fde047] text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5";
+                }
+
+                const revealedCard = document.getElementById(`revealed-p-${n}`);
+                if (revealedCard) {
+                    revealedCard.classList.toggle('ring-2', n === paraNum);
+                    revealedCard.classList.toggle('ring-amber-400', n === paraNum);
+                    revealedCard.classList.toggle('bg-[#fefce8]', n === paraNum);
+                }
+            });
+        }
+
+        function setAudioSpeed(rate) {
+            audioRate = rate;
+            const map = { 0.8: 'speed-08', 0.95: 'speed-095', 1.1: 'speed-11' };
+            Object.entries(map).forEach(([val, id]) => {
+                const el = document.getElementById(id);
+                if (parseFloat(val) === rate) {
+                    el.className = "px-2 py-0.5 rounded-full font-semibold bg-[#fef9c3] text-slate-800 border border-[#fde047] cursor-pointer";
+                } else {
+                    el.className = "px-2 py-0.5 rounded-full font-medium text-sky-700 hover:bg-sky-50 cursor-pointer";
+                }
+            });
+        }
+
+        function playParagraph(num) {
+            const para = articleParagraphs.find(p => p.num === num);
+            if (!para || !('speechSynthesis' in window)) return;
+            stopAudio();
+            isPlayingArticle = true;
+            activeAudioQueue = [{ num: para.num, text: para.text }];
+            consumeAudioQueue();
+        }
+
+        function playFullArticle() {
+            if (!('speechSynthesis' in window)) return;
+            stopAudio();
+            isPlayingArticle = true;
+            activeAudioQueue = articleParagraphs.map(p => ({ num: p.num, text: p.text }));
+            consumeAudioQueue();
+        }
+
+        function consumeAudioQueue() {
+            if (!isPlayingArticle || activeAudioQueue.length === 0) {
+                stopAudio();
+                return;
+            }
+
+            const current = activeAudioQueue.shift();
+            highlightActiveParagraphButton(current.num);
+            document.getElementById('audio-status').textContent = `Playing Paragraph ${current.num}...`;
+
+            const utterance = new SpeechSynthesisUtterance(current.text);
+            utterance.lang = currentAccent;
+            utterance.rate = audioRate;
+
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => v.lang === currentAccent && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Daniel') || v.name.includes('Samantha')))
+                || voices.find(v => v.lang.startsWith(currentAccent));
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+
+            utterance.onend = () => {
+                if (isPlayingArticle) {
+                    consumeAudioQueue();
+                }
+            };
+            utterance.onerror = () => {
+                stopAudio();
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopAudio() {
+            isPlayingArticle = false;
+            activeAudioQueue = [];
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            highlightActiveParagraphButton(null);
+            const statusEl = document.getElementById('audio-status');
+            if (statusEl) statusEl.textContent = 'Ready to listen';
+        }
+
+        // =====================================================================
+        // EXERCISE A: Paragraph Matching
+        // =====================================================================
+        function renderExA() {
+            const container = document.getElementById('exa-list');
+            container.innerHTML = exAData.map(item => `
+                <div class="p-3.5 rounded-2xl bg-[#f8fafc]/80 border border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div class="text-sm sm:text-base font-medium text-slate-800 flex-1">
+                        <span class="text-sky-600 font-semibold mr-1.5 select-none">${item.id}.</span>
+                        ${wrapWords(item.prompt)}
+                    </div>
+                    <div class="grid grid-cols-4 gap-1.5 sm:gap-2 shrink-0">
+                        ${[1, 2, 3, 4].map(pNum => `
+                            <button
+                                type="button"
+                                id="exa-btn-${item.id}-${pNum}"
+                                onclick="selectExA(${item.id}, ${pNum})"
+                                class="habit-btn px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold cursor-pointer"
+                            >
+                                P${pNum}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectExA(id, chosenPara) {
+            const item = exAData.find(d => d.id === id);
+            if (!item) return;
+            exAAnswers[id] = chosenPara;
+
+            [1, 2, 3, 4].forEach(pNum => {
+                const btn = document.getElementById(`exa-btn-${id}-${pNum}`);
+                btn.className = "habit-btn px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold cursor-pointer";
+                if (pNum === chosenPara) {
+                    if (chosenPara === item.correct) {
+                        btn.classList.add('selected-good-correct');
+                        btn.textContent = `P${pNum} ✓`;
+                    } else {
+                        btn.classList.add('selected-wrong');
+                        btn.textContent = `P${pNum} ✕`;
+                    }
+                } else {
+                    btn.textContent = `P${pNum}`;
+                }
+            });
+
+            updateGlobalScore();
+        }
+
+        function resetExA() {
+            exAAnswers = {};
+            renderExA();
+            updateGlobalScore();
+        }
+
+        // =====================================================================
+        // EXERCISE B: True or False
+        // =====================================================================
+        function renderExB() {
+            const container = document.getElementById('exb-list');
+            container.innerHTML = exBData.map(item => `
+                <div class="p-3.5 rounded-2xl bg-[#f8fafc]/80 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="text-sm sm:text-base font-medium text-slate-800 flex-1">
+                        <span class="text-sky-600 font-semibold mr-1.5 select-none">${item.id}.</span>
+                        ${wrapWords(item.statement)}
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button
+                            type="button"
+                            id="exb-btn-${item.id}-true"
+                            onclick="selectExB(${item.id}, true)"
+                            class="habit-btn good-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold cursor-pointer"
+                        >
+                            ${wrapWords("True")} <span id="exb-mark-${item.id}-true"></span>
+                        </button>
+                        <button
+                            type="button"
+                            id="exb-btn-${item.id}-false"
+                            onclick="selectExB(${item.id}, false)"
+                            class="habit-btn bad-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold cursor-pointer"
+                        >
+                            ${wrapWords("False")} <span id="exb-mark-${item.id}-false"></span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectExB(id, choice) {
+            const item = exBData.find(d => d.id === id);
+            if (!item) return;
+            exBAnswers[id] = choice;
+
+            const trueBtn = document.getElementById(`exb-btn-${id}-true`);
+            const falseBtn = document.getElementById(`exb-btn-${id}-false`);
+            const trueMark = document.getElementById(`exb-mark-${id}-true`);
+            const falseMark = document.getElementById(`exb-mark-${id}-false`);
+
+            trueBtn.className = "habit-btn good-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold cursor-pointer";
+            falseBtn.className = "habit-btn bad-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold cursor-pointer";
+            trueMark.textContent = '';
+            falseMark.textContent = '';
+
+            const isCorrect = choice === item.correct;
+            if (choice === true) {
+                if (isCorrect) {
+                    trueBtn.classList.add('selected-good-correct');
+                    trueMark.textContent = '✓';
+                } else {
+                    trueBtn.classList.add('selected-wrong');
+                    trueMark.textContent = '✕';
+                }
+            } else {
+                if (isCorrect) {
+                    falseBtn.classList.add('selected-bad-correct');
+                    falseMark.textContent = '✓';
+                } else {
+                    falseBtn.classList.add('selected-wrong');
+                    falseMark.textContent = '✕';
+                }
+            }
+
+            updateGlobalScore();
+        }
+
+        function resetExB() {
+            exBAnswers = {};
+            renderExB();
+            updateGlobalScore();
+        }
+
+        // =====================================================================
+        // EXERCISE C: Complete the Sentences
+        // =====================================================================
+        function renderExCWordBank() {
+            const bankEl = document.getElementById('exc-word-bank');
+            bankEl.innerHTML = exCWordBank.map((word, idx) => {
+                const dot = idx < exCWordBank.length - 1 ? `<span class="text-sky-300 select-none hidden sm:inline">•</span>` : '';
+                return `
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="word-chip px-3.5 py-1 rounded-full font-semibold text-sm cursor-grab active:cursor-grabbing"
+                            draggable="true"
+                            data-bank-word="${word}"
+                            onclick="handleBankClick('${word}')"
+                            ondragstart="handleDragStart(event, '${word}')"
+                        >
+                            <span class="vocab-word border-none hover:bg-transparent hover:text-slate-900 p-0" data-word="${word}">${word}</span>
+                        </div>
+                        ${dot}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderExCList() {
+            const listEl = document.getElementById('exc-list');
+            listEl.innerHTML = exCData.map(ex => `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 rounded-2xl bg-[#f8fafc]/80 border border-slate-200/70">
+                    <div class="flex flex-wrap items-center gap-2 text-sm sm:text-base font-medium text-slate-800 flex-1">
+                        <span class="text-sky-600 font-semibold select-none">${ex.id}.</span>
+                        <span>${wrapWords(ex.prefix)}</span>
+                        <div class="relative inline-flex items-center">
+                            <input
+                                type="text"
+                                id="exc-input-${ex.id}"
+                                data-id="${ex.id}"
+                                data-answer="${ex.answer}"
+                                placeholder="..."
+                                autocomplete="off"
+                                spellcheck="false"
+                                class="phrase-input w-32 sm:w-36 px-3.5 py-1.5 rounded-full text-sm font-semibold text-center placeholder-slate-400"
+                                oninput="handleExCInput(this)"
+                                onclick="handleExCSlotClick(this)"
+                                ondragover="handleDragOver(event, this)"
+                                ondragleave="handleDragLeave(this)"
+                                ondrop="handleDrop(event, this)"
+                            />
+                            <span id="exc-icon-${ex.id}" class="ml-1.5 text-xs font-bold"></span>
+                        </div>
+                        ${ex.suffix ? `<span>${wrapWords(ex.suffix)}</span>` : ''}
+                    </div>
+
+                    <button
+                        type="button"
+                        onclick="speakExCSentence(${ex.id})"
+                        title="Listen to the sentence"
+                        class="self-end sm:self-center flex items-center justify-center w-8 h-8 rounded-full bg-[#eff6ff] hover:bg-[#fef9c3] text-sky-700 hover:text-amber-800 border border-sky-200 hover:border-[#fde047] transition shrink-0 cursor-pointer"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                        </svg>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function handleDragStart(e, word) {
+            e.dataTransfer.setData('text/plain', word);
+        }
+        function handleDragOver(e, el) {
+            e.preventDefault();
+            el.classList.add('drag-over');
+        }
+        function handleDragLeave(el) {
+            el.classList.remove('drag-over');
+        }
+        function handleDrop(e, el) {
+            e.preventDefault();
+            el.classList.remove('drag-over');
+            const word = e.dataTransfer.getData('text/plain');
+            if (word) {
+                el.value = word;
+                validateExCInput(el, true);
+                updateExCUsedAndScore();
+            }
+        }
+        function handleBankClick(word) {
+            const chips = document.querySelectorAll('.word-chip');
+            if (selectedBankWord === word) {
+                selectedBankWord = null;
+                chips.forEach(c => c.classList.remove('selected'));
+            } else {
+                selectedBankWord = word;
+                chips.forEach(c => c.classList.toggle('selected', c.dataset.bankWord === word));
+            }
+        }
+        function handleExCSlotClick(el) {
+            if (selectedBankWord) {
+                el.value = selectedBankWord;
+                selectedBankWord = null;
+                document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected'));
+                validateExCInput(el, true);
+                updateExCUsedAndScore();
+            }
+        }
+        function handleExCInput(el) {
+            const val = el.value.trim().toLowerCase();
+            const ans = el.dataset.answer.toLowerCase();
+            if (val === ans) {
+                validateExCInput(el, true);
+            } else {
+                el.classList.remove('correct', 'incorrect');
+                document.getElementById(`exc-icon-${el.dataset.id}`).textContent = '';
+            }
+            updateExCUsedAndScore();
+        }
+        function validateExCInput(el, showFeedback) {
+            const val = el.value.trim().toLowerCase();
+            const ans = el.dataset.answer.toLowerCase();
+            const icon = document.getElementById(`exc-icon-${el.dataset.id}`);
+            el.classList.remove('correct', 'incorrect');
+            icon.textContent = '';
+            if (!val) return false;
+            if (val === ans) {
+                if (showFeedback) {
+                    el.classList.add('correct');
+                    icon.textContent = '✓';
+                    icon.className = 'ml-1.5 text-xs font-bold text-emerald-600';
+                }
+                return true;
+            } else {
+                if (showFeedback) {
+                    el.classList.add('incorrect');
+                    icon.textContent = '✕';
+                    icon.className = 'ml-1.5 text-xs font-bold text-red-500';
+                }
+                return false;
+            }
+        }
+        function checkExCAll() {
+            exCData.forEach(ex => {
+                const el = document.getElementById(`exc-input-${ex.id}`);
+                if (el.value.trim() !== '') {
+                    validateExCInput(el, true);
+                } else {
+                    el.classList.add('incorrect');
+                    const icon = document.getElementById(`exc-icon-${ex.id}`);
+                    icon.textContent = '✕';
+                    icon.className = 'ml-1.5 text-xs font-bold text-red-500';
+                }
+            });
+            updateExCUsedAndScore();
+        }
+        function updateExCUsedAndScore() {
+            const used = new Set();
+            exCData.forEach(ex => {
+                const el = document.getElementById(`exc-input-${ex.id}`);
+                const val = el.value.trim().toLowerCase();
+                if (val) used.add(val);
+            });
+            document.querySelectorAll('.word-chip').forEach(c => {
+                c.classList.toggle('used', used.has(c.dataset.bankWord.toLowerCase()));
+            });
+            updateGlobalScore();
+        }
+        function speakExCSentence(id) {
+            const ex = exCData.find(item => item.id === id);
+            if (!ex) return;
+            const full = `${ex.prefix} ${ex.answer} ${ex.suffix}`.replace(/\s+\./g, '.').trim();
+            speakText(full);
+        }
+        function resetExC() {
+            selectedBankWord = null;
+            document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected', 'used'));
+            exCData.forEach(ex => {
+                const el = document.getElementById(`exc-input-${ex.id}`);
+                el.value = '';
+                el.classList.remove('correct', 'incorrect');
+                document.getElementById(`exc-icon-${ex.id}`).textContent = '';
+            });
+            updateGlobalScore();
+        }
+
+        function resetAll() {
+            stopAudio();
+            resetExA();
+            resetExB();
+            resetExC();
+            resetTimer();
+        }
+
+        // =====================================================================
+        // SCORE TRACKING & TIMER
+        // =====================================================================
+        function updateGlobalScore() {
+            let sA = 0;
+            exAData.forEach(item => {
+                if (exAAnswers[item.id] === item.correct) sA++;
+            });
+            document.getElementById('exa-score').textContent = sA;
+
+            let sB = 0;
+            exBData.forEach(item => {
+                if (exBAnswers[item.id] === item.correct) sB++;
+            });
+            document.getElementById('exb-score').textContent = sB;
+
+            let sC = 0;
+            exCData.forEach(ex => {
+                const el = document.getElementById(`exc-input-${ex.id}`);
+                if (el && el.value.trim().toLowerCase() === ex.answer.toLowerCase()) sC++;
+            });
+            document.getElementById('exc-score').textContent = sC;
+
+            document.getElementById('global-score').textContent = sA + sB + sC;
+        }
+
+        function updateTimerDisplay() {
+            const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+            const secs = String(timerSeconds % 60).padStart(2, '0');
+            const display = document.getElementById('timer-display');
+            display.textContent = `${mins}:${secs}`;
+            if (timerSeconds <= 30 && timerSeconds > 0) {
+                display.classList.add('text-amber-600');
+            } else if (timerSeconds === 0) {
+                display.classList.add('text-red-600');
+            } else {
+                display.classList.remove('text-amber-600', 'text-red-600');
+            }
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('timer-toggle-btn');
+            if (timerRunning) {
+                clearInterval(timerInterval);
+                timerRunning = false;
+                btn.textContent = 'Start';
+            } else {
+                if (timerSeconds === 0) timerSeconds = 240;
+                timerRunning = true;
+                btn.textContent = 'Pause';
+                timerInterval = setInterval(() => {
+                    if (timerSeconds > 0) {
+                        timerSeconds--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        timerRunning = false;
+                        btn.textContent = 'Start';
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timerSeconds = 240;
+            document.getElementById('timer-toggle-btn').textContent = 'Start';
+            updateTimerDisplay();
+        }
+
+        // =====================================================================
+        // TOOLTIP & TEXT-TO-SPEECH
+        // =====================================================================
+        function setupTooltipEvents() {
+            document.addEventListener('mouseover', (e) => {
+                const wordEl = e.target.closest('.vocab-word');
+                if (wordEl) {
+                    clearTimeout(hideTooltipTimer);
+                    showTooltip(wordEl);
+                }
+            });
+
+            document.addEventListener('mouseout', (e) => {
+                const wordEl = e.target.closest('.vocab-word');
+                if (wordEl) {
+                    scheduleHideTooltip();
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                const wordEl = e.target.closest('.vocab-word');
+                if (wordEl) {
+                    const word = wordEl.dataset.word;
+                    showTooltip(wordEl);
+                    if (!wordEl.closest('button') && !wordEl.closest('.word-chip')) {
+                        speakText(word);
+                    }
+                }
+            });
+
+            tooltip.addEventListener('mouseenter', () => clearTimeout(hideTooltipTimer));
+            tooltip.addEventListener('mouseleave', () => scheduleHideTooltip());
+
+            ttSpeakBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentTooltipWord) speakText(currentTooltipWord);
+            });
+
+            window.addEventListener('scroll', hideTooltipImmediate, { passive: true });
+            window.addEventListener('resize', hideTooltipImmediate);
+        }
+
+        function showTooltip(targetEl) {
+            const wordKey = targetEl.dataset.word;
+            const entry = dictionary[wordKey];
+            if (!entry) return;
+
+            if (activeWordElement && activeWordElement !== targetEl) {
+                activeWordElement.classList.remove('active-tooltip');
+            }
+            activeWordElement = targetEl;
+            activeWordElement.classList.add('active-tooltip');
+            currentTooltipWord = wordKey;
+
+            ttWord.textContent = wordKey;
+            ttPos.textContent = entry.pos;
+            ttIpa.textContent = currentAccent === 'en-GB' ? entry.ipaUK : entry.ipaUS;
+            ttTranslation.textContent = entry.ua;
+
+            if (entry.context) {
+                ttContext.textContent = entry.context;
+                ttContext.classList.remove('hidden');
+            } else {
+                ttContext.classList.add('hidden');
+            }
+
+            tooltip.classList.add('visible');
+            const rect = targetEl.getBoundingClientRect();
+            const ttRect = tooltip.getBoundingClientRect();
+            const padding = 12;
+
+            let left = rect.left + (rect.width / 2) - (ttRect.width / 2);
+            left = Math.max(padding, Math.min(left, window.innerWidth - ttRect.width - padding));
+
+            let top = rect.top - ttRect.height - 10;
+            if (top < padding) {
+                top = rect.bottom + 10;
+            }
+
+            tooltip.style.left = `${left}px`;
+            tooltip.style.top = `${top}px`;
+        }
+
+        function scheduleHideTooltip() {
+            clearTimeout(hideTooltipTimer);
+            hideTooltipTimer = setTimeout(hideTooltipImmediate, 220);
+        }
+
+        function hideTooltipImmediate() {
+            tooltip.classList.remove('visible');
+            if (activeWordElement) {
+                activeWordElement.classList.remove('active-tooltip');
+                activeWordElement = null;
+            }
+        }
+
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) return;
+            isPlayingArticle = false;
+            activeAudioQueue = [];
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = currentAccent;
+            utterance.rate = 0.92;
+
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => v.lang === currentAccent && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Daniel') || v.name.includes('Samantha')))
+                || voices.find(v => v.lang.startsWith(currentAccent));
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+
+            ttSpeakBtn.classList.add('ring-4', 'ring-sky-300/60');
+            utterance.onend = () => ttSpeakBtn.classList.remove('ring-4', 'ring-sky-300/60');
+            utterance.onerror = () => ttSpeakBtn.classList.remove('ring-4', 'ring-sky-300/60');
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function setAccent(accent) {
+            currentAccent = accent;
+            const ukBtn = document.getElementById('accent-uk');
+            const usBtn = document.getElementById('accent-us');
+
+            const activeClasses = "px-2.5 py-0.5 rounded-full font-semibold transition bg-[#fef9c3] text-slate-800 border border-[#fde047] shadow-2xs cursor-pointer";
+            const inactiveClasses = "px-2.5 py-0.5 rounded-full font-medium transition text-sky-700 hover:bg-sky-100/70 border border-transparent cursor-pointer";
+
+            if (accent === 'en-GB') {
+                ukBtn.className = activeClasses;
+                usBtn.className = inactiveClasses;
+            } else {
+                usBtn.className = activeClasses;
+                ukBtn.className = inactiveClasses;
+            }
+
+            if (currentTooltipWord && dictionary[currentTooltipWord]) {
+                ttIpa.textContent = accent === 'en-GB'
+                    ? dictionary[currentTooltipWord].ipaUK
+                    : dictionary[currentTooltipWord].ipaUS;
+            }
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+        }
+
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
