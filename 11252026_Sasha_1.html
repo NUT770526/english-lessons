@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 1. Complete the phrases</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfcf7;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        /* Custom subtle scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        /* Hoverable interactive word styling */
+        .vocab-word {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            border-bottom: 1.5px dashed #7dd3fc;
+            transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+            border-radius: 5px;
+            padding: 0 3px;
+        }
+        .vocab-word:hover, .vocab-word.active-tooltip {
+            color: #0369a1;
+            border-bottom-color: #0284c7;
+            background-color: #e0f2fe;
+        }
+
+        /* Word bank pill styling - Soft Pastel Yellow */
+        .word-chip {
+            user-select: none;
+            background-color: #fef9c3;
+            border: 1.5px solid #fde047;
+            color: #1e293b;
+            box-shadow: 0 2px 5px rgba(234, 179, 8, 0.08);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .word-chip:hover:not(.used) {
+            background-color: #fef08a;
+            border-color: #facc15;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(234, 179, 8, 0.18);
+        }
+        .word-chip.selected {
+            border-color: #0284c7;
+            background-color: #bae6fd;
+            color: #0c4a6e;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+        }
+        .word-chip.used {
+            opacity: 0.45;
+            text-decoration: line-through;
+            cursor: default;
+            box-shadow: none;
+        }
+
+        /* Input slot states */
+        .phrase-input {
+            background-color: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            color: #0f172a;
+            transition: all 0.2s ease;
+        }
+        .phrase-input:hover:not(.correct):not(.incorrect) {
+            border-color: #7dd3fc;
+            background-color: #f0f9ff;
+        }
+        .phrase-input:focus {
+            outline: none;
+            border-color: #38bdf8;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22);
+        }
+        .phrase-input.drag-over {
+            border-color: #0284c7;
+            background-color: #e0f2fe;
+            transform: scale(1.01);
+        }
+        .phrase-input.correct {
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+            color: #15803d;
+        }
+        .phrase-input.incorrect {
+            border-color: #f87171;
+            background-color: #fef2f2;
+            color: #b91c1c;
+        }
+
+        /* Floating Tooltip */
+        #vocab-tooltip {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: auto;
+            opacity: 0;
+            transform: translateY(6px) scale(0.97);
+            transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+            visibility: hidden;
+            box-shadow: 0 12px 30px -4px rgba(15, 23, 42, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.05);
+        }
+        #vocab-tooltip.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-10">
+
+    <!-- Main Container -->
+    <main class="w-full max-w-4xl">
+        
+        <!-- Header & Instructions -->
+        <header class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-800">
+                    Exercise 1. Complete the phrases
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">
+                    💡 Наведіть курсор на <span class="text-sky-700 font-medium underline decoration-dashed decoration-sky-400">будь-яке слово</span>, щоб побачити переклад українською, транскрипцію та прослухати вимову.
+                </p>
+            </div>
+            
+            <!-- Accent Toggle -->
+            <div class="flex items-center gap-1.5 self-start sm:self-end bg-[#eff6ff] border border-sky-200 rounded-full p-1 text-xs shadow-sm">
+                <button id="accent-uk" onclick="setAccent('en-GB')" class="px-3 py-1 rounded-full font-semibold transition bg-[#fef9c3] text-slate-800 border border-[#fde047] shadow-sm cursor-pointer">
+                    🇬🇧 UK
+                </button>
+                <button id="accent-us" onclick="setAccent('en-US')" class="px-3 py-1 rounded-full font-medium transition text-sky-700 hover:bg-sky-100/70 cursor-pointer">
+                    🇺🇸 US
+                </button>
+            </div>
+        </header>
+
+        <!-- Word Bank Box (Pastel Blue Panel with Pastel Yellow Chips) -->
+        <section aria-label="Word bank" class="bg-[#f0f7ff] border border-[#bae6fd] rounded-2xl p-4 sm:p-5 mb-6 shadow-sm">
+            <div class="text-xs uppercase tracking-wider text-sky-700/80 font-semibold mb-3 text-center">
+                Word Bank (перетягніть слово, натисніть або впишіть)
+            </div>
+            <div id="word-bank-container" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+                <!-- Populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Exercise Card -->
+        <section class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-8" style="box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);">
+            <div id="phrases-list" class="space-y-3">
+                <!-- Populated by JavaScript -->
+            </div>
+
+            <!-- Footer Controls -->
+            <div class="mt-8 pt-5 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div id="score-display" class="text-sm sm:text-base font-medium text-slate-600">
+                        Correct: <span id="score-count" class="text-slate-900 font-bold">0</span> / 8
+                    </div>
+                    <span id="completion-badge" class="hidden text-xs font-semibold px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        🎉 Чудово! Все правильно!
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-3 ml-auto">
+                    <button onclick="checkAllAnswers()" class="px-5 py-2.5 rounded-full text-sm font-semibold bg-[#fef9c3] hover:bg-[#fef08a] active:scale-95 text-slate-800 border border-[#fde047] transition shadow-sm cursor-pointer">
+                        Check answers
+                    </button>
+                    <button onclick="resetExercise()" class="px-5 py-2.5 rounded-full text-sm font-semibold bg-[#e0f2fe] hover:bg-[#bae6fd] active:scale-95 text-[#0369a1] border border-[#7dd3fc] transition shadow-sm cursor-pointer">
+                        Try again
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Floating Dictionary & TTS Tooltip -->
+    <div id="vocab-tooltip" role="tooltip" class="w-64 sm:w-72 bg-white border-2 border-[#bae6fd] rounded-2xl p-4 text-left">
+        <div class="flex items-start justify-between gap-2">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span id="tt-word" class="text-lg font-bold text-slate-800 tracking-tight">schedule</span>
+                    <span id="tt-pos" class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-[#fefce8] text-amber-800 border border-[#fde047]">noun</span>
+                </div>
+                <div id="tt-ipa" class="inline-block text-xs sm:text-sm font-mono font-medium bg-[#e0f2fe] text-[#0369a1] px-2 py-0.5 rounded-md mt-1.5">/ˈʃedjuːl/</div>
+            </div>
+            
+            <!-- Audio Button in Pastel Yellow -->
+            <button id="tt-speak-btn" type="button" title="Озвучити слово" class="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#fef9c3] hover:bg-[#fef08a] active:scale-95 text-slate-800 border border-[#fde047] transition shrink-0 cursor-pointer shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="mt-3 pt-2.5 border-t border-slate-100">
+            <div class="text-[11px] uppercase tracking-wider text-sky-600 font-semibold">Переклад</div>
+            <div id="tt-translation" class="text-sm sm:text-base font-bold text-slate-800 mt-0.5">
+                розклад, графік
+            </div>
+            <div id="tt-context" class="text-xs text-slate-500 mt-1 italic hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        // Complete Dictionary with UK/US IPA transcriptions and Ukrainian translations
+        const dictionary = {
+            // Word bank words
+            "ready": {
+                ipaUK: "/ˈredi/",
+                ipaUS: "/ˈredi/",
+                pos: "adj",
+                ua: "готовий",
+                context: "get ready — готуватися, збиратися"
+            },
+            "schedule": {
+                ipaUK: "/ˈʃedjuːl/",
+                ipaUS: "/ˈskedʒuːl/",
+                pos: "noun",
+                ua: "розклад, графік",
+                context: "create a schedule — скласти розклад"
+            },
+            "other": {
+                ipaUK: "/ˈʌðə(r)/",
+                ipaUS: "/ˈʌðər/",
+                pos: "pron",
+                ua: "інший",
+                context: "each other — один одному"
+            },
+            "bed": {
+                ipaUK: "/bed/",
+                ipaUS: "/bed/",
+                pos: "noun",
+                ua: "ліжко",
+                context: "make your bed — застеляти ліжко"
+            },
+            "time": {
+                ipaUK: "/taɪm/",
+                ipaUS: "/taɪm/",
+                pos: "noun",
+                ua: "час",
+                context: "free time — вільний час"
+            },
+            "home": {
+                ipaUK: "/həʊm/",
+                ipaUS: "/hoʊm/",
+                pos: "noun/adv",
+                ua: "дім, додому",
+                context: "leave home — виходити з дому"
+            },
+            "friends": {
+                ipaUK: "/frendz/",
+                ipaUS: "/frendz/",
+                pos: "noun (pl)",
+                ua: "друзі",
+                context: "chat with friends — спілкуватися з друзями"
+            },
+            "diary": {
+                ipaUK: "/ˈdaɪəri/",
+                ipaUS: "/ˈdaɪəri/",
+                pos: "noun",
+                ua: "щоденник",
+                context: "write in your diary — писати у щоденнику"
+            },
+
+            // Sentence prompt words
+            "create": {
+                ipaUK: "/kriˈeɪt/",
+                ipaUS: "/kriˈeɪt/",
+                pos: "verb",
+                ua: "створювати, складати"
+            },
+            "a": {
+                ipaUK: "/ə/",
+                ipaUS: "/ə/",
+                pos: "article",
+                ua: "невизначений артикль (один, якийсь)"
+            },
+            "make": {
+                ipaUK: "/meɪk/",
+                ipaUS: "/meɪk/",
+                pos: "verb",
+                ua: "робити; застеляти (ліжко)"
+            },
+            "your": {
+                ipaUK: "/jɔː(r)/",
+                ipaUS: "/jʊr/",
+                pos: "pron",
+                ua: "твій, ваш, свій"
+            },
+            "get": {
+                ipaUK: "/ɡet/",
+                ipaUS: "/ɡet/",
+                pos: "verb",
+                ua: "ставати, отримувати",
+                context: "get ready — збиратися, готуватися"
+            },
+            "free": {
+                ipaUK: "/friː/",
+                ipaUS: "/friː/",
+                pos: "adj",
+                ua: "вільний; безкоштовний"
+            },
+            "leave": {
+                ipaUK: "/liːv/",
+                ipaUS: "/liːv/",
+                pos: "verb",
+                ua: "залишати, виходити, йти з"
+            },
+            "chat": {
+                ipaUK: "/tʃæt/",
+                ipaUS: "/tʃæt/",
+                pos: "verb",
+                ua: "балакати, невимушено спілкуватися"
+            },
+            "with": {
+                ipaUK: "/wɪð/",
+                ipaUS: "/wɪð/",
+                pos: "prep",
+                ua: "з, разом із"
+            },
+            "help": {
+                ipaUK: "/help/",
+                ipaUS: "/help/",
+                pos: "verb",
+                ua: "допомагати"
+            },
+            "each": {
+                ipaUK: "/iːtʃ/",
+                ipaUS: "/iːtʃ/",
+                pos: "pron",
+                ua: "кожний",
+                context: "each other — один одному"
+            },
+            "write": {
+                ipaUK: "/raɪt/",
+                ipaUS: "/raɪt/",
+                pos: "verb",
+                ua: "писати"
+            },
+            "in": {
+                ipaUK: "/ɪn/",
+                ipaUS: "/ɪn/",
+                pos: "prep",
+                ua: "в, у, всередині"
+            }
+        };
+
+        // Exercise Data
+        const wordBankOrder = ["ready", "schedule", "other", "bed", "time", "home", "friends", "diary"];
+        const exercises = [
+            { id: 1, prompt: "create a", answer: "schedule" },
+            { id: 2, prompt: "make your", answer: "bed" },
+            { id: 3, prompt: "get", answer: "ready" },
+            { id: 4, prompt: "free", answer: "time" },
+            { id: 5, prompt: "leave", answer: "home" },
+            { id: 6, prompt: "chat with", answer: "friends" },
+            { id: 7, prompt: "help each", answer: "other" },
+            { id: 8, prompt: "write in your", answer: "diary" }
+        ];
+
+        // State
+        let currentAccent = 'en-GB';
+        let selectedWord = null;
+        let hideTooltipTimer = null;
+        let activeWordElement = null;
+        let currentTooltipWord = '';
+
+        // DOM References
+        const wordBankContainer = document.getElementById('word-bank-container');
+        const phrasesList = document.getElementById('phrases-list');
+        const tooltip = document.getElementById('vocab-tooltip');
+        const ttWord = document.getElementById('tt-word');
+        const ttPos = document.getElementById('tt-pos');
+        const ttIpa = document.getElementById('tt-ipa');
+        const ttTranslation = document.getElementById('tt-translation');
+        const ttContext = document.getElementById('tt-context');
+        const ttSpeakBtn = document.getElementById('tt-speak-btn');
+
+        // Initialize UI
+        function initApp() {
+            renderWordBank();
+            renderExercises();
+            setupTooltipEvents();
+        }
+
+        // Helper: Wrap every English word in an interactive span
+        function renderInteractiveWords(text) {
+            return text.split(' ').map(word => {
+                const clean = word.toLowerCase().replace(/[^a-z]/g, '');
+                return `<span class="vocab-word" data-word="${clean}">${word}</span>`;
+            }).join(' ');
+        }
+
+        // Render Word Bank
+        function renderWordBank() {
+            wordBankContainer.innerHTML = wordBankOrder.map((word, index) => {
+                const dot = index < wordBankOrder.length - 1
+                    ? `<span class="text-sky-300 select-none hidden sm:inline">•</span>`
+                    : '';
+                return `
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <div 
+                            class="word-chip px-4 py-1.5 rounded-full font-semibold text-sm sm:text-base cursor-grab active:cursor-grabbing flex items-center gap-1.5"
+                            draggable="true"
+                            data-bank-word="${word}"
+                            onclick="handleBankWordClick('${word}', event)"
+                            ondragstart="handleDragStart(event, '${word}')"
+                        >
+                            <span class="vocab-word border-none hover:bg-transparent hover:text-slate-900 p-0" data-word="${word}">${word}</span>
+                        </div>
+                        ${dot}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render Exercise Rows
+        function renderExercises() {
+            phrasesList.innerHTML = exercises.map(ex => `
+                <div class="grid grid-cols-1 sm:grid-cols-12 items-center gap-2 sm:gap-4 p-2 sm:px-3 sm:py-2 rounded-2xl bg-[#f8fafc]/70 hover:bg-[#f0f9ff]/70 border border-transparent hover:border-sky-100 transition">
+                    <!-- Prompt Column -->
+                    <div class="sm:col-span-4 flex items-center justify-between sm:justify-start gap-2 text-base sm:text-[17px] font-medium text-slate-800 pl-1">
+                        <div>
+                            <span class="text-sky-600 font-semibold mr-1.5 select-none">${ex.id}.</span>
+                            ${renderInteractiveWords(ex.prompt)}
+                        </div>
+                        <!-- Mobile Listen to full phrase button -->
+                        <button 
+                            type="button"
+                            onclick="speakPhrase(${ex.id})"
+                            title="Прослухати всю фразу"
+                            class="sm:hidden p-2 rounded-full bg-[#eff6ff] text-sky-700 hover:bg-[#fefce8] hover:text-amber-800 border border-sky-200 transition cursor-pointer"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Input Slot Column -->
+                    <div class="sm:col-span-8 flex items-center gap-2.5">
+                        <div class="relative flex-1">
+                            <input 
+                                type="text"
+                                id="input-${ex.id}"
+                                data-id="${ex.id}"
+                                data-answer="${ex.answer}"
+                                placeholder="..."
+                                autocomplete="off"
+                                spellcheck="false"
+                                class="phrase-input w-full px-4 py-2.5 rounded-full text-sm sm:text-base placeholder-slate-400 font-medium shadow-xs"
+                                oninput="handleInputChange(this)"
+                                onclick="handleSlotClick(this)"
+                                ondragover="handleDragOver(event, this)"
+                                ondragleave="handleDragLeave(this)"
+                                ondrop="handleDrop(event, this)"
+                            />
+                            <!-- Status Icon inside input -->
+                            <span id="status-icon-${ex.id}" class="absolute right-4 top-1/2 -translate-y-1/2 text-sm pointer-events-none"></span>
+                        </div>
+
+                        <!-- Desktop Listen to full phrase button -->
+                        <button 
+                            type="button"
+                            onclick="speakPhrase(${ex.id})"
+                            title="Прослухати всю фразу"
+                            class="hidden sm:flex items-center justify-center w-9 h-9 rounded-full bg-[#eff6ff] hover:bg-[#fefce8] text-sky-700 hover:text-amber-800 border border-sky-200 hover:border-[#fde047] transition shrink-0 cursor-pointer shadow-2xs"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==========================================
+        // Tooltip & Text-to-Speech Logic
+        // ==========================================
+        function setupTooltipEvents() {
+            // Event delegation for hovering/clicking any .vocab-word
+            document.addEventListener('mouseover', (e) => {
+                const wordEl = e.target.closest('.vocab-word');
+                if (wordEl) {
+                    clearTimeout(hideTooltipTimer);
+                    showTooltip(wordEl);
+                }
+            });
+
+            document.addEventListener('mouseout', (e) => {
+                const wordEl = e.target.closest('.vocab-word');
+                if (wordEl) {
+                    scheduleHideTooltip();
+                }
+            });
+
+            // Click on a word pronounces it immediately
+            document.addEventListener('click', (e) => {
+                const wordEl = e.target.closest('.vocab-word');
+                if (wordEl) {
+                    const word = wordEl.dataset.word;
+                    showTooltip(wordEl);
+                    speakWord(word);
+                }
+            });
+
+            // Keep tooltip open when hovering over the tooltip itself
+            tooltip.addEventListener('mouseenter', () => {
+                clearTimeout(hideTooltipTimer);
+            });
+
+            tooltip.addEventListener('mouseleave', () => {
+                scheduleHideTooltip();
+            });
+
+            // Audio button inside tooltip
+            ttSpeakBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentTooltipWord) {
+                    speakWord(currentTooltipWord);
+                }
+            });
+
+            // Hide tooltip on scroll or resize to prevent misalignment
+            window.addEventListener('scroll', hideTooltipImmediate, { passive: true });
+            window.addEventListener('resize', hideTooltipImmediate);
+        }
+
+        function showTooltip(targetEl) {
+            const wordKey = targetEl.dataset.word;
+            const entry = dictionary[wordKey];
+            if (!entry) return;
+
+            if (activeWordElement && activeWordElement !== targetEl) {
+                activeWordElement.classList.remove('active-tooltip');
+            }
+            activeWordElement = targetEl;
+            activeWordElement.classList.add('active-tooltip');
+            currentTooltipWord = wordKey;
+
+            // Populate content
+            ttWord.textContent = wordKey;
+            ttPos.textContent = entry.pos;
+            ttIpa.textContent = currentAccent === 'en-GB' ? entry.ipaUK : entry.ipaUS;
+            ttTranslation.textContent = entry.ua;
+
+            if (entry.context) {
+                ttContext.textContent = entry.context;
+                ttContext.classList.remove('hidden');
+            } else {
+                ttContext.classList.add('hidden');
+            }
+
+            // Position tooltip smartly within viewport
+            tooltip.classList.add('visible');
+            const rect = targetEl.getBoundingClientRect();
+            const ttRect = tooltip.getBoundingClientRect();
+            const padding = 12;
+
+            let left = rect.left + (rect.width / 2) - (ttRect.width / 2);
+            left = Math.max(padding, Math.min(left, window.innerWidth - ttRect.width - padding));
+
+            // Prefer showing above the word; if not enough space at top, show below
+            let top = rect.top - ttRect.height - 10;
+            if (top < padding) {
+                top = rect.bottom + 10;
+            }
+
+            tooltip.style.left = `${left}px`;
+            tooltip.style.top = `${top}px`;
+        }
+
+        function scheduleHideTooltip() {
+            clearTimeout(hideTooltipTimer);
+            hideTooltipTimer = setTimeout(() => {
+                hideTooltipImmediate();
+            }, 220);
+        }
+
+        function hideTooltipImmediate() {
+            tooltip.classList.remove('visible');
+            if (activeWordElement) {
+                activeWordElement.classList.remove('active-tooltip');
+                activeWordElement = null;
+            }
+        }
+
+        // Speech Synthesis (TTS)
+        function speakWord(text) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = currentAccent;
+            utterance.rate = 0.92;
+
+            // Try to select a high-quality native voice matching accent
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => v.lang === currentAccent && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Daniel') || v.name.includes('Samantha')))
+                || voices.find(v => v.lang.startsWith(currentAccent));
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+
+            // Visual button feedback
+            ttSpeakBtn.classList.add('ring-4', 'ring-sky-300/60');
+            utterance.onend = () => ttSpeakBtn.classList.remove('ring-4', 'ring-sky-300/60');
+            utterance.onerror = () => ttSpeakBtn.classList.remove('ring-4', 'ring-sky-300/60');
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakPhrase(id) {
+            const ex = exercises.find(item => item.id === id);
+            if (!ex) return;
+            const input = document.getElementById(`input-${id}`);
+            const userVal = input.value.trim();
+            const fullText = userVal ? `${ex.prompt} ${userVal}` : `${ex.prompt} ${ex.answer}`;
+            speakWord(fullText);
+        }
+
+        function setAccent(accent) {
+            currentAccent = accent;
+            const ukBtn = document.getElementById('accent-uk');
+            const usBtn = document.getElementById('accent-us');
+
+            const activeClasses = "px-3 py-1 rounded-full font-semibold transition bg-[#fef9c3] text-slate-800 border border-[#fde047] shadow-sm cursor-pointer";
+            const inactiveClasses = "px-3 py-1 rounded-full font-medium transition text-sky-700 hover:bg-sky-100/70 border border-transparent cursor-pointer";
+
+            if (accent === 'en-GB') {
+                ukBtn.className = activeClasses;
+                usBtn.className = inactiveClasses;
+            } else {
+                usBtn.className = activeClasses;
+                ukBtn.className = inactiveClasses;
+            }
+
+            if (currentTooltipWord && dictionary[currentTooltipWord]) {
+                ttIpa.textContent = accent === 'en-GB'
+                    ? dictionary[currentTooltipWord].ipaUK
+                    : dictionary[currentTooltipWord].ipaUS;
+            }
+        }
+
+        // Preload voices
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+        }
+
+        // ==========================================
+        // Exercise Interaction (Drag, Click, Type)
+        // ==========================================
+        function handleDragStart(e, word) {
+            e.dataTransfer.setData('text/plain', word);
+            e.dataTransfer.effectAllowed = 'copyMove';
+        }
+
+        function handleDragOver(e, inputEl) {
+            e.preventDefault();
+            inputEl.classList.add('drag-over');
+        }
+
+        function handleDragLeave(inputEl) {
+            inputEl.classList.remove('drag-over');
+        }
+
+        function handleDrop(e, inputEl) {
+            e.preventDefault();
+            inputEl.classList.remove('drag-over');
+            const word = e.dataTransfer.getData('text/plain');
+            if (word) {
+                fillSlot(inputEl, word);
+            }
+        }
+
+        function handleBankWordClick(word, e) {
+            // Select or deselect word chip for click-to-place convenience
+            const chips = document.querySelectorAll('.word-chip');
+            if (selectedWord === word) {
+                selectedWord = null;
+                chips.forEach(c => c.classList.remove('selected'));
+            } else {
+                selectedWord = word;
+                chips.forEach(c => {
+                    c.classList.toggle('selected', c.dataset.bankWord === word);
+                });
+            }
+        }
+
+        function handleSlotClick(inputEl) {
+            if (selectedWord) {
+                fillSlot(inputEl, selectedWord);
+                selectedWord = null;
+                document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected'));
+            }
+        }
+
+        function fillSlot(inputEl, word) {
+            inputEl.value = word;
+            validateSingleInput(inputEl, true);
+            updateUsedWordsAndScore();
+        }
+
+        function handleInputChange(inputEl) {
+            const val = inputEl.value.trim().toLowerCase();
+            const answer = inputEl.dataset.answer.toLowerCase();
+
+            // Clear validation styling while typing unless exact match
+            if (val === answer) {
+                validateSingleInput(inputEl, true);
+            } else {
+                inputEl.classList.remove('correct', 'incorrect');
+                document.getElementById(`status-icon-${inputEl.dataset.id}`).textContent = '';
+            }
+            updateUsedWordsAndScore();
+        }
+
+        function validateSingleInput(inputEl, showFeedback = true) {
+            const val = inputEl.value.trim().toLowerCase();
+            const answer = inputEl.dataset.answer.toLowerCase();
+            const iconEl = document.getElementById(`status-icon-${inputEl.dataset.id}`);
+
+            inputEl.classList.remove('correct', 'incorrect');
+            iconEl.textContent = '';
+
+            if (!val) return false;
+
+            if (val === answer) {
+                if (showFeedback) {
+                    inputEl.classList.add('correct');
+                    iconEl.textContent = '✓';
+                    iconEl.className = 'absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-emerald-600 pointer-events-none';
+                }
+                return true;
+            } else {
+                if (showFeedback) {
+                    inputEl.classList.add('incorrect');
+                    iconEl.textContent = '✕';
+                    iconEl.className = 'absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-red-500 pointer-events-none';
+                }
+                return false;
+            }
+        }
+
+        function checkAllAnswers() {
+            exercises.forEach(ex => {
+                const inputEl = document.getElementById(`input-${ex.id}`);
+                if (inputEl.value.trim() !== '') {
+                    validateSingleInput(inputEl, true);
+                } else {
+                    inputEl.classList.add('incorrect');
+                    const iconEl = document.getElementById(`status-icon-${ex.id}`);
+                    iconEl.textContent = '✕';
+                    iconEl.className = 'absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-red-500 pointer-events-none';
+                }
+            });
+            updateUsedWordsAndScore();
+        }
+
+        function updateUsedWordsAndScore() {
+            let correctCount = 0;
+            const usedValues = new Set();
+
+            exercises.forEach(ex => {
+                const inputEl = document.getElementById(`input-${ex.id}`);
+                const val = inputEl.value.trim().toLowerCase();
+                if (val) usedValues.add(val);
+                if (val === ex.answer.toLowerCase()) {
+                    correctCount++;
+                }
+            });
+
+            // Highlight used words in word bank
+            document.querySelectorAll('.word-chip').forEach(chip => {
+                const w = chip.dataset.bankWord.toLowerCase();
+                chip.classList.toggle('used', usedValues.has(w));
+            });
+
+            // Update counter
+            document.getElementById('score-count').textContent = correctCount;
+            const badge = document.getElementById('completion-badge');
+            if (correctCount === exercises.length) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function resetExercise() {
+            selectedWord = null;
+            document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected', 'used'));
+            exercises.forEach(ex => {
+                const inputEl = document.getElementById(`input-${ex.id}`);
+                inputEl.value = '';
+                inputEl.classList.remove('correct', 'incorrect');
+                document.getElementById(`status-icon-${ex.id}`).textContent = '';
+            });
+            document.getElementById('score-count').textContent = '0';
+            document.getElementById('completion-badge').classList.add('hidden');
+        }
+
+        // Start app
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
