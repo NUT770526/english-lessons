@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venice Masks — Interactive English Lesson</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --error: #dc2626;
+            --error-bg: #fee2e2;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        /* Video Container */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-fallback {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .video-fallback a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Transcript Toggle & Content */
+        .transcript-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: #eef2ff;
+        }
+
+        .transcript-box {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            font-size: 1.08rem;
+            line-height: 1.85;
+            color: #334155;
+        }
+
+        .transcript-box.open {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .transcript-hint {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: #f1f5f9;
+            padding: 8px 14px;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            display: inline-block;
+        }
+
+        /* Interactive Vocab Words */
+        .vocab-word {
+            border-bottom: 2px dashed var(--secondary);
+            background-color: #fef3c7;
+            padding: 1px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #92400e;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+
+        .vocab-word:hover {
+            background-color: #fde68a;
+        }
+
+        /* Floating Tooltip */
+        #vocab-tooltip {
+            position: fixed;
+            z-index: 1000;
+            background: #1e293b;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            max-width: 280px;
+            display: none;
+            pointer-events: auto;
+            font-size: 0.9rem;
+        }
+
+        #vocab-tooltip .tt-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        #vocab-tooltip .tt-word {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #fbbf24;
+        }
+
+        #vocab-tooltip .tt-ipa {
+            font-family: "Lucida Sans Unicode", "Arial Unicode MS", sans-serif;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        #vocab-tooltip .tt-trans {
+            color: #f8fafc;
+            font-size: 0.95rem;
+        }
+
+        .speak-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: transform 0.15s, background 0.2s;
+        }
+
+        .speak-btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.08);
+        }
+
+        /* Tabs for Exercises */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .tab-btn {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            background: #eef2ff;
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .exercise-title {
+            font-size: 1.25rem;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .exercise-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        /* Exercise 1: Radio options */
+        .question-block {
+            margin-bottom: 20px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fcfcfd;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .radio-option:hover {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+
+        .radio-option.correct {
+            background: var(--success-bg);
+            border-color: var(--success);
+            color: #14532d;
+            font-weight: 600;
+        }
+
+        .radio-option.incorrect {
+            background: var(--error-bg);
+            border-color: var(--error);
+            color: #7f1d1d;
+        }
+
+        /* Exercise 2: True / False */
+        .tf-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: #fcfcfd;
+            flex-wrap: wrap;
+        }
+
+        .tf-statement {
+            flex: 1;
+            min-width: 240px;
+            font-weight: 500;
+        }
+
+        .tf-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tf-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .tf-btn.selected {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .tf-row.correct {
+            background: var(--success-bg);
+            border-color: var(--success);
+        }
+
+        .tf-row.incorrect {
+            background: var(--error-bg);
+            border-color: var(--error);
+        }
+
+        /* Exercise 3: Fill in the gaps */
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 14px;
+            background: #eef2ff;
+            border-radius: 10px;
+            margin-bottom: 18px;
+        }
+
+        .word-chip {
+            background: #fff;
+            border: 1px solid #c7d2fe;
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .gap-sentence {
+            margin-bottom: 14px;
+            font-size: 1.02rem;
+            line-height: 2;
+        }
+
+        .gap-select {
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 2px solid #cbd5e1;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .gap-select.correct {
+            border-color: var(--success);
+            background: var(--success-bg);
+            color: #14532d;
+        }
+
+        .gap-select.incorrect {
+            border-color: var(--error);
+            background: var(--error-bg);
+            color: #7f1d1d;
+        }
+
+        /* Exercise 4: Chronological Order */
+        .order-list {
+            list-style: none;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 16px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+
+        .order-item.correct {
+            background: var(--success-bg);
+            border-color: var(--success);
+        }
+
+        .order-item.incorrect {
+            background: var(--error-bg);
+            border-color: var(--error);
+        }
+
+        .order-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .move-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: #f1f5f9;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .move-btn:hover {
+            background: #e2e8f0;
+        }
+
+        /* Actions & Feedback */
+        .actions-bar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .score-badge {
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🎭 Venetian Masks — Rick Steves</h1>
+        <p>Интерактивный видеоурок: аудирование, работа с лексикой и проверка понимания</p>
+    </header>
+
+    <!-- Video Block -->
+    <div class="card">
+        <div class="video-wrapper">
+            <iframe 
+                src="https://drive.google.com/file/d/1XxmNTUu3Q1CoFWypt8S8a1USCiDPHiP9/preview" 
+                allow="autoplay; fullscreen" 
+                allowfullscreen>
+            </iframe>
+        </div>
+        <div class="video-fallback">
+            Если видео не загружается в плеере, <a href="https://drive.google.com/file/d/1XxmNTUu3Q1CoFWypt8S8a1USCiDPHiP9/view?usp=sharing" target="_blank">откройте его в новой вкладке Google Диска ↗</a>
+        </div>
+    </div>
+
+    <!-- Transcript Block -->
+    <div class="card">
+        <div class="transcript-header">
+            <div>
+                <h2 style="font-size: 1.25rem;">📄 Транскрипт видео (Transcript)</h2>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Нажмите кнопку справа, чтобы открыть или скрыть текст</p>
+            </div>
+            <button class="btn btn-outline" id="toggle-transcript-btn" onclick="toggleTranscript()">
+                👁️ Показать транскрипт
+            </button>
+        </div>
+
+        <div class="transcript-box" id="transcript-box">
+            <div class="transcript-hint">
+                💡 <strong>Подсказка:</strong> Наведите курсор (или нажмите на телефоне) на любое выделенное слово, чтобы увидеть транскрипцию, перевод и прослушать произношение.
+            </div>
+            <p id="transcript-text"></p>
+        </div>
+    </div>
+
+    <!-- Exercises Block -->
+    <div class="card">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(0)">1. Заполни пропуски (Ваше задание)</button>
+            <button class="tab-btn" onclick="switchTab(1)">2. Правда или ложь (True / False)</button>
+            <button class="tab-btn" onclick="switchTab(2)">3. Словарь в контексте</button>
+            <button class="tab-btn" onclick="switchTab(3)">4. Хронология событий</button>
+        </div>
+
+        <!-- Exercise 1: User's Exercise -->
+        <div class="tab-content active" id="tab-0">
+            <h3 class="exercise-title">Select the correct words to complete these sentences</h3>
+            <p class="exercise-desc">Выберите правильное слово, чтобы дополнить предложения из видео.</p>
+            <div id="ex1-container"></div>
+            <div class="actions-bar">
+                <button class="btn btn-primary" onclick="checkEx1()">Проверить ответы</button>
+                <button class="btn btn-outline" onclick="resetEx1()">Сбросить</button>
+                <span class="score-badge" id="ex1-score"></span>
+            </div>
+        </div>
+
+        <!-- Exercise 2: True / False -->
+        <div class="tab-content" id="tab-1">
+            <h3 class="exercise-title">True or False? (Правда или ложь?)</h3>
+            <p class="exercise-desc">Определите, соответствуют ли утверждения содержанию видеоролика.</p>
+            <div id="ex2-container"></div>
+            <div class="actions-bar">
+                <button class="btn btn-primary" onclick="checkEx2()">Проверить ответы</button>
+                <button class="btn btn-outline" onclick="resetEx2()">Сбросить</button>
+                <span class="score-badge" id="ex2-score"></span>
+            </div>
+        </div>
+
+        <!-- Exercise 3: Vocabulary in Context -->
+        <div class="tab-content" id="tab-2">
+            <h3 class="exercise-title">Vocabulary Match (Словарь в контексте)</h3>
+            <p class="exercise-desc">Вставьте подходящие по смыслу слова из текста в предложения ниже.</p>
+            <div class="word-bank" id="ex3-bank"></div>
+            <div id="ex3-container"></div>
+            <div class="actions-bar">
+                <button class="btn btn-primary" onclick="checkEx3()">Проверить ответы</button>
+                <button class="btn btn-outline" onclick="resetEx3()">Сбросить</button>
+                <span class="score-badge" id="ex3-score"></span>
+            </div>
+        </div>
+
+        <!-- Exercise 4: Chronological Order -->
+        <div class="tab-content" id="tab-3">
+            <h3 class="exercise-title">Put the events in the correct order (Хронология)</h3>
+            <p class="exercise-desc">Расставьте исторические этапы развития венецианских масок в правильном порядке с помощью стрелок ↑ ↓.</p>
+            <ul class="order-list" id="ex4-container"></ul>
+            <div class="actions-bar">
+                <button class="btn btn-primary" onclick="checkEx4()">Проверить порядок</button>
+                <button class="btn btn-outline" onclick="resetEx4()">Перемешать заново</button>
+                <span class="score-badge" id="ex4-score"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Tooltip for Dictionary -->
+<div id="vocab-tooltip">
+    <div class="tt-header">
+        <span class="tt-word" id="tt-word"></span>
+        <button class="speak-btn" id="tt-speak" title="Озвучить слово">🔊</button>
+    </div>
+    <div class="tt-ipa" id="tt-ipa"></div>
+    <div class="tt-trans" id="tt-trans"></div>
+</div>
+
+<script>
+    // 1. Transcript & Dictionary Data
+    const rawTranscript = `Hi, I'm Rick Steves. I'm in the heart of Venice, and it's just everywhere you look, there's a touristic dream coming true — and that means there's a lot of tourists in this town. Something very, very big in Venice is the masks, and if you step into a mask shop, you see it's just a forest of beautifully painted masks that have quite an interesting tradition. Originally, masks were functional. The doctors during the plague would have a mask that was, what is it, the mask was like this one, here. It would hold herbs in there, in the hopes that would filter the air, so the doctor who was checking plague victims would not catch the plague. And then another mask that goes way, way back centuries — before any of the tourism and so on — was this simple mask, here. And this mask just covers half of your face, and it would be worn with a black three-cornered hat and a cape. And this is so people of respect could go out and do things that were not respectful — go to the casino, go to the brothel, be out with somebody you're not supposed to be with — they would walk around with that mask covering their face. Of course, masks were also part of Carnival celebrations — so people could, you know, what happens in Venice stays in Venice during Carnival — and people could enjoy the anonymity of a mask. The tradition pretty much died out after the end of the republic, when Napoleon took over Venice, and then in the 1970s when students were being crazy — like they were all over the world — hippies in Venice decided to go out and do all sorts of crazy things, and they started wearing masks. And merchants, business people, realized "Hey, this is a potential big business!" So, the modern-day tradition of all these over the top masks really was co-opted from the crazy students of Venice back in the 1970s, and today tourists when they come to Venice, they'll go into these shops, and they'll enjoy picking up a souvenir that actually has a historic foundation. When you're in Venice, you'll want to check out the masks, along with lots of other clichés of this amazing culture.`;
+
+    const dictionary = {
+        "touristic": { ipa: "/tʊəˈrɪstɪk/", trans: "туристический" },
+        "originally": { ipa: "/əˈrɪdʒənəli/", trans: "первоначально, изначально" },
+        "functional": { ipa: "/ˈfʌŋkʃənl/", trans: "функциональный, практичный" },
+        "plague": { ipa: "/pleɪɡ/", trans: "чума, эпидемия" },
+        "herbs": { ipa: "/hɜːbz/", trans: "лекарственные травы" },
+        "filter": { ipa: "/ˈfɪltə(r)/", trans: "фильтровать, очищать" },
+        "victims": { ipa: "/ˈvɪktɪmz/", trans: "жертвы, пострадавшие" },
+        "centuries": { ipa: "/ˈsentʃəriz/", trans: "века, столетия" },
+        "three-cornered": { ipa: "/ˌθriː ˈkɔːnəd/", trans: "треугольный (о шляпе — треуголка)" },
+        "cape": { ipa: "/keɪp/", trans: "плащ, накидка" },
+        "respectful": { ipa: "/rɪˈspektfl/", trans: "почтительный, приличный" },
+        "brothel": { ipa: "/ˈbrɒθl/", trans: "публичный дом, бордель" },
+        "supposed": { ipa: "/səˈpəʊzd/", trans: "предполагаемый; be supposed to — полагается, следует" },
+        "celebrations": { ipa: "/ˌselɪˈbreɪʃnz/", trans: "празднества, торжества" },
+        "anonymity": { ipa: "/ˌænəˈnɪməti/", trans: "анонимность" },
+        "republic": { ipa: "/rɪˈpʌblɪk/", trans: "республика" },
+        "merchants": { ipa: "/ˈmɜːtʃənts/", trans: "торговцы, купцы" },
+        "potential": { ipa: "/pəˈtenʃl/", trans: "потенциальный, возможный" },
+        "co-opted": { ipa: "/kəʊ ˈɒptɪd/", trans: "перенятый, заимствованный" },
+        "souvenir": { ipa: "/ˌsuːvəˈnɪə(r)/", trans: "сувенир" },
+        "foundation": { ipa: "/faʊnˈdeɪʃn/", trans: "основа, фундамент" },
+        "clichés": { ipa: "/ˈkliːʃeɪz/", trans: "клише, стереотипные атрибуты" }
+    };
+
+    // Render Transcript with Interactive Words
+    function renderTranscript() {
+        const container = document.getElementById("transcript-text");
+        // Split keeping punctuation and spaces
+        const tokens = rawTranscript.split(/(\s+|[.,!?;:"()—]+)/);
+        container.innerHTML = tokens.map(token => {
+            const clean = token.toLowerCase();
+            if (dictionary[clean]) {
+                return `<span class="vocab-word" data-word="${clean}">${token}</span>`;
+            }
+            return token;
+        }).join("");
+
+        // Attach hover & click listeners
+        document.querySelectorAll(".vocab-word").forEach(el => {
+            el.addEventListener("mouseenter", (e) => showTooltip(e, el.dataset.word));
+            el.addEventListener("click", (e) => {
+                e.stopPropagation();
+                showTooltip(e, el.dataset.word);
+                speakWord(el.dataset.word);
+            });
+        });
+    }
+
+    // Tooltip & Speech Synthesis Logic
+    const tooltip = document.getElementById("vocab-tooltip");
+    let currentWord = "";
+
+    function showTooltip(event, wordKey) {
+        const entry = dictionary[wordKey];
+        if (!entry) return;
+        currentWord = wordKey;
+
+        document.getElementById("tt-word").textContent = wordKey;
+        document.getElementById("tt-ipa").textContent = entry.ipa;
+        document.getElementById("tt-trans").textContent = entry.trans;
+
+        tooltip.style.display = "block";
+
+        const rect = event.target.getBoundingClientRect();
+        let left = rect.left;
+        let top = rect.bottom + 8;
+
+        if (left + 280 > window.innerWidth) {
+            left = window.innerWidth - 295;
+        }
+        if (top + 110 > window.innerHeight) {
+            top = rect.top - 115;
+        }
+
+        tooltip.style.left = Math.max(10, left) + "px";
+        tooltip.style.top = Math.max(10, top) + "px";
+    }
+
+    document.getElementById("tt-speak").addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (currentWord) speakWord(currentWord);
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!tooltip.contains(e.target) && !e.target.classList.contains("vocab-word")) {
+            tooltip.style.display = "none";
+        }
+    });
+
+    function speakWord(word) {
+        if (!('speechSynthesis' in window)) {
+            alert("Ваш браузер не поддерживает озвучивание текста.");
+            return;
+        }
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = "en-US";
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function toggleTranscript() {
+        const box = document.getElementById("transcript-box");
+        const btn = document.getElementById("toggle-transcript-btn");
+        box.classList.toggle("open");
+        if (box.classList.contains("open")) {
+            btn.innerHTML = "🙈 Скрыть транскрипт";
+        } else {
+            btn.innerHTML = "👁️ Показать транскрипт";
+            tooltip.style.display = "none";
+        }
+    }
+
+    // Tabs Navigation
+    function switchTab(index) {
+        document.querySelectorAll(".tab-btn").forEach((btn, i) => {
+            btn.classList.toggle("active", i === index);
+        });
+        document.querySelectorAll(".tab-content").forEach((content, i) => {
+            content.classList.toggle("active", i === index);
+        });
+    }
+
+    // ==========================================
+    // EXERCISE 1: User's Provided Exercise
+    // ==========================================
+    const ex1Data = [
+        { q: "1. Originally, ___ were functional.", options: ["masks", "heart"], answer: "masks" },
+        { q: "2. The tradition pretty much died out after the end of the ___.", options: ["big", "republic"], answer: "republic" },
+        { q: "3. I'm in the ___ of Venice.", options: ["heart", "plague"], answer: "heart" },
+        { q: "4. Something very, very ___ in Venice is the masks.", options: ["republic", "big"], answer: "big" },
+        { q: "5. The doctors during the ___ would have a mask.", options: ["masks", "plague"], answer: "plague" }
+    ];
+
+    function renderEx1() {
+        const container = document.getElementById("ex1-container");
+        container.innerHTML = ex1Data.map((item, idx) => `
+            <div class="question-block" id="ex1-q-${idx}">
+                <div class="question-text">${item.q}</div>
+                ${item.options.map(opt => `
+                    <label class="radio-option" data-q="${idx}" data-val="${opt}">
+                        <input type="radio" name="ex1_q${idx}" value="${opt}">
+                        <span>${opt}</span>
+                    </label>
+                `).join("")}
+            </div>
+        `).join("");
+    }
+
+    function checkEx1() {
+        let score = 0;
+        ex1Data.forEach((item, idx) => {
+            const selected = document.querySelector(`input[name="ex1_q${idx}"]:checked`);
+            const labels = document.querySelectorAll(`.radio-option[data-q="${idx}"]`);
+            labels.forEach(lbl => lbl.classList.remove("correct", "incorrect"));
+
+            if (selected) {
+                const chosenLabel = selected.closest(".radio-option");
+                if (selected.value === item.answer) {
+                    score++;
+                    chosenLabel.classList.add("correct");
+                } else {
+                    chosenLabel.classList.add("incorrect");
+                }
+            }
+        });
+        const badge = document.getElementById("ex1-score");
+        badge.style.display = "inline-block";
+        badge.textContent = `Результат: ${score} из ${ex1Data.length}`;
+    }
+
+    function resetEx1() {
+        renderEx1();
+        document.getElementById("ex1-score").style.display = "none";
+    }
+
+    // ==========================================
+    // EXERCISE 2: True / False
+    // ==========================================
+    const ex2Data = [
+        { statement: "Plague doctors put herbs inside their masks to filter the air.", answer: true },
+        { statement: "The simple half-face mask was worn with a red hat and a modern jacket.", answer: false },
+        { statement: "Respectable people wore masks so nobody would recognize them when doing improper things.", answer: true },
+        { statement: "The mask tradition became super popular right after Napoleon took over Venice.", answer: false },
+        { statement: "In the 1970s, local merchants noticed that hippies wearing masks could become a big business.", answer: true }
+    ];
+    let ex2Answers = {};
+
+    function renderEx2() {
+        ex2Answers = {};
+        const container = document.getElementById("ex2-container");
+        container.innerHTML = ex2Data.map((item, idx) => `
+            <div class="tf-row" id="ex2-row-${idx}">
+                <div class="tf-statement">${idx + 1}. ${item.statement}</div>
+                <div class="tf-buttons">
+                    <button class="tf-btn" onclick="selectTF(${idx}, true, this)">True</button>
+                    <button class="tf-btn" onclick="selectTF(${idx}, false, this)">False</button>
+                </div>
+            </div>
+        `).join("");
+    }
+
+    function selectTF(idx, val, btn) {
+        ex2Answers[idx] = val;
+        const row = document.getElementById(`ex2-row-${idx}`);
+        row.classList.remove("correct", "incorrect");
+        row.querySelectorAll(".tf-btn").forEach(b => b.classList.remove("selected"));
+        btn.classList.add("selected");
+    }
+
+    function checkEx2() {
+        let score = 0;
+        ex2Data.forEach((item, idx) => {
+            const row = document.getElementById(`ex2-row-${idx}`);
+            row.classList.remove("correct", "incorrect");
+            if (ex2Answers[idx] !== undefined) {
+                if (ex2Answers[idx] === item.answer) {
+                    score++;
+                    row.classList.add("correct");
+                } else {
+                    row.classList.add("incorrect");
+                }
+            }
+        });
+        const badge = document.getElementById("ex2-score");
+        badge.style.display = "inline-block";
+        badge.textContent = `Результат: ${score} из ${ex2Data.length}`;
+    }
+
+    function resetEx2() {
+        renderEx2();
+        document.getElementById("ex2-score").style.display = "none";
+    }
+
+    // ==========================================
+    // EXERCISE 3: Vocabulary Fill-in-the-Gaps
+    // ==========================================
+    const ex3Words = ["herbs", "anonymity", "merchants", "souvenir", "centuries"];
+    const ex3Data = [
+        { before: "1. The plague doctor's mask held ", after: " inside to help filter the air.", answer: "herbs" },
+        { before: "2. The simple half-face mask dates back ", after: " before modern tourism.", answer: "centuries" },
+        { before: "3. During Carnival celebrations, people could enjoy the ", after: " of wearing a mask.", answer: "anonymity" },
+        { before: "4. Local ", after: " realized that selling masks could be a big business.", answer: "merchants" },
+        { before: "5. Today, tourists love buying a mask as a ", after: " with a real historic background.", answer: "souvenir" }
+    ];
+
+    function renderEx3() {
+        const bank = document.getElementById("ex3-bank");
+        bank.innerHTML = ex3Words.map(w => `<span class="word-chip">${w}</span>`).join("");
+
+        const container = document.getElementById("ex3-container");
+        container.innerHTML = ex3Data.map((item, idx) => `
+            <div class="gap-sentence">
+                ${item.before}
+                <select class="gap-select" id="ex3-sel-${idx}">
+                    <option value="">-- выберите --</option>
+                    ${ex3Words.map(w => `<option value="${w}">${w}</option>`).join("")}
+                </select>
+                ${item.after}
+            </div>
+        `).join("");
+    }
+
+    function checkEx3() {
+        let score = 0;
+        ex3Data.forEach((item, idx) => {
+            const sel = document.getElementById(`ex3-sel-${idx}`);
+            sel.classList.remove("correct", "incorrect");
+            if (sel.value) {
+                if (sel.value === item.answer) {
+                    score++;
+                    sel.classList.add("correct");
+                } else {
+                    sel.classList.add("incorrect");
+                }
+            }
+        });
+        const badge = document.getElementById("ex3-score");
+        badge.style.display = "inline-block";
+        badge.textContent = `Результат: ${score} из ${ex3Data.length}`;
+    }
+
+    function resetEx3() {
+        renderEx3();
+        document.getElementById("ex3-score").style.display = "none";
+    }
+
+    // ==========================================
+    // EXERCISE 4: Chronological Order
+    // ==========================================
+    const ex4CorrectOrder = [
+        "Doctors wore functional masks filled with herbs during the plague.",
+        "People wore half-face masks with capes and hats to stay anonymous in daily life and at Carnival.",
+        "The mask tradition almost died out when Napoleon took over Venice.",
+        "In the 1970s, crazy students and hippies started wearing masks again.",
+        "Business people turned the revived mask tradition into a big tourist industry."
+    ];
+    let currentOrder = [];
+
+    function renderEx4(shuffle = true) {
+        if (shuffle) {
+            currentOrder = [...ex4CorrectOrder].sort(() => Math.random() - 0.5);
+            // Ensure it's not accidentally already solved
+            if (currentOrder.every((val, i) => val === ex4CorrectOrder[i])) {
+                currentOrder.reverse();
+            }
+        }
+        const container = document.getElementById("ex4-container");
+        container.innerHTML = currentOrder.map((text, idx) => `
+            <li class="order-item" id="ex4-item-${idx}">
+                <span><strong>${idx + 1}.</strong> ${text}</span>
+                <div class="order-controls">
+                    <button class="move-btn" onclick="moveOrder(${idx}, -1)" ${idx === 0 ? "disabled" : ""}>↑</button>
+                    <button class="move-btn" onclick="moveOrder(${idx}, 1)" ${idx === currentOrder.length - 1 ? "disabled" : ""}>↓</button>
+                </div>
+            </li>
+        `).join("");
+    }
+
+    function moveOrder(index, direction) {
+        const newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= currentOrder.length) return;
+        const temp = currentOrder[index];
+        currentOrder[index] = currentOrder[newIndex];
+        currentOrder[newIndex] = temp;
+        renderEx4(false);
+        document.getElementById("ex4-score").style.display = "none";
+    }
+
+    function checkEx4() {
+        let score = 0;
+        currentOrder.forEach((text, idx) => {
+            const el = document.getElementById(`ex4-item-${idx}`);
+            el.classList.remove("correct", "incorrect");
+            if (text === ex4CorrectOrder[idx]) {
+                score++;
+                el.classList.add("correct");
+            } else {
+                el.classList.add("incorrect");
+            }
+        });
+        const badge = document.getElementById("ex4-score");
+        badge.style.display = "inline-block";
+        badge.textContent = `Правильно на своих местах: ${score} из ${ex4CorrectOrder.length}`;
+    }
+
+    function resetEx4() {
+        renderEx4(true);
+        document.getElementById("ex4-score").style.display = "none";
+    }
+
+    // Initialize everything on load
+    renderTranscript();
+    renderEx1();
+    renderEx2();
+    renderEx3();
+    renderEx4(true);
+</script>
+
+</body>
+</html>
