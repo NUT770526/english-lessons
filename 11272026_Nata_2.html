@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 2. Fill in the missing letters</title>
+    <!-- Підключення Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Шрифт Inter з підтримкою кирилиці -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FFFBF7;
+            --bg-blush: #FDF6F9;
+            --card-bg: #FFFEFD;
+            --border-pastel: #EFE2EC;
+            --text-plum: #433846;
+            --text-mauve: #7A6E7E;
+            --lavender: #9D84B7;
+            --lavender-hover: #8B71A6;
+            --lavender-soft: #F5F0FA;
+            --lavender-border: #DFD2EE;
+            --blush-soft: #F8E6EC;
+            --blush-border: #EBC7D4;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at 12% 14%, rgba(248, 230, 236, 0.78) 0%, transparent 44%),
+                radial-gradient(circle at 88% 18%, rgba(235, 243, 250, 0.75) 0%, transparent 46%),
+                radial-gradient(circle at 50% 88%, rgba(253, 242, 227, 0.75) 0%, transparent 50%),
+                linear-gradient(135deg, #FFFBF7 0%, #FDF6F9 52%, #F8F3FC 100%);
+            min-height: 100vh;
+            color: var(--text-plum);
+        }
+
+        .worksheet-card {
+            background-color: var(--card-bg);
+            border-color: var(--border-pastel);
+            box-shadow: 0 12px 32px -8px rgba(195, 165, 185, 0.18);
+        }
+
+        /* Поля для вписування пропущених літер */
+        .letter-box {
+            width: 2rem;
+            height: 2.2rem;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            line-height: 1;
+            border-radius: 0.7rem;
+            border: 1.5px solid #D9C6EC;
+            background-color: #FAF6FE;
+            color: #433846;
+            transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+            padding: 0;
+            margin: 0 2px;
+        }
+
+        .letter-box:focus {
+            outline: none;
+            border-color: #9D84B7;
+            background-color: #FFFEFD;
+            box-shadow: 0 0 0 3px rgba(157, 132, 183, 0.22);
+        }
+
+        /* Поле для українського перекладу */
+        .translation-input {
+            width: 100%;
+            border-radius: 0.85rem;
+            border: 1.5px solid #EADBE6;
+            background-color: #FDF9FC;
+            color: #433846;
+            font-weight: 500;
+            transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .translation-input:focus {
+            outline: none;
+            border-color: #9D84B7;
+            background-color: #FFFEFD;
+            box-shadow: 0 0 0 3px rgba(157, 132, 183, 0.22);
+        }
+
+        .translation-input::placeholder {
+            color: #B9ACBF;
+            font-weight: 400;
+        }
+
+        /* Стилі для зручного друку або збереження у PDF */
+        @media print {
+            body {
+                background: #FFFFFF !important;
+                padding: 0 !important;
+            }
+            .worksheet-card {
+                box-shadow: none !important;
+                border: 1px solid #D8CBD5 !important;
+                border-radius: 12px !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .letter-box {
+                border: none !important;
+                border-bottom: 1.5px solid #433846 !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                width: 1.5rem !important;
+                height: 1.6rem !important;
+            }
+            .translation-input {
+                border: none !important;
+                border-bottom: 1.5px solid #433846 !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            .translation-input::placeholder {
+                color: transparent !important;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#F8E6EC] selection:text-[#433846] py-6 sm:py-10 px-4 sm:px-6">
+
+    <main class="max-w-4xl mx-auto">
+        <!-- Основна пастельна картка робочого аркуша -->
+        <div class="worksheet-card rounded-3xl border overflow-hidden">
+
+            <!-- Шапка вправи -->
+            <div class="px-6 sm:px-8 py-6 sm:py-7 bg-gradient-to-r from-[#FAF5FF] via-[#FDF6F9] to-[#FDF8F2] border-b border-[#EFE2EC]">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-extrabold text-[#433846] tracking-tight">
+                            Exercise 2. Fill in the missing letters
+                        </h1>
+                        <p class="text-sm sm:text-base italic text-[#7A6E7E] mt-1.5">
+                            Встав пропущені літери та переклади слова українською мовою.
+                        </p>
+                    </div>
+                    <!-- Поле для імені учениці (зручно для скріншоту чи друку) -->
+                    <div class="flex items-center gap-2 self-start sm:self-center bg-[#FFFEFD]/80 px-3.5 py-2 rounded-2xl border border-[#EFE2EC]">
+                        <label for="studentName" class="text-xs font-semibold text-[#7A6E7E] whitespace-nowrap">Ім’я:</label>
+                        <input
+                            type="text"
+                            id="studentName"
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                            placeholder="________________"
+                            class="w-32 sm:w-36 bg-transparent text-xs sm:text-sm font-semibold text-[#433846] placeholder-[#C4B7CA] focus:outline-none"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Заголовки колонок (на екранах від md) -->
+            <div class="hidden md:grid md:grid-cols-12 gap-6 px-8 py-3.5 bg-[#FAF7FC] border-b border-[#EFE2EC] text-xs font-bold uppercase tracking-wider text-[#7A6E7E]">
+                <div class="col-span-6">English</div>
+                <div class="col-span-6">Переклад</div>
+            </div>
+
+            <!-- Список 9 завдань -->
+            <form id="worksheetForm" onsubmit="return false;" autocomplete="off" class="divide-y divide-[#F3E8F0]">
+                <!-- Рядки генеруються через JavaScript -->
+            </form>
+
+            <!-- Нижня панель із кнопкою очищення форми -->
+            <div class="no-print px-6 sm:px-8 py-5 bg-[#FAF7FC] border-t border-[#EFE2EC] flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span class="text-xs text-[#7A6E7E]">
+                    Заповніть усі пропуски та впишіть переклад для перевірки викладачем.
+                </span>
+                <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                    <button
+                        type="button"
+                        onclick="window.print()"
+                        class="px-4 py-2.5 rounded-2xl border border-[#DFD2EE] bg-[#FFFEFD] hover:bg-[#F5F0FA] text-[#433846] text-xs sm:text-sm font-semibold transition cursor-pointer"
+                    >
+                        Друк / PDF
+                    </button>
+                    <button
+                        type="button"
+                        onclick="resetWorksheet()"
+                        class="px-5 py-2.5 rounded-2xl bg-[#9D84B7] hover:bg-[#8B71A6] active:scale-[0.99] text-white text-xs sm:text-sm font-bold shadow-sm transition cursor-pointer"
+                    >
+                        Очистити форму
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        /**
+         * Конфігурація 9 слів вправи без жодних підказок, відповідей чи звуку.
+         * Кожен масив segments містить незмінні частини слова (рядки)
+         * та об'єкти { gap: true } для пропущених літер.
+         */
+        const WORKSHEET_ITEMS = [
+            { id: 1, segments: ["acc", { gap: true }, "ss", { gap: true }, "ries"] },
+            { id: 2, segments: ["br", { gap: true }, "nd"] },
+            { id: 3, segments: ["b", { gap: true }, "tch", { gap: true }, "r’s"] },
+            { id: 4, segments: ["ent", { gap: true }, "rt", { gap: true }, "inment"] },
+            { id: 5, segments: ["m", { gap: true }, "ll"] },
+            { id: 6, segments: ["nec", { gap: true }, "ss", { gap: true }, "ty"] },
+            { id: 7, segments: ["h", { gap: true }, "ge"] },
+            { id: 8, segments: ["off", { gap: true }, "r"] },
+            { id: 9, segments: ["be ", { gap: true }, "nto"] }
+        ];
+
+        /**
+         * Побудова рядків вправи у DOM
+         */
+        function renderWorksheet() {
+            const form = document.getElementById('worksheetForm');
+            form.innerHTML = '';
+
+            WORKSHEET_ITEMS.forEach((item) => {
+                const row = document.createElement('div');
+                row.className = "grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-6 items-center px-6 sm:px-8 py-4 sm:py-4.5 hover:bg-[#FDF9FC]/70 transition-colors";
+
+                // Ліва колонка: номер + слово з інлайн-полями для пропущених літер
+                const enCol = document.createElement('div');
+                enCol.className = "md:col-span-6 flex items-center flex-wrap text-base sm:text-lg font-semibold text-[#433846] tracking-wide";
+
+                const numSpan = document.createElement('span');
+                numSpan.className = "w-7 text-sm font-bold text-[#9A8CA0] select-none";
+                numSpan.textContent = `${item.id}.`;
+                enCol.appendChild(numSpan);
+
+                const wordWrapper = document.createElement('div');
+                wordWrapper.className = "inline-flex items-center flex-wrap";
+
+                let gapIndex = 0;
+                item.segments.forEach((seg) => {
+                    if (typeof seg === 'string') {
+                        const textNode = document.createElement('span');
+                        // Зберігаємо пробіл у "be into"
+                        textNode.style.whiteSpace = 'pre';
+                        textNode.textContent = seg;
+                        wordWrapper.appendChild(textNode);
+                    } else if (seg && seg.gap) {
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.maxLength = 1;
+                        input.className = 'letter-box';
+                        input.dataset.rowId = item.id;
+                        input.dataset.gapIndex = gapIndex;
+                        input.setAttribute('aria-label', `Слово ${item.id}, пропущена літера ${gapIndex + 1}`);
+                        input.setAttribute('autocomplete', 'off');
+                        input.setAttribute('autocorrect', 'off');
+                        input.setAttribute('autocapitalize', 'off');
+                        input.setAttribute('spellcheck', 'false');
+
+                        // Автоперехід при введенні літери та повернення при Backspace
+                        input.addEventListener('input', handleLetterInput);
+                        input.addEventListener('keydown', handleLetterKeydown);
+
+                        wordWrapper.appendChild(input);
+                        gapIndex++;
+                    }
+                });
+
+                enCol.appendChild(wordWrapper);
+
+                // Права колонка: поле для українського перекладу
+                const uaCol = document.createElement('div');
+                uaCol.className = "md:col-span-6 pl-7 md:pl-0";
+
+                const uaInput = document.createElement('input');
+                uaInput.type = 'text';
+                uaInput.id = `translation-${item.id}`;
+                uaInput.dataset.rowId = item.id;
+                uaInput.placeholder = 'Впишіть переклад українською...';
+                uaInput.className = 'translation-input px-3.5 py-2 text-sm sm:text-base';
+                uaInput.setAttribute('aria-label', `Переклад слова ${item.id} українською мовою`);
+                uaInput.setAttribute('autocomplete', 'off');
+                uaInput.setAttribute('autocorrect', 'off');
+                uaInput.setAttribute('autocapitalize', 'off');
+                uaInput.setAttribute('spellcheck', 'false');
+
+                // Перехід до наступного рядка по Enter у полі перекладу
+                uaInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const nextRowFirstBox = document.querySelector(`.letter-box[data-row-id="${item.id + 1}"][data-gap-index="0"]`);
+                        if (nextRowFirstBox) {
+                            nextRowFirstBox.focus();
+                        }
+                    }
+                });
+
+                uaCol.appendChild(uaInput);
+
+                row.appendChild(enCol);
+                row.appendChild(uaCol);
+                form.appendChild(row);
+            });
+        }
+
+        /**
+         * При введенні символу в клітинку літери:
+         * переводить фокус на наступну порожню клітинку в цьому слові
+         * або одразу в поле українського перекладу цього рядка.
+         */
+        function handleLetterInput(event) {
+            const input = event.target;
+            // Залишаємо лише один символ без пробілів
+            const cleaned = input.value.replace(/\s+/g, '').slice(0, 1);
+            input.value = cleaned;
+
+            if (!cleaned) return;
+
+            const rowId = input.dataset.rowId;
+            const currentIdx = Number(input.dataset.gapIndex);
+            const rowBoxes = Array.from(document.querySelectorAll(`.letter-box[data-row-id="${rowId}"]`));
+
+            // Шукаємо наступну порожню клітинку в поточному слові
+            const nextEmpty = rowBoxes.find(
+                (box) => Number(box.dataset.gapIndex) > currentIdx && box.value === ''
+            ) || rowBoxes.find((box) => box.value === '');
+
+            if (nextEmpty) {
+                nextEmpty.focus();
+            } else {
+                const translationField = document.getElementById(`translation-${rowId}`);
+                if (translationField) {
+                    translationField.focus();
+                }
+            }
+        }
+
+        /**
+         * Навігація клавішами Backspace та стрілками між клітинками літер
+         */
+        function handleLetterKeydown(event) {
+            const input = event.target;
+            const rowId = input.dataset.rowId;
+            const currentIdx = Number(input.dataset.gapIndex);
+
+            if (event.key === 'Backspace' && input.value === '' && currentIdx > 0) {
+                event.preventDefault();
+                const prevBox = document.querySelector(
+                    `.letter-box[data-row-id="${rowId}"][data-gap-index="${currentIdx - 1}"]`
+                );
+                if (prevBox) {
+                    prevBox.focus();
+                    prevBox.select();
+                }
+            } else if (event.key === 'ArrowLeft' && currentIdx > 0) {
+                const prevBox = document.querySelector(
+                    `.letter-box[data-row-id="${rowId}"][data-gap-index="${currentIdx - 1}"]`
+                );
+                if (prevBox) prevBox.focus();
+            } else if (event.key === 'ArrowRight') {
+                const nextBox = document.querySelector(
+                    `.letter-box[data-row-id="${rowId}"][data-gap-index="${currentIdx + 1}"]`
+                );
+                if (nextBox) nextBox.focus();
+            }
+        }
+
+        /**
+         * Очищення всіх полів форми
+         */
+        function resetWorksheet() {
+            const form = document.getElementById('worksheetForm');
+            form.querySelectorAll('input').forEach((inp) => {
+                inp.value = '';
+            });
+            const firstInput = form.querySelector('.letter-box[data-row-id="1"][data-gap-index="0"]');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', renderWorksheet);
+    </script>
+</body>
+</html>
