@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 4. Choose the correct word</title>
+    <!-- Підключення Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Шрифт Inter з підтримкою кирилиці та фонетичних символів IPA -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FFFBF7;
+            --bg-blush: #FDF6F9;
+            --card-bg: #FFFEFD;
+            --border-pastel: #EFE2EC;
+            --text-plum: #433846;
+            --text-mauve: #7A6E7E;
+            --lavender: #9D84B7;
+            --lavender-hover: #8B71A6;
+            --lavender-soft: #F5F0FA;
+            --lavender-border: #DFD2EE;
+            --blush-soft: #F8E6EC;
+            --blush-border: #EBC7D4;
+            --mint-soft: #E7F5EE;
+            --mint-border: #C3E3D3;
+            --peach-soft: #FDF2E3;
+            --peach-border: #F3D8B6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at 12% 14%, rgba(248, 230, 236, 0.78) 0%, transparent 44%),
+                radial-gradient(circle at 88% 18%, rgba(231, 245, 238, 0.75) 0%, transparent 46%),
+                radial-gradient(circle at 50% 88%, rgba(253, 242, 227, 0.78) 0%, transparent 50%),
+                linear-gradient(135deg, #FFFBF7 0%, #FDF6F9 52%, #F8F3FC 100%);
+            min-height: 100vh;
+            color: var(--text-plum);
+        }
+
+        .worksheet-card {
+            background-color: var(--card-bg);
+            border-color: var(--border-pastel);
+            box-shadow: 0 12px 32px -8px rgba(195, 165, 185, 0.18);
+        }
+
+        /* Кастомні пастельні радіокнопки */
+        .pastel-radio {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.15rem;
+            height: 1.15rem;
+            min-width: 1.15rem;
+            border-radius: 9999px;
+            border: 2px solid #C9B5DF;
+            background-color: #FFFEFD;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+            cursor: pointer;
+        }
+
+        .pastel-radio:checked {
+            border-color: #9D84B7;
+            background-color: #9D84B7;
+            box-shadow: inset 0 0 0 3px #FFFEFD, 0 0 0 3px rgba(157, 132, 183, 0.2);
+        }
+
+        /* Контейнер кожного варіанта відповіді */
+        .option-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.65rem;
+            padding: 0.5rem 0.8rem;
+            border-radius: 0.9rem;
+            border: 1px solid transparent;
+            transition: background-color 0.16s ease, border-color 0.16s ease;
+        }
+
+        .option-row:hover {
+            background-color: #FAF5FF;
+            border-color: #E7DAF6;
+        }
+
+        .option-row:has(.pastel-radio:checked) {
+            background-color: #F5F0FA;
+            border-color: #D6C3EC;
+        }
+
+        /* Зона наведення на слово з пастельною IPA-підказкою */
+        .option-word-hover {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.1rem 0.25rem;
+            border-radius: 0.45rem;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        .option-word-hover:hover {
+            background-color: #F8E6EC;
+            color: #5E4366;
+        }
+
+        .ipa-tooltip {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%) translateY(6px) scale(0.96);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            z-index: 40;
+            white-space: nowrap;
+            padding: 0.35rem 0.7rem;
+            border-radius: 0.75rem;
+            background-color: #FAF5FF;
+            border: 1.5px solid #D9C6EC;
+            color: #433846;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 10px 22px -6px rgba(157, 132, 183, 0.32);
+            transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.18s ease;
+        }
+
+        .ipa-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: #D9C6EC transparent transparent transparent;
+        }
+
+        .option-word-hover:hover .ipa-tooltip,
+        .option-word-hover.tooltip-open .ipa-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+
+        /* Кнопка озвучування біля варіанта */
+        .speaker-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.7rem;
+            background-color: #FDF2E3;
+            border: 1px solid #F3D8B6;
+            color: #8E6536;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: background-color 0.16s ease, transform 0.14s ease, border-color 0.16s ease;
+        }
+
+        .speaker-btn:hover {
+            background-color: #E7F5EE;
+            border-color: #C3E3D3;
+            color: #3E6D56;
+            transform: scale(1.05);
+        }
+
+        .speaker-btn:active {
+            transform: scale(0.96);
+        }
+
+        .speaker-btn.is-speaking {
+            background-color: #E7F5EE;
+            border-color: #9ED0B8;
+            color: #3A6651;
+            box-shadow: 0 0 0 3px rgba(195, 227, 211, 0.45);
+        }
+
+        /* Стилі для друку або збереження у PDF */
+        @media print {
+            body {
+                background: #FFFFFF !important;
+                padding: 0 !important;
+            }
+            .worksheet-card {
+                box-shadow: none !important;
+                border: 1px solid #D8CBD5 !important;
+                border-radius: 12px !important;
+            }
+            .no-print,
+            .speaker-btn,
+            .ipa-tooltip {
+                display: none !important;
+            }
+            .option-row {
+                padding: 0.25rem 0 !important;
+                background: transparent !important;
+                border-color: transparent !important;
+            }
+            .pastel-radio {
+                border-color: #433846 !important;
+                box-shadow: none !important;
+            }
+            .pastel-radio:checked {
+                background-color: #433846 !important;
+                box-shadow: inset 0 0 0 3px #FFFFFF !important;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#F8E6EC] selection:text-[#433846] py-6 sm:py-10 px-4 sm:px-6">
+
+    <main class="max-w-4xl mx-auto">
+        <!-- Основна пастельна картка робочого аркуша -->
+        <div class="worksheet-card rounded-3xl border overflow-hidden">
+
+            <!-- Шапка вправи -->
+            <div class="px-6 sm:px-8 py-6 sm:py-7 bg-gradient-to-r from-[#FAF5FF] via-[#FDF6F9] to-[#FDF8F2] border-b border-[#EFE2EC]">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-extrabold text-[#433846] tracking-tight">
+                            Exercise 4. Choose the correct word
+                        </h1>
+                        <p class="text-sm sm:text-base italic text-[#7A6E7E] mt-1.5">
+                            Обери правильне слово, щоб доповнити речення.
+                        </p>
+                    </div>
+                    <!-- Поле для імені учениці -->
+                    <div class="flex items-center gap-2 self-start sm:self-center bg-[#FFFEFD]/85 px-3.5 py-2 rounded-2xl border border-[#EFE2EC]">
+                        <label for="studentName" class="text-xs font-semibold text-[#7A6E7E] whitespace-nowrap">Ім’я:</label>
+                        <input
+                            type="text"
+                            id="studentName"
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                            placeholder="________________"
+                            class="w-32 sm:w-36 bg-transparent text-xs sm:text-sm font-semibold text-[#433846] placeholder-[#C4B7CA] focus:outline-none"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Легка пастельна примітка про наведення та озвучування -->
+            <div class="no-print px-6 sm:px-8 py-3 bg-[#FAF7FC] border-b border-[#EFE2EC] flex flex-wrap items-center justify-between gap-2 text-xs text-[#7A6E7E]">
+                <div class="flex items-center gap-2">
+                    <span class="inline-block w-2 h-2 rounded-full bg-[#9D84B7]"></span>
+                    <span>Наведіть курсор на слово, щоб побачити транскрипцію та прослухати вимову, або натисніть значок звуку.</span>
+                </div>
+                <span id="speechStatusNote" class="text-[11px] font-medium text-[#8E6536] bg-[#FDF2E3] border border-[#F3D8B6] px-2.5 py-0.5 rounded-full">
+                    Англійська вимова готова
+                </span>
+            </div>
+
+            <!-- Список 9 тестових запитань з радіокнопками -->
+            <form id="choiceForm" onsubmit="return false;" autocomplete="off" class="divide-y divide-[#F3E8F0]">
+                <!-- Питання генеруються через JavaScript -->
+            </form>
+
+            <!-- Нижня панель із кнопками дій -->
+            <div class="no-print px-6 sm:px-8 py-5 bg-[#FAF7FC] border-t border-[#EFE2EC] flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span class="text-xs text-[#7A6E7E]">
+                    Оберіть один варіант у кожному реченні для перевірки викладачем.
+                </span>
+                <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                    <button
+                        type="button"
+                        onclick="window.print()"
+                        class="px-4 py-2.5 rounded-2xl border border-[#DFD2EE] bg-[#FFFEFD] hover:bg-[#F5F0FA] text-[#433846] text-xs sm:text-sm font-semibold transition cursor-pointer"
+                    >
+                        Друк / PDF
+                    </button>
+                    <button
+                        type="button"
+                        onclick="resetChoiceForm()"
+                        class="px-5 py-2.5 rounded-2xl bg-[#9D84B7] hover:bg-[#8B71A6] active:scale-[0.99] text-white text-xs sm:text-sm font-bold shadow-sm transition cursor-pointer"
+                    >
+                        Очистити форму
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        /**
+         * IPA-транскрипції для всіх варіантів відповідей вправи.
+         */
+        const IPA_DICTIONARY = {
+            "mall": "/mɔːl/",
+            "butcher’s": "/ˈbʊtʃ.ərz/",
+            "brand": "/brænd/",
+            "huge": "/hjuːdʒ/",
+            "into": "/ˈɪn.tuː/",
+            "necessary": "/ˈnes.ə.ser.i/",
+            "necessity": "/nəˈses.ə.ti/",
+            "accessory": "/əkˈses.ər.i/",
+            "accessories": "/əkˈses.ər.iz/",
+            "brands": "/brændz/",
+            "malls": "/mɔːlz/",
+            "offer": "/ˈɒf.ər/",
+            "necessities": "/nəˈses.ə.tiz/",
+            "entertainment": "/ˌen.təˈteɪn.mənt/"
+        };
+
+        /**
+         * 9 речень з Exercise 4. Choose the correct word.
+         */
+        const CHOICE_QUESTIONS = [
+            {
+                id: 1,
+                sentence: "We buy meat at the ...",
+                options: ["mall", "butcher’s", "brand"]
+            },
+            {
+                id: 2,
+                sentence: "This shopping centre is very big. It is ...",
+                options: ["huge", "into", "necessary"]
+            },
+            {
+                id: 3,
+                sentence: "Nike is a famous ...",
+                options: ["necessity", "accessory", "brand"]
+            },
+            {
+                id: 4,
+                sentence: "Bags, belts and sunglasses are ...",
+                options: ["accessories", "brands", "malls"]
+            },
+            {
+                id: 5,
+                sentence: "I am ... computer games.",
+                options: ["huge", "into", "offer"]
+            },
+            {
+                id: 6,
+                sentence: "Food and water are basic ...",
+                options: ["accessories", "brands", "necessities"]
+            },
+            {
+                id: 7,
+                sentence: "We can go shopping at the ...",
+                options: ["mall", "brand", "necessity"]
+            },
+            {
+                id: 8,
+                sentence: "The shops ... discounts.",
+                options: ["into", "offer", "huge"]
+            },
+            {
+                id: 9,
+                sentence: "Bowling and watching films are forms of ...",
+                options: ["necessity", "brand", "entertainment"]
+            }
+        ];
+
+        // Стан синтезатора мовлення для захисту від повторного спрацьовування при наведенні
+        const speechState = {
+            selectedVoice: null,
+            lastHoverWord: null,
+            lastHoverTime: 0,
+            activeButton: null
+        };
+
+        /**
+         * Підбір природного англійського голосу (en-US / en-GB).
+         */
+        function loadEnglishVoice() {
+            if (!('speechSynthesis' in window)) return;
+            const voices = window.speechSynthesis.getVoices();
+            if (!voices || voices.length === 0) return;
+
+            speechState.selectedVoice =
+                voices.find(v => v.lang === 'en-GB' && /google|daniel|kate|serena|martha/i.test(v.name)) ||
+                voices.find(v => v.lang === 'en-US' && /google|samantha|alex|aria|jenny/i.test(v.name)) ||
+                voices.find(v => v.lang.startsWith('en-GB')) ||
+                voices.find(v => v.lang.startsWith('en-US')) ||
+                voices.find(v => v.lang.toLowerCase().startsWith('en')) ||
+                null;
+        }
+
+        /**
+         * Підсвічує активну кнопку динаміка під час озвучування.
+         */
+        function setSpeakingButton(btn) {
+            if (speechState.activeButton && speechState.activeButton !== btn) {
+                speechState.activeButton.classList.remove('is-speaking');
+            }
+            speechState.activeButton = btn || null;
+            if (btn) {
+                btn.classList.add('is-speaking');
+            }
+        }
+
+        /**
+         * Озвучує англійське слово або фразу через Web Speech API.
+         * @param {string} word - слово для вимови
+         * @param {HTMLElement|null} btn - кнопка динаміка для візуального відгуку
+         * @param {boolean} isHoverTrigger - чи викликано подією наведення курсора
+         */
+        function speakWord(word, btn = null, isHoverTrigger = false) {
+            if (!word) return;
+
+            // Захист від занадто частого повторного озвучування при випадковому русі курсора
+            const now = Date.now();
+            if (isHoverTrigger) {
+                if (speechState.lastHoverWord === word && now - speechState.lastHoverTime < 1400) {
+                    return;
+                }
+                if (window.speechSynthesis && window.speechSynthesis.speaking && speechState.lastHoverWord === word && now - speechState.lastHoverTime < 2200) {
+                    return;
+                }
+                speechState.lastHoverWord = word;
+                speechState.lastHoverTime = now;
+            } else {
+                // При явному кліку на кнопку динаміка дозволяємо миттєве повторення
+                speechState.lastHoverWord = word;
+                speechState.lastHoverTime = now;
+            }
+
+            const statusNote = document.getElementById('speechStatusNote');
+
+            if (!('speechSynthesis' in window)) {
+                if (statusNote) {
+                    statusNote.textContent = 'Озвучування не підтримується браузером';
+                }
+                return;
+            }
+
+            try {
+                if (!speechState.selectedVoice) {
+                    loadEnglishVoice();
+                }
+
+                // Нормалізуємо типографський апостроф для коректної вимови
+                const spokenText = word.replace(/[’']/g, "'");
+
+                window.speechSynthesis.cancel();
+
+                const utterance = new SpeechSynthesisUtterance(spokenText);
+                if (speechState.selectedVoice) {
+                    utterance.voice = speechState.selectedVoice;
+                    utterance.lang = speechState.selectedVoice.lang;
+                } else {
+                    utterance.lang = 'en-US';
+                }
+                utterance.rate = 0.94;
+                utterance.pitch = 1.02;
+
+                utterance.onstart = () => {
+                    setSpeakingButton(btn);
+                    if (statusNote) {
+                        statusNote.textContent = `Вимова: ${word}`;
+                    }
+                };
+
+                utterance.onend = () => {
+                    if (btn) btn.classList.remove('is-speaking');
+                    if (speechState.activeButton === btn) speechState.activeButton = null;
+                };
+
+                utterance.onerror = () => {
+                    if (btn) btn.classList.remove('is-speaking');
+                    if (speechState.activeButton === btn) speechState.activeButton = null;
+                };
+
+                window.speechSynthesis.speak(utterance);
+            } catch (err) {
+                // Безпечна обробка помилок синтезу мовлення
+                if (btn) btn.classList.remove('is-speaking');
+            }
+        }
+
+        /**
+         * Іконка динаміка у чистому SVG.
+         */
+        function createSpeakerIcon() {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('fill', 'none');
+            svg.setAttribute('stroke', 'currentColor');
+            svg.setAttribute('stroke-width', '2');
+            svg.setAttribute('stroke-linecap', 'round');
+            svg.setAttribute('stroke-linejoin', 'round');
+            svg.setAttribute('class', 'w-4 h-4');
+            svg.setAttribute('aria-hidden', 'true');
+
+            const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            path1.setAttribute('points', '11 5 6 9 2 9 2 15 6 15 11 19 11 5');
+
+            const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path2.setAttribute('d', 'M15.54 8.46a5 5 0 0 1 0 7.07');
+
+            const path3 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path3.setAttribute('d', 'M19.07 4.93a10 10 0 0 1 0 14.14');
+
+            svg.appendChild(path1);
+            svg.appendChild(path2);
+            svg.appendChild(path3);
+            return svg;
+        }
+
+        /**
+         * Побудова всіх 9 питань у формі з радіокнопками, IPA-підказками при наведенні та кнопками озвучування.
+         */
+        function renderChoiceWorksheet() {
+            const form = document.getElementById('choiceForm');
+            form.innerHTML = '';
+
+            CHOICE_QUESTIONS.forEach((item, qIndex) => {
+                const block = document.createElement('div');
+                const tintClass = qIndex % 3 === 1
+                    ? 'bg-[#FDF9FC]/60'
+                    : qIndex % 3 === 2
+                        ? 'bg-[#FFFDF9]/60'
+                        : 'bg-transparent';
+                block.className = `px-6 sm:px-8 py-5 ${tintClass} transition-colors`;
+
+                // Текст речення
+                const promptRow = document.createElement('div');
+                promptRow.className = 'flex items-baseline gap-2.5 text-base sm:text-lg font-semibold text-[#433846] mb-3';
+
+                const numberSpan = document.createElement('span');
+                numberSpan.className = 'text-sm sm:text-base font-bold text-[#9A8CA0] select-none flex-shrink-0';
+                numberSpan.textContent = `${item.id}.`;
+
+                const sentenceSpan = document.createElement('span');
+                sentenceSpan.textContent = item.sentence;
+
+                promptRow.appendChild(numberSpan);
+                promptRow.appendChild(sentenceSpan);
+                block.appendChild(promptRow);
+
+                // Група варіантів відповідей
+                const optionsGroup = document.createElement('div');
+                optionsGroup.className = 'pl-6 sm:pl-7 flex flex-col space-y-1.5 max-w-md';
+                optionsGroup.setAttribute('role', 'radiogroup');
+                optionsGroup.setAttribute('aria-label', `Питання ${item.id}: ${item.sentence}`);
+
+                item.options.forEach((optText, optIdx) => {
+                    const radioId = `q${item.id}_opt${optIdx}`;
+                    const ipaText = IPA_DICTIONARY[optText] || '';
+
+                    const optionRow = document.createElement('div');
+                    optionRow.className = 'option-row';
+
+                    // Ліва частина: радіокнопка + слово з IPA-підказкою та озвучуванням при наведенні
+                    const leftPart = document.createElement('div');
+                    leftPart.className = 'flex items-center gap-3 min-w-0';
+
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.id = radioId;
+                    radio.name = `question_${item.id}`;
+                    radio.value = optText;
+                    radio.className = 'pastel-radio';
+                    radio.setAttribute('autocomplete', 'off');
+
+                    const label = document.createElement('label');
+                    label.htmlFor = radioId;
+                    label.className = 'option-word-hover text-sm sm:text-base font-medium text-[#433846] select-none';
+
+                    const wordTextSpan = document.createElement('span');
+                    wordTextSpan.textContent = optText;
+
+                    // Спливаюча пастельна підказка з IPA-транскрипцією
+                    const tooltip = document.createElement('span');
+                    tooltip.className = 'ipa-tooltip';
+                    tooltip.setAttribute('role', 'tooltip');
+                    tooltip.textContent = ipaText;
+
+                    label.appendChild(wordTextSpan);
+                    label.appendChild(tooltip);
+
+                    // Кнопка динаміка для явного повторення вимови (зручно на тачскринах і мишкою)
+                    const speakerBtn = document.createElement('button');
+                    speakerBtn.type = 'button';
+                    speakerBtn.className = 'speaker-btn no-print';
+                    speakerBtn.title = `Прослухати «${optText}»`;
+                    speakerBtn.setAttribute('aria-label', `Прослухати слово ${optText}`);
+                    speakerBtn.appendChild(createSpeakerIcon());
+
+                    // Наведення курсора на слово або кнопку динаміка показує транскрипцію та озвучує слово
+                    label.addEventListener('mouseenter', () => {
+                        speakWord(optText, speakerBtn, true);
+                    });
+
+                    speakerBtn.addEventListener('mouseenter', () => {
+                        label.classList.add('tooltip-open');
+                        speakWord(optText, speakerBtn, true);
+                    });
+
+                    speakerBtn.addEventListener('mouseleave', () => {
+                        label.classList.remove('tooltip-open');
+                    });
+
+                    // Клік по кнопці динаміка озвучує слово без перемикання радіокнопки
+                    speakerBtn.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        label.classList.add('tooltip-open');
+                        setTimeout(() => label.classList.remove('tooltip-open'), 1600);
+                        speakWord(optText, speakerBtn, false);
+                    });
+
+                    leftPart.appendChild(radio);
+                    leftPart.appendChild(label);
+
+                    optionRow.appendChild(leftPart);
+                    optionRow.appendChild(speakerBtn);
+                    optionsGroup.appendChild(optionRow);
+                });
+
+                block.appendChild(optionsGroup);
+                form.appendChild(block);
+            });
+        }
+
+        /**
+         * Очищення вибраних радіокнопок та поля імені.
+         */
+        function resetChoiceForm() {
+            const form = document.getElementById('choiceForm');
+            form.reset();
+            const studentName = document.getElementById('studentName');
+            if (studentName) {
+                studentName.value = '';
+            }
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            setSpeakingButton(null);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderChoiceWorksheet();
+            loadEnglishVoice();
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.onvoiceschanged = loadEnglishVoice;
+            }
+        });
+    </script>
+</body>
+</html>
