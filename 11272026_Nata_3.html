@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 3. Correct the spelling</title>
+    <!-- Підключення Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Шрифт Inter з підтримкою кирилиці -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FFFBF7;
+            --bg-blush: #FDF6F9;
+            --card-bg: #FFFEFD;
+            --border-pastel: #EFE2EC;
+            --text-plum: #433846;
+            --text-mauve: #7A6E7E;
+            --lavender: #9D84B7;
+            --lavender-hover: #8B71A6;
+            --lavender-soft: #F5F0FA;
+            --lavender-border: #DFD2EE;
+            --blush-soft: #F8E6EC;
+            --blush-border: #EBC7D4;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at 12% 14%, rgba(248, 230, 236, 0.78) 0%, transparent 44%),
+                radial-gradient(circle at 88% 18%, rgba(235, 243, 250, 0.75) 0%, transparent 46%),
+                radial-gradient(circle at 50% 88%, rgba(253, 242, 227, 0.75) 0%, transparent 50%),
+                linear-gradient(135deg, #FFFBF7 0%, #FDF6F9 52%, #F8F3FC 100%);
+            min-height: 100vh;
+            color: var(--text-plum);
+        }
+
+        .worksheet-card {
+            background-color: var(--card-bg);
+            border-color: var(--border-pastel);
+            box-shadow: 0 12px 32px -8px rgba(195, 165, 185, 0.18);
+        }
+
+        /* Поле для вписування виправленого слова */
+        .spelling-input {
+            width: 100%;
+            border-radius: 0.85rem;
+            border: 1.5px solid #DFD2EE;
+            background-color: #FAF6FE;
+            color: #433846;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .spelling-input:focus {
+            outline: none;
+            border-color: #9D84B7;
+            background-color: #FFFEFD;
+            box-shadow: 0 0 0 3px rgba(157, 132, 183, 0.22);
+        }
+
+        .spelling-input::placeholder {
+            color: #C2B5C9;
+            font-weight: 400;
+        }
+
+        /* Стилі для друку або збереження у PDF */
+        @media print {
+            body {
+                background: #FFFFFF !important;
+                padding: 0 !important;
+            }
+            .worksheet-card {
+                box-shadow: none !important;
+                border: 1px solid #D8CBD5 !important;
+                border-radius: 12px !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .spelling-input {
+                border: none !important;
+                border-bottom: 1.5px solid #433846 !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            .spelling-input::placeholder {
+                color: transparent !important;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#F8E6EC] selection:text-[#433846] py-6 sm:py-10 px-4 sm:px-6">
+
+    <main class="max-w-4xl mx-auto">
+        <!-- Основна пастельна картка робочого аркуша -->
+        <div class="worksheet-card rounded-3xl border overflow-hidden">
+
+            <!-- Шапка вправи -->
+            <div class="px-6 sm:px-8 py-6 sm:py-7 bg-gradient-to-r from-[#FAF5FF] via-[#FDF6F9] to-[#FDF8F2] border-b border-[#EFE2EC]">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-extrabold text-[#433846] tracking-tight">
+                            Exercise 3. Correct the spelling
+                        </h1>
+                        <p class="text-sm sm:text-base italic text-[#7A6E7E] mt-1.5">
+                            У кожному слові є одна помилка. Знайди її та напиши слово правильно.
+                        </p>
+                    </div>
+                    <!-- Поле для імені учениці -->
+                    <div class="flex items-center gap-2 self-start sm:self-center bg-[#FFFEFD]/80 px-3.5 py-2 rounded-2xl border border-[#EFE2EC]">
+                        <label for="studentName" class="text-xs font-semibold text-[#7A6E7E] whitespace-nowrap">Ім’я:</label>
+                        <input
+                            type="text"
+                            id="studentName"
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                            placeholder="________________"
+                            class="w-32 sm:w-36 bg-transparent text-xs sm:text-sm font-semibold text-[#433846] placeholder-[#C4B7CA] focus:outline-none"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Заголовки колонок -->
+            <div class="hidden md:grid md:grid-cols-12 gap-6 px-8 py-3.5 bg-[#FAF7FC] border-b border-[#EFE2EC] text-xs font-bold uppercase tracking-wider text-[#7A6E7E]">
+                <div class="col-span-6">Incorrect</div>
+                <div class="col-span-6">Correct</div>
+            </div>
+
+            <!-- Список 9 слів для виправлення -->
+            <form id="spellingForm" onsubmit="return false;" autocomplete="off" class="divide-y divide-[#F3E8F0]">
+                <!-- Рядки генеруються через JavaScript -->
+            </form>
+
+            <!-- Нижня панель із кнопками дій -->
+            <div class="no-print px-6 sm:px-8 py-5 bg-[#FAF7FC] border-t border-[#EFE2EC] flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span class="text-xs text-[#7A6E7E]">
+                    Напишіть правильний варіант кожного слова для перевірки викладачем.
+                </span>
+                <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                    <button
+                        type="button"
+                        onclick="window.print()"
+                        class="px-4 py-2.5 rounded-2xl border border-[#DFD2EE] bg-[#FFFEFD] hover:bg-[#F5F0FA] text-[#433846] text-xs sm:text-sm font-semibold transition cursor-pointer"
+                    >
+                        Друк / PDF
+                    </button>
+                    <button
+                        type="button"
+                        onclick="resetWorksheet()"
+                        class="px-5 py-2.5 rounded-2xl bg-[#9D84B7] hover:bg-[#8B71A6] active:scale-[0.99] text-white text-xs sm:text-sm font-bold shadow-sm transition cursor-pointer"
+                    >
+                        Очистити форму
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        /**
+         * Список 9 слів з однією орфографічною помилкою в кожному.
+         * Без підказок, відповідей чи автоперевірки.
+         */
+        const SPELLING_ITEMS = [
+            { id: 1, incorrect: "accesories" },
+            { id: 2, incorrect: "brend" },
+            { id: 3, incorrect: "buther’s" },
+            { id: 4, incorrect: "entertanment" },
+            { id: 5, incorrect: "mal" },
+            { id: 6, incorrect: "necesity" },
+            { id: 7, incorrect: "huje" },
+            { id: 8, incorrect: "ofer" },
+            { id: 9, incorrect: "be innto" }
+        ];
+
+        /**
+         * Рендер рядків вправи у DOM
+         */
+        function renderSpellingWorksheet() {
+            const form = document.getElementById('spellingForm');
+            form.innerHTML = '';
+
+            SPELLING_ITEMS.forEach((item) => {
+                const row = document.createElement('div');
+                row.className = "grid grid-cols-1 md:grid-cols-12 gap-2.5 md:gap-6 items-center px-6 sm:px-8 py-4 hover:bg-[#FDF9FC]/70 transition-colors";
+
+                // Ліва колонка: номер + слово з помилкою
+                const leftCol = document.createElement('div');
+                leftCol.className = "md:col-span-6 flex items-center text-base sm:text-lg font-semibold text-[#433846] tracking-wide";
+
+                const numSpan = document.createElement('span');
+                numSpan.className = "w-7 text-sm font-bold text-[#9A8CA0] select-none";
+                numSpan.textContent = `${item.id}.`;
+
+                const wordSpan = document.createElement('span');
+                wordSpan.textContent = item.incorrect;
+
+                leftCol.appendChild(numSpan);
+                leftCol.appendChild(wordSpan);
+
+                // Права колонка: поле для вписування правильного варіанту
+                const rightCol = document.createElement('div');
+                rightCol.className = "md:col-span-6 pl-7 md:pl-0";
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = `correct-${item.id}`;
+                input.dataset.rowId = item.id;
+                input.placeholder = '________________';
+                input.className = 'spelling-input px-3.5 py-2 text-sm sm:text-base';
+                input.setAttribute('aria-label', `Правильне написання слова ${item.id}: ${item.incorrect}`);
+                input.setAttribute('autocomplete', 'off');
+                input.setAttribute('autocorrect', 'off');
+                input.setAttribute('autocapitalize', 'off');
+                input.setAttribute('spellcheck', 'false');
+
+                // Перехід до наступного поля при натисканні Enter
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const nextInput = document.getElementById(`correct-${item.id + 1}`);
+                        if (nextInput) {
+                            nextInput.focus();
+                        }
+                    }
+                });
+
+                rightCol.appendChild(input);
+
+                row.appendChild(leftCol);
+                row.appendChild(rightCol);
+                form.appendChild(row);
+            });
+        }
+
+        /**
+         * Скидання всіх полів форми
+         */
+        function resetWorksheet() {
+            const form = document.getElementById('spellingForm');
+            form.querySelectorAll('input').forEach((inp) => {
+                inp.value = '';
+            });
+            const firstInput = document.getElementById('correct-1');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', renderSpellingWorksheet);
+    </script>
+</body>
+</html>
