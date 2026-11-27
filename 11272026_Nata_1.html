@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Vocabulary Trainer — Інтерактивний тренажер слів</title>
+    <!-- Підключення Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Підключення шрифту Inter з підтримкою кирилиці та символів транскрипції -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FFFBF7;
+            --bg-blush: #FDF6F9;
+            --card-bg: #FFFEFD;
+            --border-pastel: #EFE2EC;
+            --text-plum: #433846;
+            --text-mauve: #7A6E7E;
+            --lavender-main: #9D84B7;
+            --lavender-hover: #8B71A6;
+            --lavender-soft: #F5F0FA;
+            --lavender-border: #DFD2EE;
+            --blush-soft: #F8E6EC;
+            --blush-border: #EBC7D4;
+            --blush-text: #8F566B;
+            --mint-soft: #E7F5EE;
+            --mint-border: #C3E3D3;
+            --mint-text: #4A7C64;
+            --peach-soft: #FDF2E3;
+            --peach-border: #F3D8B6;
+            --peach-text: #946B3C;
+            --sky-soft: #EBF3FA;
+            --sky-border: #C7DDF0;
+            --sky-text: #4C6E8F;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at 12% 15%, rgba(248, 230, 236, 0.75) 0%, transparent 42%),
+                radial-gradient(circle at 88% 18%, rgba(235, 243, 250, 0.75) 0%, transparent 45%),
+                radial-gradient(circle at 50% 88%, rgba(253, 242, 227, 0.7) 0%, transparent 50%),
+                linear-gradient(135deg, #FFFBF7 0%, #FDF6F9 52%, #F8F3FC 100%);
+            min-height: 100vh;
+            color: var(--text-plum);
+        }
+
+        .pastel-card {
+            background-color: var(--card-bg);
+            border-color: var(--border-pastel);
+            box-shadow: 0 8px 24px -6px rgba(195, 165, 185, 0.14);
+        }
+
+        /* Плавна анімація появи підказки з транскрипцією при наведенні */
+        .word-hover-trigger {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .ipa-tooltip {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(6px) scale(0.96);
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            z-index: 40;
+            background-color: #FAF5FF;
+            border: 1.5px solid #D8C7EB;
+            color: #433846;
+            box-shadow: 0 10px 25px -5px rgba(157, 132, 183, 0.25);
+        }
+
+        .word-hover-trigger:hover .ipa-tooltip,
+        .word-hover-trigger:focus-within .ipa-tooltip,
+        .word-hover-trigger.active-touch .ipa-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Анімація помилки (легке тремтіння) */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* Анімація успіху */
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop {
+            animation: popIn 0.3s ease-out;
+        }
+
+        /* Пульсація іконки звуку під час відтворення */
+        @keyframes soundPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); color: #8B71A6; }
+        }
+        .speaking-pulse {
+            animation: soundPulse 0.6s infinite ease-in-out;
+        }
+
+        /* Кастомний скролбар у пастельних тонах */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FDF6F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #DFD2EE;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C7B3DE;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#F8E6EC] selection:text-[#433846]">
+
+    <!-- Верхня панель навігації та прогресу -->
+    <header class="sticky top-0 z-30 bg-[#FFFEFD]/90 backdrop-blur-md border-b border-[#EFE2EC] shadow-[0_4px_20px_-6px_rgba(195,165,185,0.14)]">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <!-- Логотип та заголовок -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#B49FCC] via-[#D8B4C8] to-[#F3D8B6] flex items-center justify-center text-white font-extrabold text-xl shadow-sm shadow-[#E8DFEE]">
+                            En
+                        </div>
+                        <div>
+                            <h1 class="text-lg sm:text-xl font-extrabold text-[#433846] tracking-tight leading-tight">
+                                Vocabulary Lab
+                            </h1>
+                            <p class="text-xs text-[#7A6E7E] font-medium">Ніжний інтерактивний тренажер слів</p>
+                        </div>
+                    </div>
+
+                    <!-- Перемикач авто-звуку на мобільних -->
+                    <button id="audioToggleBtnMobile" onclick="toggleAutoSound()" class="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all border">
+                        <span id="audioIconMobile">🔊</span>
+                        <span id="audioLabelMobile">Звук при наведенні</span>
+                    </button>
+                </div>
+
+                <!-- Панель прогресу та керування звуком -->
+                <div class="flex items-center justify-between md:justify-end gap-3 sm:gap-4">
+                    <!-- Перемикач авто-озвучення при наведенні -->
+                    <button id="audioToggleBtn" onclick="toggleAutoSound()" title="Увімкнути або вимкнути автоматичне озвучування при наведенні курсора" class="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border cursor-pointer">
+                        <span id="audioIcon" class="text-sm">🔊</span>
+                        <span id="audioLabel">Авто-звук: Увімк.</span>
+                    </button>
+
+                    <!-- Загальний прогрес -->
+                    <div class="flex items-center gap-3 bg-[#FAF5FF] px-3.5 py-1.5 rounded-full border border-[#E8DFEE] w-full md:w-auto justify-between">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[#D49B54] text-base">✨</span>
+                            <span class="text-xs font-bold text-[#433846]">Прогрес:</span>
+                            <span id="totalScoreText" class="text-xs font-extrabold text-[#8B71A6]">0 / 36</span>
+                        </div>
+                        <div class="w-24 sm:w-28 h-2 bg-[#EFE2EC] rounded-full overflow-hidden">
+                            <div id="totalProgressBar" class="h-full bg-gradient-to-r from-[#B49FCC] via-[#E2A9BE] to-[#8EC5AB] rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладки 4 вправ -->
+            <nav class="flex items-center gap-1.5 sm:gap-2 mt-3 overflow-x-auto pb-1 no-scrollbar" aria-label="Вправи">
+                <button onclick="switchTab(1)" id="tab-btn-1" class="tab-btn flex-shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all cursor-pointer">
+                    <span class="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold bg-[#F5F0FA] text-[#8B71A6]">1</span>
+                    <span>Словник та вимова</span>
+                    <span id="badge-1" class="text-[11px] px-1.5 py-0.5 rounded-lg bg-[#F8F3FA] text-[#7A6E7E] font-bold">0/9</span>
+                </button>
+                <button onclick="switchTab(2)" id="tab-btn-2" class="tab-btn flex-shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all cursor-pointer">
+                    <span class="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold bg-[#F5F0FA] text-[#8B71A6]">2</span>
+                    <span>Знайди пару</span>
+                    <span id="badge-2" class="text-[11px] px-1.5 py-0.5 rounded-lg bg-[#F8F3FA] text-[#7A6E7E] font-bold">0/9</span>
+                </button>
+                <button onclick="switchTab(3)" id="tab-btn-3" class="tab-btn flex-shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all cursor-pointer">
+                    <span class="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold bg-[#F5F0FA] text-[#8B71A6]">3</span>
+                    <span>Контекст та вживання</span>
+                    <span id="badge-3" class="text-[11px] px-1.5 py-0.5 rounded-lg bg-[#F8F3FA] text-[#7A6E7E] font-bold">0/9</span>
+                </button>
+                <button onclick="switchTab(4)" id="tab-btn-4" class="tab-btn flex-shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all cursor-pointer">
+                    <span class="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold bg-[#F5F0FA] text-[#8B71A6]">4</span>
+                    <span>Правопис (Диктант)</span>
+                    <span id="badge-4" class="text-[11px] px-1.5 py-0.5 rounded-lg bg-[#F8F3FA] text-[#7A6E7E] font-bold">0/9</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Сповіщення про активацію звуку в браузері -->
+    <div id="audioUnlockBanner" class="max-w-6xl mx-auto px-4 sm:px-6 mt-4">
+        <div class="bg-gradient-to-r from-[#F5F0FA] via-[#F8E6EC] to-[#EBF3FA] text-[#433846] border border-[#DFD2EE] rounded-2xl p-3.5 sm:px-5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-[0_8px_24px_-6px_rgba(195,165,185,0.18)]">
+            <div class="flex items-center gap-3 text-center sm:text-left">
+                <span class="text-2xl">🎧</span>
+                <p class="text-xs sm:text-sm font-medium text-[#433846]">
+                    Натисніть кнопку праворуч один раз, щоб браузер дозволив миттєве <strong>озвучування слів при наведенні курсора</strong>.
+                </p>
+            </div>
+            <button onclick="unlockAudioSystem()" class="flex-shrink-0 bg-[#9D84B7] hover:bg-[#8B71A6] text-white active:scale-95 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition cursor-pointer">
+                Активувати звук
+            </button>
+        </div>
+    </div>
+
+    <!-- Основний контейнер контенту -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+
+        <!-- =========================================================
+             ВПРАВА 1: СЛОВНИК ТА ВИМОВА (Flashcards & Hover IPA)
+             ========================================================= -->
+        <section id="section-1" class="exercise-section space-y-6">
+            <div class="pastel-card rounded-3xl p-5 sm:p-6 border flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5F0FA] border border-[#DFD2EE] text-[#7D6399] text-xs font-bold mb-2">
+                        <span>Етап 1 із 4</span>
+                        <span>•</span>
+                        <span>Знайомство зі словами</span>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-[#433846]">Словник та вимова</h2>
+                    <p class="text-sm text-[#7A6E7E] mt-1">
+                        <strong class="text-[#433846]">Наведіть курсор миші</strong> на будь-яке англійське слово (або торкніться на телефоні), щоб побачити його <strong class="text-[#433846]">транскрипцію</strong> та почути <strong class="text-[#433846]">вимову</strong>. Прослухайте всі 9 слів!
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 self-start md:self-center">
+                    <button onclick="switchTab(2)" class="px-4 py-2.5 rounded-2xl bg-[#9D84B7] hover:bg-[#8B71A6] text-white text-sm font-semibold shadow-sm transition flex items-center gap-2 cursor-pointer">
+                        <span>Перейти до Вправи 2</span>
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Сітка карток слів -->
+            <div id="flashcardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                <!-- Генерується через JS -->
+            </div>
+        </section>
+
+        <!-- =========================================================
+             ВПРАВА 2: ЗНАЙДИ ПАРУ (Interactive Matching)
+             ========================================================= -->
+        <section id="section-2" class="exercise-section hidden space-y-6">
+            <div class="pastel-card rounded-3xl p-5 sm:p-6 border flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E7F5EE] border border-[#C3E3D3] text-[#4A7C64] text-xs font-bold mb-2">
+                        <span>Етап 2 із 4</span>
+                        <span>•</span>
+                        <span>Тренування пам'яті</span>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-[#433846]">Знайди пару</h2>
+                    <p class="text-sm text-[#7A6E7E] mt-1">
+                        Оберіть англійське слово ліворуч, а потім його український переклад праворуч. При наведенні на англійське слово так само працює підказка транскрипції та озвучення!
+                    </p>
+                </div>
+                <div class="flex items-center gap-3 self-start md:self-center">
+                    <div class="px-3.5 py-2 rounded-2xl bg-[#F8E6EC] border border-[#EBC7D4] text-[#433846] text-xs sm:text-sm font-bold">
+                        Помилок: <span id="matchingMistakes" class="text-[#8F566B]">0</span>
+                    </div>
+                    <button onclick="initMatchingGame()" class="px-3.5 py-2 rounded-2xl border border-[#DFD2EE] bg-[#FAF5FF] hover:bg-[#F5F0FA] text-[#433846] text-xs sm:text-sm font-semibold transition cursor-pointer">
+                        🔄 Перемішати
+                    </button>
+                </div>
+            </div>
+
+            <!-- Поле гри "Знайди пару" -->
+            <div class="pastel-card rounded-3xl p-4 sm:p-6 border">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
+                    <!-- Колонка англійських слів -->
+                    <div class="space-y-2.5">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-[#7A6E7E] px-1">English (наведіть для транскрипції)</h3>
+                        <div id="matchingEnglishCol" class="space-y-2.5">
+                            <!-- Генерується через JS -->
+                        </div>
+                    </div>
+
+                    <!-- Колонка українських перекладів -->
+                    <div class="space-y-2.5">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-[#7A6E7E] px-1">Український переклад</h3>
+                        <div id="matchingUkrainianCol" class="space-y-2.5">
+                            <!-- Генерується через JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Повідомлення про завершення Вправи 2 -->
+                <div id="matchingCompleteBanner" class="hidden mt-6 p-4 rounded-2xl bg-[#E7F5EE] border border-[#C3E3D3] flex flex-col sm:flex-row items-center justify-between gap-4 animate-pop">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🌸</span>
+                        <div>
+                            <h4 class="font-bold text-[#3A6651]">Чудова робота! Усі 9 пар знайдено!</h4>
+                            <p class="text-xs text-[#4A7C64]">Тепер закріпимо вживання цих слів у реальних реченнях.</p>
+                        </div>
+                    </div>
+                    <button onclick="switchTab(3)" class="px-4 py-2 rounded-xl bg-[#6BA388] hover:bg-[#5B9177] text-white text-sm font-semibold shadow-sm transition cursor-pointer">
+                        До Вправи 3 →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             ВПРАВА 3: КОНТЕКСТ ТА ВЖИВАННЯ (Fill in the Blanks)
+             ========================================================= -->
+        <section id="section-3" class="exercise-section hidden space-y-6">
+            <div class="pastel-card rounded-3xl p-5 sm:p-6 border flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FDF2E3] border border-[#F3D8B6] text-[#946B3C] text-xs font-bold mb-2">
+                        <span>Етап 3 із 4</span>
+                        <span>•</span>
+                        <span>Слова в реченнях</span>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-[#433846]">Контекст та вживання</h2>
+                    <p class="text-sm text-[#7A6E7E] mt-1">
+                        Оберіть слово зі списку нижче та натисніть на пропуск у відповідному реченні (або скористайтеся випадаючим списком).
+                    </p>
+                </div>
+                <button onclick="resetContextExercise()" class="self-start md:self-center px-3.5 py-2 rounded-2xl border border-[#DFD2EE] bg-[#FAF5FF] hover:bg-[#F5F0FA] text-[#433846] text-xs sm:text-sm font-semibold transition cursor-pointer">
+                    🔄 Очистити відповіді
+                </button>
+            </div>
+
+            <!-- Банк слів (липкий блок для зручності) -->
+            <div class="sticky top-[108px] sm:top-[116px] z-20 bg-[#FFFEFD]/95 backdrop-blur-md rounded-3xl p-4 border border-[#F3D8B6] shadow-[0_8px_24px_-6px_rgba(195,165,185,0.16)]">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#946B3C]">Банк слів (натисніть слово, щоб обрати):</span>
+                    <span id="selectedChipIndicator" class="text-xs font-medium text-[#7A6E7E]">Нічого не обрано</span>
+                </div>
+                <div id="wordBankContainer" class="flex flex-wrap gap-2">
+                    <!-- Генерується через JS -->
+                </div>
+            </div>
+
+            <!-- Список речень -->
+            <div id="contextSentencesList" class="space-y-3.5">
+                <!-- Генерується через JS -->
+            </div>
+
+            <!-- Баннер завершення Вправи 3 -->
+            <div id="contextCompleteBanner" class="hidden p-5 rounded-3xl bg-[#E7F5EE] border border-[#C3E3D3] flex flex-col sm:flex-row items-center justify-between gap-4 animate-pop">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🌷</span>
+                    <div>
+                        <h4 class="font-bold text-[#3A6651]">Блискуче! Усі речення заповнено правильно!</h4>
+                        <p class="text-xs text-[#4A7C64]">Залишився фінальний етап — перевірка безпомилкового написання слів.</p>
+                    </div>
+                </div>
+                <button onclick="switchTab(4)" class="px-4 py-2.5 rounded-xl bg-[#6BA388] hover:bg-[#5B9177] text-white text-sm font-semibold shadow-sm transition cursor-pointer">
+                    До Вправи 4 (Правопис) →
+                </button>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             ВПРАВА 4: ПРАВОПИС (Spelling & Dictation Trainer)
+             ========================================================= -->
+        <section id="section-4" class="exercise-section hidden space-y-6">
+            <div class="pastel-card rounded-3xl p-5 sm:p-6 border flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F8E6EC] border border-[#EBC7D4] text-[#8F566B] text-xs font-bold mb-2">
+                        <span>Етап 4 із 4</span>
+                        <span>•</span>
+                        <span>Тренажер орфографії</span>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-[#433846]">Правопис та диктант</h2>
+                    <p class="text-sm text-[#7A6E7E] mt-1">
+                        Напишіть англійське слово або фразу за перекладом та вимовою. Звертайте увагу на подвійні літери (<em class="text-[#433846]">a<strong>cc</strong>e<strong>ss</strong>ories</em>, <em class="text-[#433846]">nece<strong>ss</strong>ity</em>) та апостроф (<em class="text-[#433846]">butcher<strong>’</strong>s</em>).
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 self-start md:self-center">
+                    <span class="text-xs font-bold text-[#7A6E7E]">Вивчено:</span>
+                    <span id="spellingProgressText" class="px-3 py-1.5 rounded-2xl bg-[#F8E6EC] border border-[#EBC7D4] text-[#8F566B] text-sm font-extrabold">0 / 9</span>
+                </div>
+            </div>
+
+            <!-- Картка активного слова для правопису -->
+            <div class="max-w-2xl mx-auto pastel-card rounded-3xl p-6 sm:p-8 border">
+                <!-- Навігація між словами -->
+                <div class="flex items-center justify-between mb-6">
+                    <button onclick="prevSpellingWord()" class="px-3 py-1.5 rounded-xl hover:bg-[#F5F0FA] text-[#7A6E7E] hover:text-[#433846] font-semibold text-sm transition cursor-pointer">
+                        ← Попереднє
+                    </button>
+                    <div id="spellingDots" class="flex items-center gap-1.5">
+                        <!-- Індикатори 1..9 -->
+                    </div>
+                    <button onclick="nextSpellingWord()" class="px-3 py-1.5 rounded-xl hover:bg-[#F5F0FA] text-[#7A6E7E] hover:text-[#433846] font-semibold text-sm transition cursor-pointer">
+                        Наступне →
+                    </button>
+                </div>
+
+                <!-- Завдання -->
+                <div class="text-center space-y-3 mb-6">
+                    <span class="inline-block text-xs font-bold uppercase tracking-wider text-[#7A6E7E]">Перекладіть та напишіть англійською</span>
+                    <h3 id="spellingUaPrompt" class="text-2xl sm:text-3xl font-extrabold text-[#433846]">
+                        аксесуари
+                    </h3>
+                    <div class="flex items-center justify-center gap-3 pt-1">
+                        <span id="spellingIpaPrompt" class="px-3.5 py-1 rounded-xl bg-[#EBF3FA] border border-[#C7DDF0] text-[#4C6E8F] font-mono text-sm font-semibold">
+                            /əkˈses.ər.iz/
+                        </span>
+                        <button onclick="speakCurrentSpellingWord()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#F5F0FA] hover:bg-[#EBE0F5] border border-[#DFD2EE] text-[#6E5687] text-xs sm:text-sm font-bold transition cursor-pointer">
+                            <span>🔊</span>
+                            <span>Озвучити слово</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Поле введення -->
+                <div class="space-y-4">
+                    <div class="relative">
+                        <input
+                            type="text"
+                            id="spellingInput"
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                            placeholder="Введіть англійське слово тут..."
+                            class="w-full text-center text-lg sm:text-xl font-bold tracking-wide px-4 py-3.5 rounded-2xl border-2 border-[#E8DFEE] focus:border-[#9D84B7] focus:outline-none transition bg-[#FAF7FC] focus:bg-[#FFFEFD] text-[#433846] placeholder-[#B2A6B8]"
+                            onkeydown="if(event.key === 'Enter') checkSpellingAnswer()"
+                        />
+                    </div>
+
+                    <!-- Підказка з перемішаних літер (Scrambled tiles) -->
+                    <div class="bg-[#FDF8F5] rounded-2xl p-3.5 border border-[#F3E2D8]">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-[#946B3C]">Підказка — натисніть літери, щоб зібрати слово:</span>
+                            <button onclick="clearSpellingInput()" class="text-[11px] font-semibold text-[#8B71A6] hover:underline cursor-pointer">
+                                Очистити поле
+                            </button>
+                        </div>
+                        <div id="scrambledLettersBox" class="flex flex-wrap justify-center gap-1.5">
+                            <!-- Плитки літер -->
+                        </div>
+                    </div>
+
+                    <!-- Кнопки дій -->
+                    <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                        <button onclick="checkSpellingAnswer()" class="w-full sm:flex-1 py-3 px-6 rounded-2xl bg-[#9D84B7] hover:bg-[#8B71A6] active:scale-[0.99] text-white font-bold text-sm sm:text-base shadow-sm transition cursor-pointer">
+                            Перевірити написання
+                        </button>
+                        <button onclick="revealSpellingHint()" class="w-full sm:w-auto py-3 px-4 rounded-2xl border border-[#F3D8B6] bg-[#FDF2E3] hover:bg-[#FAE7CE] text-[#946B3C] font-semibold text-sm transition cursor-pointer">
+                            💡 Показати підказку
+                        </button>
+                    </div>
+
+                    <!-- Блок зворотного зв'язку та розбору орфографії -->
+                    <div id="spellingFeedback" class="hidden rounded-2xl p-4 text-sm transition-all">
+                        <!-- Динамічний результат -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             ФІНАЛЬНЕ ВІТАННЯ (Коли виконано всі 36 балів)
+             ========================================================= -->
+        <section id="finalCelebrationModal" class="hidden fixed inset-0 z-50 bg-[#433846]/40 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-[#FFFEFD] rounded-3xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl border border-[#EFE2EC] animate-pop space-y-5">
+                <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-[#F8E6EC] via-[#FDF2E3] to-[#F5F0FA] border-2 border-[#EBC7D4] flex items-center justify-center text-4xl shadow-md">
+                    🎀
+                </div>
+                <div class="space-y-2">
+                    <h2 class="text-2xl font-extrabold text-[#433846]">Вітаємо! Курс завершено!</h2>
+                    <p class="text-sm text-[#7A6E7E] leading-relaxed">
+                        Ви успішно опрацювали всі <strong class="text-[#433846]">9 англійських слів</strong> у 4 різних форматах: вимову, переклад, контекст у реченнях та безпомилковий правопис!
+                    </p>
+                </div>
+                <div class="bg-[#FAF5FF] border border-[#E8DFEE] rounded-2xl p-4 text-left space-y-1.5 text-xs text-[#433846]">
+                    <div class="font-bold text-[#7D6399] mb-1">Ваші досягнення:</div>
+                    <div>✨ Прослухано та вивчено транскрипцію 9 слів</div>
+                    <div>✨ Безпомилково поєднано всі пари перекладу</div>
+                    <div>✨ Заповнено 9 контекстних речень</div>
+                    <div>✨ Закріплено орфографію та складні літери</div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
+                    <button onclick="closeCelebrationModal()" class="flex-1 py-2.5 px-4 rounded-xl bg-[#9D84B7] hover:bg-[#8B71A6] text-white font-bold text-sm transition cursor-pointer">
+                        Продовжити практику
+                    </button>
+                    <button onclick="resetAllProgress()" class="py-2.5 px-4 rounded-xl border border-[#DFD2EE] bg-[#FAF5FF] hover:bg-[#F5F0FA] text-[#433846] font-semibold text-sm transition cursor-pointer">
+                        Почати спочатку
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        /**
+         * ============================================================================
+         * 1. БАЗА ДАНИХ СЛІВ (Точно за списком користувача + приклади та орфографія)
+         * ============================================================================
+         */
+        const VOCABULARY = [
+            {
+                id: 1,
+                en: "accessories",
+                ua: "аксесуари",
+                ipa: "/əkˈses.ər.iz/",
+                exampleEn: "She loves fashion and always buys stylish accessories like bags and belts.",
+                exampleUa: "Вона любить моду і завжди купує стильні аксесуари, як-от сумки та ремені.",
+                contextBefore: "She bought some stylish",
+                contextAfter: "like sunglasses and a leather belt.",
+                contextSentenceUa: "Вона купила кілька стильних аксесуарів, як-от сонцезахисні окуляри та шкіряний ремінь.",
+                spellingTip: "Зверніть увагу на подвійні літери: a-<b>cc</b>-e-<b>ss</b>-ories",
+                spellingHighlightHtml: "a<span class='text-[#8F566B] bg-[#F8E6EC] px-1 rounded underline decoration-2'>cc</span>e<span class='text-[#8F566B] bg-[#F8E6EC] px-1 rounded underline decoration-2'>ss</span>ories"
+            },
+            {
+                id: 2,
+                en: "brand",
+                ua: "торгова марка",
+                ipa: "/brænd/",
+                exampleEn: "This Italian brand is famous for luxury shoes.",
+                exampleUa: "Ця італійська торгова марка відома розкішним взуттям.",
+                contextBefore: "This Italian",
+                contextAfter: "is famous for luxury shoes.",
+                contextSentenceUa: "Ця італійська торгова марка відома розкішним взуттям.",
+                spellingTip: "Коротке слово з відкритим звуком [æ] (літера <b>a</b>): br<b>a</b>nd",
+                spellingHighlightHtml: "br<span class='text-[#7D6399] bg-[#F5F0FA] px-1 rounded underline decoration-2'>a</span>nd"
+            },
+            {
+                id: 3,
+                en: "butcher’s",
+                ua: "м’ясний магазин",
+                ipa: "/ˈbʊtʃ.əz/",
+                exampleEn: "We went to the butcher’s to buy fresh beef for dinner.",
+                exampleUa: "Ми пішли до м’ясного магазину, щоб купити свіжої яловичини на вечерю.",
+                contextBefore: "Let’s stop by the",
+                contextAfter: "on the way home to get some chicken.",
+                contextSentenceUa: "Давай зайдемо до м’ясного магазину дорогою додому, щоб взяти курку.",
+                spellingTip: "Не забудьте про літеру <b>t</b> перед <b>ch</b> та апостроф <b>’s</b> (означає магазин м’ясника): bu<b>tch</b>er<b>’s</b>",
+                spellingHighlightHtml: "bu<span class='text-[#7D6399] bg-[#F5F0FA] px-1 rounded underline decoration-2'>tch</span>er<span class='text-[#8F566B] bg-[#F8E6EC] px-1 rounded font-extrabold underline decoration-2'>’s</span>"
+            },
+            {
+                id: 4,
+                en: "entertainment",
+                ua: "розваги",
+                ipa: "/ˌen.təˈteɪn.mənt/",
+                exampleEn: "The city offers plenty of entertainment for tourists in the evening.",
+                exampleUa: "Місто пропонує безліч розваг для туристів увечері.",
+                contextBefore: "Live music and stand-up comedy are popular forms of",
+                contextAfter: ".",
+                contextSentenceUa: "Жива музика та стендап-комедія — популярні форми розваг.",
+                spellingTip: "Складається з частин: enter + tain + ment (зверніть увагу на <b>ai</b> в середині)",
+                spellingHighlightHtml: "enter<span class='text-[#7D6399] bg-[#F5F0FA] px-1 rounded underline decoration-2'>tain</span>ment"
+            },
+            {
+                id: 5,
+                en: "mall",
+                ua: "торговельний центр",
+                ipa: "/mɔːl/",
+                exampleEn: "This shopping mall has over two hundred stores and a cinema.",
+                exampleUa: "Цей торговельний центр має понад двісті магазинів і кінотеатр.",
+                contextBefore: "We spent the whole Saturday shopping at the new",
+                contextAfter: ".",
+                contextSentenceUa: "Ми провели всю суботу за покупками в новому торговельному центрі.",
+                spellingTip: "Пишеться через <b>a</b> та подвійну <b>ll</b> наприкінці: m<b>all</b>",
+                spellingHighlightHtml: "m<span class='text-[#8F566B] bg-[#F8E6EC] px-1 rounded underline decoration-2'>all</span>"
+            },
+            {
+                id: 6,
+                en: "necessity",
+                ua: "необхідність",
+                ipa: "/nəˈses.ə.ti/",
+                exampleEn: "A warm coat is an absolute necessity in winter.",
+                exampleUa: "Тепле пальто — це абсолютна необхідність узимку.",
+                contextBefore: "In the modern world, a smartphone has become a daily",
+                contextAfter: ".",
+                contextSentenceUa: "У сучасному світі смартфон став щоденною необхідністю.",
+                spellingTip: "Одна літера <b>c</b>, але подвійна <b>ss</b>: ne<b>c</b>e<b>ss</b>ity",
+                spellingHighlightHtml: "ne<span class='text-[#7D6399] bg-[#F5F0FA] px-1 rounded underline decoration-2'>c</span>e<span class='text-[#8F566B] bg-[#F8E6EC] px-1 rounded underline decoration-2'>ss</span>ity"
+            },
+            {
+                id: 7,
+                en: "huge",
+                ua: "величезний",
+                ipa: "/hjuːdʒ/",
+                exampleEn: "There is a huge elephant at the city zoo.",
+                exampleUa: "У міському зоопарку є величезний слон.",
+                contextBefore: "They live in a",
+                contextAfter: "house with six bedrooms.",
+                contextSentenceUa: "Вони живуть у величезному будинку з шістьма спальнями.",
+                spellingTip: "Німа літера <b>e</b> в кінці робить звук [juː], а <b>g</b> читається як [dʒ]: hu<b>ge</b>",
+                spellingHighlightHtml: "hu<span class='text-[#7D6399] bg-[#F5F0FA] px-1 rounded underline decoration-2'>ge</span>"
+            },
+            {
+                id: 8,
+                en: "to offer",
+                ua: "пропонувати",
+                ipa: "/tuː ˈɒf.ər/",
+                exampleEn: "They decided to offer a big discount to regular customers.",
+                exampleUa: "Вони вирішили запропонувати велику знижку постійним клієнтам.",
+                contextBefore: "The company is happy",
+                contextAfter: "free delivery on all orders.",
+                contextSentenceUa: "Компанія рада запропонувати безкоштовну доставку на всі замовлення.",
+                spellingTip: "Частка <b>to</b> пишеться окремо, а в дієслові подвійна <b>ff</b>: to o<b>ff</b>er",
+                spellingHighlightHtml: "to o<span class='text-[#8F566B] bg-[#F8E6EC] px-1 rounded underline decoration-2'>ff</span>er"
+            },
+            {
+                id: 9,
+                en: "to be into something",
+                ua: "захоплюватися чимось",
+                ipa: "/tuː bi ˈɪn.tuː ˈsʌm.θɪŋ/",
+                exampleEn: "It is really fun to be into a creative hobby like painting.",
+                exampleUa: "Це справді захопливо — мати творче хобі, наприклад малювання.",
+                contextBefore: "It is really fun",
+                contextAfter: "like board games with friends.",
+                contextSentenceUa: "Це справді круто — захоплюватися чимось на кшталт настільних ігор із друзями.",
+                spellingTip: "Чотири окремі слова; у слові <b>something</b> зверніть увагу на <b>th</b>: some<b>th</b>ing",
+                spellingHighlightHtml: "to be into some<span class='text-[#7D6399] bg-[#F5F0FA] px-1 rounded underline decoration-2'>th</span>ing"
+            }
+        ];
+
+        /**
+         * ============================================================================
+         * 2. СТАН ДОДАТКУ (State)
+         * ============================================================================
+         */
+        let state = {
+            currentTab: 1,
+            autoSoundEnabled: true,
+            audioUnlocked: false,
+            lastHoveredWord: null,
+            lastHoverTime: 0,
+
+            // Прогрес по вправах
+            heardWords: new Set(),          // Вправа 1 (макс 9)
+            matchedWords: new Set(),        // Вправа 2 (макс 9)
+            contextCompleted: new Set(),    // Вправа 3 (макс 9)
+            spellingCompleted: new Set(),   // Вправа 4 (макс 9)
+
+            // Стан Вправи 2 (Matching)
+            selectedEnId: null,
+            selectedUaId: null,
+            matchingMistakes: 0,
+
+            // Стан Вправи 3 (Context)
+            selectedChipWord: null,
+            userContextAnswers: {},         // { sentenceId: chosenWord }
+
+            // Стан Вправи 4 (Spelling)
+            currentSpellingIndex: 0,
+            celebrationShown: false
+        };
+
+        /**
+         * ============================================================================
+         * 3. СИНТЕЗ МОВЛЕННЯ (Web Speech API) ТА ОБРОБКА НАВЕДЕННЯ
+         * ============================================================================
+         */
+        let preferredEnglishVoice = null;
+
+        function loadVoices() {
+            if (!('speechSynthesis' in window)) return;
+            const voices = window.speechSynthesis.getVoices();
+            if (!voices.length) return;
+
+            // Пріоритет якісним голосам en-GB або en-US
+            preferredEnglishVoice =
+                voices.find(v => v.lang === 'en-GB' && v.name.includes('Google')) ||
+                voices.find(v => v.lang === 'en-US' && v.name.includes('Google')) ||
+                voices.find(v => v.lang.startsWith('en-GB')) ||
+                voices.find(v => v.lang.startsWith('en-US')) ||
+                voices.find(v => v.lang.startsWith('en'));
+        }
+
+        if ('speechSynthesis' in window) {
+            loadVoices();
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        /**
+         * Відтворення англійського тексту
+         * @param {string} text - текст для озвучення
+         * @param {number|null} wordId - ID слова (для зарахування прогресу вправи 1)
+         * @param {HTMLElement|null} iconEl - елемент іконки для візуальної пульсації
+         */
+        function speakEnglish(text, wordId = null, iconEl = null) {
+            if (!('speechSynthesis' in window)) return;
+
+            // Скасовуємо попереднє озвучення, щоб не було черги при швидкому наведенні
+            window.speechSynthesis.cancel();
+
+            // Нормалізуємо апостроф для коректної вимови синтезатором
+            const cleanText = text.replace(/’/g, "'");
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'en-GB';
+            utterance.rate = 0.92; // Трохи сповільнений темп для кращого сприйняття студентом
+            utterance.pitch = 1.0;
+
+            if (preferredEnglishVoice) {
+                utterance.voice = preferredEnglishVoice;
+            }
+
+            if (iconEl) {
+                iconEl.classList.add('speaking-pulse');
+                utterance.onend = () => iconEl.classList.remove('speaking-pulse');
+                utterance.onerror = () => iconEl.classList.remove('speaking-pulse');
+            }
+
+            window.speechSynthesis.speak(utterance);
+
+            // Якщо це одне з 9 цільових слів — фіксуємо в прогресі Вправи 1
+            if (wordId !== null) {
+                markWordAsHeard(wordId);
+            }
+        }
+
+        /**
+         * Обробник наведення курсора (onmouseenter) на англійське слово
+         */
+        function handleWordHover(wordText, wordId, triggerEl) {
+            // Візуально позначаємо для мобільних/тач пристроїв
+            document.querySelectorAll('.word-hover-trigger.active-touch').forEach(el => {
+                if (el !== triggerEl) el.classList.remove('active-touch');
+            });
+
+            if (!state.autoSoundEnabled) return;
+
+            const now = Date.now();
+            // Захист від повторного спрацювання на тому самому слові менше ніж за 900 мс
+            if (state.lastHoveredWord === wordText && now - state.lastHoverTime < 900) {
+                return;
+            }
+
+            state.lastHoveredWord = wordText;
+            state.lastHoverTime = now;
+
+            const speakerIcon = triggerEl ? triggerEl.querySelector('.speaker-icon') : null;
+            speakEnglish(wordText, wordId, speakerIcon);
+        }
+
+        /**
+         * Клік або тап по слову (завжди озвучує та розблоковує аудіо в браузері)
+         */
+        function handleWordClick(event, wordText, wordId, triggerEl) {
+            if (event) event.stopPropagation();
+            unlockAudioSystem(false);
+
+            if (triggerEl) {
+                triggerEl.classList.add('active-touch');
+            }
+
+            state.lastHoveredWord = wordText;
+            state.lastHoverTime = Date.now();
+
+            const speakerIcon = triggerEl ? triggerEl.querySelector('.speaker-icon') : null;
+            speakEnglish(wordText, wordId, speakerIcon);
+        }
+
+        /**
+         * Розблокування аудіо після першої взаємодії користувача зі сторінкою
+         */
+        function unlockAudioSystem(playTestSound = true) {
+            if (!state.audioUnlocked) {
+                state.audioUnlocked = true;
+                const banner = document.getElementById('audioUnlockBanner');
+                if (banner) banner.classList.add('hidden');
+            }
+            if (playTestSound) {
+                speakEnglish("Let's learn English!", null, null);
+            }
+        }
+
+        // Автоматично ховаємо банер при будь-якому першому кліку користувача на сторінці
+        document.addEventListener('pointerdown', () => {
+            if (!state.audioUnlocked) {
+                state.audioUnlocked = true;
+                const banner = document.getElementById('audioUnlockBanner');
+                if (banner) banner.classList.add('hidden');
+            }
+        }, { once: true });
+
+        function toggleAutoSound() {
+            state.autoSoundEnabled = !state.autoSoundEnabled;
+            updateAudioToggleUI();
+            if (state.autoSoundEnabled) {
+                unlockAudioSystem(false);
+            }
+        }
+
+        function updateAudioToggleUI() {
+            const btn = document.getElementById('audioToggleBtn');
+            const icon = document.getElementById('audioIcon');
+            const label = document.getElementById('audioLabel');
+
+            const btnM = document.getElementById('audioToggleBtnMobile');
+            const iconM = document.getElementById('audioIconMobile');
+            const labelM = document.getElementById('audioLabelMobile');
+
+            if (state.autoSoundEnabled) {
+                btn.className = "hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border cursor-pointer bg-[#EBF3FA] text-[#4C6E8F] border-[#C7DDF0] hover:bg-[#DFECF7]";
+                icon.textContent = "🔊";
+                label.textContent = "Авто-звук: Увімк.";
+
+                btnM.className = "md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all border bg-[#EBF3FA] text-[#4C6E8F] border-[#C7DDF0]";
+                iconM.textContent = "🔊";
+                labelM.textContent = "Звук: Увімк.";
+            } else {
+                btn.className = "hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border cursor-pointer bg-[#FAF7FC] text-[#7A6E7E] border-[#E8DFEE] hover:bg-[#F5F0FA]";
+                icon.textContent = "🔇";
+                label.textContent = "Авто-звук: Вимк.";
+
+                btnM.className = "md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all border bg-[#FAF7FC] text-[#7A6E7E] border-[#E8DFEE]";
+                iconM.textContent = "🔇";
+                labelM.textContent = "Звук: Вимк.";
+            }
+        }
+
+        /**
+         * ============================================================================
+         * 4. УПРАВЛІННЯ ПРОГРЕСОМ ТА НАВІГАЦІЄЮ
+         * ============================================================================
+         */
+        function markWordAsHeard(wordId) {
+            if (!state.heardWords.has(wordId)) {
+                state.heardWords.add(wordId);
+                const cardBadge = document.getElementById(`heard-badge-${wordId}`);
+                if (cardBadge) {
+                    cardBadge.className = "inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#E7F5EE] border border-[#C3E3D3] text-[#4A7C64] transition";
+                    cardBadge.innerHTML = "<span>✓</span><span>Прослухано</span>";
+                }
+                updateGlobalProgress();
+            }
+        }
+
+        function updateGlobalProgress() {
+            const p1 = state.heardWords.size;
+            const p2 = state.matchedWords.size;
+            const p3 = state.contextCompleted.size;
+            const p4 = state.spellingCompleted.size;
+
+            const total = p1 + p2 + p3 + p4;
+            const maxTotal = 36;
+            const percent = Math.round((total / maxTotal) * 100);
+
+            document.getElementById('totalScoreText').textContent = `${total} / ${maxTotal}`;
+            document.getElementById('totalProgressBar').style.width = `${percent}%`;
+
+            updateTabBadge(1, p1, 9);
+            updateTabBadge(2, p2, 9);
+            updateTabBadge(3, p3, 9);
+            updateTabBadge(4, p4, 9);
+
+            document.getElementById('spellingProgressText').textContent = `${p4} / 9`;
+
+            if (total === maxTotal && !state.celebrationShown) {
+                state.celebrationShown = true;
+                setTimeout(() => {
+                    document.getElementById('finalCelebrationModal').classList.remove('hidden');
+                }, 600);
+            }
+        }
+
+        function updateTabBadge(tabNum, current, max) {
+            const badge = document.getElementById(`badge-${tabNum}`);
+            if (!badge) return;
+            badge.textContent = `${current}/${max}`;
+            if (current === max) {
+                badge.className = "text-[11px] px-1.5 py-0.5 rounded-lg bg-[#E7F5EE] text-[#4A7C64] font-extrabold";
+            } else if (current > 0) {
+                badge.className = "text-[11px] px-1.5 py-0.5 rounded-lg bg-[#F8E6EC] text-[#8F566B] font-bold";
+            } else {
+                badge.className = "text-[11px] px-1.5 py-0.5 rounded-lg bg-[#F5F0FA] text-[#7A6E7E] font-bold";
+            }
+        }
+
+        function switchTab(tabNum) {
+            state.currentTab = tabNum;
+
+            // Ховаємо всі секції, показуємо обрану
+            document.querySelectorAll('.exercise-section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`section-${tabNum}`).classList.remove('hidden');
+
+            // Оновлюємо активний стиль кнопок вкладок у пастельній лавандовій гамі
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                const isCurrent = (idx + 1) === tabNum;
+                if (isCurrent) {
+                    btn.className = "tab-btn flex-shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer bg-[#9D84B7] text-white shadow-sm";
+                    btn.querySelector('span:first-child').className = "w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold bg-[#FFFEFD] text-[#7D6399]";
+                } else {
+                    btn.className = "tab-btn flex-shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all cursor-pointer text-[#7A6E7E] hover:text-[#433846] hover:bg-[#FAF5FF]";
+                    btn.querySelector('span:first-child').className = "w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold bg-[#F5F0FA] text-[#8B71A6]";
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /**
+         * ============================================================================
+         * 5. ВПРАВА 1: СЛОВНИК ТА ВИМОВА (Flashcards)
+         * ============================================================================
+         */
+        function renderFlashcards() {
+            const grid = document.getElementById('flashcardsGrid');
+            grid.innerHTML = '';
+
+            VOCABULARY.forEach((item, index) => {
+                const isHeard = state.heardWords.has(item.id);
+                const card = document.createElement('div');
+                card.className = "group pastel-card rounded-3xl p-5 border hover:border-[#D8C7EB] hover:shadow-md transition-all flex flex-col justify-between";
+
+                card.innerHTML = `
+                    <div>
+                        <!-- Верхній рядок: номер та статус прослуховування -->
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-extrabold text-[#B2A6B8]">#${index + 1}</span>
+                            <span id="heard-badge-${item.id}" class="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${isHeard ? 'bg-[#E7F5EE] border border-[#C3E3D3] text-[#4A7C64] font-bold' : 'bg-[#FAF5FF] border border-[#EFE2EC] text-[#7A6E7E]'}">
+                                ${isHeard ? '<span>✓</span><span>Прослухано</span>' : '<span>Наведіть на слово</span>'}
+                            </span>
+                        </div>
+
+                        <!-- Англійське слово з інтерактивним наведенням (IPA + Авто-звук) -->
+                        <div class="mb-2">
+                            <div
+                                class="word-hover-trigger rounded-2xl px-3 py-2 -mx-3 hover:bg-[#F5F0FA] transition-colors select-none"
+                                onmouseenter="handleWordHover('${item.en.replace(/'/g, "\\'")}', ${item.id}, this)"
+                                onclick="handleWordClick(event, '${item.en.replace(/'/g, "\\'")}', ${item.id}, this)"
+                            >
+                                <!-- Спливаюча підказка з IPA транскрипцією у ніжному пастельному стилі -->
+                                <div class="ipa-tooltip absolute bottom-full left-3 mb-2 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-mono flex items-center gap-2 whitespace-nowrap">
+                                    <span class="text-[#7D6399] font-bold">${item.ipa}</span>
+                                    <span class="text-[#DFD2EE]">|</span>
+                                    <span class="text-[11px] font-sans font-semibold text-[#4C6E8F]">🔊 Вимова</span>
+                                    <div class="absolute top-full left-5 -mt-1 border-4 border-transparent border-t-[#FAF5FF]"></div>
+                                </div>
+
+                                <span class="text-xl sm:text-2xl font-extrabold text-[#433846] group-hover:text-[#7D6399] transition-colors">
+                                    ${item.en}
+                                </span>
+                                <button
+                                    type="button"
+                                    aria-label="Прослухати вимову"
+                                    class="speaker-icon ml-2.5 w-8 h-8 rounded-full bg-[#EBF3FA] hover:bg-[#DFECF7] border border-[#C7DDF0] text-[#4C6E8F] inline-flex items-center justify-center text-sm transition"
+                                >
+                                    🔊
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Український переклад -->
+                        <div class="text-base font-bold text-[#7A6E7E] mb-4 pb-3 border-b border-[#F5EBF2]">
+                            ${item.ua}
+                        </div>
+                    </div>
+
+                    <!-- Приклад речення з озвученням -->
+                    <div class="bg-[#FDF9FB] rounded-2xl p-3.5 border border-[#F2E4EC] space-y-1.5">
+                        <div class="flex items-start justify-between gap-2">
+                            <p class="text-xs sm:text-sm font-medium text-[#433846] leading-relaxed">
+                                "${item.exampleEn}"
+                            </p>
+                            <button
+                                type="button"
+                                onclick="speakEnglish('${item.exampleEn.replace(/'/g, "\\'")}', null, this)"
+                                title="Прослухати речення-приклад"
+                                class="flex-shrink-0 w-7 h-7 rounded-xl bg-[#FFFEFD] hover:bg-[#EBF3FA] border border-[#DFD2EE] text-[#4C6E8F] flex items-center justify-center text-xs transition cursor-pointer"
+                            >
+                                🔈
+                            </button>
+                        </div>
+                        <p class="text-xs text-[#7A6E7E] italic">
+                            ${item.exampleUa}
+                        </p>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        /**
+         * ============================================================================
+         * 6. ВПРАВА 2: ЗНАЙДИ ПАРУ (Interactive Matching)
+         * ============================================================================
+         */
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function initMatchingGame() {
+            state.selectedEnId = null;
+            state.selectedUaId = null;
+            state.matchingMistakes = 0;
+            state.matchedWords.clear();
+
+            document.getElementById('matchingMistakes').textContent = '0';
+            document.getElementById('matchingCompleteBanner').classList.add('hidden');
+            updateGlobalProgress();
+
+            const shuffledEn = shuffleArray(VOCABULARY);
+            const shuffledUa = shuffleArray(VOCABULARY);
+
+            const enCol = document.getElementById('matchingEnglishCol');
+            const uaCol = document.getElementById('matchingUkrainianCol');
+            enCol.innerHTML = '';
+            uaCol.innerHTML = '';
+
+            // Рендер англійських карток (зі збереженням hover IPA + звуку!)
+            shuffledEn.forEach(item => {
+                const btn = document.createElement('div');
+                btn.id = `match-en-${item.id}`;
+                btn.className = "word-hover-trigger w-full justify-between px-4 py-3 rounded-2xl border-2 border-[#EFE2EC] bg-[#FFFEFD] hover:border-[#D8C7EB] text-[#433846] font-bold text-sm sm:text-base transition-all select-none";
+
+                btn.onmouseenter = () => {
+                    if (!state.matchedWords.has(item.id)) {
+                        handleWordHover(item.en, null, btn);
+                    }
+                };
+
+                btn.onclick = () => selectMatchingEn(item.id, item.en, btn);
+
+                btn.innerHTML = `
+                    <div class="ipa-tooltip absolute bottom-full left-4 mb-2 px-3 py-1 rounded-2xl text-xs font-mono flex items-center gap-1.5 whitespace-nowrap">
+                        <span class="text-[#7D6399] font-bold">${item.ipa}</span>
+                        <div class="absolute top-full left-4 -mt-1 border-4 border-transparent border-t-[#FAF5FF]"></div>
+                    </div>
+                    <span>${item.en}</span>
+                    <button
+                        type="button"
+                        onclick="event.stopPropagation(); speakEnglish('${item.en.replace(/'/g, "\\'")}', null, this)"
+                        title="Озвучити слово"
+                        class="speaker-icon w-7 h-7 rounded-xl bg-[#EBF3FA] hover:bg-[#DFECF7] border border-[#C7DDF0] text-[#4C6E8F] inline-flex items-center justify-center text-xs transition"
+                    >
+                        🔊
+                    </button>
+                `;
+                enCol.appendChild(btn);
+            });
+
+            // Рендер українських карток
+            shuffledUa.forEach(item => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.id = `match-ua-${item.id}`;
+                btn.className = "w-full text-left px-4 py-3 rounded-2xl border-2 border-[#EFE2EC] bg-[#FFFEFD] hover:border-[#D8C7EB] text-[#433846] font-semibold text-sm sm:text-base transition-all cursor-pointer flex items-center justify-between";
+                btn.onclick = () => selectMatchingUa(item.id);
+                btn.innerHTML = `
+                    <span>${item.ua}</span>
+                    <span class="match-status-icon text-sm"></span>
+                `;
+                uaCol.appendChild(btn);
+            });
+        }
+
+        function selectMatchingEn(id, wordText, btnEl) {
+            if (state.matchedWords.has(id)) return;
+            unlockAudioSystem(false);
+            speakEnglish(wordText, null, btnEl.querySelector('.speaker-icon'));
+
+            // Знімаємо попереднє виділення
+            document.querySelectorAll('[id^="match-en-"]').forEach(el => {
+                const elId = Number(el.id.replace('match-en-', ''));
+                if (!state.matchedWords.has(elId)) {
+                    el.classList.remove('border-[#9D84B7]', 'bg-[#F5F0FA]', 'ring-2', 'ring-[#E8DFEE]');
+                    el.classList.add('border-[#EFE2EC]', 'bg-[#FFFEFD]');
+                }
+            });
+
+            state.selectedEnId = id;
+            btnEl.classList.remove('border-[#EFE2EC]', 'bg-[#FFFEFD]');
+            btnEl.classList.add('border-[#9D84B7]', 'bg-[#F5F0FA]', 'ring-2', 'ring-[#E8DFEE]');
+
+            checkMatchingPair();
+        }
+
+        function selectMatchingUa(id) {
+            if (state.matchedWords.has(id)) return;
+
+            document.querySelectorAll('[id^="match-ua-"]').forEach(el => {
+                const elId = Number(el.id.replace('match-ua-', ''));
+                if (!state.matchedWords.has(elId)) {
+                    el.classList.remove('border-[#9D84B7]', 'bg-[#F5F0FA]', 'ring-2', 'ring-[#E8DFEE]');
+                    el.classList.add('border-[#EFE2EC]', 'bg-[#FFFEFD]');
+                }
+            });
+
+            state.selectedUaId = id;
+            const btnEl = document.getElementById(`match-ua-${id}`);
+            btnEl.classList.remove('border-[#EFE2EC]', 'bg-[#FFFEFD]');
+            btnEl.classList.add('border-[#9D84B7]', 'bg-[#F5F0FA]', 'ring-2', 'ring-[#E8DFEE]');
+
+            checkMatchingPair();
+        }
+
+        function checkMatchingPair() {
+            if (state.selectedEnId === null || state.selectedUaId === null) return;
+
+            const enId = state.selectedEnId;
+            const uaId = state.selectedUaId;
+            const enEl = document.getElementById(`match-en-${enId}`);
+            const uaEl = document.getElementById(`match-ua-${uaId}`);
+
+            if (enId === uaId) {
+                // Вірна пара у пастельному м'ятному відтінку
+                state.matchedWords.add(enId);
+                state.selectedEnId = null;
+                state.selectedUaId = null;
+
+                enEl.className = "w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 border-[#A8D5BF] bg-[#E7F5EE] text-[#3A6651] font-bold text-sm sm:text-base transition-all animate-pop opacity-95";
+                uaEl.className = "w-full text-left px-4 py-3 rounded-2xl border-2 border-[#A8D5BF] bg-[#E7F5EE] text-[#3A6651] font-bold text-sm sm:text-base transition-all animate-pop opacity-95 flex items-center justify-between";
+                uaEl.querySelector('.match-status-icon').textContent = '✨';
+
+                updateGlobalProgress();
+
+                if (state.matchedWords.size === VOCABULARY.length) {
+                    document.getElementById('matchingCompleteBanner').classList.remove('hidden');
+                }
+            } else {
+                // Помилка у м'якому пудрово-рожевому відтінку
+                state.matchingMistakes++;
+                document.getElementById('matchingMistakes').textContent = state.matchingMistakes;
+
+                enEl.classList.add('border-[#E3A8BD]', 'bg-[#F8E6EC]', 'animate-shake');
+                uaEl.classList.add('border-[#E3A8BD]', 'bg-[#F8E6EC]', 'animate-shake');
+
+                state.selectedEnId = null;
+                state.selectedUaId = null;
+
+                setTimeout(() => {
+                    enEl.classList.remove('border-[#E3A8BD]', 'bg-[#F8E6EC]', 'animate-shake', 'border-[#9D84B7]', 'bg-[#F5F0FA]', 'ring-2', 'ring-[#E8DFEE]');
+                    enEl.classList.add('border-[#EFE2EC]', 'bg-[#FFFEFD]');
+
+                    uaEl.classList.remove('border-[#E3A8BD]', 'bg-[#F8E6EC]', 'animate-shake', 'border-[#9D84B7]', 'bg-[#F5F0FA]', 'ring-2', 'ring-[#E8DFEE]');
+                    uaEl.classList.add('border-[#EFE2EC]', 'bg-[#FFFEFD]');
+                }, 550);
+            }
+        }
+
+        /**
+         * ============================================================================
+         * 7. ВПРАВА 3: КОНТЕКСТ ТА ВЖИВАННЯ (Fill in the Blanks)
+         * ============================================================================
+         */
+        let shuffledContextSentences = [];
+
+        function initContextExercise() {
+            shuffledContextSentences = shuffleArray(VOCABULARY);
+            renderWordBank();
+            renderContextSentences();
+        }
+
+        function renderWordBank() {
+            const container = document.getElementById('wordBankContainer');
+            container.innerHTML = '';
+
+            // Визначаємо, які слова вже використано правильно
+            const usedCorrectly = new Set(
+                Object.entries(state.userContextAnswers)
+                    .filter(([id, word]) => {
+                        const target = VOCABULARY.find(v => v.id === Number(id));
+                        return target && target.en === word;
+                    })
+                    .map(([, word]) => word)
+            );
+
+            VOCABULARY.forEach(item => {
+                const isUsed = usedCorrectly.has(item.en);
+                const isSelected = state.selectedChipWord === item.en;
+
+                const chip = document.createElement('button');
+                chip.type = 'button';
+                chip.disabled = isUsed;
+
+                if (isUsed) {
+                    chip.className = "px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-semibold bg-[#FAF7FC] text-[#B2A6B8] line-through border border-[#EFE2EC] cursor-default";
+                } else if (isSelected) {
+                    chip.className = "px-3.5 py-1.5 rounded-2xl text-xs sm:text-sm font-bold bg-[#9D84B7] text-white border border-[#9D84B7] shadow-sm scale-105 transition cursor-pointer";
+                } else {
+                    chip.className = "px-3.5 py-1.5 rounded-2xl text-xs sm:text-sm font-semibold bg-[#FDF2E3] hover:bg-[#FAE7CE] text-[#946B3C] border border-[#F3D8B6] transition cursor-pointer";
+                }
+
+                chip.textContent = item.en;
+                chip.onclick = () => {
+                    if (isUsed) return;
+                    state.selectedChipWord = (state.selectedChipWord === item.en) ? null : item.en;
+                    unlockAudioSystem(false);
+                    speakEnglish(item.en);
+                    updateSelectedChipIndicator();
+                    renderWordBank();
+                };
+
+                container.appendChild(chip);
+            });
+
+            updateSelectedChipIndicator();
+        }
+
+        function updateSelectedChipIndicator() {
+            const ind = document.getElementById('selectedChipIndicator');
+            if (state.selectedChipWord) {
+                ind.innerHTML = `Обрано: <strong class="text-[#7D6399]">${state.selectedChipWord}</strong> (натисніть пропуск у реченні)`;
+            } else {
+                ind.textContent = "Оберіть слово або скористайтеся списком у реченні";
+            }
+        }
+
+        function renderContextSentences() {
+            const list = document.getElementById('contextSentencesList');
+            list.innerHTML = '';
+
+            shuffledContextSentences.forEach((item, idx) => {
+                const currentAnswer = state.userContextAnswers[item.id] || '';
+                const isCorrect = currentAnswer === item.en;
+                const isWrong = currentAnswer !== '' && !isCorrect;
+
+                const card = document.createElement('div');
+                card.className = `pastel-card rounded-3xl p-4 sm:p-5 border-2 transition-all ${
+                    isCorrect ? 'border-[#C3E3D3] bg-[#F4FBF7]' :
+                    isWrong ? 'border-[#EBC7D4] bg-[#FDF5F8]' : 'border-[#EFE2EC]'
+                }`;
+
+                // Формуємо опції для випадаючого списку
+                const optionsHtml = VOCABULARY.map(v =>
+                    `<option value="${v.en}" ${currentAnswer === v.en ? 'selected' : ''}>${v.en}</option>`
+                ).join('');
+
+                const fullSentence = `${item.contextBefore} ${item.en}${item.contextAfter.startsWith('.') ? '' : ' '}${item.contextAfter}`;
+
+                card.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="text-sm sm:text-base font-medium text-[#433846] leading-relaxed flex flex-wrap items-center gap-y-2">
+                            <span class="text-xs font-extrabold text-[#B2A6B8] mr-2">${idx + 1}.</span>
+                            <span>${item.contextBefore}</span>
+
+                            <!-- Інтерактивний пропуск -->
+                            <span class="inline-flex items-center mx-1.5">
+                                <button
+                                    type="button"
+                                    onclick="handleBlankSlotClick(${item.id})"
+                                    title="Натисніть, щоб вставити обране слово"
+                                    class="min-w-[130px] px-3 py-1 rounded-xl border-2 border-dashed font-bold text-sm transition cursor-pointer ${
+                                        isCorrect
+                                            ? 'border-[#A8D5BF] bg-[#E7F5EE] text-[#3A6651] border-solid'
+                                            : isWrong
+                                                ? 'border-[#E3A8BD] bg-[#F8E6EC] text-[#8F566B] border-solid'
+                                                : state.selectedChipWord
+                                                    ? 'border-[#9D84B7] bg-[#F5F0FA] text-[#7D6399] animate-pulse'
+                                                    : 'border-[#DFD2EE] bg-[#FAF7FC] text-[#9E91A3] hover:border-[#B49FCC]'
+                                    }"
+                                >
+                                    ${currentAnswer || '___ вставити ___'}
+                                </button>
+
+                                <!-- Альтернативний селект для швидкого вибору -->
+                                <select
+                                    aria-label="Оберіть слово для речення ${idx + 1}"
+                                    onchange="submitContextAnswer(${item.id}, this.value)"
+                                    class="ml-1.5 px-2 py-1 rounded-xl border border-[#DFD2EE] bg-[#FFFEFD] text-xs font-semibold text-[#7A6E7E] focus:outline-none focus:border-[#9D84B7] cursor-pointer"
+                                >
+                                    <option value="">▼</option>
+                                    ${optionsHtml}
+                                </select>
+                            </span>
+
+                            <span>${item.contextAfter}</span>
+                        </div>
+
+                        <!-- Кнопки підказки перекладу та озвучення -->
+                        <div class="flex items-center gap-2 self-end sm:self-center flex-shrink-0">
+                            ${isCorrect ? `
+                                <button
+                                    type="button"
+                                    onclick="speakEnglish('${fullSentence.replace(/'/g, "\\'")}', null, this)"
+                                    class="px-2.5 py-1.5 rounded-xl bg-[#E7F5EE] hover:bg-[#D7EFE3] border border-[#C3E3D3] text-[#3A6651] text-xs font-bold flex items-center gap-1 transition cursor-pointer"
+                                >
+                                    <span>🔊</span><span>Слухати</span>
+                                </button>
+                            ` : ''}
+                            <button
+                                type="button"
+                                onclick="toggleSentenceHint(${item.id})"
+                                class="px-2.5 py-1.5 rounded-xl bg-[#FDF2E3] hover:bg-[#FAE7CE] border border-[#F3D8B6] text-[#946B3C] text-xs font-semibold transition cursor-pointer"
+                            >
+                                💡 Переклад
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Прихована підказка з українським перекладом речення -->
+                    <div id="context-hint-${item.id}" class="hidden mt-2.5 pt-2.5 border-t border-[#F2E4EC] text-xs text-[#7A6E7E] italic">
+                        🇺🇦 ${item.contextSentenceUa}
+                    </div>
+
+                    <!-- Повідомлення про статус перевірки -->
+                    ${isCorrect ? `
+                        <div class="mt-2 text-xs font-bold text-[#4A7C64] flex items-center gap-1.5">
+                            <span>✨ Правильно!</span>
+                        </div>
+                    ` : isWrong ? `
+                        <div class="mt-2 text-xs font-bold text-[#8F566B] flex items-center gap-1.5">
+                            <span>🌸 Не зовсім підходить за змістом. Спробуйте інше слово!</span>
+                        </div>
+                    ` : ''}
+                `;
+
+                list.appendChild(card);
+            });
+        }
+
+        function handleBlankSlotClick(sentenceId) {
+            if (state.selectedChipWord) {
+                submitContextAnswer(sentenceId, state.selectedChipWord);
+                state.selectedChipWord = null;
+                renderWordBank();
+            } else if (state.userContextAnswers[sentenceId] && !state.contextCompleted.has(sentenceId)) {
+                // Очищаємо помилкову відповідь при кліку
+                delete state.userContextAnswers[sentenceId];
+                renderContextSentences();
+            }
+        }
+
+        function submitContextAnswer(sentenceId, chosenWord) {
+            if (!chosenWord) {
+                delete state.userContextAnswers[sentenceId];
+            } else {
+                state.userContextAnswers[sentenceId] = chosenWord;
+                const target = VOCABULARY.find(v => v.id === sentenceId);
+                if (target && target.en === chosenWord) {
+                    state.contextCompleted.add(sentenceId);
+                    const fullSentence = `${target.contextBefore} ${target.en}${target.contextAfter.startsWith('.') ? '' : ' '}${target.contextAfter}`;
+                    speakEnglish(fullSentence);
+                } else {
+                    state.contextCompleted.delete(sentenceId);
+                }
+            }
+
+            renderWordBank();
+            renderContextSentences();
+            updateGlobalProgress();
+
+            if (state.contextCompleted.size === VOCABULARY.length) {
+                document.getElementById('contextCompleteBanner').classList.remove('hidden');
+            }
+        }
+
+        function toggleSentenceHint(id) {
+            const el = document.getElementById(`context-hint-${id}`);
+            if (el) el.classList.toggle('hidden');
+        }
+
+        function resetContextExercise() {
+            state.userContextAnswers = {};
+            state.contextCompleted.clear();
+            state.selectedChipWord = null;
+            document.getElementById('contextCompleteBanner').classList.add('hidden');
+            initContextExercise();
+            updateGlobalProgress();
+        }
+
+        /**
+         * ============================================================================
+         * 8. ВПРАВА 4: ПРАВОПИС (Spelling & Dictation Trainer)
+         * ============================================================================
+         */
+        function renderSpellingExercise() {
+            const item = VOCABULARY[state.currentSpellingIndex];
+            const isSolved = state.spellingCompleted.has(item.id);
+
+            // Оновлюємо індикатори прогресу слів 1..9
+            const dotsContainer = document.getElementById('spellingDots');
+            dotsContainer.innerHTML = '';
+            VOCABULARY.forEach((v, idx) => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                const solved = state.spellingCompleted.has(v.id);
+                const active = idx === state.currentSpellingIndex;
+                dot.className = `w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all cursor-pointer ${
+                    active ? 'scale-125 ring-2 ring-[#DFD2EE] ' : ''
+                }${
+                    solved ? 'bg-[#8EC5AB]' : active ? 'bg-[#9D84B7]' : 'bg-[#EFE2EC] hover:bg-[#DFD2EE]'
+                }`;
+                dot.title = `Слово ${idx + 1}: ${v.ua}`;
+                dot.onclick = () => {
+                    state.currentSpellingIndex = idx;
+                    renderSpellingExercise();
+                };
+                dotsContainer.appendChild(dot);
+            });
+
+            document.getElementById('spellingUaPrompt').textContent = item.ua;
+            document.getElementById('spellingIpaPrompt').textContent = item.ipa;
+
+            const input = document.getElementById('spellingInput');
+            const feedback = document.getElementById('spellingFeedback');
+
+            if (isSolved) {
+                input.value = item.en;
+                input.className = "w-full text-center text-lg sm:text-xl font-bold tracking-wide px-4 py-3.5 rounded-2xl border-2 border-[#A8D5BF] bg-[#E7F5EE] text-[#3A6651] focus:outline-none";
+                feedback.className = "rounded-2xl p-4 text-sm bg-[#E7F5EE] border border-[#C3E3D3] text-[#3A6651] space-y-1.5 animate-pop";
+                feedback.innerHTML = `
+                    <div class="font-bold flex items-center gap-2 text-[#3A6651]">
+                        <span>✨ Чудово! Правопис засвоєно:</span>
+                        <span class="text-base tracking-wide">${item.spellingHighlightHtml}</span>
+                    </div>
+                    <p class="text-xs text-[#4A7C64]">${item.spellingTip}</p>
+                `;
+            } else {
+                input.value = '';
+                input.className = "w-full text-center text-lg sm:text-xl font-bold tracking-wide px-4 py-3.5 rounded-2xl border-2 border-[#E8DFEE] focus:border-[#9D84B7] focus:outline-none transition bg-[#FAF7FC] focus:bg-[#FFFEFD] text-[#433846] placeholder-[#B2A6B8]";
+                feedback.classList.add('hidden');
+                feedback.innerHTML = '';
+            }
+
+            // Генеруємо перемішані плитки літер (Scrambled tiles)
+            renderScrambledTiles(item.en);
+        }
+
+        function renderScrambledTiles(word) {
+            const box = document.getElementById('scrambledLettersBox');
+            box.innerHTML = '';
+
+            // Розбиваємо на символи (включно з пробілами та апострофом)
+            const chars = word.split('');
+            const scrambled = shuffleArray(chars);
+
+            scrambled.forEach(ch => {
+                const tile = document.createElement('button');
+                tile.type = 'button';
+                const isSpace = ch === ' ';
+                tile.className = `min-w-[32px] h-9 px-2 rounded-xl font-mono font-bold text-sm sm:text-base border transition active:scale-90 cursor-pointer ${
+                    isSpace
+                        ? 'bg-[#FDF2E3] border-[#F3D8B6] text-[#946B3C] text-xs'
+                        : 'bg-[#FFFEFD] hover:bg-[#F5F0FA] border-[#E8DFEE] text-[#433846]'
+                }`;
+                tile.textContent = isSpace ? '␣' : ch;
+                tile.title = isSpace ? 'Пробіл' : `Додати літеру "${ch}"`;
+                tile.onclick = () => {
+                    const input = document.getElementById('spellingInput');
+                    input.value += ch;
+                    input.focus();
+                };
+                box.appendChild(tile);
+            });
+        }
+
+        function clearSpellingInput() {
+            const input = document.getElementById('spellingInput');
+            input.value = '';
+            input.focus();
+        }
+
+        function speakCurrentSpellingWord() {
+            const item = VOCABULARY[state.currentSpellingIndex];
+            unlockAudioSystem(false);
+            speakEnglish(item.en);
+        }
+
+        function normalizeApostrophes(str) {
+            return str.trim().toLowerCase().replace(/['`’ʼ]/g, "'").replace(/\s+/g, ' ');
+        }
+
+        function checkSpellingAnswer() {
+            const item = VOCABULARY[state.currentSpellingIndex];
+            const input = document.getElementById('spellingInput');
+            const feedback = document.getElementById('spellingFeedback');
+
+            const userVal = normalizeApostrophes(input.value);
+            const targetVal = normalizeApostrophes(item.en);
+
+            if (!userVal) {
+                input.focus();
+                return;
+            }
+
+            if (userVal === targetVal) {
+                state.spellingCompleted.add(item.id);
+                input.value = item.en; // Ставимо еталонне написання з красивим апострофом
+                input.className = "w-full text-center text-lg sm:text-xl font-bold tracking-wide px-4 py-3.5 rounded-2xl border-2 border-[#A8D5BF] bg-[#E7F5EE] text-[#3A6651] focus:outline-none animate-pop";
+
+                feedback.className = "rounded-2xl p-4 text-sm bg-[#E7F5EE] border border-[#C3E3D3] text-[#3A6651] space-y-1.5 animate-pop";
+                feedback.innerHTML = `
+                    <div class="font-bold flex flex-wrap items-center gap-2 text-[#3A6651]">
+                        <span>✨ Бездоганно! Правильне написання:</span>
+                        <span class="text-base tracking-wide">${item.spellingHighlightHtml}</span>
+                    </div>
+                    <p class="text-xs text-[#4A7C64]">${item.spellingTip}</p>
+                `;
+
+                speakEnglish(item.en);
+                updateGlobalProgress();
+                renderSpellingExercise();
+            } else {
+                input.classList.remove('border-[#E8DFEE]', 'focus:border-[#9D84B7]');
+                input.classList.add('border-[#E3A8BD]', 'bg-[#F8E6EC]', 'animate-shake');
+                setTimeout(() => input.classList.remove('animate-shake'), 450);
+
+                feedback.className = "rounded-2xl p-4 text-sm bg-[#F8E6EC] border border-[#EBC7D4] text-[#8F566B] space-y-1.5";
+                feedback.innerHTML = `
+                    <div class="font-bold text-[#8F566B]">🌸 Є неточність у написанні. Перевірте ще раз!</div>
+                    <p class="text-xs text-[#8F566B]">💡 ${item.spellingTip}</p>
+                `;
+            }
+        }
+
+        function revealSpellingHint() {
+            const item = VOCABULARY[state.currentSpellingIndex];
+            const feedback = document.getElementById('spellingFeedback');
+            const firstLetters = item.en.slice(0, Math.min(3, item.en.length));
+
+            feedback.className = "rounded-2xl p-4 text-sm bg-[#FDF2E3] border border-[#F3D8B6] text-[#946B3C] space-y-1.5";
+            feedback.innerHTML = `
+                <div class="font-bold text-[#946B3C]">💡 Підказка:</div>
+                <p class="text-xs">Початок: <strong class="font-mono text-sm">${firstLetters}...</strong> (усього символів: ${item.en.length})</p>
+                <p class="text-xs">${item.spellingTip}</p>
+            `;
+        }
+
+        function nextSpellingWord() {
+            state.currentSpellingIndex = (state.currentSpellingIndex + 1) % VOCABULARY.length;
+            renderSpellingExercise();
+            speakCurrentSpellingWord();
+        }
+
+        function prevSpellingWord() {
+            state.currentSpellingIndex = (state.currentSpellingIndex - 1 + VOCABULARY.length) % VOCABULARY.length;
+            renderSpellingExercise();
+            speakCurrentSpellingWord();
+        }
+
+        /**
+         * ============================================================================
+         * 9. ЗАВЕРШЕННЯ ТА СКИДАННЯ ПРОГРЕСУ
+         * ============================================================================
+         */
+        function closeCelebrationModal() {
+            document.getElementById('finalCelebrationModal').classList.add('hidden');
+        }
+
+        function resetAllProgress() {
+            state.heardWords.clear();
+            state.matchedWords.clear();
+            state.contextCompleted.clear();
+            state.spellingCompleted.clear();
+            state.userContextAnswers = {};
+            state.selectedChipWord = null;
+            state.currentSpellingIndex = 0;
+            state.celebrationShown = false;
+
+            closeCelebrationModal();
+            renderFlashcards();
+            initMatchingGame();
+            initContextExercise();
+            renderSpellingExercise();
+            updateGlobalProgress();
+            switchTab(1);
+        }
+
+        /**
+         * ============================================================================
+         * 10. ІНІЦІАЛІЗАЦІЯ ПРИ ЗАВАНТАЖЕННІ СТОРІНКИ
+         * ============================================================================
+         */
+        window.addEventListener('DOMContentLoaded', () => {
+            updateAudioToggleUI();
+            renderFlashcards();
+            initMatchingGame();
+            initContextExercise();
+            renderSpellingExercise();
+            updateGlobalProgress();
+            switchTab(1);
+        });
+    </script>
+</body>
+</html>
