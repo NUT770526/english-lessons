@@ -1,0 +1,190 @@
+<title>Daily Life &amp; Work: Listen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700&family=Nunito:wght@400;700;800&display=swap">
+<style>
+/* Layout: one calm column of word "keys" grouped by exercise; sticky control strip on top */
+:root{--bg:#F7F5F0;--card:#FFFFFF;--ink:#1E2A3A;--soft:#55606E;--line:#E3DED3;--accent:#2F6690;--key:#FFF4CF;--keyline:#F0D98A;--on:#F6C343;
+--ok:#1F6B4A;--okbg:#E3F4EA;--bad:#A3404B;--badbg:#FBE7E9;
+--display:'Rubik','Nunito',Arial,sans-serif;--body:'Nunito',Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151B24;--card:#1E2631;--ink:#E8EDF3;--soft:#A7B1BE;--line:#2E3946;--accent:#8DB8E0;--key:#2A2F38;--keyline:#4A5260;--on:#C89A1E;--ok:#8FD6B2;--okbg:#1D3A2E;--bad:#F0A3AB;--badbg:#42232A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#151B24;--card:#1E2631;--ink:#E8EDF3;--soft:#A7B1BE;--line:#2E3946;--accent:#8DB8E0;--key:#2A2F38;--keyline:#4A5260;--on:#C89A1E;--ok:#8FD6B2;--okbg:#1D3A2E;--bad:#F0A3AB;--badbg:#42232A;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 60px;display:flex;flex-direction:column;gap:28px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+header h1{font-family:var(--display);font-size:clamp(30px,6vw,44px);margin:0;text-wrap:balance}
+header p{margin:6px 0 0;color:var(--soft)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;border-bottom:1px solid var(--line)}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:transparent;color:var(--ink);font:700 15px var(--body);padding:8px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--bg)}
+nav{display:flex;flex-wrap:wrap;gap:8px}
+nav a{color:var(--accent);font-weight:800;font-size:15px;text-decoration:none;padding:6px 10px;border-radius:8px}
+nav a:focus-visible,button:focus-visible{outline:3px solid var(--on);outline-offset:2px}
+section{display:flex;flex-direction:column;gap:14px;scroll-margin-top:80px}
+.eyebrow{font:800 13px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0}
+h2{font-family:var(--display);font-size:26px;margin:0}
+.hint{margin:0;color:var(--soft)}
+.keys{display:flex;flex-wrap:wrap;gap:10px}
+.k{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--keyline);background:var(--key);color:var(--ink);font:700 18px var(--body);padding:9px 14px;border-radius:12px;cursor:pointer}
+.k svg{width:18px;height:18px;flex:none;fill:var(--accent)}
+.k.playing{background:var(--on);border-color:var(--on)}
+.group{display:flex;flex-direction:column;gap:8px}
+.group h3{margin:0;font:800 15px var(--body);color:var(--soft)}
+.all{align-self:flex-start;border:0;background:var(--accent);color:var(--bg);font:700 15px var(--display);padding:9px 18px;border-radius:999px;cursor:pointer}
+.rows{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.rows .k{justify-content:flex-start;font-size:20px;padding:12px 16px}
+.k .tr{font:400 15px var(--body);color:var(--soft);margin-left:auto}
+.quiz{display:flex;flex-direction:column;gap:10px}
+.q{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.q .v1{font:700 20px var(--body)}
+.q input{min-width:0;font:700 18px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--keyline);border-radius:10px;padding:8px 12px}
+.q button{border:0;background:var(--accent);color:var(--bg);font:700 15px var(--display);padding:9px 14px;border-radius:10px;cursor:pointer}
+.q .fb{grid-column:1/-1;margin:0;font-weight:700;font-size:16px}
+.q.right{background:var(--okbg);border-color:var(--ok)}.q.right .fb{color:var(--ok)}
+.q.wrong{background:var(--badbg);border-color:var(--bad)}.q.wrong .fb{color:var(--bad)}
+.score{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.score p{margin:0;font:700 18px var(--display)}
+.ghost{border:1px solid var(--accent);background:transparent;color:var(--accent);font:700 15px var(--display);padding:8px 16px;border-radius:999px;cursor:pointer}
+.rows .k{flex-wrap:wrap;text-align:left;row-gap:2px}
+.k .ipa{font:400 16px var(--body);color:var(--accent);flex-basis:100%;padding-left:26px}
+.k .bad{flex-basis:100%;padding-left:26px;font:400 15px var(--body);color:var(--soft)}
+.warn{background:var(--key);border:1px solid var(--keyline);border-radius:12px;padding:12px 16px;margin:0}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+<header>
+<h1>Daily Life &amp; Work: Listen</h1>
+<p>Натисніть на слово або фразу — послухайте і повторіть уголос 2–3 рази. Синім — транскрипція, ВЕЛИКИМИ літерами — наголошений склад.</p>
+</header>
+<p class="warn" id="nosound" hidden>Цей браузер не вміє озвучувати текст. Відкрийте сторінку в Chrome, Safari або Edge.</p>
+<div class="bar">
+<div class="seg" role="group" aria-label="Швидкість"><button type="button" id="sp-n" aria-pressed="true">Звичайно</button><button type="button" id="sp-s" aria-pressed="false">Повільно</button></div>
+<div class="seg" role="group" aria-label="Акцент"><button type="button" id="ac-gb" aria-pressed="true">UK</button><button type="button" id="ac-us" aria-pressed="false">US</button></div>
+<nav aria-label="Розділи"><a href="#words">Слова</a><a href="#time">Час</a><a href="#speaking">Speaking</a><a href="#check10">Перевірка 10</a><a href="#check12">Переклад</a></nav>
+</div>
+<section id="words">
+<p class="eyebrow">Words</p>
+<h2>Слова уроку</h2><p class="hint">Сірим — типова помилка. Увімкніть «Повільно» і повторіть кожне слово 2–3 рази.</p>
+<div class="keys rows" data-words="business partner|office|car park|bus stop|convenient|party|meeting|half|quarter|minute|bottle|apple|schedule|lunch" data-ipa="/ˈbɪznəs ˈpɑːtnə/|/ˈɒfɪs/ · OF-fice|/ˈkɑː pɑːk/|/ˈbʌs stɒp/|/kənˈviːniənt/ · con-VE-ni-ent|/ˈpɑːti/|/ˈmiːtɪŋ/|/hɑːf/|/ˈkwɔːtə/|/ˈmɪnɪt/ · MIN-ute|/ˈbɒtl/|/ˈæpl/|/ˈʃedjuːl/ (UK) · /ˈskedʒuːl/ (US)|/lʌntʃ/" data-tr="діловий партнер|офіс|автостоянка|автобусна зупинка|зручний|вечірка|зустріч|половина|чверть|хвилина|пляшка|яблуко|розклад|обід" data-bad="business — «бізнəс», 2 склади|«офіс», не «оФІс»||||||l не читається: «гаф»|«квотə»|«мініт», не «майнют»|||UK і US вимовляють по-різному|"></div>
+<button type="button" class="all" data-pause="2500">▶ Слухати все</button>
+</section>
+
+<section id="time">
+<p class="eyebrow">Telling the time</p>
+<h2>Котра година?</h2><p class="hint">Послухайте, як читаємо час. Цифри — для прикладу, у вправах інші.</p>
+<div class="keys rows" data-words="2:00::It’s two o’clock.|3:05::It’s five past three.|1:15::It’s quarter past one.|8:20::It’s twenty past eight.|3:30::It’s half past three.|7:40::It’s twenty to eight.|2:45::It’s quarter to three.|10:55::It’s five to eleven.|at half past ten::at half past ten" data-ipa="o’clock — рівно|past — після|quarter past — чверть після|twenty past|half past — половина|to — без|quarter to — без чверті|five to — без п’яти|at + час" data-tr="Рівно друга.|П’ять хвилин на четверту.|Чверть на другу.|Двадцять хвилин на дев’яту.|Пів на четверту.|За двадцять восьма.|За чверть третя.|За п’ять одинадцята.|о пів на одинадцяту"></div>
+<button type="button" class="all" data-pause="2500">▶ Слухати все</button>
+</section>
+
+<section id="speaking">
+<p class="eyebrow">Speaking</p>
+<h2>Дайте відповідь уголос</h2><p class="hint">Натисніть на питання, послухайте і відповідайте вголос повним реченням.</p>
+<div class="keys rows" data-words="What time do you go to work?|What time do you come home?|Is half past nine a convenient time for you?|Do you go to work by car or by bus?" data-ipa="|||" data-tr="О котрій ви йдете на роботу?|О котрій ви приходите додому?|Пів на десяту — зручний для вас час?|Ви їздите на роботу автомобілем чи автобусом?"></div>
+<button type="button" class="all" data-pause="2500">▶ Слухати все</button>
+</section>
+
+<section id="check10">
+<p class="eyebrow">Self-check · Exercise 10</p>
+<h2>Перевірте себе: правильні речення</h2><p class="hint">Спершу виконайте вправу 10. Потім натисніть на номер — почуєте правильне речення.</p>
+<div class="keys rows" data-words="Речення 1::I go home.|Речення 2::I am at work.|Речення 3::My office is near the bus stop.|Речення 4::I go to work by car.|Речення 5::He is in his car.|Речення 6::Let me park my car.|Речення 7::Tell them.|Речення 8::It is half past nine.|Речення 9::It is a convenient time.|Речення 10::They are at work.|Речення 11::This is his car.|Речення 12::I am at home now." data-ipa="|||||||||||" data-tr="натисніть, щоб почути|натисніть, щоб почути|натисніть, щоб почути|натисніть, щоб почути|натисніть, щоб почути|натисніть, щоб почути|натисніть, щоб почути|натисніть, щоб почути|натисніть, щоб почути|натисніть, щоб почути|натисніть, щоб почути|натисніть, щоб почути"></div>
+<button type="button" class="all" data-pause="2500">▶ Слухати все</button>
+</section>
+
+<section id="check12">
+<p class="eyebrow">Self-check · Translation</p>
+<h2>Перевірте переклад</h2><p class="hint">Спершу перекладіть речення у PDF. Потім натисніть на українське речення — почуєте англійський варіант.</p>
+<div class="keys rows" data-words="Я зараз на роботі.::I am at work now.|Я їду на роботу автомобілем.::I go to work by car.|Мій офіс біля автобусної зупинки.::My office is near the bus stop.|Він у своєму автомобілі.::He is in his car.|Це мій діловий партнер.::This is my business partner.|Скажи йому.::Tell him.|Скажи їм.::Tell them.|Дозволь мені припаркувати автомобіль.::Let me park my car.|Зараз 9:30.::It is half past nine.|Приходь о 9:30.::Come at half past nine.|Це зручний час.::It is a convenient time.|Зараз лише 8:30.::It is only half past eight.|Вони зараз удома.::They are at home now.|Ми йдемо додому.::We are going home.|Вона на вечірці.::She is at a party." data-ipa="||||||||||||||" data-tr="||||||||||||||"></div>
+<button type="button" class="all" data-pause="2500">▶ Слухати все</button>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var synth = window.speechSynthesis;
+  var rate = 0.9, lang = 'en-GB', queueId = 0;
+  var icon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>';
+
+  document.querySelectorAll('.keys').forEach(function(box){
+    var trs = (box.dataset.tr || '').split('|'); var ipas = (box.dataset.ipa || '').split('|'); var bads = (box.dataset.bad || '').split('|');
+    box.dataset.words.split('|').forEach(function(w, idx){
+      var parts = w.split('::'), label = parts[0], say = parts[1] || parts[0];
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'k'; b.dataset.say = say;
+      b.setAttribute('aria-label', 'Послухати: ' + label);
+      b.innerHTML = icon + '<span></span>';
+      b.querySelector('span').textContent = label;
+      if (trs[idx]) { var t = document.createElement('span'); t.className = 'tr'; t.textContent = trs[idx]; b.appendChild(t); }
+      if (ipas[idx]) { var ip = document.createElement('span'); ip.className = 'ipa'; ip.textContent = ipas[idx]; b.appendChild(ip); }
+      if (bads[idx]) { var bd = document.createElement('span'); bd.className = 'bad'; bd.textContent = bads[idx]; b.appendChild(bd); }
+      b.addEventListener('click', function(){ queueId++; speak([b]); });
+      box.appendChild(b);
+    });
+  });
+
+  if (!synth || typeof SpeechSynthesisUtterance === 'undefined') {
+    document.getElementById('nosound').hidden = false;
+    return;
+  }
+
+  function pickVoice(){
+    var vs = synth.getVoices() || [];
+    var exact = vs.filter(function(v){ return v.lang && v.lang.replace('_','-').toLowerCase() === lang.toLowerCase(); });
+    var any = vs.filter(function(v){ return v.lang && v.lang.toLowerCase().indexOf('en') === 0; });
+    var pool = exact.length ? exact : any;
+    var good = pool.filter(function(v){ return /google|natural|enhanced|premium|daniel|samantha|serena|libby|sonia/i.test(v.name); });
+    return good[0] || pool[0] || null;
+  }
+
+  function speak(buttons, pause){
+    var id = queueId; pause = pause || 450;
+    synth.cancel();
+    var i = 0;
+    (function next(){
+      if (id !== queueId || i >= buttons.length) return;
+      var b = buttons[i++];
+      var u = new SpeechSynthesisUtterance(b.dataset.say);
+      u.lang = lang; u.rate = rate;
+      var v = pickVoice(); if (v) u.voice = v;
+      b.classList.add('playing');
+      var done = function(){ b.classList.remove('playing'); setTimeout(next, pause); };
+      u.onend = done; u.onerror = done;
+      synth.speak(u);
+    })();
+  }
+
+  window.__say = function(text){
+    queueId++; synth.cancel();
+    var u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = rate;
+    var v = pickVoice(); if (v) u.voice = v; synth.speak(u);
+  };
+
+  document.querySelectorAll('.all').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      queueId++;
+      speak(Array.prototype.slice.call(btn.closest('section').querySelectorAll('.k')), +btn.dataset.pause || 450);
+    });
+  });
+
+  function toggle(onId, offId, fn){
+    document.getElementById(onId).addEventListener('click', function(){
+      document.getElementById(onId).setAttribute('aria-pressed','true');
+      document.getElementById(offId).setAttribute('aria-pressed','false');
+      fn();
+    });
+  }
+  toggle('sp-n','sp-s',function(){ rate = 0.9; });
+  toggle('sp-s','sp-n',function(){ rate = 0.6; });
+  toggle('ac-gb','ac-us',function(){ lang = 'en-GB'; });
+  toggle('ac-us','ac-gb',function(){ lang = 'en-US'; });
+
+  try { var s = localStorage.getItem('lr-rate'); if (s === 'slow') document.getElementById('sp-s').click(); } catch(e){}
+  ['sp-n','sp-s'].forEach(function(id){ document.getElementById(id).addEventListener('click', function(){ try{ localStorage.setItem('lr-rate', id === 'sp-s' ? 'slow' : 'normal'); }catch(e){} }); });
+
+  if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = function(){};
+
+  function goHash(){ var h = location.hash.slice(1); var el = h && document.getElementById(h); if (el) el.scrollIntoView(); }
+  window.addEventListener('hashchange', goHash); goHash();
+})();
+</script>
