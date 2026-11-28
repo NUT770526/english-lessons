@@ -1,0 +1,176 @@
+<title>Breakfast Words: Listen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700&family=Nunito:wght@400;700;800&display=swap">
+<style>
+/* Layout: one calm column of word "keys" grouped by exercise; sticky control strip on top */
+:root{--bg:#F7F5F0;--card:#FFFFFF;--ink:#1E2A3A;--soft:#55606E;--line:#E3DED3;--accent:#2F6690;--key:#FFF4CF;--keyline:#F0D98A;--on:#F6C343;
+--ok:#1F6B4A;--okbg:#E3F4EA;--bad:#A3404B;--badbg:#FBE7E9;
+--display:'Rubik','Nunito',Arial,sans-serif;--body:'Nunito',Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151B24;--card:#1E2631;--ink:#E8EDF3;--soft:#A7B1BE;--line:#2E3946;--accent:#8DB8E0;--key:#2A2F38;--keyline:#4A5260;--on:#C89A1E;--ok:#8FD6B2;--okbg:#1D3A2E;--bad:#F0A3AB;--badbg:#42232A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#151B24;--card:#1E2631;--ink:#E8EDF3;--soft:#A7B1BE;--line:#2E3946;--accent:#8DB8E0;--key:#2A2F38;--keyline:#4A5260;--on:#C89A1E;--ok:#8FD6B2;--okbg:#1D3A2E;--bad:#F0A3AB;--badbg:#42232A;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 60px;display:flex;flex-direction:column;gap:28px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+header h1{font-family:var(--display);font-size:clamp(30px,6vw,44px);margin:0;text-wrap:balance}
+header p{margin:6px 0 0;color:var(--soft)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;border-bottom:1px solid var(--line)}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:transparent;color:var(--ink);font:700 15px var(--body);padding:8px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--bg)}
+nav{display:flex;flex-wrap:wrap;gap:8px}
+nav a{color:var(--accent);font-weight:800;font-size:15px;text-decoration:none;padding:6px 10px;border-radius:8px}
+nav a:focus-visible,button:focus-visible{outline:3px solid var(--on);outline-offset:2px}
+section{display:flex;flex-direction:column;gap:14px;scroll-margin-top:80px}
+.eyebrow{font:800 13px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0}
+h2{font-family:var(--display);font-size:26px;margin:0}
+.hint{margin:0;color:var(--soft)}
+.keys{display:flex;flex-wrap:wrap;gap:10px}
+.k{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--keyline);background:var(--key);color:var(--ink);font:700 18px var(--body);padding:9px 14px;border-radius:12px;cursor:pointer}
+.k svg{width:18px;height:18px;flex:none;fill:var(--accent)}
+.k.playing{background:var(--on);border-color:var(--on)}
+.group{display:flex;flex-direction:column;gap:8px}
+.group h3{margin:0;font:800 15px var(--body);color:var(--soft)}
+.all{align-self:flex-start;border:0;background:var(--accent);color:var(--bg);font:700 15px var(--display);padding:9px 18px;border-radius:999px;cursor:pointer}
+.rows{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.rows .k{justify-content:flex-start;font-size:20px;padding:12px 16px}
+.k .tr{font:400 15px var(--body);color:var(--soft);margin-left:auto}
+.quiz{display:flex;flex-direction:column;gap:10px}
+.q{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.q .v1{font:700 20px var(--body)}
+.q input{min-width:0;font:700 18px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--keyline);border-radius:10px;padding:8px 12px}
+.q button{border:0;background:var(--accent);color:var(--bg);font:700 15px var(--display);padding:9px 14px;border-radius:10px;cursor:pointer}
+.q .fb{grid-column:1/-1;margin:0;font-weight:700;font-size:16px}
+.q.right{background:var(--okbg);border-color:var(--ok)}.q.right .fb{color:var(--ok)}
+.q.wrong{background:var(--badbg);border-color:var(--bad)}.q.wrong .fb{color:var(--bad)}
+.score{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.score p{margin:0;font:700 18px var(--display)}
+.ghost{border:1px solid var(--accent);background:transparent;color:var(--accent);font:700 15px var(--display);padding:8px 16px;border-radius:999px;cursor:pointer}
+.rows .k{flex-wrap:wrap;text-align:left;row-gap:2px}
+.k .ipa{font:400 16px var(--body);color:var(--accent);flex-basis:100%;padding-left:26px}
+.k .bad{flex-basis:100%;padding-left:26px;font:400 15px var(--body);color:var(--soft)}
+.warn{background:var(--key);border:1px solid var(--keyline);border-radius:12px;padding:12px 16px;margin:0}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+<header>
+<h1>Breakfast Words: Listen</h1>
+<p>Натисни на слово або фразу — послухай і повтори вголос 2–3 рази. Синім — транскрипція, ВЕЛИКИМИ літерами — наголошений склад.</p>
+</header>
+<p class="warn" id="nosound" hidden>Цей браузер не вміє озвучувати текст. Відкрий сторінку в Chrome, Safari або Edge.</p>
+<div class="bar">
+<div class="seg" role="group" aria-label="Швидкість"><button type="button" id="sp-n" aria-pressed="true">Звичайно</button><button type="button" id="sp-s" aria-pressed="false">Повільно</button></div>
+<div class="seg" role="group" aria-label="Акцент"><button type="button" id="ac-gb" aria-pressed="true">UK</button><button type="button" id="ac-us" aria-pressed="false">US</button></div>
+<nav aria-label="Розділи"><a href="#words">Слова</a><a href="#questions">Питання</a><a href="#s">Звук -s</a></nav>
+</div>
+<section id="words">
+<p class="eyebrow">Words</p>
+<h2>Сніданок</h2><p class="hint">Сірим — часта помилка. Увімкни «Повільно» і повтори кожне слово 3 рази.</p>
+<div class="keys rows" data-words="breakfast|jam|coffee|tea|cereal|bacon|toast|pancakes|salmon|ready|hungry|eggs|milk|juice" data-ipa="/ˈbrekfəst/ · BREAK-fast|/dʒæm/|/ˈkɒfi/ · COF-fee|/tiː/|/ˈsɪəriəl/ · CE-re-al|/ˈbeɪkən/ · BA-con|/təʊst/|/ˈpænkeɪks/ · PAN-cakes|/ˈsæmən/ · SAL-mon|/ˈredi/ · REA-dy|/ˈhʌŋɡri/ · HUN-gry|/eɡz/|/mɪlk/|/dʒuːs/" data-tr="сніданок|джем|кава|чай|пластівці|бекон|тост|млинці|лосось|готовий|голодний|яйця|молоко|сік" data-bad="«брекфəст», не «брейкфаст»|коротке [æ]: «джем»|«кофі», не «кофе»||«сіəріəл», не «церал»|«бейкəн»|«тоуст»|«пенкейкс»|l не читається: «семəн»!|«реді»|«хангрі»|||«джус»"></div>
+<button type="button" class="all" data-pause="1500">▶ Слухати все</button>
+</section>
+
+<section id="questions">
+<p class="eyebrow">Questions</p>
+<h2>Питання і короткі відповіді</h2><p class="hint">Слухай питання і відповідь. Повтори обидва вголос.</p>
+<div class="keys rows" data-words="Do you like toast? Yes, I do.|Do you drink milk? No, I don’t.|Does she like eggs? Yes, she does.|Does he drink juice? No, he doesn’t.|Do they eat porridge? Yes, they do.|Are you hungry? Yes, I am.|Is he ready? No, he isn’t.|Are they at school? Yes, they are." data-ipa="/duː juː laɪk təʊst/ — /jes aɪ duː/|/duː juː drɪŋk mɪlk/ — /nəʊ aɪ dəʊnt/|/dʌz ʃiː laɪk eɡz/ — /jes ʃiː dʌz/|/dʌz hiː drɪŋk dʒuːs/ — /nəʊ hiː ˈdʌznt/|/duː ðeɪ iːt ˈpɒrɪdʒ/ — /jes ðeɪ duː/|/ɑː juː ˈhʌŋɡri/ — /jes aɪ æm/|/ɪz hiː ˈredi/ — /nəʊ hiː ˈɪznt/|/ɑː ðeɪ ət skuːl/ — /jes ðeɪ ɑː/" data-tr="Ти любиш тости? — Так.|Ти п’єш молоко? — Ні.|Вона любить яйця? — Так.|Він п’є сік? — Ні.|Вони їдять кашу? — Так.|Ти голодна? — Так.|Він готовий? — Ні.|Вони в школі? — Так." data-bad="дія → Do|дія → Do|дія → Does|дія → Does|дія → Do|стан → Are|стан → Is|місце → Are"></div>
+<button type="button" class="all" data-pause="1500">▶ Слухати все</button>
+</section>
+
+<section id="s">
+<p class="eyebrow">He / She / It</p>
+<h2>Звук -s у кінці</h2><p class="hint">Після he / she / it дієслово отримує -s. Послухай, як воно звучить.</p>
+<div class="keys rows" data-words="I like → she likes|I eat → he eats|I drink → she drinks|I make → he makes|I have → she has|I go → he goes|I watch → she watches" data-ipa="/laɪks/ [s]|/iːts/ [s]|/drɪŋks/ [s]|/meɪks/ [s]|/hæz/ [z]|/ɡəʊz/ [z]|/ˈwɒtʃɪz/ [ɪz]" data-tr="я люблю → вона любить|я їм → він їсть|я п’ю → вона п’є|я роблю → він робить|я маю → вона має|я йду → він іде|я дивлюся → вона дивиться" data-bad="|||||has — не haves!|watch → watches: додаємо -es"></div>
+<button type="button" class="all" data-pause="1500">▶ Слухати все</button>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var synth = window.speechSynthesis;
+  var rate = 0.9, lang = 'en-GB', queueId = 0;
+  var icon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>';
+
+  document.querySelectorAll('.keys').forEach(function(box){
+    var trs = (box.dataset.tr || '').split('|'); var ipas = (box.dataset.ipa || '').split('|'); var bads = (box.dataset.bad || '').split('|');
+    box.dataset.words.split('|').forEach(function(w, idx){
+      var parts = w.split('::'), label = parts[0], say = parts[1] || parts[0];
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'k'; b.dataset.say = say;
+      b.setAttribute('aria-label', 'Послухати: ' + label);
+      b.innerHTML = icon + '<span></span>';
+      b.querySelector('span').textContent = label;
+      if (trs[idx]) { var t = document.createElement('span'); t.className = 'tr'; t.textContent = trs[idx]; b.appendChild(t); }
+      if (ipas[idx]) { var ip = document.createElement('span'); ip.className = 'ipa'; ip.textContent = ipas[idx]; b.appendChild(ip); }
+      if (bads[idx]) { var bd = document.createElement('span'); bd.className = 'bad'; bd.textContent = bads[idx]; b.appendChild(bd); }
+      b.addEventListener('click', function(){ queueId++; speak([b]); });
+      box.appendChild(b);
+    });
+  });
+
+  if (!synth || typeof SpeechSynthesisUtterance === 'undefined') {
+    document.getElementById('nosound').hidden = false;
+    return;
+  }
+
+  function pickVoice(){
+    var vs = synth.getVoices() || [];
+    var exact = vs.filter(function(v){ return v.lang && v.lang.replace('_','-').toLowerCase() === lang.toLowerCase(); });
+    var any = vs.filter(function(v){ return v.lang && v.lang.toLowerCase().indexOf('en') === 0; });
+    var pool = exact.length ? exact : any;
+    var good = pool.filter(function(v){ return /google|natural|enhanced|premium|daniel|samantha|serena|libby|sonia/i.test(v.name); });
+    return good[0] || pool[0] || null;
+  }
+
+  function speak(buttons, pause){
+    var id = queueId; pause = pause || 450;
+    synth.cancel();
+    var i = 0;
+    (function next(){
+      if (id !== queueId || i >= buttons.length) return;
+      var b = buttons[i++];
+      var u = new SpeechSynthesisUtterance(b.dataset.say);
+      u.lang = lang; u.rate = rate;
+      var v = pickVoice(); if (v) u.voice = v;
+      b.classList.add('playing');
+      var done = function(){ b.classList.remove('playing'); setTimeout(next, pause); };
+      u.onend = done; u.onerror = done;
+      synth.speak(u);
+    })();
+  }
+
+  window.__say = function(text){
+    queueId++; synth.cancel();
+    var u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = rate;
+    var v = pickVoice(); if (v) u.voice = v; synth.speak(u);
+  };
+
+  document.querySelectorAll('.all').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      queueId++;
+      speak(Array.prototype.slice.call(btn.closest('section').querySelectorAll('.k')), +btn.dataset.pause || 450);
+    });
+  });
+
+  function toggle(onId, offId, fn){
+    document.getElementById(onId).addEventListener('click', function(){
+      document.getElementById(onId).setAttribute('aria-pressed','true');
+      document.getElementById(offId).setAttribute('aria-pressed','false');
+      fn();
+    });
+  }
+  toggle('sp-n','sp-s',function(){ rate = 0.9; });
+  toggle('sp-s','sp-n',function(){ rate = 0.6; });
+  toggle('ac-gb','ac-us',function(){ lang = 'en-GB'; });
+  toggle('ac-us','ac-gb',function(){ lang = 'en-US'; });
+
+  try { var s = localStorage.getItem('lr-rate'); if (s === 'slow') document.getElementById('sp-s').click(); } catch(e){}
+  ['sp-n','sp-s'].forEach(function(id){ document.getElementById(id).addEventListener('click', function(){ try{ localStorage.setItem('lr-rate', id === 'sp-s' ? 'slow' : 'normal'); }catch(e){} }); });
+
+  if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = function(){};
+
+  function goHash(){ var h = location.hash.slice(1); var el = h && document.getElementById(h); if (el) el.scrollIntoView(); }
+  window.addEventListener('hashchange', goHash); goHash();
+})();
+</script>
